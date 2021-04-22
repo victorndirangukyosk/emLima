@@ -219,7 +219,7 @@
         $('input[name=\'filter_name\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/farmer/autocompletefarmer&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/farmer_transactions/autocompletefarmer&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -239,7 +239,7 @@
         $('input[name=\'filter_company\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/farmer/autocompletefarmer&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/farmer_transactions/autocompletefarmer&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -265,7 +265,7 @@
         $('input[name=\'filter_telephone\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/farmer/autocompletefarmer&token=<?php echo $token; ?>&filter_telephone=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/farmer_transactions/autocompletefarmer&token=<?php echo $token; ?>&filter_telephone=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -285,7 +285,7 @@
                 $('input[name=\'filter_email\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/farmer/autocompletefarmer&token=<?php echo $token; ?>&filter_email=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/farmer_transactions/autocompletefarmer&token=<?php echo $token; ?>&filter_email=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
