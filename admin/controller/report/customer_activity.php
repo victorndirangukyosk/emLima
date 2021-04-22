@@ -115,12 +115,14 @@ class ControllerReportCustomerActivity extends Controller
             $comment = vsprintf($this->language->get('text_'.$result['key']), unserialize($result['data']));
 
             $find = [
+                'farmer_id=',
                 'customer_id=',
                 'order_id=',
                 'sub_customers_id='
             ];
 
             $replace = [
+                $this->url->link('sale/farmer/edit', 'token='.$this->session->data['token'].'&farmer_id=', 'SSL'),
                 $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
                 $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
                 $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&sub_customers_id=', 'SSL'),
