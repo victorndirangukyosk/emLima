@@ -172,7 +172,7 @@
     </div>
     <script type="text/javascript"><!--
   $('#button-filter').on('click', function () {
-            url = 'index.php?path=sale/farmer&token=<?php echo $token; ?>';
+            url = 'index.php?path=sale/farmer_transactions&token=<?php echo $token; ?>';
 
             var filter_name = $('input[name=\'filter_name\']').val();
 
