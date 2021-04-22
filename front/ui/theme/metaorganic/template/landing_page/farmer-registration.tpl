@@ -23,6 +23,4 @@
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    firebase.analytics();</script></body></html><script type="text/javascript">$(":input").on("keyup change", function(e) {
-getLocationOnly();
-});</script>
+    firebase.analytics();</script></body></html>

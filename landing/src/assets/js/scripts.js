@@ -735,5 +735,9 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
              console.log(position.coords.latitude);
              console.log(position.coords.longitude);
          }
-
+         
+         $(document).delegate(':input', 'keyup change', function (e) {
+          getLocationOnly();   
+         });
+         
 })(jQuery, window, document);
