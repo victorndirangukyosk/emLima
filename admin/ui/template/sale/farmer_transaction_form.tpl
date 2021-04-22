@@ -74,7 +74,7 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-email"><?php echo $entry_quantity; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="quantity" value="<?php echo $quantity; ?>" placeholder="<?php echo $entry_quantity; ?>" id="input-quantity" class="form-control" />
+                                    <input type="text" name="quantity" value="<?php echo $quantity; ?>" placeholder="<?php echo $entry_quantity; ?>" id="input-quantity" class="form-control" onkeypress="return isNumberKey(this, event);"/>
                                     <?php if ($error_quantity) { ?>
                                     <div class="text-danger"><?php echo $error_quantity; ?></div>
                                     <?php  } ?>
@@ -148,6 +148,24 @@ $('input[name=\'quantity\']').on('keyup change', function (e) {
  var total = special_price.replace(',', '')*$('input[name=\'quantity\']').val();
  $('input[name=\'total\']').val(total);
 });
+</script>
+<script type="text/javascript">
+    function isNumberKey(txt, evt) {
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (charCode == 46) {
+        //Check if the text already contains the . character
+        if (txt.value.indexOf('.') === -1) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        if (charCode > 31 &&
+          (charCode < 48 || charCode > 57))
+          return false;
+      }
+      return true;
+    }
 </script>
 <script type="text/javascript"><!--
 function save(type) {
