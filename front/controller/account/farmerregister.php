@@ -11,7 +11,7 @@ class ControllerAccountFarmerRegister extends Controller
         }
         
         if ((utf8_strlen(trim($this->request->post['last_name'])) < 1) || (utf8_strlen(trim($this->request->post['last_name'])) > 32)) {
-            $this->error['lst_name'] = $this->language->get('error_name');
+            $this->error['last_name'] = $this->language->get('error_name');
         }
 
         if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
@@ -38,6 +38,7 @@ class ControllerAccountFarmerRegister extends Controller
 
         if ($this->model_account_farmer->getTotalfarmersByPhone($this->request->post['telephone'])) {
             $this->error['telephone_exists'] = $this->language->get('error_telephone_exists');
+            $this->error['warning'] = $this->language->get('error_telephone_exists');
         }
 
         return !$this->error;
