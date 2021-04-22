@@ -648,7 +648,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                            iziToast.warning({
                              position: 'topRight',
                              title: 'Oops',
-                             message: 'We couldn\'t register you. Please try again'
+                             message: json['error_warning']+' '+'We couldn\'t register you. Please try again'
                            });
                          }
                        }
