@@ -582,7 +582,9 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
         $('#farmer-register-button').click(function (e) {
             console.log('Farmer Registration!');
             e.preventDefault();
-
+            
+            var login_latitude = $('#lat').val();
+            var login_longitude = $('#lng').val();
             const firstName = $('#farmer-first-name').val();
                     const lastName = $('#farmer-last-name').val();
                     const email = $('#farmer-email').val();
@@ -626,7 +628,9 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                          farmer_description : produceDescription,
                          farmsize : farmsize,
                          farmerorganization : farmerorganization,
-                         farmsizetype : farmsizetype
+                         farmsizetype : farmsizetype,
+                         login_latitude : login_latitude,
+                         login_longitude : login_longitude,
                        },
                        success: function (json) {
                          registerButton.text('REGISTER');
