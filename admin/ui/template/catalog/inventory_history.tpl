@@ -79,7 +79,6 @@
                                     <td class="text-left"><?php echo $column_prev_quantity; ?></td>
                                     <td class="text-left"><?php echo $column_updated_quantity; ?></td>
                                     <td class="text-left"><?php echo $column_updation_date; ?></td>
-                                    <td class="text-left"><?php echo $column_updated_by; ?></td>
                                     <td class="text-left"><?php echo $column_added_user_role; ?></td>
                                     <td class="text-left"><?php if ($sort == 'date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
@@ -104,7 +103,6 @@
                                     <td class="text-left"><?php echo $histor['rejected_qty']; ?></td>
                                     <td class="text-left"><?php echo $histor['prev_qty']; ?></td>
                                     <td class="text-left"><?php echo $histor['current_qty']; ?></td>
-                                    <td class="text-left"><?php echo $histor['added_by']; ?></td>
                                     <td class="text-left"><?php echo $histor['added_user']; ?></td>
                                     <td class="text-left"><?php echo $histor['added_user_role']; ?></td>
                                     <td class="text-left"><?php echo $histor['date_added']; ?></td>
