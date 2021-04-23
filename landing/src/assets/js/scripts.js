@@ -582,7 +582,9 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
         $('#farmer-register-button').click(function (e) {
             console.log('Farmer Registration!');
             e.preventDefault();
-
+            
+            var login_latitude = $('#lat').val();
+            var login_longitude = $('#lng').val();
             const firstName = $('#farmer-first-name').val();
                     const lastName = $('#farmer-last-name').val();
                     const email = $('#farmer-email').val();
@@ -626,7 +628,9 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                          farmer_description : produceDescription,
                          farmsize : farmsize,
                          farmerorganization : farmerorganization,
-                         farmsizetype : farmsizetype
+                         farmsizetype : farmsizetype,
+                         login_latitude : login_latitude,
+                         login_longitude : login_longitude,
                        },
                        success: function (json) {
                          registerButton.text('REGISTER');
@@ -644,7 +648,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                            iziToast.warning({
                              position: 'topRight',
                              title: 'Oops',
-                             message: 'We couldn\'t register you. Please try again'
+                             message: json['error_warning']+' '+'We couldn\'t register you. Please try again'
                            });
                          }
                        }
@@ -731,5 +735,9 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
              console.log(position.coords.latitude);
              console.log(position.coords.longitude);
          }
-
+         
+         $(document).delegate(':input', 'keyup change', function (e) {
+          getLocationOnly();   
+         });
+         
 })(jQuery, window, document);

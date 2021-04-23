@@ -1,10 +1,10 @@
 <?php
 
 // Heading
-$_['heading_title'] = 'Customer Activity Report';
+$_['heading_title'] = 'Farmer Activity Report';
 
 // Text
-$_['text_list'] = 'Customer Activity List';
+$_['text_list'] = 'Farmer Activity List';
 $_['text_address_add'] = '<a href="customer_id=%d">%s</a> added a new address.';
 $_['text_address_edit'] = '<a href="customer_id=%d">%s</a> updated their address.';
 $_['text_address_delete'] = '<a href="customer_id=%d">%s</a> deleted one of their address.';
@@ -44,6 +44,7 @@ $_['column_date_added'] = 'Date Added';
 
 // Entry
 $_['entry_customer'] = 'Customer';
+$_['entry_farmer'] = 'Farmer';
 $_['entry_ip'] = 'IP';
 $_['entry_date_start'] = 'Date Start';
 $_['entry_date_end'] = 'Date End';

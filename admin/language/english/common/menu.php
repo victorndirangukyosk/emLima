@@ -73,6 +73,7 @@ $_['text_report_sale_coupon'] = 'Coupons';
 $_['text_report_product_viewed'] = 'Viewed';
 $_['text_report_product_purchased'] = 'Purchased';
 $_['text_report_customer_activity'] = 'Customer Activity';
+$_['text_report_farmer_activity'] = 'Farmer Activity';
 $_['text_report_user_activity'] = 'User Activity';
 $_['text_report_customer_online'] = 'Customers Online';
 $_['text_report_customer_order'] = 'Orders';

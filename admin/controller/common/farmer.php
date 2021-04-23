@@ -54,18 +54,18 @@ class ControllerCommonFarmer extends Controller {
             }
             // Add to activity log
             $log = new Log('error.log');
-            $this->load->model('user/user_activity');
+            $this->load->model('user/farmer_activity');
 
             $activity_data = [
                 'farmer_id' => $this->user->getFarmerId(),
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
             ];
-            $log->write('user login');
+            $log->write('farmer login');
 
-            $this->model_user_user_activity->addActivity('login', $activity_data);
+            $this->model_user_farmer_activity->addActivity('login', $activity_data);
 
-            $log->write('user login');
+            $log->write('farmer login');
 
             if ($shopper_group_id == $this->user->getGroupId()) {
                 $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));

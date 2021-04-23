@@ -27,7 +27,7 @@ class ControllerCommonLogout extends Controller {
     public function farmer() {
 
         $log = new Log('error.log');
-        $this->load->model('user/user_activity');
+        $this->load->model('user/farmer_activity');
 
         $activity_data = [
             'farmer_id' => $this->user->getFarmerId(),
@@ -36,7 +36,7 @@ class ControllerCommonLogout extends Controller {
         ];
         $log->write('farmer logout');
 
-        $this->model_user_user_activity->addActivity('logout', $activity_data);
+        $this->model_user_farmer_activity->addActivity('logout', $activity_data);
 
         $log->write('farmer logout');
         $this->user->logout();

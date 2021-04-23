@@ -1,17 +1,16 @@
 <?php
 
-class ControllerAccountFarmerRegister extends Controller
-{
+class ControllerAccountFarmerRegister extends Controller {
+
     private $error = [];
 
-    public function validate()
-    {
+    public function validate() {
         if ((utf8_strlen(trim($this->request->post['first_name'])) < 1) || (utf8_strlen(trim($this->request->post['first_name'])) > 32)) {
             $this->error['first_name'] = $this->language->get('error_name');
         }
-        
+
         if ((utf8_strlen(trim($this->request->post['last_name'])) < 1) || (utf8_strlen(trim($this->request->post['last_name'])) > 32)) {
-            $this->error['lst_name'] = $this->language->get('error_name');
+            $this->error['last_name'] = $this->language->get('error_name');
         }
 
         if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
@@ -38,20 +37,20 @@ class ControllerAccountFarmerRegister extends Controller
 
         if ($this->model_account_farmer->getTotalfarmersByPhone($this->request->post['telephone'])) {
             $this->error['telephone_exists'] = $this->language->get('error_telephone_exists');
+            $this->error['warning'] = $this->language->get('error_telephone_exists');
         }
 
         return !$this->error;
     }
 
-    public function register()
-    {
+    public function register() {
         $data['status'] = false;
 
         $this->load->language('account/farmerregister');
         $this->load->model('account/farmer');
 
         $log = new Log('error.log');
-        
+
 
         $this->request->post['telephone'] = preg_replace('/[^0-9]/', '', $this->request->post['telephone']);
 
@@ -59,6 +58,17 @@ class ControllerAccountFarmerRegister extends Controller
             $this->load->model('account/farmer');
 
             $farmer_id = $this->model_account_farmer->addNewFarmer($this->request->post);
+
+            // Add to activity log
+            $this->load->model('account/farmeractivity');
+
+            $activity_data = [
+                'farmer_id' => $farmer_id,
+                'name' => $this->request->post['first_name'] . ' ' . $this->request->post['last_name'],
+            ];
+
+            $log->write('farmer registration');
+            $this->model_account_farmeractivity->addActivity('farmer_register', $activity_data);
 
             $data['status'] = true;
 
@@ -106,4 +116,5 @@ class ControllerAccountFarmerRegister extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }
+
 }
