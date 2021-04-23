@@ -866,6 +866,14 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['description'] = '';
         }
+        
+        if (isset($this->request->post['organization'])) {
+            $data['organization'] = $this->request->post['organization'];
+        } elseif (!empty($user_info)) {
+            $data['organization'] = $user_info['organization'];
+        } else {
+            $data['organization'] = '';
+        }
 
         if (isset($this->request->post['image'])) {
             $data['image'] = $this->request->post['image'];
