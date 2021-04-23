@@ -1548,7 +1548,7 @@ class ControllerSaleFarmer extends Controller {
         $this->response->setOutput($this->load->view('sale/customer_referrals.tpl', $data));
     }
 
-    public function autocompletecompany() {
+    public function autocompleteorganization() {
         $json = [];
 
         if (isset($this->request->get['filter_name'])) {
@@ -1558,7 +1558,7 @@ class ControllerSaleFarmer extends Controller {
                 $filter_name = '';
             }
 
-            $this->load->model('sale/customer');
+            $this->load->model('user/farmer');
 
             $filter_data = [
                 'filter_name' => $filter_name,
@@ -1566,7 +1566,7 @@ class ControllerSaleFarmer extends Controller {
                 'limit' => 5,
             ];
 
-            $results = $this->model_sale_customer->getCompanies($filter_data);
+            $results = $this->model_user_farmer->getFarmerOrganizations($filter_data);
             foreach ($results as $result) {
                 $json[] = [
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),

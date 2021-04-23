@@ -188,7 +188,7 @@ $('input[name=\'filter_farmer\']').autocomplete({
          $('input[name=\'filter_organization\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/farmer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/farmer/autocompleteorganization&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
