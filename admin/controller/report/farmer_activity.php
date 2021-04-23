@@ -123,7 +123,8 @@ class ControllerReportFarmerActivity extends Controller
             ];
 
             $data['activities'][] = [
-                'farmer_name' => $result['farmer_name'],
+                'organization' => $result['organization'],
+                'farmer_name' => $result['first_name'].''.$result['last_name'],
                 'email' => $result['email'],
                 'comment' => str_replace($find, $replace, $comment),
                 'ip' => $result['ip'],

@@ -89,7 +89,7 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <td class="text-left">Company Name</td>
+                <td class="text-left">Organization</td>
                 <td class="text-left">Customer Email</td>
                 <td class="text-left"><?php echo $column_comment; ?></td>
                 <td class="text-left"><?php echo $column_ip; ?></td>
@@ -100,7 +100,7 @@
               <?php if ($activities) { ?>
               <?php foreach ($activities as $activity) { ?>
               <tr>
-                <td class="text-left"><?php echo $activity['company_name']; ?></td>
+                <td class="text-left"><?php echo $activity['organization']; ?></td>
                 <td class="text-left"><?php echo $activity['email']; ?></td>
                 <td class="text-left"><?php echo $activity['comment']; ?></td>
                 <td class="text-left"><?php echo $activity['ip']; ?></td>

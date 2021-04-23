@@ -337,7 +337,7 @@ class ModelUserFarmer extends Model {
     }
 
     public function getFarmerActivities($data = []) {
-        $sql = 'SELECT c.organization ,c.email, ca.activity_id, ca.farmer_id, ca.key, ca.data, ca.ip, ca.date_added FROM ' . DB_PREFIX . 'farmer_activity ca LEFT JOIN ' . DB_PREFIX . 'farmer c ON (ca.farmer_id = c.farmer_id)';
+        $sql = 'SELECT c.organization, c.first_name, c.last_name, c.email, ca.activity_id, ca.farmer_id, ca.key, ca.data, ca.ip, ca.date_added FROM ' . DB_PREFIX . 'farmer_activity ca LEFT JOIN ' . DB_PREFIX . 'farmer c ON (ca.farmer_id = c.farmer_id)';
 
         $implode = [];
 
