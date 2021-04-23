@@ -216,8 +216,8 @@ function excel() {
        url = 'index.php?path=report/farmer_activity/farmeractivityexcel&token=<?php echo $token; ?>';
       
         
-       var filter_customer = $('input[name=\'filter_farmer\']').val();	
-	if (filter_customer) {
+       var filter_farmer = $('input[name=\'filter_farmer\']').val();	
+	if (filter_farmer) {
 		url += '&filter_farmer=' + encodeURIComponent(filter_farmer);
 	}
 	var filter_ip = $('input[name=\'filter_ip\']').val();

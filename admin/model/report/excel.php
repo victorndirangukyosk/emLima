@@ -6243,6 +6243,152 @@ class ModelReportExcel extends Model {
             return;
         }
     }
+    
+    public function download_farmer_activity_excel($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+        $this->load->model('user/farmer');
+
+        $results = $this->model_user_farmer->getFarmerActivities($data);
+        $this->load->model('sale/order');
+
+        foreach ($results as $result) {
+            $comment = vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
+
+            $find = [
+                'farmer_id=',
+            ];
+
+            $replace = [
+                '', '',
+                    // $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
+                    // $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
+            ];
+            $comment = str_replace($find, $replace, $comment);
+            $comt = preg_replace("/<\/?a( [^>]*)?>/i", "", $comment);
+            $data['activities'][] = [
+                'organization' => $result['organization'],
+                'farmer_name' => $result['first_name'].' '.$result['last_name'],
+                'email' => $result['email'],
+                'comment' => $comt,
+                'ip' => $result['ip'],
+                'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
+            ];
+        }
+        // echo "<pre>";print_r($data['customers']);die;
+        try {
+            // set appropriate timeout limit
+            set_time_limit(3500);
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Farmer Activities')->setDescription('none');
+
+            //PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+
+            $sheet_subtitle = '';
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
+            // $objPHPExcel->getActiveSheet()->mergeCells('A2:E2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Farmer Activities');
+            // $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+            // $from = date('d-m-Y', strtotime($data['filter_date_start']));
+            // $to = date('d-m-Y', strtotime($data['filter_date_end']));
+            // $objPHPExcel->getActiveSheet()->mergeCells('A3:I3');
+            // $html = 'FROM ' . $from . ' TO ' . $to;
+            // $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            // $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Organization');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Farmer Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Farmer Email');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Comment');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'IP');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Date');
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+
+            // Fetching the table data
+            $row = 5;
+            $Amount = 0;
+
+            foreach ($data['activities'] as $result) {
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['organization']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['farmer_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['email']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['comment']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['ip']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['date_added']);
+
+                ++$row;
+            }
+
+            // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
+            // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, $row)->applyFromArray($title);
+
+
+            $objPHPExcel->setActiveSheetIndex(0);
+            //$objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+            // Sending headers to force the user to download the file
+            //header('Content-Type: application/vnd.ms-excel');
+            //header("Content-type: application/octet-stream");
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            $filename = 'Farmer_Activity.xlsx';
+
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $filename . '"');
+            header('Cache-Control: max-age=0');
+
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
 
     public function download_sale_ordertransaction_excel($filter_data) {
         // echo "<pre>";print_r($filter_data);die;

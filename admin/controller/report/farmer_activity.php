@@ -124,7 +124,7 @@ class ControllerReportFarmerActivity extends Controller
 
             $data['activities'][] = [
                 'organization' => $result['organization'],
-                'farmer_name' => $result['first_name'].''.$result['last_name'],
+                'farmer_name' => $result['first_name'].' '.$result['last_name'],
                 'email' => $result['email'],
                 'comment' => str_replace($find, $replace, $comment),
                 'ip' => $result['ip'],
