@@ -90,7 +90,7 @@
             <thead>
               <tr>
                 <td class="text-left">Organization</td>
-                <td class="text-left">Customer Email</td>
+                <td class="text-left">Farmer Email</td>
                 <td class="text-left"><?php echo $column_comment; ?></td>
                 <td class="text-left"><?php echo $column_ip; ?></td>
                 <td class="text-left"><?php echo $column_date_added; ?></td>
