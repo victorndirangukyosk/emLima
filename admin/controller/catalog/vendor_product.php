@@ -2351,6 +2351,7 @@ class ControllerCatalogVendorProduct extends Controller {
         foreach ($results as $result) {
 
             $data['history'][] = [
+                'product_history_id' => $result['product_history_id'],
                 'product_store_id' => $result['product_store_id'],
                 'product_id' => $result['product_id'],
                 'procured_qty' => $result['procured_qty'],
@@ -2388,7 +2389,7 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['column_added_user_role'] = $this->language->get('column_added_user_role');
         $data['column_date_added'] = $this->language->get('column_date_added');
 
-        $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_name'] = $this->language->get('entry_product_name');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
 
 

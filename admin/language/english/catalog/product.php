@@ -102,6 +102,8 @@ $_['entry_reward'] = 'Reward Points';
 $_['entry_layout'] = 'Layout Override';
 $_['entry_recurring'] = 'Recurring Profile';
 $_['entry_special_price'] = 'Special Price';
+$_['entry_date_added'] = 'Dated Added';
+$_['entry_product_name'] = 'Product Name';
 
 $_['entry_unit'] = 'Unit Size';
 

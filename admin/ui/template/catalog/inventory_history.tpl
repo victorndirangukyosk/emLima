@@ -39,7 +39,7 @@
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label class="control-label" for="input-company">Farmer Name</label>
+                                <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
                                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
                             </div>
 
@@ -52,45 +52,7 @@
                                     </span></div>
                             </div>
                         </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label class="control-label" for="input-telephone"><?php echo $column_telephone; ?></label>
-                                <div class="input-group">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button"><?php echo '+' . $this->config->get('config_telephone_code'); ?></button>                                      
-                                    </span>
-                                    <input type="text" name="filter_mobile" value="<?php echo $filter_mobile; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57"  minlength="9" maxlength="9"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="input-ip"><?php echo $entry_ip; ?></label>
-                                <input type="text" name="filter_ip" value="<?php echo $filter_ip; ?>" placeholder="<?php echo $entry_ip; ?>" id="input-ip" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label class="control-label" for="input-email"><?php echo $entry_email; ?></label>
-                                <input type="text" name="filter_email" value="<?php echo $filter_email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
-                                <select name="filter_status" id="input-status" class="form-control">
-                                    <option value="*"></option>
-                                    <?php if ($filter_status) { ?>
-                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                                    <?php } else { ?>
-                                    <option value="1"><?php echo $text_enabled; ?></option>
-                                    <?php } ?>
-                                    <?php if (!$filter_status && !is_null($filter_status)) { ?>
-                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                                    <?php } else { ?>
-                                    <option value="0"><?php echo $text_disabled; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
+                        
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label"></label>
@@ -99,7 +61,7 @@
                         </div>
                     </div>
                 </div>
-                <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-customer">
+                <form action="" method="post" enctype="multipart/form-data" id="form-customer">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
                             <thead>
@@ -131,9 +93,9 @@
                                 <?php foreach ($history as $histor) { ?>
                                 <tr>
                                     <td class="text-center"><?php if (in_array($histor['product_history_id'], $selected)) { ?>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $history['product_history_id']; ?>" checked="checked" />
+                                        <input type="checkbox" name="selected[]" value="<?php echo $histor['product_history_id']; ?>" checked="checked" />
                                         <?php } else { ?>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $history['product_history_id']; ?>" />
+                                        <input type="checkbox" name="selected[]" value="<?php echo $histor['product_history_id']; ?>" />
                                         <?php } ?></td>
                                     <td class="text-left"><?php echo $histor['product_name']; ?></td>
                                     <td class="text-left"><?php echo $histor['product_id']; ?></td>

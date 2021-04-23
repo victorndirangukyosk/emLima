@@ -749,8 +749,6 @@ class ModelCatalogVendorProduct extends Model {
         }
 
         $query = $this->db->query($sql);
-        $log = new Log('error.log');
-        $log->write($sql);
 
         //echo "<pre>";print_r($sql);die;
 
@@ -800,8 +798,6 @@ class ModelCatalogVendorProduct extends Model {
 
         $query = $this->db->query($sql);
         //echo "<pre>";print_r($sql);die;
-        $log = new Log('error.log');
-        $log->write($sql);
         
         return $query->rows;
     }
