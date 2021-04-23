@@ -18,6 +18,7 @@ $_['text_farmer_register'] = '<a href="farmer_id=%d">%s</a> registered as farmer
 $_['text_return_account'] = '<a href="customer_id=%d">%s</a> submitted a product return.';
 $_['text_return_guest'] = '%s submitted a product return.';
 $_['text_order_account'] = '<a href="customer_id=%d">%s</a> created a <a href="order_id=%d">new order</a>.';
+$_['text_farmer_transaction'] = '<a href="farmer_id=%d">%s</a> created a <a href="farmer_transaction_id=%d">new transaction</a>.';
 $_['text_order_guest'] = '%s created a <a href="order_id=%d">new order</a>.';
 $_['text_sms notifiction Disabled'] = '<a href="customer_id=%d">%s</a> Customer Sms Notification Disabled.';
 $_['text_sms notifiction Enabled'] = '<a href="customer_id=%d">%s</a> Customer Sms Notification Enabled.';

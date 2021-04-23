@@ -47,7 +47,7 @@ class ControllerSaleFarmerTransactions extends Controller {
 
             // Add to activity log
             $log = new Log('error.log');
-            $this->load->model('user/user_activity');
+            $this->load->model('user/farmer_activity');
 
             $activity_data = [
                 'farmer_id' => $this->user->getFarmerId(),
@@ -57,7 +57,7 @@ class ControllerSaleFarmerTransactions extends Controller {
             ];
             $log->write('farmer transaction add');
 
-            $this->model_user_user_activity->addActivity('farmer_transaction', $activity_data);
+            $this->model_user_farmer_activity->addActivity('farmer_transaction', $activity_data);
 
             $log->write('farmer transaction add');
 
