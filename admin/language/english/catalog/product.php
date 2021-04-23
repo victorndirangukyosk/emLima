@@ -19,7 +19,16 @@ $_['text_select_store'] = 'Select Store';
 
 // Column
 $_['column_name'] = 'Product Name';
-$_['column_store_name'] = 'Store Name';
+$_['column_product_id'] = 'Product Id';
+$_['column_product_store_id'] = 'Product Store Id';
+$_['column_procured_qty'] = 'Procured Quantity';
+$_['column_rejected_qty'] = 'Rejected Quantity';
+$_['column_prev_quantity'] = 'Previous Quantity';
+$_['column_updated_quantity'] = 'Updated Quanity';
+$_['column_updation_date'] = 'Updated Date';
+$_['column_updated_by'] = 'Updated By';
+$_['column_added_user_role'] = 'User Role';
+$_['column_date_added'] = 'Date Added';
 
 $_['column_unit'] = 'Unit Size';
 
