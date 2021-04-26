@@ -276,6 +276,48 @@ class ModelDashboardCharts extends Model {
 
         return $query->row;
     }
+    public function getTotalVendorCancelledOrders($date_start, $date_end, $user_id = NULL) {
+        // $complete_status_ids = '(' . implode(',', $this->config->get('config_complete_status')) . ')';
+        $complete_status_ids = '(' . implode(',', $this->config->get('config_refund_status')) . ')';
+
+        if (isset($this->request->get['vendor_id'])) {
+            $vendor_id = $this->request->get['vendor_id'];
+        } else {
+            $vendor_id = $this->user->getId();
+        }
+
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . "order.store_id) WHERE vendor_id='" . $vendor_id . "' AND order_status_id IN " . $complete_status_ids . ' AND DATE(' . DB_PREFIX . "order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'");
+
+        return $query->row;
+    }
+
+    public function getTotalVendorBookedSales($date_start, $date_end, $user_id = NULL) {
+        $complete_status_ids = '(' . implode(',', $this->config->get('config_complete_status')) . ')';
+
+        if (isset($this->request->get['vendor_id'])) {
+            $vendor_id = $this->request->get['vendor_id'];
+        } else {
+            $vendor_id = $this->user->getId();
+        }
+
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . "order.store_id) WHERE vendor_id='" . $vendor_id . "' AND order_status_id IN " . $complete_status_ids . ' AND DATE(' . DB_PREFIX . "order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'");
+
+        return $query->row;
+    }
+
+    public function getTotalVendorCreatedOrders($date_start, $date_end, $user_id = NULL) {
+        $complete_status_ids = '';
+       
+        if (isset($this->request->get['vendor_id'])) {
+            $vendor_id = $this->request->get['vendor_id'];
+        } else {
+            $vendor_id = $this->user->getId();
+        }
+
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . "order.store_id) WHERE vendor_id='" . $vendor_id . "' AND order_status_id  >0 " . $complete_status_ids . ' AND DATE(' . DB_PREFIX . "order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "'");
+
+        return $query->row;
+    }
 
     public function getTotalAccountManagerOrders($date_start, $date_end, $user_id = NULL) {
         $complete_status_ids = '(' . implode(',', $this->config->get('config_complete_status')) . ')';
