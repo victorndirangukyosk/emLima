@@ -133,6 +133,12 @@
             if (filter_name) {
                 url += '&filter_name=' + encodeURIComponent(filter_name);
             }
+            
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+            
+            if (filter_date_added) {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
 
             location = url;
         });
