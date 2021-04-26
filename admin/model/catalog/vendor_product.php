@@ -743,6 +743,10 @@ class ModelCatalogVendorProduct extends Model {
         if (!empty($data['filter_product_store_id'])) {
             $implode[] = "product_store_id = '" . $this->db->escape($data['filter_product_store_id']) . "'";
         }
+        
+        if (!empty($data['filter_name'])) {
+            $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
+        }
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
@@ -762,6 +766,10 @@ class ModelCatalogVendorProduct extends Model {
 
         if (!empty($data['filter_product_store_id'])) {
             $implode[] = "product_store_id = '" . $this->db->escape($data['filter_product_store_id']) . "'";
+        }
+        
+        if (!empty($data['filter_name'])) {
+            $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
         }
 
         if ($implode) {
