@@ -2391,7 +2391,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $data['entry_name'] = $this->language->get('entry_product_name');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
-
+        $data['entry_store_name'] = $this->language->get('entry_store_name');
 
         $data['button_filter'] = $this->language->get('button_filter');
         $data['button_show_filter'] = $this->language->get('button_show_filter');
