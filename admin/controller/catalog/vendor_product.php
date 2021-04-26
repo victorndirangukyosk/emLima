@@ -2239,7 +2239,7 @@ class ControllerCatalogVendorProduct extends Controller {
     public function InventoryHistory() {
         $this->load->language('catalog/product');
 
-        $this->document->setTitle($this->language->get('heading_title'));
+        $this->document->setTitle($this->language->get('heading_page_title'));
 
         $this->load->model('catalog/vendor_product');
 
@@ -2366,9 +2366,9 @@ class ControllerCatalogVendorProduct extends Controller {
             ];
         }
 
-        $data['heading_title'] = $this->language->get('heading_title');
+        $data['heading_title'] = $this->language->get('heading_page_title');
 
-        $data['text_list'] = $this->language->get('text_list');
+        $data['text_list'] = $this->language->get('text_page_list');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_yes'] = $this->language->get('text_yes');
