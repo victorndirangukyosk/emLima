@@ -576,6 +576,14 @@ class ControllerCommonHome extends Controller {
         if ($this->customer->isLogged()) {
             $data['customer_id'] = $this->session->data['customer_id'];
         }
+
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] = 'assets/img/logo.svg';
+        }
+
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/terms-and-conditions.tpl', $data));
     }
 
@@ -583,6 +591,12 @@ class ControllerCommonHome extends Controller {
         $data['customer_id'] = NULL;
         if ($this->customer->isLogged()) {
             $data['customer_id'] = $this->session->data['customer_id'];
+        }
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['logo'] = 'assets/img/logo.svg';
         }
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/privacy-policy.tpl', $data));
     }
