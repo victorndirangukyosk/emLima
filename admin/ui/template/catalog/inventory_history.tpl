@@ -55,6 +55,14 @@
                         
                         <div class="col-sm-3">
                             <div class="form-group">
+                                <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
+                                <input type="text" name="filter_store_id" value="<?php echo $filter_store_id; ?>" placeholder="Store Name" id="input-store-name" class="form-control" />
+                            </div>
+
+                        </div>
+                        
+                        <div class="col-sm-3">
+                            <div class="form-group">
                                 <label class="control-label"></label>
                                 <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
                             </div>
@@ -139,6 +147,12 @@
             if (filter_date_added) {
                 url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
             }
+            
+            var filter_store_id = $('input[name=\'filter_store_id\']').val();
+
+            if (filter_store_id) {
+                url += '&filter_store_id=' + encodeURIComponent(filter_store_id);
+            }
 
             location = url;
         });
@@ -164,6 +178,28 @@
                 $('input[name=\'filter_name\']').val(item['label']);
             }
         });
+        
+        $('input[name=\'filter_store_id\']').autocomplete({
+    'source': function(request, response) {
+        $.ajax({
+            url: 'index.php?path=setting/store/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+            dataType: 'json',
+            success: function(json) {
+                response($.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['store_id']
+                    }
+                }));
+            }
+        });
+    },
+    'select': function(item) {
+
+        
+        $('input[name=\'filter_store_id\']').val(item['label']);
+    }
+});
         //--></script> 
     <script type="text/javascript"><!--
   $('.date').datetimepicker({

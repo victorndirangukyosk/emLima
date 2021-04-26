@@ -2434,6 +2434,10 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
+        
+        if (isset($this->request->get['filter_store_id'])) {
+            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
+        }
 
         if ('ASC' == $order) {
             $url .= '&order=DESC';
@@ -2457,6 +2461,10 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
+        
+        if (isset($this->request->get['filter_store_id'])) {
+            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
+        }
 
         if (isset($this->request->get['sort'])) {
             $url .= '&sort=' . $this->request->get['sort'];
@@ -2478,7 +2486,8 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $data['filter_name'] = $filter_name;
         $data['filter_date_added'] = $filter_date_added;
-
+        $data['filter_store_id'] = $filter_store_id;
+        
         $data['sort'] = $sort;
         $data['order'] = $order;
 

@@ -740,14 +740,13 @@ class ModelCatalogVendorProduct extends Model {
 
         $implode = [];
 
-        if (!empty($data['filter_product_store_id'])) {
-            $implode[] = "product_store_id = '" . $this->db->escape($data['filter_product_store_id']) . "'";
+        if (!empty($data['filter_store_id'])) {
+            $implode[] = "product_store_id = '" . $this->db->escape($data['filter_store_id']) . "'";
         }
         
         if (!empty($data['filter_date_added'])) {
             $implode[] = "date_added = '" . $this->db->escape($data['filter_date_added']) . "'";
         }
-        
         
         if (!empty($data['filter_name'])) {
             $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
@@ -769,8 +768,8 @@ class ModelCatalogVendorProduct extends Model {
 
         $implode = [];
 
-        if (!empty($data['filter_product_store_id'])) {
-            $implode[] = "product_store_id = '" . $this->db->escape($data['filter_product_store_id']) . "'";
+        if (!empty($data['filter_store_id'])) {
+            $implode[] = "product_store_id = '" . $this->db->escape($data['filter_store_id']) . "'";
         }
         
         if (!empty($data['filter_date_added'])) {
