@@ -337,7 +337,7 @@ class ModelUserFarmer extends Model {
     }
 
     public function getFarmerActivities($data = []) {
-        $sql = 'SELECT c.organization ,c.email, ca.activity_id, ca.farmer_id, ca.key, ca.data, ca.ip, ca.date_added FROM ' . DB_PREFIX . 'farmer_activity ca LEFT JOIN ' . DB_PREFIX . 'farmer c ON (ca.farmer_id = c.farmer_id)';
+        $sql = 'SELECT c.organization, c.first_name, c.last_name, c.email, ca.activity_id, ca.farmer_id, ca.key, ca.data, ca.ip, ca.date_added FROM ' . DB_PREFIX . 'farmer_activity ca LEFT JOIN ' . DB_PREFIX . 'farmer c ON (ca.farmer_id = c.farmer_id)';
 
         $implode = [];
 
@@ -431,6 +431,41 @@ class ModelUserFarmer extends Model {
     public function getActivityKeys() {
 
         $sql = 'SELECT distinct ca.key  FROM ' . DB_PREFIX . "farmer_activity ca";
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function getFarmerOrganizations($data = []) {
+        $sql = 'SELECT distinct organization AS name FROM ' . DB_PREFIX . 'farmer WHERE status = 1';
+
+        $implode = [];
+        if (!empty($data['filter_name'])) {
+            $implode[] = " organization LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+        if ($implode) {
+            $sql .= ' AND ' . implode(' AND ', $implode);
+        }
+        $sql .= ' ORDER BY organization';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
 
         $query = $this->db->query($sql);
 

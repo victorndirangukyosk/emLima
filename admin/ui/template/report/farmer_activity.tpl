@@ -89,8 +89,8 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <td class="text-left">Company Name</td>
-                <td class="text-left">Customer Email</td>
+                <td class="text-left">Organization</td>
+                <td class="text-left">Farmer Email</td>
                 <td class="text-left"><?php echo $column_comment; ?></td>
                 <td class="text-left"><?php echo $column_ip; ?></td>
                 <td class="text-left"><?php echo $column_date_added; ?></td>
@@ -100,7 +100,7 @@
               <?php if ($activities) { ?>
               <?php foreach ($activities as $activity) { ?>
               <tr>
-                <td class="text-left"><?php echo $activity['company_name']; ?></td>
+                <td class="text-left"><?php echo $activity['organization']; ?></td>
                 <td class="text-left"><?php echo $activity['email']; ?></td>
                 <td class="text-left"><?php echo $activity['comment']; ?></td>
                 <td class="text-left"><?php echo $activity['ip']; ?></td>
@@ -188,7 +188,7 @@ $('input[name=\'filter_farmer\']').autocomplete({
          $('input[name=\'filter_organization\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/farmer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/farmer/autocompleteorganization&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -216,8 +216,8 @@ function excel() {
        url = 'index.php?path=report/farmer_activity/farmeractivityexcel&token=<?php echo $token; ?>';
       
         
-       var filter_customer = $('input[name=\'filter_farmer\']').val();	
-	if (filter_customer) {
+       var filter_farmer = $('input[name=\'filter_farmer\']').val();	
+	if (filter_farmer) {
 		url += '&filter_farmer=' + encodeURIComponent(filter_farmer);
 	}
 	var filter_ip = $('input[name=\'filter_ip\']').val();

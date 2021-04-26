@@ -230,6 +230,8 @@ class ControllerCommonMenu extends Controller
 
         $data['inventory_management'] = $this->url->link('catalog/vendor_product/inventory', 'token='.$this->session->data['token'], 'SSL');
         $data['inventory_management_update'] = $this->url->link('catalog/vendor_product/Manageinventory', 'token='.$this->session->data['token'], 'SSL');
+        $data['inventory_management_update_history'] = $this->url->link('catalog/vendor_product/InventoryHistory', 'token='.$this->session->data['token'], 'SSL');
+
         $data['category_prices'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token='.$this->session->data['token'], 'SSL');
 
         $data['transaction'] = $this->url->link('sale/transactions', 'token='.$this->session->data['token'], 'SSL');

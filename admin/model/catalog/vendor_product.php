@@ -694,7 +694,7 @@ class ModelCatalogVendorProduct extends Model {
             $data['rejected_qty'] = 0;
         }
         $qty = $data['current_qty'] + ($data['procured_qty'] - $data['rejected_qty']);
-        
+
         $sel_query = 'SELECT * FROM ' . DB_PREFIX . "product_to_store WHERE product_store_id ='" . (int) $store_product_id . "'";
         $sel_query = $this->db->query($sel_query);
         $sel = $sel_query->row;
@@ -732,6 +732,89 @@ class ModelCatalogVendorProduct extends Model {
         $query = 'SELECT * FROM ' . DB_PREFIX . "product_inventory_history WHERE product_store_id ='" . (int) $store_product_id . "' order by date_added desc LIMIT 6";
         $query = $this->db->query($query);
 
+        return $query->rows;
+    }
+
+    public function getTotalProductInventoryHistory($data = []) {
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'product_inventory_history';
+
+        $implode = [];
+
+        if (!empty($data['filter_store_id'])) {
+            $implode[] = "product_store_id = '" . $this->db->escape($data['filter_store_id']) . "'";
+        }
+        
+        if (!empty($data['filter_date_added'])) {
+            $implode[] = "date_added = '" . $this->db->escape($data['filter_date_added']) . "'";
+        }
+        
+        if (!empty($data['filter_name'])) {
+            $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $query = $this->db->query($sql);
+
+        //echo "<pre>";print_r($sql);die;
+
+        return $query->row['total'];
+    }
+
+    public function getProductInventoryHistory($data = []) {
+        $sql = "SELECT * FROM " . DB_PREFIX . 'product_inventory_history';
+
+        $implode = [];
+
+        if (!empty($data['filter_store_id'])) {
+            $implode[] = "product_store_id = '" . $this->db->escape($data['filter_store_id']) . "'";
+        }
+        
+        if (!empty($data['filter_date_added'])) {
+            $implode[] = "date_added = '" . $this->db->escape($data['filter_date_added']) . "'";
+        }
+        
+        if (!empty($data['filter_name'])) {
+            $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $sort_data = [
+            'product_store_id',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY date_added';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+        //echo "<pre>";print_r($sql);die;
+        
         return $query->rows;
     }
 

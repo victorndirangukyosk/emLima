@@ -60,7 +60,7 @@ class ControllerAccountFarmerRegister extends Controller {
             $farmer_id = $this->model_account_farmer->addNewFarmer($this->request->post);
 
             // Add to activity log
-            $this->load->model('account/farmeractivity');
+            $this->load->model('account/activity');
 
             $activity_data = [
                 'farmer_id' => $farmer_id,
@@ -68,7 +68,7 @@ class ControllerAccountFarmerRegister extends Controller {
             ];
 
             $log->write('farmer registration');
-            $this->model_account_farmeractivity->addActivity('farmer_register', $activity_data);
+            $this->model_account_activity->addFarmerActivity('farmer_register', $activity_data);
 
             $data['status'] = true;
 
