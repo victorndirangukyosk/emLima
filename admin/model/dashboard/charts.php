@@ -214,7 +214,7 @@ class ModelDashboardCharts extends Model {
             $vendor_id = $this->user->getId();
         }
 
-        $query = $this->db->query('SELECT COUNT(*) AS total, HOUR(' . DB_PREFIX . 'order.date_added) AS hour, CONCAT(MONTHNAME(' . DB_PREFIX . "order.date_added), ' ', YEAR(" . DB_PREFIX . 'order.date_added)) AS month, YEAR(' . DB_PREFIX . 'order.date_added) AS year, DATE(' . DB_PREFIX . 'order.date_added) AS date  FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . 'order.store_id) WHERE   DATE(' . DB_PREFIX . "order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "' AND vendor_id='" . $vendor_id . "' GROUP BY " . $group . '(' . DB_PREFIX . 'order.date_added) ORDER BY ' . DB_PREFIX . 'order.date_added ASC');
+        $query = $this->db->query('SELECT COUNT(*) AS total, HOUR(' . DB_PREFIX . 'order.date_added) AS hour, CONCAT(MONTHNAME(' . DB_PREFIX . "order.date_added), ' ', YEAR(" . DB_PREFIX . 'order.date_added)) AS month, YEAR(' . DB_PREFIX . 'order.date_added) AS year, DATE(' . DB_PREFIX . 'order.date_added) AS date  FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . 'order.store_id) WHERE   DATE(' . DB_PREFIX . "order.date_added) BETWEEN '" . $this->db->escape($date_start) . "' AND '" . $this->db->escape($date_end) . "' AND vendor_id='" . $vendor_id ."' AND  order_status_id  >0 GROUP BY " . $group . '(' . DB_PREFIX . 'order.date_added) ORDER BY ' . DB_PREFIX . 'order.date_added ASC');
 
         return $query;
     }
