@@ -2,7 +2,7 @@
 
 // Heading
 $_['heading_title'] = 'Vendor Products';
-$_['heading_page_title'] = 'Inventory Management History';
+$_['heading_page_title'] = 'Inventory History';
 
 // Text
 $_['text_success'] = 'Success: You have modified products!';

@@ -289,15 +289,16 @@
 										<!-- Modal content-->
 										<div class="modal-content">
 										  <div style="color: white;background-color: #008db9;" class="modal-header">
-											<button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                                      	<button type="button" class="close" data-dismiss="modal">&times;</button>
 											<h4 class="modal-title"><strong>Inventory History : <?php echo $product['name']; ?></strong></h4>
 										  </div>
 										  <div class="modal-body">
 											
 										  </div>
-										  <!--<div class="modal-footer">
-											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-										  </div>-->
+										  <div class="modal-footer">
+                                                                                        <a class="btn btn-primary" href="<?php echo $inventory_history; ?>" role="button">VIEW ALL</a>
+											<!--<button type="button" class="btn btn-primary" data-dismiss="modal">VIEW ALL</button>-->
+										  </div>
 										</div>
 
 									  </div>
