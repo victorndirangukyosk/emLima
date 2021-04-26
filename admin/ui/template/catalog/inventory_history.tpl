@@ -126,7 +126,7 @@
     </div>
     <script type="text/javascript"><!--
   $('#button-filter').on('click', function () {
-            url = 'index.php?path=sale/farmer&token=<?php echo $token; ?>';
+            url = 'index.php?path=catalog/vendor_product/InventoryHistory&token=<?php echo $token; ?>';
 
             var filter_name = $('input[name=\'filter_name\']').val();
 
@@ -134,52 +134,21 @@
                 url += '&filter_name=' + encodeURIComponent(filter_name);
             }
 
-            var filter_email = $('input[name=\'filter_email\']').val();
-
-            if (filter_email) {
-                url += '&filter_email=' + encodeURIComponent(filter_email);
-            }
-
-            var filter_status = $('select[name=\'filter_status\']').val();
-
-            if (filter_status != '*') {
-                url += '&filter_status=' + encodeURIComponent(filter_status);
-            }
-
-            var filter_mobile = $('input[name=\'filter_mobile\']').val();
-
-            if (filter_mobile != '*') {
-                url += '&filter_mobile=' + encodeURIComponent(filter_mobile);
-            }
-
-            var filter_ip = $('input[name=\'filter_ip\']').val();
-
-            if (filter_ip) {
-                url += '&filter_ip=' + encodeURIComponent(filter_ip);
-            }
-
-            var filter_date_added = $('input[name=\'filter_date_added\']').val();
-
-            if (filter_date_added) {
-                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
-            }
-
             location = url;
         });
         //--></script> 
     <script type="text/javascript"><!--
-
         $companyName = "";
         $('input[name=\'filter_name\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/farmer/autocompletefarmer&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
                             return {
                                 label: item['name'],
-                                value: item['farmer_id']
+				value: item['product_id']
                             }
                         }));
                     }
@@ -187,72 +156,6 @@
             },
             'select': function (item) {
                 $('input[name=\'filter_name\']').val(item['label']);
-            }
-        });
-
-        $('input[name=\'filter_company\']').autocomplete({
-            'source': function (request, response) {
-                $.ajax({
-                    url: 'index.php?path=sale/farmer/autocompletefarmer&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
-                    dataType: 'json',
-                    success: function (json) {
-                        response($.map(json, function (item) {
-                            return {
-                                label: item['name'],
-                                value: item['name']
-                            }
-                        }));
-
-
-                    }
-                });
-                $companyName = "";
-            },
-            'select': function (item) {
-                $('input[name=\'filter_company\']').val(item['label']);
-                $('input[name=\'filter_customer\']').val('');
-                $companyName = item['label'];
-            }
-        });
-
-
-        $('input[name=\'filter_mobile\']').autocomplete({
-            'source': function (request, response) {
-                $.ajax({
-                    url: 'index.php?path=sale/farmer/autocompletefarmer&token=<?php echo $token; ?>&filter_mobile=' + encodeURIComponent(request),
-                    dataType: 'json',
-                    success: function (json) {
-                        response($.map(json, function (item) {
-                            return {
-                                label: item['mobile'],
-                                value: item['farmer_id']
-                            }
-                        }));
-                    }
-                });
-            },
-            'select': function (item) {
-                $('input[name=\'filter_mobile\']').val(item['label']);
-            }
-        });
-        
-                $('input[name=\'filter_email\']').autocomplete({
-            'source': function (request, response) {
-                $.ajax({
-                    url: 'index.php?path=sale/farmer/autocompletefarmer&token=<?php echo $token; ?>&filter_email=' + encodeURIComponent(request),
-                    dataType: 'json',
-                    success: function (json) {
-                        response($.map(json, function (item) {
-                            return {
-                                label: item['email'],
-                                value: item['farmer_id']
-                            }
-                        }));
-                    }
-                });
-            },
-            'select': function (item) {
-                $('input[name=\'filter_email\']').val(item['label']);
             }
         });
         //--></script> 
