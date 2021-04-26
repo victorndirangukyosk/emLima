@@ -189,13 +189,16 @@ class ControllerCommonHome extends Controller {
 
         if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
-            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+            $data[0]['logo'] = $server . 'image/' . $this->config->get('config_logo');
         } else {
-            $data['logo'] = 'assets/img/logo.svg';
+            $data[0]['logo'] = 'assets/img/logo.svg';
         }
 
         $data['base'] = '';
-        $data['store_name'] = $this->config->get('config_name');
+        // $data[0]['base'] = '';
+        $data[0]['store_name'] = $this->config->get('config_name');
+
+        //  echo "<pre>";print_r($data);die;
 
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/faq.tpl', $data));
     }
