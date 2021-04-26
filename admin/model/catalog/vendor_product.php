@@ -748,6 +748,7 @@ class ModelCatalogVendorProduct extends Model {
             $implode[] = "date_added = '" . $this->db->escape($data['filter_date_added']) . "'";
         }
         
+        
         if (!empty($data['filter_name'])) {
             $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
         }
