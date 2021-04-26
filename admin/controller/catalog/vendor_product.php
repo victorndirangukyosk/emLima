@@ -2435,7 +2435,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_store_id'])) {
             $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
         }
@@ -2462,7 +2462,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_store_id'])) {
             $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
         }
@@ -2488,7 +2488,7 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['filter_name'] = $filter_name;
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_store_id'] = $filter_store_id;
-        
+
         $data['sort'] = $sort;
         $data['order'] = $order;
 
@@ -2497,6 +2497,32 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
 
         $this->response->setOutput($this->load->view('catalog/inventory_history.tpl', $data));
+    }
+
+    public function InventoryHistoryexcel() {
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
+
+        if (isset($this->request->get['filter_store_id'])) {
+            $filter_store_id = $this->request->get['filter_store_id'];
+        } else {
+            $filter_store_id = null;
+        }
+
+        $filter_data = [
+            'filter_name' => $filter_name,
+            'filter_store_id' => $filter_store_id,
+        ];
+
+        // echo "<pre>";print_r($filter_data);die;
+
+        $data = [];
+        $this->load->model('report/excel');
+
+        $this->model_report_excel->download_inventoryhistoryexcel($data, $filter_data);
     }
 
 }
