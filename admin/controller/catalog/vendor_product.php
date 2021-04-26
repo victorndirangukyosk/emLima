@@ -791,7 +791,6 @@ class ControllerCatalogVendorProduct extends Controller {
             $data['inventory_history'] = $this->url->link('catalog/vendor_product/InventoryHistory', 'token=' . $this->session->data['token'], 'SSL');
             $this->response->setOutput($this->load->view('catalog/vendor_product_inventory_lists.tpl', $data));
         } elseif (true == $prices) {
-            $data['inventory_price_history'] = $this->url->link('catalog/vendor_product/InventoryPriceHistory', 'token=' . $this->session->data['token'], 'SSL');
             $this->response->setOutput($this->load->view('catalog/vendor_product_category_priceslist.tpl', $data));
         }
     }
@@ -1343,6 +1342,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (false == $inventory && false == $prices) {
             $this->response->setOutput($this->load->view('catalog/vendor_product_lists.tpl', $data));
         } elseif (true == $inventory) {
+            $data['inventory_price_history'] = $this->url->link('catalog/vendor_product/InventoryPriceHistory', 'token=' . $this->session->data['token'], 'SSL');
             $this->response->setOutput($this->load->view('catalog/vendor_manage_product_inventory_lists.tpl', $data));
         } elseif (true == $prices) {
             $this->response->setOutput($this->load->view('catalog/vendor_product_category_priceslist.tpl', $data));

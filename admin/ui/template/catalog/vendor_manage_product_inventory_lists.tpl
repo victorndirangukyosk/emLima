@@ -295,6 +295,10 @@
 										  <div class="modal-body">
 											
 										  </div>
+                                                                                  <div class="modal-footer">
+                                                                                        <a class="btn btn-primary" href="<?php echo $inventory_price_history; ?>" role="button">VIEW ALL</a>
+											<!--<button type="button" class="btn btn-primary" data-dismiss="modal">VIEW ALL</button>-->
+										  </div>
 										  <!--<div class="modal-footer">
 											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 										  </div>-->
