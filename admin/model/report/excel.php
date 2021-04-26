@@ -4817,6 +4817,134 @@ class ModelReportExcel extends Model {
             return;
         }
     }
+    
+    public function download_inventorypricehistoryexcel($data, $filter_data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        $this->load->language('report/income');
+        $this->load->model('catalog/vendor_product');
+
+        $rows = $this->model_catalog_vendor_product->getProductInventoryPriceHistory($filter_data);
+
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Inventory Price History')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:J2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Inventory Price History ');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:J2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            $objPHPExcel->getActiveSheet()->getStyle('A4:J4')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:J3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            /* $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(30);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(30);
+
+
+             */
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+            
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'General Product ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Product Store ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Buying Price');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Previous Buying Price');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Source');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Previous Source');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Updated By');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'User Role');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 4, 'Date Added');
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(9, 4)->applyFromArray($title);
+
+            // Fetching the table data
+            $row = 5;
+            foreach ($rows as $result) {
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['product_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['product_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['product_store_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['buying_price']);
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['prev_buying_price']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['source']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['prev_source']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['added_user']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['added_user_role']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['date_added']);
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+            /* $objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+              // Sending headers to force the user to download the file
+              header('Content-Type: application/vnd.ms-excel'); */
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+            header('Content-Disposition: attachment;filename="inventory_price_history.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
 
     public function download_vendorproduct_category_prices($data) {
         $this->load->library('excel');

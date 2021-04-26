@@ -3,6 +3,8 @@
 // Heading
 $_['heading_title'] = 'Vendor Products';
 $_['heading_page_title'] = 'Inventory History';
+$_['heading_price_title'] = 'Inventory Price History';
+
 
 // Text
 $_['text_success'] = 'Success: You have modified products!';
@@ -24,9 +26,10 @@ $_['column_name'] = 'Product Name';
 $_['column_product_id'] = 'Product Id';
 $_['column_product_store_id'] = 'Product Store Id';
 $_['column_procured_qty'] = 'Procured Quantity';
-$_['column_rejected_qty'] = 'Rejected Quantity';
-$_['column_prev_quantity'] = 'Previous Quantity';
-$_['column_updated_quantity'] = 'Updated Quanity';
+$_['column_buying_price'] = 'Buying Price';
+$_['column_prev_buying_price'] = 'Previous Buying Price';
+$_['column_source'] = 'Source';
+$_['column_prev_source'] = 'Previous Source';
 $_['column_updation_date'] = 'Updated Date';
 $_['column_updated_by'] = 'Updated By';
 $_['column_added_user_role'] = 'User Role';
