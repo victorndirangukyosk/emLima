@@ -819,7 +819,7 @@ class ModelCatalogVendorProduct extends Model {
     }
 
     public function productInventoryPriceHistory($store_product_id) {
-        $query = 'SELECT * FROM ' . DB_PREFIX . "product_inventory_price_history WHERE product_store_id ='" . (int) $store_product_id . "'";
+        $query = 'SELECT * FROM ' . DB_PREFIX . "product_inventory_price_history WHERE product_store_id ='" . (int) $store_product_id . "'  order by date_added desc LIMIT 6";
         $query = $this->db->query($query);
 
         return $query->rows;
