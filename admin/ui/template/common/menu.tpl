@@ -72,9 +72,10 @@
             </ul>
           <?php } ?>
           <?php if($preturn_vendor_product != false){ ?>
-          <li><a class="parent">Inventory Management</a>
+          <li><a class="parent">Inven. Management</a>
             <ul>
-            <li><a href="<?php echo $inventory_management_update; ?>">Inventory Management</a></li>
+            <li><a href="<?php echo $inventory_management_update; ?>">Inven. Management</a></li>
+            <li><a href="<?php echo $inventory_management_price; ?>">History</a></li>
             </ul>
           <?php } ?>
         </ul>
