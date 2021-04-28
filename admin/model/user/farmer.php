@@ -21,7 +21,11 @@ class ModelUserFarmer extends Model {
     }
 
     public function editCode($email, $code) {
-        $this->db->query('UPDATE `' . DB_PREFIX . "user` SET code = '" . $this->db->escape($code) . "' WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+        $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET code = '" . $this->db->escape($code) . "' WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+    }
+
+    public function editCodeMobile($mobile, $code) {
+        $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET code = '" . $this->db->escape($code) . "' WHERE mobile = '" . $this->db->escape($mobile) . "'");
     }
 
     public function deleteUser($user_id) {

@@ -200,6 +200,7 @@ class ControllerCommonLogin extends Controller {
 
         $ignore = [
             'common/farmer',
+            'common/farmerforgotten',
             'common/login',
             'common/forgotten',
             'common/reset',
@@ -214,6 +215,7 @@ class ControllerCommonLogin extends Controller {
         if (isset($this->request->get['path'])) {
             $ignore = [
                 'common/farmer',
+                'common/farmerforgotten',
                 'common/login',
                 'common/logout',
                 'common/forgotten',

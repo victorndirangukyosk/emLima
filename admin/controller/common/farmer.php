@@ -137,7 +137,7 @@ class ControllerCommonFarmer extends Controller {
         }
 
         if ($this->config->get('config_password')) {
-            $data['forgotten'] = $this->url->link('common/forgotten', '', 'SSL');
+            $data['forgotten'] = $this->url->link('common/farmerforgotten', '', 'SSL');
         } else {
             $data['forgotten'] = '';
         }
@@ -199,6 +199,7 @@ class ControllerCommonFarmer extends Controller {
 
         $ignore = [
             'common/farmer',
+            'common/farmerforgotten',
             'common/login',
             'common/forgotten',
             'common/reset',
@@ -213,6 +214,7 @@ class ControllerCommonFarmer extends Controller {
         if (isset($this->request->get['path'])) {
             $ignore = [
                 'common/farmer',
+                'common/farmerforgotten',
                 'common/login',
                 'common/logout',
                 'common/forgotten',
