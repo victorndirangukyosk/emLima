@@ -482,7 +482,7 @@ class ControllerSystemEmailtemplate extends Controller
 
     protected function _getEmailTypes()
     {
-        $result = ['Order Status', 'Customer', 'Affiliate', 'Contact', 'Reviews', 'Cron', 'Mail'];
+        $result = ['Order Status', 'Customer', 'Affiliate', 'Contact', 'Reviews', 'Cron', 'Mail', 'Farmer'];
 
         for ($i = 0; $i <= 6; ++$i) {
             $types[] = [
