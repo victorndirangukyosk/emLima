@@ -200,6 +200,7 @@ class ControllerCommonFarmer extends Controller {
         $ignore = [
             'common/farmer',
             'common/farmerforgotten',
+            'common/farmerreset',
             'common/login',
             'common/forgotten',
             'common/reset',
@@ -215,6 +216,7 @@ class ControllerCommonFarmer extends Controller {
             $ignore = [
                 'common/farmer',
                 'common/farmerforgotten',
+                'common/farmerreset',
                 'common/login',
                 'common/logout',
                 'common/forgotten',

@@ -58,6 +58,7 @@ class ControllerErrorPermission extends Controller
             $ignore = [
                 'common/farmer',
                 'common/farmerforgotten',
+                'common/farmerreset',
                 'common/dashboard',
                 'common/login',
                 'common/logout',
