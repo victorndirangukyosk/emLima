@@ -75,6 +75,23 @@ class ControllerAccountFarmerRegister extends Controller {
                 $ret = $this->emailtemplate->sendmessage($this->request->post['telephone'], $sms_message);
             }
 
+            try {
+                if ($this->emailtemplate->getEmailEnabled('Customer', 'customer_9')) {
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_9', $farmer_info);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_9', $farmer_info);
+
+                    $mail = new mail($this->config->get('config_mail'));
+                    $mail->setTo($this->request->post['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSubject($subject);
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setHtml($message);
+                    $mail->send();
+                }
+            } catch (Exception $e) {
+                
+            }
+
             // Add to activity log
             $this->load->model('account/activity');
 
