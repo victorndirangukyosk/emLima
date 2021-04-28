@@ -28,18 +28,18 @@ class ControllerCommonFarmerForgotten extends Controller {
             if (isset($get_farmer_phone) || isset($get_farmer_email)) {
                 $code = sha1(uniqid(mt_rand(), true));
 
-                if (isset($get_farmer_email) && $get_farmer_email['email'] != NULL) {
+                if (isset($get_farmer_email) && sizeof($get_farmer_email) > 0 && $get_farmer_email['email'] != NULL) {
                     $this->model_user_farmer->editCode($this->request->post['email'], $code);
                 }
 
-                if (isset($get_farmer_phone) && $get_farmer_phone['mobile'] != NULL) {
+                if (isset($get_farmer_phone) && sizeof($get_farmer_phone) > 0 && $get_farmer_phone['mobile'] != NULL) {
                     $this->model_user_farmer->editCodeMobile($this->request->post['email'], $code);
                 }
 
-                if (isset($get_farmer_email) && $get_farmer_email['email'] != NULL) {
+                if (isset($get_farmer_email) && sizeof($get_farmer_email) > 0 && $get_farmer_email['email'] != NULL) {
 
-                    $farmer_info['firstname'] = $get_farmer_phone['first_name'];
-                    $farmer_info['lastname'] = $get_farmer_phone['last_name'];
+                    $farmer_info['firstname'] = $get_farmer_email['first_name'];
+                    $farmer_info['lastname'] = $get_farmer_email['last_name'];
                     $farmer_info['store_name'] = 'KwikBasket';
                     $farmer_info['order_link'] = $this->url->link('common/reset', 'code=' . $code, 'SSL');
                     $farmer_info['system_name'] = 'KwikBasket';
@@ -62,7 +62,7 @@ class ControllerCommonFarmerForgotten extends Controller {
                     }
                 }
 
-                if (isset($get_farmer_phone) && $get_farmer_phone['mobile'] != NULL) {
+                if (isset($get_farmer_phone) && sizeof($get_farmer_phone) > 0 && $get_farmer_phone['mobile'] != NULL) {
 
                     $farmer_info['firstname'] = $get_farmer_phone['first_name'];
                     $farmer_info['lastname'] = $get_farmer_phone['last_name'];
