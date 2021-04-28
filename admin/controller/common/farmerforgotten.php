@@ -41,7 +41,7 @@ class ControllerCommonFarmerForgotten extends Controller {
                     $farmer_info['firstname'] = $get_farmer_email['first_name'];
                     $farmer_info['lastname'] = $get_farmer_email['last_name'];
                     $farmer_info['store_name'] = 'KwikBasket';
-                    $farmer_info['order_link'] = $this->url->link('common/reset', 'code=' . $code, 'SSL');
+                    $farmer_info['order_link'] = $this->url->link('common/farmerreset', 'code=' . $code, 'SSL');
                     $farmer_info['system_name'] = 'KwikBasket';
 
                     try {
@@ -67,7 +67,7 @@ class ControllerCommonFarmerForgotten extends Controller {
                     $farmer_info['firstname'] = $get_farmer_phone['first_name'];
                     $farmer_info['lastname'] = $get_farmer_phone['last_name'];
                     $farmer_info['store_name'] = 'KwikBasket';
-                    $farmer_info['order_link'] = $this->url->link('common/reset', 'code=' . $code, 'SSL');
+                    $farmer_info['order_link'] = $this->url->link('common/farmerreset', 'code=' . $code, 'SSL');
                     $farmer_info['system_name'] = 'KwikBasket';
 
                     $log->write('SMS SENDING');
