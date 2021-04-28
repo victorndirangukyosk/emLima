@@ -61,8 +61,8 @@ class ModelUserFarmer extends Model {
         return $query->row;
     }
 
-    public function getUserByCode($code) {
-        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` WHERE code = '" . $this->db->escape($code) . "' AND code != ''");
+    public function getFarmerByCode($code) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "farmer` WHERE code = '" . $this->db->escape($code) . "' AND code != ''");
 
         return $query->row;
     }
