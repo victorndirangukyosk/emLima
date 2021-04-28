@@ -484,7 +484,7 @@ class ControllerSystemEmailtemplate extends Controller
     {
         $result = ['Order Status', 'Customer', 'Affiliate', 'Contact', 'Reviews', 'Cron', 'Mail', 'Farmer'];
 
-        for ($i = 0; $i <= 6; ++$i) {
+        for ($i = 0; $i <= 7; ++$i) {
             $types[] = [
                 'id' => $i + 1,
                 'value' => $result[$i],
