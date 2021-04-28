@@ -58,7 +58,10 @@ class ControllerAccountFarmerRegister extends Controller {
             $this->load->model('account/farmer');
 
             $farmer_id = $this->model_account_farmer->addNewFarmer($this->request->post);
-
+            $sms_message = 'Hello, '.$this->request->post['first_name'].' '.$this->request->post['last_name'].'\r\n Welcome and thank you for registering at KwikBasket. \r\n Your account is under review and it has been sent for approval. Soon We Will Send Username, Password For Login. \r\n Thank You, \r\n The KwikBasket Team';
+            $log = New Log('error.log');
+            $log->write($sms_message);
+            $ret = $this->emailtemplate->sendmessage($this->request->post['telephone'], $sms_message);
             // Add to activity log
             $this->load->model('account/activity');
 
