@@ -213,8 +213,21 @@ class ModelUserFarmer extends Model {
         return $query->row['total'];
     }
 
-    public function getTotalUsersByEmail($email) {
-        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "user` WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'";
+    public function getTotalFarmersByEmail($email) {
+        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "farmer` WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'";
+
+        //filter vendor groups
+        /* $sql .= ' AND user_group_id NOT IN (' . $this->db->escape($this->config->get('config_vendor_group_ids')) . ') ';
+          $sql .= ' AND user_group_id NOT IN (' . $this->db->escape($this->config->get('config_shopper_group_ids')) . ') '; */
+
+        $query = $this->db->query($sql);
+
+        //echo "<pre>";print_r($query);die;
+        return $query->row['total'];
+    }
+
+    public function getTotalFarmersByMobile($mobile) {
+        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "farmer` WHERE mobile = '" . $this->db->escape($mobile) . "'";
 
         //filter vendor groups
         /* $sql .= ' AND user_group_id NOT IN (' . $this->db->escape($this->config->get('config_vendor_group_ids')) . ') ';

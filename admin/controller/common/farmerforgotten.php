@@ -22,8 +22,8 @@ class ControllerCommonFarmerForgotten extends Controller {
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             $this->load->language('mail/forgotten');
 
-            $get_farmer_email = $this->model_user_farmer->getFarmerByEmail();
-            $get_farmer_phone = $this->model_user_farmer->getFarmerByPhone();
+            $get_farmer_email = $this->model_user_farmer->getFarmerByEmail($this->request->post['email']);
+            $get_farmer_phone = $this->model_user_farmer->getFarmerByPhone($this->request->post['email']);
             if (isset($get_farmer_phone) || isset($get_farmer_email)) {
                 $code = sha1(uniqid(mt_rand(), true));
 
@@ -35,20 +35,22 @@ class ControllerCommonFarmerForgotten extends Controller {
                     $this->model_user_farmer->editCodeMobile($this->request->post['email'], $code);
                 }
 
-                $subject = sprintf($this->language->get('text_subject'), $this->config->get('config_name'));
+                if (isset($get_farmer_email) && $get_farmer_email['email'] != NULL) {
+                    $subject = sprintf($this->language->get('text_subject'), $this->config->get('config_name'));
 
-                $message = sprintf($this->language->get('text_greeting'), $this->config->get('config_name')) . "\n\n";
-                $message .= $this->language->get('text_change') . "\n\n";
-                $message .= $this->url->link('common/reset', 'code=' . $code, 'SSL') . "\n\n";
-                $message .= sprintf($this->language->get('text_ip'), $this->request->server['REMOTE_ADDR']) . "\n\n";
+                    $message = sprintf($this->language->get('text_greeting'), $this->config->get('config_name')) . "\n\n";
+                    $message .= $this->language->get('text_change') . "\n\n";
+                    $message .= $this->url->link('common/reset', 'code=' . $code, 'SSL') . "\n\n";
+                    $message .= sprintf($this->language->get('text_ip'), $this->request->server['REMOTE_ADDR']) . "\n\n";
 
-                $mail = new mail($this->config->get('config_mail'));
-                $mail->setTo($this->request->post['email']);
-                $mail->setFrom($this->config->get('config_from_email'));
-                $mail->setSender($this->config->get('config_name'));
-                $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
-                $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8'));
-                $mail->send();
+                    $mail = new mail($this->config->get('config_mail'));
+                    $mail->setTo($this->request->post['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+                    $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8'));
+                    $mail->send();
+                }
 
                 $this->session->data['success'] = $this->language->get('text_success');
             }
@@ -116,7 +118,7 @@ class ControllerCommonFarmerForgotten extends Controller {
     protected function validate() {
         if (!isset($this->request->post['email'])) {
             $this->error['warning'] = $this->language->get('error_email');
-        } elseif (!$this->model_user_user->getTotalUsersByEmail($this->request->post['email'])) {
+        } elseif (!$this->model_user_farmer->getTotalFarmersByEmail($this->request->post['email']) && !$this->model_user_farmer->getTotalFarmersByMobile($this->request->post['email'])) {
             $this->error['warning'] = $this->language->get('error_email');
         }
 
