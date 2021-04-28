@@ -5,6 +5,7 @@ class ControllerCommonFarmerForgotten extends Controller {
     private $error = [];
 
     public function index() {
+        $log = new Log('error.log');
         if ($this->user->isFarmerLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
             $this->response->redirect($this->url->link('sale/farmer_transactions', '', 'SSL'));
         }
@@ -36,20 +37,47 @@ class ControllerCommonFarmerForgotten extends Controller {
                 }
 
                 if (isset($get_farmer_email) && $get_farmer_email['email'] != NULL) {
-                    $subject = sprintf($this->language->get('text_subject'), $this->config->get('config_name'));
 
-                    $message = sprintf($this->language->get('text_greeting'), $this->config->get('config_name')) . "\n\n";
-                    $message .= $this->language->get('text_change') . "\n\n";
-                    $message .= $this->url->link('common/reset', 'code=' . $code, 'SSL') . "\n\n";
-                    $message .= sprintf($this->language->get('text_ip'), $this->request->server['REMOTE_ADDR']) . "\n\n";
+                    $farmer_info['firstname'] = $get_farmer_phone['first_name'];
+                    $farmer_info['lastname'] = $get_farmer_phone['last_name'];
+                    $farmer_info['store_name'] = 'KwikBasket';
+                    $farmer_info['order_link'] = $this->url->link('common/reset', 'code=' . $code, 'SSL');
+                    $farmer_info['system_name'] = 'KwikBasket';
 
-                    $mail = new mail($this->config->get('config_mail'));
-                    $mail->setTo($this->request->post['email']);
-                    $mail->setFrom($this->config->get('config_from_email'));
-                    $mail->setSender($this->config->get('config_name'));
-                    $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
-                    $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8'));
-                    $mail->send();
+                    try {
+                        if ($this->emailtemplate->getEmailEnabled('Customer', 'customer_11')) {
+                            $subject = $this->emailtemplate->getSubject('Customer', 'customer_11', $farmer_info);
+                            $message = $this->emailtemplate->getMessage('Customer', 'customer_11', $farmer_info);
+
+                            $mail = new mail($this->config->get('config_mail'));
+                            $mail->setTo($this->request->post['email']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSubject($subject);
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setHtml($message);
+                            $mail->send();
+                        }
+                    } catch (Exception $e) {
+                        
+                    }
+                }
+
+                if (isset($get_farmer_phone) && $get_farmer_phone['mobile'] != NULL) {
+
+                    $farmer_info['firstname'] = $get_farmer_phone['first_name'];
+                    $farmer_info['lastname'] = $get_farmer_phone['last_name'];
+                    $farmer_info['store_name'] = 'KwikBasket';
+                    $farmer_info['order_link'] = $this->url->link('common/reset', 'code=' . $code, 'SSL');
+                    $farmer_info['system_name'] = 'KwikBasket';
+
+                    $log->write('SMS SENDING');
+                    $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_11', $farmer_info);
+                    $log->write($sms_message);
+                    // send message here
+                    if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_11')) {
+                        $log->write('FARMER SMS NOTIFICATION');
+                        $ret = $this->emailtemplate->sendmessage($get_farmer_phone['mobile'], $sms_message);
+                    }
                 }
 
                 $this->session->data['success'] = $this->language->get('text_success');
