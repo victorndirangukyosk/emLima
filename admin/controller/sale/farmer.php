@@ -103,11 +103,39 @@ class ControllerSaleFarmer extends Controller {
             }
 
             if ($send_message == TRUE && $send_message2 == TRUE) {
-                $login_farmer = $this->url->link('common/farmer', 'SSL');
-                $sms_message = 'Hello, ' . $farmer_info2['first_name'] . ' ' . $farmer_info2['last_name'] . '\r\n Welcome and thank you for registering at KwikBasket. \r\n Your Username : ' . $farmer_info2['username'] . '\r\n Password : ' . $this->request->post['password'] . '. \r\n You can login by visiting this URL : ' . $login_farmer . ' . \r\n Thank You, \r\n The KwikBasket Team.';
-                $log = New Log('error.log');
+
+                $farmer_info['firstname'] = $this->request->post['username'];
+                $farmer_info['password'] = $this->request->post['password'];
+                $farmer_info['store_name'] = 'KwikBasket';
+                $farmer_info['account_href'] = $this->url->link('common/farmer', 'SSL');
+                $farmer_info['system_name'] = 'KwikBasket';
+
+                $log->write('SMS SENDING');
+                $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_10', $farmer_info);
+                $log = new Log('error.log');
                 $log->write($sms_message);
-                $ret = $this->emailtemplate->sendmessage($farmer_info2['mobile'], $sms_message);
+                // send message here
+                if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_10')) {
+                    $log->write('FARMER SMS NOTIFICATION');
+                    $ret = $this->emailtemplate->sendmessage($this->request->post['telephone'], $sms_message);
+                }
+
+                try {
+                    if ($this->emailtemplate->getEmailEnabled('Customer', 'customer_10')) {
+                        $subject = $this->emailtemplate->getSubject('Customer', 'customer_10', $farmer_info);
+                        $message = $this->emailtemplate->getMessage('Customer', 'customer_10', $farmer_info);
+
+                        $mail = new mail($this->config->get('config_mail'));
+                        $mail->setTo($this->request->post['email']);
+                        $mail->setFrom($this->config->get('config_from_email'));
+                        $mail->setSubject($subject);
+                        $mail->setSender($this->config->get('config_name'));
+                        $mail->setHtml($message);
+                        $mail->send();
+                    }
+                } catch (Exception $e) {
+                    
+                }
             }
 
             $this->session->data['success'] = $this->language->get('text_success');
