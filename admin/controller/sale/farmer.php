@@ -84,6 +84,7 @@ class ControllerSaleFarmer extends Controller {
 
     public function edit() {
         $log = new Log('error.log');
+        $log->write(HTTPS_SERVER . 'index.php?path=common/farmer');
         $this->load->language('sale/farmer');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -111,7 +112,7 @@ class ControllerSaleFarmer extends Controller {
                 $farmer_info['firstname'] = $this->request->post['username'];
                 $farmer_info['password'] = $this->request->post['password'];
                 $farmer_info['store_name'] = 'KwikBasket';
-                $farmer_info['account_href'] = $this->url->link('common/farmer', 'SSL');
+                $farmer_info['order_link'] = HTTPS_SERVER . 'index.php?path=common/farmer';
                 $farmer_info['system_name'] = 'KwikBasket';
 
                 $log->write('SMS SENDING');

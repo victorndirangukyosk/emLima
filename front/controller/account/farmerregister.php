@@ -62,7 +62,7 @@ class ControllerAccountFarmerRegister extends Controller {
             $farmer_info['firstname'] = $this->request->post['first_name'];
             $farmer_info['lastname'] = $this->request->post['last_name'];
             $farmer_info['store_name'] = 'KwikBasket';
-            $farmer_info['account_href'] = $this->url->link('common/farmer', 'SSL');
+            $farmer_info['order_link'] = HTTPS_SERVER . 'index.php?path=common/farmer';
             $farmer_info['system_name'] = 'KwikBasket';
 
             $log->write('SMS SENDING');
