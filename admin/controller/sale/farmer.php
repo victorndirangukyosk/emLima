@@ -90,7 +90,25 @@ class ControllerSaleFarmer extends Controller {
         $this->load->model('user/farmer');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
+            $farmer_info = $this->model_user_farmer->getFarmer($this->request->get['farmer_id']);
+            $send_message = FALSE;
+            if (isset($farmer_info) && $farmer_info['username'] == NULL && $farmer_info['password'] == NULL) {
+                $send_message = TRUE;
+            }
             $this->model_user_farmer->editFarmer($this->request->get['farmer_id'], $this->request->post);
+            $farmer_info2 = $this->model_user_farmer->getFarmer($this->request->get['farmer_id']);
+            $send_message2 = FALSE;
+            if (isset($farmer_info2) && $farmer_info2['username'] != NULL && $farmer_info2['password'] != NULL) {
+                $send_message2 = TRUE;
+            }
+
+            if ($send_message == TRUE && $send_message2 == TRUE) {
+                $login_farmer = $this->url->link('common/farmer', 'SSL');
+                $sms_message = 'Hello, ' . $farmer_info2['first_name'] . ' ' . $farmer_info2['last_name'] . '\r\n Welcome and thank you for registering at KwikBasket. \r\n Your Username : ' . $farmer_info2['username'] . '\r\n Password : ' . $this->request->post['password'] . '. \r\n You can login by visiting this URL : ' . $login_farmer . ' . \r\n Thank You, \r\n The KwikBasket Team.';
+                $log = New Log('error.log');
+                $log->write($sms_message);
+                $ret = $this->emailtemplate->sendmessage($farmer_info2['mobile'], $sms_message);
+            }
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -866,7 +884,7 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['description'] = '';
         }
-        
+
         if (isset($this->request->post['organization'])) {
             $data['organization'] = $this->request->post['organization'];
         } elseif (!empty($user_info)) {
@@ -918,7 +936,7 @@ class ControllerSaleFarmer extends Controller {
         if ((utf8_strlen($this->request->post['email']) <= 0) || (utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
         }
-        
+
         $this->load->model('user/farmer');
         $farmer_info = $this->model_user_farmer->getFarmerByEmail($this->request->post['email']);
 
@@ -935,7 +953,7 @@ class ControllerSaleFarmer extends Controller {
         if ((utf8_strlen(trim($this->request->post['username'])) < 1) || (utf8_strlen(trim($this->request->post['username'])) > 32)) {
             $this->error['username'] = $this->language->get('error_username');
         }
-        
+
         $farmer_username_info = $this->model_user_farmer->getFarmerByUsername($this->request->post['username']);
 
         if (!isset($this->request->get['farmer_id'])) {
@@ -959,7 +977,7 @@ class ControllerSaleFarmer extends Controller {
         if ((utf8_strlen($this->request->post['mobile']) < 3) || (utf8_strlen($this->request->post['mobile']) > 32)) {
             $this->error['mobile'] = $this->language->get('error_telephone');
         }
-        
+
         $farmer_mobile_info = $this->model_user_farmer->getFarmerByPhone($this->request->post['mobile']);
 
         if (!isset($this->request->get['farmer_id'])) {
