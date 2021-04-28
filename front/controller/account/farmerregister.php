@@ -68,6 +68,7 @@ class ControllerAccountFarmerRegister extends Controller {
             $activity_data = [
                 'farmer_id' => $farmer_id,
                 'name' => $this->request->post['first_name'] . ' ' . $this->request->post['last_name'],
+                'user_group_id' => $this->config->get('config_farmer_group_id')
             ];
 
             $log->write('farmer registration');
