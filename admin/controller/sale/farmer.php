@@ -83,6 +83,7 @@ class ControllerSaleFarmer extends Controller {
     }
 
     public function edit() {
+        $log = new Log('error.log');
         $this->load->language('sale/farmer');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -93,17 +94,20 @@ class ControllerSaleFarmer extends Controller {
             $farmer_info = $this->model_user_farmer->getFarmer($this->request->get['farmer_id']);
             $send_message = FALSE;
             if (isset($farmer_info) && $farmer_info['username'] == NULL && $farmer_info['password'] == NULL) {
+                $log->write('farmer_info');
+                $log->write($farmer_info);
                 $send_message = TRUE;
             }
             $this->model_user_farmer->editFarmer($this->request->get['farmer_id'], $this->request->post);
             $farmer_info2 = $this->model_user_farmer->getFarmer($this->request->get['farmer_id']);
             $send_message2 = FALSE;
             if (isset($farmer_info2) && $farmer_info2['username'] != NULL && $farmer_info2['password'] != NULL) {
+                $log->write('farmer_info2');
+                $log->write($farmer_info2);
                 $send_message2 = TRUE;
             }
 
             if ($send_message == TRUE && $send_message2 == TRUE) {
-
                 $farmer_info['firstname'] = $this->request->post['username'];
                 $farmer_info['password'] = $this->request->post['password'];
                 $farmer_info['store_name'] = 'KwikBasket';
@@ -112,7 +116,6 @@ class ControllerSaleFarmer extends Controller {
 
                 $log->write('SMS SENDING');
                 $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_10', $farmer_info);
-                $log = new Log('error.log');
                 $log->write($sms_message);
                 // send message here
                 if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_10')) {
