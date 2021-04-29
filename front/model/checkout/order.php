@@ -1185,6 +1185,9 @@ class ModelCheckoutOrder extends Model {
             $this->session->data['transaction_id'] = $transaction_id;
         }
         if ($data['total'] <= 0 || $data['total'] == NULL) {
+            $log->write('addTransaction Mail');
+            $log->write($data);
+            $log->write('addTransaction Mail');
             try {
                 $subject = 'Order Total Value Zero';
                 $message = 'Order ID : ' . $order_id . ' ' . ' Order Total:' . $data['total'];
