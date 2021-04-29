@@ -1,14 +1,13 @@
 <?php
 
-class ControllerCommonFarmerReset extends Controller
-{
+class ControllerCommonFarmerReset extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
-        /*if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
-            $this->response->redirect($this->url->link('common/dashboard', '', 'SSL'));
-        }*/
+    public function index() {
+        /* if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
+          $this->response->redirect($this->url->link('common/dashboard', '', 'SSL'));
+          } */
 
         if (!$this->config->get('config_password')) {
             $this->response->redirect($this->url->link('common/farmer', '', 'SSL'));
@@ -24,8 +23,8 @@ class ControllerCommonFarmerReset extends Controller
         //echo "<pre>";print_r("ew");die;
         $user_info = $this->model_user_farmer->getFarmerByCode($code);
 
-        /*echo "<pre>";print_r($user_info);
-            die;*/
+        /* echo "<pre>";print_r($user_info);
+          die; */
 
         if ($user_info) {
             $this->load->language('common/reset');
@@ -35,8 +34,8 @@ class ControllerCommonFarmerReset extends Controller
             //echo "<pre>";print_r("1");
 
             if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
-                /*echo "<pre>";print_r($this->request->post);
-            die;*/
+                /* echo "<pre>";print_r($this->request->post);
+                  die; */
                 $this->model_user_farmer->editPassword($user_info['farmer_id'], trim($this->request->post['password']));
 
                 $this->session->data['success'] = $this->language->get('text_success');
@@ -44,8 +43,8 @@ class ControllerCommonFarmerReset extends Controller
                 $this->response->redirect($this->url->link('common/farmer', '', 'SSL'));
             }
 
-            /*echo "<pre>";print_r($user_info);
-            die;*/
+            /* echo "<pre>";print_r($user_info);
+              die; */
 
             $data['heading_title'] = $this->language->get('heading_title');
 
@@ -81,7 +80,7 @@ class ControllerCommonFarmerReset extends Controller
                 $data['error_confirm'] = '';
             }
 
-            $data['action'] = $this->url->link('common/farmerreset', 'code='.$code, 'SSL');
+            $data['action'] = $this->url->link('common/farmerreset', 'code=' . $code, 'SSL');
 
             $data['cancel'] = $this->url->link('common/farmer', '', 'SSL');
 
@@ -97,6 +96,14 @@ class ControllerCommonFarmerReset extends Controller
                 $data['confirm'] = '';
             }
 
+            $this->load->model('tool/image');
+
+            if ($this->config->get('config_image') && is_file(DIR_IMAGE . $this->config->get('config_image'))) {
+                $data['thumb'] = $this->model_tool_image->resize($this->config->get('config_image'), 200, 110);
+            } else {
+                $data['thumb'] = $this->model_tool_image->resize('no_image.png', 200, 110);
+            }
+
             $data['header'] = $this->load->controller('common/header');
             $data['footer'] = $this->load->controller('common/footer');
 
@@ -110,8 +117,7 @@ class ControllerCommonFarmerReset extends Controller
         }
     }
 
-    protected function validate()
-    {
+    protected function validate() {
         if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
             $this->error['password'] = $this->language->get('error_password');
         }
@@ -122,4 +128,5 @@ class ControllerCommonFarmerReset extends Controller
 
         return !$this->error;
     }
+
 }

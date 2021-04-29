@@ -1,10 +1,13 @@
 <?php echo $header; ?>
+<div class="login">
 <div id="content">
-  <div class="container-fluid"><br />
-    <br />
+  <div class="container-fluid">
     <div class="row">
+        <div class="logo">
+	<img src="<?php echo $thumb; ?>" alt="">
+	</div>
       <div class="col-sm-offset-4 col-sm-4">
-        <div class="panel panel-default">
+        <div class="panel panel-default" style="max-width: 350px;">
           <div class="panel-heading">
             <h1 class="panel-title"><i class="fa fa-repeat"></i> <?php echo $heading_title; ?></h1>
           </div>
@@ -39,5 +42,6 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 <?php echo $footer; ?>
