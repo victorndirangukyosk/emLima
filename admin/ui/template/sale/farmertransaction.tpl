@@ -164,8 +164,8 @@
                                     <td class="text-left"><?php echo $customer['approval_status']; ?></td>
                                     <?php if(!$this->user->isFarmer()) { ?>
                                     <td class="text-left">
-                                    <a href="#" class="customer_verified" data-toggle="tooltip" title="" data-original-title="Approve"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"></polyline></svg></a>
-                                    <a href="#" class="customer_verified" data-toggle="tooltip" title="" data-original-title="Reject"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></a>
+                                        <a href="#" data-transaction-id="<?php echo $customer['transaction_id']; ?>" data-farmer-farmerid="<?php echo $customer['farmer_id']; ?>" class="customer_verified" data-toggle="tooltip" title="" data-original-title="Approve" id="approve_transaction"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"></polyline></svg></a>
+                                        <a href="#" data-transaction-id="<?php echo $customer['transaction_id']; ?>" data-farmer-farmerid="<?php echo $customer['farmer_id']; ?>" class="customer_verified" data-toggle="tooltip" title="" data-original-title="Reject" id="reject_transaction"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></a>
                                     </td>
                                     <?php } ?>
                                 </tr>
@@ -331,7 +331,46 @@
             location = url;
         }
 
-        //--></script></div>
+        //-->
+$('a[id^=\'approve_transaction\']').on('click', function (e) {
+e.preventDefault();
+console.log('approve_transaction');
+$.ajax({
+		url: 'index.php?path=common/farmer/approve_farmer_transaction&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: { transaction_id : $("#approve_transaction").attr("data-transaction-id"), 
+                       farmer_id : $("#approve_transaction").attr("data-farmer-farmerid"),
+                       approval_status : 1},
+		success: function(json) {
+                    console.log(json);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+});
+});
+
+$('a[id^=\'reject_transaction\']').on('click', function (e) {
+e.preventDefault();
+e.preventDefault();
+console.log('approve_transaction');
+$.ajax({
+		url: 'index.php?path=common/farmer/approve_farmer_transaction&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: { transaction_id : $("#approve_transaction").attr("data-transaction-id"), 
+                       farmer_id : $("#approve_transaction").attr("data-farmer-farmerid"),
+                       approval_status : 0},
+		success: function(json) {
+                    console.log(json);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+});
+});
+</script></div>
 <?php echo $footer; ?> 
 
 <style>

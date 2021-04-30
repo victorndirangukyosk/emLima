@@ -407,6 +407,7 @@ class ControllerSaleFarmerTransactions extends Controller {
 
 
             $data['customers'][] = [
+                'transaction_id' => $result['id'],
                 'farmer_id' => $result['farmer_id'],
                 'name' => $result['name'],
                 'email' => strlen($result['email']) > 0 ? $result['email'] : 'NA',

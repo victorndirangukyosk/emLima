@@ -154,7 +154,7 @@ class ControllerCommonFarmer extends Controller {
             'name' => $this->config->get('config_name'),
             'href' => HTTP_CATALOG,
         ];
-        
+
         // Language list
         $this->load->model('localisation/language');
 
@@ -180,6 +180,31 @@ class ControllerCommonFarmer extends Controller {
         }
 
         return !$this->error;
+    }
+
+    public function approve_farmer_transaction() {
+        $json = [];
+        if (!$this->user->hasPermission('modify', 'common/farmer')) {
+            $json['error'] = TRUE;
+            $json['message'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('user/farmer_transactions');
+            $transaction_id = $this->request->post['transaction_id'];
+            $farmer_id = $this->request->post['farmer_id'];
+            $approval_status = $this->request->post['approval_status'];
+            $transaction_data = $this->model_user_farmer_transactions->getFarmerTransaction($transaction_id, $farmer_id);
+            if (isset($transaction_data) && $transaction_data['approval_status'] == NULL) {
+                $this->model_user_farmer_transactions->updateFarmerTransaction($transaction_id, $farmer_id, $approval_status);
+
+                $json['success'] = TRUE;
+                $json['message'] = 'Transaction updated sucessfully!';
+            } else {
+                $json['error'] = TRUE;
+                $json['message'] = 'No Records Found!';
+            }
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
     public function check() {
