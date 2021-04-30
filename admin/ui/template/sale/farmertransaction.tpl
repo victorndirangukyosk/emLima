@@ -362,7 +362,7 @@ $.ajax({
                     $('.customs').append(json.message);
                     setTimeout(function() {
                     location.reload();
-                    }, 15000);
+                    }, 5000);
                     console.log(json);
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
@@ -397,7 +397,7 @@ $.ajax({
                     $('.customs').append(json.message);
                     setTimeout(function() {
                     location.reload();
-                    }, 15000);
+                    }, 5000);
                     console.log(json);
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
