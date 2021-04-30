@@ -400,7 +400,7 @@ class ModelUserFarmerTransactions extends Model {
     }
 
     public function updateFarmerTransaction($transaction_id, $farmer_id, $approval_status) {
-        $this->db->query('UPDATE `' . DB_PREFIX . "farmer_transaction` SET approval_status = '" . $approval_status . "', updated_at = NOW() WHERE farmer_id = '" . (int) $farmer_id . "' AND id = '" . $transaction_id . "'");
+        $this->db->query('UPDATE `' . DB_PREFIX . "farmer_transaction` SET approval_status = '" . $approval_status . "', approved_by= '" . $this->user->getId() . "', approved_at=NOW(), updated_at = NOW() WHERE farmer_id = '" . (int) $farmer_id . "' AND id = '" . $transaction_id . "'");
     }
 
 }
