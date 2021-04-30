@@ -9,14 +9,13 @@ class ModelSchedulerDbupdates extends Model {
             // update `hf7_order` set order_status_id=1 WHERE `order_status_id`=14 and delivery_date ='2021-02-19';
             // UPDATE `hf7_order` SET order_processing_group_id = 1, order_processor_id = 1 WHERE order_status_id = 1 and delivery_date ='2021-02-19';
             $sqlSelect = 'select order_id from  ' . DB_PREFIX . "order WHERE order_status_id = 14 and delivery_date='".$delivery_date."'";//
-            $Order_ids= $this->db->query($sqlSelect);
+            $Order_ids= $this->db->query($sqlSelect)->rows;
             $sql = 'UPDATE  ' . DB_PREFIX . "order SET  order_status_id = '1', order_processing_group_id = 1, order_processor_id = 1 WHERE order_status_id = 14 and delivery_date='".$delivery_date."'";
- 
+         echo "<pre>";print_r($Order_ids);    
             $result= $this->db->query($sql);
                 try{    
                     foreach ($Order_ids as $order_id) {
-                    $this->addProcessingOrderHistory($order_id,1,"Automatically updated",false,null,null);
-                    //   echo "<pre>";print_r($order_id);die;                    
+                       $this->addProcessingOrderHistory($order_id['order_id'],1,"Automatically updated",false,null,null);
                     }
                 }
                 catch(exception $ex)
@@ -53,6 +52,7 @@ class ModelSchedulerDbupdates extends Model {
                 // $order_info = $this->getOrder($order_id);     
                 // if($order_info!=null)  
                 {
+                    $log->write('addProcessingOrderHistory -error'.$order_id);
                 
                     $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
                 
