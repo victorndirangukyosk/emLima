@@ -391,6 +391,20 @@ class ControllerSaleFarmerTransactions extends Controller {
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $country_code = '+' . $this->config->get('config_telephone_code');
+            $approval_status = 'NA';
+            if ($result['approval_status'] != NULL && ($result['approval_status'] == 0 || $result['approval_status'] == 1)) {
+                $approval_status = $result['approval_status'] == 1 ? 'APPROVED' : 'REJECTED';
+            } else {
+                $approval_status = 'NA';
+            }
+
+            $this->load->model('user/user');
+            $approved_by = 'NA';
+            if ($result['approved_by'] != NULL) {
+                $user_info = $this->model_user_user->getUser($result['approved_by']);
+                $approved_by = $user_info['firstname'] . '' . $user_info['lastname'];
+            }
+
 
             $data['customers'][] = [
                 'farmer_id' => $result['farmer_id'],
@@ -404,6 +418,9 @@ class ControllerSaleFarmerTransactions extends Controller {
                 'total' => $result['total'],
                 'product_name' => $result['product_name'],
                 'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
+                'approved_by' => $approved_by,
+                'approved_at' => $result['approved_at'] != NULL ? $result['approved_at'] : 'NA',
+                'approval_status' => $approval_status,
             ];
         }
 
@@ -427,6 +444,9 @@ class ControllerSaleFarmerTransactions extends Controller {
         $data['column_ip'] = $this->language->get('column_ip');
         $data['column_date_added'] = $this->language->get('column_date_added');
         $data['column_action'] = $this->language->get('column_action');
+        $data['column_approval_status'] = $this->language->get('column_approval_status');
+        $data['column_approval_date'] = $this->language->get('column_approval_date');
+        $data['column_approval_by'] = $this->language->get('column_approval_by');
 
         $data['entry_name'] = $this->language->get('entry_name');
         $data['entry_email'] = $this->language->get('entry_email');

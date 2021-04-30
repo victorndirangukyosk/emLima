@@ -134,6 +134,10 @@
                                     <td class="text-left">Quantity</td>
                                     <td class="text-left">Price</td>
                                     <td class="text-left">Total</td>
+                                    <td class="text-left"><?php echo $column_approval_status; ?></td>
+                                    <td class="text-left"><?php echo $column_approval_date; ?></td>
+                                    <td class="text-left"><?php echo $column_approval_by; ?></td>
+
                                     
                                 </tr>
                             </thead>
@@ -152,6 +156,9 @@
                                     <td class="text-left"><?php echo $customer['quantity']; ?></td>
                                     <td class="text-left"><?php echo $customer['price']; ?></td>
                                     <td class="text-left"><?php echo $customer['total']; ?></td>
+                                    <td class="text-left"><?php echo $customer['approved_by']; ?></td>
+                                    <td class="text-left"><?php echo $customer['approved_at']; ?></td>
+                                    <td class="text-left"><?php echo $customer['approval_status']; ?></td>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>

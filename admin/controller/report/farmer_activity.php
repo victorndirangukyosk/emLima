@@ -1,9 +1,8 @@
 <?php
 
-class ControllerReportFarmerActivity extends Controller
-{
-    public function index()
-    {
+class ControllerReportFarmerActivity extends Controller {
+
+    public function index() {
         $this->load->language('report/farmer_activity');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -54,41 +53,41 @@ class ControllerReportFarmerActivity extends Controller
         $url = '';
 
         if (isset($this->request->get['filter_farmer'])) {
-            $url .= '&filter_farmer='.urlencode($this->request->get['filter_farmer']);
+            $url .= '&filter_farmer=' . urlencode($this->request->get['filter_farmer']);
         }
 
         if (isset($this->request->get['filter_ip'])) {
-            $url .= '&filter_ip='.$this->request->get['filter_ip'];
+            $url .= '&filter_ip=' . $this->request->get['filter_ip'];
         }
 
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
         if (isset($this->request->get['filter_organization'])) {
-            $url .= '&filter_organization='.urlencode($this->request->get['filter_organization']);
+            $url .= '&filter_organization=' . urlencode($this->request->get['filter_organization']);
         }
         if (isset($this->request->get['filter_key'])) {
-            $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
+            $url .= '&filter_key=' . urlencode($this->request->get['filter_key']);
         }
 
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         $data['breadcrumbs'] = [];
 
         $data['breadcrumbs'][] = [
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
             'text' => $this->language->get('text_home'),
         ];
 
         $data['breadcrumbs'][] = [
-            'href' => $this->url->link('report/farmer_activity', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('report/farmer_activity', 'token=' . $this->session->data['token'] . $url, 'SSL'),
             'text' => $this->language->get('heading_title'),
         ];
 
@@ -112,19 +111,19 @@ class ControllerReportFarmerActivity extends Controller
         $results = $this->model_user_farmer->getFarmerActivities($filter_data);
 
         foreach ($results as $result) {
-            $comment = vsprintf($this->language->get('text_'.$result['key']), unserialize($result['data']));
+            $comment = vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
 
             $find = [
                 'farmer_id=',
             ];
 
             $replace = [
-                $this->url->link('sale/farmer/edit', 'token='.$this->session->data['token'].'&farmer_id=', 'SSL'),
+                $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=', 'SSL'),
             ];
 
             $data['activities'][] = [
                 'organization' => $result['organization'],
-                'farmer_name' => $result['first_name'].' '.$result['last_name'],
+                'farmer_name' => $result['first_name'] . ' ' . $result['last_name'],
                 'email' => $result['email'],
                 'comment' => str_replace($find, $replace, $comment),
                 'ip' => $result['ip'],
@@ -153,37 +152,37 @@ class ControllerReportFarmerActivity extends Controller
 
         $data['token'] = $this->session->data['token'];
         $data['activity_key'] = $this->model_user_farmer->getActivityKeys();
-        
+
 
         $url = '';
 
         if (isset($this->request->get['filter_farmer'])) {
-            $url .= '&filter_farmer='.urlencode($this->request->get['filter_farmer']);
+            $url .= '&filter_farmer=' . urlencode($this->request->get['filter_farmer']);
         }
 
         if (isset($this->request->get['filter_ip'])) {
-            $url .= '&filter_ip='.$this->request->get['filter_ip'];
+            $url .= '&filter_ip=' . $this->request->get['filter_ip'];
         }
 
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
         if (isset($this->request->get['filter_organization'])) {
-            $url .= '&filter_organization='.urlencode($this->request->get['filter_organization']);
+            $url .= '&filter_organization=' . urlencode($this->request->get['filter_organization']);
         }
         if (isset($this->request->get['filter_key'])) {
-            $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
+            $url .= '&filter_key=' . urlencode($this->request->get['filter_key']);
         }
 
         $pagination = new Pagination();
         $pagination->total = $activity_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/farmer_activity', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/farmer_activity', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -204,9 +203,7 @@ class ControllerReportFarmerActivity extends Controller
         $this->response->setOutput($this->load->view('report/farmer_activity.tpl', $data));
     }
 
-
-    public function farmeractivityexcel()
-    {
+    public function farmeractivityexcel() {
         //FARMER LIST EXCEL DOWNLOAD
         $this->load->language('report/farmer_activity');
 
