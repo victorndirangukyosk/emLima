@@ -339,8 +339,8 @@ $.ajax({
 		url: 'index.php?path=common/farmer/approve_farmer_transaction&token=<?php echo $token; ?>',
 		type: 'post',
 		dataType: 'json',
-		data: { transaction_id : $("#approve_transaction").attr("data-transaction-id"), 
-                       farmer_id : $("#approve_transaction").attr("data-farmer-farmerid"),
+		data: { transaction_id : $(this).attr("data-transaction-id"), 
+                       farmer_id : $(this).attr("data-farmer-farmerid"),
                        approval_status : 1},
 		success: function(json) {
                     console.log(json);
@@ -353,14 +353,13 @@ $.ajax({
 
 $('a[id^=\'reject_transaction\']').on('click', function (e) {
 e.preventDefault();
-e.preventDefault();
 console.log('approve_transaction');
 $.ajax({
 		url: 'index.php?path=common/farmer/approve_farmer_transaction&token=<?php echo $token; ?>',
 		type: 'post',
 		dataType: 'json',
-		data: { transaction_id : $("#approve_transaction").attr("data-transaction-id"), 
-                       farmer_id : $("#approve_transaction").attr("data-farmer-farmerid"),
+		data: { transaction_id : $('a[id^=\'reject_transaction\']').attr("data-transaction-id"), 
+                       farmer_id : $('a[id^=\'reject_transaction\']').attr("data-farmer-farmerid"),
                        approval_status : 0},
 		success: function(json) {
                     console.log(json);

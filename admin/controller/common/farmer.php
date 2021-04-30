@@ -184,7 +184,7 @@ class ControllerCommonFarmer extends Controller {
 
     public function approve_farmer_transaction() {
         $json = [];
-        if (!$this->user->hasPermission('modify', 'common/farmer')) {
+        if (!$this->user->hasPermission('modify', 'sale/farmer')) {
             $json['error'] = TRUE;
             $json['message'] = $this->language->get('error_permission');
         } else {
@@ -193,6 +193,8 @@ class ControllerCommonFarmer extends Controller {
             $farmer_id = $this->request->post['farmer_id'];
             $approval_status = $this->request->post['approval_status'];
             $transaction_data = $this->model_user_farmer_transactions->getFarmerTransaction($transaction_id, $farmer_id);
+            $log = new Log('error.log');
+            $log->write($transaction_data);
             if (isset($transaction_data) && $transaction_data['approval_status'] == NULL) {
                 $this->model_user_farmer_transactions->updateFarmerTransaction($transaction_id, $farmer_id, $approval_status);
 
