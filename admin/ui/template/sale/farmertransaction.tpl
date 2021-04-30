@@ -137,6 +137,9 @@
                                     <td class="text-left"><?php echo $column_approval_status; ?></td>
                                     <td class="text-left"><?php echo $column_approval_date; ?></td>
                                     <td class="text-left"><?php echo $column_approval_by; ?></td>
+                                    <?php if(!$this->user->isFarmer()) { ?>
+                                    <td class="text-left"><?php echo $column_action; ?></td>
+                                    <?php  } ?>
 
                                     
                                 </tr>
@@ -159,6 +162,12 @@
                                     <td class="text-left"><?php echo $customer['approved_by']; ?></td>
                                     <td class="text-left"><?php echo $customer['approved_at']; ?></td>
                                     <td class="text-left"><?php echo $customer['approval_status']; ?></td>
+                                    <?php if(!$this->user->isFarmer()) { ?>
+                                    <td class="text-left">
+                                    <a href="#" class="customer_verified" data-toggle="tooltip" title="" data-original-title="Approve"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"></polyline></svg></a>
+                                    <a href="#" class="customer_verified" data-toggle="tooltip" title="" data-original-title="Reject"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></a>
+                                    </td>
+                                    <?php } ?>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
