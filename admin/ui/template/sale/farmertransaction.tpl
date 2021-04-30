@@ -166,10 +166,22 @@
                                     <td class="text-left"><?php echo $customer['approved_at']; ?></td>
                                     <td class="text-left"><?php echo $customer['approval_status']; ?></td>
                                     <?php if(!$this->user->isFarmer()) { ?>
+                                    <?php if($customer['approval_status']== NULL || $customer['approval_status']== 'NA') { ?>
                                     <td class="text-left">
                                         <a href="#" data-transaction-id="<?php echo $customer['transaction_id']; ?>" data-farmer-farmerid="<?php echo $customer['farmer_id']; ?>" class="customer_verified" data-toggle="tooltip" title="" data-original-title="Approve" id="approve_transaction"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"></polyline></svg></a>
                                         <a href="#" data-transaction-id="<?php echo $customer['transaction_id']; ?>" data-farmer-farmerid="<?php echo $customer['farmer_id']; ?>" class="customer_verified" data-toggle="tooltip" title="" data-original-title="Reject" id="reject_transaction"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></a>
                                     </td>
+                                    <?php } ?>
+                                    <?php if($customer['approval_status']== 'APPROVED') { ?>
+                                    <td class="text-left">
+                                        <a href="#" style="cursor:default" data-transaction-id="<?php echo $customer['transaction_id']; ?>" data-farmer-farmerid="<?php echo $customer['farmer_id']; ?>" class="customer_verified" data-toggle="tooltip" title="" data-original-title="Approved" id="approved_transaction"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></a>
+                                    </td>
+                                    <?php } ?>
+                                    <?php if($customer['approval_status'] == 'REJECTED') { ?>
+                                    <td class="text-left">
+                                        <a href="#" style="cursor:default" data-transaction-id="<?php echo $customer['transaction_id']; ?>" data-farmer-farmerid="<?php echo $customer['farmer_id']; ?>" class="customer_verified" data-toggle="tooltip" title="" data-original-title="Rejected" id="rejected_transaction"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></a>
+                                    </td>
+                                    <?php } ?>
                                     <?php } ?>
                                 </tr>
                                 <?php } ?>
@@ -348,6 +360,9 @@ $.ajax({
 		success: function(json) {
                     $('.customss').show();
                     $('.customs').append(json.message);
+                    setTimeout(function() {
+                    location.reload();
+                    }, 15000);
                     console.log(json);
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
@@ -355,6 +370,17 @@ $.ajax({
 		}
 });
 });
+
+$('a[id^=\'approved_transaction\']').on('click', function (e) {
+e.preventDefault();
+return false;
+});
+
+$('a[id^=\'rejected_transaction\']').on('click', function (e) {
+e.preventDefault();
+return false;
+});
+
 
 $('a[id^=\'reject_transaction\']').on('click', function (e) {
 e.preventDefault();
@@ -367,6 +393,11 @@ $.ajax({
                        farmer_id : $('a[id^=\'reject_transaction\']').attr("data-farmer-farmerid"),
                        approval_status : 0},
 		success: function(json) {
+                    $('.customss').show();
+                    $('.customs').append(json.message);
+                    setTimeout(function() {
+                    location.reload();
+                    }, 15000);
                     console.log(json);
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
