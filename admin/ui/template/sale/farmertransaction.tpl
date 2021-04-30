@@ -27,6 +27,9 @@
             <button type="button" class="close" data-dismiss="alert">&times;</button>
         </div>
         <?php } ?>
+        <div class="alert alert-success customss" style="display:none;"><i class="fa fa-check-circle customs"></i>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-list"></i> Farmer Transactions List</h3>
@@ -343,6 +346,8 @@ $.ajax({
                        farmer_id : $(this).attr("data-farmer-farmerid"),
                        approval_status : 1},
 		success: function(json) {
+                    $('.customss').show();
+                    $('.customs').append(json.message);
                     console.log(json);
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
