@@ -137,9 +137,9 @@
                                     <td class="text-left">Quantity</td>
                                     <td class="text-left">Price</td>
                                     <td class="text-left">Total</td>
-                                    <td class="text-left"><?php echo $column_approval_status; ?></td>
-                                    <td class="text-left"><?php echo $column_approval_date; ?></td>
                                     <td class="text-left"><?php echo $column_approval_by; ?></td>
+                                    <td class="text-left"><?php echo $column_approval_date; ?></td>
+                                    <td class="text-left"><?php echo $column_approval_status; ?></td>
                                     <?php if(!$this->user->isFarmer()) { ?>
                                     <td class="text-left"><?php echo $column_action; ?></td>
                                     <?php  } ?>
