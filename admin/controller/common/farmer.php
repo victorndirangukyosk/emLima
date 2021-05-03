@@ -188,6 +188,8 @@ class ControllerCommonFarmer extends Controller {
             $json['error'] = TRUE;
             $json['message'] = $this->language->get('error_permission');
         } else {
+            $this->load->model('catalog/product');
+            $this->load->model('catalog/vendor_product');
             $this->load->model('user/farmer_transactions');
             $transaction_id = $this->request->post['transaction_id'];
             $farmer_id = $this->request->post['farmer_id'];
@@ -197,6 +199,16 @@ class ControllerCommonFarmer extends Controller {
             $log->write($transaction_data);
             if (isset($transaction_data) && $transaction_data['approval_status'] == NULL) {
                 $this->model_user_farmer_transactions->updateFarmerTransaction($transaction_id, $farmer_id, $approval_status);
+
+                $sel_query = 'SELECT * FROM ' . DB_PREFIX . "product_to_store WHERE product_store_id ='" . (int) $transaction_data['product_store_id'] . "'";
+                $sel_query = $this->db->query($sel_query);
+                $sel = $sel_query->row;
+
+                $product['rejected_qty'] = 0;
+                $product['current_qty'] = $sel['quantity'];
+                $product['procured_qty'] = $transaction_data['quantity'];
+
+                $this->model_catalog_vendor_product->updateProductInventory($transaction_data['product_store_id'], $product);
 
                 $json['success'] = TRUE;
                 $json['message'] = 'Transaction updated sucessfully!';
