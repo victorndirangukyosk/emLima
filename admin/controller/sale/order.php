@@ -1189,7 +1189,8 @@ class ControllerSaleOrder extends Controller
 
         $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
         $data['invoicepdf'] = $this->url->link('sale/order/invoicepdf', 'token=' . $this->session->data['token'], 'SSL');
-        $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        // $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['shipping'] = $this->url->link('sale/order/shippingNote', 'token=' . $this->session->data['token'], 'SSL');
         $data['add'] = $this->url->link('sale/order/add', 'token=' . $this->session->data['token'], 'SSL');
         $data['delivery_sheet'] = $this->url->link('sale/order/consolidatedOrderSheet', 'token=' . $this->session->data['token'], 'SSL');
         $data['orders'] = [];
@@ -6122,6 +6123,246 @@ class ControllerSaleOrder extends Controller
         //        echo "<pre>";print_r($data['orders'][0]);die;
 
         $this->response->setOutput($this->load->view('sale/order_shipping.tpl', $data['orders'][0]));
+    }
+
+
+    public function shippingNote()
+    {
+        $this->load->language('sale/order');
+
+        $data['title'] = $this->language->get('text_shipping');
+
+        if ($this->request->server['HTTPS']) {
+            $data['base'] = HTTPS_SERVER;
+        } else {
+            $data['base'] = HTTP_SERVER;
+        }
+
+        $data['direction'] = $this->language->get('direction');
+        $data['lang'] = $this->language->get('code');
+        $data['text_shipping'] = $this->language->get('text_shipping');
+        $data['text_picklist'] = $this->language->get('text_picklist');
+        $data['text_order_detail'] = $this->language->get('text_order_detail');
+        $data['text_order_id'] = $this->language->get('text_order_id');
+        $data['text_invoice_no'] = $this->language->get('text_invoice_no');
+        $data['text_invoice_date'] = $this->language->get('text_invoice_date');
+        $data['text_date_added'] = $this->language->get('text_date_added');
+        $data['text_telephone'] = $this->language->get('text_telephone');
+        $data['text_fax'] = $this->language->get('text_fax');
+        $data['text_email'] = $this->language->get('text_email');
+        $data['text_name'] = $this->language->get('text_name');
+        $data['text_contact_no'] = $this->language->get('text_contact_no');
+        $data['text_website'] = $this->language->get('text_website');
+        $data['text_contact'] = $this->language->get('text_contact');
+        $data['text_from'] = $this->language->get('text_from');
+        $data['text_to'] = $this->language->get('text_to');
+        $data['text_shipping_method'] = $this->language->get('text_shipping_method');
+        $data['text_sku'] = $this->language->get('text_sku');
+        $data['text_upc'] = $this->language->get('text_upc');
+        $data['text_ean'] = $this->language->get('text_ean');
+        $data['text_jan'] = $this->language->get('text_jan');
+        $data['text_isbn'] = $this->language->get('text_isbn');
+        $data['text_mpn'] = $this->language->get('text_mpn');
+        $data['column_location'] = $this->language->get('column_location');
+        $data['column_reference'] = $this->language->get('column_reference');
+        $data['column_product'] = $this->language->get('column_product');
+        $data['column_produce_type'] = $this->language->get('column_produce_type');
+
+        $data['column_weight'] = $this->language->get('column_weight');
+        $data['column_model'] = $this->language->get('column_model');
+        $data['column_unit'] = $this->language->get('column_unit');
+        $data['column_quantity'] = $this->language->get('column_quantity');
+        $data['column_comment'] = $this->language->get('column_comment');
+
+        $this->load->model('sale/order');
+
+        $this->load->model('catalog/product');
+
+        $this->load->model('setting/setting');
+
+        $data['orders'] = [];
+
+        $orders = [];
+
+        if (isset($this->request->post['selected'])) {
+            $orders = $this->request->post['selected'];
+        } elseif (isset($this->request->get['order_id'])) {
+            $orders[] = $this->request->get['order_id'];
+        }
+
+        if (isset($this->request->get['store_id'])) {
+            $store_id = $this->request->get['store_id'];
+        } else {
+            $store_id = 0;
+        }
+
+        foreach ($orders as $order_id) {
+            $order_info = $this->model_sale_order->getOrder($order_id);
+            //  echo "<pre>";print_r($order_info);die;
+
+            if ($this->user->isVendor() && !$this->isVendorOrder($order_info['order_id'])) {
+                continue;
+            }
+
+            // Make sure there is a shipping method
+            if ($order_info && $order_info['shipping_code']) {
+                $store_info = $this->model_setting_setting->getStore($order_info['store_id']);
+
+                if ($store_info) {
+                    $store_address = $store_info['address'];
+                    $store_name = $store_info['name'];
+
+                    $store_email = $store_info['email'];
+                    $store_telephone = $store_info['telephone'];
+                    $store_fax = $store_info['fax'];
+                } else {
+                    $store_name = $this->config->get('config_name');
+                    $store_address = $this->config->get('config_address');
+
+                    $store_email = $this->config->get('config_email');
+                    $store_telephone = $this->config->get('config_telephone');
+                    $store_fax = $this->config->get('config_fax');
+                }
+
+                if ($order_info['invoice_no']) {
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'] . $order_info['invoice_sufix'];
+                } else {
+                    $invoice_no = '';
+                }
+
+                // Order products with weight change
+                $editedProducts = $this->model_sale_order->getRealOrderProducts($order_id);
+
+                // Products as the user ordered them on the platform
+                $originalProducts = $products = $this->model_sale_order->getOrderProducts($order_id);
+
+                //                echo "<pre>";print_r($editedProducts);echo "<br>";
+                //                echo "<pre>";print_r($original_products); die;
+
+                $orderProducts = [];
+
+                if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
+                    // Order has at least one product that has a weight change
+
+                    foreach ($originalProducts as $originalProduct) {
+                        foreach ($editedProducts as $editedProduct) {
+                            if ($originalProduct['product_id'] == $editedProduct['product_id']) {
+                                $originalProduct['quantity_updated'] = floatval($editedProduct['quantity']);
+                                $originalProduct['unit_updated'] = $editedProduct['unit'];
+                                $originalProduct['price'] = $editedProduct['price'];
+                            }
+                        }
+
+                        $totalUpdated = $originalProduct['price'] * $originalProduct['quantity_updated'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+
+                        $uomOrderedWithoutApproximations = trim(explode('(', $originalProduct['unit'])[0]);
+                        $uomDeliveredWithoutApproximations = trim(explode('(', $originalProduct['unit_updated'])[0]);
+
+                        $productPrice = $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']);
+                        $orderProducts[] = [
+                            'order_product_id' => $originalProduct['order_product_id'],
+                            'product_id' => $originalProduct['product_id'],
+                            'vendor_id' => $originalProduct['vendor_id'],
+                            'store_id' => $originalProduct['store_id'],
+                            'name' => $originalProduct['name'],
+                            'unit' => $uomOrderedWithoutApproximations,
+                            'product_type' => $originalProduct['product_type'],
+                            'model' => $originalProduct['model'],
+                            'quantity' => floatval($originalProduct['quantity']),
+                            'quantity_updated' => $originalProduct['quantity_updated'],
+                            'unit_updated' => $uomDeliveredWithoutApproximations,
+                            'price' => $productPrice,
+                            'price_currency' => trim(explode(' ', $productPrice)[0]),
+                            'price_value' => trim(explode(' ', $productPrice)[1]),
+                            'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                            'total_updated' => $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']),
+                            'total_updated_currency' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[0]),
+                            'total_updated_value' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[1]),
+                        ];
+                    }
+                } else {
+                    foreach ($originalProducts as $originalProduct) {
+                        $totalUpdated = $originalProduct['price'] * $originalProduct['quantity'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+
+                        $uomOrderedWithoutApproximations = trim(explode('(', $originalProduct['unit'])[0]);
+
+                        $productPrice = $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']);
+
+                        $orderProducts[] = [
+                            'order_product_id' => $originalProduct['order_product_id'],
+                            'product_id' => $originalProduct['product_id'],
+                            'vendor_id' => $originalProduct['vendor_id'],
+                            'store_id' => $originalProduct['store_id'],
+                            'name' => $originalProduct['name'],
+                            'unit' => $uomOrderedWithoutApproximations,
+                            'product_type' => $originalProduct['product_type'],
+                            'model' => $originalProduct['model'],
+                            'quantity' => $originalProduct['quantity'],
+                            'quantity_updated' => $originalProduct['quantity'],
+                            'unit_updated' => $uomOrderedWithoutApproximations,
+                            'price' => $productPrice,
+                            'price_currency' => trim(explode(' ', $productPrice)[0]),
+                            'price_value' => trim(explode(' ', $productPrice)[1]),
+                            'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                            'total_updated' => $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']),
+                            'total_updated_currency' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[0]),
+                            'total_updated_value' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[1]),
+                        ];
+                    }
+                }
+
+                $totalData = [];
+
+                if ($store_id) {
+                    $totals = $this->model_sale_order->getVendorOrderTotals($order_id, $store_id);
+                } else {
+                    $totals = $this->model_sale_order->getOrderTotals($order_id);
+                }
+
+                foreach ($totals as $total) {
+                    $totalData[] = [
+                        'title' => $total['title'],
+                        'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                    ];
+                }
+
+                $this->load->model('sale/customer');
+                $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
+                $company_name = NULL;
+                if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
+                    $company_name = $order_customer_detials['company_name'];
+                }
+
+                $data['orders'][] = [
+                    'order_id' => $order_id,
+                    'date_added' => date($this->language->get('date_format_short'), strtotime($order_info['date_added'])),
+                    'delivery_date' => date($this->language->get('date_format_short'), strtotime($order_info['delivery_date'])),
+                    'payment_method' => $order_info['payment_method'],
+                    'po_number' => $order_info['po_number'],
+                    'store_name' => $store_name,
+                    'store_url' => rtrim($order_info['store_url'], '/'),
+                    'store_address' => nl2br($store_address),
+                    'store_email' => $store_email,
+                    'store_telephone' => $store_telephone,
+                    'email' => $order_info['email'],
+                    'telephone' => $order_info['telephone'],
+                    'shipping_method' => $order_info['shipping_method'],
+                    'shipping_contact_no' => $order_info['shipping_contact_no'],
+                    'shipping_address' => $order_info['shipping_address'],
+                    'shipping_name' => $order_info['shipping_name'],
+                    'customer_company_name' => $company_name == NULL ? $order_info['customer_company_name'] : $company_name,
+                    'shipping_city' => $order_info['shipping_city'],
+                    'totals' => $totalData,
+                    'products' => $orderProducts,
+                    'comment' => nl2br($order_info['comment']),
+                ];
+            }
+        }
+
+        //        echo "<pre>";print_r($data['orders'][0]);die;
+
+        // $this->response->setOutput($this->load->view('sale/order_shipping.tpl', $data['orders'][0]));
+        $this->response->setOutput($this->load->view('sale/order_shipping_new.tpl', $data['orders'][0]));
     }
 
     public function updateInvoice()
