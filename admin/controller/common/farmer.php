@@ -137,7 +137,7 @@ class ControllerCommonFarmer extends Controller {
         }
 
         if ($this->config->get('config_password')) {
-            $data['forgotten'] = $this->url->link('common/forgotten', '', 'SSL');
+            $data['forgotten'] = $this->url->link('common/farmerforgotten', '', 'SSL');
         } else {
             $data['forgotten'] = '';
         }
@@ -154,7 +154,7 @@ class ControllerCommonFarmer extends Controller {
             'name' => $this->config->get('config_name'),
             'href' => HTTP_CATALOG,
         ];
-        
+
         // Language list
         $this->load->model('localisation/language');
 
@@ -182,6 +182,45 @@ class ControllerCommonFarmer extends Controller {
         return !$this->error;
     }
 
+    public function approve_farmer_transaction() {
+        $json = [];
+        if (!$this->user->hasPermission('modify', 'sale/farmer')) {
+            $json['error'] = TRUE;
+            $json['message'] = $this->language->get('error_permission');
+        } else {
+            $this->load->model('catalog/product');
+            $this->load->model('catalog/vendor_product');
+            $this->load->model('user/farmer_transactions');
+            $transaction_id = $this->request->post['transaction_id'];
+            $farmer_id = $this->request->post['farmer_id'];
+            $approval_status = $this->request->post['approval_status'];
+            $transaction_data = $this->model_user_farmer_transactions->getFarmerTransaction($transaction_id, $farmer_id);
+            $log = new Log('error.log');
+            $log->write($transaction_data);
+            if (isset($transaction_data) && $transaction_data['approval_status'] == NULL) {
+                $this->model_user_farmer_transactions->updateFarmerTransaction($transaction_id, $farmer_id, $approval_status);
+
+                $sel_query = 'SELECT * FROM ' . DB_PREFIX . "product_to_store WHERE product_store_id ='" . (int) $transaction_data['product_store_id'] . "'";
+                $sel_query = $this->db->query($sel_query);
+                $sel = $sel_query->row;
+
+                $product['rejected_qty'] = 0;
+                $product['current_qty'] = $sel['quantity'];
+                $product['procured_qty'] = $transaction_data['quantity'];
+
+                $this->model_catalog_vendor_product->updateProductInventory($transaction_data['product_store_id'], $product);
+
+                $json['success'] = TRUE;
+                $json['message'] = 'Transaction updated sucessfully!';
+            } else {
+                $json['error'] = TRUE;
+                $json['message'] = 'No Records Found!';
+            }
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function check() {
         $path = '';
 
@@ -199,6 +238,8 @@ class ControllerCommonFarmer extends Controller {
 
         $ignore = [
             'common/farmer',
+            'common/farmerforgotten',
+            'common/farmerreset',
             'common/login',
             'common/forgotten',
             'common/reset',
@@ -213,6 +254,8 @@ class ControllerCommonFarmer extends Controller {
         if (isset($this->request->get['path'])) {
             $ignore = [
                 'common/farmer',
+                'common/farmerforgotten',
+                'common/farmerreset',
                 'common/login',
                 'common/logout',
                 'common/forgotten',

@@ -83,6 +83,8 @@ class ControllerSaleFarmer extends Controller {
     }
 
     public function edit() {
+        $log = new Log('error.log');
+        $log->write(HTTPS_SERVER . 'index.php?path=common/farmer');
         $this->load->language('sale/farmer');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -90,7 +92,55 @@ class ControllerSaleFarmer extends Controller {
         $this->load->model('user/farmer');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
+            $farmer_info = $this->model_user_farmer->getFarmer($this->request->get['farmer_id']);
+            $send_message = FALSE;
+            if (isset($farmer_info) && $farmer_info['username'] == NULL && $farmer_info['password'] == NULL) {
+                $log->write('farmer_info');
+                $log->write($farmer_info);
+                $send_message = TRUE;
+            }
             $this->model_user_farmer->editFarmer($this->request->get['farmer_id'], $this->request->post);
+            $farmer_info2 = $this->model_user_farmer->getFarmer($this->request->get['farmer_id']);
+            $send_message2 = FALSE;
+            if (isset($farmer_info2) && $farmer_info2['username'] != NULL && $farmer_info2['password'] != NULL) {
+                $log->write('farmer_info2');
+                $log->write($farmer_info2);
+                $send_message2 = TRUE;
+            }
+
+            if ($send_message == TRUE && $send_message2 == TRUE) {
+                $farmer_info['firstname'] = $this->request->post['username'];
+                $farmer_info['password'] = $this->request->post['password'];
+                $farmer_info['store_name'] = 'KwikBasket';
+                $farmer_info['order_link'] = HTTPS_SERVER . 'index.php?path=common/farmer';
+                $farmer_info['system_name'] = 'KwikBasket';
+
+                $log->write('SMS SENDING');
+                $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_10', $farmer_info);
+                $log->write($sms_message);
+                // send message here
+                if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_10')) {
+                    $log->write('FARMER SMS NOTIFICATION');
+                    $ret = $this->emailtemplate->sendmessage($this->request->post['telephone'], $sms_message);
+                }
+
+                try {
+                    if ($this->emailtemplate->getEmailEnabled('Customer', 'customer_10')) {
+                        $subject = $this->emailtemplate->getSubject('Customer', 'customer_10', $farmer_info);
+                        $message = $this->emailtemplate->getMessage('Customer', 'customer_10', $farmer_info);
+
+                        $mail = new mail($this->config->get('config_mail'));
+                        $mail->setTo($this->request->post['email']);
+                        $mail->setFrom($this->config->get('config_from_email'));
+                        $mail->setSubject($subject);
+                        $mail->setSender($this->config->get('config_name'));
+                        $mail->setHtml($message);
+                        $mail->send();
+                    }
+                } catch (Exception $e) {
+                    
+                }
+            }
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -866,7 +916,7 @@ class ControllerSaleFarmer extends Controller {
         } else {
             $data['description'] = '';
         }
-        
+
         if (isset($this->request->post['organization'])) {
             $data['organization'] = $this->request->post['organization'];
         } elseif (!empty($user_info)) {
@@ -918,7 +968,7 @@ class ControllerSaleFarmer extends Controller {
         if ((utf8_strlen($this->request->post['email']) <= 0) || (utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
         }
-        
+
         $this->load->model('user/farmer');
         $farmer_info = $this->model_user_farmer->getFarmerByEmail($this->request->post['email']);
 
@@ -935,7 +985,7 @@ class ControllerSaleFarmer extends Controller {
         if ((utf8_strlen(trim($this->request->post['username'])) < 1) || (utf8_strlen(trim($this->request->post['username'])) > 32)) {
             $this->error['username'] = $this->language->get('error_username');
         }
-        
+
         $farmer_username_info = $this->model_user_farmer->getFarmerByUsername($this->request->post['username']);
 
         if (!isset($this->request->get['farmer_id'])) {
@@ -959,7 +1009,7 @@ class ControllerSaleFarmer extends Controller {
         if ((utf8_strlen($this->request->post['mobile']) < 3) || (utf8_strlen($this->request->post['mobile']) > 32)) {
             $this->error['mobile'] = $this->language->get('error_telephone');
         }
-        
+
         $farmer_mobile_info = $this->model_user_farmer->getFarmerByPhone($this->request->post['mobile']);
 
         if (!isset($this->request->get['farmer_id'])) {

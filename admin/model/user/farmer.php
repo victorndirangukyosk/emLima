@@ -17,11 +17,15 @@ class ModelUserFarmer extends Model {
     }
 
     public function editPassword($user_id, $password) {
-        $this->db->query('UPDATE `' . DB_PREFIX . "user` SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', code = '' WHERE user_id = '" . (int) $user_id . "'");
+        $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', code = '' WHERE farmer_id = '" . (int) $user_id . "'");
     }
 
     public function editCode($email, $code) {
-        $this->db->query('UPDATE `' . DB_PREFIX . "user` SET code = '" . $this->db->escape($code) . "' WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+        $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET code = '" . $this->db->escape($code) . "' WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+    }
+
+    public function editCodeMobile($mobile, $code) {
+        $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET code = '" . $this->db->escape($code) . "' WHERE mobile = '" . $this->db->escape($mobile) . "'");
     }
 
     public function deleteUser($user_id) {
@@ -57,8 +61,8 @@ class ModelUserFarmer extends Model {
         return $query->row;
     }
 
-    public function getUserByCode($code) {
-        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` WHERE code = '" . $this->db->escape($code) . "' AND code != ''");
+    public function getFarmerByCode($code) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "farmer` WHERE code = '" . $this->db->escape($code) . "' AND code != ''");
 
         return $query->row;
     }
@@ -209,8 +213,21 @@ class ModelUserFarmer extends Model {
         return $query->row['total'];
     }
 
-    public function getTotalUsersByEmail($email) {
-        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "user` WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'";
+    public function getTotalFarmersByEmail($email) {
+        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "farmer` WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'";
+
+        //filter vendor groups
+        /* $sql .= ' AND user_group_id NOT IN (' . $this->db->escape($this->config->get('config_vendor_group_ids')) . ') ';
+          $sql .= ' AND user_group_id NOT IN (' . $this->db->escape($this->config->get('config_shopper_group_ids')) . ') '; */
+
+        $query = $this->db->query($sql);
+
+        //echo "<pre>";print_r($query);die;
+        return $query->row['total'];
+    }
+
+    public function getTotalFarmersByMobile($mobile) {
+        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "farmer` WHERE mobile = '" . $this->db->escape($mobile) . "'";
 
         //filter vendor groups
         /* $sql .= ' AND user_group_id NOT IN (' . $this->db->escape($this->config->get('config_vendor_group_ids')) . ') ';

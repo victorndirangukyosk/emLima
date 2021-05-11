@@ -27,6 +27,9 @@ $_['column_date_added'] = 'Date Added';
 $_['column_comment'] = 'Comment';
 $_['column_description'] = 'Description';
 $_['column_user_added'] = 'Signup User';
+$_['column_approval_status'] = 'Approval Status';
+$_['column_approval_date'] = 'Approved / Rejected Date';
+$_['column_approval_by'] = 'Approved / Rejected By';
 
 $_['column_amount'] = 'Amount';
 $_['column_points'] = 'Points';

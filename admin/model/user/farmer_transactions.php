@@ -394,4 +394,13 @@ class ModelUserFarmerTransactions extends Model {
         return $ret;
     }
 
+    public function getFarmerTransaction($transaction_id, $farmer_id) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "farmer_transaction` WHERE farmer_id = '" . $farmer_id . "' AND id = '" . $transaction_id . "'");
+        return $query->row;
+    }
+
+    public function updateFarmerTransaction($transaction_id, $farmer_id, $approval_status) {
+        $this->db->query('UPDATE `' . DB_PREFIX . "farmer_transaction` SET approval_status = '" . $approval_status . "', approved_by= '" . $this->user->getId() . "', approved_at=NOW(), updated_at = NOW() WHERE farmer_id = '" . (int) $farmer_id . "' AND id = '" . $transaction_id . "'");
+    }
+
 }

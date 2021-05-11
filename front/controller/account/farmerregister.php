@@ -59,12 +59,46 @@ class ControllerAccountFarmerRegister extends Controller {
 
             $farmer_id = $this->model_account_farmer->addNewFarmer($this->request->post);
 
+            $farmer_info['firstname'] = $this->request->post['first_name'];
+            $farmer_info['lastname'] = $this->request->post['last_name'];
+            $farmer_info['store_name'] = 'KwikBasket';
+            $farmer_info['order_link'] = HTTPS_SERVER . 'index.php?path=common/farmer';
+            $farmer_info['system_name'] = 'KwikBasket';
+
+            $log->write('SMS SENDING');
+            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_9', $farmer_info);
+            $log = new Log('error.log');
+            $log->write($sms_message);
+            // send message here
+            if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_9')) {
+                $log->write('FARMER SMS NOTIFICATION');
+                $ret = $this->emailtemplate->sendmessage($this->request->post['telephone'], $sms_message);
+            }
+
+            try {
+                if ($this->emailtemplate->getEmailEnabled('Customer', 'customer_9')) {
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_9', $farmer_info);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_9', $farmer_info);
+
+                    $mail = new mail($this->config->get('config_mail'));
+                    $mail->setTo($this->request->post['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSubject($subject);
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setHtml($message);
+                    $mail->send();
+                }
+            } catch (Exception $e) {
+                
+            }
+
             // Add to activity log
             $this->load->model('account/activity');
 
             $activity_data = [
                 'farmer_id' => $farmer_id,
                 'name' => $this->request->post['first_name'] . ' ' . $this->request->post['last_name'],
+                'user_group_id' => $this->config->get('config_farmer_group_id')
             ];
 
             $log->write('farmer registration');
