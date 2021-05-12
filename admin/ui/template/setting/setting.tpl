@@ -664,6 +664,20 @@
                                     <?php } ?>
                                 </div>
                             </div>
+                            
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-farmer-id">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="Add Farmer Group ID">
+                                        Farmer Group ID
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_farmer_group_id" value="<?php echo $config_farmer_group_id; ?>" placeholder="Enter Farmer Group ID" id="input-farmer-group-id" class="form-control" />
+                                    <?php if ($error_farmer_group_id) { ?>
+                                    <div class="text-danger"><?php echo $error_farmer_group_id; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
 
 
                             <div class="form-group required">

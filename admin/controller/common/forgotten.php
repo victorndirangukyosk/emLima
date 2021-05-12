@@ -87,10 +87,10 @@ class ControllerCommonForgotten extends Controller
 
         $this->load->model('tool/image');
 
-        if ($this->config->get('config_image') && is_file(DIR_IMAGE.$this->config->get('config_image'))) {
-            $data['thumb'] = $this->model_tool_image->resize($this->config->get('config_image'), 85, 85);
+        if ($this->config->get('config_image') && is_file(DIR_IMAGE . $this->config->get('config_image'))) {
+            $data['thumb'] = $this->model_tool_image->resize($this->config->get('config_image'), 200, 110);
         } else {
-            $data['thumb'] = $this->model_tool_image->resize('no_image.png', 85, 85);
+            $data['thumb'] = $this->model_tool_image->resize('no_image.png', 200, 110);
         }
 
         $data['store'] = [

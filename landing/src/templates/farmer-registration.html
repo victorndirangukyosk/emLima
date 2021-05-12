@@ -19,15 +19,15 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
                                         <label for="farmer-first-name">First Name</label>
-                                        <input required type="text" class="form-control" id="farmer-first-name">
+                                        <input required type="text" class="form-control" name="farmer-first-name" id="farmer-first-name">
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="farmer-last-name">Last Name</label>
-                                        <input required type="text" class="form-control" id="farmer-last-name">
+                                        <input required type="text" class="form-control" name="farmer-last-name" id="farmer-last-name">
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="farmer-email">Email Address</label>
-                                        <input required type="email" class="form-control" id="farmer-email">
+                                        <input type="email" class="form-control" id="farmer-email">
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -37,7 +37,7 @@
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text">+254</div>
                                             </div>
-                                            <input required type="text" class="form-control" id="farmer-phone">
+                                            <input required type="text" class="form-control" name="farmer-phone" id="farmer-phone">
                                         </div>
                                     </div>
                                     <div class="form-group col-md-4">
@@ -45,12 +45,40 @@
                                         <select id="farmer-type" class="form-control">
                                             <option value="Commercial">Commercial</option> 
                                             <option value="Smallholder">Smallholder</option> 
-                                            <option value="Subsistence">Subsistence</option> 
+<!--                                            <option value="Subsistence">Subsistence</option> -->
                                         </select> 
                                     </div>
                                     <div class="form-group col-md-4">
+                                        <label for="farmer-type">Irrigation Type</label>
+                                        <select id="irrigation-type" class="form-control">
+                                            <option value="Piped">Piped</option> 
+                                            <option value="Natural">Natural</option> 
+                                            <!--                                            <option value="Subsistence">Subsistence</option> -->
+                                        </select>    
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
                                         <label for="farmer-location">Farm Location</label>
                                         <input required type="text" class="form-control" id="farmer-location">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="farm-size">Farm Size</label>
+                                        <input required type="text" class="form-control" id="farm-size">  
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="farm-size-type">Farm Size Type</label>
+                                        <select id="farm-size-type" class="form-control">
+                                            <option value="Acres">Acres</option> 
+                                            <option value="Hectares">Hectares</option> 
+                                            <!--                                            <option value="Subsistence">Subsistence</option> -->
+                                        </select>    
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="farmer-organization">Farmer Organization</label>
+                                        <input required type="text" class="form-control" id="farmer-organization">
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -64,7 +92,8 @@
                                         <div class="g-recaptcha" data-sitekey="<?= $site_key ?>"></div>
                                     </div>
                                 </div>
-
+                                <input type="hidden" value="0"  id="lat">
+                                <input type="hidden" value="0" id="lng">
                                 <button id="farmer-register-button" class="btn btn-primary mt-1 btn-block">REGISTER</button>
                             </form>
                         </div>

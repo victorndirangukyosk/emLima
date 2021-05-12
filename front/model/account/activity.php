@@ -1,37 +1,32 @@
 <?php
 
-class ModelAccountActivity extends Model
-{
-    public function addActivity($key, $data)
-    {
+class ModelAccountActivity extends Model {
+
+    public function addActivity($key, $data) {
         if (isset($data['customer_id'])) {
             $customer_id = $data['customer_id'];
         } else {
             $customer_id = 0;
         }
 
-        $this->db->query('INSERT INTO `'.DB_PREFIX."customer_activity` SET `customer_id` = '".(int) $customer_id."', `key` = '".$this->db->escape($key)."', `data` = '".$this->db->escape(serialize($data))."', `ip` = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."', `date_added` = NOW()");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "customer_activity` SET `customer_id` = '" . (int) $customer_id . "', `key` = '" . $this->db->escape($key) . "', `data` = '" . $this->db->escape(serialize($data)) . "', `ip` = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', `date_added` = NOW()");
     }
 
-    public function addCustomerReward($customer_id, $points, $description)
-    {
-        $this->db->query('INSERT INTO '.DB_PREFIX."customer_reward SET customer_id = '".(int) $customer_id."', order_id = '0', description = '".$description."', points = '".(float) $points."', date_added = NOW()");
+    public function addCustomerReward($customer_id, $points, $description) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_reward SET customer_id = '" . (int) $customer_id . "', order_id = '0', description = '" . $description . "', points = '" . (float) $points . "', date_added = NOW()");
     }
 
-    public function getStoreData($store_id)
-    {
-        return $this->db->query('select name,store_id,delivery_time_diff from `'.DB_PREFIX.'store` WHERE store_id = "'.$store_id.'"')->row;
+    public function getStoreData($store_id) {
+        return $this->db->query('select name,store_id,delivery_time_diff from `' . DB_PREFIX . 'store` WHERE store_id = "' . $store_id . '"')->row;
     }
 
-    public function getReferredSignup($customer_id)
-    {
-        $query = $this->db->query('SELECT COUNT(*) AS total FROM '.DB_PREFIX."customer WHERE refree_user_id = '".(int) $customer_id."'");
+    public function getReferredSignup($customer_id) {
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "customer WHERE refree_user_id = '" . (int) $customer_id . "'");
 
         return $query->row['total'];
     }
 
-    public function getReferralAmount()
-    {
+    public function getReferralAmount() {
         $response['referrer'] = false;
         $response['referred'] = false;
 
@@ -46,8 +41,8 @@ class ModelAccountActivity extends Model
 
         if ('reward' == $config_refer_type) {
             if ($config_reward_enabled && $config_refered_points) {
-                $response['referrer'] = $config_referee_points.' Reward points';
-                $response['referred'] = $config_refered_points.' Reward points';
+                $response['referrer'] = $config_referee_points . ' Reward points';
+                $response['referred'] = $config_refered_points . ' Reward points';
             }
         } elseif ('credit' == $config_refer_type) {
             if ($config_credit_enabled && $config_refered_points) {
@@ -59,35 +54,31 @@ class ModelAccountActivity extends Model
         return $response;
     }
 
-    public function getReferredBonus($customer_id, $description)
-    {
-        $query = $this->db->query('SELECT SUM(amount) AS total FROM '.DB_PREFIX."customer_credit WHERE customer_id = '".(int) $customer_id."' and description = '".$description."'");
+    public function getReferredBonus($customer_id, $description) {
+        $query = $this->db->query('SELECT SUM(amount) AS total FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $customer_id . "' and description = '" . $description . "'");
 
         $creditsTotal = $query->row['total'];
 
-        $query = $this->db->query('SELECT SUM(points) AS total FROM '.DB_PREFIX."customer_reward WHERE customer_id = '".(int) $customer_id."' and description = '".$description."'");
+        $query = $this->db->query('SELECT SUM(points) AS total FROM ' . DB_PREFIX . "customer_reward WHERE customer_id = '" . (int) $customer_id . "' and description = '" . $description . "'");
 
         $rewardTotal = $this->config->get('config_reward_value') * $query->row['total'];
 
         return $creditsTotal + $rewardTotal;
     }
 
-    public function getUser($user_id)
-    {
-        $query = $this->db->query('SELECT *, (SELECT ug.name FROM `'.DB_PREFIX.'user_group` ug WHERE ug.user_group_id = u.user_group_id) AS user_group FROM `'.DB_PREFIX."user` u WHERE u.user_id = '".(int) $user_id."'");
+    public function getUser($user_id) {
+        $query = $this->db->query('SELECT *, (SELECT ug.name FROM `' . DB_PREFIX . 'user_group` ug WHERE ug.user_group_id = u.user_group_id) AS user_group FROM `' . DB_PREFIX . "user` u WHERE u.user_id = '" . (int) $user_id . "'");
 
         return $query->row;
     }
 
-    public function getSubAccountDetails($user_id)
-    {
-        $query = $this->db->query('SELECT * from `'.DB_PREFIX.'iugu_sub_account`  WHERE vendor_id ='.(int) $user_id);
+    public function getSubAccountDetails($user_id) {
+        $query = $this->db->query('SELECT * from `' . DB_PREFIX . 'iugu_sub_account`  WHERE vendor_id =' . (int) $user_id);
 
         return $query->row;
     }
 
-    public function transferToSubAccount($data)
-    {
+    public function transferToSubAccount($data) {
         //live key 67ff0666d626234797f4a6f65095df8c
         // market place live key ea9924eb230ea73962f5269367bdea1c
 
@@ -114,7 +105,7 @@ class ModelAccountActivity extends Model
 
         //echo "<pre>";print_r($result);die;
         if (curl_errno($ch)) {
-            echo 'Error:'.curl_error($ch);
+            echo 'Error:' . curl_error($ch);
         }
         curl_close($ch);
         //save data to table iugu_sub_account
@@ -128,13 +119,11 @@ class ModelAccountActivity extends Model
         return true;
     }
 
-    public function getVendorDetails($vendor_id)
-    {
-        return $this->db->query('select * from `'.DB_PREFIX.'user` WHERE user_id="'.$vendor_id.'"')->row;
+    public function getVendorDetails($vendor_id) {
+        return $this->db->query('select * from `' . DB_PREFIX . 'user` WHERE user_id="' . $vendor_id . '"')->row;
     }
 
-    public function addCreditVendorCopy($vendor_id, $description = '', $amount = '', $order_id = 0, $iugu_transfer = 0, $data = '')
-    {
+    public function addCreditVendorCopy($vendor_id, $description = '', $amount = '', $order_id = 0, $iugu_transfer = 0, $data = '') {
         $user_info = $this->getUser($vendor_id);
 
         $iuguStatus = true;
@@ -161,7 +150,7 @@ class ModelAccountActivity extends Model
         }
 
         if ($user_info && $iuguStatus) {
-            $this->db->query('INSERT INTO '.DB_PREFIX."vendor_wallet SET vendor_id = '".(int) $vendor_id."', order_id = '".(int) $order_id."', invoice = '".$invoice."', description = '".$this->db->escape($description)."', amount = '".(float) $amount."', date_added = NOW()");
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "vendor_wallet SET vendor_id = '" . (int) $vendor_id . "', order_id = '" . (int) $order_id . "', invoice = '" . $invoice . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
 
             $this->load->language('mail/vendor');
 
@@ -234,14 +223,13 @@ class ModelAccountActivity extends Model
         return true;
     }
 
-    public function addCreditAdminCopy($customer_id, $description = '', $amount = '', $order_id = 0)
-    {
+    public function addCreditAdminCopy($customer_id, $description = '', $amount = '', $order_id = 0) {
         $customer_info = $this->getCustomer($customer_id);
 
         $log = new Log('error.log');
 
         if ($customer_info) {
-            $this->db->query('INSERT INTO '.DB_PREFIX."customer_credit SET customer_id = '".(int) $customer_id."', order_id = '".(int) $order_id."', description = '".$this->db->escape($description)."', amount = '".(float) $amount."', date_added = NOW()");
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
 
             $this->load->language('mail/customer');
 
@@ -303,14 +291,13 @@ class ModelAccountActivity extends Model
         }
     }
 
-    public function addCredit($customer_id, $description = '', $amount = '', $order_id = 0)
-    {
+    public function addCredit($customer_id, $description = '', $amount = '', $order_id = 0) {
         $customer_info = $this->getCustomer($customer_id);
 
         $this->load->language('mail/customer');
 
         if ($customer_info) {
-            $this->db->query('INSERT INTO '.DB_PREFIX."customer_credit SET customer_id = '".(int) $customer_id."', order_id = '".(int) $order_id."', description = '".$this->db->escape($description)."', amount = '".(float) $amount."', date_added = NOW()");
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
 
             $this->load->language('mail/customer');
 
@@ -367,17 +354,27 @@ class ModelAccountActivity extends Model
         }
     }
 
-    public function getCustomer($customer_id)
-    {
-        $query = $this->db->query('SELECT DISTINCT * FROM '.DB_PREFIX."customer WHERE customer_id = '".(int) $customer_id."'");
+    public function getCustomer($customer_id) {
+        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'");
 
         return $query->row;
     }
 
-    public function getCreditTotal($customer_id)
-    {
-        $query = $this->db->query('SELECT SUM(amount) AS total FROM '.DB_PREFIX."customer_credit WHERE customer_id = '".(int) $customer_id."'");
+    public function getCreditTotal($customer_id) {
+        $query = $this->db->query('SELECT SUM(amount) AS total FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $customer_id . "'");
 
         return $query->row['total'];
     }
+
+    public function addFarmerActivity($key, $data) {
+        $dat = $data;
+        if (isset($data['farmer_id'])) {
+            $farmer_id = $data['farmer_id'];
+        } else {
+            $farmer_id = 0;
+        }
+        unset($dat['user_group_id']);
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "farmer_activity` SET `farmer_id` = '" . (int) $farmer_id . "', `user_group_id` = '" . (int) $data['user_group_id'] . "', `key` = '" . $this->db->escape($key) . "', `data` = '" . $this->db->escape(serialize($dat)) . "', `ip` = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', `date_added` = NOW()");
+    }
+
 }

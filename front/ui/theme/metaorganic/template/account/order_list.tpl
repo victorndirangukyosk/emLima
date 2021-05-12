@@ -57,14 +57,14 @@
                     <li class="list-group-item">
                         <div class="my-order-block">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="my-order-delivery">
-                                        <h3 class="my-order-title label" id="orderstatus<?= $order['order_id']; ?>" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;"><?php echo $order['status']; ?></h3>
+                                        <h3 class="my-order-title label" id="orderstatus<?= $order['order_id']; ?>" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2; text-align: center;"><?php echo $order['status']; ?></h3>
 
                                         <span class="my-order-date">ETA: <?php echo $order['eta_date']; ?>, <?php echo $order['eta_time']; ?></span>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <div class="my-order-info">
                                         <h3 class="my-order-title"><?php if($order['order_company'] == NULL) { echo $order['store_name']; ?> (<?php echo $order['name']; ?>) <?php } else { echo $order['order_company']; } ?> - <?php echo $order['total']; ?></h3>
 
@@ -83,7 +83,8 @@
                                     </div>
                                 </div>
                                 <!--<div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['products']; ?> <?= $text_items_ordered?> </a>-->
-                                <div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>    
+                                <!--<div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>-->
+                                <div class="col-md-3"><a href="#"  data-toggle="modal" data-target="#viewProductsModal" onclick="viewProductsModal(('<?php echo $order['order_id']; ?>'));" class="btn-link text_green"><?= $text_view?>  <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>    
                                 <br/>
 
                                     <?php //if($order['realproducts']) { ?>
@@ -101,29 +102,19 @@
                     </li>
                     <li class="list-group-item">
                         <div class="my-order-details" style="border: none !important;">
-                            <?php if($order['parent_details'] != NULL /*&& !empty($_SESSION['parent']) && $_SESSION['parent'] > 0*/) { ?>
                             <div class="row">
-                                <div class="col-md-4">Parent User Email</div>
-                                <div class="col-md-4"><?php echo $order['parent_details']; ?></div>
-                                <div class="col-md-4"><?php echo $order['parent_approval']; ?></div>
+                                <div class="col-md-4"><?= $text_delivery_address?></div>
+                                <?php if(isset($order['shipping_address'])) { ?>
+                                <div class="col-md-5">
+                                    <?= $order['shipping_address']['address'] ?>,<?= $order['shipping_address']['city'] ?>,<?= $order['shipping_address']['zipcode'] ?></div>
+                                <?php } else { ?>
+                                <div class="col-md-5"> </div>
+                                <?php } ?>
+                                <div class="col-md-3">  
+                            <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>">View Billing Details</a> </div>
+
                             </div>
-                            <?php if($order['sub_user_order'] == TRUE) { ?>
-                            <?php if($order['head_chef_email'] != NULL) { ?>
-                            <div class="row">
-                                <div class="col-md-4">First Level Approver</div>
-                                <div class="col-md-4"><?php echo $order['head_chef_email']; ?></div>
-                                <div class="col-md-4"><?php echo $order['head_chef']; ?></div>
-                            </div>
-                            <?php } ?>
-                            <?php if($order['procurement_person_email'] != NULL) { ?>
-                            <div class="row">
-                                <div class="col-md-4">Second Level Approver</div>
-                                <div class="col-md-4"><?php echo $order['procurement_person_email']; ?></div>
-                                <div class="col-md-4"><?php echo $order['procurement']; ?></div>
-                            </div>
-                            <?php } ?>
-                            <?php } ?>
-                            <?php } ?>
+
                             <div class="row">
                                 <div class="col-md-4"><?= $text_payment_options?></div>
                                 <div class="col-md-8"><?php echo $order['payment_method']; ?></div>
@@ -147,24 +138,40 @@
 	
 																<?php } ?>
                                 <?php } ?>
-                            </div>
+                            </div>   
                         </div>
                     </li>
+                    <?php if($order['parent_details'] != NULL /*&& !empty($_SESSION['parent']) && $_SESSION['parent'] > 0*/) { ?>
+                    <li class="list-group-item">
+                        <div class="my-order-details" style="border: none !important;">
+                            <?php if($order['parent_details'] != NULL /*&& !empty($_SESSION['parent']) && $_SESSION['parent'] > 0*/) { ?>
+                            <div class="row">
+                                <div class="col-md-4">Parent User Email</div>
+                                <div class="col-md-4"><?php echo $order['parent_details']; ?></div>
+                                <div class="col-md-4 text-right"><?php echo $order['parent_approval']; ?></div>
+                            </div>
+                            <?php if($order['sub_user_order'] == TRUE) { ?>
+                            <?php if($order['head_chef_email'] != NULL) { ?>
+                            <div class="row">
+                                <div class="col-md-4">First Level Approver</div>
+                                <div class="col-md-4"><?php echo $order['head_chef_email']; ?></div>
+                                <div class="col-md-4 text-right"><?php echo $order['head_chef']; ?></div>
+                            </div>
+                            <?php } ?>
+                            <?php if($order['procurement_person_email'] != NULL) { ?>
+                            <div class="row">
+                                <div class="col-md-4">Second Level Approver</div>
+                                <div class="col-md-4"><?php echo $order['procurement_person_email']; ?></div>
+                                <div class="col-md-4 text-right"><?php echo $order['procurement']; ?></div>
+                            </div>
+                            <?php } ?>
+                            <?php } ?>
+                            <?php } ?>
+                        </div>
+                    </li>
+                    <?php } ?>
                     <li class="list-group-item my-order-details-block">
                         <div class="collapse" id="<?= $order['order_id'] ?>">
-
-                            <div class="my-order-details">
-                                <div class="row">
-                                    <div class="col-md-4"><?= $text_delivery_address?></div>
-                                    <?php if(isset($order['shipping_address'])) { ?>
-                                    <div class="col-md-8">
-                                        <?= $order['shipping_address']['address'] ?> <br/>
-                                        <?= $order['shipping_address']['city'] ?>, <?= $order['shipping_address']['zipcode'] ?></div>
-                                    <?php } else { ?>
-                                    <div class="col-md-8"> </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
                             <div class="my-order-details">
                                 <div class="row">
                                     <div class="col-md-4"><?= $text_payment ?></div>
@@ -175,16 +182,20 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </li> 
-                    <li class="list-group-item">
+                   <!-- <li class="list-group-item">
                         <div class="my-order-showaddress">  
-                            <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>"><?= $text_view_billing?></a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['status'] ?>"><?= $text_view_order?></a>
+                            <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>">View Billing Details</a>&nbsp;|&nbsp;<a class="btn-link text_green" role="button" href="<?php echo ($order['realproducts'] ? $order['real_href'] : $order['href'].'&order_status='.urlencode($order['status'])) ;?>" aria-expanded="false" aria-controls="<?= $order['status'] ?>"><?= $text_view_order?></a>
                             <?php if($order['edit_order'] != NULL && (($order['order_approval_access_role'] == 'head_chef' && $order['head_chef'] == 'Pending') || ($order['order_approval_access_role'] == 'procurement_person' && $order['procurement'] == 'Pending') || (empty($_SESSION['parent']) && $order['parent_approval'] == 'Pending'))) { ?> |&nbsp;<a class="btn-link text_green" role="button" href="<?php echo $order['edit_order']; ?>" id="editorder<?php echo $order['order_id']; ?>" aria-expanded="false">Edit Order</a> <?php } ?>
                         </div>
-                    </li>
+                    </li>-->
+
+                            <?php if($order['edit_order'] != NULL && (($order['order_approval_access_role'] == 'head_chef' && $order['head_chef'] == 'Pending') || ($order['order_approval_access_role'] == 'procurement_person' && $order['procurement'] == 'Pending') || (empty($_SESSION['parent']) && $order['parent_approval'] == 'Pending'))) { ?>
+                            <li class="list-group-item"> <div class="my-order-showaddress"><a class="btn-link text_green" role="button" href="<?php echo $order['edit_order']; ?>" id="editorder<?php echo $order['order_id']; ?>" aria-expanded="false">Edit Order</a> </div>
+                    </li> <?php } ?>
+
+
 
                     <?php if($order['sub_user_order'] == TRUE && $order['parent_approval'] == 'Pending' && $order['head_chef'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
                     <li class="list-group-item">
@@ -316,6 +327,30 @@
 </div>
 
 <?php echo $footer; ?>
+
+
+
+  <div class="editAddressModal">
+        <div class="modal fade" id="viewProductsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog a" role="document" style="top:80px;right:160px;">
+                <div class="modal-content" style="width:170%">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="row">
+                           <div class="col-md-12">
+                                <h2>Order Details</h2>
+                                </div>
+                            
+
+                            <div class="order-details-form-panel">
+                                    <!--  form here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <script src="<?= $base; ?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -790,8 +825,46 @@
         url = 'index.php?path=account/order/export_products_excel&order_id=' + order_id + '&company=' + order_company;
         location = url;
     }
+   function viewProductsModal($order_id) {
+ 
+                //$('#edit-address-message').html('');
+                //$('#edit-address-success-message').html('');
+                console.log($order_id);
+                console.log("order_id");
+                $.ajax({
+                    url: 'index.php?path=account/order/infoPopup',
+                    type: 'get',
+                    async: false,
+                    data: {order_id: $order_id},
+                    dataType: 'html',
+                    cache: false,
+                    success: function(json) {
+
+                        console.log(json);
+                        
+                        //$('.order-details-form-panel').html(json['html']); 
+                        $('.order-details-form-panel').html(json);
+
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                         alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        
+                        return false;
+                    }
+                });
+            }
+
+     
 
 </script>
 </body>
 
 </html>
+
+<style>
+
+.editAddressModal modal-dialog {       
+   
+}
+
+ </style>

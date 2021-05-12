@@ -124,11 +124,10 @@ class ModelCheckoutOrder extends Model {
                 $order_id = $this->session->data['order_id'][$key];
 
                 $this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET order_id='" . $order_id . "', invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int) $data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int) $data['customer_id'] . "', customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float) $data['total'] . "', latitude = '" . $data['latitude'] . "',longitude = '" . $data['longitude'] . "', affiliate_id = '" . (int) $data['affiliate_id'] . "',marketing_id = '" . (int) $data['marketing_id'] . "', tracking = '" . $this->db->escape($data['tracking']) . "', language_id = '" . (int) $data['language_id'] . "', currency_id = '" . (int) $data['currency_id'] . "', currency_code = '" . $this->db->escape($data['currency_code']) . "', currency_value = '" . (float) $data['currency_value'] . "', ip = '" . $this->db->escape($data['ip']) . "', forwarded_ip = '" . $this->db->escape($data['forwarded_ip']) . "', user_agent = '" . $this->db->escape($data['user_agent']) . "', accept_language = '" . $this->db->escape($data['accept_language']) . "', fixed_commission = '" . $this->db->escape($data['fixed_commission']) . "', commission = '" . $this->db->escape($data['commission']) . "',delivery_date = '" . $this->db->escape(date('Y-m-d', strtotime($data['delivery_date']))) . "',delivery_timeslot = '" . $this->db->escape($data['delivery_timeslot']) . "',  date_added = NOW(), date_modified = NOW(), login_latitude = '" . $this->db->escape($data['login_latitude']) . "', login_longitude = '" . $this->db->escape($data['login_longitude']) . "', login_mode = '" . $this->db->escape($data['login_mode']) . "'");
-               //cant place directly in insert , due to dependencies
+                //cant place directly in insert , due to dependencies
 
-                if($this->session->data['adminlogin'] && $this->session->data['adminlogin']==1)
-                {
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET isadmin_login = 1  WHERE order_id='" . $order_id . "'");
+                if ($this->session->data['adminlogin'] && $this->session->data['adminlogin'] == 1) {
+                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET isadmin_login = 1  WHERE order_id='" . $order_id . "'");
                 }
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
@@ -735,6 +734,7 @@ class ModelCheckoutOrder extends Model {
 
                     //$log->write($message);
                     //echo "<pre>";print_r($message);die;
+                    // try{
                     if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
 
@@ -749,6 +749,12 @@ class ModelCheckoutOrder extends Model {
 
                         $log->write('mail end');
                     }
+                    // }
+                    // catch(exception $ex)
+                    // {
+                    //     $log->write('Order History Mail Error');
+                    //     $log->write($ex);
+                    // }
 
 
 
@@ -1177,6 +1183,25 @@ class ModelCheckoutOrder extends Model {
             $this->db->query("INSERT INTO " . DB_PREFIX . "transaction_details SET order_ids = '" . $order_id . "', customer_id = '" . $this->customer->getId() . "', no_of_products = '" . $this->db->escape($data['no_of_products']) . "', `total` = '" . (float) $data['total'] . "',date_added = NOW()");
             $transaction_id = $this->db->getLastId();
             $this->session->data['transaction_id'] = $transaction_id;
+        }
+        if ($data['total'] <= 0 || $data['total'] == NULL) {
+            $log->write('addTransaction Mail');
+            $log->write($data);
+            $log->write('addTransaction Mail');
+            try {
+                $subject = 'Order Total Value Zero';
+                $message = 'Order ID : ' . $order_id . ' ' . ' Order Total:' . $data['total'];
+
+                $mail = new mail($this->config->get('config_mail'));
+                $mail->setTo('bugs.kwikbasket@yopmail.com');
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSubject($subject);
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setHtml($message);
+                $mail->send();
+            } catch (Exception $e) {
+                
+            }
         }
     }
 
@@ -1681,19 +1706,24 @@ class ModelCheckoutOrder extends Model {
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
         $log->write('EMAIL SENDING');
-        
-        if($customer_info['email_notification'] == 1) {
-        $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $customer_info);
-        $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $customer_info);
+        try {
+            if ($customer_info['email_notification'] == 1) {
+                $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $customer_info);
+                $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $customer_info);
 
-        $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo($customer_info['email']);
-        $mail->setFrom($this->config->get('config_from_email'));
-        $mail->setSender($this->config->get('config_name'));
-        $mail->setSubject($subject);
-        $mail->setHTML($message);
-        $mail->send();
+                $mail = new Mail($this->config->get('config_mail'));
+                $mail->setTo($customer_info['email']);
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setSubject($subject);
+                $mail->setHTML($message);
+                $mail->send();
+            }
+        } catch (exception $ex) {
+            $log->write('SendMailToParentUser Error');
+            $log->write($ex);
         }
+
 
         $log->write('status enabled of mobi noti');
         $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $customer_info);
@@ -1732,16 +1762,21 @@ class ModelCheckoutOrder extends Model {
 
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
-                    
-                    if($order_approval_access_use['email_notification'] == 1) {
-                    $mail = new Mail($this->config->get('config_mail'));
-                    $mail->setTo($order_approval_access_use['email']);
-                    $mail->setFrom($this->config->get('config_from_email'));
-                    $mail->setSender($this->config->get('config_name'));
-                    $mail->setSubject($subject);
-                    $mail->setHTML($message);
-                    $mail->send();
+                    try {
+                        if ($order_approval_access_use['email_notification'] == 1) {
+                            $mail = new Mail($this->config->get('config_mail'));
+                            $mail->setTo($order_approval_access_use['email']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setSubject($subject);
+                            $mail->setHTML($message);
+                            $mail->send();
+                        }
+                    } catch (exception $ex) {
+                        $log->write('SendMailToParentUser Error');
+                        $log->write($ex);
                     }
+
 
                     $log->write('status enabled of mobi noti');
                     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
@@ -1772,18 +1807,23 @@ class ModelCheckoutOrder extends Model {
                     $log->write('EMAIL SENDING');
                     $log->write($customer_info);
                     $log->write('EMAIL SENDING');
-                    
-                    if($order_approval_access_use['email_notification'] == 1) {
-                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
-                    $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
 
-                    $mail = new Mail($this->config->get('config_mail'));
-                    $mail->setTo($order_approval_access_use['email']);
-                    $mail->setFrom($this->config->get('config_from_email'));
-                    $mail->setSender($this->config->get('config_name'));
-                    $mail->setSubject($subject);
-                    $mail->setHTML($message);
-                    $mail->send();
+                    try {
+                        if ($order_approval_access_use['email_notification'] == 1) {
+                            $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
+                            $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
+
+                            $mail = new Mail($this->config->get('config_mail'));
+                            $mail->setTo($order_approval_access_use['email']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setSubject($subject);
+                            $mail->setHTML($message);
+                            $mail->send();
+                        }
+                    } catch (exception $ex) {
+                        $log->write('SendMailToParentUser Error');
+                        $log->write($ex);
                     }
 
                     $log->write('status enabled of mobi noti');
@@ -1819,18 +1859,18 @@ class ModelCheckoutOrder extends Model {
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-        
+
         $parent_customer_info = NULL;
         if ($is_he_parents != NULL && $is_he_parents > 0) {
             $parent_customer_info = $this->model_account_customer->getCustomer($is_he_parents);
         }
-        
+
         $sub_customer_order_approval_required = 1;
-        if(isset($parent_customer_info) && $parent_customer_info != NULL && is_array($parent_customer_info)) {
-        $sub_customer_info = $this->model_account_customer->getCustomer($this->customer->getId());    
-        $sub_customer_order_approval_required = $sub_customer_info['sub_customer_order_approval'];    
+        if (isset($parent_customer_info) && $parent_customer_info != NULL && is_array($parent_customer_info)) {
+            $sub_customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $sub_customer_order_approval_required = $sub_customer_info['sub_customer_order_approval'];
         }
-        
+
         $order_appoval_access = FALSE;
         if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL && $sub_customer_order_approval_required == 1) {
             $order_appoval_access = TRUE;
@@ -1875,33 +1915,32 @@ class ModelCheckoutOrder extends Model {
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-          
+
         $parent_customer_info = NULL;
         if ($is_he_parents != NULL && $is_he_parents > 0) {
             $parent_customer_info = $this->model_account_customer->getCustomer($is_he_parents);
         }
-        
+
         $sub_customer_order_approval_required = 1;
-        if(isset($parent_customer_info) && $parent_customer_info != NULL && is_array($parent_customer_info)) {
-        // $sub_customer_order_approval_required = $parent_customer_info['sub_customer_order_approval'];    
-        
-        $sub_customer_info = $this->model_account_customer->getCustomer($this->customer->getId());    
-        $sub_customer_order_approval_required = $sub_customer_info['sub_customer_order_approval'];    
-        
-    }
-        
+        if (isset($parent_customer_info) && $parent_customer_info != NULL && is_array($parent_customer_info)) {
+            // $sub_customer_order_approval_required = $parent_customer_info['sub_customer_order_approval'];    
+
+            $sub_customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $sub_customer_order_approval_required = $sub_customer_info['sub_customer_order_approval'];
+        }
+
         $order_appoval_access = FALSE;
         // if ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) {
-        if ($order_approval_access > 0 && $order_approval_access_role != NULL  && $sub_customer_order_approval_required == 1) {
+        if ($order_approval_access > 0 && $order_approval_access_role != NULL && $sub_customer_order_approval_required == 1) {
             $order_appoval_access = TRUE;
-        } 
+        }
         $log->write('Order Confirm In COD FRONT/MODEL/CHECKOUT/ORDER.PHP');
         $log->write($is_he_parents);
         $log->write('Order Confirm In COD FRONT/MODEL/CHECKOUT/ORDER.PHP');
 
         $head_chef = 'Approved';
         $procurement = 'Approved';
-        if ($is_he_parents != NULL && $is_he_parents > 0 && $order_appoval_access == FALSE  && $sub_customer_order_approval_required == 1) {
+        if ($is_he_parents != NULL && $is_he_parents > 0 && $order_appoval_access == FALSE && $sub_customer_order_approval_required == 1) {
             $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
             $order_approval_access_user = $order_approval_access->rows;
 
@@ -1924,8 +1963,8 @@ class ModelCheckoutOrder extends Model {
             }
         }
         $log->write('UPDATING SUB USER ORDER' . $order_id);
-        $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE  || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
-        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE  || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
+        $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $parent_approval . "',head_chef = '" . $head_chef . "',procurement = '" . $procurement . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
     }
 

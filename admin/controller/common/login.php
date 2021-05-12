@@ -24,6 +24,7 @@ class ControllerCommonLogin extends Controller {
             //echo "<pre>";print_r($this->request->post);die;
 
             $this->session->data['token'] = md5(mt_rand());
+            $this->session->data['admintoken'] =  $this->session->data['token'];//this name is used in API
 
             if (!empty($this->request->post['lang'])) {
                 $this->session->data['language'] = $this->request->post['lang'];
@@ -153,6 +154,7 @@ class ControllerCommonLogin extends Controller {
             'name' => $this->config->get('config_name'),
             'href' => HTTP_CATALOG,
         ];
+        $data['farmer_login'] = $this->url->link('common/farmer', '', 'SSL');
 
         // Language list
         $this->load->model('localisation/language');
@@ -197,18 +199,25 @@ class ControllerCommonLogin extends Controller {
         }
 
         $ignore = [
+            'common/farmer',
+            'common/farmerforgotten',
+            'common/farmerreset',
             'common/login',
             'common/forgotten',
             'common/reset',
             'common/scheduler',
+            'common/loginAPI',
         ];
 
-        if (!$this->user->isLogged() && !in_array($path, $ignore)) {
+        if (!$this->user->isLogged() && !$this->user->isFarmerLogged() && !in_array($path, $ignore)) {
             return new Action('common/login');
         }
 
         if (isset($this->request->get['path'])) {
             $ignore = [
+                'common/farmer',
+                'common/farmerforgotten',
+                'common/farmerreset',
                 'common/login',
                 'common/logout',
                 'common/forgotten',
@@ -216,6 +225,7 @@ class ControllerCommonLogin extends Controller {
                 'error/not_found',
                 'error/permission',
                 'common/scheduler',
+                'common/loginAPI',
             ];
 
             if (!in_array($path, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {

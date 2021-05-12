@@ -580,15 +580,22 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
         });
 
         $('#farmer-register-button').click(function (e) {
+            console.log('Farmer Registration!');
             e.preventDefault();
-
+            
+            var login_latitude = $('#lat').val();
+            var login_longitude = $('#lng').val();
             const firstName = $('#farmer-first-name').val();
                     const lastName = $('#farmer-last-name').val();
                     const email = $('#farmer-email').val();
                     const phone = $('#farmer-phone').val();
                     const farmerType = $('#farmer-type').val();
                     const farmLocation = $('#farmer-location').val();
-                    const produceDescription = $('farmer-produce-grown').val();
+                    const farmIrrigationType = $('#irrigation-type').val();
+                    const produceDescription = $('#farmer-produce-grown').val();
+                    const farmsize = $('#farm-size').val();
+                    const farmsizetype = $('#farm-size-type').val();
+                    const farmerorganization = $('#farmer-organization').val();
                     const registerButton = $('#farmer-register-button');
                     if (grecaptcha.getResponse() == '') {
                 iziToast.warning({
@@ -597,45 +604,55 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                 });
             } else {
                 if ($('#farmer-registration-form')[0].reportValidity()) {
-                    iziToast.success({
+                    /*iziToast.success({
                         position: 'topRight',
                         message: 'Thanks for registering. We\'ll get in touch'
                     });
 
-                    $('#farmer-registration-form')[0].reset();
-                    // registerButton.text('PLEASE WAIT');
-                    // registerButton.toggleClass('disabled');
+                    $('#farmer-registration-form')[0].reset();*/
+                     registerButton.text('PLEASE WAIT');
+                     registerButton.toggleClass('disabled');
 
-                    // $.ajax({
-                    //   url: 'index.php?path=account/farmerregister/register',
-                    //   type: 'POST',
-                    //   dataType: 'json',
-                    //   data: { 
-                    //     name: firstName + ' ' + lastName,
-                    //     email: email,
-                    //     telephone: phone
-                    //   },
-                    //   success: function (json) {
-                    //     registerButton.text('REGISTER');
-                    //     registerButton.toggleClass('disabled');
+                     $.ajax({
+                       url: 'index.php?path=account/farmerregister/register',
+                       type: 'POST',
+                       dataType: 'json',
+                       data: { 
+                         first_name : firstName,
+                         last_name : lastName,
+                         email: email,
+                         telephone: phone,
+                         farmer_type : farmerType,
+                         farmer_location  : farmLocation,
+                         farmer_irrigation_type : farmIrrigationType,
+                         farmer_description : produceDescription,
+                         farmsize : farmsize,
+                         farmerorganization : farmerorganization,
+                         farmsizetype : farmsizetype,
+                         login_latitude : login_latitude,
+                         login_longitude : login_longitude,
+                       },
+                       success: function (json) {
+                         registerButton.text('REGISTER');
+                         registerButton.toggleClass('disabled');
 
-                    //     if (json['status']) {
-                    //       iziToast.success({
-                    //         position: 'topRight',
-                    //         message: json['success_message']
-                    //       });
+                         if (json['status']) {
+                           iziToast.success({
+                             position: 'topRight',
+                             message: json['success_message']
+                           });
 
-                    //       $('#farmer-registration-form')[0].reset();
+                           $('#farmer-registration-form')[0].reset();
 
-                    //     } else {
-                    //       iziToast.warning({
-                    //         position: 'topRight',
-                    //         title: 'Oops',
-                    //         message: 'We couldn\'t register you. Please try again'
-                    //       });
-                    //     }
-                    //   }
-                    // });
+                         } else {
+                           iziToast.warning({
+                             position: 'topRight',
+                             title: 'Oops',
+                             message: json['error_warning']+' '+'We couldn\'t register you. Please try again'
+                           });
+                         }
+                       }
+                     });
                 }
             }
         });
@@ -645,7 +662,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
             var url = 'index.php?path=common/home/careers';
 
 
-            var filter_category = $('#careers-job-category').val();
+            var filtser_category = $('#careers-job-category').val();
 
             if (filter_category && filter_category != "All Job Category") {
                 url += '&filter_category=' + encodeURIComponent(filter_category);
@@ -718,5 +735,9 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
              console.log(position.coords.latitude);
              console.log(position.coords.longitude);
          }
-
+         
+         $(document).delegate(':input', 'keyup change', function (e) {
+          getLocationOnly();   
+         });
+         
 })(jQuery, window, document);

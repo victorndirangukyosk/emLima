@@ -56,6 +56,9 @@ class ControllerErrorPermission extends Controller
             }
 
             $ignore = [
+                'common/farmer',
+                'common/farmerforgotten',
+                'common/farmerreset',
                 'common/dashboard',
                 'common/login',
                 'common/logout',
@@ -74,6 +77,7 @@ class ControllerErrorPermission extends Controller
                 'dashboard/recenttabs',
                 'dashboard/sale',
                 'common/scheduler',
+                'common/loginAPI',
             ];
 
             if (!in_array($path, $ignore) && !$this->user->hasPermission('access', $path)) {

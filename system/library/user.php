@@ -3,6 +3,7 @@
 class User extends SmartObject {
 
     protected $user_id;
+    protected $farmer_id;
     protected $username;
     protected $permission = [];
     protected $db;
@@ -41,6 +42,32 @@ class User extends SmartObject {
                 $this->user_group_name = $user_group_details->row['name'];
                 $this->firstname = $user_query->row['firstname'];
                 $this->lastname = $user_query->row['lastname'];
+            } else {
+                $this->logout();
+            }
+        } elseif (isset($this->session->data['farmer_id'])) {
+            $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "farmer WHERE farmer_id = '" . (int) $this->session->data['farmer_id'] . "' AND status = '1'");
+
+            if ($user_query->num_rows) {
+                $this->farmer_id = $user_query->row['farmer_id'];
+                $this->username = $user_query->row['username'];
+                $this->user_group_id = $user_query->row['user_group_id'];
+
+                $this->db->query('UPDATE ' . DB_PREFIX . "farmer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE farmer_id = '" . (int) $this->session->data['farmer_id'] . "'");
+
+                $user_group_query = $this->db->query('SELECT permission FROM ' . DB_PREFIX . "user_group WHERE user_group_id = '" . (int) $user_query->row['user_group_id'] . "'");
+
+                $permissions = unserialize($user_group_query->row['permission']);
+
+                if (is_array($permissions)) {
+                    foreach ($permissions as $key => $value) {
+                        $this->permission[$key] = $value;
+                    }
+                }
+                $user_group_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user_group WHERE user_group_id = '" . (int) $user_query->row['user_group_id'] . "'");
+                $this->user_group_name = $user_group_details->row['name'];
+                $this->firstname = $user_query->row['first_name'];
+                $this->lastname = $user_query->row['last_name'];
             } else {
                 $this->logout();
             }
@@ -88,10 +115,43 @@ class User extends SmartObject {
         }
     }
 
+    public function farmer($username, $password) {
+        $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "farmer WHERE username = '" . $this->db->escape($username) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1'");
+
+        if ($user_query->num_rows) {
+            $this->session->data['farmer_id'] = $user_query->row['farmer_id'];
+
+            $this->farmer_id = $user_query->row['farmer_id'];
+            $this->username = $user_query->row['username'];
+            $this->user_group_id = $user_query->row['user_group_id'];
+
+            $user_group_query = $this->db->query('SELECT permission FROM ' . DB_PREFIX . "user_group WHERE user_group_id = '" . (int) $user_query->row['user_group_id'] . "'");
+
+            $permissions = unserialize($user_group_query->row['permission']);
+
+            if (is_array($permissions)) {
+                foreach ($permissions as $key => $value) {
+                    $this->permission[$key] = $value;
+                }
+            }
+
+            $user_group_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "user_group WHERE user_group_id = '" . (int) $user_query->row['user_group_id'] . "'");
+            $this->user_group_name = $user_group_details->row['name'];
+            $this->firstname = $user_query->row['first_name'];
+            $this->lastname = $user_query->row['last_name'];
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function logout() {
         unset($this->session->data['user_id']);
+        unset($this->session->data['farmer_id']);
 
         $this->user_id = '';
+        $this->farmer_id = '';
         $this->username = '';
     }
 
@@ -105,6 +165,10 @@ class User extends SmartObject {
 
     public function isLogged() {
         return $this->user_id;
+    }
+
+    public function isFarmerLogged() {
+        return $this->farmer_id;
     }
 
     public function isVendor() {
@@ -125,8 +189,21 @@ class User extends SmartObject {
         }
     }
 
+    public function isFarmer() {
+        $farmer_group_id = $this->config->get('config_farmer_group_id');
+        if ($this->user_group_id == $farmer_group_id) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function getId() {
         return $this->user_id;
+    }
+
+    public function getFarmerId() {
+        return $this->farmer_id;
     }
 
     public function getUserName() {

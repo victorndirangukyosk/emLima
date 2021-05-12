@@ -2,10 +2,14 @@
 
 // Heading
 $_['heading_title'] = 'Vendor Products';
+$_['heading_page_title'] = 'Inventory History';
+$_['heading_price_title'] = 'Inventory Price History';
+
 
 // Text
 $_['text_success'] = 'Success: You have modified products!';
 $_['text_list'] = 'Product List';
+$_['text_page_list'] = 'History List';
 $_['text_add'] = 'Add Product';
 $_['text_edit'] = 'Edit Product';
 $_['text_plus'] = '+';
@@ -19,7 +23,20 @@ $_['text_select_store'] = 'Select Store';
 
 // Column
 $_['column_name'] = 'Product Name';
-$_['column_store_name'] = 'Store Name';
+$_['column_product_id'] = 'Product Id';
+$_['column_product_store_id'] = 'Product Store Id';
+$_['column_procured_qty'] = 'Procured Quantity';
+$_['column_buying_price'] = 'Buying Price';
+$_['column_prev_buying_price'] = 'Previous Buying Price';
+$_['column_source'] = 'Source';
+$_['column_prev_source'] = 'Previous Source';
+$_['column_updation_date'] = 'Updated Date';
+$_['column_updated_by'] = 'Updated By';
+$_['column_added_user_role'] = 'User Role';
+$_['column_date_added'] = 'Date Added';
+$_['column_rejected_qty'] = 'Rejected Quantity';
+$_['column_prev_quantity'] = 'Previous Quantity';
+$_['column_updated_quantity'] = 'Updated Quanity';
 
 $_['column_unit'] = 'Unit Size';
 
@@ -93,6 +110,8 @@ $_['entry_reward'] = 'Reward Points';
 $_['entry_layout'] = 'Layout Override';
 $_['entry_recurring'] = 'Recurring Profile';
 $_['entry_special_price'] = 'Special Price';
+$_['entry_date_added'] = 'Dated Added';
+$_['entry_product_name'] = 'Product Name';
 
 $_['entry_unit'] = 'Unit Size';
 

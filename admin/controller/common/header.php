@@ -53,6 +53,7 @@ class ControllerCommonHeader extends Controller
             $data['accountsetting'] = $this->url->link('account/settings', 'token='.$this->session->data['token'], 'SSL');
 
             $data['logout'] = $this->url->link('common/logout', 'token='.$this->session->data['token'], 'SSL');
+            $data['farmer_logout'] = $this->url->link('common/logout/farmer', 'token='.$this->session->data['token'], 'SSL');
 
             $data['preturn_update'] = $this->user->hasPermission('access', 'common/update');
             $data['update'] = $this->url->link('common/update', 'token='.$this->session->data['token'], 'SSL');
@@ -114,10 +115,16 @@ class ControllerCommonHeader extends Controller
 
                 $this->load->model('sale/customer');
 
-                $customer_total = $this->model_sale_customer->getTotalCustomers(['filter_approved' => false]);
+                $filter_cust_data = [                    
+                    'filter_approved' => 0,                   
+                    'filter_parent_customer' => $filter_parent_customer,
+                    'filter_parent_customer_id' => $filter_parent_customer_id,
+                     ];
+
+                $customer_total = $this->model_sale_customer->getTotalCustomers($filter_cust_data);
 
                 $data['customer_total'] = $customer_total;
-                $data['customer_approval'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&filter_approved=0', 'SSL');
+                $data['customer_approval'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&filter_approved=0&sort=c.date_added&order=DESC', 'SSL');
 
                 // Processing Orders
                 $data['order_status_total'] = $this->model_sale_order->getTotalOrders(['filter_order_status' => implode(',', $this->config->get('config_processing_status'))]);
@@ -157,14 +164,23 @@ class ControllerCommonHeader extends Controller
             $this->load->language('common/menu');
 
             $this->load->model('user/user');
+            $this->load->model('user/farmer');
 
             $this->load->model('tool/image');
-
+            
+            $log = new Log('error.log');
+            $user_info = NULL;
+            if($this->user->getId() != NULL) {
             $user_info = $this->model_user_user->getUser($this->user->getId());
+            }
+            
+            if($this->user->getFarmerId() != NULL) {
+            $user_info = $this->model_user_farmer->getFarmer($this->user->getFarmerId());
+            }
 
             if ($user_info) {
-                $data['firstname'] = $user_info['firstname'];
-                $data['lastname'] = $user_info['lastname'];
+                $data['firstname'] = isset($user_info['firstname']) ? $user_info['firstname'] : $user_info['first_name'];
+                $data['lastname'] = isset($user_info['lastname']) ? $user_info['lastname'] : $user_info['last_name'];
                 $data['username'] = $user_info['username'];
 
                 $data['user_group'] = $user_info['user_group'];

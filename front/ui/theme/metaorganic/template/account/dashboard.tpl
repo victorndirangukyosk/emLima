@@ -107,7 +107,7 @@
           <div class="panel-body" width="50%">
             <div class="tab-content panel" width="50%">
               <div id="dash_recent_orders" class="tab-pane active" width="50%">
-                <ul class="timeline">
+                  <ul class="timeline" id="timeline">
                   <?php if ($DashboardData['recent_activity']) { ?>
                   <?php foreach ($DashboardData['recent_activity'] as $resat) { ?>
                   <li class="tl-item">
@@ -136,13 +136,10 @@
       <div class="col-md-6">
         <div id="recenttabs" class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Most bought Products (Last 30 days)
-            </h3>
-            <span style="margin-top:-5px;background-color: #f38733;" class="butsetview"><a target="_blank"
-                href="<?php echo BASE_URL;?>/index.php?path=account/dashboard/getRecentOrderProductsList">View All
-              </a></span>
+            <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Most bought Products </h3>
+            <span style="margin-top:-5px;background-color: #f38733;" class="butsetview"><a href="#" id="mbp"> View All </a></span>
             <div class="pull-right">
-              <button type="button" style="margin-top:-5px;height:31px" onclick="excel();" data-toggle="tooltip" title=""
+              <button type="button" style="margin-top:-5px;height:31px" onclick="excel_new();" data-toggle="tooltip" title=""
                 class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
             </div>
           </div>
@@ -150,7 +147,7 @@
           <div class="panel-body" width="100%">
             <div class="tab-content panel" width="100%">
               <div class="table-responsive" width="100%">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="most">
                   <thead>
                     <tr>
                       <td>Product Name</td>
@@ -192,13 +189,12 @@
           <div class="panel-heading">
             <h3 class="panel-title"><i class="fa fa-th-list fa-lg"></i> Recent Orders
             </h3>
-            <span style="margin-top:-5px;background-color: #f38733;" class="butsetview"><a target="_blank"
-                href="<?php echo BASE_URL;?>/index.php?path=account/dashboard/getRecentOrdersList">View All </a></span>
+              <span style="margin-top:-5px;background-color: #f38733;" class="butsetview"><a href="#" id="ro">View All </a></span>
           </div>
           <div class="panel-body" width="50%">
             <div class="tab-content panel" width="50%">
               <div class="table-responsive" width="50%">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="customer_recent_orders">
                   <thead>
                     <tr>
                       <td>Order Id</td>
@@ -375,6 +371,9 @@
       /******************************************/
 
       getNewData();
+      getCustomerMostBoughtProducts();
+      getRecentActivities();
+      getRecentOrders();
     };
 
     var option_daterangepicker = {
@@ -419,16 +418,22 @@
     jQuery('#reportrange').daterangepicker(option_daterangepicker, cb);
 
     start_date = option_daterangepicker.startDate.format('YYYY-MM-DD');
-    end_date = option_daterangepicker.endDate.format('YYYY-MM-DD')
+    end_date = option_daterangepicker.endDate.format('YYYY-MM-DD');
+    $(".cancelBtn").hide();
 
 
     getNewData();
+    getCustomerMostBoughtProducts();
+    getRecentActivities();
+    getRecentOrders();
   });
 
 
   $(document).delegate('.company-name', 'change', function () {
     getNewData();
-
+    getCustomerMostBoughtProducts();
+    getRecentActivities();
+    getRecentOrders();
   });
 
   function getNewData() {
@@ -455,7 +460,63 @@
     //recentPattern($optionvalue);
   }
 
+  function getCustomerMostBoughtProducts() {
+          $optionvalue = $('.company-name option:selected').val();
+    // alert($optionvalue);
 
+    $.ajax({
+      type: 'get',
+      url: 'index.php?path=account/dashboard/getCustomerMostBoughtProducts&start=' + start_date + '&end=' + end_date + '&customer_id=' + $optionvalue,
+      dataType: 'html',
+      cache: false,
+      async: false,
+      beforeSend: function() { },
+      complete: function() { },
+      success: function(html) { 
+          console.log(html);
+          console.log(html);
+             $("#most tbody").empty().append(html);
+      }
+    });
+  }
+  
+  function getRecentActivities() {
+          $optionvalue = $('.company-name option:selected').val();
+    // alert($optionvalue);
+
+    $.ajax({
+      type: 'get',
+      url: 'index.php?path=account/dashboard/getRecentActivities&start=' + start_date + '&end=' + end_date + '&customer_id=' + $optionvalue,
+      dataType: 'html',
+      cache: false,
+      async: false,
+      beforeSend: function() { },
+      complete: function() { },
+      success: function(html) { 
+          console.log(html);
+          $("#dash_recent_orders ul").empty().append(html);
+      }
+    });
+  }
+  
+  function getRecentOrders() {
+          $optionvalue = $('.company-name option:selected').val();
+    // alert($optionvalue);
+
+    $.ajax({
+      type: 'get',
+      url: 'index.php?path=account/dashboard/getRecentOrders&start=' + start_date + '&end=' + end_date + '&customer_id=' + $optionvalue,
+      dataType: 'html',
+      cache: false,
+      async: false,
+      beforeSend: function() { },
+      complete: function() { },
+      success: function(html) { 
+          console.log(html);
+          $("#customer_recent_orders tbody").empty().append(html);
+      }
+    });
+  }
 
 
   function getPurchaseHistory($product_id) {
@@ -488,6 +549,43 @@
         $('input[name="qunatitypurchased"]').val('');
         $('input[name="totalvalue"]').val('');
 
+        return false;
+      }
+    });
+
+
+
+    $('input[name="product_id"]').val($product_id);
+
+  }
+  
+  function getPurchaseHistoryNew($product_id) {
+
+    //   $('#poModal-message').html(''); 
+    $customer_id = $('.company-name option:selected').val();
+    $.ajax({
+      url: 'index.php?path=account/dashboard/getPurchaseHistoryNew&start=' + start_date + '&end=' + end_date + '&product_id=' + $product_id + '&customer_id=' + $customer_id,
+      type: 'get',
+      dataType: 'json',
+      async: true,
+      success: function (json) {
+        console.log(json);
+        if (json['status']) {
+          $('input[name="timespurchased"]').val(json['timespurchased']);
+          $('input[name="qunatitypurchased"]').val(json['qunatitypurchased']);
+          $('input[name="totalvalue"]').val(json['totalvalue']);
+        }
+        else {
+          $('input[name="timespurchased"]').val('');
+          $('input[name="qunatitypurchased"]').val('');
+          $('input[name="totalvalue"]').val('');
+
+        }
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        $('input[name="timespurchased"]').val('');
+        $('input[name="qunatitypurchased"]').val('');
+        $('input[name="totalvalue"]').val('');
         return false;
       }
     });
@@ -653,6 +751,14 @@
 
     location = url;
   }
+  
+    function excel_new() {
+    var optionvalue = $('.company-name option:selected').val();
+    console.log(optionvalue);
+    url = 'index.php?path=account/dashboard/export_mostpurchased_products_excel_new&start=' + start_date + '&end=' + end_date + '&customer_id='+ optionvalue;
+
+    location = url;
+  }
 
 
 
@@ -710,8 +816,8 @@
               position: 'absolute',
              // left: item.pageX - ($('#tooltip').outerWidth() / 2),
               //top: item.pageY - $('#tooltip').outerHeight(),
-               left: item.pageX - 100,
-              top: item.pageY - 10,
+               left: item.pageX - 30,
+              top: item.pageY - 50,
               pointer: 'cusror'
             }).fadeIn('slow');
 
@@ -729,7 +835,20 @@
     });
 
   }
-
+  
+  $(document).delegate('#mbp', 'click', function (e) {
+           e.preventDefault();
+           var optionvalue = $('.company-name option:selected').val();
+           var url = 'index.php?path=account/dashboard/getRecentOrderProductsList_new&start=' + start_date + '&end=' + end_date + '&customer_id=' + optionvalue;  
+           window.open(url);
+  });
+  
+  $(document).delegate('#ro', 'click', function (e) {
+           e.preventDefault();
+           var optionvalue = $('.company-name option:selected').val();
+           var url = 'index.php?path=account/dashboard/getRecentOrdersList&start=' + start_date + '&end=' + end_date + '&customer_id=' + optionvalue;  
+           window.open(url);
+  });
 </script>
 
 

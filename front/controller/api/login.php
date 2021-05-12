@@ -71,30 +71,90 @@ class ControllerApiLogin extends Controller {
     }
 
 
-    //Customer login by admin for mobile app
+    //Customer login by admin for new app//same method replicated in admin module regarding token session
     //this is temperory method, need to validate, category pricing, two level approval process,tax
     public function getloginbyadmin($args) {
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
-        $json['customer_id'] = $args['customer_id'];
+        // $json['customer_id'] = $args['customer_id'];
         $json['url'] = [];
 
-        if (isset($args['customer_id'])) {
-            $customer_id = $args['customer_id'];
-        } else {
-            $customer_id = 0;
+        // if (isset($args['customer_id'])) {
+        //     $customer_id = $args['customer_id'];
+        // } else {
+        //     $customer_id = 0;
+        // }
+
+        //below token check added for security
+        #region       
+
+
+        // if ((isset($this->session->data['token']) && !isset($this->request->get['token'])) || ((isset($this->request->get['token']) && (isset($this->session->data['token']) && ($this->request->get['token'] != $this->session->data['token']))))) {
+        //     $this->error['warning'] = $this->language->get('error_token');
+        // }
+
+            // echo "<pre>";print_r($this->session);die; 
+            
+        if(!isset($this->request->get['admintoken']))
+        {
+            $json['message'] = 'Please check the URL... ';                    
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
         }
+
+        // if(!isset($this->session->data['admintoken']))
+        // {
+        //     $json['message'] = 'Please login again as Admin ';                    
+        //     $this->response->addHeader('Content-Type: application/json');
+        //     $this->response->setOutput(json_encode($json));
+        //     return;
+        // }
+        // if ((isset($this->session->data['admintoken']) && !isset($this->request->get['token'])) || ((isset($this->request->get['token']) && (isset($this->session->data['admintoken']) && ($this->request->get['token'] != $this->session->data['admintoken']))))) {
+        
+        //     $json['message'] = 'Authentication Failed.Please login again as Admin';                    
+        //     $this->response->addHeader('Content-Type: application/json');
+        //     $this->response->setOutput(json_encode($json));
+        //     return;
+        // } session not coming from Admin folder ,so implementing base64
+
+        $admintoken= base64_decode($this->request->get['admintoken']);
+        $tokenvalue= (explode(":",$admintoken));
+        
+            if (isset($tokenvalue[1])) {
+                $customervalue = $tokenvalue[1];
+                $key = (int)(date("dmY")); 
+                $customer_id= $customervalue-$key;
+                $json['customer_id'] =$customer_id;
+                
+            }
+           
+            // echo "<pre>";print_r((int)($customer_id));die; 
+
+        #endregion
+
         // $this->load->model('sale/customer');
         // $customer_info = $this->model_sale_customer->getCustomer($customer_id);
 
         $this->load->model('account/customer');
-        $customer_info = $this->model_account_customer->getCustomer($args['customer_id']);
-        $customer_info['devices'] = $this->model_account_customer->getCustomerDevices($api_info['customer_id']);
+        $customer_info = $this->model_account_customer->getCustomer($customer_id);
        
-        if ($customer_info) {
-            $token = md5(mt_rand());
+
+        if (array_key_exists('customer_id', $customer_info)) {
+            // echo "<pre>";print_r(($customer_info));die; 
+            if($customer_info['email']!=$tokenvalue[0])
+            {
+                $json['message'] = 'User emaial does not match'; 
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+                return;
+            }
+        $customer_info['devices'] = $this->model_account_customer->getCustomerDevices($api_info['customer_id']);
+
+
+            $token = md5(mt_rand()); 
 
              $this->model_account_customer->editToken($customer_id, $token);
             if (isset($args['store_id'])) {
@@ -296,6 +356,54 @@ class ControllerApiLogin extends Controller {
         
 
          
+    }
+
+    //below method used to check dmin login token/session token
+    public function check() {
+        $path = '';
+
+        if (isset($this->request->get['path'])) {
+            $part = explode('/', $this->request->get['path']);
+
+            if (isset($part[0])) {
+                $path .= $part[0];
+            }
+
+            if (isset($part[1])) {
+                $path .= '/' . $part[1];
+            }
+        }
+
+        $ignore = [
+            'common/login',
+            'common/forgotten',
+            'common/reset',
+            'common/scheduler',
+        ];
+
+        if (!$this->user->isLogged() && !in_array($path, $ignore)) {
+            return new Action('common/login');
+        }
+
+        if (isset($this->request->get['path'])) {
+            $ignore = [
+                'common/login',
+                'common/logout',
+                'common/forgotten',
+                'common/reset',
+                'error/not_found',
+                'error/permission',
+                'common/scheduler',
+            ];
+
+            if (!in_array($path, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
+                return new Action('common/login');
+            }
+        } else {
+            if (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
+                return new Action('common/login');
+            }
+        }
     }
 
 }

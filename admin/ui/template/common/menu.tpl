@@ -1,5 +1,7 @@
 <ul id="menu">
+    <?php if(!$this->user->isFarmer()) { ?>
     <li id="dashboard"><a href="<?php echo $dashboard; ?>"><i class="fa fa-dashboard fa-fw"></i> <span><?php echo $text_dashboard; ?></span></a></li>
+    <?php } ?>
     <?php
     if($preturn_cat_packages != false || $preturn_general_products != false || $preturn_category != false || $preturn_product != false || $preturn_review != false || $preturn_information != false ) {
     ?>
@@ -63,10 +65,18 @@
         <a class="parent"><i class="fa fa-cubes fa-fw"></i> <span>Inventory</span></a>
         <ul>
           <?php if($preturn_vendor_product != false){ ?>
+            <li><a class="parent">Inventory</a>
+            <ul>
             <li><a href="<?php echo $inventory_management; ?>">Inventory</a></li>
+            <li><a href="<?php echo $inventory_management_update_history; ?>">Inventory History</a></li>
+            </ul>
           <?php } ?>
-          <?php if($preturn_vendor_product != false){ ?>
-            <li><a href="<?php echo $inventory_management_update; ?>">Inventory Management</a></li>
+          <?php if($preturn_vendor_product != falses){ ?>
+          <li><a class="parent">Inven. Management</a>
+            <ul>
+            <li><a href="<?php echo $inventory_management_update; ?>">Inven. Management</a></li>
+            <li><a href="<?php echo $inventory_management_price; ?>">History</a></li>
+            </ul>
           <?php } ?>
         </ul>
     </li>
@@ -157,6 +167,21 @@
             <?php } ?>
             <?php if($preturn_customer_ban_ip) { ?>
             <li><a href="<?php echo $customer_ban_ip; ?>"><?php echo $text_customer_ban_ip; ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+    
+        <?php
+    if( $preturn_farmer != false || $preturn_farmertransactions != false) {
+    ?>
+    <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_farmer; ?></span></a>
+        <ul class="collapse">
+            <?php if($preturn_customer) { ?>
+            <li><a href="<?php echo $farmer; ?>"><?php echo $text_farmer; ?></a></li>
+            <?php } ?>
+            <?php if($preturn_farmertransactions) { ?>
+            <li><a href="<?php echo $farmertransactions; ?>"><?php echo $text_farmertransactions; ?></a></li>
             <?php } ?>
         </ul>
     </li>
@@ -503,7 +528,17 @@
                 </ul>
             </li>
             <?php }?>
-
+            
+            <?php if( $preturn_farmer_activity != false) { ?>
+            <li><a class="parent"><?php echo $text_farmer; ?></a>
+                <ul>
+                    <?php if($preturn_farmer_activity) { ?>
+                    <li><a href="<?php echo $report_farmer_activity; ?>"><?php echo $text_report_farmer_activity; ?></a></li>
+                    <?php } ?>
+                </ul>
+            </li>
+            <?php } ?>
+            
             <?php if( $preturn_user_activity != false ) { ?>
             <li><a class="parent"><?php echo $text_user; ?></a>
                 <ul>

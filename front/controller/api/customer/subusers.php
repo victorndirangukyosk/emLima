@@ -636,7 +636,7 @@ class ControllerApiCustomerSubusers extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-
+    //mobile API,Skip once new developer
     public function addSubuser($args = [])
     {
         $json = [];
@@ -763,7 +763,7 @@ class ControllerApiCustomerSubusers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-
+    //use this only for Admin/authorizatioin not available , used in mobile
     public function getAllSubUsers($args = [])
     {
         $json = [];
@@ -897,6 +897,132 @@ class ControllerApiCustomerSubusers extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    //add assign order approval need change
+    public function getSubUsers($args = [])
+    {
+        $json = [];
 
+        $log = new Log('error.log');
+        $log->write('getSubUsers');
+        // $parentuser_id = $args['parent_user_id'];
+        $parentuser_id =$this->customer->getId();
+        $log->write($parentuser_id);
+
+       // $this->load->language('information/locations');
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $filter_data = [
+            'filter_parent' => $parentuser_id,
+            'order' => 'DESC',
+            'start' => 0,
+            'limit' => 1000,
+        ];
+        $this->load->model('sale/order');
+        $customer_total = $this->model_sale_order->getTotalCustomers($filter_data);
+        $result_customers = $this->model_sale_order->getCustomers($filter_data);
+
+
+        //if( $this->customer->isLogged() )         
+             
+            // foreach ($results as $result) {
+            //     $data['delivery_addresses'][] = [
+            //     'address_id' => $result['address_id'],
+            //     'name' => $result['name'],
+            //       ];           
+
+            $json['data'] =$result_customers;// $data;
+            
+        // }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function addNewSubUser($args = [])
+    {
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        try{
+
+        $this->load->language('api/general');
+        // $this->load->model('api/approval');
+
+        $log = new Log('error.log');
+
+        $this->load->model('account/customer');
+        // echo "<pre>";print_r($this->customer->getFirstName());die;
+        // if (!$this->validate()) {
+        //     $json['status'] = 10014;
+
+        //     foreach ($this->error as $key => $value) {
+        //         $json['message'][] = ['type' => '', 'body' => $value];
+        //     }
+        //     http_response_code(400);
+        // } else 
+        //{
+         $this->request->post['dob'] = null;
+         $this->request->post['source'] = 'Mobile';
+         $this->request->post['parent'] =$this->customer->getId();           
+         $parentcustomer_info = $this->model_account_customer->getCustomer($this->request->post['parent']);
+         if($parentcustomer_info!=null)
+         {$this->request->post['customer_group_id']=$parentcustomer_info['customer_group_id'];
+         }
+
+        //  $log = new Log('error.log');
+         $log->write('before add customer');
+         $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
+           
+         $log->write('before add customer');
+         // Clear any previous login attempts for unregistered accounts.
+        $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
+        //$logged_in = $this->customer->login($this->request->post['email'], $this->request->post['password']);
+         //  $json['message'] ='User added successfully!'
+        // Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $this->customer->getId(),
+                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'sub_customers_id' => $sub_customer_id,
+            ];
+
+            // $this->model_account_activity->addActivity('register', $activity_data);
+            $this->model_account_activity->addActivity('sub_customer_created', $activity_data);
+
+            /* If not able to login*/
+            // $data['status'] = true;
+            // $data['customer_id'] = $sub_customer_id;
+            // $json['data'] =$data;
+            $json['customer_id'] = $sub_customer_id;
+
+            // if (!$logged_in) {
+            //     $data['status'] = false;
+            // }
+            // $data['text_new_signup_reward'] = $this->language->get('text_new_signup_reward');
+            // $data['text_new_signup_credit'] = $this->language->get('text_new_signup_credit');
+
+            //$data['message'] = $this->language->get( 'verify_mail_sent' );
+
+            $json['message'] =  $this->language->get('text_success_registered');
+
+            
+        // }
+            }
+            catch(exception $ex)
+            {
+                $json['message'] = 'Something went wrong';
+            }
+            finally{
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+            }
+    }
 
 }

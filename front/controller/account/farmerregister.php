@@ -1,13 +1,16 @@
 <?php
 
-class ControllerAccountFarmerRegister extends Controller
-{
+class ControllerAccountFarmerRegister extends Controller {
+
     private $error = [];
 
-    public function validate()
-    {
-        if ((utf8_strlen(trim($this->request->post['name'])) < 1) || (utf8_strlen(trim($this->request->post['name'])) > 32)) {
-            $this->error['name'] = $this->language->get('error_name');
+    public function validate() {
+        if ((utf8_strlen(trim($this->request->post['first_name'])) < 1) || (utf8_strlen(trim($this->request->post['first_name'])) > 32)) {
+            $this->error['first_name'] = $this->language->get('error_name');
+        }
+
+        if ((utf8_strlen(trim($this->request->post['last_name'])) < 1) || (utf8_strlen(trim($this->request->post['last_name'])) > 32)) {
+            $this->error['last_name'] = $this->language->get('error_name');
         }
 
         if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
@@ -17,8 +20,8 @@ class ControllerAccountFarmerRegister extends Controller
         if ($this->model_account_farmer->getTotalfarmersByEmail($this->request->post['email'])) {
             $numb = $this->model_account_farmer->getfarmerByEmail($this->request->post['email']);
 
-            if (isset($numb['telephone'])) {
-                $this->error['warning'] = sprintf($this->language->get('error_exists_email'), $numb['telephone']);
+            if (isset($numb['mobile'])) {
+                $this->error['warning'] = sprintf($this->language->get('error_exists_email'), $numb['mobile']);
             } else {
                 $this->error['warning'] = $this->language->get('error_exists');
             }
@@ -34,13 +37,13 @@ class ControllerAccountFarmerRegister extends Controller
 
         if ($this->model_account_farmer->getTotalfarmersByPhone($this->request->post['telephone'])) {
             $this->error['telephone_exists'] = $this->language->get('error_telephone_exists');
+            $this->error['warning'] = $this->language->get('error_telephone_exists');
         }
 
         return !$this->error;
     }
 
-    public function register()
-    {
+    public function register() {
         $data['status'] = false;
 
         $this->load->language('account/farmerregister');
@@ -48,12 +51,58 @@ class ControllerAccountFarmerRegister extends Controller
 
         $log = new Log('error.log');
 
+
         $this->request->post['telephone'] = preg_replace('/[^0-9]/', '', $this->request->post['telephone']);
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             $this->load->model('account/farmer');
 
-            $farmer_id = $this->model_account_farmer->addFarmer($this->request->post);
+            $farmer_id = $this->model_account_farmer->addNewFarmer($this->request->post);
+
+            $farmer_info['firstname'] = $this->request->post['first_name'];
+            $farmer_info['lastname'] = $this->request->post['last_name'];
+            $farmer_info['store_name'] = 'KwikBasket';
+            $farmer_info['order_link'] = HTTPS_SERVER . 'index.php?path=common/farmer';
+            $farmer_info['system_name'] = 'KwikBasket';
+
+            $log->write('SMS SENDING');
+            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_9', $farmer_info);
+            $log = new Log('error.log');
+            $log->write($sms_message);
+            // send message here
+            if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_9')) {
+                $log->write('FARMER SMS NOTIFICATION');
+                $ret = $this->emailtemplate->sendmessage($this->request->post['telephone'], $sms_message);
+            }
+
+            try {
+                if ($this->emailtemplate->getEmailEnabled('Customer', 'customer_9')) {
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_9', $farmer_info);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_9', $farmer_info);
+
+                    $mail = new mail($this->config->get('config_mail'));
+                    $mail->setTo($this->request->post['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSubject($subject);
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setHtml($message);
+                    $mail->send();
+                }
+            } catch (Exception $e) {
+                
+            }
+
+            // Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'farmer_id' => $farmer_id,
+                'name' => $this->request->post['first_name'] . ' ' . $this->request->post['last_name'],
+                'user_group_id' => $this->config->get('config_farmer_group_id')
+            ];
+
+            $log->write('farmer registration');
+            $this->model_account_activity->addFarmerActivity('farmer_register', $activity_data);
 
             $data['status'] = true;
 
@@ -101,4 +150,5 @@ class ControllerAccountFarmerRegister extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }
+
 }

@@ -1,21 +1,20 @@
 <?php
 
-require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
+require_once DIR_SYSTEM . '/vendor/konduto/vendor/autoload.php';
 
 //require_once DIR_SYSTEM.'/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
-require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
+require_once DIR_SYSTEM . '/vendor/fcp-php/autoload.php';
 
-require DIR_SYSTEM.'vendor/Facebook/autoload.php';
+require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
 
-require_once DIR_APPLICATION.'/controller/api/settings.php';
+require_once DIR_APPLICATION . '/controller/api/settings.php';
 
-class ControllerAccountDashboard extends Controller
-{
+class ControllerAccountDashboard extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
+    public function index() {
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
@@ -27,7 +26,7 @@ class ControllerAccountDashboard extends Controller
             $data['redirect_coming'] = true;
         }
 
-        $this->document->addStyle('/front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('/front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/dashboard', '', 'SSL');
@@ -132,7 +131,7 @@ class ControllerAccountDashboard extends Controller
                 $frequency = ($total_orders / $months);
             }
 
-            $customer_name = $customer_info['firstname'].' '.$customer_info['lastname'];
+            $customer_name = $customer_info['firstname'] . ' ' . $customer_info['lastname'];
             $this->load->model('user/user');
             $account_manager_details = $this->model_user_user->getUser($customer_info['account_manager_id']);
             $data['DashboardData'] = [
@@ -145,20 +144,19 @@ class ControllerAccountDashboard extends Controller
                 // 'avg_value' => $this->currency->format($avg_value, $this->config->get('config_currency')),
                 // 'First_order_date' => $first_order_Date,
                 // 'frequency' => $frequency,
-                 'most_purhased' => $most_purchased,
+                'most_purhased' => $most_purchased,
             ];
 
             $customer_SubUser_info = $this->model_account_dashboard->getCustomerSubUsers($this->customer->getId());
             if (count($customer_SubUser_info) > 1) {
                 $newdata = [
-    [
-    'company_name' => 'All Branches',
-    'customer_id' => '-1',
-    ],
-  ];
+                    [
+                        'company_name' => 'All Branches',
+                        'customer_id' => '-1',
+                    ],
+                ];
                 // $customer_SubUser_info[-1]['company_name']='All Branches';
                 // $customer_SubUser_info[-1]['customer_id']='0';
-
                 // $customer_SubUser_info=ksort($customer_SubUser_info,1);
                 $customer_SubUser_info = array_merge($newdata, $customer_SubUser_info);
             }
@@ -173,8 +171,8 @@ class ControllerAccountDashboard extends Controller
                     'name' => $ro['name'],
                     'date_added' => $ro['date_added'],
                     'delivery_date' => $ro['delivery_date'],
-                    'href' => $this->url->link('account/order/info', 'order_id='.$ro['order_id'], 'SSL'),
-                    'real_href' => $this->url->link('account/order/realinfo', 'order_id='.$ro['order_id'], 'SSL'), ];
+                    'href' => $this->url->link('account/order/info', 'order_id=' . $ro['order_id'], 'SSL'),
+                    'real_href' => $this->url->link('account/order/realinfo', 'order_id=' . $ro['order_id'], 'SSL'),];
             }
             $data['DashboardData']['recent_orders'] = $user_recent_orders;
             $user_recent_activity = $this->model_account_dashboard->getRecentActivity($this->customer->getId());
@@ -189,7 +187,7 @@ class ControllerAccountDashboard extends Controller
                     $comment2 = ' ';
                 } else {
                     $comment1 = 'Placed Order';
-                    $comment2 = ' and the order is  '.$ra['name'];
+                    $comment2 = ' and the order is  ' . $ra['name'];
                 }
 
                 $recent_activity[] = ['store_name' => $ra['store_name'],
@@ -198,28 +196,25 @@ class ControllerAccountDashboard extends Controller
                     'order_id' => $ra['order_id'],
                     'comment1' => $comment1,
                     'comment2' => $comment2,
-                    'href' => $this->url->link('account/order/info', 'order_id='.$ra['order_id'], 'SSL'),
+                    'href' => $this->url->link('account/order/info', 'order_id=' . $ra['order_id'], 'SSL'),
                     'total' => $this->currency->format($ra['total'], $this->config->get('config_currency')),
-                    'date_added' => $ra['date_added'], ];
+                    'date_added' => $ra['date_added'],];
             }
 
             // foreach ($user_recent_activity as $result) {
             // 	$comment =  vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
-
             // 	$find = array(
             // 		'customer_id=',
             // 		'order_id=',
             // 		//'affiliate_id=',
             // 		'return_id='
             // 	);
-
             // 	$replace = array(
             // 		$this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=', 'SSL'),
             // 		$this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=', 'SSL'),
             // 		//$this->url->link('marketing/affiliate/edit', 'token=' . $this->session->data['token'] . '&affiliate_id=', 'SSL'),
             // 		$this->url->link('sale/return/edit', 'token=' . $this->session->data['token'] . '&return_id=', 'SSL')
             // 	);
-
             // 	$recent_activity[] = array(
             // 		'comment'    =>  str_replace($find, $replace, $comment) ,
             // 		'ip'         => $result['ip'],
@@ -229,12 +224,10 @@ class ControllerAccountDashboard extends Controller
 
             $data['DashboardData']['recent_activity'] = $recent_activity;
             // $recent_buying_pattern = $this->model_account_dashboard->getBuyingPattern($this->customer->getId());
-
             // foreach ($recent_buying_pattern as $rbp) {
             //     $user_recent_buying_pattern[] = array('date_added' => $rbp['date_added'],
             //         'total' => $this->currency->format($rbp['total'], $this->config->get('config_currency')));
             // }
-
             // $data['DashboardData']['recent_buying_pattern'] = $user_recent_buying_pattern;
         }
 
@@ -260,11 +253,10 @@ class ControllerAccountDashboard extends Controller
         $data['home'] = $this->url->link('common/home/toHome');
 
         // echo "<pre>";print_r($data);die;
-        $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/dashboard.tpl', $data));
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/dashboard.tpl', $data));
     }
 
-    public function valueofbasket()
-    {
+    public function valueofbasket() {
         $json = $this->getChartsData('getValueOfBasket', true);
 
         $json['order']['label'] = 'Basket Value Per Day';
@@ -272,8 +264,7 @@ class ControllerAccountDashboard extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getRange($diff)
-    {
+    public function getRange($diff) {
         // if (isset($this->request->get['range']) and ! empty($this->request->get['range']) and $this->request->get['range'] != 'undefined') {
         //     $range = $this->request->get['range'];
         // } else {
@@ -289,7 +280,6 @@ class ControllerAccountDashboard extends Controller
         // if ($diff < 31) {
         //     $range = 'day';
         // }
-
         // if ($diff == 1) {
         //     $range = 'hour';
         // }
@@ -301,8 +291,7 @@ class ControllerAccountDashboard extends Controller
         return $range;
     }
 
-    public function getChartsData($modelFunction, $currency_format = false)
-    {
+    public function getChartsData($modelFunction, $currency_format = false) {
         $this->load->model('account/dashboard');
 
         $json = [];
@@ -341,27 +330,22 @@ class ControllerAccountDashboard extends Controller
             // case 'hour':
             //     $results = $this->model_dashboard_charts->{$modelFunction}($date_start, $date_end, 'HOUR');
             //     $order_data = array();
-
             //     for ($i = 0; $i < 24; $i++) {
             //         $order_data[$i] = array(
             //             'hour' => $i,
             //             'total' => 0
             //         );
-
             //         $json['xaxis'][] = array($i, $i . ':00');
             //     }
-
             //     foreach ($results->rows as $result) {
             //         $order_data[$result['hour']] = array(
             //             'hour' => $result['hour'],
             //             'total' => $result['total']
             //         );
             //     }
-
             //     foreach ($order_data as $key => $value) {
             //         $json['order']['data'][] = array($key, $value['total']);
             //     }
-
             //     break;
             // default:
             case 'day':
@@ -370,7 +354,7 @@ class ControllerAccountDashboard extends Controller
                 $order_data = [];
 
                 for ($i = 0; $i < $diff; ++$i) {
-                    $date = date_create($str_date)->modify('+'.$i.' day')->format('Y-m-d');
+                    $date = date_create($str_date)->modify('+' . $i . ' day')->format('Y-m-d');
 
                     //setting default values
                     $order_data[$date] = [
@@ -433,7 +417,7 @@ class ControllerAccountDashboard extends Controller
                 $diff = floor($diff / 365) + 1;
 
                 for ($i = 0; $i < $diff; ++$i) {
-                    $date = date_create($str_date)->modify('+'.$i.' year')->format('Y');
+                    $date = date_create($str_date)->modify('+' . $i . ' year')->format('Y');
 
                     $order_data[$date] = [
                         'year' => $date,
@@ -472,8 +456,7 @@ class ControllerAccountDashboard extends Controller
         return $json;
     }
 
-    public function getDashboardData()
-    {
+    public function getDashboardData() {
         $this->load->model('account/dashboard');
 
         $json = [];
@@ -540,14 +523,12 @@ class ControllerAccountDashboard extends Controller
         }
 
         // $months = 0;
-
         // while (($date1 = strtotime('+1 MONTH', $date1)) <= $date2)
         //     $months++;
         // if ($months == 0)
         //     $frequency = ($total_orders);
         // else
         //     $frequency = ($total_orders / $months);
-
         // $data['DashboardNewData'] = array(
 
         $json['total_orders'] = $total_orders;
@@ -555,16 +536,13 @@ class ControllerAccountDashboard extends Controller
         $json['avg_value'] = $this->currency->format($avg_value, $this->config->get('config_currency'));
         //'frequency' => $frequency
         // );
-
         // }
-
         // $json['order']['total'] = $total;
         // return $json;
         $this->response->setOutput(json_encode($json));
     }
 
-    public function recentbuyingpattern()
-    {
+    public function recentbuyingpattern() {
         $this->load->model('account/dashboard');
 
         $json = $this->getChartData('getSales', true);
@@ -573,8 +551,7 @@ class ControllerAccountDashboard extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getChartData($modelFunction, $currency_format = false)
-    {
+    public function getChartData($modelFunction, $currency_format = false) {
         $this->load->model('account/dashboard');
         $json = [];
 
@@ -590,9 +567,9 @@ class ControllerAccountDashboard extends Controller
 
             //setting default values
             $order_data[$date] = [
-                        'day' => $date,
-                        'total' => 0,
-                    ];
+                'day' => $date,
+                'total' => 0,
+            ];
 
             $json['xaxis'][] = [$i, $date];
         }
@@ -605,9 +582,9 @@ class ControllerAccountDashboard extends Controller
             }
 
             $order_data[$result['date']] = [
-                        'day' => $result['date'],
-                        'total' => $total,
-                    ];
+                'day' => $result['date'],
+                'total' => $total,
+            ];
         }
 
         $i = 0;
@@ -618,21 +595,20 @@ class ControllerAccountDashboard extends Controller
         return $json;
     }
 
-    public function getOrderProducts()
-    {
+    public function getOrderProducts() {
         $order_id = $this->request->post['order_id'];
-        $order_query = $this->db->query('SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM '.DB_PREFIX."order_product o WHERE o.order_id = '".(int) $order_id."'");
+        $order_query = $this->db->query('SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM ' . DB_PREFIX . "order_product o WHERE o.order_id = '" . (int) $order_id . "'");
 
         if ($order_query->num_rows) {
-            foreach ($order_query->rows   as $ra) {
+            foreach ($order_query->rows as $ra) {
                 $data[] = [
-                'order_id' => $ra['order_id'],
-                'product_id' => $ra['product_id'],
-                'general_product_id' => $ra['general_product_id'],
-                'quantity' => $ra['quantity'],
-                'unit' => $ra['unit'],
-                'name' => $ra['name'],
-                        ];
+                    'order_id' => $ra['order_id'],
+                    'product_id' => $ra['product_id'],
+                    'general_product_id' => $ra['general_product_id'],
+                    'quantity' => $ra['quantity'],
+                    'unit' => $ra['unit'],
+                    'name' => $ra['name'],
+                ];
             }
 
             $this->response->addHeader('Content-Type: application/json');
@@ -642,34 +618,29 @@ class ControllerAccountDashboard extends Controller
             $this->response->setOutput(json_encode(null));
         }
     }
-    public function getAvailableOrderProducts()
-    {
+
+    public function getAvailableOrderProducts() {
         $order_id = $this->request->post['order_id'];
-        $order_query = $this->db->query('SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM '.DB_PREFIX."order_product o WHERE o.order_id = '".(int) $order_id."'");
+        $order_query = $this->db->query('SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM ' . DB_PREFIX . "order_product o WHERE o.order_id = '" . (int) $order_id . "'");
 
         if ($order_query->num_rows) {
             // $this->load->model('assets/product');
-            foreach ($order_query->rows   as $ra) {
+            foreach ($order_query->rows as $ra) {
 
                 // $fromStore = false;
                 // $product_store_id = 0;
-
                 // // product_store_id 11
                 // if ($data['store_id']) {
                 //     $productStoreData = $this->model_assets_product->getProductStoreId($product['product_id'], $data['store_id']);
-
                 //     //echo "<pre>";print_r($productStoreData);die;
-
                 //     if (count($productStoreData) > 0) {
                 //         $product_store_id = $productStoreData['product_store_id'];
                 //         $fromStore = true;
                 //     }
                 // }
-
                 //echo "<pre>";print_r($product_store_id);die;
                 // $special_price = 0;
                 // $price = 0;
-
                 // if (count($product_info) > 0) 
                 {
 
@@ -678,22 +649,21 @@ class ControllerAccountDashboard extends Controller
                     // } else {
                     //     $special_price = $product_info['special_price'];
                     // }
-
                     // if ((float) $product_info['price']) {
                     //     $price = $this->currency->format($product_info['price']);
                     // } else {
                     //     $price = $product_info['price'];
                     // }
 
-                $data[] = [
-                'order_id' => $ra['order_id'],
-                'product_id' => $ra['product_id'],
-                'general_product_id' => $ra['general_product_id'],
-                'quantity' => $ra['quantity'],
-                'unit' => $ra['unit'],
-                'name' => $ra['name'],
-                        ];
-                    }
+                    $data[] = [
+                        'order_id' => $ra['order_id'],
+                        'product_id' => $ra['product_id'],
+                        'general_product_id' => $ra['general_product_id'],
+                        'quantity' => $ra['quantity'],
+                        'unit' => $ra['unit'],
+                        'name' => $ra['name'],
+                    ];
+                }
             }
 
             $this->response->addHeader('Content-Type: application/json');
@@ -704,22 +674,20 @@ class ControllerAccountDashboard extends Controller
         }
     }
 
-
-    public function getAndAddOrderProducts()
-    {
+    public function getAndAddOrderProducts() {
         $order_id = $this->request->post['order_id'];
-        $order_query = $this->db->query('SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM '.DB_PREFIX."order_product o WHERE o.order_id = '".(int) $order_id."'");
+        $order_query = $this->db->query('SELECT product_id,general_product_id,quantity,unit,name,order_id  FROM ' . DB_PREFIX . "order_product o WHERE o.order_id = '" . (int) $order_id . "'");
 
         if ($order_query->num_rows) {
-            foreach ($order_query->rows   as $ra) {
+            foreach ($order_query->rows as $ra) {
                 $data[] = [
-                'order_id' => $ra['order_id'],
-                'product_id' => $ra['product_id'],
-                'general_product_id' => $ra['general_product_id'],
-                'quantity' => $ra['quantity'],
-                'unit' => $ra['unit'],
-                'name' => $ra['name'],
-                        ];
+                    'order_id' => $ra['order_id'],
+                    'product_id' => $ra['product_id'],
+                    'general_product_id' => $ra['general_product_id'],
+                    'quantity' => $ra['quantity'],
+                    'unit' => $ra['unit'],
+                    'name' => $ra['name'],
+                ];
             }
 
             $log = new Log('error.log');
@@ -733,7 +701,7 @@ class ControllerAccountDashboard extends Controller
                     $log->write($order_product['product_id']);
                     $log->write('Order Products 2');
                     if ($order_product['quantity'] > 0)
-                    $this->cart->add($order_product['product_id'], $order_product['quantity'], [], $recurring_id = 0, $store_id = false, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+                        $this->cart->add($order_product['product_id'], $order_product['quantity'], [], $recurring_id = 0, $store_id = false, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
                 }
             }
 
@@ -744,9 +712,9 @@ class ControllerAccountDashboard extends Controller
             $this->response->setOutput(json_encode(null));
         }
     }
+
     //below method used in dashboard and reorder of order list
-    public function addOrderProductToCart()
-    {
+    public function addOrderProductToCart() {
         $this->load->model('account/wishlist');
 
         $data['text_cart_success'] = $this->language->get('text_cart_success');
@@ -775,8 +743,7 @@ class ControllerAccountDashboard extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function getRecentOrderProductsList()
-    {
+    public function getRecentOrderProductsList() {
         if (isset($this->request->get['filter_product_name'])) {
             $filter_product_name = $this->request->get['filter_product_name'];
         } else {
@@ -804,28 +771,26 @@ class ControllerAccountDashboard extends Controller
         $url = '';
 
         if (isset($this->request->get['filter_product_name'])) {
-            $url .= '&filter_product_name='.urlencode(html_entity_decode($this->request->get['filter_product_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_product_name=' . urlencode(html_entity_decode($this->request->get['filter_product_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort='.$this->request->get['sort'];
+            $url .= '&sort=' . $this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order='.$this->request->get['order'];
+            $url .= '&order=' . $this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         // $data['breadcrumbs'] = array();
-
         // $data['breadcrumbs'][] = array(
         //     'text' => $this->language->get('text_home'),
         //     'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
         // );
-
         // $data['breadcrumbs'][] = array(
         //     'text' => $this->language->get('heading_title'),
         //     'href' => $this->url->link('account/dashboard', 'token=' . $this->session->data['token'] . $url, 'SSL')
@@ -855,7 +820,7 @@ class ControllerAccountDashboard extends Controller
                 'name' => $result['name'],
                 'unit' => $result['unit'],
                 'total' => $result['total'],
-                 ];
+            ];
         }
 
         $data['heading_title'] = 'Most bought Products (Last 30 days)';
@@ -866,7 +831,7 @@ class ControllerAccountDashboard extends Controller
         $url = '';
 
         if (isset($this->request->get['filter_product_name'])) {
-            $url .= '&filter_product_name='.urlencode(html_entity_decode($this->request->get['filter_product_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_product_name=' . urlencode(html_entity_decode($this->request->get['filter_product_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if ('ASC' == $order) {
@@ -876,32 +841,32 @@ class ControllerAccountDashboard extends Controller
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('account/dashboard/getRecentOrderProductsList', '&sort=pd.name'.$url, 'SSL');
-        $data['sort_total'] = $this->url->link('account/dashboard/getRecentOrderProductsList', '&sort=total'.$url, 'SSL');
-        $data['sort_unit'] = $this->url->link('account/dashboard/getRecentOrderProductsList', '&sort=op.unit'.$url, 'SSL');
+        $data['sort_name'] = $this->url->link('account/dashboard/getRecentOrderProductsList', '&sort=pd.name' . $url, 'SSL');
+        $data['sort_total'] = $this->url->link('account/dashboard/getRecentOrderProductsList', '&sort=total' . $url, 'SSL');
+        $data['sort_unit'] = $this->url->link('account/dashboard/getRecentOrderProductsList', '&sort=op.unit' . $url, 'SSL');
 
         $url = '';
 
         if (isset($this->request->get['filter_product_name'])) {
-            $url .= '&filter_product_name='.urlencode(html_entity_decode($this->request->get['filter_product_name'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_product_name=' . urlencode(html_entity_decode($this->request->get['filter_product_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort='.$this->request->get['sort'];
+            $url .= '&sort=' . $this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order='.$this->request->get['order'];
+            $url .= '&order=' . $this->request->get['order'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $recentorderproducts_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('account/dashboard/getRecentOrderProductsList', $url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('account/dashboard/getRecentOrderProductsList', $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -920,8 +885,168 @@ class ControllerAccountDashboard extends Controller
         $this->response->setOutput($this->load->view('metaorganic/template/account/recentorderproducts_list.tpl', $data));
     }
 
-    public function getRecentOrdersList()
-    {
+    public function getRecentOrderProductsList_new() {
+        if (isset($this->request->get['filter_product_name'])) {
+            $filter_product_name = $this->request->get['filter_product_name'];
+        } else {
+            $filter_product_name = null;
+        }
+        
+        if (isset($this->request->get['customer_id'])) {
+            $filter_customer_id = $this->request->get['customer_id'];
+        } else {
+            $filter_customer_id = null;
+        }
+        
+        if (isset($this->request->get['start'])) {
+            $filter_start_date = $this->request->get['start'];
+        } else {
+            $filter_start_date = null;
+        }
+        
+        if (isset($this->request->get['end'])) {
+            $filter_end_date = $this->request->get['end'];
+        } else {
+            $filter_end_date = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'name';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'DESC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $url = '';
+
+        if (isset($this->request->get['filter_product_name'])) {
+            $url .= '&filter_product_name=' . urlencode(html_entity_decode($this->request->get['filter_product_name'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+
+        // $data['breadcrumbs'] = array();
+        // $data['breadcrumbs'][] = array(
+        //     'text' => $this->language->get('text_home'),
+        //     'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
+        // );
+        // $data['breadcrumbs'][] = array(
+        //     'text' => $this->language->get('heading_title'),
+        //     'href' => $this->url->link('account/dashboard', 'token=' . $this->session->data['token'] . $url, 'SSL')
+        // );
+
+        $data['recentorderproducts'] = [];
+
+        $filter_data = [
+            'filter_product_name' => $filter_product_name,
+            'sort' => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin'),
+            'customer_id' => $filter_customer_id,
+            'start_date' => $filter_start_date,
+            'end_date' => $filter_end_date
+        ];
+
+        $this->load->model('account/dashboard');
+
+        $recentorderproducts_total_results = $this->model_account_dashboard->getTotalrecentorderproducts_new($filter_data);
+        $recentorderproducts_total = $recentorderproducts_total_results['count'];
+        $results = $this->model_account_dashboard->getrecentorderproducts_new($filter_data);
+
+        //echo "<pre>";print_r($recentorderproducts_total);die;
+        foreach ($results as $result) {
+            $data['recentorderproducts'][] = [
+                'name' => $result['name'],
+                'unit' => $result['unit'],
+                'total' => $result['total'],
+            ];
+        }
+
+        $data['heading_title'] = 'Most bought Products (Last 30 days)';
+
+        $data['token'] = $this->session->data['token'];
+        $data['customer_id'] = $this->customer->getId();
+
+        $url = '';
+
+        if (isset($this->request->get['filter_product_name'])) {
+            $url .= '&filter_product_name=' . urlencode(html_entity_decode($this->request->get['filter_product_name'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if ('ASC' == $order) {
+            $url .= '&order=ASC';
+        } else {
+            $url .= '&order=DESC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+
+        $data['sort_name'] = $this->url->link('account/dashboard/getRecentOrderProductsList_new', '&sort=pd.name' . $url, 'SSL');
+        $data['sort_total'] = $this->url->link('account/dashboard/getRecentOrderProductsList_new', '&sort=total' . $url, 'SSL');
+        $data['sort_unit'] = $this->url->link('account/dashboard/getRecentOrderProductsList_new', '&sort=op.unit' . $url, 'SSL');
+
+        $url = '';
+
+        if (isset($this->request->get['filter_product_name'])) {
+            $url .= '&filter_product_name=' . urlencode(html_entity_decode($this->request->get['filter_product_name'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
+        $pagination = new Pagination();
+        $pagination->total = $recentorderproducts_total;
+        $pagination->page = $page;
+        $pagination->limit = $this->config->get('config_limit_admin');
+        $pagination->url = $this->url->link('account/dashboard/getRecentOrderProductsList_new', $url . '&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($recentorderproducts_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($recentorderproducts_total - $this->config->get('config_limit_admin'))) ? $recentorderproducts_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $recentorderproducts_total, ceil($recentorderproducts_total / $this->config->get('config_limit_admin')));
+
+        $data['filter_product_name'] = $filter_product_name;
+        $this->document->setTitle($data['heading_title']);
+        $data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->load->controller('common/header/onlyHeader');
+        $this->load->model('account/dashboard');
+        $data['sort'] = $sort;
+        $data['order'] = $order;
+
+        // echo "<pre>";print_r($data);die;
+
+        $this->response->setOutput($this->load->view('metaorganic/template/account/recentorderproducts_list.tpl', $data));
+    }
+
+    public function getRecentOrdersList() {
         if (isset($this->request->get['filter_order_id'])) {
             $filter_order_id = $this->request->get['filter_order_id'];
         } else {
@@ -963,6 +1088,24 @@ class ControllerAccountDashboard extends Controller
         } else {
             $filter_date_modified = null;
         }
+        
+        if (isset($this->request->get['customer_id'])) {
+            $filter_customer_id = $this->request->get['customer_id'];
+        } else {
+            $filter_customer_id = null;
+        }
+        
+        if (isset($this->request->get['start'])) {
+            $filter_start_date = $this->request->get['start'];
+        } else {
+            $filter_start_date = null;
+        }
+        
+        if (isset($this->request->get['end'])) {
+            $filter_end_date = $this->request->get['end'];
+        } else {
+            $filter_end_date = null;
+        }
 
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -985,19 +1128,19 @@ class ControllerAccountDashboard extends Controller
         $url = '';
 
         if (isset($this->request->get['filter_order_id'])) {
-            $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
+            $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
         }
 
         if (isset($this->request->get['filter_delivery_method'])) {
-            $url .= '&filter_delivery_method='.urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_payment'])) {
-            $url .= '&filter_payment='.urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_order_status'])) {
-            $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
+            $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
 
         // if (isset($this->request->get['filter_total'])) {
@@ -1005,32 +1148,30 @@ class ControllerAccountDashboard extends Controller
         // }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['filter_date_modified'])) {
-            $url .= '&filter_date_modified='.$this->request->get['filter_date_modified'];
+            $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort='.$this->request->get['sort'];
+            $url .= '&sort=' . $this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order='.$this->request->get['order'];
+            $url .= '&order=' . $this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         // $data['breadcrumbs'] = array();
-
         // $data['breadcrumbs'][] = array(
         //     'text' => $this->language->get('text_home'),
         //     'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
         // );
-
         // $data['breadcrumbs'][] = array(
         //     'text' => $this->language->get('heading_title'),
         //     'href' => $this->url->link('account/dashboard', 'token=' . $this->session->data['token'] . $url, 'SSL')
@@ -1040,7 +1181,6 @@ class ControllerAccountDashboard extends Controller
 
         $filter_data = [
             'filter_order_id' => $filter_order_id,
-
             'filter_delivery_method' => $filter_delivery_method,
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
@@ -1051,7 +1191,9 @@ class ControllerAccountDashboard extends Controller
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
-            'customer_id' => $this->customer->getId(),
+            'customer_id' => $filter_customer_id,
+            'filter_start_date' => $filter_start_date,
+            'filter_end_date' => $filter_end_date,
         ];
 
         $this->load->model('account/dashboard');
@@ -1067,7 +1209,7 @@ class ControllerAccountDashboard extends Controller
                 'date_added' => $result['date_added'],
                 'name' => $result['name'],
                 'delivery_date' => $result['delivery_date'],
-                 ];
+            ];
         }
 
         $data['heading_title'] = 'Recent Orders';
@@ -1078,30 +1220,30 @@ class ControllerAccountDashboard extends Controller
         $url = '';
 
         if (isset($this->request->get['filter_order_id'])) {
-            $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
+            $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
         }
         if (isset($this->request->get['filter_delivery_method'])) {
-            $url .= '&filter_delivery_method='.urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_payment'])) {
-            $url .= '&filter_payment='.urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_order_status'])) {
-            $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
+            $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
 
         if (isset($this->request->get['filter_total'])) {
-            $url .= '&filter_total='.$this->request->get['filter_total'];
+            $url .= '&filter_total=' . $this->request->get['filter_total'];
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['filter_date_modified'])) {
-            $url .= '&filter_date_modified='.$this->request->get['filter_date_modified'];
+            $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
         }
 
         if ('ASC' == $order) {
@@ -1111,30 +1253,30 @@ class ControllerAccountDashboard extends Controller
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_order'] = $this->url->link('account/dashboard/getRecentOrdersList', '&sort=o.order_id'.$url, 'SSL');
-        $data['sort_status'] = $this->url->link('account/dashboard/getRecentOrdersList', '&sort=name'.$url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('account/dashboard/getRecentOrdersList', '&sort=o.date_added'.$url, 'SSL');
-        $data['sort_date_modified'] = $this->url->link('account/dashboard/getRecentOrdersList', '&sort=o.date_modified'.$url, 'SSL');
+        $data['sort_order'] = $this->url->link('account/dashboard/getRecentOrdersList', '&sort=o.order_id' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('account/dashboard/getRecentOrdersList', '&sort=name' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('account/dashboard/getRecentOrdersList', '&sort=o.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = $this->url->link('account/dashboard/getRecentOrdersList', '&sort=o.date_modified' . $url, 'SSL');
 
         $url = '';
 
         if (isset($this->request->get['filter_order_id'])) {
-            $url .= '&filter_order_id='.$this->request->get['filter_order_id'];
+            $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
         }
 
         if (isset($this->request->get['filter_delivery_method'])) {
-            $url .= '&filter_delivery_method='.urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_payment'])) {
-            $url .= '&filter_payment='.urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_order_status'])) {
-            $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
+            $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
 
         // if (isset($this->request->get['filter_total'])) {
@@ -1142,33 +1284,34 @@ class ControllerAccountDashboard extends Controller
         // }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
         if (isset($this->request->get['filter_date_modified'])) {
-            $url .= '&filter_date_modified='.$this->request->get['filter_date_modified'];
+            $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort='.$this->request->get['sort'];
+            $url .= '&sort=' . $this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order='.$this->request->get['order'];
+            $url .= '&order=' . $this->request->get['order'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $recentorders_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('account/dashboard/getRecentOrdersList', $url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('account/dashboard/getRecentOrdersList', $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($recentorders_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($recentorders_total - $this->config->get('config_limit_admin'))) ? $recentorders_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $recentorders_total, ceil($recentorders_total / $this->config->get('config_limit_admin')));
 
         $data['filter_product_name'] = $filter_product_name;
-
+        
+        $this->document->setTitle($data['heading_title']);
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/onlyHeader');
         $this->load->model('account/dashboard');
@@ -1180,8 +1323,7 @@ class ControllerAccountDashboard extends Controller
         $this->response->setOutput($this->load->view('metaorganic/template/account/recentorders_list.tpl', $data));
     }
 
-    public function export_mostpurchased_products_excel($customer_id)
-    {
+    public function export_mostpurchased_products_excel($customer_id) {
         $data = [];
 
         if (isset($this->request->get['customer_id'])) {
@@ -1192,8 +1334,20 @@ class ControllerAccountDashboard extends Controller
         $this->model_account_dashboard->download_mostpurchased_products_excel($data);
     }
 
-    public function getPurchaseHistory()
-    {
+    public function export_mostpurchased_products_excel_new() {
+        $data = array();
+        $data = [
+            /*'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),*/
+            'filter_customer' => $this->request->get['customer_id'],
+            'filter_date_start' => $this->request->get['start'],
+            'filter_date_end' => $this->request->get['end']
+        ];
+
+        $this->load->model('account/dashboard');
+        $this->model_account_dashboard->download_mostpurchased_products_excel_new($data);
+    }
+
+    public function getPurchaseHistory() {
         $this->load->model('account/dashboard');
         //echo 'date.timezone ' ;;
         $data = $this->request->post;
@@ -1224,8 +1378,38 @@ class ControllerAccountDashboard extends Controller
         return true;
     }
 
-    public function getMonths($date1, $date2)
-    {
+    public function getPurchaseHistoryNew() {
+        $this->load->model('account/dashboard');
+        //echo 'date.timezone ' ;;
+        $data = array();
+        $data = [
+            'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),
+            'filter_product_id' => $this->request->get['product_id'],
+            'filter_date_start' => $this->request->get['start'],
+            'filter_date_end' => $this->request->get['end']
+        ];
+
+        /// echo '<pre>';print_r($this->request->post);exit;
+        $result = $this->model_account_dashboard->getPurchaseHistoryNew($data);
+        $log = new Log('error.log');
+        $log->write($result);
+
+
+        $result['status'] = true;
+
+        $result['totalvalue'] = $this->currency->format($result['totalvalue'], $this->config->get('config_currency'));
+
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($result));
+        }
+
+        //  echo '<pre>';print_r($data);exit;
+
+        return true;
+    }
+
+    public function getMonths($date1, $date2) {
         $time1 = strtotime($date1);
         $time2 = strtotime($date2);
         $my = date('n-Y', $time2);
@@ -1240,15 +1424,96 @@ class ControllerAccountDashboard extends Controller
                 $f = date('n-Y', $time1);
                 if (date('n-Y', $time1) != $my && ($time1 < $time2)) {
                     $str_mese = $mesi[(date('n', $time1) - 1)];
-                    $months[] = $str_mese.' '.date('Y', $time1);
+                    $months[] = $str_mese . ' ' . date('Y', $time1);
                 }
             }
-            $time1 = strtotime((date('Y-n-d', $time1).' +15days'));
+            $time1 = strtotime((date('Y-n-d', $time1) . ' +15days'));
         }
 
         $str_mese = $mesi[(date('n', $time2) - 1)];
-        $months[] = $str_mese.' '.date('Y', $time2);
+        $months[] = $str_mese . ' ' . date('Y', $time2);
 
         return $months;
     }
+
+    public function getCustomerMostBoughtProducts() {
+        $this->load->model('account/dashboard');
+        $data = array();
+        $data = [
+            /*'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),*/
+            'filter_customer' => $this->request->get['customer_id'],
+            'filter_date_start' => $this->request->get['start'],
+            'filter_date_end' => $this->request->get['end']
+        ];
+
+        $most_purchased = $this->model_account_dashboard->getboughtproductswithRealOrders($data);
+        $data['most_purchased'] = $most_purchased;
+        //$log = new Log('error.log');
+        //$log->write('most_purchased');
+        //$log->write($most_purchased);
+        //$log->write('most_purchased');
+        $this->response->setOutput($this->load->view('metaorganic/template/account/most_bought_products.tpl', $data));
+    }
+
+    public function getRecentActivities() {
+        $this->load->model('account/dashboard');
+        $data = array();
+        $data = [
+            /*'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),*/
+            'filter_customer' => $this->request->get['customer_id'],
+            'filter_date_start' => $this->request->get['start'],
+            'filter_date_end' => $this->request->get['end']
+        ];
+
+        $user_recent_activity = $this->model_account_dashboard->getRecentActivity_new($data);
+
+        foreach ($user_recent_activity as $ra) {
+            if (15 == $ra['order_status_id']) {
+                $comment1 = 'Placed Order';
+                $comment2 = ' and Approval is Required';
+            } elseif (14 == $ra['order_status_id']) {
+                $comment1 = 'Placed Order';
+                $comment2 = ' ';
+            } else {
+                $comment1 = 'Placed Order';
+                $comment2 = ' and the order is  ' . $ra['name'];
+            }
+
+            $recent_activity[] = ['store_name' => $ra['store_name'],
+                'firstname' => $ra['firstname'],
+                'lastname' => $ra['lastname'],
+                'order_id' => $ra['order_id'],
+                'comment1' => $comment1,
+                'comment2' => $comment2,
+                'href' => $this->url->link('account/order/info', 'order_id=' . $ra['order_id'], 'SSL'),
+                'total' => $this->currency->format($ra['total'], $this->config->get('config_currency')),
+                'date_added' => $ra['date_added'],];
+        }
+
+        $data['recent_activity'] = $recent_activity;
+        $this->response->setOutput($this->load->view('metaorganic/template/account/recent_activity.tpl', $data));
+    }
+
+    public function getRecentOrders() {
+        $this->load->model('account/dashboard');
+        $data = array();
+        $data = [
+            /*'filter_customer' => $this->request->get['customer_id'] > 0 ? $this->request->get['customer_id'] : $this->customer->getId(),*/
+            'filter_customer' => $this->request->get['customer_id'],
+            'filter_date_start' => $this->request->get['start'],
+            'filter_date_end' => $this->request->get['end']
+        ];
+        $recent_orders = $this->model_account_dashboard->getRecentOrders_new($data);
+        foreach ($recent_orders as $ro) {
+            $user_recent_orders[] = ['order_id' => $ro['order_id'],
+                'name' => $ro['name'],
+                'date_added' => $ro['date_added'],
+                'delivery_date' => $ro['delivery_date'],
+                'href' => $this->url->link('account/order/info', 'order_id=' . $ro['order_id'], 'SSL'),
+                'real_href' => $this->url->link('account/order/realinfo', 'order_id=' . $ro['order_id'], 'SSL'),];
+        }
+        $data['recent_orders'] = $user_recent_orders;
+        $this->response->setOutput($this->load->view('metaorganic/template/account/recentorders.tpl', $data));
+    }
+
 }
