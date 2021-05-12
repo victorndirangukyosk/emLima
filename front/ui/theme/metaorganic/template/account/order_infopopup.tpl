@@ -1,28 +1,10 @@
 <form id="edit-address-form">
-div class="dashboard-wrapper">
+ 
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <div class="my-order-view-dashboard">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
-                        </div>
-                    </div>
-                    <!-- <div class="row">
-                        <div class="col-md-11">
-                            <div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
-                        </div>
-                                                    <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && $can_return && ($returnProductCount>0)) { ?>
-                            <div class="col-md-1">
-                                                        
-                               <?php $url = $product['return']; ?>
-                               <a data-toggle="modal" data-target="#refundOrderModal" title="<?php echo $button_return; ?>" class="btn btn-danger"><i class="fa fa-reply"></i></a>
-                                              
-
-                             </div>
-                        <?php } ?>
-                    </div> -->
+            <div class="col-md-10">
+                <div class="my-order-view-dashboard">                    
+                    
                     <div class="row">
                         <div class="col-md-8">
                             <div class="my-order-view-content">
