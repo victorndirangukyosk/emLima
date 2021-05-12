@@ -304,7 +304,7 @@
 											
 										  </div>
 										  <div class="modal-footer">
-                                                                                        <a class="btn btn-primary" href="<?php echo $inventory_history; ?>" role="button">VIEW ALL</a>
+                                                                                        <a class="btn btn-primary" href="<?php echo $inventory_history.'&filter_name='.$product['name']; ?>" role="button">VIEW ALL</a>
 											<!--<button type="button" class="btn btn-primary" data-dismiss="modal">VIEW ALL</button>-->
 										  </div>
 										</div>
