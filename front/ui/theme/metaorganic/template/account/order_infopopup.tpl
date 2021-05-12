@@ -1,5 +1,5 @@
- 
-<div class="dashboard-wrapper">
+<form id="edit-address-form">
+div class="dashboard-wrapper">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -1160,3 +1160,4 @@
             });
         </script>
         </html>
+        </form>
