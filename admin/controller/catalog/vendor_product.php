@@ -496,6 +496,8 @@ class ControllerCatalogVendorProduct extends Controller {
             }
 
             $data['products'][] = [
+                'buying_price' => $result['buying_price'],
+                'source' => $result['source'],
                 'store_name' => $result['store_name'],
                 //'vendor_name'=>$result['fs'].' '.$result['ls'],
                 'product_store_id' => $result['product_store_id'],
