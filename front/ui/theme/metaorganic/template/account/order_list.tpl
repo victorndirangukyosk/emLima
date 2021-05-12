@@ -83,8 +83,8 @@
                                     </div>
                                 </div>
                                 <!--<div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['products']; ?> <?= $text_items_ordered?> </a>-->
-                                <div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>
-                                <!--<div class="col-md-3"><a href="#"  data-toggle="modal" data-target="#viewProductsModal" onclick="viewProductsModal(('<?php echo $order['order_id']; ?>'));" class="btn-link text_green"><?= $text_view?>  <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>   --> 
+                                <!--<div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>-->
+                                <div class="col-md-3"><a href="#"  data-toggle="modal" data-target="#viewProductsModal" onclick="viewProductsModal(('<?php echo $order['order_id']; ?>'));" class="btn-link text_green"><?= $text_view?>  <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>    
                                 <br/>
 
                                     <?php //if($order['realproducts']) { ?>
@@ -332,8 +332,8 @@
 
   <div class="editAddressModal">
         <div class="modal fade" id="viewProductsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
+            <div class="modal-dialog a" role="document" style="top:80px;right:160px;">
+                <div class="modal-content" style="width:170%">
                     <div class="modal-body">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="row">
@@ -836,13 +836,14 @@
                     type: 'get',
                     async: false,
                     data: {order_id: $order_id},
-                    dataType: 'json',
+                    dataType: 'html',
                     cache: false,
                     success: function(json) {
 
                         console.log(json);
-                        alert(json);
-                        $('.order-details-form-panel').html(json['html']); 
+                        
+                        //$('.order-details-form-panel').html(json['html']); 
+                        $('.order-details-form-panel').html(json);
 
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
@@ -859,3 +860,11 @@
 </body>
 
 </html>
+
+<style>
+
+.editAddressModal modal-dialog {       
+   
+}
+
+ </style>
