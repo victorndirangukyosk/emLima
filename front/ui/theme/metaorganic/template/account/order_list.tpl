@@ -83,7 +83,8 @@
                                     </div>
                                 </div>
                                 <!--<div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['products']; ?> <?= $text_items_ordered?> </a>-->
-                                <div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>    
+                                <div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>
+                                <!--<div class="col-md-3"><a href="#"  data-toggle="modal" data-target="#viewProductsModal" onclick="viewProductsModal(('<?php echo $order['order_id']; ?>'));" class="btn-link text_green"><?= $text_view?>  <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>   --> 
                                 <br/>
 
                                     <?php //if($order['realproducts']) { ?>
@@ -326,6 +327,30 @@
 </div>
 
 <?php echo $footer; ?>
+
+
+
+  <div class="editAddressModal">
+        <div class="modal fade" id="viewProductsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="row">
+                           <div class="col-md-12">
+                                <h2>Order Details</h2>
+                                </div>
+                            
+
+                            <div class="order-details-form-panel">
+                                    <!--  form here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <script src="<?= $base; ?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -800,6 +825,35 @@
         url = 'index.php?path=account/order/export_products_excel&order_id=' + order_id + '&company=' + order_company;
         location = url;
     }
+   function viewProductsModal($order_id) {
+ 
+                //$('#edit-address-message').html('');
+                //$('#edit-address-success-message').html('');
+                console.log($order_id);
+                console.log("order_id");
+                $.ajax({
+                    url: 'index.php?path=account/order/infoPopup',
+                    type: 'get',
+                    async: false,
+                    data: {order_id: $order_id},
+                    dataType: 'json',
+                    cache: false,
+                    success: function(json) {
+
+                        console.log(json);
+                        alert(json);
+                        $('.order-details-form-panel').html(json['html']); 
+
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                         alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        
+                        return false;
+                    }
+                });
+            }
+
+     
 
 </script>
 </body>

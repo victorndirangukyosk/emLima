@@ -295,7 +295,7 @@
 									  <div class="modal-dialog">
 
 										<!-- Modal content-->
-										<div class="modal-content">
+										<div class="modal-content" style="min-width: 680px !important;">
 										  <div style="color: white;background-color: #008db9;" class="modal-header">
                                                                                       	<button type="button" class="close" data-dismiss="modal">&times;</button>
 											<h4 class="modal-title"><strong>Inventory History : <?php echo $product['name']; ?></strong></h4>
@@ -304,7 +304,7 @@
 											
 										  </div>
 										  <div class="modal-footer">
-                                                                                        <a class="btn btn-primary" href="<?php echo $inventory_history; ?>" role="button">VIEW ALL</a>
+                                                                                        <a class="btn btn-primary" href="<?php echo $inventory_history.'&filter_name='.$product['name']; ?>" role="button">VIEW ALL</a>
 											<!--<button type="button" class="btn btn-primary" data-dismiss="modal">VIEW ALL</button>-->
 										  </div>
 										</div>

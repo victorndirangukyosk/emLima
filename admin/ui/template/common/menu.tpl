@@ -71,7 +71,7 @@
             <li><a href="<?php echo $inventory_management_update_history; ?>">Inventory History</a></li>
             </ul>
           <?php } ?>
-          <?php if($preturn_vendor_product != false){ ?>
+          <?php if($preturn_vendor_product != falses){ ?>
           <li><a class="parent">Inven. Management</a>
             <ul>
             <li><a href="<?php echo $inventory_management_update; ?>">Inven. Management</a></li>
