@@ -124,7 +124,7 @@ class ControllerCommonHeader extends Controller
                 $customer_total = $this->model_sale_customer->getTotalCustomers($filter_cust_data);
 
                 $data['customer_total'] = $customer_total;
-                $data['customer_approval'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&filter_approved=0', 'SSL');
+                $data['customer_approval'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&filter_approved=0&sort=c.date_added&order=DESC', 'SSL');
 
                 // Processing Orders
                 $data['order_status_total'] = $this->model_sale_order->getTotalOrders(['filter_order_status' => implode(',', $this->config->get('config_processing_status'))]);
