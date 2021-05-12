@@ -301,12 +301,14 @@ class ControllerCatalogProduct extends Controller
             $html .= '<div class="container"><table style="width:48%;" class="table table-bordered table-striped table-responsive">
 	   <thead>
        <tr class="info">
-        <th>Product Name</th>
-        <th>Product Id</th>
         <th>Procured Qty</th>
 		<th>Rejected Qty</th>
 		<th>Prev Qty</th>
 		<th>Updated Qty</th>
+                <th>Previous Buying Price</th>
+                <th>Buying Price</th>
+                <th>Previous Source</th>
+                <th>Source</th>
 		<th>Updated Date</th>
                 <th>Updated By</th>
       </tr>
@@ -319,12 +321,14 @@ class ControllerCatalogProduct extends Controller
             $html .= '<tbody>';
             foreach ($res as $product_history) {
                 $html .= '<tr>
-				    <th>'.$product_history['product_name'].'</th>
-					<th>'.$product_history['product_id'].'</th>
 					<th>'.$product_history['procured_qty'].'</th>
 					<th>'.$product_history['rejected_qty'].'</th>
 					<th>'.$product_history['prev_qty'].'</th>
 					<th>'.$product_history['current_qty'].'</th>
+                                        <th>'.$product_history['prev_buying_price'].'</th>
+                                        <th>'.$product_history['buying_price'].'</th>
+                                        <th>'.$product_history['prev_source'].'</th>
+					<th>'.$product_history['source'].'</th>
 					<th>'.$product_history['date_added'].'</th>
                                         <th>'.$product_history['added_user'].'</th>
 			   </tr>';
