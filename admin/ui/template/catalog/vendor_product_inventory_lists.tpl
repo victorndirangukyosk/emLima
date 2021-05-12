@@ -266,7 +266,7 @@
                                         <?php echo $product['status']; ?>
                                     </td>-->
                                     <td class="text-left">
-                                         <input style="max-width: 75px !important;" name="buying_price" type="text" onkeypress="return validateFloatKeyPress(this, event);" class="buying_price" data-general_product_id="<?php echo $product['product_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-buying-price="<?php echo $product['buying_price']; ?>" id="<?php echo $product['product_store_id'];?>" value="<?php echo $product['buying_price']; ?>">
+                                         <input style="max-width: 75px !important;" name="buying_price" type="text" onkeypress="return validateFloatKeyPress(this, event);" class="buying_price" data-general_product_id="<?php echo $product['product_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-buying-price="<?php echo $product['buying_price']; ?>" id="buying_price_<?php echo $product['product_store_id'];?>" value="<?php echo $product['buying_price']; ?>">
                                     </td>
 				    <td class="text-left">
                                         <input style="max-width: 75px !important;" name="source" type="text" class="source" id="source_<?php echo $product['product_store_id'];?>" data-current-source="<?php echo $product['source']; ?>" value="<?php echo $product['source']; ?>">
@@ -574,12 +574,18 @@ function ChangeProductInventory(product_store_id){
             var product_name = $(this).attr('data-name');
 	    var current_qty = $(this).attr('data-current-qty');
             var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();
+            
+            var current_buying_price = $('#buying_price_'+vendor_product_id).val();
+            var source = $('#source_'+vendor_product_id).val();
+            
             tempObj.product_store_id = vendor_product_id;
             tempObj.product_id = general_product_id;
             tempObj.product_name = product_name;
             tempObj.procured_qty = procured_qty;
             tempObj.rejected_qty = rejected_qty;
 	    tempObj.current_qty = current_qty;
+            tempObj.current_buying_price = current_buying_price;
+            tempObj.source = source;
             if(product_store_id==vendor_product_id)
             data_array.push(tempObj);
         }
