@@ -209,9 +209,11 @@
                                     <td><?= $column_price  ?></td>
                                     <td class="text-left"><?php echo $column_status; ?></a>
                                        </td>-->
-                                     <td class="text-right"><?php echo 'Current '.$column_quantity; ?></td>
-                                     <td class="text-right"><?php echo 'Total Procured Qty'; ?></td>
-                                     <td class="text-right"><?php echo 'Rejected Qty'; ?></td>
+                                     <td class="text-left">Buying Price</td>
+                                     <td class="text-left">Source</td>
+                                     <td class="text-left"><?php echo 'Current '.$column_quantity; ?></td>
+                                     <td class="text-left"><?php echo 'Total Procured Qty'; ?></td>
+                                     <td class="text-left"><?php echo 'Rejected Qty'; ?></td>
 									 <td class="text-right"><?php echo 'Total Qty'; ?></td>
                                      <td class="text-right"><?php echo $column_action; ?></td>
                                      
@@ -264,17 +266,23 @@
                                         <?php echo $product['status']; ?>
                                     </td>-->
                                     <td class="text-left">
+                                         <input style="max-width: 75px !important;" name="buying_price" type="text" onkeypress="return validateFloatKeyPress(this, event);" class="buying_price" data-general_product_id="<?php echo $product['product_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-buying-price="<?php echo $product['buying_price']; ?>" id="buying_price_<?php echo $product['product_store_id'];?>" value="<?php echo $product['buying_price']; ?>">
+                                    </td>
+				    <td class="text-left">
+                                        <input style="max-width: 75px !important;" name="source" type="text" class="source" id="source_<?php echo $product['product_store_id'];?>" data-current-source="<?php echo $product['source']; ?>" value="<?php echo $product['source']; ?>">
+                                    </td>
+                                    <td class="text-left">
                                         <?php //echo $product['quantity'] ?>
-                                    <input name="current_qty_in_warehouse" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="current_qty_in_warehouse" data-general_product_id="<?php echo $product['product_id']; ?>" data-product_store_id="<?php echo $product['product_store_id']; ?>"  data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="current_qty_in_warehouse_<?php echo $product['product_store_id'];?>" value="<?php echo $product['quantity'] ?>">
+                                    <input style="max-width: 75px !important;" name="current_qty_in_warehouse" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="current_qty_in_warehouse" data-general_product_id="<?php echo $product['product_id']; ?>" data-product_store_id="<?php echo $product['product_store_id']; ?>"  data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="current_qty_in_warehouse_<?php echo $product['product_store_id'];?>" value="<?php echo $product['quantity'] ?>">
                                     </td>
                                     <td class="text-left">
-                                        <input name="total_procured_qty" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="procured_qty" data-general_product_id="<?php echo $product['product_id']; ?>" data-product_store_id="<?php echo $product['product_store_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="total_procured_qty_<?php echo $product['product_store_id'];?>" value="">
+                                        <input style="max-width: 75px !important;" name="total_procured_qty" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="procured_qty" data-general_product_id="<?php echo $product['product_id']; ?>" data-product_store_id="<?php echo $product['product_store_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="total_procured_qty_<?php echo $product['product_store_id'];?>" value="">
                                     </td>
                                     <td class="text-left">
-                                        <input name="rejected_qty" type="text" class="rejected_qty" onkeypress="return validateFloatKeyPress(this, event);" id="rejected_qty_<?php echo $product['product_store_id'];?>" data-product_store_id="<?php echo $product['product_store_id']; ?>" data-current-qty="<?php echo $product['quantity']; ?>" value="">
+                                        <input style="max-width: 75px !important;" name="rejected_qty" type="text" class="rejected_qty" onkeypress="return validateFloatKeyPress(this, event);" id="rejected_qty_<?php echo $product['product_store_id'];?>" data-product_store_id="<?php echo $product['product_store_id']; ?>" data-current-qty="<?php echo $product['quantity']; ?>" value="">
                                     </td>
 									<td class="text-left">
-                                        <input name="total_qty" disabled type="number"  id="total_qty_<?php echo $product['product_store_id'];?>" value="">
+                                        <input style="max-width: 75px !important;" name="total_qty" disabled type="number"  id="total_qty_<?php echo $product['product_store_id'];?>" value="">
                                     </td>
                                     <td class="text-right"><button type="button" onclick="ChangeProductInventory('<?php echo $product['product_store_id']; ?>');" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button>
 									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
@@ -566,12 +574,18 @@ function ChangeProductInventory(product_store_id){
             var product_name = $(this).attr('data-name');
 	    var current_qty = $(this).attr('data-current-qty');
             var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();
+            
+            var current_buying_price = $('#buying_price_'+vendor_product_id).val();
+            var source = $('#source_'+vendor_product_id).val();
+            
             tempObj.product_store_id = vendor_product_id;
             tempObj.product_id = general_product_id;
             tempObj.product_name = product_name;
             tempObj.procured_qty = procured_qty;
             tempObj.rejected_qty = rejected_qty;
 	    tempObj.current_qty = current_qty;
+            tempObj.current_buying_price = current_buying_price;
+            tempObj.source = source;
             if(product_store_id==vendor_product_id)
             data_array.push(tempObj);
         }
