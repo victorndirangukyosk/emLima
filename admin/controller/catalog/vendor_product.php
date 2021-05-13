@@ -2363,6 +2363,8 @@ class ControllerCatalogVendorProduct extends Controller {
                 'prev_qty' => $result['prev_qty'],
                 'current_qty' => $result['current_qty'],
                 'product_name' => $result['product_name'],
+                'source' => $result['source'],
+                'buying_price' => $result['buying_price'],
                 'date_added' => $result['date_added'],
                 'added_by' => $result['added_by'],
                 'added_user_role' => $result['added_user_role'],
