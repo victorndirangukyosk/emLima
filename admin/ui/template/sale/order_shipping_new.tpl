@@ -72,7 +72,7 @@
                 <td>Product</td>
                 <td class="text-center">Quantity Ordered</td>
                 <td class="text-center">Quantity Delivered</td>
-                <td class="text-right">Unit Price</td>
+                <!--<td class="text-right">Unit Price</td>-->
                 <!--<td class="text-right">Total</td>-->
               </tr>
               </thead>
@@ -83,7 +83,7 @@
                 <td><?= $product['name'] ?></td>
                 <td class="text-center"><?= $product['quantity'] ?> <?= $product['unit'] ?></td>
                 <td class="text-center"><?= $product['quantity_updated'] ?> <?= $product['unit_updated'] ?></td>
-                <td class="text-right">
+                <!--<td class="text-right">
                   <div class="price-container">
                     <span class="currency">
                       <?= $product['price_currency'] ?>
@@ -92,7 +92,7 @@
                       <?= $product['price_value'] ?>
                     </span>
                   </div>
-                </td>
+                </td>-->
                 <!--<td class="text-right">
                   <div class="price-container">
                     <span class="currency">
