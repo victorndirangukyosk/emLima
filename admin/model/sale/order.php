@@ -2901,12 +2901,12 @@ class ModelSaleOrder extends Model {
             $order_grand_total = 0;
             foreach ($all_orders as $all_order) {
                 $order_totals = $this->getOrderTotals($all_order['order_id']);
-                $log->write($all_order['order_id']);
+                //$log->write($all_order['order_id']);
                 if (is_array($order_totals) && count($order_totals) > 0) {
                     foreach ($order_totals as $order_total) {
                         if ($order_total['code'] == 'total') {
                             $order_grand_total+= $order_total['value'];
-                            $log->write($order_total);
+                            //$log->write($order_total);
                         }
                     }
                 }

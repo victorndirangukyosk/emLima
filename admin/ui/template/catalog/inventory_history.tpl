@@ -84,7 +84,6 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                                         <?php } ?></td>
-                                    <td class="text-left"><?php echo $column_product_id; ?></td>
                                     <td class="text-left"><?php echo $column_product_store_id; ?></td>
                                     <td class="text-left">Buying Price</td>
                                     <td class="text-left">Source</td>
@@ -111,7 +110,6 @@
                                         <input type="checkbox" name="selected[]" value="<?php echo $histor['product_history_id']; ?>" />
                                         <?php } ?></td>
                                     <td class="text-left"><?php echo $histor['product_name']; ?></td>
-                                    <td class="text-right"><?php echo $histor['product_id']; ?></td>
                                     <td class="text-right"><?php echo $histor['product_store_id']; ?></td>
                                     <td class="text-right"><?php echo $histor['buying_price']; ?></td>
                                     <td class="text-left"><?php echo $histor['source']; ?></td>

@@ -4769,9 +4769,15 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Rejected Quantity');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Previous Quantity');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Updated Quantity');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Updated By');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'User Role');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 4, 'Date Added');
+            
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Previous Buying Price');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'Buying Price');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 4, 'Previous Source');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, 4, 'Source');
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(11, 4, 'Updated By');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(12, 4, 'User Role');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, 4, 'Date Added');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -4780,9 +4786,16 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+            
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(9, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(10, 4)->applyFromArray($title);
+
+            
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(11, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(12, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(13, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 5;
@@ -4795,9 +4808,15 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['rejected_qty']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['prev_qty']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['current_qty']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['added_user']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['added_user_role']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['date_added']);
+                
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['prev_buying_price']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['buying_price']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['prev_source']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, $row, $result['source']);
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(11, $row, $result['added_user']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(12, $row, $result['added_user_role']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, $row, $result['date_added']);
                 ++$row;
             }
 
