@@ -69,6 +69,25 @@
 
 								</div>
 							</div>
+                                                        <div class="form-group required">
+								<label class="col-sm-2 control-label">Vendor</label>
+								<div class="col-sm-10">
+									<select class="form-control" name="merchant_id">
+										<option value=""><?= $text_none ?></option>
+
+										<?php foreach ($vendors as $f): ?>
+											<option value="<?php echo $f['user_id']; ?>" <?php echo $merchant_id == $f['user_id'] ? 'selected' : '' ?>><?php echo $f['username'] ?></option>
+										<?php endforeach ?>
+									</select>
+									
+								  <?php if ($error_merchant) { ?>
+									<div class="text-danger">
+										<?php echo $error_merchant; ?>
+									</div>
+									<?php } ?>
+
+								</div>
+							</div>
 							<div class="form-group required">
 								<label class="col-sm-2 control-label"><?php echo $entry_name; ?></label>
 								<div class="col-sm-10">

@@ -1523,6 +1523,9 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->load->model('setting/store');
 
         $data['stores'] = $this->model_setting_store->getStores();
+        
+        $this->load->model('vendor/vendor');
+        $data['vendors'] = $this->model_vendor_vendor->getUsers();
 
         // if (isset($this->request->post['product_store'])) {
         //     $data['product_store'] = $this->request->post['product_store'];
@@ -1538,6 +1541,14 @@ class ControllerCatalogVendorProduct extends Controller {
             $data['product_store'] = $product_info['store_id'];
         } else {
             $data['product_store'] = '';
+        }
+        
+        if (isset($this->request->post['merchant_id'])) {
+            $data['merchant_id'] = $this->request->post['merchant_id'];
+        } elseif (!empty($product_info)) {
+            $data['merchant_id'] = $product_info['merchant_id'];
+        } else {
+            $data['merchant_id'] = '';
         }
 
         $this->load->model('localisation/tax_class');
@@ -1719,6 +1730,12 @@ class ControllerCatalogVendorProduct extends Controller {
             $data['error_product_store'] = $this->error['product_store'];
         } else {
             $data['error_product_store'] = '';
+        }
+        
+        if (isset($this->error['merchant'])) {
+            $data['error_merchant'] = $this->error['merchant'];
+        } else {
+            $data['error_merchant'] = '';
         }
 
         if (isset($this->error['product_id'])) {
