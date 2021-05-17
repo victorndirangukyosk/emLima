@@ -1438,6 +1438,12 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $data['error_name'] = [];
         }
+        
+        if (isset($this->error['merchant'])) {
+            $data['error_merchant'] = $this->error['merchant'];
+        } else {
+            $data['error_merchant'] = [];
+        }
 
         $url = '';
 
@@ -1771,6 +1777,9 @@ class ControllerCatalogVendorProduct extends Controller {
 
         if (empty($this->request->post['product_store'])) {
             $this->error['product_store'] = $this->language->get('error_product_store');
+        }
+        if (empty($this->request->post['merchant_id']) || $this->request->post['merchant_id'] <= 0 || !is_numeric($this->request->post['merchant_id'])) {
+            $this->error['merchant'] = $this->language->get('error_merchant');
         }
         if (empty($this->request->post['product_id'])) {
             $this->error['product_id'] = $this->language->get('error_product_id');
