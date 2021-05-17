@@ -115,7 +115,8 @@ class ControllerCheckoutCheckoutItems extends Controller
         $data['arrs'] = [];
 
         foreach ($data['products_details'] as $key => $item) {
-            $data['arrs'][$item['store_id']][$key] = $item;
+            //$data['arrs'][$item['store_id']][$key] = $item;
+            $data['arrs'][75][$key] = $item;
         }
 
         //echo "<pre>";print_r($data['arrs']);die;
