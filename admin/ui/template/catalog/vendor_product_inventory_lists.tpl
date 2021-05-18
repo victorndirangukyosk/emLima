@@ -8,6 +8,7 @@
                 <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>-->
             <?php }else{ ?>
+                <button type="button" data-toggle="tooltip" title="Update Inventory" class="btn btn-default" onclick="updateinventory();"><i class="fa fa-floppy-o text-success"></i></button>
                 <!--<a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_copy; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $copy; ?>').submit()"><i class="fa fa-copy"></i></button>-->
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_enable; ?>" class="btn btn-default" onclick="changeStatus(1)"><i class="fa fa-check-circle text-success"></i></button>
@@ -780,6 +781,45 @@ function isNumberKey(txt,evt)
 		if (r.text == '') return o.value.length
 		return o.value.lastIndexOf(r.text)
 	} else return o.selectionStart
+}
+
+function updateinventory() {
+var data_array = [];
+$('input[name="selected[]"]:checked').each(function() {
+var data_inventory = {};
+var vendor_product_id = $(this).val();
+var buying_price = $('#buying_price_'+vendor_product_id).val(); 
+var source = $('#source_'+vendor_product_id).val();  
+var current_qty = $('#current_qty_in_warehouse_'+vendor_product_id).val(); 
+var total_procured_qty = $('#total_procured_qty_'+vendor_product_id).val(); 
+var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();  
+var total_qty = $('#total_qty_'+vendor_product_id).val();   
+
+var general_product_id = $('#buying_price_'+vendor_product_id).attr('data-general_product_id');
+var product_name = $('#buying_price_'+vendor_product_id).attr('data-name');
+
+data_inventory[vendor_product_id] = { 'vendor_product_id' : vendor_product_id, 'buying_price' : buying_price, 'source' : source, 'current_qty' : current_qty, 'total_procured_qty' : total_procured_qty, 'rejected_qty' : rejected_qty, 'total_qty' : total_qty, 'product_id' : general_product_id, 'product_name' : product_name};
+console.log(data_inventory);
+data_array.push(data_inventory);
+console.log(data_array);
+});
+
+    if(data_array.length  > 0){
+           $.ajax({
+                    url: 'index.php?path=catalog/product/updateMultiInventory&token=<?= $token ?>',
+                    dataType: 'json',
+                    data: {updated_products :data_array},
+                    success: function(json) {
+                    if (json) {
+                    $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+                    }
+                    else {
+                    location.reload();
+                    }    
+                    }
+         });
+    }
+
 }
 
 </script>
