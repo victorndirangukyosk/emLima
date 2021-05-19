@@ -784,6 +784,11 @@ function isNumberKey(txt,evt)
 }
 
 function updateinventory() {
+console.log($('input[name="selected[]"]:checked').length);
+if($('input[name="selected[]"]:checked').length == 0) {
+alert('Please select atleaset one product!');
+return false;
+}
 var data_array = [];
 $('input[name="selected[]"]:checked').each(function() {
 var data_inventory = {};
