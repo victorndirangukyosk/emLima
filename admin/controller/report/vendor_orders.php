@@ -514,17 +514,38 @@ class ControllerReportVendorOrders extends Controller {
 
         if (isset($this->request->get['filter_delivery_date'])) {
             $deliveryDate = $this->request->get['filter_delivery_date'];
-
-
-            $filter_data = [
-                'filter_delivery_date' => $deliveryDate,
-            ];
-            $this->load->model('sale/order');
-            // $results = $this->model_sale_order->getOrders($filter_data);
-            $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
         } else {
             $deliveryDate = null;
         }
+
+        if (isset($this->request->get['filter_order_status'])) {
+            $order_status = $this->request->get['filter_order_status'];
+        } else {
+            $order_status = null;
+        }
+        
+        if (isset($this->request->get['filter_company'])) {
+            $company = $this->request->get['filter_company'];
+        } else {
+            $company = null;
+        }
+        
+        if (isset($this->request->get['filter_customer'])) {
+            $customer = $this->request->get['filter_customer'];
+        } else {
+            $company = null;
+        }
+
+        $filter_data = [
+            'filter_delivery_date' => $deliveryDate,
+            'filter_order_status' => $order_status,
+            'filter_company' => $company,
+            'filter_customer' => $customer
+        ];
+
+        $this->load->model('sale/order');
+        // $results = $this->model_sale_order->getOrders($filter_data);
+        $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
 
         $data = [];
         $unconsolidatedProducts = [];
