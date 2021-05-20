@@ -1534,8 +1534,21 @@ function downloadOrdersonsolidated() {
 
             if (filter_delivery_date != '*') {
                 url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
-            } 
-                    location = url;
+            }
+            
+            var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company != '*') {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+            
+            var filter_customer = $('input[name=\'filter_customer\']').val();
+
+            if (filter_customer != '*') {
+                url += '&filter_customer=' + encodeURIComponent(filter_customer);
+            }
+            
+            location = url;
             
 }
 </script></div>
