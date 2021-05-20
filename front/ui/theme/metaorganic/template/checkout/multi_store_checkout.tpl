@@ -188,12 +188,13 @@
                                 <div class="checkout-step-body">
                                     <input type="hidden" value="" name="dates_selected" >
                                     <?php foreach ($store_data as $os): ?>
-
+                                            <?php if($os['store_id'] == 75) { ?>
                                             <b>     <?php echo $os['name'] ?> </b>
                                             <div class="checkout-payment-mode" id="shipping-method-wrapper-<?php echo $os['store_id'] ?>">
                                                 <!-- shipping method will goes here -->
 
                                             </div>
+                                            <?php } ?>
                                     <?php endforeach ?> 
                                     <div class="goto-next">
                                         <div class="row">
@@ -227,11 +228,12 @@
                                     <input type="hidden" value="" name="shipping_time_selected" >
 
                                     <?php foreach ($store_data as $os): ?>
-
+                                        <?php if($os['store_id'] == 75) { ?>
                                         <b>     <?php echo $os['name'] ?> </b>
                                         <div class="checkout-time-table" id="delivery-time-wrapper-<?php echo $os['store_id'] ?>">
 
-                                        </div>              
+                                        </div>
+                                        <?php } ?>
                                     <?php endforeach ?> 
                                     <a class="collapsed btn btn-grey"  style="border-radius:20px" disabled="disabled" role="button" data-toggle="collapse" data-parent="#accordion" href="#" id="payment-next">  <?= $text_next?>  
 
@@ -1504,12 +1506,13 @@ var name="dropoff_notes";
 
     appendDataToSend = '';
      <?php foreach ($store_data as $os):  ?>
-        var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value')
+          var shipping_method = $('input[name=\'shipping_method-'+75+'\']:checked').attr('value')
+        //var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value')
         if (shipping_method.length <= 0) {
             console.log("shipping_method selected");
             $error = true;
         }
-        console.log("shipping-method-wrapper"+shipping_method);
+        console.log("shipping-method-wrapper"+shipping_method+'QWERTY');
 
         /*if($('#delivery-time-wrapper-<?php echo $os["store_id"] ?> ul.list-group input[type=radio]:checked').val() == undefined ) {
             $error = true;
@@ -1770,7 +1773,8 @@ function saveInAddressBook() {
         var bothExpress = true;
 
         <?php foreach ($store_data as $os):  ?>
-            var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value');
+              var shipping_method = $('input[name=\'shipping_method-'+75+'\']:checked').attr('value');
+            //var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value');
 
             console.log("shipping_method"+shipping_method);
             
@@ -1820,7 +1824,7 @@ function saveInAddressBook() {
         $error = false;
 
         <?php foreach ($store_data as $os):  ?>
-            var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value')
+            var shipping_method = $('input[name=\'shipping_method-'+75+'\']:checked').attr('value')
             if (shipping_method.length <= 0) {
                 console.log("shipping_method not selected");
                 $error = true;
