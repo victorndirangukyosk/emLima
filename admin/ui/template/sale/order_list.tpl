@@ -11,7 +11,7 @@
                 
                 <button type="" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
                 <button type="" id="button-invoice-pdf" form="form-order" formaction="<?php echo $invoicepdf; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
-
+                <button type="button" onclick="downloadOrdersonsolidated();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Consolidated Excel"><i class="fa fa-download"></i></button>
                <?php if (!$this->user->isVendor()): ?>
                         <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
                 <?php endif ?>  
@@ -1517,6 +1517,27 @@ $.ajax({
 });
 console.log($(this).attr("data-order-id"));
 });
+
+function downloadOrdersonsolidated() {
+          
+            //const deliveryDate = $("#consolidated-order-sheet-datepicker").val();
+                url = 'index.php?path=report/vendor_orders/consolidatedOrderSheetForOrders&token=<?php echo $token; ?>';
+              var filter_order_status = $('select[name=\'filter_order_status\']').val();
+
+            console.log(filter_order_status);
+
+            if (filter_order_status != '*') {
+                url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
+            }
+
+            var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
+
+            if (filter_delivery_date != '*') {
+                url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
+            } 
+                    location = url;
+            
+}
 </script></div>
 <?php echo $footer; ?>
 

@@ -1,27 +1,24 @@
 <?php
 
-class ControllerReportVendorOrders extends Controller
-{
-    public function getUserByName($name)
-    {
+class ControllerReportVendorOrders extends Controller {
+
+    public function getUserByName($name) {
         if ($name) {
-            $query = $this->db->query('SELECT * FROM `'.DB_PREFIX."user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '".$this->db->escape($name)."%'");
+            $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '" . $this->db->escape($name) . "%'");
 
             return $query->row['user_id'];
         }
     }
 
-    public function getStoreIdByName($name)
-    {
+    public function getStoreIdByName($name) {
         if ($name) {
-            $query = $this->db->query('SELECT * FROM `'.DB_PREFIX."store` WHERE name LIKE '".$this->db->escape($name)."%'");
+            $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "store` WHERE name LIKE '" . $this->db->escape($name) . "%'");
 
             return $query->row['store_id'];
         }
     }
 
-    public function excel()
-    {
+    public function excel() {
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
         } else {
@@ -72,8 +69,7 @@ class ControllerReportVendorOrders extends Controller
         $this->model_report_excel->download_report_vendor_orders_excel($data);
     }
 
-    public function index()
-    {
+    public function index() {
         $this->language->load('report/vendor_orders');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -147,52 +143,52 @@ class ControllerReportVendorOrders extends Controller
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city='.$this->request->get['filter_city'];
+            $url .= '&filter_city=' . $this->request->get['filter_city'];
         }
 
         if (isset($this->request->get['filter_vendor'])) {
-            $url .= '&filter_vendor='.$this->request->get['filter_vendor'];
+            $url .= '&filter_vendor=' . $this->request->get['filter_vendor'];
         }
 
         if (isset($this->request->get['filter_vendor_id'])) {
-            $url .= '&filter_vendor_id='.$this->request->get['filter_vendor_id'];
+            $url .= '&filter_vendor_id=' . $this->request->get['filter_vendor_id'];
         }
 
         if (isset($this->request->get['filter_store'])) {
-            $url .= '&filter_store='.$this->request->get['filter_store'];
+            $url .= '&filter_store=' . $this->request->get['filter_store'];
         }
 
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_group'])) {
-            $url .= '&filter_group='.$this->request->get['filter_group'];
+            $url .= '&filter_group=' . $this->request->get['filter_group'];
         }
 
         if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
+            $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         $data['breadcrumbs'] = [];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
             'separator' => false,
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . $url, 'SSL'),
             'separator' => ' :: ',
         ];
 
@@ -220,7 +216,6 @@ class ControllerReportVendorOrders extends Controller
         $order_total = $this->model_report_sale->getTotalReportVendorOrders($filter_data);
         $results = $this->model_report_sale->getReportVendorOrders($filter_data);
         //$order_total = count($results);
-
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $products_qty = 0;
@@ -256,7 +251,7 @@ class ControllerReportVendorOrders extends Controller
                 'products' => $products_qty,
                 'subtotal' => $this->currency->format($sub_total),
                 'total' => $this->currency->format($total),
-                //'total' => $this->currency->format($result['total']),
+                    //'total' => $this->currency->format($result['total']),
             ];
         }
 
@@ -320,35 +315,35 @@ class ControllerReportVendorOrders extends Controller
         $url = '';
 
         if (isset($this->request->get['filter_city'])) {
-            $url .= '&filter_city='.$this->request->get['filter_city'];
+            $url .= '&filter_city=' . $this->request->get['filter_city'];
         }
 
         if (isset($this->request->get['filter_vendor'])) {
-            $url .= '&filter_vendor='.$this->request->get['filter_vendor'];
+            $url .= '&filter_vendor=' . $this->request->get['filter_vendor'];
         }
 
         if (isset($this->request->get['filter_vendor_id'])) {
-            $url .= '&filter_vendor_id='.$this->request->get['filter_vendor_id'];
+            $url .= '&filter_vendor_id=' . $this->request->get['filter_vendor_id'];
         }
 
         if (isset($this->request->get['filter_store'])) {
-            $url .= '&filter_store='.$this->request->get['filter_store'];
+            $url .= '&filter_store=' . $this->request->get['filter_store'];
         }
 
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
+            $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
 
         if (isset($this->request->get['filter_group'])) {
-            $url .= '&filter_group='.$this->request->get['filter_group'];
+            $url .= '&filter_group=' . $this->request->get['filter_group'];
         }
 
         if ('ASC' == $order) {
@@ -369,17 +364,17 @@ class ControllerReportVendorOrders extends Controller
             $data['order'] = 'DESC';
         }
 
-        $data['sort_orders'] = $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'].'&sort=orders'.$url, 'SSL');
-        $data['sort_products'] = $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'].'&sort=products'.$url, 'SSL');
-        $data['sort_total'] = $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'].'&sort=total'.$url, 'SSL');
-        $data['sort_subtotal'] = $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'].'&sort=subtotal'.$url, 'SSL');
+        $data['sort_orders'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=orders' . $url, 'SSL');
+        $data['sort_products'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=products' . $url, 'SSL');
+        $data['sort_total'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=total' . $url, 'SSL');
+        $data['sort_subtotal'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=subtotal' . $url, 'SSL');
 
         $pagination = new Pagination();
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
         $pagination->text = $this->language->get('text_pagination');
-        $pagination->url = $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -403,21 +398,19 @@ class ControllerReportVendorOrders extends Controller
         $this->response->setOutput($this->load->view('report/vendor_orders.tpl', $data));
     }
 
-    public function consolidatedOrderSheet()
-    {
+    public function consolidatedOrderSheet() {
 
 
         if (isset($this->request->get['filter_delivery_date'])) {
             $deliveryDate = $this->request->get['filter_delivery_date'];
 
-            
+
             $filter_data = [
-                'filter_delivery_date' => $deliveryDate,            
+                'filter_delivery_date' => $deliveryDate,
             ];
             $this->load->model('sale/order');
             // $results = $this->model_sale_order->getOrders($filter_data);
             $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
-
         } else {
             $deliveryDate = null;
         }
@@ -429,19 +422,19 @@ class ControllerReportVendorOrders extends Controller
             } else {
                 $filter_order_status = null;
             }
-            
+
             $filter_data = [
-                'filter_order_day' => $filter_order_day,  
-                'filter_order_status' => $filter_order_status, 
+                'filter_order_day' => $filter_order_day,
+                'filter_order_status' => $filter_order_status,
             ];
             $this->load->model('sale/order');
-           
+
             $results = $this->model_sale_order->getFastOrders($filter_data);
         } else {
             $filter_order_day = null;
         }//end of if 
 
-       
+
         $data = [];
         $unconsolidatedProducts = [];
 
@@ -478,7 +471,7 @@ class ControllerReportVendorOrders extends Controller
                 foreach ($indexes as $index) {
                     if ($productUnit == $consolidatedProducts[$index]['unit']) {
                         if ($consolidatedProducts[$index]['produce_type']) {
-                            $produceType = $consolidatedProducts[$index]['produce_type'].' / '.$produceType.' ';
+                            $produceType = $consolidatedProducts[$index]['produce_type'] . ' / ' . $produceType . ' ';
                         }
 
                         $consolidatedProducts[$index]['quantity'] += $productQuantity;
@@ -515,4 +508,96 @@ class ControllerReportVendorOrders extends Controller
         $this->load->model('report/excel');
         $this->model_report_excel->download_consolidated_order_sheet_excel($data);
     }
+
+    public function consolidatedOrderSheetForOrders() {
+
+
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $deliveryDate = $this->request->get['filter_delivery_date'];
+
+
+            $filter_data = [
+                'filter_delivery_date' => $deliveryDate,
+            ];
+            $this->load->model('sale/order');
+            // $results = $this->model_sale_order->getOrders($filter_data);
+            $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+        } else {
+            $deliveryDate = null;
+        }
+
+        $data = [];
+        $unconsolidatedProducts = [];
+
+        foreach ($results as $index => $order) {
+            $data['orders'][$index] = $order;
+            $orderProducts = $this->model_sale_order->getOrderAndRealOrderProducts($data['orders'][$index]['order_id']);
+            $data['orders'][$index]['products'] = $orderProducts;
+
+            foreach ($orderProducts as $product) {
+                $unconsolidatedProducts[] = [
+                    'name' => $product['name'],
+                    'unit' => $product['unit'],
+                    'quantity' => $product['quantity'],
+                    'note' => $product['product_note'],
+                    'produce_type' => $product['produce_type'],
+                ];
+            }
+        }
+
+        $consolidatedProducts = [];
+
+        foreach ($unconsolidatedProducts as $product) {
+            $productName = $product['name'];
+            $productUnit = $product['unit'];
+            $productQuantity = $product['quantity'];
+            $productNote = $product['product_note'];
+            $produceType = $product['produce_type'];
+
+            $consolidatedProductNames = array_column($consolidatedProducts, 'name');
+            if (false !== array_search($productName, $consolidatedProductNames)) {
+                $indexes = array_keys($consolidatedProductNames, $productName);
+
+                $foundExistingProductWithSimilarUnit = false;
+                foreach ($indexes as $index) {
+                    if ($productUnit == $consolidatedProducts[$index]['unit']) {
+                        if ($consolidatedProducts[$index]['produce_type']) {
+                            $produceType = $consolidatedProducts[$index]['produce_type'] . ' / ' . $produceType . ' ';
+                        }
+
+                        $consolidatedProducts[$index]['quantity'] += $productQuantity;
+                        $consolidatedProducts[$index]['produce_type'] = $produceType;
+                        $foundExistingProductWithSimilarUnit = true;
+                        break;
+                    }
+                }
+
+                if (!$foundExistingProductWithSimilarUnit) {
+                    $consolidatedProducts[] = [
+                        'name' => $productName,
+                        'unit' => $productUnit,
+                        'quantity' => $productQuantity,
+                        'note' => $productNote,
+                        'produce_type' => $produceType,
+                    ];
+                }
+            } else {
+                $consolidatedProducts[] = [
+                    'name' => $productName,
+                    'unit' => $productUnit,
+                    'quantity' => $productQuantity,
+                    'note' => $productNote,
+                    'produce_type' => $produceType,
+                ];
+            }
+        }
+        //echo "<pre>";print_r($consolidatedProducts);die;
+
+        $data['products'] = $consolidatedProducts;
+        // echo "<pre>";print_r($data);die;
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_consolidated_order_sheet_excel($data);
+    }
+
 }
