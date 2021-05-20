@@ -1548,6 +1548,55 @@ function downloadOrdersonsolidated() {
                 url += '&filter_customer=' + encodeURIComponent(filter_customer);
             }
             
+            var filter_total = $('input[name=\'filter_total\']').val();
+
+            if (filter_total != '*') {
+                url += '&filter_total=' + encodeURIComponent(filter_total);
+            }
+            
+            var filter_delivery_method = $('input[name=\'filter_delivery_method\']').val();
+
+            if (filter_delivery_method != '*') {
+                url += '&filter_delivery_method=' + encodeURIComponent(filter_delivery_method);
+            }
+            
+            var filter_payment = $('input[name=\'filter_payment\']').val();
+
+            if (filter_payment != '*') {
+                url += '&filter_payment=' + encodeURIComponent(filter_payment);
+            }
+            
+            var filter_order_type = $('input[name=\'filter_order_type\']').val();
+
+            if (filter_order_type != '*') {
+                url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
+            }
+            
+            var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
+
+            if (filter_order_from_id != '*') {
+                url += '&filter_order_from_id=' + encodeURIComponent(filter_order_from_id);
+            }
+            
+            var filter_order_to_id = $('input[name=\'filter_order_to_id\']').val();
+
+            if (filter_order_to_id != '*') {
+                url += '&filter_order_to_id=' + encodeURIComponent(filter_order_to_id);
+            }
+            
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added != '*') {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+            
+            var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
+
+            if (filter_date_added_end != '*') {
+                url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
+            }
+            
+            
             location = url;
             
 }

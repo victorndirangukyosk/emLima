@@ -535,12 +535,69 @@ class ControllerReportVendorOrders extends Controller {
         } else {
             $company = null;
         }
+        
+        if (isset($this->request->get['filter_total'])) {
+            $total = $this->request->get['filter_total'];
+        } else {
+            $total = null;
+        }
+        
+        if (isset($this->request->get['filter_delivery_method'])) {
+            $delivery_method = $this->request->get['filter_delivery_method'];
+        } else {
+            $delivery_method = null;
+        }
+        
+        if (isset($this->request->get['filter_payment'])) {
+            $payment = $this->request->get['filter_payment'];
+        } else {
+            $payment = null;
+        }
+        
+        if (isset($this->request->get['filter_order_type'])) {
+            $order_type = $this->request->get['filter_order_type'];
+        } else {
+            $order_type = null;
+        }
+        
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $order_from_id = $this->request->get['filter_order_from_id'];
+        } else {
+            $order_from_id = null;
+        }
+        
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $order_to_id = $this->request->get['filter_order_to_id'];
+        } else {
+            $order_to_id = null;
+        }
+        
+        if (isset($this->request->get['filter_date_added'])) {
+            $date_added = $this->request->get['filter_date_added'];
+        } else {
+            $date_added = null;
+        }
+        
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $date_added_end = null;
+        }
 
         $filter_data = [
             'filter_delivery_date' => $deliveryDate,
             'filter_order_status' => $order_status,
             'filter_company' => $company,
-            'filter_customer' => $customer
+            'filter_customer' => $customer,
+            'filter_total' => $total,
+            'filter_delivery_method' => $delivery_method,
+            'filter_payment' => $payment,
+            'filter_order_type' => $order_type,
+            'filter_order_type' => $order_type,
+            'filter_order_from_id' => $order_from_id,
+            'filter_order_to_id' => $order_to_id,
+            'filter_date_added' => $date_added,
+            'filter_date_added_end' => $date_added_end,
         ];
 
         $this->load->model('sale/order');
