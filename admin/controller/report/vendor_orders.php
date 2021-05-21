@@ -583,6 +583,12 @@ class ControllerReportVendorOrders extends Controller {
         } else {
             $date_added_end = null;
         }
+        
+        if (isset($this->request->get['filter_order_id'])) {
+            $order_id = $this->request->get['filter_order_id'];
+        } else {
+            $order_id = null;
+        }
 
         $filter_data = [
             'filter_delivery_date' => $deliveryDate,
@@ -598,6 +604,7 @@ class ControllerReportVendorOrders extends Controller {
             'filter_order_to_id' => $order_to_id,
             'filter_date_added' => $date_added,
             'filter_date_added_end' => $date_added_end,
+            'filter_order_id' => $order_id
         ];
 
         $this->load->model('sale/order');
