@@ -1602,6 +1602,14 @@ function downloadOrdersonsolidated() {
                 url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
             }
             
+            var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
+            return n.value;
+            }).join(',');
+            console.log(selected_order_id);
+            
+            if (selected_order_id != '') {
+                url += '&selected_order_id=' + encodeURIComponent(selected_order_id);
+            }
             
             location = url;
             
