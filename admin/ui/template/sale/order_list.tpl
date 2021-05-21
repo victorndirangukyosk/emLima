@@ -1596,6 +1596,12 @@ function downloadOrdersonsolidated() {
                 url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
             }
             
+            var filter_order_id = $('input[name=\'filter_order_id\']').val();
+
+            if (filter_order_id != '*') {
+                url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
+            }
+            
             
             location = url;
             
