@@ -11,7 +11,7 @@
                 
                 <button type="" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
                 <button type="" id="button-invoice-pdf" form="form-order" formaction="<?php echo $invoicepdf; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
-
+                <button type="button" onclick="downloadOrdersonsolidated();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Consolidated Excel"><i class="fa fa-download"></i></button>
                <?php if (!$this->user->isVendor()): ?>
                         <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
                 <?php endif ?>  
@@ -1517,6 +1517,103 @@ $.ajax({
 });
 console.log($(this).attr("data-order-id"));
 });
+
+function downloadOrdersonsolidated() {
+          
+            //const deliveryDate = $("#consolidated-order-sheet-datepicker").val();
+                url = 'index.php?path=report/vendor_orders/consolidatedOrderSheetForOrders&token=<?php echo $token; ?>';
+              var filter_order_status = $('select[name=\'filter_order_status\']').val();
+
+            console.log(filter_order_status);
+
+            if (filter_order_status != '*') {
+                url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
+            }
+
+            var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
+
+            if (filter_delivery_date != '*') {
+                url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
+            }
+            
+            var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company != '*') {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+            
+            var filter_customer = $('input[name=\'filter_customer\']').val();
+
+            if (filter_customer != '*') {
+                url += '&filter_customer=' + encodeURIComponent(filter_customer);
+            }
+            
+            var filter_total = $('input[name=\'filter_total\']').val();
+
+            if (filter_total != '*') {
+                url += '&filter_total=' + encodeURIComponent(filter_total);
+            }
+            
+            var filter_delivery_method = $('input[name=\'filter_delivery_method\']').val();
+
+            if (filter_delivery_method != '*') {
+                url += '&filter_delivery_method=' + encodeURIComponent(filter_delivery_method);
+            }
+            
+            var filter_payment = $('input[name=\'filter_payment\']').val();
+
+            if (filter_payment != '*') {
+                url += '&filter_payment=' + encodeURIComponent(filter_payment);
+            }
+            
+            var filter_order_type = $('input[name=\'filter_order_type\']').val();
+
+            if (filter_order_type != '*') {
+                url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
+            }
+            
+            var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
+
+            if (filter_order_from_id != '*') {
+                url += '&filter_order_from_id=' + encodeURIComponent(filter_order_from_id);
+            }
+            
+            var filter_order_to_id = $('input[name=\'filter_order_to_id\']').val();
+
+            if (filter_order_to_id != '*') {
+                url += '&filter_order_to_id=' + encodeURIComponent(filter_order_to_id);
+            }
+            
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added != '*') {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+            
+            var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
+
+            if (filter_date_added_end != '*') {
+                url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
+            }
+            
+            var filter_order_id = $('input[name=\'filter_order_id\']').val();
+
+            if (filter_order_id != '*') {
+                url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
+            }
+            
+            var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
+            return n.value;
+            }).join(',');
+            console.log(selected_order_id);
+            
+            if (selected_order_id != '') {
+                url += '&selected_order_id=' + encodeURIComponent(selected_order_id);
+            }
+            
+            location = url;
+            
+}
 </script></div>
 <?php echo $footer; ?>
 

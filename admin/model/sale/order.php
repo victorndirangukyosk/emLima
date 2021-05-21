@@ -2646,9 +2646,9 @@ class ModelSaleOrder extends Model {
     public function getStoreDetails($q) {
         $sql = 'SELECT name, store_id from `' . DB_PREFIX . 'store` WHERE name LIKE "%' . $q . '%"';
 
-        if ($this->user->isVendor()) {
+        /*if ($this->user->isVendor()) {
             $sql .= " AND vendor_id='" . $this->user->getId() . "'";
-        }
+        }*/
 
         $sql .= ' LIMIT 5';
 
