@@ -1,11 +1,8 @@
 <?php
 
-class ControllerReportCustomerBoughtProducts extends Controller
-{
-     
+class ControllerReportCustomerBoughtProducts extends Controller {
 
-    public function index()
-    {
+    public function index() {
         $this->load->language('report/customer_boughtproducts');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -20,7 +17,7 @@ class ControllerReportCustomerBoughtProducts extends Controller
             $filter_date_end = $this->request->get['filter_date_end'];
         } else {
             $filter_date_end = '';
-        } 
+        }
         if (isset($this->request->get['filter_customer'])) {
             $filter_customer = $this->request->get['filter_customer'];
         } else {
@@ -32,6 +29,12 @@ class ControllerReportCustomerBoughtProducts extends Controller
         } else {
             $filter_company = '';
         }
+        
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
 
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
@@ -42,36 +45,40 @@ class ControllerReportCustomerBoughtProducts extends Controller
         $url = '';
 
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
 
-       
+
         if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer='.$this->request->get['filter_customer'];
+            $url .= '&filter_customer=' . $this->request->get['filter_customer'];
         }
 
         if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company='.$this->request->get['filter_company'];
+            $url .= '&filter_company=' . $this->request->get['filter_company'];
+        }
+        
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . $this->request->get['filter_name'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         $data['breadcrumbs'] = [];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
         ];
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/customer_boughtproducts', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('report/customer_boughtproducts', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
         $this->load->model('report/customer');
@@ -84,15 +91,15 @@ class ControllerReportCustomerBoughtProducts extends Controller
             // 'filter_order_status_id' => $filter_order_status_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
-            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            // 'limit' => $this->config->get('config_limit_admin'),
+            'filter_name' => $filter_name,
+                // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+                // 'limit' => $this->config->get('config_limit_admin'),
         ];
         if ('' != $filter_customer || '' != $filter_company) {
             // $customer_total = $this->model_report_customer->getTotalboughtproducts($filter_data);
 
             $results = $this->model_report_customer->getboughtproductswithRealOrders($filter_data);
             $customer_total = count($results);
-             
         } else {
             $customer_total = 0;
             $results = null;
@@ -101,14 +108,14 @@ class ControllerReportCustomerBoughtProducts extends Controller
         if (is_array($results) && count($results) > 0) {
             $log = new Log('error.log');
             $log->write('Yes It Is Array');
-            foreach ($results as $result) {                 
+            foreach ($results as $result) {
                 $data['customers'][] = [
-                'company' => $result['company'],
-                // 'customer' => $result['customer'],not listed in query
-                'name' => $result['name'],
-                'unit' => $result['unit'], 
-                'quantity' => $result['quantity'],
-                 ];
+                    'company' => $result['company'],
+                    // 'customer' => $result['customer'],not listed in query
+                    'name' => $result['name'],
+                    'unit' => $result['unit'],
+                    'quantity' => $result['quantity'],
+                ];
             }
         }
         //  echo "<pre>";print_r($data['customers']);die;
@@ -139,7 +146,7 @@ class ControllerReportCustomerBoughtProducts extends Controller
         $data['button_hide_filter'] = $this->language->get('button_hide_filter');
 
         $data['token'] = $this->session->data['token'];
-        
+
         $this->load->model('sale/customer');
 
         $data['customer_names'] = $this->model_sale_customer->getCustomers(null);
@@ -147,28 +154,32 @@ class ControllerReportCustomerBoughtProducts extends Controller
         $url = '';
 
         if (isset($this->request->get['filter_date_start'])) {
-            $url .= '&filter_date_start='.$this->request->get['filter_date_start'];
+            $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
         }
 
         if (isset($this->request->get['filter_date_end'])) {
-            $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
 
-        
+
 
         if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer='.$this->request->get['filter_customer'];
+            $url .= '&filter_customer=' . $this->request->get['filter_customer'];
         }
 
         if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company='.$this->request->get['filter_company'];
+            $url .= '&filter_company=' . $this->request->get['filter_company'];
+        }
+        
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . $this->request->get['filter_name'];
         }
 
         $pagination = new Pagination();
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/customer_boughtproducts', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/customer_boughtproducts', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -179,23 +190,23 @@ class ControllerReportCustomerBoughtProducts extends Controller
         // $data['filter_order_status_id'] = $filter_order_status_id;
         $data['filter_customer'] = $filter_customer;
         $data['filter_company'] = $filter_company;
+        $data['filter_name'] = $filter_name;
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
 
-         //as the dynamic pagination will not work for this calculation , applied pagination on array
-         $start = ($page - 1) * $this->config->get('config_limit_admin');
-         $limit = $this->config->get('config_limit_admin');
- 
-         $data['customers'] = array_slice($data['customers'], $start, $limit);
+        //as the dynamic pagination will not work for this calculation , applied pagination on array
+        $start = ($page - 1) * $this->config->get('config_limit_admin');
+        $limit = $this->config->get('config_limit_admin');
+
+        $data['customers'] = array_slice($data['customers'], $start, $limit);
 
         $this->response->setOutput($this->load->view('report/customer_boughtproducts.tpl', $data));
     }
 
-    public function boughtproductsexcel()
-    {
+    public function boughtproductsexcel() {
         $this->load->language('report/customer_boughtproducts');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -203,7 +214,7 @@ class ControllerReportCustomerBoughtProducts extends Controller
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
         } else {
-            $filter_date_start ="";//  '1990-01-01'default date removed
+            $filter_date_start = ""; //  '1990-01-01'default date removed
         }
 
         if (isset($this->request->get['filter_date_end'])) {
@@ -212,7 +223,7 @@ class ControllerReportCustomerBoughtProducts extends Controller
             $filter_date_end = date('Y-m-d');
         }
 
-         
+
 
         if (isset($this->request->get['filter_customer'])) {
             $filter_customer = $this->request->get['filter_customer'];
@@ -225,6 +236,12 @@ class ControllerReportCustomerBoughtProducts extends Controller
         } else {
             $filter_company = 0;
         }
+        
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = 0;
+        }
 
         $filter_data = [
             'filter_date_start' => $filter_date_start,
@@ -232,11 +249,35 @@ class ControllerReportCustomerBoughtProducts extends Controller
             // 'filter_order_status_id' => $filter_order_status_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
+            'filter_name' => $filter_name,
         ];
 
-        $this->load->model('report/excel');//download_customer_order_excel
+        $this->load->model('report/excel'); //download_customer_order_excel
         $this->model_report_excel->download_customer_boughtproducts_excel($filter_data);
     }
 
-  
+    public function product_autocomplete() {
+        
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        $this->load->model('sale/order');
+
+        $send = [];
+
+        $json = $this->model_sale_order->getProductDataByStoreFilterNew($filter_name);
+        $log = new Log('error.log');
+
+        foreach ($json as $j) {
+            $j['name'] = htmlspecialchars_decode($j['name']);
+
+            $send[] = $j;
+        }
+
+        echo json_encode($send);
+    }
+
 }
