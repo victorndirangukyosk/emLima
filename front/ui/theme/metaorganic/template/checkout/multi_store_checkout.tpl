@@ -1257,7 +1257,8 @@ if ($shipping_required) {
 
         $('#timeslot-next').removeAttr('disabled');
 
-        var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value');
+        //var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value');
+        var shipping_method = $('input[name=\'shipping_method-'+75+'\']:checked').attr('value');
         console.log(shipping_method); 
         if (shipping_method == undefined) {
             shipping_method = 0;

@@ -1527,6 +1527,7 @@ class Controllercheckoutdeliverytime extends Controller
         if (isset($this->request->post['timeslot'])) {
             $delivery_timeslot = $this->request->post['timeslot'];
             $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
+            $this->session->data['timeslot'][76] = $delivery_timeslot;
         } else {
             $delivery_timeslot = '';
         }
