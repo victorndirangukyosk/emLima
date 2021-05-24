@@ -404,6 +404,12 @@ class ControllerCommonHome extends Controller {
         $data['jobpositions'][0]['action'] = $this->url->link('common/home/savecareers', '', 'SSL');
         $data['jobpositions'][0]['message'] = $message;
         $data['jobpositions'][0]['errormessage'] = $errormessage;
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['jobpositions'][0]['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['jobpositions'][0]['logo'] = 'assets/img/logo.svg';
+        }
         //   echo "<pre>";print_r($data['jobpositions'][0]);die;
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
     }
