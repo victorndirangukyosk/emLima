@@ -833,6 +833,7 @@ class ControllerSaleCustomer extends Controller {
                 'telephone' => $country_code . $result['telephone'],
                 'customer_group' => $result['customer_group'],
                 'status_row' => $result['status'],
+                'approved_row' => $result['approved'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'source' => $result['source'],
                 'ip' => $result['ip'],
