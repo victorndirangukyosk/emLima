@@ -832,6 +832,7 @@ class ControllerSaleCustomer extends Controller {
                 'email' => $result['email'],
                 'telephone' => $country_code . $result['telephone'],
                 'customer_group' => $result['customer_group'],
+                'status_row' => $result['status'],
                 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'source' => $result['source'],
                 'ip' => $result['ip'],
