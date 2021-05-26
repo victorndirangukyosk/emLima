@@ -531,7 +531,7 @@ class ModelReportCustomer extends Model {
 
         if (!empty($data['filter_company'])) {
             $implode[] = "c.company_name LIKE '" . $this->db->escape($data['filter_company']) . "'";
-             }
+        }
 
 
         if (!empty($data['filter_key'])) {
@@ -588,7 +588,7 @@ class ModelReportCustomer extends Model {
 
         if (!empty($data['filter_company'])) {
             $implode[] = "c.company_name LIKE '" . $this->db->escape($data['filter_company']) . "'";
-             }
+        }
 
 
         if (!empty($data['filter_key'])) {
@@ -604,17 +604,14 @@ class ModelReportCustomer extends Model {
         return $query->row['total'];
     }
 
-    public function getActivityKeys()
-    {
-         
-            $sql = 'SELECT distinct ca.key  FROM '.DB_PREFIX."customer_activity ca";
-  
-            $query = $this->db->query($sql);
+    public function getActivityKeys() {
 
-            return $query->rows;
-        
+        $sql = 'SELECT distinct ca.key  FROM ' . DB_PREFIX . "customer_activity ca";
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
     }
-
 
     public function getTotalCustomerOrders($data = []) {
         $sql = 'SELECT COUNT(DISTINCT o.order_id) AS total FROM `' . DB_PREFIX . 'order` o  LEFT JOIN `' . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) WHERE o.customer_id > '0'";
@@ -857,16 +854,16 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_company'])) {
             $implode[] = "c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
-        
+
         if (!empty($data['filter_account_manager_id']) && $data['filter_account_manager_id'] > 0) {
-            $implode[] =  "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
+            $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
-        
-        $sql .=  "group by  c.company_name ORDER BY c.company_name asc";
+
+        $sql .= "group by  c.company_name ORDER BY c.company_name asc";
 
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
@@ -877,9 +874,9 @@ class ModelReportCustomer extends Model {
                 $data['limit'] = 20;
             }
 
-            $sql .=  ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
-        
+
         $query = $this->db->query($sql);
         //  echo  ($sql);die;
         //echo "<pre>";print_r($query->rows);die;
@@ -889,15 +886,15 @@ class ModelReportCustomer extends Model {
     public function getTotalValidCompanies($data = []) {
         $sql = "SELECT count( distinct (c.company_name) ) as companycount  from hf7_customer c ";
         $implode = [];
-        
+
         if (!empty($data['filter_company'])) {
             $implode[] = "c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
-        
+
         if (!empty($data['filter_account_manager_id']) && $data['filter_account_manager_id'] > 0) {
             $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
-        
+
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
@@ -919,11 +916,11 @@ class ModelReportCustomer extends Model {
         } else {
             $sql .= " AND o.order_status_id > '0' AND  o.order_status_id NOT IN (6,8)";
         }
-        
+
         if (!empty($data['filter_account_manager_id']) && $data['filter_account_manager_id'] > 0) {
             $sql .= " AND c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
-        
+
         // and o.date_added BETWEEN '2020-06-01 00:00:00' AND '2020-09-30 00:00:00' 
         if (!empty($data['filter_date_start'])) {
             $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -963,7 +960,6 @@ class ModelReportCustomer extends Model {
         return $query->row;
     }
 
-
     public function getboughtproducts($data = []) {
         $sql = "SELECT c.company_name  as company,op.name,op.unit,op.general_product_id, SUM( op.quantity )AS quantity  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id >0 ";
 
@@ -990,8 +986,8 @@ class ModelReportCustomer extends Model {
             $sql .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
-        $sql .= ' GROUP BY op.general_product_id   ORDER BY quantity DESC';//group by name should not be done
-         
+        $sql .= ' GROUP BY op.general_product_id   ORDER BY quantity DESC'; //group by name should not be done
+
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
                 $data['start'] = 0;
@@ -1009,6 +1005,7 @@ class ModelReportCustomer extends Model {
 
         return $query->rows;
     }
+
     public function getboughtproductswithRealOrders($data = []) {
         //general product not available..need to change code
         //Order Rejected(16),Order Approval Pending(15),Cancelled(6),Failed(8),Pending(9),Possible Fraud(10)
@@ -1041,36 +1038,41 @@ class ModelReportCustomer extends Model {
             $sql0 .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
             $sql1 .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
+        //$log = new Log('error.log');
+        //$log->write($data['filter_variations']);
+        if (!empty($data['filter_variations']) && count($data['filter_variations']) > 0) {
+            $variant_array = array_column($data['filter_variations'], 'variation_id');
+            $variants = implode(',', $variant_array);
+            $sql0 .= "AND op.product_id IN (" . $variants . ")";
+            $sql1 .= "AND op.product_id IN (" . $variants . ")";
+        }
 
         $sql0 .= ' GROUP BY op.product_id ';
-        $sql1 .= ' GROUP BY op.product_id ';//general_product_id
+        $sql1 .= ' GROUP BY op.product_id '; //general_product_id
 
-        $sql ="SELECT company,name,unit,product_id, sum(quantity )AS quantity from (" .$sql0 ."union all ".$sql1.") as t";
+        $sql = "SELECT company,name,unit,product_id, sum(quantity )AS quantity from (" . $sql0 . "union all " . $sql1 . ") as t";
         $sql .= ' GROUP BY product_id   ORDER BY quantity DESC';
-         
+
         // if (isset($data['start']) || isset($data['limit'])) {
         //     if ($data['start'] < 0) {
         //         $data['start'] = 0;
         //     }
-
         //     if ($data['limit'] < 1) {
         //         $data['limit'] = 20;
         //     }
-
         //     $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         // }
-
-            // echo  ($sql);die;
+        // echo  ($sql);die;
         $query = $this->db->query($sql);
 
         return $query->rows;
     }
+
     public function getTotalboughtproducts($data = []) {
         // // $sql = 'SELECT COUNT(DISTINCT pd.product_id) AS total FROM `' . DB_PREFIX . 'order` o  LEFT JOIN `' . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) WHERE o.customer_id > '0'";
-
         // //   $sql = "SELECT count(DISTINCT op.general_product_id) AS total  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id >0 ";
         // $sql = "SELECT count( distinct op.general_product_id ) as total  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id >0 ";
-        
+
         $sql = "SELECT c.company_name  as company,op.name,op.unit,op.general_product_id, SUM( op.quantity )AS quantity  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id >0 ";
 
 
@@ -1097,6 +1099,7 @@ class ModelReportCustomer extends Model {
         return count($query->rows);
         // return $query->num_rows();
     }
+
     public function getTotalOrdersPlaced($data = []) {
         $sql = 'SELECT COUNT(DISTINCT c.customer_id) AS total FROM `' . DB_PREFIX . 'customer` c  JOIN `' . DB_PREFIX . "order` o ON (o.customer_id = c.customer_id) WHERE c.customer_id > '0' and o.order_status_id>'0'";
 
@@ -1118,13 +1121,14 @@ class ModelReportCustomer extends Model {
 
         return $query->row['total'];
     }
+
     public function getOrdersPlaced($data = []) {
         $sql = "SELECT c.customer_id,c.company_name as company, CONCAT(c.firstname, ' ', c.lastname) AS customer, c.email, cgd.name AS customer_group, c.status, o.order_id, SUM(op.quantity) as products, SUM(DISTINCT o.total) AS total FROM `" . DB_PREFIX . 'order` o LEFT JOIN `' . DB_PREFIX . 'order_product` op ON (o.order_id = op.order_id)LEFT JOIN `' . DB_PREFIX . 'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `' . DB_PREFIX . "customer_group_description` cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE o.customer_id > 0 AND cgd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
         // if (!empty($data['filter_order_status_id'])) {
         //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         // } else {
-             $sql .= " AND o.order_status_id > '0'";
+        $sql .= " AND o.order_status_id > '0'";
         // }
 
         if (!empty($data['filter_date_start'])) {
@@ -1160,7 +1164,6 @@ class ModelReportCustomer extends Model {
         return $query->rows;
     }
 
-
     public function getTotalCustomersOnboarded($data = []) {
         $sql = 'SELECT count(DISTINCT c.customer_id) AS total FROM `' . DB_PREFIX . 'customer` c  JOIN `' . DB_PREFIX . "order` o ON (o.customer_id = c.customer_id) WHERE c.customer_id > '0' and o.order_status_id>'0'";
 
@@ -1180,7 +1183,7 @@ class ModelReportCustomer extends Model {
 
         $sql .= " AND o.customer_id not in (select customer_id from  `" . DB_PREFIX . "order` where date_added < '" . $this->db->escape($data['filter_date_start']) . "')";
 
-            //  echo  ($sql);die;
+        //  echo  ($sql);die;
         $query = $this->db->query($sql);
 
         return $query->row['total'];
@@ -1192,7 +1195,7 @@ class ModelReportCustomer extends Model {
         // if (!empty($data['filter_order_status_id'])) {
         //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         // } else {
-             $sql .= " AND o.order_status_id > '0'";
+        $sql .= " AND o.order_status_id > '0'";
         // }
 
         if (!empty($data['filter_date_start'])) {
@@ -1209,7 +1212,7 @@ class ModelReportCustomer extends Model {
         $sql .= " AND o.customer_id not in (select customer_id from  `" . DB_PREFIX . "order` where date_added < '" . $this->db->escape($data['filter_date_start']) . "')";
 
         // $sql .= ' GROUP BY o.order_id';
-          $sql .= ' GROUP BY c.customer_id,c.company_name,customer ';
+        $sql .= ' GROUP BY c.customer_id,c.company_name,customer ';
         $sql .= ' Order BY o.order_id asc';
 
         // $sql = 'SELECT t.customer_id, t.customer,t.company, t.email, t.customer_group, t.status, COUNT(DISTINCT t.order_id) AS orders, SUM(t.products) AS products, SUM(t.total) AS total FROM (' . $sql . ') AS t GROUP BY t.customer_id ORDER BY total DESC';

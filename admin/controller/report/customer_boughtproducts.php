@@ -29,7 +29,7 @@ class ControllerReportCustomerBoughtProducts extends Controller {
         } else {
             $filter_company = '';
         }
-        
+
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
         } else {
@@ -60,9 +60,13 @@ class ControllerReportCustomerBoughtProducts extends Controller {
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . $this->request->get['filter_company'];
         }
-        
+
+        $variations = array();
         if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name=' . $this->request->get['filter_name'];
+            $variations = $this->getProductVariantsInfo($this->request->get['filter_name']);
+            //$log = new Log('error.log');
+            //$log->write($variations);
         }
 
         if (isset($this->request->get['page'])) {
@@ -92,6 +96,7 @@ class ControllerReportCustomerBoughtProducts extends Controller {
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
             'filter_name' => $filter_name,
+            'filter_variations' => $variations
                 // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
                 // 'limit' => $this->config->get('config_limit_admin'),
         ];
@@ -170,7 +175,7 @@ class ControllerReportCustomerBoughtProducts extends Controller {
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . $this->request->get['filter_company'];
         }
-        
+
         if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name=' . $this->request->get['filter_name'];
         }
@@ -236,9 +241,13 @@ class ControllerReportCustomerBoughtProducts extends Controller {
         } else {
             $filter_company = 0;
         }
-        
+
+        $variations = array();
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
+            $variations = $this->getProductVariantsInfo($this->request->get['filter_name']);
+            //$log = new Log('error.log');
+            //$log->write($variations);
         } else {
             $filter_name = 0;
         }
@@ -250,6 +259,7 @@ class ControllerReportCustomerBoughtProducts extends Controller {
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
             'filter_name' => $filter_name,
+            'filter_variations' => $variations
         ];
 
         $this->load->model('report/excel'); //download_customer_order_excel
@@ -257,7 +267,7 @@ class ControllerReportCustomerBoughtProducts extends Controller {
     }
 
     public function product_autocomplete() {
-        
+
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
         } else {
@@ -278,6 +288,15 @@ class ControllerReportCustomerBoughtProducts extends Controller {
         }
 
         echo json_encode($send);
+    }
+
+    public function getProductVariantsInfo($product_name) {
+
+        $this->load->model('sale/order');
+        $log = new Log('error.log');
+        $variations = $this->model_sale_order->getProductVariationsNewFarmer($product_name, 75);
+        //$log->write($variations);
+        return $variations;
     }
 
 }

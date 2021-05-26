@@ -133,7 +133,7 @@ $('#button-filter').on('click', function() {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
             
-    var filter_name = $('input[name=\'filter_name\']').attr("product_id");
+    var filter_name = $('input[name=\'filter_name\']').val();
 
     if (filter_name) {
         url += '&filter_name=' + encodeURIComponent(filter_name);
@@ -270,7 +270,7 @@ function excel() {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
     
-    var filter_name = $('input[name=\'filter_name\']').attr("product_id");
+    var filter_name = $('input[name=\'filter_name\']').val();
 
     if (filter_name) {
         url += '&filter_name=' + encodeURIComponent(filter_name);
