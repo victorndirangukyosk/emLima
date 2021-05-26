@@ -1162,7 +1162,7 @@ class ModelReportCustomer extends Model {
 
 
     public function getTotalCustomersOnboarded($data = []) {
-        $sql = 'SELECT COUNT(DISTINCT c.customer_id) AS total FROM `' . DB_PREFIX . 'customer` c  JOIN `' . DB_PREFIX . "order` o ON (o.customer_id = c.customer_id) WHERE c.customer_id > '0' and o.order_status_id>'0'";
+        $sql = 'SELECT count(DISTINCT c.customer_id) AS total FROM `' . DB_PREFIX . 'customer` c  JOIN `' . DB_PREFIX . "order` o ON (o.customer_id = c.customer_id) WHERE c.customer_id > '0' and o.order_status_id>'0'";
 
         // if (!empty($data['filter_order_status_id'])) {
         //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
@@ -1171,20 +1171,23 @@ class ModelReportCustomer extends Model {
         // }
 
         if (!empty($data['filter_date_start'])) {
-            $sql .= " AND DATE(c.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
         }
 
         if (!empty($data['filter_date_end'])) {
-            $sql .= " AND DATE(c.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
         }
-        //   echo  ($sql);die;
+
+        $sql .= " AND o.customer_id not in (select customer_id from  `" . DB_PREFIX . "order` where date_added < '" . $this->db->escape($data['filter_date_start']) . "')";
+
+            //  echo  ($sql);die;
         $query = $this->db->query($sql);
 
         return $query->row['total'];
     }
 
     public function getCustomersOnboarded($data = []) {
-        $sql = "SELECT Top 1 c.customer_id,c.company_name as company, CONCAT(c.firstname, ' ', c.lastname) AS customer, c.email, cgd.name AS customer_group, c.status, o.order_id, SUM(op.quantity) as products, SUM(DISTINCT o.total) AS total FROM `" . DB_PREFIX . 'order` o LEFT JOIN `' . DB_PREFIX . 'order_product` op ON (o.order_id = op.order_id)LEFT JOIN `' . DB_PREFIX . 'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `' . DB_PREFIX . "customer_group_description` cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE o.customer_id > 0 AND cgd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
+        $sql = "SELECT   c.customer_id,c.company_name as company, CONCAT(c.firstname, ' ', c.lastname) AS customer, o.order_id, o.date_added FROM `" . DB_PREFIX . "order` o  JOIN `" . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id)  WHERE o.customer_id > 0  ";
 
         // if (!empty($data['filter_order_status_id'])) {
         //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
@@ -1203,9 +1206,10 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_customer'])) {
             $sql .= " AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
         }
-        $sql .= " AND o.order_id not in (select order_id from  `" . DB_PREFIX . "order` where date_added < '" . $this->db->escape($data['filter_date_start']) . "')";
+        $sql .= " AND o.customer_id not in (select customer_id from  `" . DB_PREFIX . "order` where date_added < '" . $this->db->escape($data['filter_date_start']) . "')";
 
         // $sql .= ' GROUP BY o.order_id';
+          $sql .= ' GROUP BY c.customer_id,c.company_name,customer ';
         $sql .= ' Order BY o.order_id asc';
 
         // $sql = 'SELECT t.customer_id, t.customer,t.company, t.email, t.customer_group, t.status, COUNT(DISTINCT t.order_id) AS orders, SUM(t.products) AS products, SUM(t.total) AS total FROM (' . $sql . ') AS t GROUP BY t.customer_id ORDER BY total DESC';

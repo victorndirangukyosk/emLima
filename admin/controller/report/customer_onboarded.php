@@ -89,11 +89,11 @@ class ControllerReportCustomerOnboarded extends Controller
             $data['customers'][] = [
                 'customer' => $result['customer'],
                 'company' => $result['company'],
-                'email' => $result['email'],
-                'customer_group' => $result['customer_group'],
-                'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+                // 'email' => $result['email'],
+                // 'customer_group' => $result['customer_group'],
+                // 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
                 'order_id' => $result['order_id'],
-                'order_date' => $result['order_date'],
+                'order_date' => $result['date_added'],
                 // 'orders' => $result['orders'],
                 // 'products' => $result['products'],
                 // 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
@@ -113,6 +113,8 @@ class ControllerReportCustomerOnboarded extends Controller
         $data['column_customer_group'] = $this->language->get('column_customer_group');
         $data['column_status'] = $this->language->get('column_status');
         $data['column_orders'] = $this->language->get('column_orders');
+        $data['column_order_id'] = $this->language->get('column_order_id');
+        $data['column_order_date'] = $this->language->get('column_order_date');
         $data['column_products'] = $this->language->get('column_products');
         $data['column_total'] = $this->language->get('column_total');
         $data['column_action'] = $this->language->get('column_action');
@@ -202,7 +204,6 @@ class ControllerReportCustomerOnboarded extends Controller
         ];
 
         $this->load->model('report/excel');
-        // $this->model_report_excel->download_customer_orderplaced_excel($filter_data);
         $this->model_report_excel->download_customer_onboarded_excel($filter_data);
     }
 }
