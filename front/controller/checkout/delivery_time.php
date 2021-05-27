@@ -3,6 +3,8 @@
 class Controllercheckoutdeliverytime extends Controller {
 
     public function index() {
+        $data = [];
+
         $rangetwostart = "08:00:00";
         $rangetwoend = "09:59:59";
 
@@ -18,18 +20,25 @@ class Controllercheckoutdeliverytime extends Controller {
         $log->write('RANGE');
 
         if (time() >= strtotime($rangeonestart) && time() <= strtotime($rangeoneend)) {
+            $pre_defined_slots = array('10:00am - 12:00pm', '12:00pm - 02:00pm', '02:00pm - 04:00pm', '04:00pm - 06:00pm');
+            $k = array_rand($pre_defined_slots);
+            $selected_slot = $pre_defined_slots[$k];
+            $data['selected_slot'] = $selected_slot;
+            $log->write($selected_slot);
             $log->write('RANGE ONE');
         }
 
         if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
+            $pre_defined_slots = array('04:00pm - 06:00pm');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
             $log->write('RANGE TWO');
         }
 
         if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
+            $pre_defined_slots = array('02:00pm - 04:00pm');
             $log->write('RANGE THREE');
         }
-
-        $data = [];
 
         $this->language->load('checkout/delivery_time');
 
