@@ -1,13 +1,12 @@
 <?php
 
-class Cart
-{
+class Cart {
+
     private $config;
     private $db;
     private $data = [];
 
-    public function __construct($registry)
-    {
+    public function __construct($registry) {
         $this->config = $registry->get('config');
         $this->customer = $registry->get('customer');
         $this->session = $registry->get('session');
@@ -24,8 +23,7 @@ class Cart
         }
     }
 
-    public function getStores()
-    {
+    public function getStores() {
         $stores = [];
         $store_id = 0;
 
@@ -39,8 +37,7 @@ class Cart
         return $stores;
     }
 
-    public function getCartProducts()
-    {
+    public function getCartProducts() {
         $totalQuantity = 0;
         $log = new Log('error.log');
         $log->write('cwen');
@@ -102,9 +99,7 @@ class Cart
                     // $sql .= ' INNER JOIN `'.DB_PREFIX.'category` c on c.category_id = pc.category_id';
                     // $sql .= ' WHERE pc.product_id = "'.$product_id.'"';
                     // $sql .= ' GROUP BY pc.category_id';
-
                     // $rows = $this->db->query($sql)->rows;
-
                     // Stock
 
                     if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $data['quantity'])) {
@@ -135,7 +130,7 @@ class Cart
                         //old below
                         //$variation = ' - '.$row['name'];
 
-                        $variation = ' - '.$row['unit'];
+                        $variation = ' - ' . $row['unit'];
                     } else {
                         $price = $product_query->row['price'];
                         $special_price = null;
@@ -146,7 +141,7 @@ class Cart
                         }
 
                         $store_product_variation_id = 0;
-                        $variation = $product_query->row['unit'] ? ' - '.$product_query->row['unit'] : '';
+                        $variation = $product_query->row['unit'] ? ' - ' . $product_query->row['unit'] : '';
                         $image = $product_query->row['image'];
                     }
 
@@ -162,7 +157,7 @@ class Cart
                         'store_product_variation_id' => $store_product_variation_id,
                         'store_id' => $product['store_id'],
                         'product_type' => $product_type,
-                        'name' => $product_query->row['name'].$variation,
+                        'name' => $product_query->row['name'] . $variation,
                         'model' => $product_query->row['model'],
                         'shipping' => 0,
                         'image' => $image,
@@ -199,8 +194,7 @@ class Cart
         return $res;
     }
 
-    public function getProducts()
-    {
+    public function getProducts() {
         $log = new Log('error.log');
         $log->write('get product');
 
@@ -247,7 +241,6 @@ class Cart
                 }
 
                 //product_type replacable/not replacable
-
                 //$product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)    WHERE p.product_id = '" . (int) $product_id . "' AND p.status = '1'");
 
                 $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
@@ -270,9 +263,7 @@ class Cart
                     // $sql .= ' INNER JOIN `'.DB_PREFIX.'category` c on c.category_id = pc.category_id';
                     // $sql .= ' WHERE pc.product_id = "'.$product_id.'"';
                     // $sql .= ' GROUP BY pc.category_id';
-
                     // $rows = $this->db->query($sql)->rows;
-
                     // Stock
                     if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $data['quantity'])) {
                         $stock = false;
@@ -302,7 +293,7 @@ class Cart
                         //old below
                         //$variation = ' - '.$row['name'];
 
-                        $variation = ' - '.$row['unit'];
+                        $variation = ' - ' . $row['unit'];
                     } else {
                         $price = $product_query->row['price'];
                         $orignal_price = $price;
@@ -316,7 +307,7 @@ class Cart
                         }
 
                         $store_product_variation_id = 0;
-                        $variation = $product_query->row['unit'] ? ' - '.$product_query->row['unit'] : '';
+                        $variation = $product_query->row['unit'] ? ' - ' . $product_query->row['unit'] : '';
                         $image = $product_query->row['image'];
                     }
 
@@ -370,8 +361,7 @@ class Cart
         return $this->data;
     }
 
-    public function getRecurringProducts()
-    {
+    public function getRecurringProducts() {
         $recurring_products = [];
 
         foreach ($this->getProducts() as $key => $value) {
@@ -383,8 +373,7 @@ class Cart
         return $recurring_products;
     }
 
-    public function getTaxesByApi($args)
-    {
+    public function getTaxesByApi($args) {
         $tax_data = [];
 
         $log = new Log('error.log');
@@ -395,7 +384,7 @@ class Cart
             //$this->load->model( 'assets/product' );
 
             if (isset($product['store_id'])) {
-                $row = $this->db->query('select city_id from '.DB_PREFIX.'store WHERE store_id="'.$product['store_id'].'"')->row;
+                $row = $this->db->query('select city_id from ' . DB_PREFIX . 'store WHERE store_id="' . $product['store_id'] . '"')->row;
                 if ($row) {
                     $this->tax->setShippingAddress($row['city_id']);
                     $this->tax->setCity($row['city_id']);
@@ -442,8 +431,7 @@ class Cart
         return $tax_data;
     }
 
-    public function addCustom($product_store_id, $qty, $option = [], $recurring_id = 0, $store_id, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null)
-    {
+    public function addCustom($product_store_id, $qty, $option = [], $recurring_id = 0, $store_id, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null) {
         $this->data = [];
 
         $product['product_store_id'] = (int) $product_store_id;
@@ -460,9 +448,9 @@ class Cart
             $product['recurring_id'] = (int) $recurring_id;
         }
 
-        /*if ($product_type) {
-            $product['product_type'] = $product_type;
-        }*/
+        /* if ($product_type) {
+          $product['product_type'] = $product_type;
+          } */
 
         if ($store_id) {
             $product['store_id'] = $store_id;
@@ -542,8 +530,7 @@ class Cart
         return $key;
     }
 
-    public function add($product_store_id, $qty = 1, $option = [], $recurring_id = 0, $store_id = false, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null)
-    {
+    public function add($product_store_id, $qty = 1, $option = [], $recurring_id = 0, $store_id = false, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null) {
         $this->data = [];
 
         $product['product_store_id'] = (int) $product_store_id;
@@ -560,9 +547,9 @@ class Cart
             $product['recurring_id'] = (int) $recurring_id;
         }
 
-        /*if ($product_type) {
-            $product['product_type'] = $product_type;
-        }*/
+        /* if ($product_type) {
+          $product['product_type'] = $product_type;
+          } */
 
         if ($store_id) {
             $product['store_id'] = $store_id;
@@ -642,8 +629,7 @@ class Cart
         return $key;
     }
 
-    public function updateProductType($key, $product_type = 'replacable')
-    {
+    public function updateProductType($key, $product_type = 'replacable') {
         $this->data = [];
 
         $keys = [];
@@ -660,19 +646,17 @@ class Cart
         return true;
     }
 
-    public function update($key, $qty, $product_note, $produce_type = null)
-    {
+    public function update($key, $qty, $product_note, $produce_type = null) {
         if (null == $produce_type || 'null' == $produce_type) {
             $this->data = [];
 
             $log = new Log('error.log');
-            /*$log->write("cart content");
-            */
+            /* $log->write("cart content");
+             */
             if ((float) $qty && ((float) $qty > 0) && isset($this->session->data['cart'][$key])) {
                 $this->session->data['cart'][$key]['quantity'] = (float) $qty;
-                if($product_note!=null && $product_note!="null")
-                {
-                $this->session->data['cart'][$key]['product_note'] = $product_note;
+                if ($product_note != null && $product_note != "null") {
+                    $this->session->data['cart'][$key]['product_note'] = $product_note;
                 }
             } else {
                 $this->remove($key);
@@ -681,9 +665,8 @@ class Cart
             if ($qty && ($qty > 0)) {
                 $this->session->data['temp_cart'][$key]['quantity'] = (float) $qty;
                 //$this->session->data['temp_cart'][$key]['ripe'] =   $ripe;
-                if($product_note!=null && $product_note!="null")
-                {
-                $this->session->data['temp_cart'][$key]['product_note'] = $product_note;
+                if ($product_note != null && $product_note != "null") {
+                    $this->session->data['temp_cart'][$key]['product_note'] = $product_note;
                 }
                 $this->session->data['temp_cart'][$key]['produce_type'] = $produce_type;
             } else {
@@ -693,38 +676,33 @@ class Cart
             $log = new Log('error.log');
             $log->write('test123');
             $log->write($produce_type);
-            if($qty>0)
-            {
-            $preProduceTypes = $this->session->data['cart'][$key]['produce_type'];
-            $oldquantity = $this->session->data['cart'][$key]['quantity'];
-            $i = 0;
-            foreach ($preProduceTypes as $pt) {
-                if ($pt['type'] == $produce_type) {
-                    $oldtypequantity = $pt['value'];
-                    $pt['value'] = $qty;
-                    $preProduceTypes[$i]['value'] = $qty;
-                    $newquantity = $oldquantity - $oldtypequantity + $qty;
+            if ($qty > 0) {
+                $preProduceTypes = $this->session->data['cart'][$key]['produce_type'];
+                $oldquantity = $this->session->data['cart'][$key]['quantity'];
+                $i = 0;
+                foreach ($preProduceTypes as $pt) {
+                    if ($pt['type'] == $produce_type) {
+                        $oldtypequantity = $pt['value'];
+                        $pt['value'] = $qty;
+                        $preProduceTypes[$i]['value'] = $qty;
+                        $newquantity = $oldquantity - $oldtypequantity + $qty;
+                    }
+                    ++$i;
                 }
-                ++$i;
-            }
 
-            $this->session->data['cart'][$key]['produce_type'] = $preProduceTypes;
-            $this->session->data['cart'][$key]['quantity'] = (float) $newquantity;
-            if($product_note!=null && $product_note!="null")
-            {
-            $this->session->data['cart'][$key]['product_note'] = $product_note;
+                $this->session->data['cart'][$key]['produce_type'] = $preProduceTypes;
+                $this->session->data['cart'][$key]['quantity'] = (float) $newquantity;
+                if ($product_note != null && $product_note != "null") {
+                    $this->session->data['cart'][$key]['product_note'] = $product_note;
+                }
+            } else {
+                //if produce type is availabe and 0 is passed , deletion should be happen based on produce type
+                //not on entire key
             }
-            }
-           else{
-            //if produce type is availabe and 0 is passed , deletion should be happen based on produce type
-            //not on entire key
-
-             }
         }
     }
 
-    public function updateProduceType($key, $qty, $produce_type)
-    {
+    public function updateProduceType($key, $qty, $produce_type) {
         $log->write('test123');
         $log->write($produce_type);
         $preProduceTypes = $this->session->data['cart'][$key]['produce_type'];
@@ -744,29 +722,25 @@ class Cart
         $this->session->data['cart'][$key]['quantity'] = (float) $newquantity;
     }
 
-    public function remove($key)
-    {
+    public function remove($key) {
         $this->data = [];
         unset($this->session->data['cart'][$key]);
     }
 
-    public function removeTempCart($key)
-    {
+    public function removeTempCart($key) {
         $this->data = [];
 
         unset($this->session->data['temp_cart'][$key]);
     }
 
-    public function clear()
-    {
+    public function clear() {
         $this->data = [];
 
         $this->session->data['cart'] = [];
         $this->session->data['temp_cart'] = [];
     }
 
-    public function getWeight()
-    {
+    public function getWeight() {
         $weight = 0;
 
         foreach ($this->getProducts() as $product) {
@@ -778,10 +752,9 @@ class Cart
         return $weight;
     }
 
-    public function getSubTotal($store_id = false)
-    {
+    public function getSubTotal($store_id = false) {
         $total = 0;
-        
+
         $log = new Log('error.log');
         $log->write('getSubTotal system_library_cart.php');
         $log->write($this->getProducts());
@@ -796,8 +769,7 @@ class Cart
         return $total;
     }
 
-    public function getTaxes()
-    {
+    public function getTaxes() {
         $tax_data = [];
 
         foreach ($this->getProducts() as $product) {
@@ -817,8 +789,27 @@ class Cart
         return $tax_data;
     }
 
-    public function getTotal()
-    {
+    public function getTaxesByStore($store_id) {
+        $tax_data = [];
+
+        foreach ($this->getProducts() as $product) {
+            if ($product['tax_class_id'] && $product['store_id'] == $store_id) {
+                $tax_rates = $this->tax->getRates($product['price'], $product['tax_class_id']);
+
+                foreach ($tax_rates as $tax_rate) {
+                    if (!isset($tax_data[$tax_rate['tax_rate_id']])) {
+                        $tax_data[$tax_rate['tax_rate_id']] = ($tax_rate['amount'] * $product['quantity']);
+                    } else {
+                        $tax_data[$tax_rate['tax_rate_id']] += ($tax_rate['amount'] * $product['quantity']);
+                    }
+                }
+            }
+        }
+
+        return $tax_data;
+    }
+
+    public function getTotal() {
         $total = 0;
         //echo '<pre>';print_r($this->getProducts());exit;
         $log = new Log('error.log');
@@ -834,8 +825,7 @@ class Cart
         return $total;
     }
 
-    public function getTotalByStore($store_id)
-    {
+    public function getTotalByStore($store_id) {
         $total = 0;
 
         foreach ($this->getProducts() as $product) {
@@ -847,8 +837,7 @@ class Cart
         return $total;
     }
 
-    public function getTotalProductsByStore($store_id)
-    {
+    public function getTotalProductsByStore($store_id) {
         $total = 0;
 
         foreach ($this->getProducts() as $product) {
@@ -860,12 +849,11 @@ class Cart
         return $total;
     }
 
-    public function countProducts()
-    {
+    public function countProducts() {
         $product_total = 0;
 
         $products = $this->getProducts();
-        
+
         if (is_array($products)) {
             foreach ($products as $product) {
                 $product_total += $product['quantity'];
@@ -874,18 +862,15 @@ class Cart
         return count($products);
     }
 
-    public function hasProducts()
-    {
+    public function hasProducts() {
         return count($this->session->data['cart']);
     }
 
-    public function hasRecurringProducts()
-    {
+    public function hasRecurringProducts() {
         return count($this->getRecurringProducts());
     }
 
-    public function hasStock()
-    {
+    public function hasStock() {
         $stock = true;
 
         foreach ($this->getProducts() as $product) {
@@ -897,8 +882,7 @@ class Cart
         return $stock;
     }
 
-    public function hasShipping()
-    {
+    public function hasShipping() {
         $shipping = false;
         // foreach ($this->getProducts() as $product) {
         //     if ($product['shipping']) {
@@ -909,8 +893,7 @@ class Cart
         return true;
     }
 
-    public function hasDownload()
-    {
+    public function hasDownload() {
         $download = false;
 
         foreach ($this->getProducts() as $product) {
@@ -924,11 +907,11 @@ class Cart
         return $download;
     }
 
-    public function getCategoryPriceProduct($product_store_id, $store_id, $category)
-    {
+    public function getCategoryPriceProduct($product_store_id, $store_id, $category) {
         //echo $category;exit;
-        $product_query = $this->db->query('SELECT * FROM '.DB_PREFIX."product_category_prices WHERE product_store_id = '".(int) $product_store_id."' AND store_id = '".(int) $store_id."' AND price_category = '".$category."' AND status = '1'");
+        $product_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE product_store_id = '" . (int) $product_store_id . "' AND store_id = '" . (int) $store_id . "' AND price_category = '" . $category . "' AND status = '1'");
 
         return $product_query->row['price'];
     }
+
 }

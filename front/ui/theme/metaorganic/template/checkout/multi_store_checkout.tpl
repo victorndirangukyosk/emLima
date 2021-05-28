@@ -1155,9 +1155,53 @@ function loadDeliveryTime(store_id) {
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
         }
     });
+    setDeliveryTime();
 }
 
+//Load Delivery Time
+function setDeliveryTime() {
+    var store_id = 75;
 
+    $('#delivery-time-wrapper-'+store_id+'').html('<center><div class="login-loader" style=""></div></center>');
+
+    console.log("loadDeliveryTime");
+    var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value')
+    console.log(shipping_method);
+    console.log("shipping_method");
+    //$('input[id="shipping_method"]').val(shipping_method);
+
+    if($('input[id="shipping_method"]').val() == 'express.express') {
+        $('#timeslot-next-hidden').attr("href","#collapseFour");
+        $('#delivery_time_panel_link').attr("href","");
+
+        $('input[name="shipping_time_selected"]').val('');
+        $('input[name="dates_selected"]').val('');
+    } else {
+        $('#timeslot-next-hidden').attr("href","#collapseThree");
+        $('#delivery_time_panel_link').attr("href","#collapseThree");
+    }
+
+    $.ajax({
+        url: 'index.php?path=checkout/delivery_time/indexNew&shipping_method='+shipping_method+'&store_id='+store_id+'',
+        type: 'get',
+        dataType: 'json',
+        cache: false,
+        async: true,
+        beforeSend: function() {
+            // $('#delivery-time-wrapper-'+store_id+'').html('<div class="text-center"><i class="fa fa-spinner fa-spin checkout-spin"></i></div>');
+        },
+        success: function(json) {
+            $('#select-timeslot').html("Selected : "+ json['dates'][0]+ ', ' + json['selected_slot']);
+            $('.timeslot-selected[data-value="' + json['selected_slot'] + '"][data-date="'+json['dates'][0]+'"]').children().children().prop("checked", true);
+            $('#payment-next').removeAttr('disabled');
+            $('#payment-next').removeClass('btn-grey');
+            $('#payment-next').addClass('btn-default');
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+}
 function getTimeSlot(store_id,date) {
 
     var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value')

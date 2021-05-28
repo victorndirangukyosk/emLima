@@ -592,7 +592,7 @@ class ControllerAccountLogin extends Controller {
 
             //print_r($user_query);
             if ($user_query->num_rows) {
-                if ($user_query->row['approved']) {
+                if ($user_query->row['approved'] && $user_query->row['status']) {
                     $data['customer_id'] = $user_query->row['customer_id'];
                     $data['customer_email'] = $user_query->row['email'];
                     $data['temppassword'] = $user_query->row['tempPassword'];
