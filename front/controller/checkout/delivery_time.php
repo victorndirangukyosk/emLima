@@ -37,6 +37,8 @@ class Controllercheckoutdeliverytime extends Controller {
 
         if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
             $pre_defined_slots = array('02:00pm - 04:00pm');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
             $log->write('RANGE THREE');
         }
 
@@ -1708,6 +1710,131 @@ class Controllercheckoutdeliverytime extends Controller {
         }
 
         return $data;
+    }
+
+    public function indexNew() {
+        $data = [];
+
+        $rangetwostart = "08:00:00";
+        $rangetwoend = "09:59:59";
+
+        $rangeonestart = "10:00:00";
+        $rangeoneend = "23:59:59";
+
+        $rangethreestart = "00:00:00";
+        $rangethreeend = "07:59:59";
+
+        $log = new Log('error.log');
+        $log->write('RANGE');
+        $log->write(time());
+        $log->write('RANGE');
+
+        if (time() >= strtotime($rangeonestart) && time() <= strtotime($rangeoneend)) {
+            $pre_defined_slots = array('10:00am - 12:00pm', '12:00pm - 02:00pm', '02:00pm - 04:00pm', '04:00pm - 06:00pm');
+            $k = array_rand($pre_defined_slots);
+            $selected_slot = $pre_defined_slots[$k];
+            $data['selected_slot'] = $selected_slot;
+            $log->write($selected_slot);
+            $log->write('RANGE ONE');
+        }
+
+        if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
+            $pre_defined_slots = array('04:00pm - 06:00pm');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $log->write('RANGE TWO');
+        }
+
+        if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
+            $pre_defined_slots = array('02:00pm - 04:00pm');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $log->write('RANGE THREE');
+        }
+
+        $this->language->load('checkout/delivery_time');
+
+        $data['text_no_timeslot'] = $this->language->get('text_no_timeslot');
+
+        $store_id = $this->request->get['store_id'];
+        $shipping_method = $this->request->get['shipping_method'];
+
+        //TO STORE STORE ID AND SHIPPING METHOD IN SESSION
+        $this->session->data['store_id_for_timeslot'] = $store_id;
+        $this->session->data['shipping_method_for_timeslot'] = $shipping_method;
+
+        $getActiveDays = $this->getActiveDays($store_id, $shipping_method);
+        $log = new Log('error.log');
+        $log->write('timeslots');
+        $log->write($store_id . 'ss' . $shipping_method);
+
+        $log->write($getActiveDays);
+        $data['dates'] = $this->getDates($getActiveDays, $store_id, $shipping_method);
+        $data['timeslots'] = [];
+
+        $data['formatted_dates'] = [];
+        $log->write($data['dates']);
+        foreach ($data['dates'] as $date) {
+            $amTimeslot = [];
+            $pmTimeslot = [];
+            $inPmfirstTimeslot = [];
+
+            $temp = $this->get_all_time_slot($store_id, $shipping_method, $date);
+
+            foreach ($temp as $temp1) {
+                $temp2 = explode('-', $temp1['timeslot']);
+
+                if (false !== strpos($temp2[0], 'am')) {
+                    array_push($amTimeslot, $temp1);
+                } else {
+                    if ('12' == substr($temp2[0], 0, 2)) {
+                        array_push($inPmfirstTimeslot, $temp1);
+                    } else {
+                        array_push($pmTimeslot, $temp1);
+                    }
+                }
+            }
+
+            foreach ($inPmfirstTimeslot as $te) {
+                array_push($amTimeslot, $te);
+            }
+
+            foreach ($pmTimeslot as $te) {
+                array_push($amTimeslot, $te);
+            }
+
+            //echo "<pre>";print_r($temp);print_r($amTimeslot);
+
+            if (count($amTimeslot) > 0) {
+                $data['timeslots'][$date] = $amTimeslot;
+                $data['formatted_dates'][] = $date;
+            }
+
+            //$data['timeslots'][$date] = $temp;
+        }
+
+        $data['dates'] = $data['formatted_dates'];
+
+        $log->write('timeslots final');
+        $log->write($data['dates']);
+        $log->write($data['timeslots']);
+        $data['store'] = $this->getStoreDetail($store_id);
+        $json['dates'] = $data['dates'];
+        $json['timeslots'] = $data['timeslots'];
+        $json['selected_slot'] = $data['selected_slot'];
+
+        $stores = $this->cart->getStores();
+        foreach ($stores as $store_id) {
+            $this->session->data['timeslot'][$store_id] = $data['selected_slot'];
+            $this->session->data['dates'][$store_id] = $data['dates'][0];
+        }
+        /*$log = new Log('error.log');
+        $log->write('SLOTS');
+        $log->write($data['selected_slot']);
+        $log->write($data['dates'][0]);
+        $log->write('SLOTS');*/
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
