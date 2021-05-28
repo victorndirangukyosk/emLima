@@ -1822,6 +1822,17 @@ class Controllercheckoutdeliverytime extends Controller {
         $json['dates'] = $data['dates'];
         $json['timeslots'] = $data['timeslots'];
         $json['selected_slot'] = $data['selected_slot'];
+
+        $stores = $this->cart->getStores();
+        foreach ($stores as $store_id) {
+            $this->session->data['timeslot'][$store_id] = $data['selected_slot'];
+            $this->session->data['dates'][$store_id] = $data['dates'][0];
+        }
+        /*$log = new Log('error.log');
+        $log->write('SLOTS');
+        $log->write($data['selected_slot']);
+        $log->write($data['dates'][0]);
+        $log->write('SLOTS');*/
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

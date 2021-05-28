@@ -1193,6 +1193,9 @@ function setDeliveryTime() {
         success: function(json) {
             $('#select-timeslot').html("Selected : "+ json['dates'][0]+ ', ' + json['selected_slot']);
             $('.timeslot-selected[data-value="' + json['selected_slot'] + '"][data-date="'+json['dates'][0]+'"]').children().children().prop("checked", true);
+            $('#payment-next').removeAttr('disabled');
+            $('#payment-next').removeClass('btn-grey');
+            $('#payment-next').addClass('btn-default');
         },
         error: function(xhr, ajaxOptions, thrownError) {
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
