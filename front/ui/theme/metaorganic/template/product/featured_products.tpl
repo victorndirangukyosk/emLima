@@ -22,7 +22,6 @@
         </div>
         
     </div>
-<?php // echo $current_store;exit;echo '<pre>';print_r($categories);exit;?>
 <!-- Organic Theme Code Start --->
 
  <div class="page" data-reactroot="">
@@ -176,41 +175,21 @@
                                                         </div>
                                         </div>
                                         <div class="m0T0C">
-										  <?php
-											$products = array();
-											 foreach($categories as $category){
-											  $link_array = explode('/',$category['href']);
-											   $page_link = end($link_array);
-											   if(isset($_REQUEST['cat'])){
-												 if(isset($category['products']) && ($_REQUEST['cat'] == $page_link)){
-													$products  = array_merge( $products,$category['products']);
-												 }
-											   }else{
-												  $products  = array_merge( $products,$category['products']);
-											   }
-											 
-											 ?>
-										   <?php } ?>
+										
                                             <div class="_47ahp" data-test-selector="search-results">
-											<?php if(count($products)>0){?>
+											<?php if(count($products)>0) { ?>
                                                 <ul id="items-ul" class="_2tY3C yOn4a" data-test-selector="item-cards-layout-grid">
 												
-												 <?php 
-												   if(isset($_REQUEST['product'])){
-													  $products = array_filter($products, function ($var) {
-															return ($var['name'] == $_REQUEST['product']);
-												      });
-												   }
-													foreach($products as $product) {
-													//echo '<pre>';print_r($product);
-												  ?>
+			                            <?php 
+					            foreach($products as $product) {
+		                                    ?>
                                                    <li class="_1cn3x" data-price="<?=str_replace('KSh ','',$product['variations'][0]['special'])?>">
                                                    
 					
                                                     <div class="_2sT86 EurVi">
                                                     <article class="_3Oe1A">
 
- <a class="product-detail-bnt open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
+ <a class="product-detail-bnt open-popup" role="button" data-store="<?= $product['store_id'] ?>" data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
                                                   
                                                     <div class="col-md-12 col-sm-12 pl0 pr0">
                                                     <div class="col-md-12 col-sm-12 pl0 pr0 listwidth">
@@ -257,51 +236,27 @@
   <span id="flag-qty-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" style="padding:5px;display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>"><?php echo $product['qty_in_cart']?> items in cart <i class="fas fa-flag"></i></span>
 
 
-                                                   <!-- <a href="#" class="_2Pk9X" tabindex="0"><?=$product['name']?></a>
-													
-                                                    <a class="R8zaM">( per <?=$product['unit']?> )</a>-->
+                                                   
                                                        
                                                     </div>
                                                 </div>
-                                                 <div class=""><!--col-md-12 col-sm-12 pl0 pr0 setproductimg-->
-                                                   <!-- <div class="variation-selector-container">
-                                                        <p class="variations-title">Variation</p>
-                                                        <select class="product-variation">
-                                                            <?php foreach($product['variations'] as $variation) { ?>
-                                                            <option value="<?php echo $variation[variation_id]; ?>"
-                                                                    data-price="<?php echo $variation[price]; ?>"
-                                                                    data-special="<?php echo $variation[special]; ?>">
-                                                                <?php  echo 'per ' . $variation[weight] . ' ' . $variation['unit']; ?>
-                                                            </option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </div>-->
+                                                 <div class="">
                                                 <div class="_2D2lC">
                                                             <div class="-DeRq">
-                                                               <!-- <?= $product['variations'][0]['special']; ?></div>-->
                                                         </div>
                                                         <div>
                                                         <div class="_2xqFO">
-                                                               <!-- <div class="_3QV9M"><strike><?= $product['variations'][0]['price'];?></strike> </div>-->
                                                                     
                                                             </div>
                                                         </div>
                                                                           <div class="_2bSMY">
                                                         <div class="_31alT">
-                                                           <!-- <a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>-->
-                                                          <div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>"data-variation-id="<?= $product['product_variation_store_id'] ?>" id="action_<?= $product['product_variation_store_id'] ?>">
+                                                          <div class="pro-qty-addbtn" data-store-id="<?= $product['store_id']; ?>"data-variation-id="<?= $product['product_variation_store_id']; ?>" id="action_<?= $product['product_variation_store_id'] ?>">
 
 													      
 									
 													      </div>
-															<!--<a class="_3tfm8 wrc8W lpgPF" role="button" href="#" target="_blank" rel="noopener noreferrer">
-                                                                <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle">
-                                                                    <title>Cart</title>
-                                                                    <g>
-                                                                        <path d="M 0.009 1.349 C 0.009 1.753 0.347 2.086 0.765 2.086 C 0.765 2.086 0.766 2.086 0.767 2.086 L 0.767 2.09 L 2.289 2.09 L 5.029 7.698 L 4.001 9.507 C 3.88 9.714 3.812 9.958 3.812 10.217 C 3.812 11.028 4.496 11.694 5.335 11.694 L 14.469 11.694 L 14.469 11.694 C 14.886 11.693 15.227 11.36 15.227 10.957 C 15.227 10.552 14.886 10.221 14.469 10.219 L 14.469 10.217 L 5.653 10.217 C 5.547 10.217 5.463 10.135 5.463 10.031 L 5.487 9.943 L 6.171 8.738 L 11.842 8.738 C 12.415 8.738 12.917 8.436 13.175 7.978 L 15.901 3.183 C 15.96 3.08 15.991 2.954 15.991 2.828 C 15.991 2.422 15.65 2.09 15.23 2.09 L 3.972 2.09 L 3.481 1.077 L 3.466 1.043 C 3.343 0.79 3.084 0.612 2.778 0.612 C 2.777 0.612 0.765 0.612 0.765 0.612 C 0.347 0.612 0.009 0.943 0.009 1.349 Z M 3.819 13.911 C 3.819 14.724 4.496 15.389 5.335 15.389 C 6.171 15.389 6.857 14.724 6.857 13.911 C 6.857 13.097 6.171 12.434 5.335 12.434 C 4.496 12.434 3.819 13.097 3.819 13.911 Z M 11.431 13.911 C 11.431 14.724 12.11 15.389 12.946 15.389 C 13.784 15.389 14.469 14.724 14.469 13.911 C 14.469 13.097 13.784 12.434 12.946 12.434 C 12.11 12.434 11.431 13.097 11.431 13.911 Z"></path>
-                                                                    </g>
-                                                                </svg>
-                                                            </a>-->
+															
                                                         </div>
                                                     </div>
                                                 </div>
@@ -312,78 +267,14 @@
                                             <section class="_9q1LS">
                                                 <section class="_3dJU8">
                                                     <div class="oKU4K">
-                                                        <!--<a role="button" href="#" class="" rel="nofollow">
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 11 9" class="_3lCzm -Vcje" style="vertical-align:middle">
-                                                                <title>Add to Collection</title>
-                                                                <g stroke="none" stroke-width="1" fill-rule="evenodd" transform="translate(-3.000000, -4.000000)">
-                                                                    <g transform="translate(3.000000, 4.500000)">
-                                                                        <polygon points="0 1.18461536 9.05384614 1.18461536 9.05384614 0 0 0"></polygon>
-                                                                        <polygon points="0 6.26153844 4.52692307 6.26153844 4.52692307 5.07692308 0 5.07692308"></polygon>
-                                                                        <polygon points="5.92307692 6.26153844 11 6.26153844 11 5.07692308 5.92307692 5.07692308"></polygon>
-                                                                        <polygon transform="translate(8.461538, 5.669231) rotate(-270.000000) translate(-8.461538, -5.669231) " points="5.92307692 6.26153844 11 6.26153844 11 5.07692308 5.92307692 5.07692308"></polygon>
-                                                                        <polygon points="0 3.7230769 6.76923077 3.7230769 6.76923077 2.53846154 0 2.53846154"></polygon>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                        </a>-->
-                                                        <!--<a role="button" href="#" class="" rel="nofollow">
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 512 512" class="_1UJnU _255P_" style="vertical-align:middle">
-                                                                <title>Add to Favorites</title>
-                                                                <g>
-                                                                    <path d="M256 475.8c-4.9 0-9.1-1.7-12.5-5.1l-176.7-170.5c-1.9-1.5-4.5-4-7.8-7.4-3.3-3.4-8.5-9.6-15.7-18.6-7.2-9-13.6-18.2-19.3-27.6-5.7-9.4-10.7-20.9-15.2-34.3-4.3-13.3-6.5-26.3-6.5-38.9 0-41.5 12-74 36-97.4 24-23.4 57.1-35.1 99.4-35.1 11.7 0 23.6 2 35.8 6.1 12.2 4.1 23.5 9.5 34 16.4 10.5 6.9 19.5 13.4 27 19.4 7.5 6 14.7 12.5 21.5 19.3 6.8-6.8 14-13.2 21.5-19.3 7.5-6 16.6-12.5 27-19.4 10.5-6.9 21.8-12.4 34-16.4 12.2-4.1 24.1-6.1 35.8-6.1 42.3 0 75.4 11.7 99.4 35.1 24 23.4 36 55.9 36 97.4 0 41.7-21.6 84.2-64.9 127.4l-176.3 169.9c-3.4 3.4-7.6 5.1-12.5 5.1z"></path>
-                                                                </g>
-                                                            </svg>
-                                                        </a>-->
+                                                        
                                                     </div>
                                                 </section>
                                                 <section class="_7H2LP">
                                                     <div class="-DeRq">
                                                         <?= $product['variations'][0]['special']; ?></div>
                                                     <div class="_1I1Wt">
-                                                        <!--<div class="_3yoIm" aria-label="Rated 3.83 out of 5">
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle;color:#fec42d">
-                                                                <title>Star-Full</title>
-                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <g fill="#F9BF00">
-                                                                        <path d="M15,6.42527246 C15,6.55455774 14.9269858,6.6960766 14.7809847,6.84853675 L11.7271493,9.97160064 L12.4504175,14.3824632 C12.4559497,14.4236438 12.459017,14.4828014 12.459017,14.5593617 C12.459017,14.6828748 12.4295758,14.7870899 12.370666,14.8719783 C12.3117835,14.9575271 12.2258973,15 12.1142398,15 C12.0074845,15 11.8952245,14.9646203 11.7774322,14.8944926 L7.99967135,12.8122586 L4.22254044,14.8944926 C4.09861343,14.9646203 3.98695588,15 3.88573284,15 C3.76794056,15 3.67961689,14.9575558 3.62070706,14.8719783 C3.56182461,14.7870612 3.532356,14.6828461 3.532356,14.5593617 C3.532356,14.523982 3.53788821,14.4647957 3.54892525,14.3824632 L4.27282331,9.97160064 L1.21041574,6.84853675 C1.06991948,6.68964393 1,6.54878557 1,6.42527246 C1,6.20785377 1.15703812,6.07210709 1.47114173,6.01938213 L5.69487547,5.37548281 L7.58743945,1.3615221 C7.6941947,1.12029677 7.8315962,1 7.99969874,1 C8.1684038,1 8.30520278,1.12029677 8.41195803,1.3615221 L10.3051245,5.37548281 L14.5288583,6.01938213 C14.8423594,6.07210709 15,6.20785377 15,6.42527246 L15,6.42527246 Z"></path>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle;color:#fec42d">
-                                                                <title>Star-Full</title>
-                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <g fill="#F9BF00">
-                                                                        <path d="M15,6.42527246 C15,6.55455774 14.9269858,6.6960766 14.7809847,6.84853675 L11.7271493,9.97160064 L12.4504175,14.3824632 C12.4559497,14.4236438 12.459017,14.4828014 12.459017,14.5593617 C12.459017,14.6828748 12.4295758,14.7870899 12.370666,14.8719783 C12.3117835,14.9575271 12.2258973,15 12.1142398,15 C12.0074845,15 11.8952245,14.9646203 11.7774322,14.8944926 L7.99967135,12.8122586 L4.22254044,14.8944926 C4.09861343,14.9646203 3.98695588,15 3.88573284,15 C3.76794056,15 3.67961689,14.9575558 3.62070706,14.8719783 C3.56182461,14.7870612 3.532356,14.6828461 3.532356,14.5593617 C3.532356,14.523982 3.53788821,14.4647957 3.54892525,14.3824632 L4.27282331,9.97160064 L1.21041574,6.84853675 C1.06991948,6.68964393 1,6.54878557 1,6.42527246 C1,6.20785377 1.15703812,6.07210709 1.47114173,6.01938213 L5.69487547,5.37548281 L7.58743945,1.3615221 C7.6941947,1.12029677 7.8315962,1 7.99969874,1 C8.1684038,1 8.30520278,1.12029677 8.41195803,1.3615221 L10.3051245,5.37548281 L14.5288583,6.01938213 C14.8423594,6.07210709 15,6.20785377 15,6.42527246 L15,6.42527246 Z"></path>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle;color:#fec42d">
-                                                                <title>Star-Full</title>
-                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <g fill="#F9BF00">
-                                                                        <path d="M15,6.42527246 C15,6.55455774 14.9269858,6.6960766 14.7809847,6.84853675 L11.7271493,9.97160064 L12.4504175,14.3824632 C12.4559497,14.4236438 12.459017,14.4828014 12.459017,14.5593617 C12.459017,14.6828748 12.4295758,14.7870899 12.370666,14.8719783 C12.3117835,14.9575271 12.2258973,15 12.1142398,15 C12.0074845,15 11.8952245,14.9646203 11.7774322,14.8944926 L7.99967135,12.8122586 L4.22254044,14.8944926 C4.09861343,14.9646203 3.98695588,15 3.88573284,15 C3.76794056,15 3.67961689,14.9575558 3.62070706,14.8719783 C3.56182461,14.7870612 3.532356,14.6828461 3.532356,14.5593617 C3.532356,14.523982 3.53788821,14.4647957 3.54892525,14.3824632 L4.27282331,9.97160064 L1.21041574,6.84853675 C1.06991948,6.68964393 1,6.54878557 1,6.42527246 C1,6.20785377 1.15703812,6.07210709 1.47114173,6.01938213 L5.69487547,5.37548281 L7.58743945,1.3615221 C7.6941947,1.12029677 7.8315962,1 7.99969874,1 C8.1684038,1 8.30520278,1.12029677 8.41195803,1.3615221 L10.3051245,5.37548281 L14.5288583,6.01938213 C14.8423594,6.07210709 15,6.20785377 15,6.42527246 L15,6.42527246 Z"></path>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle;color:#fec42d">
-                                                                <title>Star-Full</title>
-                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <g fill="#F9BF00">
-                                                                        <path d="M15,6.42527246 C15,6.55455774 14.9269858,6.6960766 14.7809847,6.84853675 L11.7271493,9.97160064 L12.4504175,14.3824632 C12.4559497,14.4236438 12.459017,14.4828014 12.459017,14.5593617 C12.459017,14.6828748 12.4295758,14.7870899 12.370666,14.8719783 C12.3117835,14.9575271 12.2258973,15 12.1142398,15 C12.0074845,15 11.8952245,14.9646203 11.7774322,14.8944926 L7.99967135,12.8122586 L4.22254044,14.8944926 C4.09861343,14.9646203 3.98695588,15 3.88573284,15 C3.76794056,15 3.67961689,14.9575558 3.62070706,14.8719783 C3.56182461,14.7870612 3.532356,14.6828461 3.532356,14.5593617 C3.532356,14.523982 3.53788821,14.4647957 3.54892525,14.3824632 L4.27282331,9.97160064 L1.21041574,6.84853675 C1.06991948,6.68964393 1,6.54878557 1,6.42527246 C1,6.20785377 1.15703812,6.07210709 1.47114173,6.01938213 L5.69487547,5.37548281 L7.58743945,1.3615221 C7.6941947,1.12029677 7.8315962,1 7.99969874,1 C8.1684038,1 8.30520278,1.12029677 8.41195803,1.3615221 L10.3051245,5.37548281 L14.5288583,6.01938213 C14.8423594,6.07210709 15,6.20785377 15,6.42527246 L15,6.42527246 Z"></path>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle;color:#fec42d">
-                                                                <title>Star-Empty</title>
-                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <g stroke="#F9BF00">
-                                                                        <path d="M14.4149055,6.50778699 L9.96650226,5.82963728 L9.85289956,5.58877268 L7.99978321,1.65939651 L6.0335367,5.82963134 L5.77022882,5.86977207 L1.5776195,6.50886977 L4.8072668,9.80248587 L4.76622274,10.0525759 L4.04940067,14.4189972 L7.99965123,12.2413268 L8.24102803,12.3743694 L11.949704,14.4188336 L11.1928076,9.80288899 L11.3696559,9.62203171 L14.4149055,6.50778699 Z M4.03255885,14.588468 C4.03252835,14.5884236 4.03249783,14.5883793 4.03246729,14.5883351 Z M3.88714866,14.5000131 C3.88667315,14.5000044 3.88620118,14.5 3.88573284,14.5 C3.88671005,14.5 3.88860849,14.4996521 3.89145519,14.4988551 Z"></path>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                        </div>--><!--<span class="_2jw0T">(12)</span>--></div>
-                                                    <!--<div class="_3QV9M">356
-                                                        Sales</div>-->
+                                                        
                                                     <div class="GeySM"><span class="_2g_QW">Unit:</span> <span class="_3TIJT"><?= $product['unit']?></span></div>
                                                 </section>
                                                 <section data-id="<?= $product['product_store_id'] ?>" class="VRlLl">
@@ -396,14 +287,7 @@
 													  
 									
 													 </div>
-													<!--<a class="_3tfm8 wrc8W lpgPF" role="button" href="#" target="_blank" rel="noopener noreferrer">
-                                                        <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle">
-                                                            <title>Cart</title>
-                                                            <g>
-                                                                <path d="M 0.009 1.349 C 0.009 1.753 0.347 2.086 0.765 2.086 C 0.765 2.086 0.766 2.086 0.767 2.086 L 0.767 2.09 L 2.289 2.09 L 5.029 7.698 L 4.001 9.507 C 3.88 9.714 3.812 9.958 3.812 10.217 C 3.812 11.028 4.496 11.694 5.335 11.694 L 14.469 11.694 L 14.469 11.694 C 14.886 11.693 15.227 11.36 15.227 10.957 C 15.227 10.552 14.886 10.221 14.469 10.219 L 14.469 10.217 L 5.653 10.217 C 5.547 10.217 5.463 10.135 5.463 10.031 L 5.487 9.943 L 6.171 8.738 L 11.842 8.738 C 12.415 8.738 12.917 8.436 13.175 7.978 L 15.901 3.183 C 15.96 3.08 15.991 2.954 15.991 2.828 C 15.991 2.422 15.65 2.09 15.23 2.09 L 3.972 2.09 L 3.481 1.077 L 3.466 1.043 C 3.343 0.79 3.084 0.612 2.778 0.612 C 2.777 0.612 0.765 0.612 0.765 0.612 C 0.347 0.612 0.009 0.943 0.009 1.349 Z M 3.819 13.911 C 3.819 14.724 4.496 15.389 5.335 15.389 C 6.171 15.389 6.857 14.724 6.857 13.911 C 6.857 13.097 6.171 12.434 5.335 12.434 C 4.496 12.434 3.819 13.097 3.819 13.911 Z M 11.431 13.911 C 11.431 14.724 12.11 15.389 12.946 15.389 C 13.784 15.389 14.469 14.724 14.469 13.911 C 14.469 13.097 13.784 12.434 12.946 12.434 C 12.11 12.434 11.431 13.097 11.431 13.911 Z"></path>
-                                                            </g>
-                                                        </svg>
-                                                    </a>-->
+													
                                                 </section>
                                             </section>
                                         </section>
@@ -496,7 +380,7 @@
                                                  <?php }?>
        
                                                </ul>
-											   <?php }else{ ?>
+            <?php }else{ ?>
              <center> <h2> There are no products to list in this category. </h2></center>
             <?php }?>
         <!--<nav class="rKk-w" role="navigation">
