@@ -360,6 +360,7 @@
                   <?php } } ?>
               </ul>
           </div>
+          <span class="view-all-button"><a href=<?= $mostboughtproducts_url; ?>>View All Featured</a></span>
       </div>
   </div>
 

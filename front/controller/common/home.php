@@ -1138,6 +1138,7 @@ class ControllerCommonHome extends Controller {
         $data['contactus_modal'] = $this->load->controller('information/contact');
         $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
         $data['mostboughtproducts'] = array_slice($this->getMostBoughtProducts(), 0, 19);
+        $data['mostboughtproducts_url'] = $this->url->link('product/store/featuredproducts', '', 'SSL');
         $data['cartproducts'] = $this->cart->getProducts();
         $log->write('mostboughtproducts');
         $log->write($this->cart->getProducts());

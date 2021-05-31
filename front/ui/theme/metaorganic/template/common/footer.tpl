@@ -46,7 +46,7 @@
          </div>
          <div class="row">
             <div class="content-container col-md-12">
-               <p class="text-muted">© 2020 KwikBasket | All Rights Reserved</p>
+               <p class="text-muted">© <?=date("Y"); ?> KwikBasket | All Rights Reserved</p>
                <ul>
                   <li style="margin-right: 8px"><a href='<?= BASE_URL."/index.php?path=common/home/terms_and_conditions" ?>'>Terms &
                         Conditions</a></li>
