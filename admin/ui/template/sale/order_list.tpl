@@ -1566,7 +1566,7 @@ function downloadOrdersonsolidated() {
                 url += '&filter_payment=' + encodeURIComponent(filter_payment);
             }
             
-            var filter_order_type = $('input[name=\'filter_order_type\']').val();
+            var filter_order_type = $('select[name=\'filter_order_type\']').val();
 
             if (filter_order_type != '*') {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
