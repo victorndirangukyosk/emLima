@@ -1137,7 +1137,7 @@ class ControllerCommonHome extends Controller {
         /* add Contact modal */
         $data['contactus_modal'] = $this->load->controller('information/contact');
         $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
-        $data['mostboughtproducts'] = $this->getMostBoughtProducts();
+        $data['mostboughtproducts'] = array_slice($this->getMostBoughtProducts(), 0, 19);
         $data['cartproducts'] = $this->cart->getProducts();
         $log->write('mostboughtproducts');
         $log->write($this->cart->getProducts());
@@ -1847,9 +1847,9 @@ class ControllerCommonHome extends Controller {
 
                 //echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price;//exit;
 
-                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']])) {
-                    $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
-                    $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']])) {
+                    $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']];
+                    $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']];
                     $special_price = $this->currency->format($s_price);
                     $price = $this->currency->format($o_price);
                 }
@@ -1859,7 +1859,7 @@ class ControllerCommonHome extends Controller {
             if (!empty($this->session->data['config_store_id'])) {
                 $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $this->session->data['config_store_id']]));
             } else {
-                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $filter_data['store_id']]));
+                $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $result['store_id']]));
             }
             if (isset($this->session->data['cart'][$key])) {
                 $qty_in_cart = $this->session->data['cart'][$key]['quantity'];

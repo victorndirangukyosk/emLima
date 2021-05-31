@@ -250,7 +250,7 @@
                                   <?= $mostboughtproduct['variations'][0]['special'];?>
                                   <?php  echo '/ Per ' . $mostboughtproduct['variations'][0]['unit']; ?>
                               </div>
-                              <?php if(count($cartproducts) > 0) { foreach($cartproducts as $cartproduct) { if($cartproduct['product_store_id'] == $mostboughtproduct['product_store_id'] && $cartproduct['quantity'] > 0) { ?>
+                              <?php if(isset($cartproducts) && count($cartproducts) > 0) { foreach($cartproducts as $cartproduct) { if($cartproduct['product_store_id'] == $mostboughtproduct['product_store_id'] && $cartproduct['quantity'] > 0) { ?>
                               <span id="flag-qty-id-<?= $mostboughtproduct['product_store_id']; ?>-<?= $mostboughtproduct['store_product_variation_id']; ?>">
                                   <?php echo $cartproduct['quantity']; ?> items in cart <i class="fas fa-flag"></i>
                               </span>
