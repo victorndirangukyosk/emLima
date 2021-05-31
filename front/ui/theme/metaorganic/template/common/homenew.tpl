@@ -233,6 +233,135 @@
   </div>
 
   <div style="clear:both !important"> </div>
+  
+  <div class="container--full-width featured-categories">
+      <div class="container" style="width:100%;">
+          <div class="_47ahp" data-test-selector="search-results">
+              <div style="margin-top: 16px" class="clearfix featured-categories__header">
+                  <h2 class="featured-categories__header-title"><span>Featured</span></h2>
+              </div>
+              <ul id="items-ul" class="row" data-test-selector="item-cards-layout-grid">
+                  <?php if(count($mostboughtproducts) > 0) { foreach($mostboughtproducts as $mostboughtproduct ) { ?>
+                  <li class="col-md-2" style="min-height: 265px">
+                      <a class="product-detail-bnt open-popup" role="button" data-store="<?= $mostboughtproduct['store_id'] ?>" data-id="<?= $mostboughtproduct['product_store_id'] ?>" target="_blank" aria-label="<?= $mostboughtproduct['name'] ?>">
+                          <img class="_1xvs1" src="<?= $mostboughtproduct['thumb'] ?>" title="<?= $mostboughtproduct['name'] ?>" alt="<?= $mostboughtproduct['name'] ?>">
+                          <div class="_25ygu"><?= $mostboughtproduct['name'] ?><br>
+                              <div style="color:#6dbd46">
+                                  <?= $mostboughtproduct['variations'][0]['special'];?>
+                                  <?php  echo '/ Per ' . $mostboughtproduct['variations'][0]['unit']; ?>
+                              </div>
+                              <?php if(count($cartproducts) > 0) { foreach($cartproducts as $cartproduct) { if($cartproduct['product_store_id'] == $mostboughtproduct['product_store_id'] && $cartproduct['quantity'] > 0) { ?>
+                              <span id="flag-qty-id-<?= $mostboughtproduct['product_store_id']; ?>-<?= $mostboughtproduct['store_product_variation_id']; ?>">
+                                  <?php echo $cartproduct['quantity']; ?> items in cart <i class="fas fa-flag"></i>
+                              </span>
+                              <?php } } } ?>
+                          </div>
+                      </a>
+                  </li>
+
+                  <!--- Product Details Modal Start --->
+                  <div id="product_<?=$mostboughtproduct['product_id']?>" class="modal fade" role="dialog">
+                      <div class="modal-dialog">
+
+                          <!-- Modal content-->
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              </div>
+                              <div class="modal-body class=" col-lg-2 col-md-4 col-sm-6 col-xs-6 nopadding product-details"
+                                   style="border-right: 1px solid rgb(215, 220, 214);">
+                                   <div>
+
+                                      <?php /*echo "<pre>";print_r($mostboughtproduct);die;*/ if(isset($mostboughtproduct['percent_off']) && $mostboughtproduct['percent_off'] != '0.00') { ?>
+
+                                      <span class="spacial-offer">
+                                          <?php echo $mostboughtproduct['percent_off'].'% OFF';?>
+                                      </span>
+                                      <?php } ?>
+
+
+                                      <?php if($this->customer->isLogged()) { ?>
+
+
+                                      <a href="#"
+                                         class="add-to-list list_button<?= $mostboughtproduct['product_store_id'] ?>-<?= $mostboughtproduct['store_product_variation_id'] ?>"
+                                         id="list-btn" data-id="<?= $mostboughtproduct['product_id'] ?>" type="button" data-toggle="modal"
+                                         data-target="#listModal"><img class="add-list-png"
+                                                                    src="<?= $base;?>front/ui/theme/mvgv2/images/list-icon.png">
+                                      </a>
+
+                                      <?php } else { ?>
+                                      <a href="#" class="add-to-list" type="button" data-toggle="modal" data-target="#phoneModal"><img
+                                              class="add-list-png" src="<?= $base;?>front/ui/theme/mvgv2/images/list-icon.png"></a>
+
+                                      <?php } ?>
+                                  </div>
+                                  <div class="product-block" data-id="<?= $mostboughtproduct['product_store_id'] ?>">
+
+                                      <div class="product-img product-description open-popup"
+                                           data-id="<?= $mostboughtproduct['product_store_id'] ?>" data-id="<?= $mostboughtproduct['product_store_id'] ?>">
+                                          <img class="lazy" data-src="<?= $mostboughtproduct['thumb'] ?>" alt="">
+                                      </div>
+                                      <div class="product-description" data-id="<?= $mostboughtproduct['product_store_id'] ?>">
+
+
+                                          <h3 class="open-popup" data-id="<?= $mostboughtproduct['product_store_id'] ?>">
+
+                                              <a class="product-title">
+                                                  <?= $mostboughtproduct['name']?>
+                                              </a>
+                                          </h3>
+
+                                          <?php if(trim(isset($mostboughtproduct['unit']))){ ?>
+                                          <p class="product-info open-popup" data-id="<?= $mostboughtproduct['product_store_id'] ?>"><span
+                                                  class="small-info">
+                                                  <?= $mostboughtproduct['unit'] ?>
+                                              </span></p>
+                                          <?php } else { ?>
+                                          <p class="product-info open-popup" data-id="<?= $mostboughtproduct['product_store_id'] ?>"><span
+                                                  class="small-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+                                          <?php } ?>
+
+                                          <div class="product-price">
+                                              <?php if ( $mostboughtproduct['variations'][0]['special'] == '0.00' || empty(trim($mostboughtproduct['variations'][0]['special']))) { ?>
+                                              <span class="price-cancelled open-popup" data-id="<?= $mostboughtproduct['product_store_id'] ?>"
+                                                    style="display: none" ;>
+                                              </span>
+                                              <span class="price open-popup" data-id="<?= $mostboughtproduct['product_store_id'] ?>">
+                                                  <?php echo $mostboughtproduct['variations'][0]['price']; ?>
+                                              </span>
+                                              <?php } else { ?>
+                                              <span class="price-cancelled open-popup" data-id="<?= $mostboughtproduct['product_store_id'] ?>">
+                                                  <?php echo $mostboughtproduct['variations'][0]['price']; ?>
+                                              </span>
+                                              <span class="price open-popup" data-id="<?= $mostboughtproduct['product_store_id'] ?>">
+                                                  <?php echo $mostboughtproduct['variations'][0]['special']; ?>
+                                              </span>
+                                              <?php } ?>
+                                              <div class="pro-qty-addbtn" data-store-id="<?= isset($current_store) ? $current_store : '' ?>"
+                                                   data-variation-id="<?= $mostboughtproduct['store_product_variation_id'] ?>"
+                                                   id="action_<?= $mostboughtproduct['product_store_id'] ?>">
+
+                                                  <?php require 'action.tpl'; ?>
+                                              </div>
+                                          </div>
+
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="modal-footer">
+                                  Footer
+                              </div>
+                          </div>
+                          <!----- Product Detail Modal End --->
+
+                      </div>
+                  </div>
+                  <?php } } ?>
+              </ul>
+          </div>
+      </div>
+  </div>
 
   <?php
 					$i=0;
