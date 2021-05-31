@@ -636,7 +636,7 @@ class ControllerReportVendorOrders extends Controller {
             $productName = $product['name'];
             $productUnit = $product['unit'];
             $productQuantity = $product['quantity'];
-            $productNote = $product['product_note'];
+            $productNote = array_key_exists('product_note', $product) && isset($product['product_note']) && $product['product_note'] != NULL ? $product['product_note'] : '';
             $produceType = $product['produce_type'];
 
             $consolidatedProductNames = array_column($consolidatedProducts, 'name');
