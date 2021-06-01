@@ -168,6 +168,10 @@ class ControllerApiCart extends Controller
             if (isset($this->request->post['product'])) {
                 $this->cart->clear();
                 foreach ($this->request->post['product'] as $product) {
+                    $log = new Log('error.log');
+                    $log->write('front_controller_api_cart');
+                    $log->write($product);
+                    $log->write('front_controller_api_cart');
                     $option = [];
                     $this->cart->add($product['product_store_id'], $product['quantity'], $option, false, $product['store_id'], $product['store_product_variation_id']);
                     if ($product['store_id']) {
