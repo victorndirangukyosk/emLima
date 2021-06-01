@@ -1526,79 +1526,79 @@ function downloadOrdersonsolidated() {
 
             console.log(filter_order_status);
 
-            if (filter_order_status != '*') {
+            if (filter_order_status != '*' && filter_order_status != '') {
                 url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
             }
 
             var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
 
-            if (filter_delivery_date != '*') {
+            if (filter_delivery_date != '*' && filter_delivery_date != '') {
                 url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
             }
             
             var filter_company = $('input[name=\'filter_company\']').val();
 
-            if (filter_company != '*') {
+            if (filter_company != '*' && filter_company != '') {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
             
             var filter_customer = $('input[name=\'filter_customer\']').val();
 
-            if (filter_customer != '*') {
+            if (filter_customer != '*' && filter_customer != '') {
                 url += '&filter_customer=' + encodeURIComponent(filter_customer);
             }
             
             var filter_total = $('input[name=\'filter_total\']').val();
 
-            if (filter_total != '*') {
+            if (filter_total != '*' && filter_total != '') {
                 url += '&filter_total=' + encodeURIComponent(filter_total);
             }
             
             var filter_delivery_method = $('input[name=\'filter_delivery_method\']').val();
 
-            if (filter_delivery_method != '*') {
+            if (filter_delivery_method != '*' && filter_delivery_method != '') {
                 url += '&filter_delivery_method=' + encodeURIComponent(filter_delivery_method);
             }
             
             var filter_payment = $('input[name=\'filter_payment\']').val();
 
-            if (filter_payment != '*') {
+            if (filter_payment != '*' && filter_payment != '') {
                 url += '&filter_payment=' + encodeURIComponent(filter_payment);
             }
             
             var filter_order_type = $('select[name=\'filter_order_type\']').val();
 
-            if (filter_order_type != '*') {
+            if (filter_order_type != '*' && filter_order_type != '') {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
             }
             
             var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
 
-            if (filter_order_from_id != '*') {
+            if (filter_order_from_id != '*' && filter_order_from_id != '') {
                 url += '&filter_order_from_id=' + encodeURIComponent(filter_order_from_id);
             }
             
             var filter_order_to_id = $('input[name=\'filter_order_to_id\']').val();
 
-            if (filter_order_to_id != '*') {
+            if (filter_order_to_id != '*' && filter_order_to_id != '') {
                 url += '&filter_order_to_id=' + encodeURIComponent(filter_order_to_id);
             }
             
             var filter_date_added = $('input[name=\'filter_date_added\']').val();
 
-            if (filter_date_added != '*') {
+            if (filter_date_added != '*' && filter_date_added != '') {
                 url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
             }
             
             var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
 
-            if (filter_date_added_end != '*') {
+            if (filter_date_added_end != '*' && filter_date_added_end != '') {
                 url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
             }
             
             var filter_order_id = $('input[name=\'filter_order_id\']').val();
 
-            if (filter_order_id != '*') {
+            if (filter_order_id != '*' && filter_order_id != '') {
                 url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
             }
             

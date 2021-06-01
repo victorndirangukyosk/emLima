@@ -533,7 +533,7 @@ class ControllerReportVendorOrders extends Controller {
         if (isset($this->request->get['filter_customer'])) {
             $customer = $this->request->get['filter_customer'];
         } else {
-            $company = null;
+            $customer = null;
         }
         
         if (isset($this->request->get['filter_total'])) {
