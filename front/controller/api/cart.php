@@ -158,8 +158,6 @@ class ControllerApiCart extends Controller
 
     public function addCart()
     { //add to addCart
-        $log = new Log('error.log');
-        $log->write('addcart');
         echo 'cart/add';
 
         $this->load->language('api/cart');
