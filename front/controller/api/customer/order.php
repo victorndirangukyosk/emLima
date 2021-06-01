@@ -271,13 +271,14 @@ class ControllerApiCustomerOrder extends Controller
                 //$log->write('Log 3.4');
 
                 $this->load->model('assets/product');
-
+                
+                $log = new Log('error.log');
+                $log->write('ORDER.PHP');
+                $log->write($args['products']);
+                $log->write('ORDER.PHP');
+                    
                 foreach ($args['products'] as $product) {
                     $option_data = [];
-                    $log = new Log('error.log');
-                    $log->write('ORDER.PHP');
-                    $log->write($product);
-                    $log->write('ORDER.PHP');
                     $vendor_id = $this->model_extension_extension->getVendorId($product['store_id']);
 
                     $db_product_detail = $this->model_assets_product->getProductForPopupByApi($product['store_id'], $product['product_store_id']);
