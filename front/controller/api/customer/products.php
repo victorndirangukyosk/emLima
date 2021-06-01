@@ -1819,7 +1819,7 @@ class ControllerApiCustomerProducts extends Controller
                 'product_id' => $result['product_id'],
                 'model' => $result['model'],
                 'product_store_id' => $result['product_store_id'],
-                'store_id' => $result['product_store_id'],
+                'store_id' => $result['store_id'],
                 'default_variation_name' => $result['default_variation_name'],
                 'thumb' => $image,
                 'name' => htmlspecialchars_decode($name),
