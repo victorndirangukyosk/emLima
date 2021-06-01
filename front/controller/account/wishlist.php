@@ -865,6 +865,7 @@ class ControllerAccountWishList extends Controller
     {
         $this->load->language('account/wishlist');
         $this->load->model('account/wishlist');
+        $this->load->model('account/order');
 
         $data['text_cart_success'] = $this->language->get('text_cart_success');
         $log = new Log('error.log');
@@ -873,7 +874,8 @@ class ControllerAccountWishList extends Controller
          $order_id = $this->request->post['order_id'];
         $log->write($this->request->post['order_id']);
         $log->write('Order List Products');
-
+        
+        $order_details = $this->model_account_order->getOrderDetailsById($order_id);
         $Orderlist_products = $this->model_account_wishlist->getAvailableOrderedProducts($order_id);
         $log->write($Orderlist_products);
         $log->write('Order List Products obtained');
@@ -887,7 +889,7 @@ class ControllerAccountWishList extends Controller
                 $log->write($Orderlist_product['product_id']);
                 $log->write('Order List Products 2');
                 $this->load->model('assets/product');
-                $store_data = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], 75);
+                $store_data = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], $order_details['store_id']);
                 $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
                 
                 $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
