@@ -19,6 +19,11 @@ class ModelAccountOrder extends Model {
         }
     }
 
+    public function getOrderDetailsById($order_id) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order` where `order_id` = '" . (int) $order_id . "' LIMIT 1");
+        return $query->row;
+    }
+
     public function updateNewShippingAddress($order_id, $data) {
         $data['shipping_address'] = !empty($data['shipping_flat_number']) ? $data['shipping_flat_number'] . ', ' . $data['shipping_landmark'] : $data['shipping_landmark'];
 
