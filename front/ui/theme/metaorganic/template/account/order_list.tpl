@@ -21,7 +21,7 @@
                             <div class="pull-right">
                             <?php if($order['status'] == 'Delivered' || $order['status'] == 'Cancelled' ) { ?>
                               <a data-confirm="Available products  in this order will be added to cart !!" id="additemstocart" class="btn btn-success download" style="margin-right: 4px !important; height: 27px;margin-left:4px;"
-                          data-store-id="<?= ACTIVE_STORE_ID ?>" data-toggle="tooltip"
+                          data-store-id="<?= $order['store_id']; ?>" data-toggle="tooltip"
                           value="<?php echo $order['order_id']; ?>" title="Add To Cart/Reorder"><i
                             class="fa fa-cart-plus"></i></a><?php } ?>
                             </div>  
