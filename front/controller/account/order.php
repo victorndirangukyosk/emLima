@@ -211,6 +211,7 @@ class ControllerAccountOrder extends Controller {
                 'shipping_address' => $shipping_address,
                 'order_total' => $order_total_detail,
                 'store_name' => $result['store_name'],
+                'store_id' => $result['store_id'],
                 'status' => $result['status'],
                 'order_status_color' => $result['order_status_color'],
                 'shipped' => $shipped,
