@@ -3460,6 +3460,8 @@ class ControllerApiCustomerOrder extends Controller {
                         $log->write($product_info);
                         $log->write($store_data);
                         $log->write('store details');
+                    } else {
+                        $product_info['category_price'] = 0;
                     }
                     $all_products[] = $product_info;
                     $json['data'] = $all_products;
