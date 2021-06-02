@@ -3454,6 +3454,7 @@ class ControllerApiCustomerOrder extends Controller {
 
                     if (isset($product_info) && count($product_info) > 0 && $category_price_status == 1) {
                         $log->write('store details');
+                        $log->write($product_info);
                         $log->write($store_data);
                         $log->write('store details');
                     }
