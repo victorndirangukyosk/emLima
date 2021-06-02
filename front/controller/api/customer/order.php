@@ -3433,6 +3433,31 @@ class ControllerApiCustomerOrder extends Controller {
             $Orderlist_products = $this->model_account_wishlist->getAvailableOrderedProducts($order_id);
             $log->write($Orderlist_products);
             $log->write('Order List Products obtained');
+
+            if (is_array($Orderlist_products) && count($Orderlist_products) > 0) {
+                $log->write('Order List Products inner');
+
+
+                foreach ($Orderlist_products as $Orderlist_product) {
+                    $log->write('Order List Products 2');
+                    $log->write($Orderlist_product);
+                    $log->write('Order List Products 2');
+                    $this->load->model('assets/product');
+                    $store_data = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], $order_details['store_id']);
+                    $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
+
+                    $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
+                    $log = new Log('error.log');
+                    $log->write($category_status_price_details);
+                    $category_price_status = is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1;
+
+                    if (isset($product_info) && count($product_info) > 0 && $category_price_status == 1) {
+                        $log->write('store details');
+                        $log->write($store_data);
+                        $log->write('store details');
+                    }
+                }
+            }
         } else {
             $json['status'] = 10014;
 
