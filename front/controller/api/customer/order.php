@@ -3462,6 +3462,10 @@ class ControllerApiCustomerOrder extends Controller {
                     $log->write($category_status_price_details);
                     $category_price_status = is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1;
 
+                    $log->write('category_price_status');
+                    $log->write($category_price_status);
+                    $log->write('category_price_status');
+
                     if (isset($product_info) && count($product_info) > 0 && $category_price_status == 1) {
                         $product_info['category_price'] = $category_status_price_details['price'];
                         $log->write('store details');
