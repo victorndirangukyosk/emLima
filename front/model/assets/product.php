@@ -602,6 +602,7 @@ class ModelAssetsProduct extends Model {
             $result = $query->row;
             $log = new Log('error.log');
             $log->write('product.php');
+            $log->write($this->customer->getId());
             $log->write($result);
             $log->write('product.php');
         }
