@@ -73,6 +73,7 @@ class ModelAccountWishList extends Model
                     'name' => $orderlist['name'],
                     // 'image' => $image,
                     'unit' => $orderlist['unit'],
+                    'store_id' => $orderlist['store_id']
                     //for priice add here
                 ];
 
