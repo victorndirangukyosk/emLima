@@ -3419,7 +3419,7 @@ class ControllerApiCustomerOrder extends Controller {
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
-        if ($this->validates($args)) {
+        if ($this->validates($args) && $this->customer->isLogged()) {
 
             $this->load->model('account/order');
             $this->load->model('account/wishlist');
