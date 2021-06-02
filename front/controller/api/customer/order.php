@@ -3437,8 +3437,10 @@ class ControllerApiCustomerOrder extends Controller {
             if (is_array($Orderlist_products) && count($Orderlist_products) > 0) {
                 $log->write('Order List Products inner');
 
-
+                $all_products = array();
                 foreach ($Orderlist_products as $Orderlist_product) {
+                    $product_info = array();
+                    $category_status_price_details = array();
                     $log->write('Order List Products 2');
                     $log->write($Orderlist_product);
                     $log->write($_SESSION['customer_category']);
@@ -3459,6 +3461,8 @@ class ControllerApiCustomerOrder extends Controller {
                         $log->write($store_data);
                         $log->write('store details');
                     }
+                    $all_products[] = $product_info;
+                    $json['data'] = $all_products;
                 }
             }
         } else {
@@ -3470,6 +3474,9 @@ class ControllerApiCustomerOrder extends Controller {
 
             http_response_code(400);
         }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
