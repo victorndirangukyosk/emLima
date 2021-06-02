@@ -82,6 +82,8 @@ class ControllerApiCustomerOrder extends Controller
 
         if ($this->validate($args)) {
             $log->write('addOrder');
+            $log->write($args);
+            $log->write('addOrder');
             $stores = array_keys($args['stores']);
 
             //print_r($stores);
