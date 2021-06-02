@@ -3460,7 +3460,7 @@ class ControllerApiCustomerOrder extends Controller {
                     $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
                     $log = new Log('error.log');
                     $log->write($category_status_price_details);
-                    $category_price_status = is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 0;
+                    $category_price_status = is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) && $category_status_price_details['status'] == 1 ? $category_status_price_details['status'] : 0;
 
                     $log->write('category_price_status');
                     $log->write($category_price_status);
@@ -3468,12 +3468,14 @@ class ControllerApiCustomerOrder extends Controller {
 
                     if (isset($product_info) && count($product_info) > 0 && $category_price_status == 1) {
                         $product_info['category_price'] = $category_status_price_details['price'];
+                        $product_info['ordered_quantity'] = $Orderlist_product['quantity'];
                         $log->write('store details');
                         $log->write($product_info);
                         $log->write($store_data);
                         $log->write('store details');
                     } else {
                         $product_info['category_price'] = 0;
+                        $product_info['ordered_quantity'] = $Orderlist_product['quantity'];
                     }
                     $all_products[] = $product_info;
                     $json['data'] = $all_products;
