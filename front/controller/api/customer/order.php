@@ -3433,6 +3433,14 @@ class ControllerApiCustomerOrder extends Controller {
             $Orderlist_products = $this->model_account_wishlist->getAvailableOrderedProducts($order_id);
             $log->write($Orderlist_products);
             $log->write('Order List Products obtained');
+        } else {
+            $json['status'] = 10014;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
         }
     }
 
