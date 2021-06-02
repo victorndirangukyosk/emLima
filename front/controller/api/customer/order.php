@@ -3419,6 +3419,14 @@ class ControllerApiCustomerOrder extends Controller {
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
+        if (!$this->customer->isLogged()) {
+            $json['status'] = 10014;
+
+            $json['message'] = 'Unauthorized Session Expired!';
+
+            http_response_code(401);
+        }
+
         if ($this->validates($args) && $this->customer->isLogged()) {
 
             $this->load->model('account/order');
