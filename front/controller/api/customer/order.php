@@ -3441,9 +3441,10 @@ class ControllerApiCustomerOrder extends Controller {
                 foreach ($Orderlist_products as $Orderlist_product) {
                     $log->write('Order List Products 2');
                     $log->write($Orderlist_product);
+                    $log->write($_SESSION['customer_category']);
                     $log->write('Order List Products 2');
                     $this->load->model('assets/product');
-                    $store_data = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], $order_details['store_id']);
+                    $store_data = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], $Orderlist_product['store_id']);
                     $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
 
                     $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
