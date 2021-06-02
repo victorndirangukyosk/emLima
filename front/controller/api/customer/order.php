@@ -3463,6 +3463,7 @@ class ControllerApiCustomerOrder extends Controller {
                     }
                     $all_products[] = $product_info;
                     $json['data'] = $all_products;
+                    $json['message'] = 'Order Products!';
                 }
             }
         } else {
