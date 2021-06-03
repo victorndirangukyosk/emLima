@@ -94,7 +94,7 @@
                                                     </span>
                                                     <?php } else { ?>
                                                     <span class="price-cancelled open-popup" data-id="<?= $product['product_store_id'] ?>">
-                                                        <?php echo $product['price']; ?>
+                                                        <?php //echo $product['price']; ?>
                                                     </span>
                                                     <span class="price open-popup" data-id="<?= $product['product_store_id'] ?>">
                                                         <?php echo $product['special_price']; ?>

@@ -1,12 +1,11 @@
 <?php
 
-class ControllerAccountWishList extends Controller
-{
+class ControllerAccountWishList extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+    public function index() {
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/order', '', 'SSL');
@@ -37,7 +36,7 @@ class ControllerAccountWishList extends Controller
         $url = '';
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         $data['breadcrumbs'][] = [
@@ -104,7 +103,7 @@ class ControllerAccountWishList extends Controller
                 'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
                 'product_count' => $totalCount,
                 'products' => $wishlist_products,
-                'href' => $this->url->link('account/wishlist/info', 'wishlist_id='.$result['wishlist_id'], 'SSL'),
+                'href' => $this->url->link('account/wishlist/info', 'wishlist_id=' . $result['wishlist_id'], 'SSL'),
             ];
         }
 
@@ -136,18 +135,17 @@ class ControllerAccountWishList extends Controller
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/information');
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/order_list.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/wishlist.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_list.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/wishlist.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/wishlist.tpl', $data));
         }
     }
 
-    public function info()
-    {
+    public function info() {
         $this->load->language('account/wishlist');
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (isset($this->request->get['wishlist_id'])) {
             $wishlist_id = $this->request->get['wishlist_id'];
@@ -171,11 +169,9 @@ class ControllerAccountWishList extends Controller
 
         //if ( !isset($this->session->data['zipcode']) || !isset($this->session->data['config_store_id']) ) {
         // if ( !(count($_COOKIE) > 0 && isset($_COOKIE['zipcode']) ) || !isset($this->session->data['config_store_id']) ) {
-
         //     if(!isset($_COOKIE['location'])) {
         //         $data['store_selected'] = false;
         //     }
-
         // }
 
         if (isset($this->session->data['config_store_id'])) {
@@ -189,7 +185,7 @@ class ControllerAccountWishList extends Controller
         $this->document->setTitle($this->language->get('heading_title'));
 
         if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/wishlist/info', 'wishlist_id='.$wishlist_id, 'SSL');
+            $this->session->data['redirect'] = $this->url->link('account/wishlist/info', 'wishlist_id=' . $wishlist_id, 'SSL');
 
             $this->response->redirect($this->url->link('account/login', '', 'SSL'));
         }
@@ -217,7 +213,7 @@ class ControllerAccountWishList extends Controller
             $url = '';
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
             $data['breadcrumbs'][] = [
@@ -227,7 +223,7 @@ class ControllerAccountWishList extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_wishlist'),
-                'href' => $this->url->link('account/wishlist/info', 'wishlist_id='.$this->request->get['wishlist_id'].$url, 'SSL'),
+                'href' => $this->url->link('account/wishlist/info', 'wishlist_id=' . $this->request->get['wishlist_id'] . $url, 'SSL'),
             ];
 
             $data['text_go_back'] = $this->language->get('text_go_back');
@@ -348,7 +344,7 @@ class ControllerAccountWishList extends Controller
                 $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($product_store_id);
                 $log = new Log('error.log');
                 $log->write($category_status_price_details);
-                
+
                 $data['products'][] = [
                     'name' => isset($product_info['pd_name']) ? $product_info['pd_name'] : '',
                     'image' => $product['image'],
@@ -362,11 +358,11 @@ class ControllerAccountWishList extends Controller
                     'category_price' => $this->model_assets_product->getCategoryPriceStatusByProductStoreId($product_store_id),
                     'status' => isset($product_info['pd_name']) && count($product_info) > 0 ? 1 : 0,
                     'category_price_status' => is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1,
-                       /* 'store_id'     => $product['store_id'],
-                    'model'    => $product['model'],*/
+                        /* 'store_id'     => $product['store_id'],
+                          'model'    => $product['model'], */
 
-                    /*'price'    => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $wishlist_info['currency_code'], $wishlist_info['currency_value']),
-                    'total'    => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $wishlist_info['currency_code'], $wishlist_info['currency_value']),*/
+                        /* 'price'    => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $wishlist_info['currency_code'], $wishlist_info['currency_value']),
+                          'total'    => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $wishlist_info['currency_code'], $wishlist_info['currency_value']), */
                 ];
             }
 
@@ -395,8 +391,8 @@ class ControllerAccountWishList extends Controller
                 $data['total_items'] += 1;
             }
             //echo "<pre>";print_r($data);die;
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/wishlist_info.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/wishlist_info.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/wishlist_info.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/wishlist_info.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/account/wishlist_info.tpl', $data));
             }
@@ -429,7 +425,7 @@ class ControllerAccountWishList extends Controller
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_order'),
-                'href' => $this->url->link('account/order/info', 'wishlist_id='.$wishlist_id, 'SSL'),
+                'href' => $this->url->link('account/order/info', 'wishlist_id=' . $wishlist_id, 'SSL'),
             ];
 
             $data['continue'] = $this->url->link('account/wishlist', '', 'SSL');
@@ -441,16 +437,15 @@ class ControllerAccountWishList extends Controller
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header/onlyHeader');
 
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/error/not_found.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/error/not_found.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/error/not_found.tpl', $data));
             }
         }
     }
 
-    public function deleteWishlist()
-    {
+    public function deleteWishlist() {
         $data['status'] = false;
 
         $log = new Log('error.log');
@@ -469,8 +464,7 @@ class ControllerAccountWishList extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function deleteWishlistProduct()
-    {
+    public function deleteWishlistProduct() {
         $data['status'] = false;
 
         $log = new Log('error.log');
@@ -491,8 +485,7 @@ class ControllerAccountWishList extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function getProductWislists()
-    {
+    public function getProductWislists() {
         $log = new Log('error.log');
         $log = new Log('getProductWislists');
         $log = new Log('getProductWislists');
@@ -514,14 +507,14 @@ class ControllerAccountWishList extends Controller
 
                 $log->write($present);
                 if ($present) {
-                    $inp = '<input type="checkbox" class="" name="add_to_list[]" value="'.$list['wishlist_id'].'" checked>';
+                    $inp = '<input type="checkbox" class="" name="add_to_list[]" value="' . $list['wishlist_id'] . '" checked>';
                 } else {
-                    $inp = '<input type="checkbox" class="" name="add_to_list[]" value="'.$list['wishlist_id'].'">';
+                    $inp = '<input type="checkbox" class="" name="add_to_list[]" value="' . $list['wishlist_id'] . '">';
                 }
 
                 $p .= '<tr>
-                    <td>'.$list['name'].'</td>
-                    <td class="">'.$inp.' </td>
+                    <td>' . $list['name'] . '</td>
+                    <td class="">' . $inp . ' </td>
                 </tr>';
             }
 
@@ -533,8 +526,7 @@ class ControllerAccountWishList extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function updateWishlistProduct()
-    {
+    public function updateWishlistProduct() {
         $data['status'] = false;
 
         $log = new Log('error.log');
@@ -561,7 +553,7 @@ class ControllerAccountWishList extends Controller
             if ($quantity <= 0) {
                 $data['delete'] = true;
             } else {
-                $data['delete'] = false;  
+                $data['delete'] = false;
             }
         }
 
@@ -569,8 +561,7 @@ class ControllerAccountWishList extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function addWishlistProductToCart()
-    {
+    public function addWishlistProductToCart() {
         $this->load->language('account/wishlist');
         $this->load->model('account/wishlist');
 
@@ -591,17 +582,17 @@ class ControllerAccountWishList extends Controller
                 $this->load->model('assets/product');
                 $store_data = $this->model_assets_product->getProductStoreId($wishlist_product['product_id'], 75);
                 $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
-                
+
                 $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
                 $log = new Log('error.log');
                 $log->write($category_status_price_details);
                 $category_price_status = is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1;
-                
-                if(isset($product_info) && count($product_info) > 0 && $category_price_status == 1) {
-                $log->write('store details');
-                $log->write($store_data);
-                $log->write('store details');
-                $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+
+                if (isset($product_info) && count($product_info) > 0 && $category_price_status == 1) {
+                    $log->write('store details');
+                    $log->write($store_data);
+                    $log->write('store details');
+                    $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
                 }
             }
         }
@@ -614,8 +605,7 @@ class ControllerAccountWishList extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function addWishlistProductToCartByProduct()
-    {
+    public function addWishlistProductToCartByProduct() {
         $log = new Log('error.log');
         $log->write('Wish List Products 2');
         $log->write($this->request->post['wishlist_id']);
@@ -640,7 +630,7 @@ class ControllerAccountWishList extends Controller
             $log->write('Store Details123');
             $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
             //$this->model_account_wishlist->deleteWishlistProduct($wishlist_id, $product_id);
-        //Items should remain in whishlist
+            //Items should remain in whishlist
         }
 
         $this->session->data['success'] = $data['text_cart_success'];
@@ -651,8 +641,7 @@ class ControllerAccountWishList extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function createWishlist()
-    {
+    public function createWishlist() {
         $this->load->language('account/wishlist');
 
         $data['text_success_added_in_list'] = $this->language->get('text_success_added_in_list');
@@ -703,8 +692,7 @@ class ControllerAccountWishList extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function addProductToWishlist()
-    {
+    public function addProductToWishlist() {
         $this->load->language('account/wishlist');
 
         $data['text_success_added_in_list'] = $this->language->get('text_success_added_in_list');
@@ -724,7 +712,6 @@ class ControllerAccountWishList extends Controller
 
         // if ( $this->customer->isLogged()) {
         //     $lists = $this->model_assets_category->getUserLists();
-
         // foreach ($lists as $list) {
         //     $this->model_account_wishlist->deleteWishlistProduct($list['wishlist_id'],$this->request->post['listproductId']);
         // }
@@ -770,8 +757,7 @@ class ControllerAccountWishList extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function addProdToWishlist($product_id)
-    {
+    public function addProdToWishlist($product_id) {
         $this->load->language('account/wishlist');
 
         $data['text_success_added_in_list'] = $this->language->get('text_success_added_in_list');
@@ -790,7 +776,6 @@ class ControllerAccountWishList extends Controller
 
         // if ( $this->customer->isLogged()) {
         //     $lists = $this->model_assets_category->getUserLists();
-
         //     foreach ($lists as $list) {
         //         $this->model_account_wishlist->deleteWishlistProduct($list['wishlist_id'],$this->request->post['listproductId']);
         //     }
@@ -836,16 +821,13 @@ class ControllerAccountWishList extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function deleteWishlistProductByID()
-    {
+    public function deleteWishlistProductByID() {
         $data['status'] = false;
 
         $log = new Log('error.log');
 
         // $wishlist_id = isset($this->request->post['wishlist_id'])?$this->request->post['wishlist_id']:null;
-
         // $product_id = isset($this->request->post['product_id'])?$this->request->post['product_id']:null;
-
         // if($wishlist_id && $product_id) {
         if ($this->request->get['listproductId']) {
             $this->load->model('account/wishlist');
@@ -859,27 +841,26 @@ class ControllerAccountWishList extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-
-
-    public function addAvailableOrderProducts()
-    {
+    public function addAvailableOrderProducts() {
         $this->load->language('account/wishlist');
         $this->load->model('account/wishlist');
+        $this->load->model('account/order');
 
         $data['text_cart_success'] = $this->language->get('text_cart_success');
         $log = new Log('error.log');
         // echo "<pre>";print_r($this->request->post['order_id']);die;
         // $wishlist_id = $this->request->post['wishlist_id'];
-         $order_id = $this->request->post['order_id'];
+        $order_id = $this->request->post['order_id'];
         $log->write($this->request->post['order_id']);
         $log->write('Order List Products');
 
+        $order_details = $this->model_account_order->getOrderDetailsById($order_id);
         $Orderlist_products = $this->model_account_wishlist->getAvailableOrderedProducts($order_id);
         $log->write($Orderlist_products);
         $log->write('Order List Products obtained');
 
         if (is_array($Orderlist_products) && count($Orderlist_products) > 0) {
-        $log->write('Order List Products inner');
+            $log->write('Order List Products inner');
 
 
             foreach ($Orderlist_products as $Orderlist_product) {
@@ -887,19 +868,21 @@ class ControllerAccountWishList extends Controller
                 $log->write($Orderlist_product['product_id']);
                 $log->write('Order List Products 2');
                 $this->load->model('assets/product');
-                $store_data = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], 75);
+                $store_data = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], $order_details['store_id']);
                 $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
-                
+
                 $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
                 $log = new Log('error.log');
                 $log->write($category_status_price_details);
-                $category_price_status = is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1;
-                
-                if(isset($product_info) && count($product_info) > 0 && $category_price_status == 1) {
-                $log->write('store details');
-                $log->write($store_data);
-                $log->write('store details');
-                $this->cart->addCustom($store_data['product_store_id'], $Orderlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+                $category_price_status = is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) && $category_status_price_details['status'] == 1 ? $category_status_price_details['status'] : 0;
+
+                if (isset($product_info) && count($product_info) > 0 && $category_price_status == 1) {
+                    $log->write('store details');
+                    $log->write($store_data);
+                    $log->write('store details');
+                    $this->cart->addCustom($store_data['product_store_id'], $Orderlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+                } else {
+                    $this->cart->addCustom($store_data['product_store_id'], $Orderlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
                 }
             }
         }
@@ -911,4 +894,5 @@ class ControllerAccountWishList extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }
+
 }

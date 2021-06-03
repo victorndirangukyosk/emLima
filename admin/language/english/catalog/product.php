@@ -148,6 +148,7 @@ $_['error_model'] = 'Product Model must be greater than 1 and less than 64 chara
 $_['error_seo_url'] = 'SEO URL already in use!';
 $_['error_price'] = 'Price is required';
 $_['error_product_store'] = 'Store is required';
+$_['error_merchant'] = 'Vendor is required';
 $_['error_product_id'] = 'Please Select any general Product required';
 
 $_['no_variation'] = 'No variation present of this product';

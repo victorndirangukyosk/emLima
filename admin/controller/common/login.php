@@ -24,7 +24,7 @@ class ControllerCommonLogin extends Controller {
             //echo "<pre>";print_r($this->request->post);die;
 
             $this->session->data['token'] = md5(mt_rand());
-            $this->session->data['admintoken'] =  $this->session->data['token'];//this name is used in API
+            $this->session->data['admintoken'] = $this->session->data['token']; //this name is used in API
 
             if (!empty($this->request->post['lang'])) {
                 $this->session->data['language'] = $this->request->post['lang'];
@@ -69,6 +69,8 @@ class ControllerCommonLogin extends Controller {
 
             if ($shopper_group_id == $this->user->getGroupId()) {
                 $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
+            } elseif ($this->user->getGroupId() == 21) {
+                $this->response->redirect($this->url->link('setting/jobposition', 'token=' . $this->session->data['token'], 'SSL'));
             } elseif (isset($this->request->post['redirect']) && (0 === strpos($this->request->post['redirect'], HTTP_SERVER) || 0 === strpos($this->request->post['redirect'], HTTPS_SERVER))) {
                 $this->response->redirect($this->request->post['redirect'] . '&token=' . $this->session->data['token']);
             } else {

@@ -1,13 +1,12 @@
 <?php
 
-class ControllerApiCustomerProducts extends Controller
-{
+class ControllerApiCustomerProducts extends Controller {
+
     private $error = [];
 
-    public function getProducts()
-    {
+    public function getProducts() {
         $json = [];
-        
+
         if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
             $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
         } else {
@@ -35,7 +34,7 @@ class ControllerApiCustomerProducts extends Controller
 
         $this->load->model('tool/image');
 
-        if (/*isset($this->request->get['page']) &&*/isset($this->request->get['store_id']) && isset($this->request->get['category'])) {
+        if (/* isset($this->request->get['page']) && */isset($this->request->get['store_id']) && isset($this->request->get['category'])) {
             if (isset($this->request->get['filter'])) {
                 $filter = $this->request->get['filter'];
             } else {
@@ -233,63 +232,63 @@ class ControllerApiCustomerProducts extends Controller
                         $url .= '&limit=' . $this->request->get['limit'];
                     }
 
-                    /*$data['sorts'] = array();
+                    /* $data['sorts'] = array();
 
-                    $data['sorts'][] = array(
-                        'text' => $this->language->get('text_default'),
-                        'value' => 'p.sort_order-ASC',
-                        'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=p.sort_order&order=ASC' . $url)
-                    );
+                      $data['sorts'][] = array(
+                      'text' => $this->language->get('text_default'),
+                      'value' => 'p.sort_order-ASC',
+                      'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=p.sort_order&order=ASC' . $url)
+                      );
 
-                    $data['sorts'][] = array(
-                        'text' => $this->language->get('text_name_asc'),
-                        'value' => 'pd.name-ASC',
-                        'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=pd.name&order=ASC' . $url)
-                    );
+                      $data['sorts'][] = array(
+                      'text' => $this->language->get('text_name_asc'),
+                      'value' => 'pd.name-ASC',
+                      'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=pd.name&order=ASC' . $url)
+                      );
 
-                    $data['sorts'][] = array(
-                        'text' => $this->language->get('text_name_desc'),
-                        'value' => 'pd.name-DESC',
-                        'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=pd.name&order=DESC' . $url)
-                    );
+                      $data['sorts'][] = array(
+                      'text' => $this->language->get('text_name_desc'),
+                      'value' => 'pd.name-DESC',
+                      'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=pd.name&order=DESC' . $url)
+                      );
 
-                    $data['sorts'][] = array(
-                        'text' => $this->language->get('text_price_asc'),
-                        'value' => 'p.price-ASC',
-                        'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=p.price&order=ASC' . $url)
-                    );
+                      $data['sorts'][] = array(
+                      'text' => $this->language->get('text_price_asc'),
+                      'value' => 'p.price-ASC',
+                      'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=p.price&order=ASC' . $url)
+                      );
 
-                    $data['sorts'][] = array(
-                        'text' => $this->language->get('text_price_desc'),
-                        'value' => 'p.price-DESC',
-                        'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=p.price&order=DESC' . $url)
-                    );
+                      $data['sorts'][] = array(
+                      'text' => $this->language->get('text_price_desc'),
+                      'value' => 'p.price-DESC',
+                      'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=p.price&order=DESC' . $url)
+                      );
 
-                    if ($this->config->get('config_review_status')) {
-                        $data['sorts'][] = array(
-                            'text' => $this->language->get('text_rating_desc'),
-                            'value' => 'rating-DESC',
-                            'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=rating&order=DESC' . $url)
-                        );
+                      if ($this->config->get('config_review_status')) {
+                      $data['sorts'][] = array(
+                      'text' => $this->language->get('text_rating_desc'),
+                      'value' => 'rating-DESC',
+                      'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=rating&order=DESC' . $url)
+                      );
 
-                        $data['sorts'][] = array(
-                            'text' => $this->language->get('text_rating_asc'),
-                            'value' => 'rating-ASC',
-                            'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=rating&order=ASC' . $url)
-                        );
-                    }
+                      $data['sorts'][] = array(
+                      'text' => $this->language->get('text_rating_asc'),
+                      'value' => 'rating-ASC',
+                      'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=rating&order=ASC' . $url)
+                      );
+                      }
 
-                    $data['sorts'][] = array(
-                        'text' => $this->language->get('text_model_asc'),
-                        'value' => 'p.model-ASC',
-                        'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=p.model&order=ASC' . $url)
-                    );
+                      $data['sorts'][] = array(
+                      'text' => $this->language->get('text_model_asc'),
+                      'value' => 'p.model-ASC',
+                      'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=p.model&order=ASC' . $url)
+                      );
 
-                    $data['sorts'][] = array(
-                        'text' => $this->language->get('text_model_desc'),
-                        'value' => 'p.model-DESC',
-                        'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=p.model&order=DESC' . $url)
-                    );*/
+                      $data['sorts'][] = array(
+                      'text' => $this->language->get('text_model_desc'),
+                      'value' => 'p.model-DESC',
+                      'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . '&sort=p.model&order=DESC' . $url)
+                      ); */
 
                     $url = '';
 
@@ -305,19 +304,19 @@ class ControllerApiCustomerProducts extends Controller
                         $url .= '&order=' . $this->request->get['order'];
                     }
 
-                    /*$data['limits'] = array();
+                    /* $data['limits'] = array();
 
-                    $limits = array_unique(array($this->config->get('config_app_product_limit'), 25, 50, 75, 100));
+                      $limits = array_unique(array($this->config->get('config_app_product_limit'), 25, 50, 75, 100));
 
-                    sort($limits);
+                      sort($limits);
 
-                    foreach ($limits as $value) {
-                        $data['limits'][] = array(
-                            'text' => $value,
-                            'value' => $value,
-                            'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . $url . '&limit=' . $value),
-                        );
-                    }*/
+                      foreach ($limits as $value) {
+                      $data['limits'][] = array(
+                      'text' => $value,
+                      'value' => $value,
+                      'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . $url . '&limit=' . $value),
+                      );
+                      } */
 
                     $data['sort'] = $sort;
                     $data['order'] = $order;
@@ -357,17 +356,16 @@ class ControllerApiCustomerProducts extends Controller
 
             /* $json['status'] = 10010;
 
-            $json['message'][] = ['type' =>  $this->language->get('text_data_missing') , 'body' =>  $this->language->get('text_data_missing_detail') ];
+              $json['message'][] = ['type' =>  $this->language->get('text_data_missing') , 'body' =>  $this->language->get('text_data_missing_detail') ];
 
-            http_response_code(400);
-            */
+              http_response_code(400);
+             */
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getProductCollectionProducts()
-    {
+    public function getProductCollectionProducts() {
         $json = [];
 
         $this->load->language('api/products');
@@ -476,10 +474,10 @@ class ControllerApiCustomerProducts extends Controller
 
                 $data['pagination'] = $pagination->render();
 
-                /*print_r($product_total."ss");
-                print_r($page."ss");
-                print_r($limit."ss");
-                echo "<pre>";print_r($data['pagination']);die;*/
+                /* print_r($product_total."ss");
+                  print_r($page."ss");
+                  print_r($limit."ss");
+                  echo "<pre>";print_r($data['pagination']);die; */
                 $data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
 
                 $data['total_product'] = $product_total;
@@ -505,8 +503,7 @@ class ControllerApiCustomerProducts extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getCollectionProducts($filter_data)
-    {
+    public function getCollectionProducts($filter_data) {
         $this->load->model('assets/product');
         $this->load->model('tool/image');
 
@@ -584,8 +581,8 @@ class ControllerApiCustomerProducts extends Controller
             }
 
             $data['products'][] = [
-                /*'key' => $key,
-                'qty_in_cart' => $qty_in_cart,*/
+                /* 'key' => $key,
+                  'qty_in_cart' => $qty_in_cart, */
                 'variations' => $this->model_assets_product->getApiVariations($result['product_store_id']),
                 'store_product_variation_id' => 0,
                 'product_id' => $result['product_id'],
@@ -606,15 +603,13 @@ class ControllerApiCustomerProducts extends Controller
                 'rating' => 0,
                 'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                 'produce_type' => $result['produce_type'],
-
             ];
         }
 
         return $data['products'];
     }
 
-    public function addProductSearch()
-    {
+    public function addProductSearch() {
         $json = [];
 
         $log = new Log('error.log');
@@ -733,42 +728,41 @@ class ControllerApiCustomerProducts extends Controller
                 $this->load->model('assets/category');
 
                 //$this->config->set('config_language_id',2);
-
                 // 3 Level Category Search
-                /*$data['categories'] = array();
+                /* $data['categories'] = array();
 
-                $categories_1 = $this->model_assets_category->getCategories(0);
+                  $categories_1 = $this->model_assets_category->getCategories(0);
 
-                foreach ($categories_1 as $category_1) {
-                    $level_2_data = array();
+                  foreach ($categories_1 as $category_1) {
+                  $level_2_data = array();
 
-                    $categories_2 = $this->model_assets_category->getCategories($category_1['category_id']);
+                  $categories_2 = $this->model_assets_category->getCategories($category_1['category_id']);
 
-                    foreach ($categories_2 as $category_2) {
-                        $level_3_data = array();
+                  foreach ($categories_2 as $category_2) {
+                  $level_3_data = array();
 
-                        $categories_3 = $this->model_assets_category->getCategories($category_2['category_id']);
+                  $categories_3 = $this->model_assets_category->getCategories($category_2['category_id']);
 
-                        foreach ($categories_3 as $category_3) {
-                            $level_3_data[] = array(
-                                'category_id' => $category_3['category_id'],
-                                'name' => $category_3['name'],
-                            );
-                        }
+                  foreach ($categories_3 as $category_3) {
+                  $level_3_data[] = array(
+                  'category_id' => $category_3['category_id'],
+                  'name' => $category_3['name'],
+                  );
+                  }
 
-                        $level_2_data[] = array(
-                            'category_id' => $category_2['category_id'],
-                            'name' => $category_2['name'],
-                            'children' => $level_3_data
-                        );
-                    }
+                  $level_2_data[] = array(
+                  'category_id' => $category_2['category_id'],
+                  'name' => $category_2['name'],
+                  'children' => $level_3_data
+                  );
+                  }
 
-                    $data['categories'][] = array(
-                        'category_id' => $category_1['category_id'],
-                        'name' => $category_1['name'],
-                        'children' => $level_2_data
-                    );
-                }*/
+                  $data['categories'][] = array(
+                  'category_id' => $category_1['category_id'],
+                  'name' => $category_1['name'],
+                  'children' => $level_2_data
+                  );
+                  } */
 
                 $data['products'] = [];
 
@@ -869,12 +863,12 @@ class ControllerApiCustomerProducts extends Controller
                             $special_price = $price;
                         }
 
-                        /*$temp['name'] = htmlspecialchars_decode($tempProduct['name'])." - ".$tempProduct['unit'];
-            		//$temp['name'] = $tempProduct['name']." - ".$tempProduct['unit'];
-            		$temp['unit'] = $tempProduct['unit'];
-            		$temp['only_name'] = htmlspecialchars_decode($tempProduct['name']);
-            		$temp['product_id'] = $tempProduct['product_id'];
-            		$temp['product_store_id'] = $tempProduct['product_store_id'];*/
+                        /* $temp['name'] = htmlspecialchars_decode($tempProduct['name'])." - ".$tempProduct['unit'];
+                          //$temp['name'] = $tempProduct['name']." - ".$tempProduct['unit'];
+                          $temp['unit'] = $tempProduct['unit'];
+                          $temp['only_name'] = htmlspecialchars_decode($tempProduct['name']);
+                          $temp['product_id'] = $tempProduct['product_id'];
+                          $temp['product_store_id'] = $tempProduct['product_store_id']; */
 
                         $data['products'][] = [
                             'key' => $key,
@@ -893,14 +887,12 @@ class ControllerApiCustomerProducts extends Controller
                             'percent_off' => number_format($percent_off, 0),
                             'left_symbol_currency' => $this->currency->getSymbolLeft(),
                             'right_symbol_currency' => $this->currency->getSymbolRight(),
-
                             'tax' => $result['tax_percentage'],
                             //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                             'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                             'rating' => 0,
                             'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                             'produce_type' => $result['produce_type'],
-
                         ];
                     }
 
@@ -960,19 +952,19 @@ class ControllerApiCustomerProducts extends Controller
                         $url .= '&order=' . $this->request->post['order'];
                     }
 
-                    /*$data['limits'] = array();
+                    /* $data['limits'] = array();
 
-                    $limits = array_unique(array($this->config->get('config_app_product_limit'), 25, 50, 75, 100));
+                      $limits = array_unique(array($this->config->get('config_app_product_limit'), 25, 50, 75, 100));
 
-                    sort($limits);
+                      sort($limits);
 
-                    foreach ($limits as $value) {
-                        $data['limits'][] = array(
-                            'text' => $value,
-                            'value' => $value,
-                            'href' => $this->url->link('product/search', $url . '&limit=' . $value)
-                        );
-                    }*/
+                      foreach ($limits as $value) {
+                      $data['limits'][] = array(
+                      'text' => $value,
+                      'value' => $value,
+                      'href' => $this->url->link('product/search', $url . '&limit=' . $value)
+                      );
+                      } */
 
                     $url = '';
 
@@ -1051,8 +1043,7 @@ class ControllerApiCustomerProducts extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getProductSearch()
-    {
+    public function getProductSearch() {
         $json = [];
 
         if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
@@ -1178,42 +1169,41 @@ class ControllerApiCustomerProducts extends Controller
                 $this->load->model('assets/category');
 
                 //$this->config->set('config_language_id',2);
-
                 // 3 Level Category Search
-                /*$data['categories'] = array();
+                /* $data['categories'] = array();
 
-                $categories_1 = $this->model_assets_category->getCategories(0);
+                  $categories_1 = $this->model_assets_category->getCategories(0);
 
-                foreach ($categories_1 as $category_1) {
-                    $level_2_data = array();
+                  foreach ($categories_1 as $category_1) {
+                  $level_2_data = array();
 
-                    $categories_2 = $this->model_assets_category->getCategories($category_1['category_id']);
+                  $categories_2 = $this->model_assets_category->getCategories($category_1['category_id']);
 
-                    foreach ($categories_2 as $category_2) {
-                        $level_3_data = array();
+                  foreach ($categories_2 as $category_2) {
+                  $level_3_data = array();
 
-                        $categories_3 = $this->model_assets_category->getCategories($category_2['category_id']);
+                  $categories_3 = $this->model_assets_category->getCategories($category_2['category_id']);
 
-                        foreach ($categories_3 as $category_3) {
-                            $level_3_data[] = array(
-                                'category_id' => $category_3['category_id'],
-                                'name' => $category_3['name'],
-                            );
-                        }
+                  foreach ($categories_3 as $category_3) {
+                  $level_3_data[] = array(
+                  'category_id' => $category_3['category_id'],
+                  'name' => $category_3['name'],
+                  );
+                  }
 
-                        $level_2_data[] = array(
-                            'category_id' => $category_2['category_id'],
-                            'name' => $category_2['name'],
-                            'children' => $level_3_data
-                        );
-                    }
+                  $level_2_data[] = array(
+                  'category_id' => $category_2['category_id'],
+                  'name' => $category_2['name'],
+                  'children' => $level_3_data
+                  );
+                  }
 
-                    $data['categories'][] = array(
-                        'category_id' => $category_1['category_id'],
-                        'name' => $category_1['name'],
-                        'children' => $level_2_data
-                    );
-                }*/
+                  $data['categories'][] = array(
+                  'category_id' => $category_1['category_id'],
+                  'name' => $category_1['name'],
+                  'children' => $level_2_data
+                  );
+                  } */
 
                 $data['products'] = [];
 
@@ -1437,19 +1427,19 @@ class ControllerApiCustomerProducts extends Controller
                         $url .= '&order=' . $this->request->get['order'];
                     }
 
-                    /*$data['limits'] = array();
+                    /* $data['limits'] = array();
 
-                    $limits = array_unique(array($this->config->get('config_app_product_limit'), 25, 50, 75, 100));
+                      $limits = array_unique(array($this->config->get('config_app_product_limit'), 25, 50, 75, 100));
 
-                    sort($limits);
+                      sort($limits);
 
-                    foreach ($limits as $value) {
-                        $data['limits'][] = array(
-                            'text' => $value,
-                            'value' => $value,
-                            'href' => $this->url->link('product/search', $url . '&limit=' . $value)
-                        );
-                    }*/
+                      foreach ($limits as $value) {
+                      $data['limits'][] = array(
+                      'text' => $value,
+                      'value' => $value,
+                      'href' => $this->url->link('product/search', $url . '&limit=' . $value)
+                      );
+                      } */
 
                     $url = '';
 
@@ -1528,8 +1518,7 @@ class ControllerApiCustomerProducts extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getProductsFn($filter_data, $store_id)
-    {
+    public function getProductsFn($filter_data, $store_id) {
         $this->load->model('assets/product');
         $this->load->model('tool/image');
 
@@ -1628,21 +1617,21 @@ class ControllerApiCustomerProducts extends Controller
                 $special_price = $price;
             }
 
-            /*$productNames = array_column($data['products'], 'name');
-            if (array_search($result['name'], $productNames) !== false) {
-                // Add variation to existing product
-                $productIndex = array_search($result['name'], $productNames);
-                // TODO: Check for product variation duplicates
-                $data['products'][$productIndex]['variations'][] = array(
-                    'variation_id' => $result['product_store_id'],
-                    'unit' => $result['unit'],
-                    'weight' => floatval($result['weight']),
-                    'price' => $price,
-                    'special' => $special_price,
-                    'percent_off' => number_format($percent_off,0),
-                    'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
-                );
-            } else { */
+            /* $productNames = array_column($data['products'], 'name');
+              if (array_search($result['name'], $productNames) !== false) {
+              // Add variation to existing product
+              $productIndex = array_search($result['name'], $productNames);
+              // TODO: Check for product variation duplicates
+              $data['products'][$productIndex]['variations'][] = array(
+              'variation_id' => $result['product_store_id'],
+              'unit' => $result['unit'],
+              'weight' => floatval($result['weight']),
+              'price' => $price,
+              'special' => $special_price,
+              'percent_off' => number_format($percent_off,0),
+              'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
+              );
+              } else { */
             $formatted = false;
             if (isset($filter_data['group_by']) && ('name' == $filter_data['group_by'])) {
                 $formatted = true;
@@ -1672,28 +1661,25 @@ class ControllerApiCustomerProducts extends Controller
                 'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                 'variations' => $this->model_assets_product->getProductVariations($name, $formatted),
                 'produce_type' => $result['produce_type'],
-
-                /*'variations' => array(
-                    array(
-                        'variation_id' => $result['product_store_id'],
-                        'unit' => $result['unit'],
-                        'weight' => floatval($result['weight']),
-                        'price' => $price,
-                        'special' => $special_price,
-                        'percent_off' => number_format($percent_off,0),
-                        'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
-                    )
-                )*/
+                    /* 'variations' => array(
+                      array(
+                      'variation_id' => $result['product_store_id'],
+                      'unit' => $result['unit'],
+                      'weight' => floatval($result['weight']),
+                      'price' => $price,
+                      'special' => $special_price,
+                      'percent_off' => number_format($percent_off,0),
+                      'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
+                      )
+                      ) */
             ];
-            /*}*/
+            /* } */
         }
 
         return $data['products'];
     }
 
-
-    public function getProductsFnNew($filter_data, $store_id)
-    {
+    public function getProductsFnNew($filter_data, $store_id) {
         $this->load->model('assets/product');
         $this->load->model('tool/image');
 
@@ -1792,21 +1778,21 @@ class ControllerApiCustomerProducts extends Controller
                 $special_price = $price;
             }
 
-            /*$productNames = array_column($data['products'], 'name');
-            if (array_search($result['name'], $productNames) !== false) {
-                // Add variation to existing product
-                $productIndex = array_search($result['name'], $productNames);
-                // TODO: Check for product variation duplicates
-                $data['products'][$productIndex]['variations'][] = array(
-                    'variation_id' => $result['product_store_id'],
-                    'unit' => $result['unit'],
-                    'weight' => floatval($result['weight']),
-                    'price' => $price,
-                    'special' => $special_price,
-                    'percent_off' => number_format($percent_off,0),
-                    'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
-                );
-            } else { */
+            /* $productNames = array_column($data['products'], 'name');
+              if (array_search($result['name'], $productNames) !== false) {
+              // Add variation to existing product
+              $productIndex = array_search($result['name'], $productNames);
+              // TODO: Check for product variation duplicates
+              $data['products'][$productIndex]['variations'][] = array(
+              'variation_id' => $result['product_store_id'],
+              'unit' => $result['unit'],
+              'weight' => floatval($result['weight']),
+              'price' => $price,
+              'special' => $special_price,
+              'percent_off' => number_format($percent_off,0),
+              'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
+              );
+              } else { */
             $formatted = false;
             if (isset($filter_data['group_by']) && ('name' == $filter_data['group_by'])) {
                 $formatted = true;
@@ -1819,6 +1805,7 @@ class ControllerApiCustomerProducts extends Controller
                 'product_id' => $result['product_id'],
                 'model' => $result['model'],
                 'product_store_id' => $result['product_store_id'],
+                'store_id' => $result['store_id'],
                 'default_variation_name' => $result['default_variation_name'],
                 'thumb' => $image,
                 'name' => htmlspecialchars_decode($name),
@@ -1836,28 +1823,25 @@ class ControllerApiCustomerProducts extends Controller
                 'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                 'variations' => $this->model_assets_product->getProductVariationsAPI($name, $formatted),
                 'produce_type' => $result['produce_type'],
-
-                /*'variations' => array(
-                    array(
-                        'variation_id' => $result['product_store_id'],
-                        'unit' => $result['unit'],
-                        'weight' => floatval($result['weight']),
-                        'price' => $price,
-                        'special' => $special_price,
-                        'percent_off' => number_format($percent_off,0),
-                        'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
-                    )
-                )*/
+                    /* 'variations' => array(
+                      array(
+                      'variation_id' => $result['product_store_id'],
+                      'unit' => $result['unit'],
+                      'weight' => floatval($result['weight']),
+                      'price' => $price,
+                      'special' => $special_price,
+                      'percent_off' => number_format($percent_off,0),
+                      'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity']
+                      )
+                      ) */
             ];
-            /*}*/
+            /* } */
         }
 
         return $data['products'];
     }
 
-
-    public function getProductDetails($args = [])
-    {
+    public function getProductDetails($args = []) {
         //above should be set once user enters a store
 
         $json = [];
@@ -1874,6 +1858,10 @@ class ControllerApiCustomerProducts extends Controller
         if (isset($this->request->get['product_store_id']) && isset($this->request->get['store_id'])) {
             $product_store_id = $this->request->get['product_store_id'];
             $store_id = $this->request->get['store_id'];
+            $log = new Log('error.log');
+            $log->write('store_id');
+            $log->write($store_id);
+            $log->write('store_id');
 
             $this->load->model('assets/product');
 
@@ -1895,25 +1883,25 @@ class ControllerApiCustomerProducts extends Controller
 
                 //$product_info['special_price'] = 10;
 
-                /*$data['images'] = array();
+                /* $data['images'] = array();
 
-                $results = $this->model_assets_product->getProductImages( $product_info['product_id'] );
+                  $results = $this->model_assets_product->getProductImages( $product_info['product_id'] );
 
-                foreach ( $results as $result ) {
+                  foreach ( $results as $result ) {
 
-                    if ( file_exists( DIR_IMAGE .$result['image'] ) ) {
-                        $popup = $this->model_tool_image->resize($result['image'], 500, 500 );
-                        $thumb = $this->model_tool_image->resize($result['image'], 500, 500 );
-                    } else {
-                        $popup = $this->model_tool_image->resize('placeholder.png', 500, 500 );
-                        $thumb = $this->model_tool_image->resize('placeholder.png', 500, 500 );
-                    }
+                  if ( file_exists( DIR_IMAGE .$result['image'] ) ) {
+                  $popup = $this->model_tool_image->resize($result['image'], 500, 500 );
+                  $thumb = $this->model_tool_image->resize($result['image'], 500, 500 );
+                  } else {
+                  $popup = $this->model_tool_image->resize('placeholder.png', 500, 500 );
+                  $thumb = $this->model_tool_image->resize('placeholder.png', 500, 500 );
+                  }
 
-                    $data['images'][] = array(
-                        'popup' => $popup,
-                        'thumb' => $thumb
-                    );
-                }*/
+                  $data['images'][] = array(
+                  'popup' => $popup,
+                  'thumb' => $thumb
+                  );
+                  } */
                 //get qty in cart
                 $key = base64_encode(serialize(['product_store_id' => (int) $product_info['product_store_id'], 'store_id' => $store_id]));
 
@@ -1967,9 +1955,9 @@ class ControllerApiCustomerProducts extends Controller
                     $percent_off = (($o_price - $s_price) / $o_price) * 100;
                 }
 
-                /*if(is_null($product_info['special_price'])) {
-                    $product_info['special_price'] = 0;
-                }*/
+                /* if(is_null($product_info['special_price'])) {
+                  $product_info['special_price'] = 0;
+                  } */
                 if (is_null($product_info['special_price']) || !($product_info['special_price'] + 0)) {
                     $product_info['special_price'] = $product_info['price'];
                 }
@@ -1987,7 +1975,6 @@ class ControllerApiCustomerProducts extends Controller
                     'product_info' => $product_info,
                     'left_symbol_currency' => $this->currency->getSymbolLeft(),
                     'right_symbol_currency' => $this->currency->getSymbolRight(),
-
                     'percent_off' => number_format($percent_off, 0),
                     'default_variation_name' => $product_info['default_variation_name'],
                     'variations' => $this->model_assets_product->getApiVariations($product_info['product_store_id']),
@@ -2025,8 +2012,7 @@ class ControllerApiCustomerProducts extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getProductImages($args = [])
-    {
+    public function getProductImages($args = []) {
         //above should be set once user enters a store
 
         $json = [];
@@ -2100,8 +2086,7 @@ class ControllerApiCustomerProducts extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getSearchProductAutocomplete($args = [])
-    {
+    public function getSearchProductAutocomplete($args = []) {
         $json = [];
 
         $this->load->language('api/errors');
@@ -2152,8 +2137,7 @@ class ControllerApiCustomerProducts extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addSearchProductAutocomplete()
-    {
+    public function addSearchProductAutocomplete() {
         $json = [];
 
         $this->load->language('api/errors');
@@ -2206,9 +2190,7 @@ class ControllerApiCustomerProducts extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getProductAutocomplete($data = [])
-
-    {
+    public function getProductAutocomplete($data = []) {
         $conn = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 
         if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
@@ -2232,12 +2214,12 @@ class ControllerApiCustomerProducts extends Controller
             $sql .= ' AND ps.store_id="' . $data['filter_store'] . '"';
         }
 
-        /*if ($this->user->isVendor()) {
-            // $sql .= ' AND p.vendor_id="'.$this->user->getId().'"';
-        }else{
-            // $sql .= ' AND p.vendor_id!="0"';
-        }
-        */
+        /* if ($this->user->isVendor()) {
+          // $sql .= ' AND p.vendor_id="'.$this->user->getId().'"';
+          }else{
+          // $sql .= ' AND p.vendor_id!="0"';
+          }
+         */
 
         if (!empty($data['filter_name'])) {
             $sql .= " AND pd.name LIKE '%" . $data['filter_name'] . "%'";
@@ -2362,7 +2344,301 @@ class ControllerApiCustomerProducts extends Controller
         $this->response->setOutput(json_encode($resjson));
         //echo '<pre>';print_r($json);exit;
         //echo $sql;ext;
-
         // $query = $this->db->query($sql);
     }
+
+    public function getProductID($data = []) {//this is temp for demo, need to modify according getProductAutocomplete
+        try {
+            $conn = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+
+            // if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
+            //     $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
+            // } else {
+            //     $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id'] . "' AND status = '1'");
+            // }
+            // $customercategory_new = $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+            // $sql = 'SELECT p.*,pd.*,p2c.product_id product_id2 FROM ' . DB_PREFIX . 'product p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (p.product_id = p2c.product_id)';
+            $sql = 'SELECT p.*,pd.*,p2c.product_id product_id2,ps.product_store_id FROM ' . DB_PREFIX . 'product p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (p.product_id = p2c.product_id)';
+
+            // if (!empty($data['filter_store'])) 
+            {
+                $sql .= ' LEFT JOIN `' . DB_PREFIX . 'product_to_store` ps on ps.product_id = p.product_id';
+            }
+
+            $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
+
+            if (!empty($data['filter_store'])) {
+                $sql .= ' AND ps.store_id="' . $data['filter_store'] . '"';
+            }
+
+            // /*if ($this->user->isVendor()) {
+            //     // $sql .= ' AND p.vendor_id="'.$this->user->getId().'"';
+            // }else{
+            //     // $sql .= ' AND p.vendor_id!="0"';
+            // }
+            // */
+
+            if (!empty($data['filter_name'])) {
+                $sql .= " AND pd.name LIKE '%" . $data['filter_name'] . "%'";
+            }
+            if (!empty($data['filter_varient'])) {
+                $sql .= " AND p.unit LIKE '%" . $data['filter_varient'] . "%'";
+            }
+
+            // if (!empty($data['filter_model'])) {
+            //     $sql .= " AND p.model LIKE '" . $data['filter_model'] . "%'";
+            // }
+            // if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
+            //     $sql .= " AND p2c.category_id = '" . $data['filter_category'] . "'";
+            // }
+            // if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
+            //     $lGroup = false;
+            //     $sql .= " AND p2c.category_id = '" . $data['filter_category'] . "'";
+            // } else {
+            //     $lGroup = true;
+            // }
+            // if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            //     $sql .= " AND p.status = '" . (int) $data['filter_status'] . "'";
+            // }
+            // //$sql .= " GROUP BY p.product_id";
+            $sql .= " LIMIT 1";
+            // //$sql .= " LIMIT " . (int) $data['start'] . "," . (int) $data['limit'];
+            // echo $sql;exit;
+            // $sort_data = [
+            //     'pd.name',
+            //     'p.model',
+            //     'p.price',
+            //     'p2c.category_id',
+            //     'p.quantity',
+            //     'p.status',
+            //     'p.sort_order',
+            // ];
+            // if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            //     $sql .= ' ORDER BY ' . $data['sort'];
+            // } else {
+            //     $sql .= ' ORDER BY pd.name';
+            // }
+            // if (isset($data['order']) && ('DESC' == $data['order'])) {
+            //     $sql .= ' DESC';
+            // } else {
+            //     $sql .= ' ASC';
+            // }
+
+
+
+            $results = $query = $conn->query($sql);
+
+
+            $disabled_products_string = NULL;
+            // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
+            if (isset($customercategory_new) && $customercategory_new != NULL) {
+                $this->load->model('assets/product');
+                $category_pricing_disabled_products = $this->model_assets_product->getCategoryPriceStatusByCategoryName($customercategory_new, 0);
+                //$log = new Log('error.log');
+                //$log->write('category_pricing_disabled_products');
+                $disabled_products = array_column($category_pricing_disabled_products, 'product_id');
+                $disabled_products_string = implode(',', $disabled_products);
+                //$log->write($disabled_products_string);
+                //$log->write('category_pricing_disabled_products');
+            }
+
+
+            foreach ($results as $result) {
+                $avaialble = 0;
+                if ($disabled_products_string != NULL && isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
+                    // if (in_array($r['product_store_id'], $disabled_products_string)) {
+                    //      continue;
+                    // } 
+
+                    foreach ($disabled_products as $key => $value) {
+                        if ($value == $result['product_id']) {
+                            $avaialble = 1;
+                        }
+                    }
+                }
+                if ($avaialble == 0) {
+                    // echo "<pre>";print_r($disabled_products_string);die;
+                    $result['index'] = $result['name'];
+                    if (strpos($result['name'], '&nbsp;&nbsp;&gt;&nbsp;&nbsp;')) {
+                        $result['name'] = explode('&nbsp;&nbsp;&gt;&nbsp;&nbsp;', $result['name']);
+                        $result['name'] = end($result['name']);
+                    }
+
+                    $json[] = [
+                        'product_store_id' => $result['product_store_id'],
+                        'index' => $result['index'],
+                        'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')) . ' - ' . $result['unit'],
+                        'unit' => $result['unit'],
+                        'product_id' => $result['product_id'],
+                    ];
+                }
+            }
+            $sort_order = [];
+
+            foreach ($json as $key => $value) {
+                $sort_order[$key] = $value['name'];
+            }
+            array_multisort($sort_order, SORT_ASC, $json);
+            $resjson['status'] = 200;
+            $resjson['data'] = $json;
+            $resjson['msg'] = 'Product list fetched succesfully';
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($resjson));
+            //echo '<pre>';print_r($json);exit;
+            //echo $sql;ext;
+            // $query = $this->db->query($sql);
+        } catch (exception $ex) {
+            $json['status'] = 400;
+            $json['data'] = '';
+            $json['msg'] = 'Product data fetching failed';
+        }
+    }
+
+    public function addProductID($data = []) {//this is temp for demo, need to modify according getProductAutocomplete
+        try {
+            $conn = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+
+            // if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
+            //     $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
+            // } else {
+            //     $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id'] . "' AND status = '1'");
+            // }
+            // $customercategory_new = $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+            // $sql = 'SELECT p.*,pd.*,p2c.product_id product_id2 FROM ' . DB_PREFIX . 'product p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (p.product_id = p2c.product_id)';
+            $sql = 'SELECT p.*,pd.*,p2c.product_id product_id2,ps.product_store_id FROM ' . DB_PREFIX . 'product p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (p.product_id = p2c.product_id)';
+
+            // if (!empty($data['filter_store'])) 
+            {
+                $sql .= ' LEFT JOIN `' . DB_PREFIX . 'product_to_store` ps on ps.product_id = p.product_id';
+            }
+
+            $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
+
+            if (!empty($data['filter_store'])) {
+                $sql .= ' AND ps.store_id="' . $data['filter_store'] . '"';
+            }
+
+            // /*if ($this->user->isVendor()) {
+            //     // $sql .= ' AND p.vendor_id="'.$this->user->getId().'"';
+            // }else{
+            //     // $sql .= ' AND p.vendor_id!="0"';
+            // }
+            // */
+
+            if (!empty($data['filter_name'])) {
+                $sql .= " AND pd.name LIKE '%" . $data['filter_name'] . "%'";
+            }
+            if (!empty($data['filter_varient'])) {
+                $sql .= " AND p.unit LIKE '%" . $data['filter_varient'] . "%'";
+            }
+
+            // if (!empty($data['filter_model'])) {
+            //     $sql .= " AND p.model LIKE '" . $data['filter_model'] . "%'";
+            // }
+            // if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
+            //     $sql .= " AND p2c.category_id = '" . $data['filter_category'] . "'";
+            // }
+            // if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
+            //     $lGroup = false;
+            //     $sql .= " AND p2c.category_id = '" . $data['filter_category'] . "'";
+            // } else {
+            //     $lGroup = true;
+            // }
+            // if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            //     $sql .= " AND p.status = '" . (int) $data['filter_status'] . "'";
+            // }
+            // //$sql .= " GROUP BY p.product_id";
+            $sql .= " LIMIT 1";
+            // //$sql .= " LIMIT " . (int) $data['start'] . "," . (int) $data['limit'];
+            // echo $sql;exit;
+            // $sort_data = [
+            //     'pd.name',
+            //     'p.model',
+            //     'p.price',
+            //     'p2c.category_id',
+            //     'p.quantity',
+            //     'p.status',
+            //     'p.sort_order',
+            // ];
+            // if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            //     $sql .= ' ORDER BY ' . $data['sort'];
+            // } else {
+            //     $sql .= ' ORDER BY pd.name';
+            // }
+            // if (isset($data['order']) && ('DESC' == $data['order'])) {
+            //     $sql .= ' DESC';
+            // } else {
+            //     $sql .= ' ASC';
+            // }
+
+
+
+            $results = $query = $conn->query($sql);
+
+
+            $disabled_products_string = NULL;
+            // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
+            if (isset($customercategory_new) && $customercategory_new != NULL) {
+                $this->load->model('assets/product');
+                $category_pricing_disabled_products = $this->model_assets_product->getCategoryPriceStatusByCategoryName($customercategory_new, 0);
+                //$log = new Log('error.log');
+                //$log->write('category_pricing_disabled_products');
+                $disabled_products = array_column($category_pricing_disabled_products, 'product_id');
+                $disabled_products_string = implode(',', $disabled_products);
+                //$log->write($disabled_products_string);
+                //$log->write('category_pricing_disabled_products');
+            }
+
+
+            foreach ($results as $result) {
+                $avaialble = 0;
+                if ($disabled_products_string != NULL && isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
+                    // if (in_array($r['product_store_id'], $disabled_products_string)) {
+                    //      continue;
+                    // } 
+
+                    foreach ($disabled_products as $key => $value) {
+                        if ($value == $result['product_id']) {
+                            $avaialble = 1;
+                        }
+                    }
+                }
+                if ($avaialble == 0) {
+                    // echo "<pre>";print_r($disabled_products_string);die;
+                    $result['index'] = $result['name'];
+                    if (strpos($result['name'], '&nbsp;&nbsp;&gt;&nbsp;&nbsp;')) {
+                        $result['name'] = explode('&nbsp;&nbsp;&gt;&nbsp;&nbsp;', $result['name']);
+                        $result['name'] = end($result['name']);
+                    }
+
+                    $json[] = [
+                        'product_store_id' => $result['product_store_id'],
+                        'index' => $result['index'],
+                        'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')) . ' - ' . $result['unit'],
+                        'unit' => $result['unit'],
+                        'product_id' => $result['product_id'],
+                    ];
+                }
+            }
+            $sort_order = [];
+
+            foreach ($json as $key => $value) {
+                $sort_order[$key] = $value['name'];
+            }
+            array_multisort($sort_order, SORT_ASC, $json);
+            $resjson['status'] = 200;
+            $resjson['data'] = $json;
+            $resjson['msg'] = 'Product list fetched succesfully';
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($resjson));
+            //echo '<pre>';print_r($json);exit;
+            //echo $sql;ext;
+            // $query = $this->db->query($sql);
+        } catch (exception $ex) {
+            $json['status'] = 400;
+            $json['data'] = '';
+            $json['msg'] = 'Product data fetching failed';
+        }
+    }
+
 }

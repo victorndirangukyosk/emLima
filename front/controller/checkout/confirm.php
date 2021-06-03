@@ -840,6 +840,10 @@ class ControllerCheckoutConfirm extends Controller
 
                 $total = 0;
                 $taxes = $this->cart->getTaxes();
+                $taxes_by_store = $this->cart->getTaxesByStore($store_id);
+                $log->write('taxes_by_store');
+                $log->write($taxes_by_store);
+                $log->write('taxes_by_store');
 
                 $this->load->model('extension/extension');
 
@@ -859,7 +863,7 @@ class ControllerCheckoutConfirm extends Controller
                         $log->write('in multiStoreIndex'.$result['code']);
                         $log->write('in loop'.$total);
 
-                        $this->{'model_total_'.$result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes, $store_id);
+                        $this->{'model_total_'.$result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
                     }
                 }
 

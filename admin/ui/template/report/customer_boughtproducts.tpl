@@ -39,6 +39,13 @@
                  <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="Customer Name" id="input-customer" class="form-control" />
               
               </div>
+               
+                   <div class="form-group">
+                <label class="control-label" for="input-product">Product</label>
+
+                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="Product" id="input-customer" class="form-control" />
+              
+              </div>
 
             
             </div>
@@ -125,6 +132,12 @@ $('#button-filter').on('click', function() {
             if (filter_company) {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
+            
+    var filter_name = $('input[name=\'filter_name\']').val();
+
+    if (filter_name) {
+        url += '&filter_name=' + encodeURIComponent(filter_name);
+    }
   
   if(filter_customer==0 && filter_company==0)
   {
@@ -190,6 +203,28 @@ $('#button-filter').on('click', function() {
                 $('input[name=\'filter_customer\']').val(item['label']);
             }
         });
+   
+    $('input[name=\'filter_name\']').autocomplete({
+
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=report/customer_boughtproducts/product_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company=' +$companyName,
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['product_store_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'filter_name\']').val(item['label']);
+                $('input[name=\'filter_name\']').attr('product_id',item['value']);
+            }
+    });  
 
 
    $('input[name=\'filter_company\']').autocomplete({
@@ -234,6 +269,12 @@ function excel() {
             if (filter_company) {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
+    
+    var filter_name = $('input[name=\'filter_name\']').val();
+
+    if (filter_name) {
+        url += '&filter_name=' + encodeURIComponent(filter_name);
+    }
   
   if(filter_customer==0 && filter_company==0)
   {

@@ -1,5 +1,5 @@
 <ul id="menu">
-    <?php if(!$this->user->isFarmer()) { ?>
+    <?php if(!$this->user->isFarmer() && $this->user->getGroupId() != 21) { ?>
     <li id="dashboard"><a href="<?php echo $dashboard; ?>"><i class="fa fa-dashboard fa-fw"></i> <span><?php echo $text_dashboard; ?></span></a></li>
     <?php } ?>
     <?php
@@ -525,6 +525,10 @@
                     <li><a href="<?php echo $report_customer_orderplaced; ?>"><?php echo $text_report_customer_orderplaced; ?></a></li>
                     <?php } ?>
 
+                     <?php if($preturn_customer_onboarded) { ?>
+                    <li><a href="<?php echo $report_customer_onboarded; ?>"><?php echo $text_report_customer_onboarded; ?></a></li>
+                    <?php } ?>
+
                 </ul>
             </li>
             <?php }?>
@@ -691,7 +695,7 @@
 
 
     <?php
-    if($preturn_testimonial != false || $preturn_setting != false || $preturn_shopper != false || $preturn_shopper_permission != false || $preturn_user != false || $preturn_user_permission != false || $preturn_user_api != false || $preturn_email_template != false) {
+    if($preturn_testimonial != false || $preturn_setting != false || $preturn_shopper != false || $preturn_shopper_permission != false || $preturn_user != false || $preturn_user_permission != false || $preturn_user_api != false || $preturn_email_template != false || $preturn_jobposition != false) {
     ?>
     <li id="system"><a class="parent"><i class="fa fa-cog fa-fw"></i> <span><?php echo $text_system; ?></span></a>
         <ul class="collapse">

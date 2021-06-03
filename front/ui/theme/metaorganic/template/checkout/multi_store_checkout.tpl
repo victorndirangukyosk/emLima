@@ -187,14 +187,24 @@
                             <div id="collapseDeliveryOptions" class="panel-collapse collapse">
                                 <div class="checkout-step-body">
                                     <input type="hidden" value="" name="dates_selected" >
+                                    <?php if(count($store_data) >= 2) { ?>
                                     <?php foreach ($store_data as $os): ?>
-
+                                            <?php if($os['store_id'] == 75) { ?>
                                             <b>     <?php echo $os['name'] ?> </b>
                                             <div class="checkout-payment-mode" id="shipping-method-wrapper-<?php echo $os['store_id'] ?>">
                                                 <!-- shipping method will goes here -->
 
                                             </div>
-                                    <?php endforeach ?> 
+                                    <?php } ?>
+                                    <?php endforeach ?>
+                                    <?php } ?>
+                                    <?php if(count($store_data) <= 1) { ?>
+                                    <b>Kwik Basket</b>
+                                    <div class="checkout-payment-mode" id="shipping-method-wrapper-75">
+                                    <!-- shipping method will goes here -->
+
+                                    </div>
+                                    <?php } ?>
                                     <div class="goto-next">
                                         <div class="row">
                                             <div class="col-md-12 pull-left">
@@ -225,14 +235,22 @@
                             <div id="collapseThree" class="panel-collapse collapse">
                                 <div class="checkout-step-body">
                                     <input type="hidden" value="" name="shipping_time_selected" >
-
+                                    <?php if(count($store_data) >= 2) { ?>
                                     <?php foreach ($store_data as $os): ?>
-
+                                    <?php if($os['store_id'] == 75) { ?>
                                         <b>     <?php echo $os['name'] ?> </b>
                                         <div class="checkout-time-table" id="delivery-time-wrapper-<?php echo $os['store_id'] ?>">
 
-                                        </div>              
-                                    <?php endforeach ?> 
+                                        </div>
+                                    <?php } ?>
+                                    <?php endforeach ?>
+                                    <?php } ?>
+                                    <?php if(count($store_data) <= 1) { ?>
+                                    <b>Kwik Basket</b>
+                                    <div class="checkout-time-table" id="delivery-time-wrapper-75">
+
+                                    </div>
+                                    <?php } ?>
                                     <a class="collapsed btn btn-grey"  style="border-radius:20px" disabled="disabled" role="button" data-toggle="collapse" data-parent="#accordion" href="#" id="payment-next">  <?= $text_next?>  
 
                                     </a>
@@ -1098,6 +1116,7 @@ function loadTotals($city_id) {
 }
 //Load Delivery Time
 function loadDeliveryTime(store_id) {
+    var store_id = 75;
 
     $('#delivery-time-wrapper-'+store_id+'').html('<center><div class="login-loader" style=""></div></center>');
 
@@ -1136,9 +1155,53 @@ function loadDeliveryTime(store_id) {
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
         }
     });
+    //setDeliveryTime();
 }
 
+//Load Delivery Time
+function setDeliveryTime() {
+    var store_id = 75;
 
+    $('#delivery-time-wrapper-'+store_id+'').html('<center><div class="login-loader" style=""></div></center>');
+
+    console.log("loadDeliveryTime");
+    var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value')
+    console.log(shipping_method);
+    console.log("shipping_method");
+    //$('input[id="shipping_method"]').val(shipping_method);
+
+    if($('input[id="shipping_method"]').val() == 'express.express') {
+        $('#timeslot-next-hidden').attr("href","#collapseFour");
+        $('#delivery_time_panel_link').attr("href","");
+
+        $('input[name="shipping_time_selected"]').val('');
+        $('input[name="dates_selected"]').val('');
+    } else {
+        $('#timeslot-next-hidden').attr("href","#collapseThree");
+        $('#delivery_time_panel_link').attr("href","#collapseThree");
+    }
+
+    $.ajax({
+        url: 'index.php?path=checkout/delivery_time/indexNew&shipping_method='+shipping_method+'&store_id='+store_id+'',
+        type: 'get',
+        dataType: 'json',
+        cache: false,
+        async: true,
+        beforeSend: function() {
+            // $('#delivery-time-wrapper-'+store_id+'').html('<div class="text-center"><i class="fa fa-spinner fa-spin checkout-spin"></i></div>');
+        },
+        success: function(json) {
+            $('#select-timeslot').html("Selected : "+ json['dates'][0]+ ', ' + json['selected_slot']);
+            $('.timeslot-selected[data-value="' + json['selected_slot'] + '"][data-date="'+json['dates'][0]+'"]').children().children().prop("checked", true);
+            $('#payment-next').removeAttr('disabled');
+            $('#payment-next').removeClass('btn-grey');
+            $('#payment-next').addClass('btn-default');
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+}
 function getTimeSlot(store_id,date) {
 
     var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value')
@@ -1203,6 +1266,7 @@ if ($shipping_required) {
 ?>
     // Load shipping methods
     function loadShippingMethods(store_id) {
+        var store_id = 75;
         data = {
             store_id : store_id
         }
@@ -1237,7 +1301,8 @@ if ($shipping_required) {
 
         $('#timeslot-next').removeAttr('disabled');
 
-        var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value');
+        //var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value');
+        var shipping_method = $('input[name=\'shipping_method-'+75+'\']:checked').attr('value');
         console.log(shipping_method); 
         if (shipping_method == undefined) {
             shipping_method = 0;
@@ -1504,12 +1569,13 @@ var name="dropoff_notes";
 
     appendDataToSend = '';
      <?php foreach ($store_data as $os):  ?>
-        var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value')
+          var shipping_method = $('input[name=\'shipping_method-'+75+'\']:checked').attr('value')
+        //var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value')
         if (shipping_method.length <= 0) {
             console.log("shipping_method selected");
             $error = true;
         }
-        console.log("shipping-method-wrapper"+shipping_method);
+        console.log("shipping-method-wrapper"+shipping_method+'QWERTY');
 
         /*if($('#delivery-time-wrapper-<?php echo $os["store_id"] ?> ul.list-group input[type=radio]:checked').val() == undefined ) {
             $error = true;
@@ -1770,7 +1836,8 @@ function saveInAddressBook() {
         var bothExpress = true;
 
         <?php foreach ($store_data as $os):  ?>
-            var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value');
+              var shipping_method = $('input[name=\'shipping_method-'+75+'\']:checked').attr('value');
+            //var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value');
 
             console.log("shipping_method"+shipping_method);
             
@@ -1820,7 +1887,7 @@ function saveInAddressBook() {
         $error = false;
 
         <?php foreach ($store_data as $os):  ?>
-            var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value')
+            var shipping_method = $('input[name=\'shipping_method-'+75+'\']:checked').attr('value')
             if (shipping_method.length <= 0) {
                 console.log("shipping_method not selected");
                 $error = true;
