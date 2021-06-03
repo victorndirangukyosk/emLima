@@ -3495,31 +3495,4 @@ class ControllerApiCustomerOrder extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-
-    public function getDeliveryTimeSlot() {
-
-        $json = [];
-        $json['status'] = 200;
-        $json['data'] = [];
-        $json['message'] = [];
-
-        $data['kondutoStatus'] = $this->config->get('config_konduto_status');
-        $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
-
-        if (!$this->customer->isLogged()) {
-            $json['status'] = 10014;
-
-            $json['message'] = 'Unauthorized Session Expired!';
-
-            http_response_code(401);
-        }
-
-        if ($this->customer->isLogged()) {
-            
-        }
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
-
 }
