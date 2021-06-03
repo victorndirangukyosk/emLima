@@ -1155,7 +1155,7 @@ function loadDeliveryTime(store_id) {
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
         }
     });
-    setDeliveryTime();
+    //setDeliveryTime();
 }
 
 //Load Delivery Time
