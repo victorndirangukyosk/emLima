@@ -875,7 +875,7 @@ class ModelAssetsProduct extends Model
         $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
 
         $this->db->group_by('product_to_store.product_store_id');
-        $this->db->where('product_to_store.store_id', $store_id);
+        //$this->db->where('product_to_store.store_id', $store_id);
         //$this->db->where('product_to_store.status', 1);
         $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
         $this->db->where('product_to_store.product_store_id', $product_store_id);
@@ -2518,7 +2518,7 @@ class ModelAssetsProduct extends Model
             $this->db->group_by('product_to_store.product_store_id');
         }
 
-        $this->db->where('product_to_store.store_id', $store_id);
+        //$this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
         //REMOVED QUANTITY CHECK CONDITION
         //$this->db->where('product_to_store.quantity >=', 1);
