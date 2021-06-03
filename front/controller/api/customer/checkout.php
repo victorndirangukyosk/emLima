@@ -1535,9 +1535,10 @@ class ControllerApiCustomerCheckout extends Controller {
             $log->write($data['dates']);
             $log->write($data['timeslots']);
             $data['store'] = $this->getStoreDetail($store_id);
-            $json['dates'] = $data['dates'];
-            $json['timeslots'] = $data['timeslots'];
-            $json['selected_slot'] = $data['selected_slot'];
+            $json['data']['dates'] = $data['dates'];
+            $json['data']['timeslots'] = $data['timeslots'];
+            $json['data']['selected_time_slot'] = $data['selected_slot'];
+            $json['data']['selected_date_slot'] = $data['dates'][0];
 
             $stores = $this->cart->getStores();
             foreach ($stores as $store_id) {
