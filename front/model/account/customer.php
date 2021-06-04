@@ -308,6 +308,12 @@ class ModelAccountCustomer extends Model {
         return $query->row;
     }
 
+    public function getCustomerDeliverychargeFlag($customer_id) {
+        $query = $this->db->query('SELECT delivery_charge FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'");
+
+        return $query->row;
+    }
+
     public function getCustomerOtherInfo($customer_id) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_other_info WHERE customer_id = '" . (int) $customer_id . "'");
 
