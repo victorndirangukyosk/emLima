@@ -529,6 +529,10 @@
                     <li><a href="<?php echo $report_customer_onboarded; ?>"><?php echo $text_report_customer_onboarded; ?></a></li>
                     <?php } ?>
 
+                     <?php if($preturn_customer_unordered) { ?>
+                    <li><a href="<?php echo $report_customer_unordered; ?>"><?php echo $text_report_customer_unordered; ?></a></li>
+                    <?php } ?>
+
                 </ul>
             </li>
             <?php }?>
