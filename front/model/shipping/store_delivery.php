@@ -70,8 +70,17 @@ class ModelShippingStoreDelivery extends Model
 
                 $log->write($response);
                 //echo "<pre>";print_r($response);die;
+                $this->load->model('account/customer');
+                $customer_Deliveryinfo = $this->model_account_customer->getCustomerDeliverychargeFlag($this->session->data['customer_id']);
+
+                //echo "<pre>";print_r($customer_Deliveryinfo['delivery_charge']);die;
                 if ($response['status']) {
                     $cost = $response['data']->price + $response['data']->tax;
+                }
+
+                if($customer_Deliveryinfo['delivery_charge'] == 0)
+                {
+                    $cost =0;
                 }
             }
         }
