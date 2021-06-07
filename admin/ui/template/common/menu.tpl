@@ -150,6 +150,10 @@
             <li><a href="<?php echo $transaction; ?>">Order Transactions</a></li>
             <?php } ?>
 
+            <?php if($preturn_order_product_missing) { ?>  
+            <li><a href="<?php echo $order_product_missing; ?>">Order Products Missing</a></li>
+            <?php } ?>
+
         </ul>
     </li>
     <?php } ?>

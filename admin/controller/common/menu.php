@@ -110,6 +110,7 @@ class ControllerCommonMenu extends Controller
         $data['marketplace'] = $this->url->link('extension/marketplace', 'token='.$this->session->data['token'], 'SSL');
         $data['module'] = $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL');
         $data['order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
+        $data['order_product_missing'] = $this->url->link('sale/order_product_missing', 'token='.$this->session->data['token'], 'SSL');
         $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token='.$this->session->data['token'], 'SSL');
         $data['vendor_order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
 
@@ -299,6 +300,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_vendor_order'] = $this->user->hasPermission('access', 'sale/vendor_order');
         $data['preturn_order_dashboard'] = $this->user->hasPermission('access', 'sale/orderdashboard');
         $data['preturn_order'] = $this->user->hasPermission('access', 'sale/order');
+        $data['preturn_order_product_missing'] = $this->user->hasPermission('access', 'sale/order_product_missing');
         $data['preturn_order_recurring'] = $this->user->hasPermission('access', 'sale/recurring');
         $data['preturn_return'] = $this->user->hasPermission('access', 'sale/return');
         $data['preturn_customer'] = $this->user->hasPermission('access', 'sale/customer');
@@ -490,6 +492,7 @@ class ControllerCommonMenu extends Controller
 
         $data['file_manager'] = $this->url->link('tool/file_manager', 'token='.$this->session->data['token'], 'SSL');
         $data['order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
+        $data['order_product_missing'] = $this->url->link('sale/order_product_missing', 'token='.$this->session->data['token'], 'SSL');
         $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token='.$this->session->data['token'], 'SSL');
 
         $data['product'] = $this->url->link('catalog/vendor_product', 'token='.$this->session->data['token'], 'SSL');
