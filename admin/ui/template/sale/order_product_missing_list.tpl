@@ -227,9 +227,9 @@
 
                         
                     </div>
-                                      <button type="button" onclick="addtomissingproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add To Missing Products"><i class="fa fa-download"></i>Add To Missing Products</button>
 
                 </div>   
+                                      <button type="button" onclick="addtomissingproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add To Missing Products">Add To Missing Products</button>
                            
                            </br>
                            
@@ -1031,7 +1031,11 @@ function addtomissingproduct() {
             return n.value;
             }).join(',');
             console.log(selected_order_id);
-            
+            if(selected_order_id=='' || selected_order_id==null)
+            {
+                alert("Please Select the product");
+                return;
+            }
             
             
            
@@ -1042,6 +1046,7 @@ $.ajax({
 		data: 'selected=' + selected_order_id,
 		success: function(json) {
                     console.log(json);
+                     alert("Product Added to Missing Products List");
                     
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		

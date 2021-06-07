@@ -620,13 +620,16 @@ class ControllerSaleOrderProductMissing extends Controller
 
     public function addtomissingproduct()
     {
+        $json = [];
+        try
+        {
         $this->load->language('sale/order');        
         // if ($this->request->server['HTTPS']) {
         //     $data['base'] = HTTPS_SERVER;
         // } else {
         //     $data['base'] = HTTP_SERVER;
         // }
- 
+       
         $this->load->model('sale/order');      
         $data['orders'] = [];
  
@@ -643,6 +646,17 @@ class ControllerSaleOrderProductMissing extends Controller
  
             
          }  
+         $json = 'success';
+        }
+        catch(exception $ex)
+        {
+            $json = 'failed';
+        }
+        finally
+        {
+         $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        }
 
                   
         
