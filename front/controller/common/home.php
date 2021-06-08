@@ -1001,9 +1001,21 @@ class ControllerCommonHome extends Controller {
         $this->load->model('assets/category');
         $data['categories'] = [];
         $this->load->controller('product/store');
+        $new_categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+        $data['categories_new'] = $new_categories;
         //$categories = $this->model_assets_category->getCategoriesNoRelationStore();
         $selected_categoory_id = isset($this->request->get['filter_category']) && $this->request->get['filter_category'] > 0 ? $this->request->get['filter_category'] : 0;
-        $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+        if ($selected_categoory_id == 0) {
+            $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+        } else {
+            $categories = $this->model_assets_category->getCategoryById(ACTIVE_STORE_ID, 0, $selected_categoory_id);
+        }
+        
+        /*$log = new Log('error.log');
+        $log->write('categories');
+        $log->write($categories);
+        $log->write('categories');*/
+        
         $selectedProducts = [];
         foreach ($categories as $category) {
             // Level 2
