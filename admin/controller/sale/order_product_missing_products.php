@@ -13,7 +13,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
     }
 
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'sale/order_product_missing')) {
+        if (!$this->user->hasPermission('modify', 'sale/order_product_missing_products')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
         return !$this->error;
@@ -233,7 +233,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
         // $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
@@ -458,13 +458,13 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_order'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
-        $data['sort_city'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'] . '&sort=c.name' . $url, 'SSL');
-        $data['sort_customer'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-        $data['sort_total'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url, 'SSL');
+        $data['sort_order'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
+        $data['sort_city'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . '&sort=c.name' . $url, 'SSL');
+        $data['sort_customer'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
+        $data['sort_total'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url, 'SSL');
 
         $url = '';
 
@@ -549,7 +549,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
