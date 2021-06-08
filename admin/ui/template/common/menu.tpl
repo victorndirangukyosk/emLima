@@ -150,6 +150,14 @@
             <li><a href="<?php echo $transaction; ?>">Order Transactions</a></li>
             <?php } ?>
 
+            <?php if($preturn_order_product_missing) { ?>  
+            <li><a href="<?php echo $order_product_missing; ?>">Order Products Missing</a></li>
+            <?php } ?>
+            
+            <?php if($preturn_order_product_missing_products) { ?>  
+            <li><a href="<?php echo $order_product_missing_products; ?>">Order Products Missing</a></li>
+            <?php } ?>
+
         </ul>
     </li>
     <?php } ?>
@@ -527,6 +535,10 @@
 
                      <?php if($preturn_customer_onboarded) { ?>
                     <li><a href="<?php echo $report_customer_onboarded; ?>"><?php echo $text_report_customer_onboarded; ?></a></li>
+                    <?php } ?>
+
+                     <?php if($preturn_customer_unordered) { ?>
+                    <li><a href="<?php echo $report_customer_unordered; ?>"><?php echo $text_report_customer_unordered; ?></a></li>
                     <?php } ?>
 
                 </ul>
