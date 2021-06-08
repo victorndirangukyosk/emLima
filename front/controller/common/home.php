@@ -1144,6 +1144,7 @@ class ControllerCommonHome extends Controller {
         $log->write($this->cart->getProducts());
         $log->write($this->getMostBoughtProducts());
         $log->write('mostboughtproducts');
+        $data['category_url'] = $this->url->link('common/home', '', 'SSL');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl') && isset($this->session->data['customer_id'])) {
             // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/home.tpl', $data));
