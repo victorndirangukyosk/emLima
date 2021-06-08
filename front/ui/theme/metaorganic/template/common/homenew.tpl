@@ -105,7 +105,7 @@
                     <select class="form-control" id="selectedCategory">
                       <option value="">- Select categories-</option>
                       <?php foreach($categories as $category){ ?>
-                      <option value="<?=$categoty['id']?>">
+                      <option value="<?=$category['id']?>">
                         <?=$category['name']?>
                       </option>
                       <?php } ?>
