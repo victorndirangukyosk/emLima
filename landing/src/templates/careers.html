@@ -108,16 +108,13 @@
             </form>
             <div class="row mt-5">
                 <?php foreach($jobpositions as $position) { ?>
-                <div class="col-md-4 form-group">
+                <div class="col-md-6 form-group">
                     <div class="job-box bg-white p-0">
                         <div class="p-4">
                             <div class="row align-items-center">
                                 <div class="col-md-8">
                                     <div>
                                         <h6><?= $position['job_category'] ?></h6>
-                                        <p class="text-muted mb-0">
-                                            <?=$position[ 'job_type'] ?>
-                                        </p>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -133,9 +130,12 @@
                             <div class="row">
                                 <div class="col-md-8">
                                     <div>
-                                        <p class="text-muted mb-0 mo-mb-2">
-                                            <?=$position[ 'experience'] ?> <span class="text-muted">Experience</span>
+                                        <p class="text-muted mb-0">
+                                            <?=$position[ 'job_type'] ?>
                                         </p>
+                                        <!--<p class="text-muted mb-0 mo-mb-2">
+                                            <?=$position[ 'experience'] ?> <span class="text-muted">Experience</span>
+                                        </p>-->
                                     </div>
                                 </div>
                                 <div class="col-md-4 d-flex align-items-center justify-content-center">
