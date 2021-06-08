@@ -3114,7 +3114,7 @@ class ModelSaleOrder extends Model {
     }
     
     public function getOrderedMissingProducts($data = []) {
-        $sql = "SELECT p.order_product_id, o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, o.order_status_id,p.product_id,p.product_store_id,p.name,p.unit,p.quantity,p.price,p.total,p.tax FROM `" . DB_PREFIX . 'order` o ';
+        $sql = "SELECT o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, o.order_status_id,p.product_id,p.product_store_id,p.name,p.unit,p.quantity,p.price,p.total,p.tax FROM `" . DB_PREFIX . 'order` o ';
          
         $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
