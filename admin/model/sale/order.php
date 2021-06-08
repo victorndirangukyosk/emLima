@@ -3276,7 +3276,8 @@ class ModelSaleOrder extends Model {
         }
 
         //    echo "<pre>";print_r($sql);die;
-
+        $log = new Log('error.log');
+        $log->write($sql);
         $query = $this->db->query($sql);
 
         return $query->rows;
