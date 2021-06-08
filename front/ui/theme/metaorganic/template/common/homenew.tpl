@@ -105,7 +105,7 @@
                       <select class="form-control" id="selectedCategory" data-url="<?= $category_url; ?>">
                       <option value="">- Select categories-</option>
                       <?php foreach($categories as $category){ ?>
-                      <option value="<?=$category['id']?>">
+                      <option value="<?=$category['id']?>" <?php if(isset($this->request->get['filter_category']) && $this->request->get['filter_category'] > 0 && $this->request->get['filter_category'] == $category['id']) { echo "selected"; } ?> >
                         <?=$category['name']?>
                       </option>
                       <?php } ?>
