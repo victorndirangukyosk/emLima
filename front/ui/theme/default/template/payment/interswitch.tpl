@@ -44,3 +44,49 @@
 </div>
 
 <script type="text/javascript" src="https://qa.interswitchng.com/collections/public/javascripts/inline-checkout.js"></script>
+<script type="text/javascript">
+var submitForm = document.getElementById("submit-form");
+
+submitForm.addEventListener("submit", submitHandler);
+
+function submitHandler(event) {
+  event.preventDefault();
+
+  var merchantCode = document.getElementById("param-merchantCode").value;
+  var itemId = document.getElementById("param-itemId").value;
+  var transRef = document.getElementById("param-transRef").value;
+  var amount = document.getElementById("param-amount").value;
+
+  var customerName = document.getElementById("param-customerName").value;
+  var customerId = document.getElementById("param-customerId").value;
+
+  var mode = document.getElementById("param-mode").value;
+
+  var redirectUrl = location.href;
+
+  var paymentRequest = {
+    merchant_code: merchantCode,
+    pay_item_id: itemId,
+    txn_ref: transRef,
+    amount: amount,
+    currency: 404,
+    site_redirect_url: redirectUrl,
+    onComplete: paymentCallback,
+    mode: mode
+  };
+
+  if (customerName != "") {
+    paymentRequest.cust_name = customerName;
+  }
+
+  if (customerId != "") {
+    paymentRequest.cust_id = customerId;
+  }
+
+  window.webpayCheckout(paymentRequest);
+}
+
+function paymentCallback(response) {
+  console.log(response);
+}    
+</script>
