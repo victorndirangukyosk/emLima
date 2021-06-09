@@ -23,8 +23,9 @@ $_['help_total'] = 'The checkout total the order must reach before this payment 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify payment Interswitch / money order!';
 $_['error_payable'] = 'Payable To Required!';
-$_['error_customer_key'] = 'Customer key Required!';
-$_['error_customer_secret'] = 'Customer secret Required!';
+$_['error_merchant_code'] = 'Merchant Code Required!';
+$_['error_pay_item_id'] = 'Pay Item ID Required!';
+$_['error_data_ref'] = 'Data Ref Required!';
 $_['error_business_short_code'] = 'Business Short Code Required!';
 $_['error_lipanainterswitchpasskey'] = 'LipaNaInterswitchPasskey Required!';
 $_['error_party_a'] = 'Party A Required!';

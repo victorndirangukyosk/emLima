@@ -26,7 +26,7 @@ class ControllerPaymentInterswitch extends Controller
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
 
-        $data['entry_consumer_key'] = $this->language->get('entry_consumer_key');
+        $data['entry_merchant_code'] = $this->language->get('entry_merchant_code');
         $data['entry_total'] = $this->language->get('entry_total');
         $data['entry_order_status'] = $this->language->get('entry_order_status');
         $data['entry_status'] = $this->language->get('entry_status');
@@ -50,16 +50,22 @@ class ControllerPaymentInterswitch extends Controller
             $data['success'] = '';
         }
 
-        if (isset($this->error['consumer_key'])) {
-            $data['error_consumer_key'] = $this->error['consumer_key'];
+        if (isset($this->error['merchant_code'])) {
+            $data['error_merchant_code'] = $this->error['merchant_code'];
         } else {
-            $data['error_consumer_key'] = '';
+            $data['error_merchant_code'] = '';
         }
 
-        if (isset($this->error['consumer_secret'])) {
-            $data['error_consumer_secret'] = $this->error['consumer_secret'];
+        if (isset($this->error['pay_item_id'])) {
+            $data['error_pay_item_id'] = $this->error['pay_item_id'];
         } else {
-            $data['error_consumer_secret'] = '';
+            $data['error_pay_item_id'] = '';
+        }
+        
+        if (isset($this->error['data_ref'])) {
+            $data['error_data_ref'] = $this->error['data_ref'];
+        } else {
+            $data['error_data_ref'] = '';
         }
 
         $data['breadcrumbs'] = [];
@@ -83,16 +89,22 @@ class ControllerPaymentInterswitch extends Controller
 
         $data['cancel'] = $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL');
 
-        if (isset($this->request->post['interswitch_consumer_key'])) {
-            $data['interswitch_consumer_key'] = $this->request->post['interswitch_consumer_key'];
+        if (isset($this->request->post['interswitch_merchant_code'])) {
+            $data['interswitch_merchant_code'] = $this->request->post['interswitch_merchant_code'];
         } else {
-            $data['interswitch_consumer_key'] = $this->config->get('interswitch_consumer_key');
+            $data['interswitch_merchant_code'] = $this->config->get('interswitch_merchant_code');
         }
 
-        if (isset($this->request->post['interswitch_consumer_secret'])) {
-            $data['interswitch_consumer_secret'] = $this->request->post['interswitch_consumer_secret'];
+        if (isset($this->request->post['interswitch_pay_item_id'])) {
+            $data['interswitch_pay_item_id'] = $this->request->post['interswitch_pay_item_id'];
         } else {
-            $data['interswitch_consumer_secret'] = $this->config->get('interswitch_consumer_secret');
+            $data['interswitch_pay_item_id'] = $this->config->get('interswitch_pay_item_id');
+        }
+        
+        if (isset($this->request->post['interswitch_data_ref'])) {
+            $data['interswitch_data_ref'] = $this->request->post['interswitch_data_ref'];
+        } else {
+            $data['interswitch_data_ref'] = $this->config->get('interswitch_data_ref');
         }
 
         if (isset($this->request->post['interswitch_environment'])) {
@@ -154,11 +166,14 @@ class ControllerPaymentInterswitch extends Controller
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
-        if (!$this->request->post['interswitch_consumer_key']) {
-            $this->error['consumer_key'] = $this->language->get('error_consumer_key');
+        if (!$this->request->post['interswitch_merchant_code']) {
+            $this->error['merchant_code'] = $this->language->get('error_merchant_code');
         }
-        if (!$this->request->post['interswitch_consumer_secret']) {
-            $this->error['consumer_secret'] = $this->language->get('error_consumer_secret');
+        if (!$this->request->post['interswitch_pay_item_id']) {
+            $this->error['pay_item_id'] = $this->language->get('error_pay_item_id');
+        }
+        if (!$this->request->post['interswitch_data_ref']) {
+            $this->error['data_ref'] = $this->language->get('error_data_ref');
         }
 
         return !$this->error;

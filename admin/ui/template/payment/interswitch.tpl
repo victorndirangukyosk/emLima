@@ -3,7 +3,7 @@
     <div class="page-header">
         <div class="container-fluid">
             <div class="pull-right">
-                <button type="submit" form="form-pesapal" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary"><i class="fa fa-save"></i></button>
+                <button type="submit" form="form-interswitch" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-primary"><i class="fa fa-save"></i></button>
                 <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
             <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
@@ -31,24 +31,34 @@
                 <h3 class="panel-title"><i class="fa fa-pencil"></i> <?php echo $text_edit; ?></h3>
             </div>
             <div class="panel-body">
-                <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-pesapal" class="form-horizontal">
+                <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-interswitch" class="form-horizontal">
 
                     <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-payable">Consumer key</label>
+                        <label class="col-sm-2 control-label" for="input-payable">Merchant Code</label>
                         <div class="col-sm-10">
-                            <input type="text" name="pesapal_consumer_key" value="<?php echo $pesapal_consumer_key; ?>" placeholder="Consumer key" id="input-payable" class="form-control" />
-                            <?php if ($error_consumer_key) { ?>
-                            <div class="text-danger"><?php echo $error_consumer_key; ?></div>
+                            <input type="text" name="interswitch_merchant_code" value="<?php echo $interswitch_merchant_code; ?>" placeholder="Merchant Code" id="input-payable" class="form-control" />
+                            <?php if ($error_merchant_code) { ?>
+                            <div class="text-danger"><?php echo $error_merchant_code; ?></div>
                             <?php } ?>
                         </div>
                     </div>
 
                     <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-payable">Consumer secret</label>
+                        <label class="col-sm-2 control-label" for="input-payable">Pay Item ID</label>
                         <div class="col-sm-10">
-                            <input type="text" name="pesapal_consumer_secret" value="<?php echo $pesapal_consumer_secret; ?>" placeholder="Consumer secret" id="input-payable" class="form-control" />
-                            <?php if ($error_consumer_secret) { ?>
-                            <div class="text-danger"><?php echo $error_consumer_secret; ?></div>
+                            <input type="text" name="interswitch_pay_item_id" value="<?php echo $interswitch_pay_item_id; ?>" placeholder="Pay Item ID" id="input-payable" class="form-control" />
+                            <?php if ($error_pay_item_id) { ?>
+                            <div class="text-danger"><?php echo $error_pay_item_id; ?></div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-payable">Data Ref</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="interswitch_data_ref" value="<?php echo $interswitch_data_ref; ?>" placeholder="Data Ref" id="input-payable" class="form-control" />
+                            <?php if ($error_data_ref) { ?>
+                            <div class="text-danger"><?php echo $error_data_ref; ?></div>
                             <?php } ?>
                         </div>
                     </div>
@@ -56,16 +66,16 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-total"><span data-toggle="tooltip" title="<?php echo $help_total; ?>"><?php echo $entry_total; ?></span></label>
                         <div class="col-sm-10">
-                            <input type="text" name="pesapal_total" value="<?php echo $pesapal_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
+                            <input type="text" name="interswitch_total" value="<?php echo $interswitch_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-order-status"><?php echo $entry_order_status; ?></label>
                         <div class="col-sm-10">
-                            <select name="pesapal_order_status_id" id="input-order-status" class="form-control">
+                            <select name="interswitch_order_status_id" id="input-order-status" class="form-control">
                                 <?php foreach ($order_statuses as $order_status) { ?>
-                                <?php if ($order_status['order_status_id'] == $pesapal_order_status_id) { ?>
+                                <?php if ($order_status['order_status_id'] == $interswitch_order_status_id) { ?>
                                 <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                                 <?php } else { ?>
                                 <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -78,9 +88,9 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-order-status">Order Status Failed</label>
                         <div class="col-sm-10">
-                            <select name="pesapal_failed_order_status_id" id="input-order-status" class="form-control">
+                            <select name="interswitch_failed_order_status_id" id="input-order-status" class="form-control">
                                 <?php foreach ($order_statuses as $order_status) { ?>
-                                <?php if ($order_status['order_status_id'] == $pesapal_failed_order_status_id) { ?>
+                                <?php if ($order_status['order_status_id'] == $interswitch_failed_order_status_id) { ?>
                                 <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                                 <?php } else { ?>
                                 <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -93,9 +103,9 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-order-status">Order Status Pending</label>
                         <div class="col-sm-10">
-                            <select name="pesapal_pending_order_status_id" id="input-order-status" class="form-control">
+                            <select name="interswitch_pending_order_status_id" id="input-order-status" class="form-control">
                                 <?php foreach ($order_statuses as $order_status) { ?>
-                                <?php if ($order_status['order_status_id'] == $pesapal_pending_order_status_id) { ?>
+                                <?php if ($order_status['order_status_id'] == $interswitch_pending_order_status_id) { ?>
                                 <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
                                 <?php } else { ?>
                                 <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
@@ -108,8 +118,8 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
                         <div class="col-sm-10">
-                            <select name="pesapal_status" id="input-status" class="form-control">
-                                <?php if ($pesapal_status) { ?>
+                            <select name="interswitch_status" id="input-status" class="form-control">
+                                <?php if ($interswitch_status) { ?>
                                 <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
                                 <option value="0"><?php echo $text_disabled; ?></option>
                                 <?php } else { ?>
@@ -122,19 +132,19 @@
 
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-pesapal-environment">
+                        <label class="col-sm-2 control-label" for="input-interswitch-environment">
                             <span data-toggle="tooltip" data-original-title="<?php echo $help_test; ?>">
                                 Environment
                             </span>
                         </label>
                         <div class="col-sm-10">
-                            <select name="pesapal_environment" id="input-pesapal-environment" class="form-control">
-                                <?php if ($pesapal_environment == 'live') { ?>
+                            <select name="interswitch_environment" id="input-interswitch-environment" class="form-control">
+                                <?php if ($interswitch_environment == 'live') { ?>
                                 <option value="live" selected="selected">Live</option>
                                 <?php } else { ?>
                                 <option value="live">Live</option>
                                 <?php } ?>
-                                <?php if ($pesapal_environment == 'sandbox') { ?>
+                                <?php if ($interswitch_environment == 'sandbox') { ?>
                                 <option value="sandbox" selected="selected">Sandbox</option>
                                 <?php } else { ?>
                                 <option value="sandbox">Sandbox</option>
@@ -146,7 +156,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_sort_order; ?></label>
                         <div class="col-sm-10">
-                            <input type="text" name="pesapal_sort_order" value="<?php echo $pesapal_sort_order; ?>" placeholder="<?php echo $entry_sort_order; ?>" id="input-sort-order" class="form-control" />
+                            <input type="text" name="interswitch_sort_order" value="<?php echo $interswitch_sort_order; ?>" placeholder="<?php echo $entry_sort_order; ?>" id="input-sort-order" class="form-control" />
                         </div>
                     </div>
                 </form>
