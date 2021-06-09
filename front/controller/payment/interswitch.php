@@ -29,7 +29,7 @@ class ControllerPaymentInterswitch extends Controller {
         $data['interswitch_data_ref'] = base64_encode($order_info['customer_id'] . '_' . $order_id . '_' . $amount . '_' . date("Y-m-d h:i:s"));
         $data['interswitch_customer_id'] = $customer_info['customer_id'];
         $data['interswitch_customer_name'] = $customer_info['firstname'] . ' ' . $customer_info['lastname'];
-        $data['interswitch_amount'] = $amount;
+        $data['interswitch_amount'] = $amount*100;
         $log = new Log('error.log');
         $log->write($interswitch_creds['interswitch_merchant_code']);
 

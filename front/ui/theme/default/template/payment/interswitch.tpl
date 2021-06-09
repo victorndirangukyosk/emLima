@@ -1,4 +1,4 @@
-<div class="checkout-container">
+<div class="checkout-container" style="display:none;">
     <h4>Inline Checkout Demo</h4>
 
     <form id="submit-form">
