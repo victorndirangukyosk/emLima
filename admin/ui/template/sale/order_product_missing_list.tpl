@@ -16,7 +16,7 @@
                         <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
                <!-- <?php endif ?>  -->
             </div>
-            <h1>Ordered Products</h1>
+            <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
                 <?php foreach ($breadcrumbs as $breadcrumb) { ?>
                 <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
@@ -51,14 +51,14 @@
             </div>
             <div class="panel-body">
 
-            	<!--<ul class="nav nav-tabs">
+            	<ul class="nav nav-tabs">
                 	<li class="active" ><a href="#tab-order-product" data-toggle="tab">Ordered Products</a></li>
                 	<li class="active" ><a href="#tab-missing-product" data-toggle="tab">Missing Products</a></li>
                 
                 </ul>
                 </div>
                 <div class="tab-content">
-                	<div class="tab-pane active" id="tab-order-product">-->
+                	<div class="tab-pane active" id="tab-order-product">
                 <div class="well" style="display:none;max-height:310px !important;" >
                     <div class="row">
                         <div class="col-sm-4">
@@ -214,7 +214,7 @@
 
                               <div class="form-group">
                                 <label class="control-label" for="input-delivery-date">Delivery Day</label>
-                                <select   name="filter_order_day" id="input-delivery-date" class="form-control">
+                                <select   name="filter_delivery_date" id="input-delivery-date" class="form-control">
                                     <option value="today" <?php echo ($filter_order_day == 'today') ? 'selected="selected"':  "" ?> >Today</option>
                                     <option value="tomorrow" <?php echo ($filter_order_day == 'tomorrow') ? 'selected="selected"':  "" ?> >Tomorrow</option>
                                     
@@ -555,13 +555,6 @@
                 url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
             }
 
-
-  var filter_order_day = $('select[name=\'filter_order_day\']').val();
-
-            if (filter_order_day != '*') {
-                url += '&filter_order_day=' + encodeURIComponent(filter_order_day);
-            } 
-            
             var filter_payment = $('input[name=\'filter_payment\']').val();
 
             if (filter_payment) {
