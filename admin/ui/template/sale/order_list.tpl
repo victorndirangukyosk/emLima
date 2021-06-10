@@ -391,9 +391,11 @@
                                        <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
                                        </a> 
                                        <?php } ?>
+                                        <?php if ($order['order_status_id'] == 1) { ?>
                                        <a href="#" data-toggle="tooltip" data-target="store_modal" title="Order Products List" data-orderid="<?= $order['order_id'] ?>" id="order_products_list">
-                                       <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                       <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 512 512" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M499.5 385.4L308.9 57.2c-31.8-52.9-74.1-52.9-105.9 0L12.5 385.4c-31.8 52.9 0 95.3 63.5 95.3h360c63.5 0 95.3-42.4 63.5-95.3zm-201.1 52.9h-84.7v-84.7h84.7v84.7zm0-127h-84.7V120.7h84.7v190.6z" fill="#626262"/></svg>
                                        </a> 
+                                        <?php } ?>
                                        </div>
                                     </td>
                                         
@@ -1005,13 +1007,24 @@
 
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal"><?= $button_close ?></button>
-                                    <button onclick="submit_copy();" type="button" class="btn btn-primary"><?= $button_submit ?></button>
-                                </div>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    
+                                      <button type="button" onclick="addtomissingproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add To Missing Products">Add To Missing Products</button>
+                                   </div>
                             </div>
                         </div>
                     </div> <!-- /.modal -->
 <script  type="text/javascript">
+
+
+
+
+ $('input[name^=\'selectedproducts\']').on('change', function () {            
+            var selectedproducts = $('input[name^=\'selectedproducts\']:checked');  
+
+        });
+        $('input[name^=\'selectedproducts\']:first').trigger('change');
+
 
 
 function getPO($order_id) {
@@ -1647,12 +1660,15 @@ function downloadOrdersonsolidated() {
 $('a[id^=\'order_products_list\']').on('click', function (e) {
 e.preventDefault();
 $('#store_modal').modal('toggle');
+ var order_id_val=$(this).attr('data-orderid');
+           console.log(order_id_val);
 $('.orderproducts').html('');
 	   $.ajax({
                     url: 'index.php?path=sale/order/getOrderProducts&token=<?= $token ?>',
                     dataType: 'html',
-                    data: { order_id : '' },
+                    data: { order_id : order_id_val },
                     success: function(json) {
+                        
 					   $('.orderproducts').html(json);
                     },
 					error: function(json) {
@@ -1662,6 +1678,105 @@ $('.orderproducts').html('');
          });
 
 });
+
+
+
+function submit_copy() {
+    
+    $('.message_wrapper').html('');
+    
+    $error = '';
+    
+    if($('input[name="product_store[]"').length == 0){
+        $error += '<li>Select store(s).</li>';
+    }
+    
+    if($('input[name="selected[]"]:checked').length == 0){
+        $error += '<li>Select products.</li>';
+    }
+    
+    if(!$error){        
+        $('form').attr('action','index.php?path=catalog/product/copy&token=<?= $token ?>').submit();
+    } else{        
+        $('.message_wrapper').html('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-label="Close">&times</button><ul class="list list-unstyled">'+$error+'</ul></div>');
+    }
+}
+
+
+
+
+function addtomissingproduct() {
+              url = 'index.php?path=sale/order_product_missing/addtomissingproduct&token=<?php echo $token; ?>';
+                
+            var selected_order_product_id = $.map($('input[name="selectedproducts[]"]:checked'), function(n, i){
+            return n.value;
+            }).join(',');
+           console.log(selected_order_product_id);
+            if(selected_order_product_id=='' || selected_order_product_id==null)
+            {
+                alert("Please Select the product");
+                return;
+            }
+            
+            
+           
+    $.ajax({
+		url: 'index.php?path=sale/order_product_missing/addtomissingproduct&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'selected=' + selected_order_product_id,
+		success: function(json) {
+                    console.log(json);
+                     alert("Product Added to Missing Products List");
+                    
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}       
+});
+            
+}
+
+
+ 
+function validateFloatKeyPresswithVarient(el, evt, unitvarient) {
+
+	// $optionvalue=$('.product-variation option:selected').text().trim();
+	$optionvalue=unitvarient;
+	//  alert($optionvalue);
+	if($optionvalue=="Per Kg" || $optionvalue=="Kg")
+	{
+	 var charCode = (evt.which) ? evt.which : event.keyCode;
+	 var number = el.value.split('.');
+	 if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+		 return false;
+	 }
+	 //just one dot
+	 if(number.length>1 && charCode == 46){
+		 return false;
+	 }
+	 //get the carat position
+	 var caratPos = getSelectionStart(el);
+	 var dotPos = el.value.indexOf(".");
+	 if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+		 return false;
+	 }
+	 return true;
+	}
+
+	else{
+	 var charCode = (evt.which) ? evt.which : event.keyCode;
+	 if (charCode > 31 &&
+	   (charCode < 48 || charCode > 57))
+	   return false;
+	   else
+   
+   return true;
+	}
+}
+
+
+
     </script></div>
 <?php echo $footer; ?>
 

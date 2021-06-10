@@ -1654,7 +1654,7 @@ class ModelSaleOrder extends Model {
         }
 
         $query = $this->db->query($sql);
-
+        // echo "<pre>";print_r( $query->rows);die;
         return $query->rows;
     }
 
