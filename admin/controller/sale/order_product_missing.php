@@ -8,7 +8,7 @@ class ControllerSaleOrderProductMissing extends Controller
     public function index()
     {      
 
-        $this->load->language('sale/ordered_product');
+        $this->load->language('sale/order_product_missing');
         $this->document->setTitle($this->language->get('heading_title'));
         $this->load->model('sale/order');
         $this->getMissingProductsList();
@@ -78,9 +78,7 @@ class ControllerSaleOrderProductMissing extends Controller
         } else {
             $filter_delivery_method = null;
         }
-        if (isset($this->request->get['filter_order_day'])) {
-            $url .= '&filter_order_day='.$this->request->get['filter_order_day'];
-        }
+
         if (isset($this->request->get['filter_delivery_date'])) {
             $filter_delivery_date = $this->request->get['filter_delivery_date'];
         } else {
@@ -97,13 +95,6 @@ class ControllerSaleOrderProductMissing extends Controller
             $filter_order_status = $this->request->get['filter_order_status'];
         } else {
             $filter_order_status = null;
-        }
-
-
-        if (isset($this->request->get['filter_order_day'])) {
-            $filter_order_day = $this->request->get['filter_order_day'];
-        } else {
-            $filter_order_day = 'today';
         }
 
         if (isset($this->request->get['filter_order_type'])) {
@@ -205,11 +196,6 @@ class ControllerSaleOrderProductMissing extends Controller
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
 
-
-        if (isset($this->request->get['filter_order_day'])) {
-            $url .= '&filter_order_day='.$this->request->get['filter_order_day'];
-        }
-
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
@@ -285,7 +271,6 @@ class ControllerSaleOrderProductMissing extends Controller
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
-            'filter_order_day' => $filter_order_day,
         ];
 
         // echo "<pre>";print_r($filter_data);die; 
@@ -448,11 +433,6 @@ class ControllerSaleOrderProductMissing extends Controller
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
 
-
-        if (isset($this->request->get['filter_order_day'])) {
-            $url .= '&filter_order_day='.$this->request->get['filter_order_day'];
-        }
-
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
@@ -591,7 +571,7 @@ class ControllerSaleOrderProductMissing extends Controller
         $data['filter_delivery_method'] = $filter_delivery_method;
         $data['filter_delivery_date'] = $filter_delivery_date;
         $data['filter_payment'] = $filter_payment;
-        $data['filter_order_day'] = $filter_order_day;
+
         $data['filter_order_status'] = $filter_order_status;
         $data['filter_order_type'] = $filter_order_type;
         $data['filter_total'] = $filter_total;
