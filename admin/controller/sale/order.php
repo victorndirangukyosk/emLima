@@ -1,12 +1,10 @@
 <?php
 
-class ControllerSaleOrder extends Controller
-{
+class ControllerSaleOrder extends Controller {
 
     private $error = [];
 
-    public function index()
-    {
+    public function index() {
         //$this->sendNewInvoice(812);die;
         /* echo "<pre>";print_r(date('d M Y h:i A', strtotime(date("Y-m-d H:i:s"))));die;
           if (date_default_timezone_get()) {
@@ -27,8 +25,7 @@ class ControllerSaleOrder extends Controller
         $this->getList();
     }
 
-    public function product_autocomplete()
-    {
+    public function product_autocomplete() {
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
         } else {
@@ -67,8 +64,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    public function add()
-    {
+    public function add() {
         $this->load->language('sale/order');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -121,8 +117,7 @@ class ControllerSaleOrder extends Controller
         $this->getForm();
     }
 
-    public function edit()
-    {
+    public function edit() {
         $this->load->language('sale/order');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -175,8 +170,7 @@ class ControllerSaleOrder extends Controller
         $this->getForm();
     }
 
-    public function EditInvoice()
-    {
+    public function EditInvoice() {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -418,8 +412,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($this->load->view('sale/edit_order_invoice.tpl', $data));
     }
 
-    public function getProductVariantsInfo()
-    {
+    public function getProductVariantsInfo() {
 
         $this->load->model('sale/order');
         $log = new Log('error.log');
@@ -434,8 +427,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function EditTransactionInvoice()
-    {
+    public function EditTransactionInvoice() {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -582,8 +574,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($this->load->view('sale/edit_transaction_invoice.tpl', $data));
     }
 
-    public function PrintTransactionInvoice()
-    {
+    public function PrintTransactionInvoice() {
         //echo "<pre>";print_r($this->request->post);die;
         $this->load->language('sale/order');
 
@@ -791,8 +782,7 @@ class ControllerSaleOrder extends Controller
         //$this->response->setOutput($this->load->view('sale/edit_transaction_invoice.tpl', $data));
     }
 
-    public function delete()
-    {
+    public function delete() {
         //check vendor order
         if ($this->user->isVendor()) {
             die('not allowed!');
@@ -969,8 +959,7 @@ class ControllerSaleOrder extends Controller
         $this->getList();
     }
 
-    protected function getList()
-    {
+    protected function getList() {
         if (isset($this->request->get['filter_city'])) {
             $filter_city = $this->request->get['filter_city'];
         } else {
@@ -1567,8 +1556,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($this->load->view('sale/order_list.tpl', $data));
     }
 
-    public function getUserByName($name)
-    {
+    public function getUserByName($name) {
         if ($name) {
             $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '" . $this->db->escape($name) . "%'");
 
@@ -1576,8 +1564,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    public function getUser($id)
-    {
+    public function getUser($id) {
         if ($id) {
             $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer`  WHERE customer_id ='" . $id . "'");
 
@@ -1585,8 +1572,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    public function getForm()
-    {
+    public function getForm() {
         $this->load->model('sale/customer');
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -1970,8 +1956,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($this->load->view('sale/order_form.tpl', $data));
     }
 
-    public function info()
-    {
+    public function info() {
         $this->load->model('sale/order');
 
         if (isset($this->request->get['order_id'])) {
@@ -3636,7 +3621,7 @@ class ControllerSaleOrder extends Controller
 
             $data['header'] = $this->load->controller('common/header');
             $data['column_left'] = $this->load->controller('common/column_left');
-            $data['footer'] = $this->load->controller('common/footer'); 
+            $data['footer'] = $this->load->controller('common/footer');
 
             $this->response->setOutput($this->load->view('sale/order_info.tpl', $data));
         } else {
@@ -3668,8 +3653,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    protected function validateDelete()
-    {
+    protected function validateDelete() {
         $this->load->model('sale/order');
 
         if (!$this->user->hasPermission('modify', 'sale/order')) {
@@ -3691,8 +3675,7 @@ class ControllerSaleOrder extends Controller
         return !$this->error;
     }
 
-    protected function validate()
-    {
+    protected function validate() {
         if (!$this->user->hasPermission('modify', 'sale/order')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -3702,8 +3685,7 @@ class ControllerSaleOrder extends Controller
         //        return true;
     }
 
-    public function createInvoiceNo()
-    {
+    public function createInvoiceNo() {
         $this->load->language('sale/order');
 
         $json = [];
@@ -3748,8 +3730,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addReward()
-    {
+    public function addReward() {
         $this->load->language('sale/order');
 
         $json = [];
@@ -3784,8 +3765,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function save_order_transaction_id()
-    {
+    public function save_order_transaction_id() {
         $this->load->language('sale/order');
 
         $log = new Log('error.log');
@@ -3841,8 +3821,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function removeReward()
-    {
+    public function removeReward() {
         $this->load->language('sale/order');
 
         $json = [];
@@ -3873,8 +3852,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addCommission()
-    {
+    public function addCommission() {
         $this->load->language('sale/order');
 
         $json = [];
@@ -3909,8 +3887,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function removeCommission()
-    {
+    public function removeCommission() {
         $this->load->language('sale/order');
 
         $json = [];
@@ -3941,8 +3918,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function country()
-    {
+    public function country() {
         $json = [];
 
         $this->load->model('localisation/country');
@@ -3968,8 +3944,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function history()
-    {
+    public function history() {
         $this->load->language('sale/order');
 
         $data['text_no_results'] = $this->language->get('text_no_results');
@@ -4033,8 +4008,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($this->load->view('sale/order_history.tpl', $data));
     }
 
-    public function translateAmountToWords(int $number)
-    {
+    public function translateAmountToWords(int $number) {
         /*
          * A recursive function to turn digits into words
          * Numbers must be integers from -999,999,999,999 to 999,999,999,999 inclusive.
@@ -4046,7 +4020,7 @@ class ControllerSaleOrder extends Controller
         }
         if ($number < abs($max_size)) {
             switch ($number) {
-                    // set up some rules for converting digits to words
+                // set up some rules for converting digits to words
                 case $number < 0:
                     $prefix = 'negative';
                     $suffix = $this->translateAmountToWords(-1 * $number);
@@ -4091,7 +4065,7 @@ class ControllerSaleOrder extends Controller
                 case 13:
                     $string = 'thirteen';
                     break;
-                    // fourteen handled later
+                // fourteen handled later
                 case 15:
                     $string = 'fifteen';
                     break;
@@ -4134,7 +4108,7 @@ class ControllerSaleOrder extends Controller
                     $suffix = $this->translateAmountToWords($number % 10);
                     $string = $prefix . ' ' . $suffix;
                     break;
-                    // handles all number 100 to 999
+                // handles all number 100 to 999
                 case $number < pow(10, 3):
                     // floor return a float not an integer
                     $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 2)))) . ' hundred';
@@ -4175,8 +4149,8 @@ class ControllerSaleOrder extends Controller
                     }
                     $string = $prefix . ' ' . $suffix;
                     break;
-                    // Be careful not to pass default formatted numbers in the quadrillions+ into this function
-                    // Default formatting is float and causes errors
+                // Be careful not to pass default formatted numbers in the quadrillions+ into this function
+                // Default formatting is float and causes errors
                 case $number < pow(10, 18):
                     // floor return a float not an integer
                     $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 15)))) . ' quadrillion';
@@ -4193,8 +4167,7 @@ class ControllerSaleOrder extends Controller
         return $string;
     }
 
-    public function printinvoice()
-    {
+    public function printinvoice() {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -4434,8 +4407,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data['orders'][0]));
     }
 
-    public function invoice()
-    {
+    public function invoice() {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -4725,9 +4697,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
 
-
-    public function invoicepdf()
-    {
+    public function invoicepdf() {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -5031,8 +5001,7 @@ class ControllerSaleOrder extends Controller
                  *     endless loops).
                  * @return string|bool Full path to newly-created dir, or false on failure.
                  */
-                function tempdir($dir = null, $prefix = 'tmp_', $mode = 0700, $maxAttempts = 1000)
-                {
+                function tempdir($dir = null, $prefix = 'tmp_', $mode = 0700, $maxAttempts = 1000) {
                     /* Use the system temp dir by default. */
                     if (is_null($dir)) {
                         $dir = sys_get_temp_dir();
@@ -5042,8 +5011,8 @@ class ControllerSaleOrder extends Controller
                     $dir = rtrim($dir, DIRECTORY_SEPARATOR);
 
                     /* If we don't have permission to create a directory, fail, otherwise we will
-                    * be stuck in an endless loop.
-                    */
+                     * be stuck in an endless loop.
+                     */
                     if (!is_dir($dir) || !is_writable($dir)) {
                         return false;
                     }
@@ -5054,15 +5023,15 @@ class ControllerSaleOrder extends Controller
                     }
 
                     /* Attempt to create a random directory until it works. Abort if we reach
-                    * $maxAttempts. Something screwy could be happening with the filesystem
-                    * and our loop could otherwise become endless.
-                    */
+                     * $maxAttempts. Something screwy could be happening with the filesystem
+                     * and our loop could otherwise become endless.
+                     */
                     $attempts = 0;
                     do {
                         $path = sprintf('%s%s%s%s', $dir, DIRECTORY_SEPARATOR, $prefix, mt_rand(100000, mt_getrandmax()));
                     } while (
-                        !mkdir($path, $mode) &&
-                        $attempts++ < $maxAttempts
+                    !mkdir($path, $mode) &&
+                    $attempts++ < $maxAttempts
                     );
 
                     return $path;
@@ -5100,8 +5069,7 @@ class ControllerSaleOrder extends Controller
                 unlink($zipname);
 
                 // delete temp folder
-                function deleteDirectory($dir)
-                {
+                function deleteDirectory($dir) {
                     if (!file_exists($dir)) {
                         return true;
                     }
@@ -5132,9 +5100,7 @@ class ControllerSaleOrder extends Controller
         //$this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
 
-
-    public function consolidatedCalculationSheet()
-    {
+    public function consolidatedCalculationSheet() {
         $deliveryDate = $this->request->get['filter_delivery_date'];
 
         $filter_data = [
@@ -5195,11 +5161,11 @@ class ControllerSaleOrder extends Controller
             if (is_array($transaction_fee) && count($transaction_fee) > 0 && $transaction_fee['order_id'] == $data['orders'][$index]['order_id']) {
                 $tran_fee = $transaction_fee['value'];
 
-                /*$log = new Log('error.log');
-            $log->write('transaction_fee');
-            $log->write($tran_fee);
-            $log->write($transaction_fee);
-            $log->write('transaction_fee');*/
+                /* $log = new Log('error.log');
+                  $log->write('transaction_fee');
+                  $log->write($tran_fee);
+                  $log->write($transaction_fee);
+                  $log->write('transaction_fee'); */
             }
 
 
@@ -5218,8 +5184,7 @@ class ControllerSaleOrder extends Controller
         $this->model_report_excel->download_consolidated_calculation_sheet_excel($data);
     }
 
-    public function getOrderTotals($order_id, $store_id)
-    {
+    public function getOrderTotals($order_id, $store_id) {
         if ($store_id) {
             $totals = $this->model_sale_order->getVendorOrderTotals($order_id, $store_id);
         } else {
@@ -5229,8 +5194,7 @@ class ControllerSaleOrder extends Controller
         return $totals;
     }
 
-    public function getOrderProductsWithVariances($order_id)
-    {
+    public function getOrderProductsWithVariances($order_id) {
         $this->load->model('sale/order');
 
         // Order products with weight change
@@ -5310,8 +5274,7 @@ class ControllerSaleOrder extends Controller
         return $orderProducts;
     }
 
-    public function getOrderProductsWithVariancesNew($order_id)
-    {
+    public function getOrderProductsWithVariancesNew($order_id) {
         $this->load->model('sale/order');
 
         $orderProducts = [];
@@ -5356,8 +5319,7 @@ class ControllerSaleOrder extends Controller
         return $orderProducts;
     }
 
-    public function orderCalculationSheet()
-    {
+    public function orderCalculationSheet() {
         $this->load->model('sale/order');
 
         if (isset($this->request->post['selected'])) {
@@ -5481,8 +5443,7 @@ class ControllerSaleOrder extends Controller
         $this->model_report_excel->download_calculation_sheet_excel($data);
     }
 
-    public function newinvoice()
-    {
+    public function newinvoice() {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -5684,8 +5645,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
 
-    public function newinvoicepdf()
-    {
+    public function newinvoicepdf() {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -5887,8 +5847,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
 
-    public function shipping()
-    {
+    public function shipping() {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_shipping');
@@ -6125,9 +6084,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($this->load->view('sale/order_shipping.tpl', $data['orders'][0]));
     }
 
-
-    public function shippingNote()
-    {
+    public function shippingNote() {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_shipping');
@@ -6360,13 +6317,11 @@ class ControllerSaleOrder extends Controller
         }
 
         //        echo "<pre>";print_r($data['orders'][0]);die;
-
         // $this->response->setOutput($this->load->view('sale/order_shipping.tpl', $data['orders'][0]));
         $this->response->setOutput($this->load->view('sale/order_shipping_new.tpl', $data['orders'][0]));
     }
 
-    public function updateInvoice()
-    {
+    public function updateInvoice() {
         $json = [];
 
         $this->load->language('sale/order');
@@ -6737,8 +6692,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($json);
     }
 
-    public function notifyInvoice()
-    {
+    public function notifyInvoice() {
         $json = [];
 
         $this->load->language('sale/order');
@@ -6778,8 +6732,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($json);
     }
 
-    public function api()
-    {
+    public function api() {
         $json = [];
 
         $this->load->language('sale/order');
@@ -6918,8 +6871,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($json);
     }
 
-    public function isMyOrder($order_id, $store_id)
-    {
+    public function isMyOrder($order_id, $store_id) {
         $this->load->model('sale/order');
 
         $row = $this->model_sale_order->isMyOrder($order_id, $store_id);
@@ -6931,8 +6883,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    public function isVendorOrder($order_id)
-    {
+    public function isVendorOrder($order_id) {
         $this->load->model('sale/order');
 
         $row = $this->model_sale_order->isVendorOrder($order_id, $this->user->getId());
@@ -6943,8 +6894,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    public function editDeliveryRequest($order_id)
-    {
+    public function editDeliveryRequest($order_id) {
         $log = new Log('error.log');
 
         $log->write('inside editDeliveryRequest');
@@ -7055,8 +7005,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    public function isOnlinePayment($payment_code)
-    {
+    public function isOnlinePayment($payment_code) {
         $refundToCustomerWallet = false;
 
         $allowedPaymentMethods = $this->config->get('config_payment_methods_status');
@@ -7072,8 +7021,7 @@ class ControllerSaleOrder extends Controller
         return $refundToCustomerWallet;
     }
 
-    private function timeIsBetween($from, $to, $time, $time_diff = false)
-    {
+    private function timeIsBetween($from, $to, $time, $time_diff = false) {
         //calculate from_time in minuts
         $i = explode(':', $to);
         if (12 == $i[0]) {
@@ -7114,8 +7062,7 @@ class ControllerSaleOrder extends Controller
     }
 
     //save timeslot in data
-    public function save_timeslots()
-    {
+    public function save_timeslots() {
         $order_id = $this->request->get['order_id'];
 
         $delivery_date = $this->request->post['delivery_date'];
@@ -7123,8 +7070,7 @@ class ControllerSaleOrder extends Controller
         $delivery_time = $this->request->post['delivery_time'];
     }
 
-    public function payment_status()
-    {
+    public function payment_status() {
         if (!$this->user->isVendor()) {
             $this->load->model('sale/order');
 
@@ -7136,8 +7082,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    public function city_autocomplete()
-    {
+    public function city_autocomplete() {
         $this->load->model('sale/order');
 
         $json = $this->model_sale_order->getCities();
@@ -7146,8 +7091,7 @@ class ControllerSaleOrder extends Controller
         echo json_encode($json);
     }
 
-    public function checkStoreDelivery()
-    {
+    public function checkStoreDelivery() {
         $json = [];
 
         // if ($store_info['city_id']  !=  $this->request->post['shipping_city_id']) {
@@ -7157,8 +7101,7 @@ class ControllerSaleOrder extends Controller
         echo json_encode($json);
     }
 
-    public function notFraudApi()
-    {
+    public function notFraudApi() {
         $json = [];
 
         $this->load->language('sale/order');
@@ -7265,8 +7208,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput($json);
     }
 
-    public function reversePaymentApi()
-    {
+    public function reversePaymentApi() {
         //set order status to Pending and raise delivery request
 
         /* Iugu::setApiKey($this->config->get('iugu_token'));
@@ -7435,8 +7377,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    public function createDeliveryRequest($order_id, $order_status_id = 1)
-    {
+    public function createDeliveryRequest($order_id, $order_status_id = 1) {
         $log = new Log('error.log');
         $order_info = $this->getOrder($order_id);
 
@@ -7564,8 +7505,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    public function createDeliveryRequestold($order_id, $order_status_id = 1)
-    {
+    public function createDeliveryRequestold($order_id, $order_status_id = 1) {
         $log = new Log('error.log');
         $order_info = $this->getOrder($order_id);
         $log->write('inside createDeliveryRequest');
@@ -7678,8 +7618,7 @@ class ControllerSaleOrder extends Controller
         return false;
     }
 
-    public function getOrder($order_id)
-    {
+    public function getOrder($order_id) {
         $order_query = $this->db->query('SELECT *, (SELECT os.name FROM `' . DB_PREFIX . 'order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `' . DB_PREFIX . "order` o WHERE o.order_id = '" . (int) $order_id . "'");
 
         if ($order_query->num_rows) {
@@ -7746,7 +7685,7 @@ class ControllerSaleOrder extends Controller
                 'date_added' => $order_query->row['date_added'],
                 'delivery_date' => $order_query->row['delivery_date'],
                 'delivery_timeslot' => $order_query->row['delivery_timeslot'],
-                /* 'date_modified' => $order_query->row['date_modified'],
+                    /* 'date_modified' => $order_query->row['date_modified'],
                       'date_added' => $order_query->row['date_added'] */
             ];
         } else {
@@ -7754,8 +7693,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    public function getTimeslotAverage($timeslot)
-    {
+    public function getTimeslotAverage($timeslot) {
         $str = $timeslot; //"06:26pm - 08:32pm";
         $arr = explode('-', $str);
         //print_r($arr);
@@ -7788,8 +7726,7 @@ class ControllerSaleOrder extends Controller
         return false;
     }
 
-    public function settle_payment()
-    {
+    public function settle_payment() {
         $this->load->language('sale/order');
 
         $json['status'] = true;
@@ -7838,8 +7775,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function captureInvoice($order_id, $invoiceId)
-    {
+    public function captureInvoice($order_id, $invoiceId) {
         $log = new Log('error.log');
         $log->write('captureInvoice');
 
@@ -7874,8 +7810,7 @@ class ControllerSaleOrder extends Controller
         return false;
     }
 
-    public function actionOnCustomerWallet($customer_id, $description, $amount)
-    {
+    public function actionOnCustomerWallet($customer_id, $description, $amount) {
         $this->load->model('sale/customer');
 
         $this->model_sale_customer->addCredit($customer_id, $description, $amount);
@@ -7883,8 +7818,7 @@ class ControllerSaleOrder extends Controller
         return true;
     }
 
-    public function chargeCustomerOld($customer_id, $description, $final_amount, $order_id)
-    {
+    public function chargeCustomerOld($customer_id, $description, $final_amount, $order_id) {
         require_once DIR_SYSTEM . 'library/Iugu.php';
 
         $log = new Log('error.log');
@@ -7936,8 +7870,7 @@ class ControllerSaleOrder extends Controller
         return false;
     }
 
-    public function chargeCustomer($customer_id, $description, $final_amount, $order_id)
-    {
+    public function chargeCustomer($customer_id, $description, $final_amount, $order_id) {
         require_once DIR_SYSTEM . 'library/Iugu.php';
 
         $log = new Log('error.log');
@@ -7977,8 +7910,7 @@ class ControllerSaleOrder extends Controller
         return false;
     }
 
-    public function refundCustomer($customer_id, $description, $final_amount, $order_id)
-    {
+    public function refundCustomer($customer_id, $description, $final_amount, $order_id) {
         require_once DIR_SYSTEM . 'library/Iugu.php';
 
         $log = new Log('error.log');
@@ -8011,8 +7943,7 @@ class ControllerSaleOrder extends Controller
         return false;
     }
 
-    public function iuguCharge($data)
-    {
+    public function iuguCharge($data) {
         $order_id = $data['order_id'];
 
         $amount = $data['amount'];
@@ -8112,8 +8043,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    public function sendNewInvoice($order_id, $comment = '', $notify = true)
-    {
+    public function sendNewInvoice($order_id, $comment = '', $notify = true) {
         $this->trigger->fire('pre.order.history.add', $order_id);
 
         //print_r($this->config->get('config_ssl'));die;
@@ -8306,6 +8236,7 @@ class ControllerSaleOrder extends Controller
 
                     /* $this->saveVendorNotification($order_info['customer_id'],$customer_info['device_id'],$order_id,$mobile_notification_template,$mobile_notification_title); */
                 } else {
+                    
                 }
                 // customer push notitification end
             }
@@ -8360,8 +8291,7 @@ class ControllerSaleOrder extends Controller
         return true;
     }
 
-    public function saveVendorNotification($user_id, $deviceId, $order_id, $message, $title)
-    {
+    public function saveVendorNotification($user_id, $deviceId, $order_id, $message, $title) {
         $this->db->query('INSERT INTO ' . DB_PREFIX . "vendor_notifications SET user_id = '" . $user_id . "', type = 'order', purpose_id = '" . $order_id . "', title = '" . $title . "', message = '" . $message . "', status = 'unread', created_at = NOW() , updated_at = NOW()");
 
         $notificaiton_id = $this->db->getLastId();
@@ -8369,13 +8299,11 @@ class ControllerSaleOrder extends Controller
         return $notificaiton_id;
     }
 
-    public function getOrderDetailIugu($order_id)
-    {
+    public function getOrderDetailIugu($order_id) {
         return $this->db->query('SELECT * FROM `' . DB_PREFIX . 'order_iugu` WHERE `order_id` = ' . (int) $order_id)->row;
     }
 
-    public function updatePO()
-    {
+    public function updatePO() {
         $this->load->model('sale/order');
         //echo 'date.timezone ' ;;
         $data = $this->request->post;
@@ -8403,8 +8331,7 @@ class ControllerSaleOrder extends Controller
         return true;
     }
 
-    public function getPO()
-    {
+    public function getPO() {
         $this->load->model('sale/order');
         //echo 'date.timezone ' ;;
         $data = $this->request->post;
@@ -8433,8 +8360,7 @@ class ControllerSaleOrder extends Controller
         return true;
     }
 
-    public function consolidatedOrderProducts()
-    {
+    public function consolidatedOrderProducts() {
         $orderid = $this->request->get['order_id'];
         $customer = $this->request->get['customer'];
         $company = $this->request->get['company'];
@@ -8462,9 +8388,7 @@ class ControllerSaleOrder extends Controller
         $this->model_report_excel->download_order_products_excel($data);
     }
 
-    public function consolidatedOrdersSummary()
-    { //used only in sale order report
-
+    public function consolidatedOrdersSummary() { //used only in sale order report
         $filter_city = $this->request->get['filter_city'];
         $filter_date_start = $this->request->get['orderstartdate'];
         $filter_date_end = $this->request->get['orderenddate'];
@@ -8561,8 +8485,7 @@ class ControllerSaleOrder extends Controller
         $this->model_report_excel->download_consolidated_order_products_excel($data);
     }
 
-    public function SaveOrUpdateOrderDriverDetails()
-    {
+    public function SaveOrUpdateOrderDriverDetails() {
         $order_id = $this->request->post['order_id'];
         $driver_id = $this->request->post['driver_id'];
         /* $log = new Log('error.log');
@@ -8600,8 +8523,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function SaveOrUpdateOrderVehilceDetails()
-    {
+    public function SaveOrUpdateOrderVehilceDetails() {
         $order_id = $this->request->post['order_id'];
         $vehicle_number = $this->request->post['vehicle_number'];
 
@@ -8634,8 +8556,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function SaveOrUpdateOrderDeliveryExecutiveDetails()
-    {
+    public function SaveOrUpdateOrderDeliveryExecutiveDetails() {
         $order_id = $this->request->post['order_id'];
         $delivery_executive_id = $this->request->post['delivery_executive_id'];
 
@@ -8669,8 +8590,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function SendMailToCustomerWithDriverDetails($order_id)
-    {
+    public function SendMailToCustomerWithDriverDetails($order_id) {
         $log = new Log('error.log');
         $log->write('SendMailToCustomerWithDriverDetails');
         $log->write($order_id);
@@ -8753,8 +8673,7 @@ class ControllerSaleOrder extends Controller
         }
     }
 
-    public function SaveOrUpdateOrderDriverVehicleDetails()
-    {
+    public function SaveOrUpdateOrderDriverVehicleDetails() {
         $order_id = $this->request->post['order_id'];
         $driver_id = $this->request->post['driver_id'];
         $vehicle_number = $this->request->post['vehicle_number'];
@@ -8796,8 +8715,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function SaveOrUpdateOrderProcessorDetails()
-    {
+    public function SaveOrUpdateOrderProcessorDetails() {
         $order_id = $this->request->post['order_id'];
         $order_processing_group_id = $this->request->post['order_processing_group_id'];
         $order_processor_id = $this->request->post['order_processor_id'];
@@ -8836,8 +8754,7 @@ class ControllerSaleOrder extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getDriverDetails()
-    {
+    public function getDriverDetails() {
 
         $order_id = $this->request->post['order_id'];
         $this->load->model('checkout/order');
@@ -8846,4 +8763,30 @@ class ControllerSaleOrder extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+    public function getOrderProducts() {
+        $html = '';
+        $html .= '<div class="container"><table style="width:48%;" class="table table-bordered table-striped table-responsive">
+	   <thead>
+      <tr class="info">
+      <th>Order ID</th>
+      <th>Product ID</th>
+      <th>Product Store ID</th>
+      <th>Product Name</th>
+      <th>Quantity</th>
+      </tr>
+      </thead>';
+        $html .= '<tbody>';
+        $html .= '<tr>
+	<th></th>
+        <th></th>
+	<th></th>
+        <th></th>
+        <th></th>
+        </tr>';
+        $html .= '</tbody></table><div>';
+        echo $html;
+        exit();
+    }
+
 }
