@@ -8765,25 +8765,50 @@ class ControllerSaleOrder extends Controller {
     }
 
     public function getOrderProducts() {
+
+        $this->load->model('sale/order');
+        $order_id = $this->request->get['order_id'];
+        $res = $this->model_sale_order->getOrderProducts($order_id);
+        // echo "<pre>";print_r( $res);die;
+
         $html = '';
         $html .= '<div class="container"><table style="width:48%;" class="table table-bordered table-striped table-responsive">
 	   <thead>
       <tr class="info">
-      <th>Order ID</th>
+    <!--<th>Order ID</th>-->
+    <!--<th>Order Product ID</th>-->
+    <th> </th>
       <th>Product ID</th>
-      <th>Product Store ID</th>
+      <!--<th>Product General ID</th>-->
+      <!--<th>Product Store ID</th>-->
       <th>Product Name</th>
+      <th>Unit</th>
       <th>Quantity</th>
+      <!--<th>Price</th>-->
+      <!--<th>Tax</th>-->
+    <th>Quantity Required</th>
+
       </tr>
       </thead>';
         $html .= '<tbody>';
+        foreach ($res as $product) {
         $html .= '<tr>
-	<th></th>
-        <th></th>
-	<th></th>
-        <th></th>
-        <th></th>
-        </tr>';
+        <!--<th>' . $product['order_id'] . '</th>   -->   
+        <!--<th>' . $product['order_product_id'] . '</th>   -->  
+         <th><input type="checkbox" name="selectedproducts[]"  value='. $product['order_product_id'] .'></th>    
+
+
+	<th>' . $product['product_id'] . '</th>        
+	<!--<th>' . $product['general_product_id'] . '</th> -->
+	<!--<th>' . $product['store_id'] . '</th> -->    
+	<th>' . $product['name'] . '</th>   
+	<th>' . $product['unit'] . '</th>  
+	<th>' . $product['quantity'] . '</th>      
+    <!--<th>' . $product['price'] . '</th> -->
+	<!--<th>' . $product['tax'] . '</th>  -->    
+    <th><input style="max-width: 75px !important; text-align: right;"   type="text" onkeypress="return validateFloatKeyPresswithVarient(this, event,'.$product['unit'].');" id=updated_quantity_'. $product['order_product_id'].'  value= ' . $product['quantity'] . '></th>      
+           </tr>';
+         }
         $html .= '</tbody></table><div>';
         echo $html;
         exit();
