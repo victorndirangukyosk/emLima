@@ -87,6 +87,7 @@ function submitHandler(event) {
 }
 
 function paymentCallback(response) {
+  alert(response);
   console.log(response);
 }    
 </script>
