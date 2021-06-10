@@ -657,9 +657,9 @@ class ControllerSaleOrderProductMissing extends Controller
         if (isset($this->request->post['selected'])) {
             $orders  = explode(",",$this->request->post['selected']);
         }  
-
+        // echo "<pre>";print_r($orders);die;
         foreach ($orders as $order_product_id) {
-        //   echo "<pre>";print_r($order_product_id);die;
+            // echo "<pre>";print_r($order_product_id);die;
 
             $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id);
             //   echo "<pre>";print_r($order_product_info);die;
