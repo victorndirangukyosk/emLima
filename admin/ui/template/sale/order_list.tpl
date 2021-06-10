@@ -1716,24 +1716,22 @@ function addtomissingproduct() {
             {
                 alert("Please Select the product");
                 return;
-            }
-            
-            
+            } 
            
-    $.ajax({
-		url: 'index.php?path=sale/order_product_missing/addtomissingproduct&token=<?php echo $token; ?>',
-		type: 'post',
-		dataType: 'json',
-		data: 'selected=' + selected_order_product_id,
-		success: function(json) {
-                    console.log(json);
-                     alert("Product Added to Missing Products List");
+            $.ajax({
+                url: 'index.php?path=sale/order_product_missing/addtomissingproduct&token=<?php echo $token; ?>',
+                type: 'post',
+                dataType: 'json',
+                data: 'selected=' + selected_order_product_id,
+                success: function(json) {
+                            console.log(json);
+                            alert("Product Added to Missing Products List");
+                            
+                },			
+                error: function(xhr, ajaxOptions, thrownError) {		
                     
-		},			
-		error: function(xhr, ajaxOptions, thrownError) {		
-			 
-		}       
-});
+                }       
+        });
             
 }
 
