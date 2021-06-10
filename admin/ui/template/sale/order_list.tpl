@@ -391,9 +391,6 @@
                                        <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
                                        </a> 
                                        <?php } ?>
-                                       <a href="#" data-toggle="modal" data-target="store_modal" title="Order Products List" data-orderid="<?= $order['order_id'] ?>" id="order_products_list">
-                                       <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                                       </a> 
                                        </div>
                                     </td>
                                         
@@ -985,32 +982,6 @@
             </div>
         </div>
     </div>
-    
-    <div class="modal fade" id="store_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content"> 
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Order Products List</h4>
-                                </div>
-                                <div class="modal-body orderproducts">
-
-                                    <div class="message_wrapper"></div>
-
-                                    <div class="form-group">
-                                        <input type="text" name="store" value="" placeholder="Store name" id="input-product" class="form-control" />
-                                        <div id="store-list" class="well well-sm" style="max-width: 100%; height: 150px; overflow: auto;">
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal"><?= $button_close ?></button>
-                                    <button onclick="submit_copy();" type="button" class="btn btn-primary"><?= $button_submit ?></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- /.modal -->
 <script  type="text/javascript">
 
 
@@ -1643,26 +1614,7 @@ function downloadOrdersonsolidated() {
             location = url;
             
 }
-
-$('a[id^=\'order_products_list\']').on('click', function (e) {
-e.preventDefault();
-$('#store_modal').modal('toggle');
-$('.orderproducts').html('');
-	   $.ajax({
-                    url: 'index.php?path=sale/order/getOrderProducts&token=<?= $token ?>',
-                    dataType: 'html',
-                    data: { order_id : '' },
-                    success: function(json) {
-					   $('.orderproducts').html(json);
-                    },
-					error: function(json) {
-					 console.log('html',json);
-					  $('.orderproducts').html(json);
-                    }
-         });
-
-});
-    </script></div>
+</script></div>
 <?php echo $footer; ?>
 
 <style>
