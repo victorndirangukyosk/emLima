@@ -8786,7 +8786,7 @@ class ControllerSaleOrder extends Controller {
       <th>Quantity</th>
       <!--<th>Price</th>-->
       <!--<th>Tax</th>-->
-    <th>Quantity Required</th>
+    <th>Missing Quantity</th>
 
       </tr>
       </thead>';
