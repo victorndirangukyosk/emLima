@@ -1707,22 +1707,43 @@ function submit_copy() {
 
 function addtomissingproduct() {
               url = 'index.php?path=sale/order_product_missing/addtomissingproduct&token=<?php echo $token; ?>';
-                
+                var req_quantity="0";
             var selected_order_product_id = $.map($('input[name="selectedproducts[]"]:checked'), function(n, i){
+            
+                var req_quantity_single =$('input[id^="updated_quantity_'+n.value+'"]').val(); 
+                if(req_quantity!="0")
+                {
+                req_quantity=req_quantity+','+req_quantity_single;
+                }
+                else
+                {
+                    req_quantity=req_quantity_single;
+                }
+           console.log(req_quantity);
+           console.log("req_quantity");
             return n.value;
-            }).join(',');
+            }).join(','); 
+           console.log(req_quantity);
            console.log(selected_order_product_id);
+                
+
             if(selected_order_product_id=='' || selected_order_product_id==null)
             {
                 alert("Please Select the product");
                 return;
             } 
+
+             data = {
+                selected :selected_order_product_id,
+                quantityrequired: req_quantity
+            }
+
            
             $.ajax({
                 url: 'index.php?path=sale/order_product_missing/addtomissingproduct&token=<?php echo $token; ?>',
                 type: 'post',
                 dataType: 'json',
-                data: 'selected=' + selected_order_product_id,
+                data: data,
                 success: function(json) {
                             console.log(json);
                             alert("Product Added to Missing Products List");
@@ -1739,9 +1760,9 @@ function addtomissingproduct() {
  
 function validateFloatKeyPresswithVarient(el, evt, unitvarient) {
 
-	// $optionvalue=$('.product-variation option:selected').text().trim();
-	$optionvalue=unitvarient;
-	//  alert($optionvalue);
+        
+	 	 $optionvalue=unitvarient;
+	 
 	if($optionvalue=="Per Kg" || $optionvalue=="Kg")
 	{
 	 var charCode = (evt.which) ? evt.which : event.keyCode;

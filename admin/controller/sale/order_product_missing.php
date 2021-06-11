@@ -657,13 +657,19 @@ class ControllerSaleOrderProductMissing extends Controller
         if (isset($this->request->post['selected'])) {
             $orders  = explode(",",$this->request->post['selected']);
         }  
-        // echo "<pre>";print_r($orders);die;
+
+        if (isset($this->request->post['quantityrequired'])) {
+            $ordersquantityrequired  = explode(",",$this->request->post['quantityrequired']);
+        } 
+
+        //   echo "<pre>";print_r($ordersquantityrequired);die;
+        $i=0;
         foreach ($orders as $order_product_id) {
             // echo "<pre>";print_r($order_product_id);die;
 
-            $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id);
+            $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id,$ordersquantityrequired[$i]);
             //   echo "<pre>";print_r($order_product_info);die;
- 
+            $i++;
             
          }  
          $json = 'success';

@@ -8792,6 +8792,7 @@ class ControllerSaleOrder extends Controller {
       </thead>';
         $html .= '<tbody>';
         foreach ($res as $product) {
+            
         $html .= '<tr>
         <!--<th>' . $product['order_id'] . '</th>   -->   
         <!--<th>' . $product['order_product_id'] . '</th>   -->  
@@ -8806,7 +8807,7 @@ class ControllerSaleOrder extends Controller {
 	<th>' . $product['quantity'] . '</th>      
     <!--<th>' . $product['price'] . '</th> -->
 	<!--<th>' . $product['tax'] . '</th>  -->    
-    <th><input style="max-width: 75px !important; text-align: right;"   type="text" onkeypress="return validateFloatKeyPresswithVarient(this, event,'.$product['unit'].');" id=updated_quantity_'. $product['order_product_id'].'  value= ' . $product['quantity'] . '></th>      
+    <th><input style="max-width: 75px !important; text-align: right;" name="quantityrequired[]"  type="text" onkeypress="return validateFloatKeyPresswithVarient(this, event,'.$product['unit'].');" id=updated_quantity_'. $product['order_product_id'].'  value= ' . $product['quantity'] . '></th>      
            </tr>';
          }
         $html .= '</tbody></table><div>';
