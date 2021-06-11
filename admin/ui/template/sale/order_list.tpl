@@ -1009,7 +1009,7 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     
-                                      <button type="button" onclick="addtomissingproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add To Missing Products">Add To Missing Products</button>
+                                      <button type="button" onclick="addtomissingproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add To Missing Products">Save To Missing Products</button>
                                    </div>
                             </div>
                         </div>
@@ -1747,6 +1747,8 @@ function addtomissingproduct() {
                 success: function(json) {
                             console.log(json);
                             alert("Product Added to Missing Products List");
+                            //location=location;
+                            $('#store_modal').modal('hide')
                             
                 },			
                 error: function(xhr, ajaxOptions, thrownError) {		
