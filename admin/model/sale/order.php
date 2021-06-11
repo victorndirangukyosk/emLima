@@ -3114,11 +3114,12 @@ class ModelSaleOrder extends Model {
     }
     
     public function getOrderedMissingProducts($data = []) {
-        $sql = "SELECT o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, o.order_status_id,p.product_id,p.product_store_id,p.name,p.unit,p.quantity,p.price,p.total,p.tax FROM `" . DB_PREFIX . 'order` o ';
+        $sql = "SELECT mp.id,o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id,p.product_id,p.general_product_id,p.name,p.unit,p.quantity,p.price,p.total,p.tax,mp.quantity_required FROM `" . DB_PREFIX . 'order` o ';
          
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
-        $sql .= ' INNER JOIN ' . DB_PREFIX . 'missing_products p on (o.order_id = p.order_id) ';
+        $sql .= ' INNER JOIN ' . DB_PREFIX . 'order_product p on (o.order_id = p.order_id) ';
+        $sql .= ' INNER JOIN ' . DB_PREFIX . 'missing_products mp on (p.product_id = mp.product_store_id) ';
 
 
 
@@ -3137,7 +3138,7 @@ class ModelSaleOrder extends Model {
                 
             }
         } else {
-            $sql .= " WHERE o.order_status_id > '0'";
+            $sql .= " WHERE o.order_status_id > '0'  and p.order_id =mp.order_id ";
         }
 
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
@@ -3274,7 +3275,7 @@ class ModelSaleOrder extends Model {
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
 
-        //    echo "<pre>";print_r($sql);die;
+        // echo "<pre>";print_r($sql);die;
         $log = new Log('error.log');
         $query = $this->db->query($sql);
 

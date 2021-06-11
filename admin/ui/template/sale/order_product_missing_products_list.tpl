@@ -173,40 +173,34 @@
 
                                   
                            
-                                    <td class="text-right">Product Vendor ID</td>
+                                   <!-- <td class="text-right">Product Vendor ID</td>-->
                                     <td class="text-left">Product Name</td>
                                     <td class="text-left">Unit</td>
-                                    <td class="text-right">Quantity</td>
-                                    <td class="text-right">Price</td>
-                                    <td class="text-right">Total</td>
+                                    <td class="text-right">Missing Quantity</td>
+                                   <!-- <td class="text-right">Price</td>
+                                    <td class="text-right">Total</td>-->
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if ($orders) { ?>
                                 <?php foreach ($orders as $order) { ?>
                                 <tr>
-                                    <td class="text-center"><?php if (in_array($order['order_product_id'], $selected)) { ?>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $order['order_product_id']; ?>" checked="checked" />
+                                    <td class="text-center"><?php if (in_array($order['id'], $selected)) { ?>
+                                        <input type="checkbox" name="selected[]" value="<?php echo $order['id']; ?>" checked="checked" />
                                         <?php } else { ?>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $order['order_product_id']; ?>" />
+                                        <input type="checkbox" name="selected[]" value="<?php echo $order['id']; ?>" />
                                         <?php } ?>
                                         <input type="hidden" name="shipping_code[]" value="<?php echo $order['shipping_code']; ?>" />
                                     </td>
                                     <td class="text-right"><?php echo $order['order_id']; ?></td>
 
-                                    
-                                  
-                                    <!-- <td class="text-left"><?php echo $order['date_modified']; ?></td> 
-
-                                     <td class="text-right"><?php echo $order['delivery_date']; ?></td>
-                                    <td class="text-left"><?php echo $order['delivery_timeslot']; ?></td>-->
-                                                      
-                                    <td class="text-right"><?php echo $order['product_id']; ?></td>
+                                                                            
+                                    <!--<td class="text-right"><?php echo $order['product_id']; ?></td>-->
                                     <td class="text-left"><?php echo $order['name']; ?></td>
                                     <td class="text-left"><?php echo $order['unit']; ?></td>
-                                    <td class="text-right"><?php echo $order['quantity']; ?></td>
-                                    <td class="text-right"><?php echo $order['price']; ?></td>
-                                    <td class="text-right"><?php echo $order['total']; ?></td>
+                                    <td class="text-right"><?php echo $order['quantity_required']; ?></td>
+                                    <!--<td class="text-right"><?php echo $order['price']; ?></td>
+                                    <td class="text-right"><?php echo $order['total']; ?></td>-->
                                         
                                 </tr>
                                 <?php } ?>
