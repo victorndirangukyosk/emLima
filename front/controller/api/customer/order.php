@@ -3469,6 +3469,7 @@ class ControllerApiCustomerOrder extends Controller {
                     if (isset($product_info) && count($product_info) > 0 && $category_price_status == 1) {
                         $product_info['category_price'] = $category_status_price_details['price'];
                         $product_info['ordered_quantity'] = $Orderlist_product['quantity'];
+                        $product_info['product_note'] = $Orderlist_product['product_note'];
                         $log->write('store details');
                         $log->write($product_info);
                         $log->write($store_data);
@@ -3476,6 +3477,7 @@ class ControllerApiCustomerOrder extends Controller {
                     } else {
                         $product_info['category_price'] = 0;
                         $product_info['ordered_quantity'] = $Orderlist_product['quantity'];
+                        $product_info['product_note'] = $Orderlist_product['product_note'];
                     }
                     $all_products[] = $product_info;
                     $json['data'] = $all_products;
@@ -3495,4 +3497,5 @@ class ControllerApiCustomerOrder extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
 }
