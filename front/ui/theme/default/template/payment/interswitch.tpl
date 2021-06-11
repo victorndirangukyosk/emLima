@@ -37,6 +37,7 @@
         <div class="form-input">
             <label>Mode(TEST or LIVE)</label>
             <input id="param-mode" required="" value="TEST" />
+            <input id="param-url" required="" value="<?=$this->url->link('payment/interswitch/status', '', 'SSL'); ?>"
         </div>
 
         <button type="submit">Pay</button>
@@ -62,7 +63,7 @@ function submitHandler(event) {
 
   var mode = document.getElementById("param-mode").value;
 
-  var redirectUrl = location.href;
+  var redirectUrl = document.getElementById("param-url").value;
 
   var paymentRequest = {
     merchant_code: merchantCode,
@@ -87,7 +88,26 @@ function submitHandler(event) {
 }
 
 function paymentCallback(response) {
-  alert(response);
-  console.log(response);
+console.log(response);
+    $.ajax({
+        url: 'index.php?path=payment/interswitch/InterswitchPaymentResponse',
+        type: 'post',
+        data: {
+            payment_response : response
+        },
+        dataType: 'html',
+        cache: false,
+        async: true,
+        beforeSend: function() {
+        },
+        success: function(json) {
+            console.log(json);
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        },
+        complete: function() {            
+        },
+    });  
 }    
 </script>
