@@ -281,6 +281,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $this->load->model('localisation/order_status');
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
+                'id' => $result['id'],
                 'customer' => $result['customer'],
                 'company_name' => $result['company_name'],
                 'status' => $result['status'],
@@ -289,10 +290,11 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
                 'name' => $result['name'],
                 'unit' => $result['unit'],
                 'quantity' => $result['quantity'],
+                'quantity_required' => $result['quantity_required'],
                 'total' => $result['total'],
                 'price' => $result['price'],
                 'tax' => $result['tax'],
-                'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+                // 'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
                 'order_product_id' => $result['order_product_id'],
             ];
         }
