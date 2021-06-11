@@ -51,14 +51,7 @@
             </div>
             <div class="panel-body">
 
-            	<ul class="nav nav-tabs">
-                	<li class="active" ><a href="#tab-order-product" data-toggle="tab">Ordered Products</a></li>
-                	<li class="active" ><a href="#tab-missing-product" data-toggle="tab">Missing Products</a></li>
-                
-                </ul>
-                </div>
-                <div class="tab-content">
-                	<div class="tab-pane active" id="tab-order-product">
+            	 
                 <div class="well" style="display:none;max-height:310px !important;" >
                     <div class="row">
                         <div class="col-sm-4">
@@ -73,37 +66,7 @@
                                     <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
                                 </div>
                             <?php endif ?> 
-                            
-                            
-                            
-                            <!--<div class="form-group">
-                                <label class="control-label" for="input-customer"><?= $entry_city ?></label>
-                                <input type="text" name="filter_city" value="<?php echo $filter_city; ?>" class="form-control" />
-                            </div>-->
-
-                             <!--<div class="form-group">
-                                <label class="control-label" for="input-name"><?= $column_delivery_method ?></label>
-                                <input type="text" name="filter_delivery_method" value="<?php echo $filter_delivery_method; ?>" placeholder="<?php echo $column_delivery_method; ?>" id="input-name" class="form-control" />
-                            </div>-->
-                            
-                             <!--<div class="form-group">
                              
-                                <label class="control-label" for="input-order-type">Order Type</label>
-                                <select name="filter_order_type" id="input-order-type" class="form-control">
-                                    <option value="*" selected></option> 
-                                    <?php if ($filter_order_type=='1') { ?>
-                                    <option value="1" selected="selected">Manual</option>
-                                    <?php } else { ?>
-                                    <option value="1">Manual</option>
-                                    <?php } ?>
-                                     <?php if ($filter_order_type=='0') { ?>
-                                    <option value="0" selected="selected">Online</option>
-                                    <?php } else { ?>
-                                    <option value="0">Online</option>
-                                    <?php } ?>
-                                     
-                                </select>
-                            </div>-->
                          
 
                             
@@ -164,62 +127,7 @@
                            <div class="form-group">
                                 <label class="control-label" for="input-company">Company Name</label>
                                 <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
-                            </div>
-
-                            <?php if(!$this->user->isVendor()){ ?>  
-                            <!--<div class="form-group">
-                                <label class="control-label" for="input-model"><?= $text_vendor ?></label>
-                                <input type="text" name="filter_vendor" value="<?php echo $filter_vendor; ?>" placeholder="<?php echo $text_vendor; ?>" id="input-model" class="form-control" />
-                            </div>-->
-                            <?php } ?>
-
-
-                    <!--<div class="form-group">
-                                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group">    
-                                <label class="control-label" for="input-date-added-end"><?php echo $entry_date_added_end; ?></label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="<?php echo $entry_date_added_end; ?>" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>-->
-                            <!--<div class="form-group">
-                                <label class="control-label" for="input-date-modified"><?php echo $entry_date_modified; ?></label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_date_modified" value="<?php echo $filter_date_modified; ?>" placeholder="<?php echo $entry_date_modified; ?>" data-date-format="YYYY-MM-DD" id="input-date-modified" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>-->
-                            
-                             <!--<div class="form-group">
-                                <label class="control-label" for="input-delivery-date">Delivery Date</label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_delivery_date" value="<?php echo $filter_delivery_date; ?>" placeholder="<?php echo $column_delivery_date; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>-->
-
-                              <div class="form-group">
-                                <label class="control-label" for="input-delivery-date">Delivery Day</label>
-                                <select   name="filter_delivery_date" id="input-delivery-date" class="form-control">
-                                    <option value="today" <?php echo ($filter_order_day == 'today') ? 'selected="selected"':  "" ?> >Today</option>
-                                    <option value="tomorrow" <?php echo ($filter_order_day == 'tomorrow') ? 'selected="selected"':  "" ?> >Tomorrow</option>
-                                    
-                                </select>
-                            </div>
+                            </div> 
                             
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
 
@@ -229,9 +137,7 @@
                     </div>
 
                 </div>   
-                                      <!--<button type="button" onclick="addtomissingproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add To Missing Products">Add To Missing Products</button>-->
-                           
-                           </br>
+                                      
                            
 
                 <form method="post" enctype="multipart/form-data" target="_blank" id="form-order">
@@ -261,58 +167,12 @@
                                     <?php endif ?> -->
 
                                     
-                                    <!-- <td class="text-left">
-                                        <?php if ($sort == 'city') { ?>
-                                        <a href="<?php echo $sort_city; ?>" class="<?php echo strtolower($order); ?>">City</a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_city; ?>"><?= $column_city ?></a>
-                                        <?php } ?>
-                                    </td> 
-                                    <td class="text-left">
-                                        <?php if ($sort == 'status') { ?>
-                                        <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
-                                        <?php } ?>
-                                    </td>-->
+                                     
 
                                     
 
-                                    <!-- <td class="text-right"><?php if ($sort == 'o.total') { ?>
-                                        <a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_total; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?></a>
-                                        <?php } ?></td> -->
-                                    <!--<td class="text-right"><?php if ($sort == 'o.total') { ?>
-                                        <a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_total; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?></a>
-                                        <?php } ?></td>-->
-                                   <!-- <td class="text-left">
-                                        <?php if ($sort == 'o.date_added') { ?>
-                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
-                                        <?php } ?>
-                                    </td>
-                                     <td class="text-left"><?php if ($sort == 'o.date_modified') { ?>
-                                        <a href="<?php echo $sort_date_modified; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_modified; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_date_modified; ?>"><?php echo $column_date_modified; ?></a>
-                                        <?php } ?></td> 
-
-                                    <td class="text-left">Delivery Date</td>
-
-                                    <td class="text-left">Delivery Timeslot</td>-->
-
-                                   <!--  <?php if (!$this->user->isVendor()): ?>
-                                        <td class="text-right"><?php echo $column_payment; ?></td>
-                                     <?php endif ?>  
-
-                                    
-                                    <td class="text-right"><?php echo $column_delivery_method; ?></td>
-
-                                    <td class="text-right"><?php echo $column_action; ?></td>-->
+                                  
+                           
                                     <td class="text-right">Product Vendor ID</td>
                                     <td class="text-left">Product Name</td>
                                     <td class="text-left">Unit</td>
@@ -334,50 +194,13 @@
                                     </td>
                                     <td class="text-right"><?php echo $order['order_id']; ?></td>
 
-                                   <!-- <?php if (!$this->user->isVendor()): ?>
-
-                                        <td class="text-left" style="width:200px">
-                                            <?php echo $order['customer']; ?>  <br/>
-                                            <?php echo $order['company_name']  ; ?> <br/>
-                                            <?php echo $order['shipping_address']  ; ?>
-                                        </td>
-
-                                    <?php endif ?> 
-                                     <td class="text-left"><?php echo $order['city']; ?></td> -->
-                                    <!-- <td class="text-left"><?php echo $order['status']; ?></td> -->
-                                    <!--<td class="text-left">
-                                                <?php 
-                                                $disabled = NULL;
-                                                if($order['order_status_id'] == 5 || $order['order_status_id'] == 6) {
-                                                $disabled = 'disabled';
-                                                } ?>
-                                                <select name="order_status_id" id="input-order-status<?php echo $order['order_id']; ?>" class="form-control" <?php echo $disabled; ?> >
-						  <?php foreach ($order['all_order_statuses'] as $order_statuses) { ?>
-						  <?php if ($order_statuses['order_status_id'] == $order['order_status_id']) { ?>
-						  <option value="<?php echo $order_statuses['order_status_id']; ?>" selected="selected"><?php echo $order_statuses['name']; ?></option>
-						  <?php } else { ?>
-						  <option value="<?php echo $order_statuses['order_status_id']; ?>"><?php echo $order_statuses['name']; ?></option>
-						  <?php } ?>
-						  <?php } ?>
-						</select>
-                                                                       </td>
-                                   
-
-                                    <td class="text-right"><?php echo $order['sub_total']; /*echo $order['total'];*/ ?></td>
-                                    <td class="text-left"><?php echo $order['date_added']; ?></td>-->
+                                    
+                                  
                                     <!-- <td class="text-left"><?php echo $order['date_modified']; ?></td> 
 
                                      <td class="text-right"><?php echo $order['delivery_date']; ?></td>
                                     <td class="text-left"><?php echo $order['delivery_timeslot']; ?></td>-->
-                                    
-                                    <!-- <?php if (!$this->user->isVendor()): ?>
-                                        <td class="text-right"  style="width:120px"><?php echo $order['payment_method']; ?></td>
-                                     <?php endif ?>  
-
-                                    
-                                    <td class="text-right"><?php echo $order['shipping_method']; ?></td> -->
-
-                                    
+                                                      
                                     <td class="text-right"><?php echo $order['product_id']; ?></td>
                                     <td class="text-left"><?php echo $order['name']; ?></td>
                                     <td class="text-left"><?php echo $order['unit']; ?></td>
@@ -497,7 +320,7 @@
         });
 
    $('#button-filter').on('click', function () {
-            url = 'index.php?path=sale/order_product_missing&token=<?php echo $token; ?>';
+            url = 'index.php?path=sale/order_product_missing_products&token=<?php echo $token; ?>';
 
              var filter_company = $('input[name=\'filter_company\']').val();
 
@@ -1022,39 +845,7 @@ $.ajax({
 });
 console.log($(this).attr("data-order-id"));
 });
- 
-function addtomissingproduct() {
-               url = 'index.php?path=sale/order_product_missing/addtomissingproduct&token=<?php echo $token; ?>';
-                 
-            
-            var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
-            return n.value;
-            }).join(',');
-            console.log(selected_order_id);
-            if(selected_order_id=='' || selected_order_id==null)
-            {
-                alert("Please Select the product");
-                return;
-            }
-            
-            
-           
-$.ajax({
-		url: 'index.php?path=sale/order_product_missing/addtomissingproduct&token=<?php echo $token; ?>',
-		type: 'post',
-		dataType: 'json',
-		data: 'selected=' + selected_order_id,
-		success: function(json) {
-                    console.log(json);
-                     alert("Product Added to Missing Products List");
-                    
-		},			
-		error: function(xhr, ajaxOptions, thrownError) {		
-			 
-		}
-});
-            
-}
+   
 </script></div>
 <?php echo $footer; ?>
 

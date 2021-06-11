@@ -12,13 +12,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $this->getMissingProductsList();
     }
 
-    protected function validate() {
-        if (!$this->user->hasPermission('modify', 'sale/order_product_missing_products')) {
-            $this->error['warning'] = $this->language->get('error_permission');
-        }
-        return !$this->error;
-    }
-
+    
     protected function getMissingProductsList() {
         if (isset($this->request->get['filter_city'])) {
             $filter_city = $this->request->get['filter_city'];
@@ -236,12 +230,6 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             'href' => $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        // $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['invoicepdf'] = $this->url->link('sale/order/invoicepdf', 'token=' . $this->session->data['token'], 'SSL');
-        // // $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['shipping'] = $this->url->link('sale/order/shippingNote', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['add'] = $this->url->link('sale/order/add', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['delivery_sheet'] = $this->url->link('sale/order/consolidatedOrderSheet', 'token=' . $this->session->data['token'], 'SSL');
         $data['orders'] = [];
 
         $filter_data = [
@@ -279,15 +267,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         foreach ($results as $result) {
             $sub_total = 0;
 
-            // $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
-            //echo "<pre>";print_r($totals);die;
-            // foreach ($totals as $total) {
-            //     if ('sub_total' == $total['code']) {
-            //         $sub_total = $total['value'];
-            //         break;
-            //     }
-            // }
-
+            
             if ($this->user->isVendor()) {
                 $result['customer'] = strtok($result['firstname'], ' ');
             }
@@ -295,7 +275,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             if ($result['company_name']) {
                 $result['company_name'] = ' (' . $result['company_name'] . ')';
             } else {
-                // $result['company_name'] = "(NA)";
+                $result['company_name'] = "(NA)";
             }
 
             $this->load->model('localisation/order_status');
@@ -609,37 +589,5 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         }
     }
 
-    public function addtomissingproduct() {
-        $json = [];
-        try {
-            $this->load->language('sale/order');
-            // if ($this->request->server['HTTPS']) {
-            //     $data['base'] = HTTPS_SERVER;
-            // } else {
-            //     $data['base'] = HTTP_SERVER;
-            // }
-
-            $this->load->model('sale/order');
-            $data['orders'] = [];
-
-
-            if (isset($this->request->post['selected'])) {
-                $orders = explode(",", $this->request->post['selected']);
-            }
-
-            foreach ($orders as $order_product_id) {
-                //   echo "<pre>";print_r($order_product_id);die;
-
-                $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id);
-                //   echo "<pre>";print_r($order_product_info);die;
-            }
-            $json = 'success';
-        } catch (exception $ex) {
-            $json = 'failed';
-        } finally {
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($json));
-        }
-    }
-
+   
 }
