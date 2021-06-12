@@ -3419,15 +3419,15 @@ class ControllerApiCustomerOrder extends Controller {
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
-        if (!$this->customer->isLogged()) {
+        /*if (!$this->customer->isLogged()) {
             $json['status'] = 10014;
 
             $json['message'] = 'Unauthorized Session Expired!';
 
             http_response_code(401);
-        }
+        }*/
 
-        if ($this->validates($args) && $this->customer->isLogged()) {
+        if ($this->validates($args) /*&& $this->customer->isLogged()*/) {
 
             $this->load->model('account/order');
             $this->load->model('account/wishlist');
@@ -3491,7 +3491,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $json['message'][] = ['type' => $key, 'body' => $value];
             }
 
-            http_response_code(200);
+            http_response_code(400);
         }
 
         $this->response->addHeader('Content-Type: application/json');
