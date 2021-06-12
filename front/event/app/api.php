@@ -419,6 +419,7 @@ class EventAppApi extends Event
 
         $log = new Log('error.log');
         $log->write('getFunction');
+        $log->write($method);
         $log->write($path);
 
         $all_singular = false;
