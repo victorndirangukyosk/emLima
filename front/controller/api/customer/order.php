@@ -3491,7 +3491,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $json['message'][] = ['type' => $key, 'body' => $value];
             }
 
-            http_response_code(400);
+            http_response_code(200);
         }
 
         $this->response->addHeader('Content-Type: application/json');
