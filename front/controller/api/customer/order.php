@@ -3419,15 +3419,15 @@ class ControllerApiCustomerOrder extends Controller {
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
-        /*if (!$this->customer->isLogged()) {
-            $json['status'] = 10014;
+        /* if (!$this->customer->isLogged()) {
+          $json['status'] = 10014;
 
-            $json['message'] = 'Unauthorized Session Expired!';
+          $json['message'] = 'Unauthorized Session Expired!';
 
-            http_response_code(401);
-        }*/
+          http_response_code(401);
+          } */
 
-        if ($this->validates($args) /*&& $this->customer->isLogged()*/) {
+        if ($this->validates($args) /* && $this->customer->isLogged() */) {
 
             $this->load->model('account/order');
             $this->load->model('account/wishlist');
@@ -3457,6 +3457,11 @@ class ControllerApiCustomerOrder extends Controller {
                     $store_data = $this->model_assets_product->getProductStoreId($Orderlist_product['product_id'], $Orderlist_product['store_id']);
                     $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
 
+                    $percent_off = null;
+                    if (isset($product_info['special_price']) && isset($product_info['price']) && 0 != $product_info['price'] && 0 != $product_info['special_price']) {
+                        $percent_off = (($product_info['price'] - $product_info['special_price']) / $product_info['price']) * 100;
+                    }
+
                     $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
                     $log = new Log('error.log');
                     $log->write($category_status_price_details);
@@ -3470,6 +3475,7 @@ class ControllerApiCustomerOrder extends Controller {
                         $product_info['category_price'] = $category_status_price_details['price'];
                         $product_info['ordered_quantity'] = $Orderlist_product['quantity'];
                         $product_info['product_note'] = $Orderlist_product['product_note'];
+                        $product_info['percent_off'] = $percent_off;
                         $log->write('store details');
                         $log->write($product_info);
                         $log->write($store_data);
@@ -3478,6 +3484,7 @@ class ControllerApiCustomerOrder extends Controller {
                         $product_info['category_price'] = 0;
                         $product_info['ordered_quantity'] = $Orderlist_product['quantity'];
                         $product_info['product_note'] = $Orderlist_product['product_note'];
+                        $product_info['percent_off'] = $percent_off;
                     }
                     $all_products[] = $product_info;
                     $json['data'] = $all_products;
