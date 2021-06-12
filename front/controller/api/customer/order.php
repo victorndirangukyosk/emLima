@@ -3461,7 +3461,8 @@ class ControllerApiCustomerOrder extends Controller {
                     if (isset($product_info['special_price']) && isset($product_info['price']) && 0 != $product_info['price'] && 0 != $product_info['special_price']) {
                         $percent_off = (($product_info['price'] - $product_info['special_price']) / $product_info['price']) * 100;
                     }
-
+                    
+                    $this->load->model('tool/image');
                     if (file_exists(DIR_IMAGE . $product_info['image'])) {
                         $image = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
                     } else {
