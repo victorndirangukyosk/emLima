@@ -3462,6 +3462,12 @@ class ControllerApiCustomerOrder extends Controller {
                         $percent_off = (($product_info['price'] - $product_info['special_price']) / $product_info['price']) * 100;
                     }
 
+                    if (file_exists(DIR_IMAGE . $product_info['image'])) {
+                        $image = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+                    } else {
+                        $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+                    }
+
                     $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
                     $log = new Log('error.log');
                     $log->write($category_status_price_details);
@@ -3476,6 +3482,7 @@ class ControllerApiCustomerOrder extends Controller {
                         $product_info['ordered_quantity'] = $Orderlist_product['quantity'];
                         $product_info['product_note'] = $Orderlist_product['product_note'];
                         $product_info['percent_off'] = $percent_off;
+                        $product_info['image'] = $image;
                         $log->write('store details');
                         $log->write($product_info);
                         $log->write($store_data);
@@ -3485,6 +3492,7 @@ class ControllerApiCustomerOrder extends Controller {
                         $product_info['ordered_quantity'] = $Orderlist_product['quantity'];
                         $product_info['product_note'] = $Orderlist_product['product_note'];
                         $product_info['percent_off'] = $percent_off;
+                        $product_info['image'] = $image;
                     }
                     $all_products[] = $product_info;
                     $json['data'] = $all_products;
