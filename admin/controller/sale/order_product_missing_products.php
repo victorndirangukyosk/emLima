@@ -252,22 +252,65 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             'filter_date_modified' => $filter_date_modified,
             'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
-            'order' => $order,
-            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin'),
+            'order' => $order,// all orders are fecting by group, so dont send limit
+            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            // 'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        // echo "<pre>";print_r($filter_data);die; 
+        // echo "<pre>";print_r($filter_data);die;        
 
-        $order_total = $this->model_sale_order->getTotalOrderedMissingProducts($filter_data);
+        // $order_total = $this->model_sale_order->getTotalOrderedMissingProducts($filter_data);
 
-        $results = $this->model_sale_order->getOrderedMissingProducts($filter_data);
+        // $results = $this->model_sale_order->getOrderedMissingProducts($filter_data);
 
-        //        echo "<pre>";print_r($results);die;
-        foreach ($results as $result) {
-            $sub_total = 0;
+
+#region
+        
+        $order_total_final = [];
+        $results_final = [];
+
+        $filter_order_id_temp = $this->model_sale_order->getOrderedMissingProductsOnlyOrder($filter_data);
+
+        if (!empty($filter_order_id_temp) ) {
+             
+            // echo "<pre>";print_r($filter_order_id_temp);die;
+
+            foreach ($filter_order_id_temp as $tmp) {
+                $tmp=$tmp[order_id];
+
+            //   echo "<pre>";print_r($tmp);die;
+
+                // code...
+                $filter_data['filter_order_id'] = $tmp;
+
+                 $order_total = $this->model_sale_order->getTotalOrderedMissingProducts($filter_data);
+
+                  $results = $this->model_sale_order->getOrderedMissingProducts($filter_data);
+
+                //  echo "<pre>";print_r($results);die;
+                
+                array_push($order_total_final, $order_total);
+                array_push($results_final, $results);
+            }
+
+            $order_total = array_sum($order_total_final);
+        } else {
+            $order_total = 0;
+            $results = [];
+        }
+
+
+        foreach ($results_final as $key => $results) {
+            // code...
 
             
+            $result_order_tmp = null;
+
+            foreach ($results as $result) {
+                
+
+
+                
             if ($this->user->isVendor()) {
                 $result['customer'] = strtok($result['firstname'], ' ');
             }
@@ -278,9 +321,11 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
                 $result['company_name'] = "(NA)";
             }
 
-            $this->load->model('localisation/order_status');
-            $data['orders'][] = [
-                'order_id' => $result['order_id'],
+               
+                $this->load->model('localisation/order_status');
+                $data['orders'][$result['order_id']]['orders'][] = [
+
+                    'order_id' => $result['order_id'],
                 'id' => $result['id'],
                 'customer' => $result['customer'],
                 'company_name' => $result['company_name'],
@@ -296,8 +341,24 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
                 'tax' => $result['tax'],
                 // 'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
                 'order_product_id' => $result['order_product_id'],
-            ];
+
+                   ];
+
+             
+                $result_status_tmp = $result['status'];
+            }
+
+             
         }
+
+
+        #end region
+        // echo "<pre>";print_r($data);die;
+
+        $data['all_orders'] = $data['orders'];
+
+        // echo "<pre>";print_r($data['all_orders']);die;
+
 
         $data['heading_title'] = $this->language->get('heading_title');
         $data['text_vendor'] = $this->language->get('text_vendor');

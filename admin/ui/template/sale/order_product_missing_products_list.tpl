@@ -116,15 +116,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if ($orders) { ?>
-                                <?php foreach ($orders as $order) { ?>
+                                <?php if ($all_orders) { ?>
+                                <?php foreach ($all_orders as $key => $orderLoop ) { ?>
+
+                                 <tr>  <td colspan="11">  </td> </tr>
+                                    <tr>  <td colspan="11"><center><h3 class="my-order-title label" style="background-color: #ff2a00a8;display: block;line-height: 2;" id="order-status-id" ><?= $key?> </h3>   </center></td> </tr>
+                                    <tr>  <td colspan="11">  </td> </tr>
+                        <?php foreach ($orderLoop['orders'] as $order) { ?>
                                 <tr>
                                     <td class="text-center"><?php if (in_array($order['id'], $selected)) { ?>
                                         <input type="checkbox" name="selected[]" value="<?php echo $order['id']; ?>" checked="checked" />
                                         <?php } else { ?>
                                         <input type="checkbox" name="selected[]" value="<?php echo $order['id']; ?>" />
                                         <?php } ?>
-                                        <input type="hidden" name="shipping_code[]" value="<?php echo $order['shipping_code']; ?>" />
                                     </td>
                                     <td class="text-right"><?php echo $order['order_id']; ?></td>
 
@@ -138,6 +142,7 @@
                                         
                                 </tr>
                                 <?php } ?>
+                                  <?php } ?>
                                 <?php } else { ?>
                                 <tr>
                                     <td class="text-center" colspan="11"><?php echo $text_no_results; ?></td>
@@ -147,12 +152,12 @@
                         </table>
                     </div>
                 </form>
-                <?php if ($orders) { ?>
+               <!-- <?php if ($all_orders) { ?>
                 <div class="row">
                     <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
                     <div class="col-sm-6 text-right"><?php echo $results; ?></div>
                 </div>
-                <?php } ?>
+                <?php } ?>-->
                
 
                </div>
