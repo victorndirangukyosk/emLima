@@ -119,9 +119,9 @@
                                 <?php if ($all_orders) { ?>
                                 <?php foreach ($all_orders as $key => $orderLoop ) { ?>
 
-                                 <tr>  <td colspan="11">  </td> </tr>
-                                    <tr>  <td colspan="11"><center><h3 class="my-order-title label" style="background-color: #ff2a00a8;display: block;line-height: 2;" id="order-status-id" ><?= $key?> </h3>   </center></td> </tr>
-                                    <tr>  <td colspan="11">  </td> </tr>
+                                 
+                                    <tr class="header">  <td colspan="11"><center><h3 class="my-order-title label" style="background-color: #ff2a00a8;display: block;line-height: 2;" id="order-status-id" ><?= $key?> </h3>   </center></td> </tr>
+                                    
                         <?php foreach ($orderLoop['orders'] as $order) { ?>
                                 <tr>
                                     <td class="text-center"><?php if (in_array($order['id'], $selected)) { ?>
@@ -288,7 +288,13 @@
      location = location;
     }, 300 * 1000); // 60 * 1000 milsec
      
-                   
+
+
+         $('.header').click(function(){
+
+$(this).nextUntil('tr.header').slideToggle(1000);
+});
+
 </script> 
 <?php echo $footer; ?>
 
@@ -297,5 +303,10 @@
 .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn)
 {
  width: 100%;
+}
+
+tr.header
+{
+    cursor:pointer;
 }
 </style>
