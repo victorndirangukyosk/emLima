@@ -1298,7 +1298,7 @@ class ModelReportExcel extends Model {
                 $sheet_subtitle_1_new = $order['comment'];
 
                 // $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
-                $objPHPExcel->getActiveSheet()->mergeCells('A2:B2');
+                // $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
                 $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Date of Delivery : ' . $order['delivery_date']);
                 $objPHPExcel->getActiveSheet()->setCellValue('B1', $order['delivery_date']);
                 //$objPHPExcel->getActiveSheet()->setCellValue('C1', 'Delivery Timeslot');
