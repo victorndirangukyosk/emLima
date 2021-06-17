@@ -104,6 +104,9 @@
                                 <label class="col-sm-2 control-label" for="input-orderprefix"><?php echo $entry_orderprefix; ?></label>
                                 <div class="col-sm-10">
                                     <input type="text" name="orderprefix" value="<?php echo $orderprefix; ?>" placeholder="<?php echo $orderprefix; ?>" id="input-orderprefix" class="form-control" />
+                                    <?php if ($error_orderprefix) { ?>
+                                    <div class="text-danger"><?php echo $error_orderprefix; ?></div>
+                                    <?php } ?>
                                 </div>
                             </div>
 
