@@ -127,6 +127,12 @@ class ModelVendorVendor extends Model {
 
         return $query->row;
     }
+    
+    public function getVendorByStoreId($store_id) {
+        $query = $this->db->query("SELECT * from `" . DB_PREFIX . "store`  WHERE store_id =" . (int) $store_id);
+
+        return $query->row;
+    }
 
     public function addVendorBank($data,$vendor_id) {
 
