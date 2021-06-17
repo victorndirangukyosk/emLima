@@ -1246,6 +1246,7 @@ class ControllerSaleOrder extends Controller {
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
                 'order_prefix' => $vendor_details['orderprefix'].'-',
+                'vendor_name' => $vendor_details['username'],
                 'customer' => $result['customer'],
                 'company_name' => $result['company_name'],
                 'status' => $result['status'],
