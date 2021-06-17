@@ -1390,6 +1390,7 @@ class ControllerSaleCustomer extends Controller {
 
         //echo "<pre>";print_r($customer_info);die;
         $this->load->model('sale/customer_group');
+        $this->load->model('user/accountmanager');
         $filter_data = [
             'filter_parent' => $this->request->get['customer_id'],
             'order' => 'DESC',
@@ -1399,6 +1400,7 @@ class ControllerSaleCustomer extends Controller {
         $data['sub_users'] = $this->model_sale_customer->getSubCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['account_managers_list'] = $this->model_user_accountmanager->getAccountManagers();
 
         if (isset($this->request->post['company_name'])) {
             $data['company_name'] = $this->request->post['company_name'];
@@ -1593,6 +1595,14 @@ class ControllerSaleCustomer extends Controller {
             $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
         } else {
             $data['SAP_customer_no'] = '';
+        }
+        
+        if (isset($this->request->post['account_manager'])) {
+            $data['account_manager'] = $this->request->post['account_manager'];
+        } elseif (!empty($customer_info)) {
+            $data['account_manager'] = $customer_info['account_manager_id'];
+        } else {
+            $data['account_manager'] = '';
         }
 
         // $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];

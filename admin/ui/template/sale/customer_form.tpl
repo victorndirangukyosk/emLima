@@ -306,7 +306,22 @@
                             </div>
                             <?php } ?>
                             
-                            <?php if($account_manager_name != NULL) { ?>
+                        <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-account-manager">Account Manager Name</label>
+                        <div class="col-sm-10">
+                            <select name="account_manager" id="input-account-manager" class="form-control" <?php echo $customer_category_disabled; ?> >
+                            <option value="">Select Account Manager</option>
+                            <?php foreach ($account_managers_list as $account_managers_lis) { ?>
+                             <?php if(isset($account_manager) && ($account_manager == $account_managers_lis['user_id'])){ ?>
+                            <option selected="selected" value="<?php echo $account_managers_lis['user_id']; ?>"><?php echo $account_managers_lis['firstname'].''.$account_managers_lis['lastname']; ?></option>
+                            <?php } else { ?>
+                             <option  value="<?php echo $account_managers_lis['user_id']; ?>"><?php echo $account_managers_lis['firstname'].''.$account_managers_lis['lastname']; ?></option>
+                            <?php } ?>
+                            <?php } ?>
+                          </select>
+                        </div>
+                      </div>
+                            <!--<?php if($account_manager_name != NULL) { ?>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-account-manager">Account Manager Name</label>
                                 <div class="col-sm-10">
@@ -331,7 +346,7 @@
                                     <input type="text" value="<?php echo $account_manager_phone; ?>" readonly="" class="form-control" />
                                 </div>
                             </div>
-                            <?php } ?>
+                            <?php } ?>-->
                         <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-source">Source</label>
                                 <div class="col-sm-10">

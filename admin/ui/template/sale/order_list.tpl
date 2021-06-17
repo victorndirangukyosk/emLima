@@ -158,10 +158,10 @@
                             </div>
 
                             <?php if(!$this->user->isVendor()){ ?>  
-                            <!--<div class="form-group">
+                            <div class="form-group">
                                 <label class="control-label" for="input-model"><?= $text_vendor ?></label>
                                 <input type="text" name="filter_vendor" value="<?php echo $filter_vendor; ?>" placeholder="<?php echo $text_vendor; ?>" id="input-model" class="form-control" />
-                            </div>-->
+                            </div>
                             <?php } ?>
 
 
@@ -223,6 +223,7 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_order; ?>"><?php echo $column_order_id; ?></a>
                                         <?php } ?></td>
+                                    <td class="text-center">Vendor</td>
 
                                     <?php if (!$this->user->isVendor()): ?>
 
@@ -302,8 +303,8 @@
                                         <?php } ?>
                                         <input type="hidden" name="shipping_code[]" value="<?php echo $order['shipping_code']; ?>" />
                                     </td>
-                                    <td class="text-right"><?php echo $order['order_id']; ?></td>
-
+                                    <td class="text-left"><?php echo $order['order_prefix'].''.$order['order_id']; ?></td>
+                                    <td class="text-left"><?php echo $order['vendor_name']; ?></td>
                                     <?php if (!$this->user->isVendor()): ?>
 
                                         <td class="text-left" style="width:200px">
@@ -391,6 +392,11 @@
                                        <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
                                        </a> 
                                        <?php } ?>
+                                        <?php if ($order['order_status_id'] == 1) { ?>
+                                       <a href="#" data-toggle="tooltip" data-target="store_modal" title="Order Products List" data-orderid="<?= $order['order_id'] ?>" id="order_products_list">
+                                       <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 512 512" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M499.5 385.4L308.9 57.2c-31.8-52.9-74.1-52.9-105.9 0L12.5 385.4c-31.8 52.9 0 95.3 63.5 95.3h360c63.5 0 95.3-42.4 63.5-95.3zm-201.1 52.9h-84.7v-84.7h84.7v84.7zm0-127h-84.7V120.7h84.7v190.6z" fill="#626262"/></svg>
+                                       </a> 
+                                        <?php } ?>
                                        </div>
                                     </td>
                                         
@@ -982,7 +988,44 @@
             </div>
         </div>
     </div>
+    
+    <div class="modal fade" id="store_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content"> 
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Order Products List</h4>
+                                </div>
+                                <div class="modal-body orderproducts" style="overflow-y: auto;overflow-x: hidden;max-height:400px">
+
+                                    <div class="message_wrapper"></div>
+
+                                    <div class="form-group">
+                                        <input type="text" name="store" value="" placeholder="Store name" id="input-product" class="form-control" />
+                                        <div id="store-list" class="well well-sm" style="max-width: 100%; height: 150px; overflow: auto;">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    
+                                      <button type="button" onclick="addtomissingproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add To Missing Products">Save To Missing Products</button>
+                                   </div>
+                            </div>
+                        </div>
+                    </div> <!-- /.modal -->
 <script  type="text/javascript">
+
+
+
+
+ $('input[name^=\'selectedproducts\']').on('change', function () {            
+            var selectedproducts = $('input[name^=\'selectedproducts\']:checked');  
+
+        });
+        $('input[name^=\'selectedproducts\']:first').trigger('change');
+
 
 
 function getPO($order_id) {
@@ -1614,7 +1657,149 @@ function downloadOrdersonsolidated() {
             location = url;
             
 }
-</script></div>
+
+$('a[id^=\'order_products_list\']').on('click', function (e) {
+e.preventDefault();
+$('#store_modal').modal('toggle');
+ var order_id_val=$(this).attr('data-orderid');
+           console.log(order_id_val);
+$('.orderproducts').html('');
+	   $.ajax({
+                    url: 'index.php?path=sale/order/getOrderProducts&token=<?= $token ?>',
+                    dataType: 'html',
+                    data: { order_id : order_id_val },
+                    success: function(json) {
+                        
+					   $('.orderproducts').html(json);
+                    },
+					error: function(json) {
+					 console.log('html',json);
+					  $('.orderproducts').html(json);
+                    }
+         });
+
+});
+
+
+
+function submit_copy() {
+    
+    $('.message_wrapper').html('');
+    
+    $error = '';
+    
+    if($('input[name="product_store[]"').length == 0){
+        $error += '<li>Select store(s).</li>';
+    }
+    
+    if($('input[name="selected[]"]:checked').length == 0){
+        $error += '<li>Select products.</li>';
+    }
+    
+    if(!$error){        
+        $('form').attr('action','index.php?path=catalog/product/copy&token=<?= $token ?>').submit();
+    } else{        
+        $('.message_wrapper').html('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-label="Close">&times</button><ul class="list list-unstyled">'+$error+'</ul></div>');
+    }
+}
+
+
+
+
+function addtomissingproduct() {
+              url = 'index.php?path=sale/order_product_missing/addtomissingproduct&token=<?php echo $token; ?>';
+                var req_quantity="0";
+            var selected_order_product_id = $.map($('input[name="selectedproducts[]"]:checked'), function(n, i){
+            
+                var req_quantity_single =$('input[id^="updated_quantity_'+n.value+'"]').val(); 
+                if(req_quantity!="0")
+                {
+                req_quantity=req_quantity+','+req_quantity_single;
+                }
+                else
+                {
+                    req_quantity=req_quantity_single;
+                }
+           console.log(req_quantity);
+           console.log("req_quantity");
+            return n.value;
+            }).join(','); 
+           console.log(req_quantity);
+           console.log(selected_order_product_id);
+                
+
+            if(selected_order_product_id=='' || selected_order_product_id==null)
+            {
+                alert("Please Select the product");
+                return;
+            } 
+
+             data = {
+                selected :selected_order_product_id,
+                quantityrequired: req_quantity
+            }
+
+           
+            $.ajax({
+                url: 'index.php?path=sale/order_product_missing/addtomissingproduct&token=<?php echo $token; ?>',
+                type: 'post',
+                dataType: 'json',
+                data: data,
+                success: function(json) {
+                            console.log(json);
+                            alert("Product Added to Missing Products List");
+                            //location=location;
+                            $('#store_modal').modal('hide')
+                            
+                },			
+                error: function(xhr, ajaxOptions, thrownError) {		
+                    
+                }       
+        });
+            
+}
+
+
+ 
+function validateFloatKeyPresswithVarient(el, evt, unitvarient) {
+
+        
+	 	 $optionvalue=unitvarient;
+	 
+	if($optionvalue=="Per Kg" || $optionvalue=="Kg")
+	{
+	 var charCode = (evt.which) ? evt.which : event.keyCode;
+	 var number = el.value.split('.');
+	 if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+		 return false;
+	 }
+	 //just one dot
+	 if(number.length>1 && charCode == 46){
+		 return false;
+	 }
+	 //get the carat position
+	 var caratPos = getSelectionStart(el);
+	 var dotPos = el.value.indexOf(".");
+	 if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+		 return false;
+	 }
+	 return true;
+	}
+
+	else{
+	 var charCode = (evt.which) ? evt.which : event.keyCode;
+	 if (charCode > 31 &&
+	   (charCode < 48 || charCode > 57))
+	   return false;
+	   else
+   
+   return true;
+	}
+}
+
+
+
+    </script></div>
 <?php echo $footer; ?>
 
 <style>
