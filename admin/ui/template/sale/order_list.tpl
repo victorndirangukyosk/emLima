@@ -304,7 +304,7 @@
                                         <input type="hidden" name="shipping_code[]" value="<?php echo $order['shipping_code']; ?>" />
                                     </td>
                                     <td class="text-left"><?php echo $order['order_prefix'].''.$order['order_id']; ?></td>
-                                    <td class="text-right"><?php echo $order['vendor_name']; ?></td>
+                                    <td class="text-left"><?php echo $order['vendor_name']; ?></td>
                                     <?php if (!$this->user->isVendor()): ?>
 
                                         <td class="text-left" style="width:200px">
