@@ -458,6 +458,7 @@ class ControllerVendorVendor extends Controller {
         $data['entry_commision'] = $this->language->get('entry_commision'); 
         $data['entry_fixed_commision'] = $this->language->get('entry_fixed_commision'); 
         $data['entry_tin_no'] = $this->language->get('entry_tin_no'); 
+        $data['entry_orderprefix'] = $this->language->get('entry_orderprefix'); 
 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');
@@ -789,6 +790,14 @@ class ControllerVendorVendor extends Controller {
             $data['tin_no'] = $vendor_info['tin_no'];
         } else {
             $data['tin_no'] = '';
+        }
+        
+        if (isset($this->request->post['orderprefix'])) {
+            $data['orderprefix'] = $this->request->post['orderprefix'];
+        } elseif (!empty($vendor_info)) {
+            $data['orderprefix'] = $vendor_info['orderprefix'];
+        } else {
+            $data['orderprefix'] = '';
         }
         
         if (isset($this->request->post['address'])) {
@@ -1277,6 +1286,7 @@ class ControllerVendorVendor extends Controller {
         $data['entry_business'] = $this->language->get('entry_business');
         $data['entry_type'] = $this->language->get('entry_type');
         $data['entry_tin_no'] = $this->language->get('entry_tin_no');
+        $data['entry_orderprefix'] = $this->language->get('entry_orderprefix');
         $data['entry_mobile'] = $this->language->get('entry_mobile');
         $data['entry_telephone'] = $this->language->get('entry_telephone');
         $data['entry_address'] = $this->language->get('entry_address');
