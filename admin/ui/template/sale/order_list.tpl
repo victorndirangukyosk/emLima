@@ -158,10 +158,10 @@
                             </div>
 
                             <?php if(!$this->user->isVendor()){ ?>  
-                            <!--<div class="form-group">
+                            <div class="form-group">
                                 <label class="control-label" for="input-model"><?= $text_vendor ?></label>
                                 <input type="text" name="filter_vendor" value="<?php echo $filter_vendor; ?>" placeholder="<?php echo $text_vendor; ?>" id="input-model" class="form-control" />
-                            </div>-->
+                            </div>
                             <?php } ?>
 
 
