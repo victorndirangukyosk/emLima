@@ -21,6 +21,7 @@ class ControllerSaleOrder extends Controller {
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('sale/order');
+        $this->load->model('vendor/vendor');
 
         $this->getList();
     }
@@ -1220,6 +1221,8 @@ class ControllerSaleOrder extends Controller {
             $sub_total = 0;
 
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
+            $store_details = $this->model_vendor_vendor->getVendorByStoreId($result['store_id']);
+            $vendor_details = $this->model_vendor_vendor->getVendorDetails($store_details['vendor_id']);
 
             //echo "<pre>";print_r($totals);die;
             foreach ($totals as $total) {
@@ -1242,6 +1245,7 @@ class ControllerSaleOrder extends Controller {
             $this->load->model('localisation/order_status');
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
+                'order_prefix' => $vendor_details['orderprefix'].'-',
                 'customer' => $result['customer'],
                 'company_name' => $result['company_name'],
                 'status' => $result['status'],
@@ -1547,7 +1551,6 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('drivers/drivers');
         $drivers = $this->model_drivers_drivers->getDrivers();
         $data['drivers'] = $drivers;
-
 
         $this->load->model('orderprocessinggroup/orderprocessinggroup');
         $order_processing_groups = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
@@ -4640,7 +4643,6 @@ class ControllerSaleOrder extends Controller {
                 $data['delivery_executive_name'] = $delivery_executive_name;
                 $data['delivery_executive_phone'] = $delivery_executive_phone;
 
-
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
@@ -4928,7 +4930,6 @@ class ControllerSaleOrder extends Controller {
                 }
                 $data['delivery_executive_name'] = $delivery_executive_name;
                 $data['delivery_executive_phone'] = $delivery_executive_phone;
-
 
                 $data['orders'][] = [
                     'order_id' => $order_id,
@@ -8403,7 +8404,6 @@ class ControllerSaleOrder extends Controller {
             'filter_customer' => $filter_customer,
         ];
 
-
         //echo "<pre>";print_r($filter_data);die;
 
         $this->load->model('report/sale');
@@ -8633,7 +8633,6 @@ class ControllerSaleOrder extends Controller {
         $customer_info['deliveryexecutivename'] = $executive_name;
         $customer_info['deliveryexecutivephone'] = $executive_phone;
         $customer_info['vehicle'] = $order_info['vehicle_number'];
-
 
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
