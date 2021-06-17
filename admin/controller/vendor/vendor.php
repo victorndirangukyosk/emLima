@@ -586,6 +586,12 @@ class ControllerVendorVendor extends Controller {
         } else {
             $data['error_lastname'] = '';
         }
+        
+        if (isset($this->error['orderprefix'])) {
+            $data['error_orderprefix'] = $this->error['orderprefix'];
+        } else {
+            $data['error_orderprefix'] = '';
+        }
 
         $url = '';
 
@@ -965,6 +971,14 @@ class ControllerVendorVendor extends Controller {
 
         if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
             $this->error['lastname'] = $this->language->get('error_lastname');
+        }
+        
+        if ((utf8_strlen(trim($this->request->post['orderprefix'])) < 2) || (utf8_strlen(trim($this->request->post['orderprefix'])) > 5)) {
+            $this->error['orderprefix'] = 'Order Prefix Length Should Be Between 2 To 5 Characters!';
+        }
+        
+        if (utf8_strlen(trim($this->request->post['orderprefix'])) > 2 && !preg_match("/^[a-zA-Z0-9]+$/", trim($this->request->post['orderprefix']))) {
+            $this->error['orderprefix'] = 'Order Prefix Characters Should Be Alpha Numeric Only!';
         }
 
         /*bank validate*/
