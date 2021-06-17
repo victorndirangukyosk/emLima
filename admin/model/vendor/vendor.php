@@ -21,6 +21,7 @@ class ModelVendorVendor extends Model {
             . "city_id = '" . $this->db->escape($data['city_id']) . "', " 
             . "address = '" . $this->db->escape($data['address']) . "', "                 
             . "image = '" . $this->db->escape($data['image']) . "', "
+            . "orderprefix = '" . $this->db->escape($data['orderprefix']) . "', "
             . "status = '" . (int)$data['status'] . "', "
             . "date_added = NOW()");
 
@@ -58,6 +59,7 @@ class ModelVendorVendor extends Model {
                 . "latitude = '" . $this->db->escape($data['latitude']) . "', "   
                 . "longitude = '" . $this->db->escape($data['longitude']) . "', "                 
                 . "image = '" . $this->db->escape($data['image']) . "', "
+                . "orderprefix = '" . $this->db->escape($data['orderprefix']) . "', "
                 . "status = '" . (int)$data['status'] . "' "
                 . "WHERE user_id='" . $user_id . "'";
 
