@@ -1540,6 +1540,10 @@ class Controllercheckoutdeliverytime extends Controller {
             $delivery_timeslot = $this->request->post['timeslot'];
             $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
             $this->session->data['timeslot'][76] = $delivery_timeslot;
+            $log = new Log('error.log');
+            $log->write('timeslot');
+            $log->write($this->session->data['timeslot']);
+            $log->write('timeslot');
         } else {
             $delivery_timeslot = '';
         }
