@@ -35,6 +35,7 @@ $_['entry_top'] = 'Top';
 $_['entry_column'] = 'Columns';
 $_['entry_sort_order'] = 'Sort Order';
 $_['entry_status'] = 'Status';
+$_['entry_delivery_time'] = 'Delivery Time';
 $_['entry_layout'] = 'Layout Override';
 $_['entry_update_menu_name'] = 'Update Menu Name';
 

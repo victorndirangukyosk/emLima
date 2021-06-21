@@ -34,7 +34,7 @@ class ModelCatalogCategory extends Model
     {
         $this->trigger->fire('pre.admin.category.add', $data);
 
-        $this->db->query('INSERT INTO '.DB_PREFIX."category SET discount = '".$data['discount']."', parent_id = '".(int) $data['parent_id']."', `top` = '".(isset($data['top']) ? (int) $data['top'] : 0)."', `column` = '".(int) $data['column']."', sort_order = '".(int) $data['sort_order']."', status = '".(int) $data['status']."', date_modified = NOW(), date_added = NOW()");
+        $this->db->query('INSERT INTO '.DB_PREFIX."category SET discount = '".$data['discount']."', parent_id = '".(int) $data['parent_id']."', `top` = '".(isset($data['top']) ? (int) $data['top'] : 0)."', `column` = '".(int) $data['column']."', sort_order = '".(int) $data['sort_order']."', status = '".(int) $data['status']."', delivery_time = '".(int) $data['delivery_time']."', date_modified = NOW(), date_added = NOW()");
 
         $category_id = $this->db->getLastId();
 
@@ -133,7 +133,7 @@ class ModelCatalogCategory extends Model
 
         $isTop = $this->db->query('SELECT * FROM `'.DB_PREFIX."category` WHERE category_id = '".(int) $category_id."'");
 
-        $this->db->query('UPDATE '.DB_PREFIX."category SET discount = '".$data['discount']."', parent_id = '".(int) $data['parent_id']."', `top` = '".(isset($data['top']) ? (int) $data['top'] : 0)."', `column` = '".(int) $data['column']."', sort_order = '".(int) $data['sort_order']."', status = '".(int) $data['status']."', date_modified = NOW() WHERE category_id = '".(int) $category_id."'");
+        $this->db->query('UPDATE '.DB_PREFIX."category SET discount = '".$data['discount']."', parent_id = '".(int) $data['parent_id']."', `top` = '".(isset($data['top']) ? (int) $data['top'] : 0)."', `column` = '".(int) $data['column']."', sort_order = '".(int) $data['sort_order']."', status = '".(int) $data['status']."', delivery_time = '".(int) $data['delivery_time']."', date_modified = NOW() WHERE category_id = '".(int) $category_id."'");
 
         if (isset($data['image'])) {
             $this->db->query('UPDATE '.DB_PREFIX."category SET image = '".$this->db->escape($data['image'])."' WHERE category_id = '".(int) $category_id."'");
