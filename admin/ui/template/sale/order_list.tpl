@@ -815,7 +815,7 @@
     <div class="modal fade" id="driverModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
-                    <div class="modal-body"  style="height:400px;">
+                    <div class="modal-body"  style="height:450px;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="store-find-block">
                             <div class="mydivsss">
@@ -869,6 +869,16 @@
 
                                                     <div class="col-md-12">
                                                         <input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>
+                                                    <br/> </div>
+                                                </div>
+                                            </div>
+
+                                                 <div class="form-row">
+                                                <div class="form-group">
+                                                    <label> Delivery Charge </label>
+
+                                                    <div class="col-md-12">
+                                                        <input id="order_delivery_charge" maxlength="10" required style="max-width:100% ;" name="order_delivery_charge" type="number" placeholder="Delivery Charge" class="form-control input-md" required>
                                                     <br/> </div>
                                                 </div>
 
@@ -1123,9 +1133,11 @@ function savedriverdetails() {
    var driver_id = $('select[name="order_drivers"]').val();
    //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
    var vehicle_number =  $('input[name="order_vehicle_number"]').val();
+   var delivery_charge =  $('input[name="order_delivery_charge"]').val();
    var delivery_executive_id =  $('select[name="order_delivery_executives"]').val();
    //var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
     console.log(vehicle_number);
+    console.log(delivery_charge);
     console.log(driver_id);
     console.log(delivery_executive_id);
 
@@ -1159,7 +1171,7 @@ function savedriverdetails() {
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id },
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge },
                     async: true,
                     success: function(json) {
                         console.log(json); 
@@ -1192,9 +1204,11 @@ function savedriverdetail() {
    var driver_id = $('select[name="order_drivers"]').val();
    //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
    var vehicle_number =  $('input[name="order_vehicle_number"]').val();
+   var delivery_charge =  $('input[name="order_delivery_charge"]').val();
    var delivery_executive_id =  $('select[name="order_delivery_executives"]').val();
    //var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
     console.log(vehicle_number);
+    console.log(delivery_charge);
     console.log(driver_id);
     console.log(delivery_executive_id);
 
@@ -1236,7 +1250,7 @@ function savedriverdetail() {
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id },
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge },
                     async: true,
                     success: function(json) {
                         console.log(json); 

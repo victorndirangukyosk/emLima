@@ -2816,6 +2816,13 @@ class ModelSaleOrder extends Model {
         $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET driver_id="' . $driver_id . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
     }
 
+
+    public function UpdateOrderDeliveryCharge($order_id, $delivery_charge) {
+            // echo "<pre>";print_r("UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"");die;
+
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
+    }
+
     public function UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id) {
         $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_executive_id="' . $delivery_executive_id . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
     }

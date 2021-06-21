@@ -8677,6 +8677,7 @@ class ControllerSaleOrder extends Controller {
         $order_id = $this->request->post['order_id'];
         $driver_id = $this->request->post['driver_id'];
         $vehicle_number = $this->request->post['vehicle_number'];
+        $delivery_charge = $this->request->post['delivery_charge'];
         $delivery_executive_id = $this->request->post['delivery_executive_id'];
         /* $log = new Log('error.log');
           $log->write('SaveOrUpdateOrderDriverDetails');
@@ -8687,9 +8688,13 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('sale/order');
         $order_info = $this->model_checkout_order->getOrder($order_id);
         if (is_array($order_info) && $order_info != NULL) {
+
+            // echo "<pre>";print_r( $delivery_charge);die;
             $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
             $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
             $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id);
+             if($delivery_charge>0)
+            $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
         }
 
         $this->SendMailToCustomerWithDriverDetails($order_id);
