@@ -51,6 +51,8 @@ class ControllerPaymentInterswitch extends Controller {
         $txn_ref = base64_decode($this->request->post['payment_response']['txnref']);
         $txn_refl = explode('_', $txn_ref);
         $order_id = $txn_refl[1];
+        $customer_id = $txn_refl[0];
+        $log->write($customer_id);
         $log->write($order_id);
 
         $this->load->language('payment/interswitch');
