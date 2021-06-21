@@ -1112,7 +1112,7 @@ class ModelAssetsProduct extends Model
             $offset = isset($data['start']) ? $data['start'] : '';
         }
         if (isset($data['limit']) ? $data['limit'] : ''  < 1) {
-            $data['limit'] = 20;
+            $data['limit'] = 12;
             $limit = $data['limit'];
         } else {
             $limit = $data['limit'];
