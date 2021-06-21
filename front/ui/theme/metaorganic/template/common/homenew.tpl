@@ -115,7 +115,7 @@
                 </li>
                 <li class="header__search-bar-item header__search-bar-item--location search-location-all">
                   <div class="header__search-location search-location">
-                    <i class="fa fa-map-marker header__search-location-icon" aria-hidden="true"></i>
+                    <i class="fas fa-search header__search-location-icon" aria-hidden="true"></i>
 
                     <!-- SuggestionWidget  start -->
                     <div id="search-area-wrp" class="c-sggstnbx header__search-input-wrapper">
