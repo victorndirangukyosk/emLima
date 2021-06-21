@@ -52,6 +52,18 @@ class ControllerPaymentInterswitch extends Controller {
         $txn_refl = explode('_', $txn_ref);
         $order_id = $txn_refl[1];
         $customer_id = $txn_refl[0];
+
+        $payment_gateway_description = $this->request->post['payment_response']['desc'];
+        $payment_reference_number = $this->request->post['payment_response']['payRef'];
+        $banking_reference_number = $this->request->post['payment_response']['retRef'];
+        $transaction_reference_number = $this->request->post['payment_response']['txnref'];
+        $approved_amount = $this->request->post['payment_response']['apprAmt'];
+        $payment_gateway_amount = $this->request->post['payment_response']['amount'];
+        $card_number = $this->request->post['payment_response']['cardNum'];
+        $mac = $this->request->post['payment_response']['mac'];
+        $response_code = $this->request->post['payment_response']['resp'];
+        $status = $this->request->post['payment_response']['resp'] == 00 ? 'COMPLETED' : 'FAILED';
+
         $log->write($customer_id);
         $log->write($order_id);
 
@@ -67,6 +79,7 @@ class ControllerPaymentInterswitch extends Controller {
         }
         $order_info = $this->model_checkout_order->getOrder($order_id);
         $this->model_payment_interswitch_response->Saveresponse($order_info['customer_id'], $order_id, json_encode($this->request->post['payment_response']));
+        $this->model_payment_interswitch_response->SaveResponseIndv($customer_id, $order_id, $payment_gateway_description, $payment_reference_number, $banking_reference_number, $transaction_reference_number, $approved_amount, $payment_gateway_amount, $card_number, $mac, $response_code, $status);
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
         if (00 == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
