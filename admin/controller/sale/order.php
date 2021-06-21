@@ -4622,6 +4622,7 @@ class ControllerSaleOrder extends Controller {
                     $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
                     $company_name = $order_customer_detials['company_name'];
                 }
+                $data['delivery_charge'] = $order_info['delivery_charge'];
 
                 $this->load->model('drivers/drivers');
                 $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
@@ -4678,13 +4679,13 @@ class ControllerSaleOrder extends Controller {
                     'driver_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $driver_phone,
                     'delivery_executive_name' => $delivery_executive_name,
                     'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $delivery_executive_phone,
-                    'delivery_charge' => $order_info['delivery_charges'],
+                    'delivery_charge' => $order_info['delivery_charge'],
 
                 ];
             }
         }
 
-        // echo "<pre>";print_r($data);die;
+        //   echo "<pre>";print_r($data);die;
         /* $log = new Log('error.log');
           $log->write(DIR_TEMPLATE);
           require_once DIR_ROOT . '/vendor/autoload.php';
