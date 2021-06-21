@@ -274,7 +274,7 @@ $(document).ready(function() {
                                                 <a href="<?= $order ?>">
                                             <?php } ?>
 
-                                            <i class="fa fa-reorder"></i><?= $text_order ?></a>
+                                            <i class="fa fa-reorder"></i>My Orders</a>
                                             </li>
 
                                            <!-- <?php if($this->config->get('config_account_return_status') == 'yes') { ?>
