@@ -201,7 +201,7 @@
                       <td>Status</td>
                       <td>Order Date</td>
                       <td>Delivery Date</td>
-                      <td class="text-center">Action</td>
+                      <td class="text-center">View Order</td>
                     </tr>
                   </thead>
                   <tbody>
