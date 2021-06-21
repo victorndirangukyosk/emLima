@@ -67,11 +67,11 @@ class ControllerPaymentInterswitch extends Controller {
         $this->model_payment_interswitch_response->Saveresponse($order_info['customer_id'], $order_id, json_encode($this->request->post['payment_response']));
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
-        if (00 == $this->request->post['payment_response']['resp'] && 'Z6' == $this->request->post['payment_response']['resp']) {
+        if (00 == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
             $this->response->redirect($this->url->link('checkout/success'));
         }
 
-        if (00 != $this->request->post['payment_response']['resp'] && 'Z6' == $this->request->post['payment_response']['resp']) {
+        if (00 != $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
             $this->response->redirect($this->url->link('checkout/success/orderfailed'));
         }
 
