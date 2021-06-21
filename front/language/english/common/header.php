@@ -49,7 +49,7 @@ $_['text_sign_in'] = 'Sign In';
 $_['label_address'] = 'My Addresses';
 $_['button_clear_cart'] = 'Clear cart';
 
-$_['text_signout'] = 'Signout';
+$_['text_signout'] = 'Logout';
 $_['text_cash'] = 'My Wallet';
 
 $_['text_logout'] = 'Logout';
