@@ -823,7 +823,7 @@ class ControllerAccountDashboard extends Controller {
             ];
         }
 
-        $data['heading_title'] = 'Most bought Products (Last 30 days)';
+        $data['heading_title'] = 'Most bought Products ';
 
         $data['token'] = $this->session->data['token'];
         $data['customer_id'] = $this->customer->getId();
@@ -984,7 +984,7 @@ class ControllerAccountDashboard extends Controller {
             ];
         }
 
-        $data['heading_title'] = 'Most bought Products (Last 30 days)';
+        $data['heading_title'] = 'Most bought Products ';
 
         $data['token'] = $this->session->data['token'];
         $data['customer_id'] = $this->customer->getId();
