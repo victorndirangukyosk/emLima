@@ -103,7 +103,7 @@
                                             <?php if($addresses){ ?>
                                              
                                                 <?php foreach($addresses as $address){ ?>
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-6">
                                                         <div class="address-block">
                                                             <h3 class="address-locations">
                                                             <?php if($address['address_type'] == 'Home') { ?>
