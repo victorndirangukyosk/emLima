@@ -56,6 +56,7 @@ class ControllerPaymentInterswitch extends Controller {
         $this->load->language('payment/interswitch');
         $this->load->model('setting/setting');
         $this->load->model('payment/interswitch');
+        $this->load->model('payment/interswitch_response');
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
 
@@ -63,6 +64,7 @@ class ControllerPaymentInterswitch extends Controller {
             $order_id = $value;
         }
         $order_info = $this->model_checkout_order->getOrder($order_id);
+        $this->model_payment_interswitch_response->Saveresponse($order_info['customer_id'], $order_id, json_encode($this->request->post['payment_response']));
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
         if (00 == $this->request->post['payment_response']['resp']) {
