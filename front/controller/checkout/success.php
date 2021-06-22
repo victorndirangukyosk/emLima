@@ -209,6 +209,7 @@ class ControllerCheckoutSuccess extends Controller {
         $order_id = $this->session->data['completed_order_id'][75];
         $log = new Log('error.log');
         $log->write('completed_order_id');
+        $log->write($this->session->data['completed_order_id']);
         $log->write($order_id);
         $log->write('completed_order_id');
 
