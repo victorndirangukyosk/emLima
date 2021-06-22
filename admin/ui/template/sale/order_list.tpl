@@ -1535,10 +1535,10 @@ var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selec
  $('select[name="order_delivery_executives"]').selectpicker('val', 0);
  $('select[name="order_drivers"]').selectpicker('val', 0);
  $('input[name="order_vehicle_number"]').val('');
-  $('#div_deliverycharge').show();
+  $('#div_deliverycharge').hide();
  if(order_vendor=='Kwik Basket')
  { 
- $('#div_deliverycharge').hide();
+ $('#div_deliverycharge').show();
  }
 
 $.ajax({
