@@ -81,6 +81,13 @@ class ControllerCheckoutCheckoutItems extends Controller
             // Display prices
             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                 $total = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
+                $total_tax = ($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']) - ($product['price'] * $product['quantity']);
+                $total_orginal_price = ($product['price'] * $product['quantity']);
+                $log = new Log('error.log');
+                $log->write('total');
+                $log->write($total);
+                $log->write($total_tax);
+                $log->write('total');
             } else {
                 $total = false;
             }
@@ -102,6 +109,8 @@ class ControllerCheckoutCheckoutItems extends Controller
                 'reward' => ($product['reward'] ? sprintf($this->language->get('text_points'), $product['reward']) : ''),
                 'price' => $price,
                 'total' => $total,
+                'total_tax' => $this->currency->format($total_tax),
+                'total_orginal_price' => $this->currency->format($total_orginal_price),
                 'store_id' => $product['store_id'],
                 'href' => $this->url->link('product/product', 'product_store_id='.$product['product_store_id']),
             ];
