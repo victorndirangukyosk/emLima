@@ -364,7 +364,7 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                                                 </a> -->
                                               
-                                               <a href="#" id="new_print_invoice" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
+                                               <a href="#" id="new_print_invoice"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
                                             <?php } ?>
                                         
 
@@ -874,7 +874,7 @@
                                             </div>
 
                                                  <div class="form-row">
-                                                <div class="form-group">
+                                                <div class="form-group" id="div_deliverycharge">
                                                     <label> Delivery Charge </label>
 
                                                     <div class="col-md-12">
@@ -1529,11 +1529,17 @@ $('a[id^=\'new_print_invoice\']').on('click', function (e) {
 e.preventDefault();
 var invoice = $(this).attr("data-order-invoice");
 var order_id = $(this).attr("data-order-id");
+var order_vendor = $(this).attr("data-order-vendor");
 var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selected').text();
 
  $('select[name="order_delivery_executives"]').selectpicker('val', 0);
  $('select[name="order_drivers"]').selectpicker('val', 0);
  $('input[name="order_vehicle_number"]').val('');
+  $('#div_deliverycharge').show();
+ if(order_vendor=='Kwik Basket')
+ { 
+ $('#div_deliverycharge').hide();
+ }
 
 $.ajax({
 		url: 'index.php?path=sale/order/getDriverDetails&token=<?php echo $token; ?>',
