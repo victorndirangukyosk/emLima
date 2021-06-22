@@ -75,9 +75,9 @@
                                 <ul class="list-block">
                                     <li>Name : <?= $order['delivery_executive_name'] ?></li>
                                     <li>Phone : <?= $order['delivery_executive_phone'] ?></li>
-                                <?php if($order['delivery_charge'] != NULL && $order['delivery_charge'] >0) { ?>
+                                <!--<?php if($order['delivery_charge'] != NULL && $order['delivery_charge'] >0) { ?>
                                     <li>Delivery Charge : <?= $order['delivery_charge'] ?></li>
-                                 <?php } ?>
+                                 <?php } ?>-->
                                 </ul>
                                 <br>
                                 <?php } ?>
