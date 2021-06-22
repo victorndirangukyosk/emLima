@@ -2819,9 +2819,27 @@ class ModelSaleOrder extends Model {
 
 
     public function UpdateOrderDeliveryCharge($order_id, $delivery_charge) {
-            // echo "<pre>";print_r("UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"");die;
 
-        $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
+        // $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
+        //insert into order_total
+
+        $exists = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="shipping"')->row;
+        // echo "<pre>";print_r($exists);
+        //  echo "<pre>";print_r('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+ '.$delivery_charge.'  WHERE order_id="' . $order_id . '" and code="shipping"');die;
+        if($exists!=null)
+            {
+             $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="shipping"');
+            }
+            else
+            {                  
+                //   echo "<pre>";print_r('INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge . "', order_id = '" . $order_id . "', title = 'Standard Delivery', sort_order = 6, code = 'shipping'");die;
+                    $sql = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge . "', order_id = '" . $order_id . "', title = 'Standard Delivery', sort_order = 6, code = 'shipping'";
+                    $query = $this->db->query($sql);
+            }
+         
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="total"');
+            // echo "<pre>";print_r('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="total"');die;
+          
     }
 
     public function UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id) {
