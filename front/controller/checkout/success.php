@@ -205,8 +205,10 @@ class ControllerCheckoutSuccess extends Controller {
         $this->load->language('account/return');
 
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
-
-        $order_id = $this->session->data['completed_order_id'][75];
+        
+        foreach($this->session->data['completed_order_id'] as $x => $val) {
+        $order_id = $this->session->data['completed_order_id'][$x];
+        }
         $log = new Log('error.log');
         $log->write('completed_order_id');
         $log->write($this->session->data['completed_order_id']);
