@@ -171,7 +171,6 @@ class ControllerCheckoutSuccess extends Controller {
                     $this->load->model('checkout/order');
                     $this->model_checkout_order->SendMailToParentUser($order_info['order_id']);
                 }
-                $this->session->data['completed_order_id'] = $this->session->data['order_id'];
                 unset($this->session->data['shipping_method']);
                 unset($this->session->data['shipping_methods']);
                 unset($this->session->data['payment_method']);
@@ -205,15 +204,6 @@ class ControllerCheckoutSuccess extends Controller {
         $this->load->language('account/return');
 
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
-        
-        foreach($this->session->data['completed_order_id'] as $x => $val) {
-        $order_id = $this->session->data['completed_order_id'][$x];
-        }
-        $log = new Log('error.log');
-        $log->write('completed_order_id');
-        $log->write($this->session->data['completed_order_id']);
-        $log->write($order_id);
-        $log->write('completed_order_id');
 
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
@@ -222,363 +212,249 @@ class ControllerCheckoutSuccess extends Controller {
         //$this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('account/order');
-        $order_info = $this->model_account_order->getOrder($order_id, true);
         $data['cashback_condition'] = $this->language->get('cashback_condition');
 
-        if ($order_info) {
-            $data['cashbackAmount'] = $this->currency->format(0);
-
-            $coupon_history_data = $this->model_account_order->getCashbackAmount($order_id);
-
-            if (count($coupon_history_data) > 0) {
-                $data['cashbackAmount'] = $this->currency->format((-1 * $coupon_history_data['amount']));
-            }
-
-            //$this->document->setTitle($this->language->get('text_order'));
-
-            $data['breadcrumbs'] = [];
-
-            $data['breadcrumbs'][] = [
-                'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/home'),
-            ];
-
-            $data['breadcrumbs'][] = [
-                'text' => $this->language->get('text_account'),
-                'href' => $this->url->link('account/account', '', 'SSL'),
-            ];
-
-            $url = '';
-
-            if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
-            }
-
-            $data['breadcrumbs'][] = [
-                'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('account/order', $url, 'SSL'),
-            ];
-
-            $data['breadcrumbs'][] = [
-                'text' => $this->language->get('text_order'),
-                'href' => $this->url->link('account/order/info', 'order_id=' . $order_id . $url, 'SSL'),
-            ];
-
-            $data['text_go_back'] = $this->language->get('text_go_back');
-            $data['text_order_id_with_colon'] = $this->language->get('text_order_id_with_colon');
-            $data['text_items'] = $this->language->get('text_items');
-            $data['text_products'] = $this->language->get('text_products');
-
-            $data['text_coupon_willbe_credited'] = $this->language->get('text_coupon_willbe_credited');
-            $data['text_coupon_credited'] = $this->language->get('text_coupon_credited');
-
-            //$data['heading_title'] = $this->language->get('heading_title');
-            $data['text_order_detail'] = $this->language->get('text_order_detail');
-            $data['text_invoice_no'] = $this->language->get('text_invoice_no');
-            $data['text_order_id'] = $this->language->get('text_order_id');
-            $data['text_date_added'] = $this->language->get('text_date_added');
-            $data['text_shipping_method'] = $this->language->get('text_shipping_method');
-            $data['text_shipping_address'] = $this->language->get('text_shipping_address');
-            $data['text_payment_method'] = $this->language->get('text_payment_method');
-            $data['text_payment_address'] = $this->language->get('text_payment_address');
-            $data['text_history'] = $this->language->get('text_history');
-            $data['text_comment'] = $this->language->get('text_comment');
-            $data['text_processing'] = $this->language->get('text_processing');
-            $data['text_shipped'] = $this->language->get('text_shipped');
-            $data['text_delivered'] = $this->language->get('text_delivered');
-            $data['text_name'] = $this->language->get('text_name');
-            $data['text_contact_no'] = $this->language->get('text_contact_no');
-            $data['text_estimated_datetime'] = $this->language->get('text_estimated_datetime');
-            $data['text_cancel'] = $this->language->get('text_cancel');
-
-            $data['column_name'] = $this->language->get('column_name');
-
-            $data['column_image'] = $this->language->get('column_image');
-
-            $data['column_unit'] = $this->language->get('column_unit');
-
-            $data['column_model'] = $this->language->get('column_model');
-            $data['column_quantity'] = $this->language->get('column_quantity');
-            $data['column_price'] = $this->language->get('column_price');
-            $data['column_total'] = $this->language->get('column_total');
-            $data['column_action'] = $this->language->get('column_action');
-            $data['column_date_added'] = $this->language->get('column_date_added');
-            $data['column_status'] = $this->language->get('column_status');
-            $data['column_comment'] = $this->language->get('column_comment');
-
-            $data['button_reorder'] = $this->language->get('button_reorder');
-            $data['button_return'] = $this->language->get('button_return');
-            $data['button_continue'] = $this->language->get('button_continue');
-
-            $data['delivered'] = false;
-            $data['coupon_cashback'] = false;
-
-            $data['can_return'] = false;
-
-            if (isset($order_info['date_modified'])) {
-                $start = date('Y-m-d H:i:s');
-
-                $end = $order_info['date_modified'];
-
-                $timeFirst = strtotime($start);
-                $timeSecond = strtotime($end);
-
-                $differenceInSeconds = $timeFirst - $timeSecond;
-
-                if ($differenceInSeconds <= $this->config->get('config_return_timeout')) {
-                    $data['can_return'] = true;
-                }
-            }
-
-            foreach ($this->config->get('config_complete_status') as $key => $value) {
-                if ($value == $order_info['order_status_id']) {
-                    $data['delivered'] = true;
-                    $data['coupon_cashback'] = true;
-                    break;
-                }
-            }
-
-            if (isset($this->session->data['error'])) {
-                $data['error_warning'] = $this->session->data['error'];
-
-                unset($this->session->data['error']);
-            } else {
-                $data['error_warning'] = '';
-            }
-
-            if (isset($this->session->data['success'])) {
-                $data['success'] = $this->session->data['success'];
-
-                unset($this->session->data['success']);
-            } else {
-                $data['success'] = '';
-            }
-
-            if ($order_info['invoice_no']) {
-                $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'];
-            } else {
-                $data['invoice_no'] = '';
-            }
-
-            if ($order_info['settlement_amount']) {
-                $data['settlement_amount'] = $this->currency->format($order_info['settlement_amount']);
-            } else {
-                $data['settlement_amount'] = null;
-            }
-
-            $data['text_rating'] = $this->language->get('text_rating');
-            $data['text_review'] = $this->language->get('text_review');
-            $data['text_send'] = $this->language->get('text_send');
-
-            $data['text_send_rating'] = $this->language->get('text_send_rating');
-            $data['text_remaining'] = $this->language->get('text_remaining');
-            $data['text_intransit'] = $this->language->get('text_intransit');
-            $data['text_completed'] = $this->language->get('text_completed');
-            $data['text_cancelled'] = $this->language->get('text_cancelled');
-
-            $data['text_not_avialable'] = $this->language->get('text_not_avialable');
-            $data['text_picked'] = $this->language->get('text_picked');
-            $data['text_replaced'] = $this->language->get('text_replaced');
-            $data['text_delivery_detail'] = $this->language->get('text_delivery_detail');
-            $data['text_no_delivery_alloted'] = $this->language->get('text_no_delivery_alloted');
-            $data['text_real_amount'] = $this->language->get('text_real_amount');
-
-            $data['text_replacable_title'] = $this->language->get('text_replacable_title');
-            $data['text_not_replacable_title'] = $this->language->get('text_not_replacable_title');
-            $data['text_replacable'] = $this->language->get('text_replacable');
-            $data['text_not_replacable'] = $this->language->get('text_not_replacable');
-            $data['order_id'] = $order_id;
-            $data['date_added'] = date($this->language->get('date_format_short'), strtotime($order_info['date_modified']));
-
-            $data['payment_method'] = $order_info['payment_method'];
-
-            $data['shipping_name'] = $order_info['shipping_name'];
-            $data['shipping_contact_no'] = $order_info['shipping_contact_no'];
-
-            $data['shipping_address'] = $order_info['shipping_flat_number'] . ', ' . $order_info['shipping_building_name'] . ', ' . $order_info['shipping_landmark'];
-
-            $data['shipping_method'] = $order_info['shipping_method'];
-            $data['shipping_city'] = $order_info['shipping_city'];
-
-            $data['delivery_timeslot'] = $order_info['delivery_timeslot'];
-
-            $data['order_status_id'] = $order_info['order_status_id'];
-
-            $data['delivery_date'] = $order_info['delivery_date'];
-
-            $data['store_name'] = $order_info['store_name'];
-            $data['store_address'] = $order_info['store_address'];
-            $data['status'] = $order_info['status'];
-
-            $this->load->model('assets/product');
-            $this->load->model('tool/upload');
-
-            $data['email'] = $this->config->get('config_delivery_username');
-            $data['password'] = $this->config->get('config_delivery_secret');
-
-            $data['delivery_id'] = $order_info['delivery_id']; //"del_XPeEGFX3Hc4ZeWg5";//
-
-            $data['rating'] = is_null($order_info['rating']) ? 0 : $order_info['rating']; //"del_XPeEGFX3Hc4ZeWg5";//
-            //echo "<pre>";print_r($data['rating']);die;
-            //$data['delivery_id'] =  26;
-            $data['shopper_link'] = $this->config->get('config_shopper_link') . '/storage/';
-
-            $data['products_status'] = [];
-            $data['delivery_data'] = [];
-
-            $log = new Log('error.log');
-
-            if (isset($data['delivery_id'])) {
-                $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
-
-                if ($response['status']) {
-                    $data['token'] = $response['token'];
-                    $productStatus = $this->load->controller('deliversystem/deliversystem/getProductStatus', $data);
-
-                    $resp = $this->load->controller('deliversystem/deliversystem/getDeliveryStatus', $data);
-                    if (!$resp['status'] || isset($resp['error'])) {
-                        $data['delivery_data'] = [];
-                    } else {
-                        $data['delivery_data'] = $resp['data'][0];
-                    }
-
-                    if (!$productStatus['status'] || !(count($productStatus['data']) > 0)) {
-                        $data['products_status'] = [];
-                    } else {
-                        $data['products_status'] = $productStatus['data'];
-                    }
-
-                    $log->write('order log');
-                    $log->write($data['products_status']);
-                }
-            }
-
-            // Products
-            $data['products'] = [];
-
-            $products = $this->model_account_order->getOrderProducts($order_id);
-
-            $returnProductCount = 0;
-            $data['products'] = $this->session->data['completed_order_products'];
-
-            $log->write($data['products']);
-            // Voucher
-            $data['vouchers'] = [];
-
-            $vouchers = $this->model_account_order->getOrderVouchers($order_id);
-
-            foreach ($vouchers as $voucher) {
-                $data['vouchers'][] = [
-                    'description' => $voucher['description'],
-                    'amount' => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']),
-                ];
-            }
-
-            // Totals
-            $data['totals'] = [];
-
-            $totals = $this->model_account_order->getOrderTotals($order_id);
-
-            $data['newTotal'] = $this->currency->format(0);
-
-            //echo "<pre>";print_r($totals);die;
-            $data['totals'] = $this->session->data['completed_order_totals'];
-
-            $data['comment'] = nl2br($order_info['comment']);
-
-            // History
-            $data['histories'] = [];
-
-            $results = $this->model_account_order->getOrderHistories($order_id);
-
-            foreach ($results as $result) {
-                $data['histories'][] = [
-                    'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                    'status' => $result['status'],
-                    'comment' => $result['notify'] ? nl2br($result['comment']) : '',
-                ];
-            }
-
-            if ($this->request->server['HTTPS']) {
-                $server = $this->config->get('config_ssl');
-            } else {
-                $server = $this->config->get('config_url');
-            }
-
-            $data['base'] = $server;
-
-            $data['continue'] = $this->url->link('account/order', '', 'SSL');
-
-            $data['column_left'] = $this->load->controller('common/column_left');
-            $data['column_right'] = $this->load->controller('common/column_right');
-            $data['content_top'] = $this->load->controller('common/content_top');
-            $data['content_bottom'] = $this->load->controller('common/content_bottom');
-            $data['footer'] = $this->load->controller('common/footer');
-            $data['header'] = $this->load->controller('common/header/orderSummaryHeader');
-
-            $data['total_products'] = count($data['products']);
-            $data['total_quantity'] = 0;
-            foreach ($data['products'] as $product) {
-                $data['total_quantity'] += $product['quantity'];
-            }
-
-            $data['show_rating'] = false;
-            $data['take_rating'] = false;
-
-            if (in_array($data['order_status_id'], $this->config->get('config_complete_status'))) {
-                $data['show_rating'] = false;
-
-                if (is_null($data['rating']) || empty($data['rating'])) {
-                    $data['take_rating'] = false;
-                }
-            }
-
-            $this->load->model('localisation/return_reason');
-            $data['entry_reason'] = $this->language->get('entry_reason');
-            $data['entry_return_action'] = 'Desired Action';
-            $data['entry_opened'] = $this->language->get('entry_opened');
-            $data['entry_fault_detail'] = $this->language->get('entry_fault_detail');
-            $data['text_yes'] = $this->language->get('text_yes');
-            $data['text_no'] = $this->language->get('text_no');
-            $data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons();
-            $data['return_actions'] = $this->model_localisation_return_reason->getReturnActions();
-            $data['button_submit'] = $this->language->get('button_submit');
-            $data['button_back'] = $this->language->get('button_back');
-            $data['action'] = $this->url->link('account/return/multipleproducts', '', 'SSL');
-            $data['returnProductCount'] = $returnProductCount;
-            if ($this->config->get('config_return_id')) {
-                $this->load->model('assets/information');
-
-                $information_info = $this->model_assets_information->getInformation($this->config->get('config_return_id'));
-
-                if ($information_info) {
-                    $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
+        $data['cashbackAmount'] = $this->currency->format(0);
+
+        $coupon_history_data = $this->model_account_order->getCashbackAmount($order_id);
+
+        if (count($coupon_history_data) > 0) {
+            $data['cashbackAmount'] = $this->currency->format((-1 * $coupon_history_data['amount']));
+        }
+
+        //$this->document->setTitle($this->language->get('text_order'));
+
+        $data['breadcrumbs'] = [];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/home'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_account'),
+            'href' => $this->url->link('account/account', '', 'SSL'),
+        ];
+
+        $url = '';
+
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('account/order', $url, 'SSL'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_order'),
+            'href' => $this->url->link('account/order/info', 'order_id=' . $order_id . $url, 'SSL'),
+        ];
+
+        $data['text_go_back'] = $this->language->get('text_go_back');
+        $data['text_order_id_with_colon'] = $this->language->get('text_order_id_with_colon');
+        $data['text_items'] = $this->language->get('text_items');
+        $data['text_products'] = $this->language->get('text_products');
+
+        $data['text_coupon_willbe_credited'] = $this->language->get('text_coupon_willbe_credited');
+        $data['text_coupon_credited'] = $this->language->get('text_coupon_credited');
+
+        //$data['heading_title'] = $this->language->get('heading_title');
+        $data['text_order_detail'] = $this->language->get('text_order_detail');
+        $data['text_invoice_no'] = $this->language->get('text_invoice_no');
+        $data['text_order_id'] = $this->language->get('text_order_id');
+        $data['text_date_added'] = $this->language->get('text_date_added');
+        $data['text_shipping_method'] = $this->language->get('text_shipping_method');
+        $data['text_shipping_address'] = $this->language->get('text_shipping_address');
+        $data['text_payment_method'] = $this->language->get('text_payment_method');
+        $data['text_payment_address'] = $this->language->get('text_payment_address');
+        $data['text_history'] = $this->language->get('text_history');
+        $data['text_comment'] = $this->language->get('text_comment');
+        $data['text_processing'] = $this->language->get('text_processing');
+        $data['text_shipped'] = $this->language->get('text_shipped');
+        $data['text_delivered'] = $this->language->get('text_delivered');
+        $data['text_name'] = $this->language->get('text_name');
+        $data['text_contact_no'] = $this->language->get('text_contact_no');
+        $data['text_estimated_datetime'] = $this->language->get('text_estimated_datetime');
+        $data['text_cancel'] = $this->language->get('text_cancel');
+
+        $data['column_name'] = $this->language->get('column_name');
+
+        $data['column_image'] = $this->language->get('column_image');
+
+        $data['column_unit'] = $this->language->get('column_unit');
+
+        $data['column_model'] = $this->language->get('column_model');
+        $data['column_quantity'] = $this->language->get('column_quantity');
+        $data['column_price'] = $this->language->get('column_price');
+        $data['column_total'] = $this->language->get('column_total');
+        $data['column_action'] = $this->language->get('column_action');
+        $data['column_date_added'] = $this->language->get('column_date_added');
+        $data['column_status'] = $this->language->get('column_status');
+        $data['column_comment'] = $this->language->get('column_comment');
+
+        $data['button_reorder'] = $this->language->get('button_reorder');
+        $data['button_return'] = $this->language->get('button_return');
+        $data['button_continue'] = $this->language->get('button_continue');
+
+        $data['delivered'] = false;
+        $data['coupon_cashback'] = false;
+
+        $data['can_return'] = false;
+
+        if (isset($this->session->data['error'])) {
+            $data['error_warning'] = $this->session->data['error'];
+
+            unset($this->session->data['error']);
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
+
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
+        }
+
+        $data['text_rating'] = $this->language->get('text_rating');
+        $data['text_review'] = $this->language->get('text_review');
+        $data['text_send'] = $this->language->get('text_send');
+
+        $data['text_send_rating'] = $this->language->get('text_send_rating');
+        $data['text_remaining'] = $this->language->get('text_remaining');
+        $data['text_intransit'] = $this->language->get('text_intransit');
+        $data['text_completed'] = $this->language->get('text_completed');
+        $data['text_cancelled'] = $this->language->get('text_cancelled');
+
+        $data['text_not_avialable'] = $this->language->get('text_not_avialable');
+        $data['text_picked'] = $this->language->get('text_picked');
+        $data['text_replaced'] = $this->language->get('text_replaced');
+        $data['text_delivery_detail'] = $this->language->get('text_delivery_detail');
+        $data['text_no_delivery_alloted'] = $this->language->get('text_no_delivery_alloted');
+        $data['text_real_amount'] = $this->language->get('text_real_amount');
+
+        $data['text_replacable_title'] = $this->language->get('text_replacable_title');
+        $data['text_not_replacable_title'] = $this->language->get('text_not_replacable_title');
+        $data['text_replacable'] = $this->language->get('text_replacable');
+        $data['text_not_replacable'] = $this->language->get('text_not_replacable');
+
+        $this->load->model('assets/product');
+        $this->load->model('tool/upload');
+
+        $data['email'] = $this->config->get('config_delivery_username');
+        $data['password'] = $this->config->get('config_delivery_secret');
+
+        //echo "<pre>";print_r($data['rating']);die;
+        //$data['delivery_id'] =  26;
+        $data['shopper_link'] = $this->config->get('config_shopper_link') . '/storage/';
+
+        $data['products_status'] = [];
+        $data['delivery_data'] = [];
+
+        $log = new Log('error.log');
+
+        if (isset($data['delivery_id'])) {
+            $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
+
+            if ($response['status']) {
+                $data['token'] = $response['token'];
+                $productStatus = $this->load->controller('deliversystem/deliversystem/getProductStatus', $data);
+
+                $resp = $this->load->controller('deliversystem/deliversystem/getDeliveryStatus', $data);
+                if (!$resp['status'] || isset($resp['error'])) {
+                    $data['delivery_data'] = [];
                 } else {
-                    $data['text_agree'] = '';
+                    $data['delivery_data'] = $resp['data'][0];
                 }
+
+                if (!$productStatus['status'] || !(count($productStatus['data']) > 0)) {
+                    $data['products_status'] = [];
+                } else {
+                    $data['products_status'] = $productStatus['data'];
+                }
+
+                $log->write('order log');
+                $log->write($data['products_status']);
+            }
+        }
+
+        // Products
+        $data['products'] = [];
+
+        $returnProductCount = 0;
+        $data['products'] = $this->session->data['completed_order_products'];
+
+        $log->write($data['products']);
+
+        // Totals
+        $data['totals'] = [];
+
+        $data['newTotal'] = $this->currency->format(0);
+
+        //echo "<pre>";print_r($totals);die;
+        $data['totals'] = $this->session->data['completed_order_totals'];
+
+        if ($this->request->server['HTTPS']) {
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
+
+        $data['base'] = $server;
+
+        $data['continue'] = $this->url->link('account/order', '', 'SSL');
+
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['column_right'] = $this->load->controller('common/column_right');
+        $data['content_top'] = $this->load->controller('common/content_top');
+        $data['content_bottom'] = $this->load->controller('common/content_bottom');
+        $data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->load->controller('common/header/orderSummaryHeader');
+
+        $data['total_products'] = count($data['products']);
+        $data['total_quantity'] = 0;
+        foreach ($data['products'] as $product) {
+            $data['total_quantity'] += $product['quantity'];
+        }
+
+        if (in_array($data['order_status_id'], $this->config->get('config_complete_status'))) {
+            $data['show_rating'] = false;
+
+            if (is_null($data['rating']) || empty($data['rating'])) {
+                $data['take_rating'] = false;
+            }
+        }
+
+        $this->load->model('localisation/return_reason');
+        $data['entry_reason'] = $this->language->get('entry_reason');
+        $data['entry_return_action'] = 'Desired Action';
+        $data['entry_opened'] = $this->language->get('entry_opened');
+        $data['entry_fault_detail'] = $this->language->get('entry_fault_detail');
+        $data['text_yes'] = $this->language->get('text_yes');
+        $data['text_no'] = $this->language->get('text_no');
+        $data['return_reasons'] = $this->model_localisation_return_reason->getReturnReasons();
+        $data['return_actions'] = $this->model_localisation_return_reason->getReturnActions();
+        $data['button_submit'] = $this->language->get('button_submit');
+        $data['button_back'] = $this->language->get('button_back');
+        $data['action'] = $this->url->link('account/return/multipleproducts', '', 'SSL');
+        $data['returnProductCount'] = $returnProductCount;
+        if ($this->config->get('config_return_id')) {
+            $this->load->model('assets/information');
+
+            $information_info = $this->model_assets_information->getInformation($this->config->get('config_return_id'));
+
+            if ($information_info) {
+                $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
             } else {
                 $data['text_agree'] = '';
             }
-            //echo "<pre>";print_r($data);die;
-
-            $this->load->model('drivers/drivers');
-            $this->load->model('executives/executives');
-            $order_driver_details = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
-            if (is_array($order_driver_details) && $order_driver_details != NULL) {
-                $data['order_driver_details'] = $order_driver_details;
-            } else {
-                $data['order_driver_details'] = NULL;
-            }
-
-            $order_delivery_executive_details = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
-            if (is_array($order_delivery_executive_details) && $order_delivery_executive_details != NULL) {
-                $data['order_delivery_executive_details'] = $order_delivery_executive_details;
-            } else {
-                $data['order_delivery_executive_details'] = NULL;
-            }
-
-            $data['vehicle_number'] = $order_info['vehicle_number'];
+        } else {
+            $data['text_agree'] = '';
         }
+        //echo "<pre>";print_r($data);die;
         /* ORDER SUMMARY */
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
