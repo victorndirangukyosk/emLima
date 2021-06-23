@@ -98,6 +98,7 @@ class ControllerCheckoutCheckoutItems extends Controller
                 'key' => $product['key'],
                 'product_store_id' => $product['product_store_id'],
                 'thumb' => $image,
+                'image' => $image,
                 'name' => $product['name'],
                 'product_type' => $product['product_type'],
                 'produce_type' => $product['produce_type'],

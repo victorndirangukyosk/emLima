@@ -459,79 +459,7 @@ class ControllerCheckoutSuccess extends Controller {
             $products = $this->model_account_order->getOrderProducts($order_id);
 
             $returnProductCount = 0;
-            foreach ($products as $product) {
-                $option_data = [];
-
-                $options = $this->model_account_order->getOrderOptions($order_id, $product['order_product_id']);
-
-                foreach ($options as $option) {
-                    if ('file' != $option['type']) {
-                        $value = $option['value'];
-                    } else {
-                        $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
-
-                        if ($upload_info) {
-                            $value = $upload_info['name'];
-                        } else {
-                            $value = '';
-                        }
-                    }
-
-                    $option_data[] = [
-                        'name' => $option['name'],
-                        'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value),
-                    ];
-                }
-
-                $product_info = $this->model_assets_product->getDetailproduct($product['product_id']);
-
-                if ($product_info) {
-                    $reorder = $this->url->link('account/order/reorder', 'order_id=' . $order_id . '&order_product_id=' . $product['order_product_id'], 'SSL');
-                } else {
-                    $reorder = '';
-                }
-
-                $this->load->model('tool/image');
-
-                if ($product['image'] != NULL && file_exists(DIR_IMAGE . $product['image'])) {
-                    $image = $this->model_tool_image->resize($product['image'], 80, 100);
-                } else if ($product['image'] == NULL || !file_exists(DIR_IMAGE . $product['image'])) {
-                    $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
-                }
-
-                $return_status = '';
-
-                if (isset($product['return_id']) && !is_null($product['return_id'])) {
-                    $this->load->model('account/return');
-
-                    $returnDetails = $this->model_account_return->getReturn($product['return_id']);
-
-                    if (count($returnDetails) > 0) {
-                        $return_status = $returnDetails['status'];
-                    }
-                } else {
-                    $returnProductCount = $returnProductCount + 1;
-                }
-
-                $data['products'][] = [
-                    'product_id' => $product['product_id'],
-                    'store_id' => $product['store_id'],
-                    'vendor_id' => $product['vendor_id'],
-                    'name' => $product['name'],
-                    'unit' => $product['unit'],
-                    'model' => $product['model'],
-                    'product_type' => $product['product_type'],
-                    'image' => $image,
-                    'option' => $option_data,
-                    'return_id' => $product['return_id'],
-                    'return_status' => $return_status,
-                    'quantity' => $product['quantity'],
-                    'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-                    'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
-                    'reorder' => $reorder,
-                    'return' => $this->url->link('account/return/add', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], 'SSL'),
-                ];
-            }
+            $data['products'] = $this->session->data['completed_order_products'];
 
             $log->write($data['products']);
             // Voucher
@@ -554,24 +482,7 @@ class ControllerCheckoutSuccess extends Controller {
             $data['newTotal'] = $this->currency->format(0);
 
             //echo "<pre>";print_r($totals);die;
-            foreach ($totals as $total) {
-                $data['totals'][] = [
-                    'title' => $total['title'],
-                    'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                ];
-
-                if ('sub_total' == $total['code']) {
-                    $data['subtotal'] = $total['value'];
-                }
-                if ('total' == $total['code']) {
-                    $temptotal = $total['value'];
-                }
-
-                $data['plain_settlement_amount'] = $order_info['settlement_amount'];
-                if (isset($data['settlement_amount']) && isset($data['subtotal']) && isset($temptotal)) {
-                    $data['newTotal'] = $this->currency->format($temptotal - $data['subtotal'] + $order_info['settlement_amount']);
-                }
-            }
+            $data['totals'] = $this->session->data['completed_order_totals'];
 
             $data['comment'] = nl2br($order_info['comment']);
 
