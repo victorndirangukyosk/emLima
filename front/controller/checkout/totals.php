@@ -54,7 +54,11 @@ class ControllerCheckoutTotals extends Controller
                 'text' => $this->currency->format($total['value']),
             ];
         }
-
+        $log = new Log('error.log');
+        $log->write('totals');
+        $log->write($data['totals']);
+        $log->write('totals');
+        $this->session->data['completed_order_totals'] = $data['totals'];
         //echo "<pre>";print_r($data);die;
         $data['cashback_condition'] = $this->language->get('cashback_condition');
 

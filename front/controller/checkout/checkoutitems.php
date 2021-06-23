@@ -122,7 +122,7 @@ class ControllerCheckoutCheckoutItems extends Controller
         //echo "<pre>";print_r($data['products_details']);die;
 
         $data['arrs'] = [];
-
+        $this->session->data['completed_order_products'] = $data['products_details'];
         foreach ($data['products_details'] as $key => $item) {
             //$data['arrs'][$item['store_id']][$key] = $item;
             $data['arrs'][75][$key] = $item;
