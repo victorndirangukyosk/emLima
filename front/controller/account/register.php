@@ -639,7 +639,8 @@ class ControllerAccountRegister extends Controller
                     $this->model_account_customer->saveOTP($this->request->post['phone'], $data['otp'], 'register');
                     $data['text_verify_otp'] = $this->language->get('text_verify_otp');
 
-                    $data['success_message'] = $this->language->get('text_otp_sent_email').' '.$this->request->post['email'];
+                    // $data['success_message'] = $this->language->get('text_otp_sent_email').' '.$this->request->post['email'];
+                    $data['success_message'] = $this->language->get('text_otp_sent_email_mobile');
                 }
                 
                 try{
