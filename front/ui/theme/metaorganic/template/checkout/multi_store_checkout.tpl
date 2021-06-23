@@ -1431,6 +1431,8 @@ function savePaymentMethod() {
             } else {
                 loadConfirm();
             }
+            CartProducts();
+            CartTotals();
         },
         error: function(xhr, ajaxOptions, thrownError) {
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
@@ -2126,7 +2128,45 @@ function saveInAddressBook() {
         }
     });
 
+function CartProducts() {
+        $.ajax({
+        url: 'index.php?path=checkout/checkoutitems/index',
+        type: 'post',
+        data: {
+        },
+        dataType: 'html',
+        cache: false,
+        async: true,
+        beforeSend: function() {            
+        },
+        success: function(json) {
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        },
+        complete: function() {
+        },
+    });
+}
 
+function CartTotals() {
+        $.ajax({
+        url: 'index.php?path=checkout/totals/index&city_id=',
+        type: 'post',
+        data: {
+        },
+        dataType: 'html',
+        cache: false,
+        async: true,
+        beforeSend: function() {            
+        },
+        success: function(json) {
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        },
+        complete: function() {
+        },
+    });
+}
 </script>
 <script src="https://api-test.equitybankgroup.com/js/eazzycheckout.js"></script>
 </body>

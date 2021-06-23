@@ -33,7 +33,21 @@ class ControllerPaymentPesapal extends Controller {
         $log->write('Pesapal Order Info');
 
         if (count($order_info) > 0) {
-            $amount = (int) ($order_info['total']);
+            $total_data = $this->totalData();
+            $all_sub_total = 0;
+            $all_total = 0;
+            foreach ($total_data as $tots) {
+                foreach ($tots as $tot) {
+                    if ($tot['title'] == 'Sub-Total') {
+                        $all_sub_total = $tot['value'];
+                    }
+
+                    if ($tot['title'] == 'Total') {
+                        $all_total = $tot['value'];
+                    }
+                }
+            }
+            $amount = (int) ($all_total);
         }
 
         $data['text_instruction'] = $this->language->get('text_instruction');
@@ -1159,6 +1173,63 @@ class ControllerPaymentPesapal extends Controller {
             }
         }
         echo $status;
+    }
+
+    public function totalData() {
+        $this->load->language('checkout/cart');
+
+        if (isset($this->request->get['city_id'])) {
+            $this->tax->setShippingAddress($this->request->get['city_id']);
+        }
+
+        // Totals
+        $this->load->model('extension/extension');
+
+        $total_data = [];
+        $total = 0;
+        $taxes = $this->cart->getTaxes();
+
+        // Display prices
+        if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+            $sort_order = [];
+
+            $results = $this->model_extension_extension->getExtensions('total');
+
+            foreach ($results as $key => $value) {
+                $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
+            }
+
+            array_multisort($sort_order, SORT_ASC, $results);
+
+            foreach ($results as $result) {
+                if ($this->config->get($result['code'] . '_status')) {
+                    $this->load->model('total/' . $result['code']);
+
+                    $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                }
+            }
+
+            //echo "<pre>";print_r($results);die;
+            $sort_order = [];
+
+            foreach ($total_data as $key => $value) {
+                $sort_order[$key] = $value['sort_order'];
+            }
+
+            array_multisort($sort_order, SORT_ASC, $total_data);
+        }
+
+        $data['totals'] = [];
+
+        foreach ($total_data as $total) {
+            $data['totals'][] = [
+                'title' => $total['title'],
+                'text' => $this->currency->format($total['value']),
+                'value' => $total['value'],
+            ];
+        }
+
+        return $data;
     }
 
 }
