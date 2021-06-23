@@ -10,6 +10,9 @@ require_once DIR_APPLICATION . '/controller/api/settings.php';
 class ControllerCheckoutSuccess extends Controller {
 
     public function index() {
+        if (!isset($this->session->data['completed_order_products']) || !isset($this->session->data['completed_order_totals'])) {
+            $this->response->redirect($this->url->link('common/home'));
+        }
         //$this->load->language( 'account/register' );
 
         $this->load->model('account/customer');
@@ -455,6 +458,8 @@ class ControllerCheckoutSuccess extends Controller {
             $data['text_agree'] = '';
         }
         //echo "<pre>";print_r($data);die;
+        unset($this->session->data['completed_order_products']);
+        unset($this->session->data['completed_order_totals']);
         /* ORDER SUMMARY */
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
