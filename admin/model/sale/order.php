@@ -2822,6 +2822,10 @@ class ModelSaleOrder extends Model {
 
         // $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
         //insert into order_total
+        $alreadyupdated = $this->db->query('select delivery_charges from ' . DB_PREFIX . 'order  WHERE order_id="' . $order_id . '" and delivery_charges >0')->row;
+        if($alreadyupdated)
+        return;
+         $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
 
         $exists = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="shipping"')->row;
         // echo "<pre>";print_r($exists);
