@@ -56,7 +56,7 @@
                 <div class="my-order-view-dashboard">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>
+                            <!--<div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>-->
                         </div>
                     </div>
                     
