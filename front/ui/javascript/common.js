@@ -30,12 +30,12 @@ $(document).delegate('.product-box .dropdown-menu a', 'click', function () {
 	});
 });
 
-$(document).delegate('#selectedCategory', 'change', function () {
+/*$(document).delegate('#selectedCategory', 'change', function () {
 console.log($( this ).val());
 console.log($( this ).attr('data-url'));
 var url = $( this ).attr('data-url');
 window.location.replace(url+"index.php?path=common/home&filter_category="+$( this ).val());
-});
+});*/
 //shop info modal 
 $(document).ready(function () {
 
