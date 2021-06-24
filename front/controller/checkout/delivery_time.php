@@ -1929,18 +1929,18 @@ class Controllercheckoutdeliverytime extends Controller {
         foreach ($selected_date as $selected) {
             $selected_timeslot = $selected['timeslot'];
             $time_period = explode('-', $selected_timeslot);
-            //$log->write('selected');
-            //$log->write($time_period[1]);
-            //$log->write(date("H:i", strtotime($time_period[1])));
+            $log->write('selected');
+            $log->write($time_period[1]);
+            $log->write(date("H:i", strtotime($time_period[1])));
             $full_format = $delivery_time2[0] . ' ' . date("H:i", strtotime($time_period[1]));
-            //$log->write($delivery_time);
-            //$log->write($full_format);
-            //$log->write('selected');
+            $log->write($delivery_time);
+            $log->write($full_format);
+            $log->write('selected');
             if (strtotime($delivery_time) < strtotime($full_format) && $category_time_slot == NULL) {
                 $category_time_slot = $delivery_time2[0] . ' ' . $selected_timeslot;
-                //$log->write('category_time_slot');
-                //$log->write($category_time_slot);
-                //$log->write('category_time_slot');
+                $log->write('category_time_slot');
+                $log->write($category_time_slot);
+                $log->write('category_time_slot');
             }
         }
         return $category_time_slot;
