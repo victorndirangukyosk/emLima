@@ -56,7 +56,7 @@
                 <div class="my-order-view-dashboard">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="back-link-block"><span class="back-arrow">Order Summary</span></div>
+                            <div class="back-link-block"><span class="back-arrow"><h2 class="signupheading">Order Summary</h2></span></div>
                         </div>
                     </div>
                     
