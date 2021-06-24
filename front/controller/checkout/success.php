@@ -175,12 +175,12 @@ class ControllerCheckoutSuccess extends Controller {
                     $this->model_checkout_order->SendMailToParentUser($order_info['order_id']);
                 }
                 $this->session->data['completed_order_ids'] = $this->session->data['order_id'];
-                
+
                 $log = new Log('error.log');
                 $log->write('completed_order_ids');
                 $log->write($this->session->data['completed_order_ids']);
                 $log->write('completed_order_ids');
-                
+
                 unset($this->session->data['shipping_method']);
                 unset($this->session->data['shipping_methods']);
                 unset($this->session->data['payment_method']);
@@ -406,6 +406,7 @@ class ControllerCheckoutSuccess extends Controller {
 
         //echo "<pre>";print_r($totals);die;
         $data['totals'] = $this->session->data['completed_order_totals'];
+        $data['order_id'] = implode('#', array_values($this->session->data['completed_order_ids']));
 
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
@@ -467,6 +468,7 @@ class ControllerCheckoutSuccess extends Controller {
         //echo "<pre>";print_r($data);die;
         unset($this->session->data['completed_order_products']);
         unset($this->session->data['completed_order_totals']);
+        unset($this->session->data['completed_order_ids']);
         /* ORDER SUMMARY */
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
