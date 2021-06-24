@@ -110,6 +110,7 @@ class ModelCheckoutOrder extends Model {
         $log = new Log('error.log');
         $log->write('addMultiOrder 1');
         //$log->write($stores);
+        $this->load->model('assets/category');
         $this->trigger->fire('pre.order.add', $stores);
 
 
@@ -151,6 +152,14 @@ class ModelCheckoutOrder extends Model {
                         }
                         $log = new Log('error.log');
                         $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
+                        
+                        $category_details = $this->model_assets_category->getCategory($product['category_id']);
+                        $log->write($product['category_id'] . '-' . 'category_id');
+                        $delivery_slot_details = $this->load->controller('checkout/delivery_time/CategoryDeliverySlots', array('hours' => $category_details['delivery_time']));
+                        $log->write('delivery_slot_details');
+                        $log->write($delivery_slot_details);
+                        $log->write('delivery_slot_details');
+                        
                         $log->write($product['product_note'] . '-' . $product['product_id'] . '-' . $product['name']);
                         $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
                         if ($product['product_note'] == 'undefined' || $product['product_note'] == 'null') {
