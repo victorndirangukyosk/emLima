@@ -92,6 +92,8 @@ class ControllerCheckoutSuccess extends Controller {
 
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
+        $data['order_ids'] = $this->session->data['order_id'];
+
         if (isset($this->session->data['order_id'])) {
             $this->load->model('checkout/success');
             $this->load->model('checkout/order');
@@ -174,14 +176,6 @@ class ControllerCheckoutSuccess extends Controller {
                     $this->load->model('checkout/order');
                     $this->model_checkout_order->SendMailToParentUser($order_info['order_id']);
                 }
-                
-                $data['order_ids'] = implode(' #', array_values($this->session->data['order_id']));
-                $this->session->data['completed_order_ids'] = implode(' #', array_values($this->session->data['order_id']));
-
-                $log = new Log('error.log');
-                $log->write('completed_order_ids');
-                $log->write($this->session->data['completed_order_ids']);
-                $log->write('completed_order_ids');
 
                 unset($this->session->data['shipping_method']);
                 unset($this->session->data['shipping_methods']);
