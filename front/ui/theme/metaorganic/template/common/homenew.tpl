@@ -799,6 +799,15 @@
   <script src="<?= $base; ?>front/ui/theme/metaorganic/javascript/common.js?v=2.0.7" charset="UTF-8"
     type="text/javascript"></script>
 
+<script type="text/javascript">
+$(document).delegate('#selectedCategory', 'change', function () {
+console.log($( this ).val());
+console.log($( this ).attr('data-url'));
+var url = $( this ).attr('data-url');
+window.location.replace(url+"index.php?path=common/home&filter_category="+$( this ).val());
+});      
+</script>
+
   <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
 
   <script type="text/javascript"
@@ -1138,14 +1147,6 @@
     $("#toTop").show();
     $("#toTop").css('opacity', '1.0');
   });
-  
-$(document).delegate('#selectedCategory', 'change', function () {
-console.log($( this ).val());
-console.log($( this ).attr('data-url'));
-var url = $( this ).attr('data-url');
-window.location.replace(url+"index.php?path=common/home&filter_category="+$( this ).val());
-});
-
 </script>
 
 </html>
