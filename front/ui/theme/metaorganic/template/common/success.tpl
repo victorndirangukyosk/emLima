@@ -56,7 +56,7 @@
                 <div class="my-order-view-dashboard">
                     <div class="row">
                         <div class="col-md-12">
-                            <!--<div class="back-link-block"><a href="<?php echo $continue; ?>"> <span class="back-arrow"><i class="fa fa-long-arrow-left"></i> </span> <?= $text_go_back ?></a></div>-->
+                            <div class="back-link-block"><span class="back-arrow">Order Summary</span></div>
                         </div>
                     </div>
                     
@@ -76,7 +76,7 @@
 
                                             <span>
                                                 <?= $text_order_id_with_colon ?>
-                                                <span class="my-order-id-number"><?php echo $order_id; if(is_array($order_ids) && count($order_ids) > 0) { foreach($order_ids as $stid => $stoid){ echo '#'.$stoid;  } } ?></span>
+                                                <span class="my-order-id-number"><?php echo $order_id; if(is_array($order_ids) && count($order_ids) > 0) { foreach($order_ids as $stid => $stoid){ echo ' #'.$stoid;  } } ?></span>
                                             </span>
                                             <span class="my-order-id-item"><strong><?php echo $total_products; ?></strong> <?= $text_products ?></span>
                                             <!--<span class="my-order-id-item"><strong><?php echo $total_quantity; ?></strong> <?= $text_products ?></span>-->
