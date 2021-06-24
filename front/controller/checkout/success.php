@@ -174,6 +174,8 @@ class ControllerCheckoutSuccess extends Controller {
                     $this->load->model('checkout/order');
                     $this->model_checkout_order->SendMailToParentUser($order_info['order_id']);
                 }
+                
+                $data['order_ids'] = implode(' #', array_values($this->session->data['order_id']));
                 $this->session->data['completed_order_ids'] = implode(' #', array_values($this->session->data['order_id']));
 
                 $log = new Log('error.log');
@@ -407,11 +409,6 @@ class ControllerCheckoutSuccess extends Controller {
         //echo "<pre>";print_r($totals);die;
         $data['totals'] = $this->session->data['completed_order_totals'];
         $data['order_id'] = $this->session->data['completed_order_ids'];
-
-        $log = new Log('error.log');
-        $log->write('completed_order_ids_2');
-        $log->write($this->session->data['completed_order_ids']);
-        $log->write('completed_order_ids_2');
 
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
