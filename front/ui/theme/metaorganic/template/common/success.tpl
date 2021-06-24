@@ -76,7 +76,7 @@
 
                                             <span>
                                                 <?= $text_order_id_with_colon ?>
-                                                <span class="my-order-id-number">#<?php echo $order_id; print_r($order_ids); ?></span>
+                                                <span class="my-order-id-number"><?php echo $order_id; if(is_array($order_ids) && count($order_ids) > 0) { foreach($order_ids as $stid => $stoid){ echo '#'.$stiid;  } } ?></span>
                                             </span>
                                             <span class="my-order-id-item"><strong><?php echo $total_products; ?></strong> <?= $text_products ?></span>
                                             <!--<span class="my-order-id-item"><strong><?php echo $total_quantity; ?></strong> <?= $text_products ?></span>-->
