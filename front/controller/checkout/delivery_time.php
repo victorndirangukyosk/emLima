@@ -1828,13 +1828,115 @@ class Controllercheckoutdeliverytime extends Controller {
             $this->session->data['timeslot'][$store_id] = $data['selected_slot'];
             $this->session->data['dates'][$store_id] = $data['dates'][0];
         }
-        /*$log = new Log('error.log');
-        $log->write('SLOTS');
-        $log->write($data['selected_slot']);
-        $log->write($data['dates'][0]);
-        $log->write('SLOTS');*/
+        /* $log = new Log('error.log');
+          $log->write('SLOTS');
+          $log->write($data['selected_slot']);
+          $log->write($data['dates'][0]);
+          $log->write('SLOTS'); */
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function CategoryDeliverySlots($hours) {
+
+        $delivery_time = date('d-m-Y H:i', strtotime($hours['hours'] . ' hour'));
+        $delivery_time2 = explode(' ', $delivery_time);
+        $log = new Log('error.log');
+        $log->write(date('d-m-Y H:i:s'));
+        $log->write('hours');
+        $log->write($delivery_time2[0]);
+        $log->write($delivery_time2[1]);
+        $log->write($hours['hours']);
+        $log->write('hours');
+        $data = [];
+
+        $this->language->load('checkout/delivery_time');
+
+        $data['text_no_timeslot'] = $this->language->get('text_no_timeslot');
+
+        $store_id = 75;
+        $shipping_method = 'store_delivery.store_delivery';
+
+        //TO STORE STORE ID AND SHIPPING METHOD IN SESSION
+        $this->session->data['store_id_for_timeslot'] = $store_id;
+        $this->session->data['shipping_method_for_timeslot'] = $shipping_method;
+
+        $getActiveDays = $this->getActiveDays($store_id, $shipping_method);
+        $log = new Log('error.log');
+        $log->write('CategoryDeliverySlots');
+        $log->write($store_id . 'ss' . $shipping_method);
+
+        $log->write($getActiveDays);
+        $data['dates'] = $this->getDates($getActiveDays, $store_id, $shipping_method);
+        $data['timeslots'] = [];
+
+        $data['formatted_dates'] = [];
+        $log->write($data['dates']);
+        foreach ($data['dates'] as $date) {
+            $amTimeslot = [];
+            $pmTimeslot = [];
+            $inPmfirstTimeslot = [];
+
+            $temp = $this->get_all_time_slot($store_id, $shipping_method, $date);
+
+            foreach ($temp as $temp1) {
+                $temp2 = explode('-', $temp1['timeslot']);
+
+                if (false !== strpos($temp2[0], 'am')) {
+                    array_push($amTimeslot, $temp1);
+                } else {
+                    if ('12' == substr($temp2[0], 0, 2)) {
+                        array_push($inPmfirstTimeslot, $temp1);
+                    } else {
+                        array_push($pmTimeslot, $temp1);
+                    }
+                }
+            }
+
+            foreach ($inPmfirstTimeslot as $te) {
+                array_push($amTimeslot, $te);
+            }
+
+            foreach ($pmTimeslot as $te) {
+                array_push($amTimeslot, $te);
+            }
+
+            //echo "<pre>";print_r($temp);print_r($amTimeslot);
+
+            if (count($amTimeslot) > 0) {
+                $data['timeslots'][$date] = $amTimeslot;
+                $data['formatted_dates'][] = $date;
+            }
+
+            //$data['timeslots'][$date] = $temp;
+        }
+
+        $data['dates'] = $data['formatted_dates'];
+
+        //$log->write('timeslots final');
+        //$log->write($data['dates']);
+        //$log->write($data['timeslots']);
+        $data['store'] = $this->getStoreDetail($store_id);
+        $selected_date = $data['timeslots'][$delivery_time2[0]];
+        $category_time_slot = NULL;
+        foreach ($selected_date as $selected) {
+            $selected_timeslot = $selected['timeslot'];
+            $time_period = explode('-', $selected_timeslot);
+            //$log->write('selected');
+            //$log->write($time_period[1]);
+            //$log->write(date("H:i", strtotime($time_period[1])));
+            $full_format = $delivery_time2[0] . ' ' . date("H:i", strtotime($time_period[1]));
+            //$log->write($delivery_time);
+            //$log->write($full_format);
+            //$log->write('selected');
+            if (strtotime($delivery_time) < strtotime($full_format) && $category_time_slot == NULL) {
+                $category_time_slot = $delivery_time2[0] . ' ' . $selected_timeslot;
+                //$log->write('category_time_slot');
+                //$log->write($category_time_slot);
+                //$log->write('category_time_slot');
+            }
+        }
+        return $category_time_slot;
     }
 
 }

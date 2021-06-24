@@ -32,8 +32,6 @@ class ModelCheckoutOrder extends Model {
                 $log->write('addorder 2');
                 $this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET order_id='" . $order_id . "', invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int) $data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int) $data['customer_id'] . "', customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float) $data['total'] . "', latitude = '" . $data['latitude'] . "',longitude = '" . $data['longitude'] . "', affiliate_id = '" . (int) $data['affiliate_id'] . "',marketing_id = '" . (int) $data['marketing_id'] . "', tracking = '" . $this->db->escape($data['tracking']) . "', language_id = '" . (int) $data['language_id'] . "', currency_id = '" . (int) $data['currency_id'] . "', currency_code = '" . $this->db->escape($data['currency_code']) . "', currency_value = '" . (float) $data['currency_value'] . "', ip = '" . $this->db->escape($data['ip']) . "', forwarded_ip = '" . $this->db->escape($data['forwarded_ip']) . "', user_agent = '" . $this->db->escape($data['user_agent']) . "', accept_language = '" . $this->db->escape($data['accept_language']) . "', commission = '" . $this->db->escape($data['commission']) . "', fixed_commission = '" . $this->db->escape($data['fixed_commission']) . "',delivery_date = '" . $this->db->escape(date('Y-m-d', strtotime($data['delivery_date']))) . "',delivery_timeslot = '" . $this->db->escape($data['delivery_timeslot']) . "',  date_added = NOW(), date_modified = NOW()");
 
-
-
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
                         . "shipping_city_id = '" . $this->db->escape((array_key_exists('shipping_city_id', $data) ? $data['shipping_city_id'] : '')) . "', "
                         . "shipping_contact_no = '" . $this->db->escape($data['shipping_contact_no']) . "', "
@@ -70,7 +68,6 @@ class ModelCheckoutOrder extends Model {
                 $order_id = $this->db->getLastId();
 
                 $this->session->data['order_id'][$data['store_id']] = $order_id;
-
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
                         . "shipping_city_id = '" . $this->db->escape($data['shipping_city_id']) . "', "
@@ -110,8 +107,8 @@ class ModelCheckoutOrder extends Model {
         $log = new Log('error.log');
         $log->write('addMultiOrder 1');
         //$log->write($stores);
+        $this->load->model('assets/category');
         $this->trigger->fire('pre.order.add', $stores);
-
 
         $orders = isset($this->session->data['order_id']);
 
@@ -151,7 +148,14 @@ class ModelCheckoutOrder extends Model {
                         }
                         $log = new Log('error.log');
                         $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
+
+                        $category_details = $this->model_assets_category->getCategory($product['category_id']);
+                        $log->write($product['category_id'] . '-' . 'category_id');
                         $log->write($product['product_note'] . '-' . $product['product_id'] . '-' . $product['name']);
+                        $delivery_slot_details = $this->load->controller('checkout/delivery_time/CategoryDeliverySlots', array('hours' => $category_details['delivery_time']));
+                        $log->write('delivery_slot_details');
+                        $log->write($delivery_slot_details);
+                        $log->write('delivery_slot_details');
                         $log->write('PRODUCT NOTE FRONT.MODEL.CHECKOUT.ORDER');
                         if ($product['product_note'] == 'undefined' || $product['product_note'] == 'null') {
                             $product['product_note'] = '';
@@ -177,7 +181,6 @@ class ModelCheckoutOrder extends Model {
                 $order_id = $this->db->getLastId();
 
                 $this->session->data['order_id'][$data['store_id']] = $order_id;
-
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
                         . "shipping_city_id = '" . $this->db->escape((array_key_exists('shipping_city_id', $data) ? $data['shipping_city_id'] : '')) . "', "
@@ -451,7 +454,6 @@ class ModelCheckoutOrder extends Model {
                 $log->write('addOrderHistory not safe');
                 $status = false;
 
-
                 if ($order_info['customer_id']) {
 
                     $results = $this->model_account_customer->getIps($order_info['customer_id']);
@@ -542,7 +544,6 @@ class ModelCheckoutOrder extends Model {
 
             $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
 
-
             // If current order status is not processing or complete but new status is processing or complete then commence completing the order
             //print_r($order_info['order_status_id']);
 
@@ -550,7 +551,6 @@ class ModelCheckoutOrder extends Model {
 
                 // Stock subtraction
                 $order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
-
 
                 foreach ($order_product_query->rows as $order_product) {
                     $this->db->query("UPDATE " . DB_PREFIX . "product_to_store SET quantity = (quantity - " . (float) $order_product['quantity'] . ") WHERE product_store_id = '" . (int) $order_product['product_id'] . "' AND subtract_quantity = '1'");
@@ -702,7 +702,6 @@ class ModelCheckoutOrder extends Model {
                     'invoice_no' => !empty($invoice_no) ? $invoice_no : ''
                 );
 
-
                 $getTotal = $order_total->rows;
 
                 $textData = array(
@@ -722,7 +721,6 @@ class ModelCheckoutOrder extends Model {
                 if ($notify) {
 
                     $log->write('in if');
-
 
                     $log->write("cust orderData");
                     //$log->write($data);
@@ -815,12 +813,9 @@ class ModelCheckoutOrder extends Model {
 
                     $vendorData = $this->getVendorDetails($tempVendorInfo['vendor_id']);
 
-
-
                     $this->load->model('account/order');
 
                     $store_details = $this->model_account_order->getStoreById($order_info['store_id']);
-
 
                     // checking if vendor mail is on
 
@@ -832,7 +827,6 @@ class ModelCheckoutOrder extends Model {
                     //$text = $this->emailtemplate->getText( 'Order', 'order', $textData );
 
                     $vendor_sms_message = $this->emailtemplate->getSmsMessage('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
-
 
                     if (isset($vendorData['email']) && $this->emailtemplate->getEmailEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id) && (in_array($order_status_id, $this->config->get('config_processing_status')) || in_array($order_status_id, $this->config->get('config_complete_status')))) {
 
@@ -850,7 +844,6 @@ class ModelCheckoutOrder extends Model {
                         $message = $this->emailtemplate->getMessage('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
 
                         $mail = new mail($this->config->get('config_mail'));
-
 
                         $mail->setTo($vendorData['email']);
                         $mail->setFrom($this->config->get('config_from_email'));
@@ -879,7 +872,6 @@ class ModelCheckoutOrder extends Model {
 
                         $mail = new mail($this->config->get('config_mail'));
 
-
                         /* $mail->setTo($store_details['email']);
 
                           $mail->setFrom($this->config->get('config_from_email'));
@@ -905,7 +897,6 @@ class ModelCheckoutOrder extends Model {
                     }
 
                     $log->write('vendro end');
-
 
                     if ($this->emailtemplate->getNotificationEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id)) {
 
@@ -1147,7 +1138,6 @@ class ModelCheckoutOrder extends Model {
 
                             $creditDescription = sprintf($this->language->get('text_coupon_order_id'), $order_info['order_id']);
 
-
                             $log->write('coupon cashback');
 
                             $log->write($points);
@@ -1293,7 +1283,6 @@ class ModelCheckoutOrder extends Model {
     public function getOrderDetailIugu($order_id) {
 
         $log = new Log('error.log');
-
 
         $log->write('in igi constant');
         $log->write("SELECT * FROM `" . DB_PREFIX . "order_iugu` WHERE `order_id` = " . (int) $order_id);
@@ -1447,7 +1436,6 @@ class ModelCheckoutOrder extends Model {
 
             $log->write("inside createDeliveryRequest");
 
-
             $data['products']['products'] = [];
             $weight = 0;
 
@@ -1510,7 +1498,6 @@ class ModelCheckoutOrder extends Model {
 
             //$deliverAddress = $order_info['shipping_flat_number'].", ". $order_info['shipping_building_name'].", ".$order_info['shipping_landmark'];
             $deliverAddress = $order_info['shipping_flat_number'] . ", " . $order_info['shipping_landmark'];
-
 
             $this->load->model('sale/order');
 
@@ -1581,7 +1568,6 @@ class ModelCheckoutOrder extends Model {
                 'total_type' => $total_type,
             ];
 
-
             $data['email'] = $this->config->get('config_delivery_username');
             $data['password'] = $this->config->get('config_delivery_secret');
             $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
@@ -1637,7 +1623,6 @@ class ModelCheckoutOrder extends Model {
             $log->write("response true");
             $log->write($data);
 
-
             $respon = $this->load->controller('deliversystem/deliversystem/updateCancelledOrder', $data);
         }
     }
@@ -1646,7 +1631,6 @@ class ModelCheckoutOrder extends Model {
         $refundToCustomerWallet = false;
 
         $allowedPaymentMethods = $this->config->get('config_payment_methods_status');
-
 
         if (is_array($allowedPaymentMethods) && count($allowedPaymentMethods) > 0) {
             foreach ($allowedPaymentMethods as $method) {

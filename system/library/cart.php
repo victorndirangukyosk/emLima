@@ -245,6 +245,7 @@ class Cart {
 
                 $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
                 $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+                $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
                 $this->db->where('product.status', 1);
                 $this->db->where('product_description.language_id', (int) $this->config->get('config_language_id'));
                 $this->db->where('product_to_store.product_store_id', $product_store_id);
@@ -316,7 +317,11 @@ class Cart {
                         $orignal_price = isset($cat_price) ? $this->getCategoryPriceProduct($product_query->row['product_store_id'], $product['store_id'], $_SESSION['customer_category']) : $price;
                         $price = $orignal_price;
                     }
-
+                    
+                    $log = new Log('error.log');
+                    $log->write('category_id');
+                    $log->write($product_query->row['category_id']);
+                    $log->write('category_id');
                     $this->data[$keys] = [
                         'key' => $keys,
                         'product_store_id' => $product_query->row['product_store_id'],
@@ -351,6 +356,7 @@ class Cart {
                         'height' => 0,
                         'length_class_id' => 0,
                         'recurring' => false,
+                        'category_id' => $product_query->row['category_id']
                     ];
                 } else {
                     $this->remove($keys);
