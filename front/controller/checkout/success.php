@@ -408,6 +408,11 @@ class ControllerCheckoutSuccess extends Controller {
         $data['totals'] = $this->session->data['completed_order_totals'];
         $data['order_id'] = implode('#', array_values($this->session->data['completed_order_ids']));
 
+        $log = new Log('error.log');
+        $log->write('completed_order_ids_2');
+        $log->write(implode('#', array_values($this->session->data['completed_order_ids'])));
+        $log->write('completed_order_ids_2');
+
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
