@@ -174,6 +174,13 @@ class ControllerCheckoutSuccess extends Controller {
                     $this->load->model('checkout/order');
                     $this->model_checkout_order->SendMailToParentUser($order_info['order_id']);
                 }
+                $this->session->data['completed_order_ids'] = $this->session->data['order_id'];
+                
+                $log = new Log('error.log');
+                $log->write('completed_order_ids');
+                $log->write($this->session->data['completed_order_ids']);
+                $log->write('completed_order_ids');
+                
                 unset($this->session->data['shipping_method']);
                 unset($this->session->data['shipping_methods']);
                 unset($this->session->data['payment_method']);
