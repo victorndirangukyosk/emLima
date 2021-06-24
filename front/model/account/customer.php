@@ -355,6 +355,15 @@ class ModelAccountCustomer extends Model {
 
     }
 
+    public function getRegisterOTP($customer_id, $type) {
+        
+            $query = $this->db->query('SELECT otp FROM ' . DB_PREFIX . "otp WHERE customer_id = '" . $customer_id . "' and type='" . $type . "'");
+
+            return $query->row;
+        
+
+    }
+
     public function saveOTP($customer_id, $otp, $type) {
         $query = $this->db->query('DELETE FROM ' . DB_PREFIX . "otp WHERE customer_id = '" . $customer_id . "' and type='" . $type . "'");
 
