@@ -151,15 +151,20 @@ class ModelCheckoutOrder extends Model {
 
                         $category_details = $this->model_assets_category->getCategory($product['category_id']);
                         $log->write($product['category_id'] . '-' . 'category_id');
-                        $delivery_slot_details = $this->load->controller('checkout/delivery_time/CategoryDeliverySlots', array('hours' => $category_details['delivery_time']));
-                        $log->write('delivery_slot_details');
-                        $log->write($delivery_slot_details);
-                        $log->write('delivery_slot_details');
+
                         $db_delivery_date = NULL;
                         $db_delivery_timeslot = NULL;
-                        if (is_array($delivery_slot_details) && $delivery_slot_details != NULL) {
-                            $db_delivery_date = date("Y-m-d", strtotime($delivery_slot_details['delivery_date']));
-                            $db_delivery_timeslot = $delivery_slot_details['delivery_timeslot'];
+
+                        if ($category_details['delivery_time'] > 0) {
+                            $delivery_slot_details = $this->load->controller('checkout/delivery_time/CategoryDeliverySlots', array('hours' => $category_details['delivery_time']));
+                            $log->write('delivery_slot_details');
+                            $log->write($delivery_slot_details);
+                            $log->write('delivery_slot_details');
+
+                            if (is_array($delivery_slot_details) && $delivery_slot_details != NULL) {
+                                $db_delivery_date = date("Y-m-d", strtotime($delivery_slot_details['delivery_date']));
+                                $db_delivery_timeslot = $delivery_slot_details['delivery_timeslot'];
+                            }
                         }
 
                         $log->write($product['product_note'] . '-' . $product['product_id'] . '-' . $product['name']);
