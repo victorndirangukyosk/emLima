@@ -1854,6 +1854,8 @@ class Controllercheckoutdeliverytime extends Controller {
         $log->write($delivery_time2[0]);
         $log->write($delivery_time2[1]);
         $log->write($hours['hours']);
+        $log->write(date('d-m-Y', strtotime("+1 day", strtotime($delivery_time2[0]))));
+        $next_day = date('d-m-Y', strtotime("+1 day", strtotime($delivery_time2[0])));
         $log->write('hours');
         $data = [];
 
@@ -1926,6 +1928,7 @@ class Controllercheckoutdeliverytime extends Controller {
         $data['store'] = $this->getStoreDetail($store_id);
         $selected_date = $data['timeslots'][$delivery_time2[0]];
         $category_time_slot = NULL;
+        $category_time_slot_array = array();
         foreach ($selected_date as $selected) {
             $selected_timeslot = $selected['timeslot'];
             $time_period = explode('-', $selected_timeslot);
@@ -1941,9 +1944,33 @@ class Controllercheckoutdeliverytime extends Controller {
                 $log->write('category_time_slot');
                 $log->write($category_time_slot);
                 $log->write('category_time_slot');
+                $category_time_slot_array = array('delivery_date' => $delivery_time2[0], 'delivery_timeslot' => $selected_timeslot);
             }
         }
-        return $category_time_slot;
+
+        if ($category_time_slot == NULL) {
+            $selected_date = $data['timeslots'][$next_day];
+            $category_time_slot = NULL;
+            foreach ($selected_date as $selected) {
+                $selected_timeslot = $selected['timeslot'];
+                $time_period = explode('-', $selected_timeslot);
+                $log->write('selected');
+                $log->write($time_period[1]);
+                $log->write(date("H:i", strtotime($time_period[1])));
+                $full_format = $next_day . ' ' . date("H:i", strtotime($time_period[1]));
+                $log->write($delivery_time);
+                $log->write($full_format);
+                $log->write('selected');
+                if (strtotime($delivery_time) < strtotime($full_format) && $category_time_slot == NULL) {
+                    $category_time_slot = $next_day . ' ' . $selected_timeslot;
+                    $log->write('category_time_slot');
+                    $log->write($category_time_slot);
+                    $log->write('category_time_slot');
+                    $category_time_slot_array = array('delivery_date' => $next_day, 'delivery_timeslot' => $selected_timeslot);
+                }
+            }
+        }
+        return $category_time_slot_array;
     }
 
 }
