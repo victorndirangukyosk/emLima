@@ -165,6 +165,11 @@ class ModelCheckoutOrder extends Model {
                                 $db_delivery_date = date("Y-m-d", strtotime($delivery_slot_details['delivery_date']));
                                 $db_delivery_timeslot = $delivery_slot_details['delivery_timeslot'];
                             }
+                        } elseif (isset($this->session->data['dates'][75]) && isset($this->session->data['timeslot'][75])) {
+                            $log->write($this->session->data['dates'][75]);
+                            $log->write($this->session->data['timeslot'][75]);
+                            $db_delivery_date = date("Y-m-d", strtotime($this->session->data['dates'][75]));
+                            $db_delivery_timeslot = $this->session->data['timeslot'][75];
                         }
 
                         $log->write($product['product_note'] . '-' . $product['product_id'] . '-' . $product['name']);
