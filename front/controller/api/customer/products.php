@@ -1658,6 +1658,7 @@ class ControllerApiCustomerProducts extends Controller {
                 'left_symbol_currency' => $this->currency->getSymbolLeft(),
                 'right_symbol_currency' => $this->currency->getSymbolRight(),
                 'tax' => $result['tax_percentage'],
+                'tax_class_id' => $result['tax_class_id'],
                 //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
