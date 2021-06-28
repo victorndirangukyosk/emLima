@@ -113,9 +113,12 @@ final class Tax
 
     public function getRateName($tax_rate_id)
     {
+        $log = new Log('error.log');
+        $log->write('getRateName');
+        $log->write($tax_rate_id);
+        $log->write('getRateName');
         $tax_query = $this->db->query('SELECT name FROM '.DB_PREFIX."tax_rate WHERE tax_rate_id = '".(int) $tax_rate_id."'");
         if($tax_rate_id > 0) {
-        $log = new Log('error.log');
         $log->write('getRateName');
         $log->write($tax_query->num_rows);
         $log->write('getRateName');
