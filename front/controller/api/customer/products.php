@@ -1797,6 +1797,16 @@ class ControllerApiCustomerProducts extends Controller {
             if (isset($filter_data['group_by']) && ('name' == $filter_data['group_by'])) {
                 $formatted = true;
             }
+            if ($result['tax_class_id'] > 0) {
+                $c_price = $special_price > 0 ? $special_price : $price;
+                $tax_details = $this->tax->getRates($c_price, $result['tax_class_id']);
+                $log = new Log('error.log');
+                $log->write('tax_details');
+                $log->write($c_price);
+                $log->write($result['tax_class_id']);
+                $log->write($tax_details);
+                $log->write('tax_details');
+            }
             $data['products'][] = [
                 'key' => $key,
                 'qty_in_cart' => $qty_in_cart,
