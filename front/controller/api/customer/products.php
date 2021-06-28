@@ -599,6 +599,7 @@ class ControllerApiCustomerProducts extends Controller {
                 'right_symbol_currency' => $this->currency->getSymbolRight(),
                 'tax' => $result['tax_percentage'],
                 'tax_class_id' => $result['tax_class_id'],
+                'tax_class_name' => $this->tax->getRateName($result['tax_class_id']),
                 //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
@@ -890,6 +891,7 @@ class ControllerApiCustomerProducts extends Controller {
                             'right_symbol_currency' => $this->currency->getSymbolRight(),
                             'tax' => $result['tax_percentage'],
                             'tax_class_id' => $result['tax_class_id'],
+                            'tax_class_name' => $this->tax->getRateName($result['tax_class_id']),
                             //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                             'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                             'rating' => 0,
@@ -1318,8 +1320,6 @@ class ControllerApiCustomerProducts extends Controller {
 
                         $unit = $result['unit'] ? $result['unit'] : false;
 
-
-
                         $productNames = array_column($data['products'], 'name');
                         if (false !== array_search($result['name'], $productNames)) {
                             // Add variation to existing product
@@ -1365,6 +1365,7 @@ class ControllerApiCustomerProducts extends Controller {
                                 ],
                                 'tax' => $result['tax_percentage'],
                                 'tax_class_id' => $result['tax_class_id'],
+                                'tax_class_name' => $this->tax->getRateName($result['tax_class_id']),
                                 //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                                 'rating' => 0,
@@ -1659,6 +1660,7 @@ class ControllerApiCustomerProducts extends Controller {
                 'right_symbol_currency' => $this->currency->getSymbolRight(),
                 'tax' => $result['tax_percentage'],
                 'tax_class_id' => $result['tax_class_id'],
+                'tax_class_name' => $this->tax->getRateName($result['tax_class_id']),
                 //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
@@ -1822,6 +1824,7 @@ class ControllerApiCustomerProducts extends Controller {
                 'right_symbol_currency' => $this->currency->getSymbolRight(),
                 'tax' => $result['tax_percentage'],
                 'tax_class_id' => $result['tax_class_id'],
+                'tax_class_name' => $this->tax->getRateName($result['tax_class_id']),
                 //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
@@ -2205,8 +2208,6 @@ class ControllerApiCustomerProducts extends Controller {
         }
         $customercategory_new = $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
-
-
         $sql = 'SELECT p.*,pd.*,p2c.product_id product_id2 FROM ' . DB_PREFIX . 'product p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (p.product_id = p2c.product_id)';
 
         if (!empty($data['filter_store'])) {
@@ -2291,7 +2292,6 @@ class ControllerApiCustomerProducts extends Controller {
         }
 
         $results = $query = $conn->query($sql);
-
 
         $disabled_products_string = NULL;
         // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
@@ -2432,7 +2432,6 @@ class ControllerApiCustomerProducts extends Controller {
 
 
             $results = $query = $conn->query($sql);
-
 
             $disabled_products_string = NULL;
             // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
@@ -2579,7 +2578,6 @@ class ControllerApiCustomerProducts extends Controller {
 
 
             $results = $query = $conn->query($sql);
-
 
             $disabled_products_string = NULL;
             // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
