@@ -1803,6 +1803,7 @@ class ControllerApiCustomerProducts extends Controller {
                 $log = new Log('error.log');
                 $log->write('tax_details');
                 $log->write($c_price);
+                $log->write($result['tax_class_id']);
                 $log->write($tax_details);
                 $log->write('tax_details');
             }
