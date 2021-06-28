@@ -585,6 +585,7 @@ class ControllerApiCustomerProducts extends Controller {
                 $tax_details = $this->tax->getRates($c_price, $result['tax_class_id']);
                 $log = new Log('error.log');
                 $log->write('tax_details');
+                $log->write($c_price);
                 $log->write($tax_details);
                 $log->write('tax_details');
             }
@@ -884,6 +885,7 @@ class ControllerApiCustomerProducts extends Controller {
                             $tax_details = $this->tax->getRates($c_price, $result['tax_class_id']);
                             $log = new Log('error.log');
                             $log->write('tax_details');
+                            $log->write($c_price);
                             $log->write($tax_details);
                             $log->write('tax_details');
                         }
@@ -1357,6 +1359,7 @@ class ControllerApiCustomerProducts extends Controller {
                                 $tax_details = $this->tax->getRates($c_price, $result['tax_class_id']);
                                 $log = new Log('error.log');
                                 $log->write('tax_details');
+                                $log->write($c_price);
                                 $log->write($tax_details);
                                 $log->write('tax_details');
                             }
@@ -1831,6 +1834,7 @@ class ControllerApiCustomerProducts extends Controller {
                 $tax_details = $this->tax->getRates($c_price, $result['tax_class_id']);
                 $log = new Log('error.log');
                 $log->write('tax_details');
+                $log->write($c_price);
                 $log->write($tax_details);
                 $log->write('tax_details');
             }
