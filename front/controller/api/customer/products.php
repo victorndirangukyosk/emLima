@@ -1798,23 +1798,29 @@ class ControllerApiCustomerProducts extends Controller {
                 $formatted = true;
             }
             
+            $tax_amount = 0;
+            $tax_name = NULL;
+            $tax_percentage = 0;
             if ($result['tax_class_id'] > 0) {
                 $c_price = $special_price > 0 ? $special_price : $price;
                 $tax_details = $this->tax->getRates($c_price, $result['tax_class_id']);
                 $log = new Log('error.log');
-                $log->write('tax_details');
-                $log->write($c_price);
-                $log->write($result['tax_class_id'][0]);
-                $log->write($tax_details);
-                $log->write('tax_details');
+                //$log->write('tax_details');
+                //$log->write($c_price);
+                //$log->write($result['tax_class_id'][0]);
+                //$log->write($tax_details);
+                //$log->write('tax_details');
 
                 foreach ($tax_details as $tax_detail) {
-                   $log->write($tax_detail['amount']); 
-                   $log->write($tax_detail['name']); 
-                   $log->write($tax_detail['rate']); 
+                    $tax_amount = $tax_detail['amount'];
+                    $tax_name = $tax_detail['name'];
+                    $tax_percentage = $tax_detail['rate'];
+                    $log->write($tax_detail['amount']);
+                    $log->write($tax_detail['name']);
+                    $log->write($tax_detail['rate']);
                 }
             }
-            
+
             $data['products'][] = [
                 'key' => $key,
                 'qty_in_cart' => $qty_in_cart,
@@ -1835,6 +1841,10 @@ class ControllerApiCustomerProducts extends Controller {
                 'left_symbol_currency' => $this->currency->getSymbolLeft(),
                 'right_symbol_currency' => $this->currency->getSymbolRight(),
                 'tax' => $result['tax_percentage'],
+                'tax_class_id' => $result['tax_class_id'],
+                'tax_percentage' => $tax_percentage,
+                'tax_amount' => $tax_amount,
+                'tax_name' => $tax_name,
                 //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
