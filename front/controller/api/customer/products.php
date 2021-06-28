@@ -579,16 +579,6 @@ class ControllerApiCustomerProducts extends Controller {
                 //$special_price = 0;
                 $special_price = $price;
             }
-            
-            if ($result['tax_class_id'] > 0) {
-                $c_price = $special_price > 0 ? $special_price : $price;
-                $tax_details = $this->tax->getRates($c_price, $result['tax_class_id']);
-                $log = new Log('error.log');
-                $log->write('tax_details');
-                $log->write($c_price);
-                $log->write($tax_details);
-                $log->write('tax_details');
-            }
 
             $data['products'][] = [
                 /* 'key' => $key,
@@ -879,16 +869,6 @@ class ControllerApiCustomerProducts extends Controller {
                           $temp['only_name'] = htmlspecialchars_decode($tempProduct['name']);
                           $temp['product_id'] = $tempProduct['product_id'];
                           $temp['product_store_id'] = $tempProduct['product_store_id']; */
-                        
-                        if ($result['tax_class_id'] > 0) {
-                            $c_price = $special_price > 0 ? $special_price : $price;
-                            $tax_details = $this->tax->getRates($c_price, $result['tax_class_id']);
-                            $log = new Log('error.log');
-                            $log->write('tax_details');
-                            $log->write($c_price);
-                            $log->write($tax_details);
-                            $log->write('tax_details');
-                        }
 
                         $data['products'][] = [
                             'key' => $key,
@@ -1353,17 +1333,6 @@ class ControllerApiCustomerProducts extends Controller {
                                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                             ];
                         } else {
-                            
-                            if ($result['tax_class_id'] > 0) {
-                                $c_price = $special_price > 0 ? $special_price : $price;
-                                $tax_details = $this->tax->getRates($c_price, $result['tax_class_id']);
-                                $log = new Log('error.log');
-                                $log->write('tax_details');
-                                $log->write($c_price);
-                                $log->write($tax_details);
-                                $log->write('tax_details');
-                            }
-
                             $data['products'][] = [
                                 'key' => $key,
                                 'qty_in_cart' => $qty_in_cart,
@@ -1828,7 +1797,6 @@ class ControllerApiCustomerProducts extends Controller {
             if (isset($filter_data['group_by']) && ('name' == $filter_data['group_by'])) {
                 $formatted = true;
             }
-            
             if ($result['tax_class_id'] > 0) {
                 $c_price = $special_price > 0 ? $special_price : $price;
                 $tax_details = $this->tax->getRates($c_price, $result['tax_class_id']);
@@ -1838,7 +1806,6 @@ class ControllerApiCustomerProducts extends Controller {
                 $log->write($tax_details);
                 $log->write('tax_details');
             }
-
             $data['products'][] = [
                 'key' => $key,
                 'qty_in_cart' => $qty_in_cart,
