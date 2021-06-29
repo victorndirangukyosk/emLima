@@ -407,7 +407,8 @@ class ControllerApiCart extends Controller {
                 }
             }
         }
-
+        $json['status'] = 200;
+        $json['data'] = [];
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -460,6 +461,8 @@ class ControllerApiCart extends Controller {
             }
         }
 
+        $json['status'] = 200;
+        $json['data'] = [];
         $json['products'] = $this->data;
 
         $this->response->addHeader('Content-Type: application/json');
