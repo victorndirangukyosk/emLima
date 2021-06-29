@@ -93,6 +93,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $taxes = $this->cart->getTaxes();
                 $taxes_by_store = $this->cart->getTaxesByStore($store_id);
                 $log->write('taxes_by_store mobile');
+                $log->write($store_id);
                 $log->write($taxes_by_store);
                 $log->write('taxes_by_store mobile');
 
