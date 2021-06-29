@@ -1,17 +1,14 @@
 <?php
 
-class ControllerApiCart extends Controller
-{
+class ControllerApiCart extends Controller {
+
     private $config;
     private $db;
     private $data = [];
 
     // added getCart fn
 
-    public function getCart()
-    {
-        $log = new Log('error.log');
-        $log->write('cwen');
+    public function getCart() {
         echo 'getCart';
 
         $totalQuantity = 0;
@@ -69,9 +66,7 @@ class ControllerApiCart extends Controller
                     // $sql .= ' INNER JOIN `'.DB_PREFIX.'category` c on c.category_id = pc.category_id';
                     // $sql .= ' WHERE pc.product_id = "'.$product_id.'"';
                     // $sql .= ' GROUP BY pc.category_id';
-
                     // $rows = $this->db->query($sql)->rows;
-
                     // Stock
                     if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $data['quantity'])) {
                         $stock = false;
@@ -101,7 +96,7 @@ class ControllerApiCart extends Controller
                         //old below
                         //$variation = ' - '.$row['name'];
 
-                        $variation = ' - '.$row['unit'];
+                        $variation = ' - ' . $row['unit'];
                     } else {
                         $price = $product_query->row['price'];
                         $special_price = null;
@@ -112,7 +107,7 @@ class ControllerApiCart extends Controller
                         }
 
                         $store_product_variation_id = 0;
-                        $variation = $product_query->row['unit'] ? ' - '.$product_query->row['unit'] : '';
+                        $variation = $product_query->row['unit'] ? ' - ' . $product_query->row['unit'] : '';
                         $image = $product_query->row['image'];
                     }
 
@@ -122,7 +117,7 @@ class ControllerApiCart extends Controller
                         'store_product_variation_id' => $store_product_variation_id,
                         'store_id' => $product['store_id'],
                         'product_type' => $product_type,
-                        'name' => $product_query->row['name'].$variation,
+                        'name' => $product_query->row['name'] . $variation,
                         'model' => $product_query->row['model'],
                         'shipping' => 0,
                         'image' => $image,
@@ -158,8 +153,7 @@ class ControllerApiCart extends Controller
         return $res;
     }
 
-    public function addCart()
-    { //add to addCart
+    public function addCart() { //add to addCart
         echo 'cart/add';
 
         $this->load->language('api/cart');
@@ -234,8 +228,7 @@ class ControllerApiCart extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function putEdit()
-    { //edit to putEdit
+    public function putEdit() { //edit to putEdit
         $this->load->language('api/cart');
 
         $json = [];
@@ -258,8 +251,7 @@ class ControllerApiCart extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function remove()
-    {
+    public function remove() {
         $this->load->language('api/cart');
 
         $json = [];
@@ -287,8 +279,7 @@ class ControllerApiCart extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getProducts()
-    {//renamed function products to getProducts
+    public function getProducts() {//renamed function products to getProducts
         echo 'cart/products';
         $this->load->language('api/cart');
 
@@ -361,16 +352,16 @@ class ControllerApiCart extends Controller
             $results = $this->model_extension_extension->getExtensions('total');
 
             foreach ($results as $key => $value) {
-                $sort_order[$key] = $this->config->get($value['code'].'_sort_order');
+                $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
             }
 
             array_multisort($sort_order, SORT_ASC, $results);
 
             foreach ($results as $result) {
-                if ($this->config->get($result['code'].'_status')) {
-                    $this->load->model('total/'.$result['code']);
+                if ($this->config->get($result['code'] . '_status')) {
+                    $this->load->model('total/' . $result['code']);
 
-                    $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
+                    $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
                 }
             }
 
@@ -395,4 +386,84 @@ class ControllerApiCart extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+    public function addCartProducts() { //add to addCartProducts
+        $this->load->language('api/cart');
+        $json = [];
+
+        if (isset($this->request->post['product'])) {
+            $this->cart->clear();
+            foreach ($this->request->post['product'] as $product) {
+                $option = [];
+                $this->load->model('assets/product');
+                $product_info = $this->model_assets_product->getProduct($product['product_store_id'], true);
+
+                $log = new Log('error.log');
+                $log->write(sizeof($product_info));
+                if (is_array($product_info) && $product_info['status'] == 1) {
+                    $log->write($product_info);
+                    $this->cart->add($product['product_store_id'], $product['quantity'], $option, false, $product['store_id'], $product['store_product_variation_id']);
+                    $json['success'] = $this->language->get('text_success');
+                }
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getCartProducts() {
+
+        $totalQuantity = 0;
+        $json = [];
+        $log = new Log('error.log');
+        $log->write($this->cart->getProducts());
+
+        foreach ($this->session->data['cart'] as $keys => $data) {
+
+            $product = unserialize(base64_decode($keys));
+            $product_store_id = $product['product_store_id'];
+            $this->load->model('assets/product');
+            $product_info = $this->model_assets_product->getProduct($product_store_id, true);
+
+            if (is_array($product_info) && $product_info['status'] == 1) {
+                $this->data[$keys] = [
+                    'key' => $keys,
+                    'product_store_id' => $product_info['product_store_id'],
+                    'store_product_variation_id' => 0,
+                    'store_id' => $product_info['store_id'],
+                    'product_type' => '',
+                    'name' => $product_info['name'],
+                    'model' => '',
+                    'shipping' => 0,
+                    'image' => $product_info['image'],
+                    'option' => [],
+                    'download' => [],
+                    'quantity' => $data['quantity'],
+                    'minimum' => $product_info['min_quantity'],
+                    'subtract' => $product_info['subtract_quantity'],
+                    'stock' => '',
+                    'price' => $product_info['price'],
+                    'special_price' => $product_info['special_price'],
+                    'total' => $product_info['special_price'] * $data['quantity'],
+                    'reward' => 0,
+                    'points' => 0,
+                    'tax_class_id' => $product_info['tax_class_id'],
+                    'weight' => 0,
+                    'weight_class_id' => 0,
+                    'length' => 0,
+                    'width' => 0,
+                    'height' => 0,
+                    'length_class_id' => 0,
+                    'recurring' => false,
+                ];
+            }
+        }
+
+        $json['products'] = $this->data;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
