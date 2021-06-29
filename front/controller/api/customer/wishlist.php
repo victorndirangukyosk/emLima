@@ -266,7 +266,7 @@ class ControllerApiCustomerWishlist extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addCreateWishlistWithProduct($args)
+    public function addCreateWishlistWithProduct($args=[])
     {
         //echo "<pre>";print_r("addCreateWishlistWithProduct");die;
 
@@ -279,6 +279,8 @@ class ControllerApiCustomerWishlist extends Controller
         $this->load->language('api/general');
         $this->load->model('account/customer');
         $this->load->language('account/wishlist');
+        //  echo "<pre>";print_r($args);die;
+
 
         /*$data['text_success_added_in_list'] = $this->language->get('text_success_added_in_list');
         $data['text_success_created_list'] = $this->language->get('text_success_created_list');*/
@@ -287,18 +289,20 @@ class ControllerApiCustomerWishlist extends Controller
 
         $this->load->model('account/wishlist');
 
-        $log->write($this->request->post['name']);
-        $log->write($this->request->post['listproductId']);
+        $log->write($args['name']);
+        $log->write($args['products']);
         $log->write('createWishlist');
-        if (isset($this->request->post['name']) && isset($this->request->post['listproductId'])) {
-            $count = $this->model_account_wishlist->getWishlistPresent($this->request->post['name']);
+        if (isset($args['name']) && isset($args['products'])) {
+            $count = $this->model_account_wishlist->getWishlistPresent($args['name']);
             $log->write($count);
 
             if (!$count) {
                 //not present
-                $wishlist_id = $this->model_account_wishlist->createWishlist($this->request->post['name']);
-
-                $this->model_account_wishlist->addProductToWishlist($wishlist_id, $this->request->post['listproductId']);
+                $wishlist_id = $this->model_account_wishlist->createWishlist($args['name']);
+                foreach($args['products'] as $product)
+                {
+                $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id, $product['product_id'], $product['quantity']);
+                }
 
                 $json['message'][] = ['type' => '', 'body' => $this->language->get('text_success_created_list')];
             } else {
