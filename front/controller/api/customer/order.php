@@ -91,6 +91,10 @@ class ControllerApiCustomerOrder extends Controller {
 
                 $total = 0;
                 $taxes = $this->cart->getTaxes();
+                $taxes_by_store = $this->cart->getTaxesByStore($store_id);
+                $log->write('taxes_by_store mobile');
+                $log->write($taxes_by_store);
+                $log->write('taxes_by_store mobile');
 
                 $this->load->model('extension/extension');
 
@@ -112,7 +116,7 @@ class ControllerApiCustomerOrder extends Controller {
                           $log->write("in loop".$total); */
 
                         //$this->{'model_total_' . $result['code']}->getApiTotal( $order_data[$store_id]['totals'], $total, $taxes,$store_id ,$args['stores'][$store_id]);
-                        $this->{'model_total_' . $result['code']}->getApiTotal($order_data[$store_id]['totals'], $total, $taxes, $store_id, $args);
+                        $this->{'model_total_' . $result['code']}->getApiTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id, $args);
                     }
                 }
 
