@@ -10,6 +10,8 @@ class ControllerApiCart extends Controller
 
     public function getCart()
     {
+        $log = new Log('error.log');
+        $log->write('cwen');
         echo 'getCart';
 
         $totalQuantity = 0;
