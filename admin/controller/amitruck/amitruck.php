@@ -53,4 +53,32 @@ class ControllerAmitruckAmitruck extends Controller {
         }
     }
 
+    public function getDriverLocation() {
+        $this->request->post['order_id'] = 3142;
+        $this->load->model('amitruck/amitruck');
+        $this->load->model('sale/order');
+        $order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
+        if (is_array($order_info) && count($order_info) > 0 && $order_info['delivery_id'] != NULL) {
+            $log = new Log('error.log');
+            //$log->write($order_info);
+
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/driver_location?id=' . $order_info['delivery_id']);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_POST, 0);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            $result = curl_exec($curl);
+
+            $log->write($result);
+            curl_close($curl);
+            $result = json_decode($result, true);
+            $json = $result;
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
+    }
+
 }
