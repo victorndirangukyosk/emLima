@@ -9,12 +9,15 @@ class ControllerAmitruckAmitruck extends Controller {
 
         $response['status'] = false;
 
+        $pickup_time = date("d/m/Y H:i", strtotime('+3 hours'));
+        $payment_date = date("d/m/Y");
+
         $start_point = array('latitude' => '-1.305183', 'longitude' => '36.737732');
         $end_point = array('latitude' => '-1.297139', 'longitude' => '36.80455');
         $stops = array($start_point, $end_point);
         $vehicleCategories = array("OPEN");
 
-        $body = array('orderId' => $this->request->post['order_id'], 'stops' => $stops, 'vehicleType' => 1, 'vehicleCategories' => $vehicleCategories, 'paymentTerm' => 'UPFRONT', 'declaredValueOfGoods' => $this->request->post['order_total'], 'pickUpDateAndTime' => "01/07/2021 14:00", 'paymentDueDate' => "01/07/2021", "description" => "Household goods");
+        $body = array('orderId' => $this->request->post['order_id'], 'stops' => $stops, 'vehicleType' => 1, 'vehicleCategories' => $vehicleCategories, 'paymentTerm' => 'UPFRONT', 'declaredValueOfGoods' => $this->request->post['order_total'], 'pickUpDateAndTime' => $pickup_time, 'paymentDueDate' => $payment_date, "description" => "Household goods");
         $log->write($body);
         $body = json_encode($body);
         $log->write($body);
