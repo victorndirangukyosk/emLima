@@ -15,7 +15,7 @@ class ControllerAmitruckAmitruck extends Controller {
             $response['status'] = false;
 
             $pickup_time = date("d/m/Y H:i", strtotime('+3 hours'));
-            $payment_date = date("d/m/Y");
+            $payment_date = date("d/m/Y", strtotime('+5 days'));
 
             $start_point = array('latitude' => '-1.305183', 'longitude' => '36.737732');
             $end_point = array('latitude' => '-1.297139', 'longitude' => '36.80455');
