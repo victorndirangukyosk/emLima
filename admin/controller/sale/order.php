@@ -1261,6 +1261,7 @@ class ControllerSaleOrder extends Controller {
                 'city' => $result['city'],
                 'total' => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
                 'sub_total' => $this->currency->format($sub_total, $result['currency_code'], $result['currency_value']),
+                'sub_total_custom' => $sub_total, $result['currency_code'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'date_modified' => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
                 'shipping_code' => $result['shipping_code'],
