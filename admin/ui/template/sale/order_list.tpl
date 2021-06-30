@@ -1038,6 +1038,35 @@
                     </div> <!-- /.modal -->
 <script  type="text/javascript">
 
+$('a[id^=\'assign_to_amitruck\']').on('click', function (e) {
+e.preventDefault();
+console.log($(this).data('orderid'));
+console.log($(this).data('ordertotal'));
+
+                $.ajax({
+		url: 'index.php?path=amitruck/amitruck/createDelivery&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + encodeURIComponent($(this).data('orderid')) + '&order_total='+ encodeURIComponent($(this).data('ordertotal')),
+		beforeSend: function() {
+                // setting a timeout
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                },
+                success: function(json) {	 
+                    console.log(json);
+                    $('.alert').html('Order assigned to delivery partner!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    //setTimeout(function(){ window.location.reload(false); }, 1500);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+                }); 
+
+});
 
 
 
