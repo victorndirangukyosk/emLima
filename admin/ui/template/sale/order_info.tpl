@@ -115,9 +115,9 @@
 			  
 				<div class="tab-pane " id="tab-driver-location">
 
-					<input type="button" class="btn btn-primary" onclick="initMapLoad()" value="View Map" /> 
+					<input type="button" class="btn btn-primary" onclick="initMapLoads()" value="View Map" /> 
 
-					<div class="" id="map" style="height: 100%; min-height: 600px;">
+					<div class="" id="drivermap" style="height: 100%; min-height: 600px;">
 		    		</div>
 
 		    		<input type="hidden" name="single_delivery_map_ui" id="single_delivery_map_ui" value="<?= $map_s ?>">
@@ -1600,7 +1600,13 @@
     	
 
 		return false;
-	}
+    }
+    
+    function initMapLoads() {
+    
+    	initMaps(<?= $pointB ?>,<?= $pointA ?>);
+        return false;
+    }
 
 	function locationpickerLoad() {
     
