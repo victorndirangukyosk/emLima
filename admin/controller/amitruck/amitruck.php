@@ -14,7 +14,7 @@ class ControllerAmitruckAmitruck extends Controller {
         $stops = array($start_point, $end_point);
         $vehicleCategories = array("OPEN");
 
-        $body = array('orderId' => '1234', 'stops' => $stops, 'vehicleType' => 1, 'vehicleCategories' => $vehicleCategories, 'paymentTerm' => 'UPFRONT', 'declaredValueOfGoods' => 1500000, 'pickUpDateAndTime' => "01/07/2021 14:00", 'paymentDueDate' => "01/07/2021", "description" => "Household goods");
+        $body = array('orderId' => $this->request->post['order_id'], 'stops' => $stops, 'vehicleType' => 1, 'vehicleCategories' => $vehicleCategories, 'paymentTerm' => 'UPFRONT', 'declaredValueOfGoods' => $this->request->post['order_total'], 'pickUpDateAndTime' => "01/07/2021 14:00", 'paymentDueDate' => "01/07/2021", "description" => "Household goods");
         $log->write($body);
         $body = json_encode($body);
         $log->write($body);
@@ -32,6 +32,7 @@ class ControllerAmitruckAmitruck extends Controller {
         $log->write($result);
         curl_close($curl);
         $result = json_decode($result);
+        $json = $result;
         if (isset($result->error)) {
             $response['status'] = false;
             $response['error'] = $result->error;
@@ -40,7 +41,8 @@ class ControllerAmitruckAmitruck extends Controller {
             $response['data'] = $result;
         }
 
-        return $response;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
