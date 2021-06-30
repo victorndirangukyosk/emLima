@@ -362,6 +362,7 @@ class ControllerApiCustomerWishlist extends Controller
             $wishlist_id = $this->request->get['wishlist_id'];
 
             $data['store_selected'] = true;
+            $store_id = ACTIVE_STORE_ID;
 
             $this->load->model('account/wishlist');
 
