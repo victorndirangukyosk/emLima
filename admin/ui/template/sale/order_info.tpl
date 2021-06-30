@@ -82,6 +82,10 @@
 		  <?php if(!$this->user->isVendor()){ ?>
 		  	<li><a href="#tab-location" data-toggle="tab"><?php echo $tab_location; ?></a></li>
 		  <?php } ?>
+                  
+                  <?php if(!$this->user->isVendor()){ ?>
+		  	<li><a href="#tab-driver-location" data-toggle="tab">Driver Location</a></li>
+		  <?php } ?>
 		  
 		  
 
@@ -94,6 +98,22 @@
 			  
 			  
 				<div class="tab-pane " id="tab-location">
+
+					<input type="button" class="btn btn-primary" onclick="initMapLoad()" value="View Map" /> 
+
+					<div class="" id="map" style="height: 100%; min-height: 600px;">
+		    		</div>
+
+		    		<input type="hidden" name="single_delivery_map_ui" id="single_delivery_map_ui" value="<?= $map_s ?>">
+
+				</div>
+
+			<?php } ?>
+                        
+                        <?php if(!$this->user->isVendor()){ ?>
+			  
+			  
+				<div class="tab-pane " id="tab-driver-location">
 
 					<input type="button" class="btn btn-primary" onclick="initMapLoad()" value="View Map" /> 
 
