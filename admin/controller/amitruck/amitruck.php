@@ -14,7 +14,7 @@ class ControllerAmitruckAmitruck extends Controller {
         $stops = array($start_point, $end_point);
         $vehicleCategories = array("OPEN");
 
-        $body = array('orderId' => '1234', 'stops' => $stops, 'vehicleType' => 1, 'vehicleCategories' => $vehicleCategories, 'paymentTerm' => 'UPFRONT', 'customerRequestedPrice' => 200, 'wantInsurance' => true, 'declaredValueOfGoods' => 1500000, 'pickUpDateAndTime' => "28/06/2021 14:00", 'paymentDueDate' => "30/06/2021", "description" => "Household goods");
+        $body = array('orderId' => '1234', 'stops' => $stops, 'vehicleType' => 1, 'vehicleCategories' => $vehicleCategories, 'paymentTerm' => 'UPFRONT', 'customerRequestedPrice' => 200, 'wantInsurance' => true, 'declaredValueOfGoods' => 1500000, 'pickUpDateAndTime' => "01/07/2021 14:00", 'paymentDueDate' => "01/07/2021", "description" => "Household goods");
         $log->write($body);
         $body = json_encode($body);
         $log->write($body);
