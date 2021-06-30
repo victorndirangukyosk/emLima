@@ -5,6 +5,7 @@ class ControllerAmitruckAmitruck extends Controller {
     private $error = [];
 
     public function createDelivery() {
+        $this->load->model('amitruck/amitruck');
         $log = new Log('error.log');
 
         $response['status'] = false;
@@ -43,6 +44,8 @@ class ControllerAmitruckAmitruck extends Controller {
             $response['status'] = true;
             $response['data'] = $result;
         }
+
+        $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json));
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
