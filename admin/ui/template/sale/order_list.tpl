@@ -404,6 +404,10 @@
                                        <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 512 512" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M499.5 385.4L308.9 57.2c-31.8-52.9-74.1-52.9-105.9 0L12.5 385.4c-31.8 52.9 0 95.3 63.5 95.3h360c63.5 0 95.3-42.4 63.5-95.3zm-201.1 52.9h-84.7v-84.7h84.7v84.7zm0-127h-84.7V120.7h84.7v190.6z" fill="#626262"/></svg>
                                        </a> 
                                         <?php } ?>
+                                        
+                                        <a href="#" target="_blank" data-toggle="tooltip" title="Amitruck" data-orderid="<?= $order['order_id'] ?>" data-ordertotal="<?= $order['sub_total'] ?>" id="assign_to_amitruck">
+                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                                        </a>
                                        </div>
                                     </td>
                                         
