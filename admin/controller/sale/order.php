@@ -1245,6 +1245,7 @@ class ControllerSaleOrder extends Controller {
             $this->load->model('localisation/order_status');
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
+                'delivery_id' => $result['delivery_id'],
                 'order_prefix' => $vendor_details['orderprefix'] != '' ? $vendor_details['orderprefix'].'-' : '',
                 'vendor_name' => $vendor_details['lastname'],
                 'customer' => $result['customer'],

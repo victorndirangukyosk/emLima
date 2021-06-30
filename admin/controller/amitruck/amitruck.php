@@ -54,7 +54,6 @@ class ControllerAmitruckAmitruck extends Controller {
     }
 
     public function getDriverLocation() {
-        $this->request->post['order_id'] = 3142;
         $this->load->model('amitruck/amitruck');
         $this->load->model('sale/order');
         $order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
