@@ -1998,7 +1998,9 @@ class ControllerSaleOrder extends Controller {
             $this->load->language('sale/order');
 
             $this->document->setTitle($this->language->get('heading_title'));
-
+            
+            $data['delivery_latitude'] = $order_info['latitude'];
+            $data['delivery_longitude'] = $order_info['longitude'];
             $data['text_yes'] = $this->language->get('text_yes');
             $data['text_no'] = $this->language->get('text_no');
 

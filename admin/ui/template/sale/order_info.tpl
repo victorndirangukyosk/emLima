@@ -115,7 +115,7 @@
 			  
 				<div class="tab-pane " id="tab-driver-location">
 
-					<input type="button" class="btn btn-primary" onclick="initMapLoads()" value="View Map" /> 
+                                    <input type="button" class="btn btn-primary" id="show_driver_location" data-order_id="<?= $order_id; ?>" data-delivery_id="<?= $delivery_id; ?>" data-delivery_latitide="<?= $delivery_latitude; ?>" data-delivery_longitude="<?= $delivery_longitude; ?>" value="View Map" /> 
 
 					<div class="" id="drivermap" style="height: 100%; min-height: 600px;">
 		    		</div>
@@ -1602,9 +1602,9 @@
 		return false;
     }
     
-    function initMapLoads() {
+    function initMapLoads(presentlocation,deliverylocation) {
     
-    	initMaps(<?= $pointB ?>,<?= $pointA ?>);
+    	initMaps(presentlocation,deliverylocation);
         return false;
     }
 
@@ -1663,7 +1663,7 @@
 		}
 	});
 });
-
+                                                                               
 $(document).delegate('#button-invoice', 'click', function() {
 	$.ajax({
 		url: 'index.php?path=sale/order/createinvoiceno&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>',
@@ -2412,7 +2412,39 @@ $(document).delegate('#save_order_vehicle_number', 'click', function() {
                 //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
             }
         });
-});    
+});
+
+$(document).delegate('#show_driver_location', 'click', function(e) {
+e.preventDefault();
+console.log($(this).data('order_id'));
+var delivery_latitide = $(this).data('delivery_latitide');
+var delivery_longitude = $(this).data('delivery_longitude');
+var delivery_location = $(this).data('delivery_latitide')+','+$(this).data('delivery_longitude');
+var present_location = '-1.3068048692017753,36.65802472191967';
+console.log(delivery_location);
+console.log(present_location);
+
+
+
+                $.ajax({
+		url: 'index.php?path=amitruck/amitruck/getDriverLocation&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + encodeURIComponent($(this).data('order_id')),
+		beforeSend: function() {
+                // setting a timeout
+                },
+                success: function(json) {	 
+                    console.log(json);
+                    initMapLoads(present_location,delivery_location);
+                    //setTimeout(function(){ window.location.reload(false); }, 1500);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+	           alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); 
+		}
+                }); 
+
+});
 
 </script>
 <?php echo $footer; ?> 
