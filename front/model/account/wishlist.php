@@ -176,6 +176,14 @@ class ModelAccountWishList extends Model
         return $query->row['total'];
     }
 
+    public function getWishlistID($name)
+    {
+        $query = $this->db->query('SELECT wishlist_id AS total FROM `'.DB_PREFIX.'wishlist` w WHERE customer_id = '.(int) $this->customer->getId()." and name ='".$name."'");
+
+        //return $query;
+        return $query->row['total'];
+    }
+
     public function createWishlist($name)
     {
         $query = $this->db->query('INSERT into `'.DB_PREFIX.'wishlist` set customer_id = '.(int) $this->customer->getId().", name ='".$name."'");
