@@ -157,15 +157,6 @@
                                     </span>
                                 </div>
                             </div>
-                            <!--<div class="form-group">
-                                <label class="control-label" for="input-date-modified"><?php echo $entry_date_modified; ?></label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_date_modified" value="<?php echo $filter_date_modified; ?>" placeholder="<?php echo $entry_date_modified; ?>" data-date-format="YYYY-MM-DD" id="input-date-modified" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>-->
                             
                              <div class="form-group">
                                 <label class="control-label" for="input-delivery-date">Delivery Date</label>
@@ -192,17 +183,18 @@
                                     <td style="width: 1px;" class="text-center">
                                         <input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);"  name="selected[]"/>
                                     </td>
-                                    <td class="text-right"><?php if ($sort == 'o.order_id') { ?>
+                                    <td class="text-center"><?php if ($sort == 'o.order_id') { ?>
                                         <a href="<?php echo $sort_order; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_order_id; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_order; ?>"><?php echo $column_order_id; ?></a>
                                         <?php } ?></td>
+                                    <td class="text-center">Delivery ID</td>
 
                                     <?php if (!$this->user->isVendor()): ?>
                                     <td class="text-center">Vendor</td>
 
 
-                                        <td style="width: 3px;" class="text-left">
+                                        <td style="width: 3px;" class="text-center">
                                             <?php if ($sort == 'customer') { ?>
                                             <a href="<?php echo $sort_customer; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_customer; ?></a>
                                             <?php } else { ?>
@@ -211,7 +203,7 @@
                                         </td>
 
                                     <?php endif ?> 
-                                    <td class="text-left">
+                                    <td class="text-center">
                                         <?php if ($sort == 'o.date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
                                         <?php } else { ?>
@@ -224,9 +216,9 @@
                                         <a href="<?php echo $sort_date_modified; ?>"><?php echo $column_date_modified; ?></a>
                                         <?php } ?></td> -->
 
-                                    <td class="text-left">Delivery Date</td>
+                                    <td class="text-center">Delivery Date</td>
 
-                                    <td class="text-left">Delivery Timeslot</td>
+                                    <td class="text-center">Delivery Timeslot</td>
 
                                    <!--  <?php if (!$this->user->isVendor()): ?>
                                         <td class="text-right"><?php echo $column_payment; ?></td>
@@ -235,7 +227,7 @@
                                     
                                     <td class="text-right"><?php echo $column_delivery_method; ?></td>-->
 
-                                    <td class="text-right"><?php echo $column_action; ?></td>
+                                    <td class="text-center"><?php echo $column_action; ?></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -250,6 +242,7 @@
                                         <input type="hidden" name="shipping_code[]" value="<?php echo $order['shipping_code']; ?>" />
                                     </td>
                                     <td class="text-left"><?php echo $order['order_prefix'].''.$order['order_id']; ?></td>
+                                    <td class="text-center"><?php echo $order['order_reference_id']; ?></td>
                                     <?php if (!$this->user->isVendor()): ?>
                                     <td class="text-left"><?php echo $order['vendor_name']; ?></td>
 
