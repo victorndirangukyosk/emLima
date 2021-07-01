@@ -2435,8 +2435,13 @@ console.log(present_location);
                 // setting a timeout
                 },
                 success: function(json) {	 
-                    console.log(json);
+                    //console.log(json.driverLocation.latitude);
+                    if(json.status == 200) {
+                    var present_location = json.driverLocation.latitude+','+json.driverLocation.longitude;
                     initMapLoads(present_location,delivery_location);
+                    } else {
+                    alert(json.errors);
+                    }
                     //setTimeout(function(){ window.location.reload(false); }, 1500);
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
