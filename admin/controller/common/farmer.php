@@ -245,6 +245,7 @@ class ControllerCommonFarmer extends Controller {
             'common/reset',
             'common/scheduler',
             'common/loginAPI',
+            'amitruck/amitruck',
         ];
 
         if (!$this->user->isLogged() && !$this->user->isFarmerLogged() && !in_array($path, $ignore)) {
@@ -264,6 +265,7 @@ class ControllerCommonFarmer extends Controller {
                 'error/permission',
                 'common/scheduler',
                 'common/loginAPI',
+                'amitruck/amitruck',
             ];
 
             if (!in_array($path, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {

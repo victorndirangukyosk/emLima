@@ -384,6 +384,7 @@ class ControllerUserUserPermission extends Controller
             'dashboard/recenttabs',
             'dashboard/sale',
             'common/loginAPI',
+            'amitruck/amitruck',
         ];
 
         $data['permissions'] = [];
