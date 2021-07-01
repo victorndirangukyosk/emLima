@@ -1669,6 +1669,36 @@ e.preventDefault();
 
 });
 
+$('a[id^=\'make_payment\']').on('click', function (e) {
+e.preventDefault();
+
+                $.ajax({
+		url: 'index.php?path=amitruck/amitruck/getWalletBalance&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + encodeURIComponent($(this).data('order-id')) + '&order_reference_id='+ encodeURIComponent($(this).data('order-reference-id')),
+		beforeSend: function() {
+                // setting a timeout
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                },
+                success: function(json) {	 
+                    console.log(json.status);
+                    $('.alert').html('Order assigned to delivery partner!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    if(json.status == 200) {
+                    //setTimeout(function(){ window.location.reload(false); }, 1500);
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+                }); 
+
+});
+
 
 
 function submit_copy() {
