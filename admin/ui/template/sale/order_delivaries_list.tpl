@@ -373,7 +373,7 @@
         });
 
    $('#button-filter').on('click', function () {
-            url = 'index.php?path=sale/order&token=<?php echo $token; ?>';
+            url = 'index.php?path=sale/amitruckdelivaries&token=<?php echo $token; ?>';
 
              var filter_company = $('input[name=\'filter_company\']').val();
 
