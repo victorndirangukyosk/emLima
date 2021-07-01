@@ -438,7 +438,7 @@ class ControllerApiCart extends Controller {
                     'name' => $product_info['name'],
                     'model' => '',
                     'shipping' => 0,
-                    'image' => $product_info['image'],
+                    'image' => DIR_IMAGE . $product_info['image'],
                     'option' => [],
                     'download' => [],
                     'quantity' => $data['quantity'],
