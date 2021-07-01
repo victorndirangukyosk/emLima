@@ -131,7 +131,7 @@
     <?php } ?>
 
     <?php 
-    if( $preturn_order != false || $preturn_order_recurring != false || $preturn_return != false || $preturn_customer != false || $preturn_customer_group != false || $preturn_customer_ban_ip != false || $preturn_paypal != false ) {
+    if( $preturn_order != false || $preturn_order_delivaries != false || $preturn_order_recurring != false || $preturn_return != false || $preturn_customer != false || $preturn_customer_group != false || $preturn_customer_ban_ip != false || $preturn_paypal != false ) {
     ?>
     <li id="sale"><a class="parent"><i class="fa fa-shopping-cart fa-fw"></i> <span><?php echo $text_sale; ?></span></a>
         <ul class="collapse">
@@ -154,6 +154,10 @@
             
             <?php if($preturn_order_product_missing_products) { ?>  
             <li><a href="<?php echo $order_product_missing_products; ?>">Missing Order Products</a></li>
+            <?php } ?>
+            
+            <?php if($preturn_order_delivaries) { ?>
+            <li><a href="<?php echo $order_delivaries; ?>">Order Delivaries</a></li>
             <?php } ?>
 
         </ul>
