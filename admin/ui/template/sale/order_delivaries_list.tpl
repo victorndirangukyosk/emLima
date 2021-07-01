@@ -1655,10 +1655,15 @@ e.preventDefault();
                 },
                 success: function(json) {	 
                     console.log(json.status);
+                    if(json.status == 200) {
                     $('.alert').html('Order assigned to delivery partner!');
                     $(".alert").attr('class', 'alert alert-success');
                     $(".alert").show();
-                    if(json.status == 200) {
+                    }
+                    else {
+                    $('.alert').html(json.errors);
+                    $(".alert").attr('class', 'alert alert-warning');
+                    $(".alert").show();
                     //setTimeout(function(){ window.location.reload(false); }, 1500);
                     }
 		},			
@@ -1669,7 +1674,7 @@ e.preventDefault();
 
 });
 
-$('a[id^=\'make_payment\']').on('click', function (e) {
+$('a[id^=\'get_waller_balance\']').on('click', function (e) {
 e.preventDefault();
 
                 $.ajax({
@@ -1685,11 +1690,13 @@ e.preventDefault();
                 },
                 success: function(json) {	 
                     console.log(json.status);
+                    if(json.status == 200) {
                     $('.alert').html('Order assigned to delivery partner!');
                     $(".alert").attr('class', 'alert alert-success');
                     $(".alert").show();
-                    if(json.status == 200) {
                     //setTimeout(function(){ window.location.reload(false); }, 1500);
+                    } else {
+                    alert(json.errors);
                     }
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
