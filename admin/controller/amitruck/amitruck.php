@@ -43,7 +43,7 @@ class ControllerAmitruckAmitruck extends Controller {
             $json = $result;
 
             if ($result['status'] == 200) {
-                $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json));
+                $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'CREATE_DELIVERY');
                 $this->model_amitruck_amitruck->addDeliveryStatus($this->request->post['order_id'], json_encode($json));
                 $this->model_amitruck_amitruck->updateOrderDelivery($this->request->post['order_id'], json_encode($json));
             }
@@ -103,6 +103,7 @@ class ControllerAmitruckAmitruck extends Controller {
             $json = $result;
             if ($result['status'] == 200) {
                 $this->model_amitruck_amitruck->updateDeliveryStatus($this->request->post['order_id'], json_encode($json));
+                $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'FETCH_DELIVERY');
                 $log->write($result);
             }
 
