@@ -5798,6 +5798,15 @@ class ModelReportExcel extends Model {
 
         //download_customer_statement_excel
     public function mail_download_customer_statement_excel($data) {
+
+
+        $dt = date("Y-m-d");
+        
+        
+        if(date('l', $dt)!='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
+        {
+            return;
+        }
         $this->load->library('excel');
         $this->load->library('iofactory');
         $this->load->model('report/customer');
@@ -5817,7 +5826,8 @@ class ModelReportExcel extends Model {
         // $data['filter_customer_email']='stalluri89@gmail.com';
                 
 
-            $results = $this->model_report_customer->getValidCustomerOrders($data);
+            // $results = $this->model_report_customer->getValidCustomerOrders($data);
+            $results = $this->model_report_customer->getValidCustomerOrdersByDates($data);
             if($results!=null)
             {
                 $this->load->model('sale/order');
