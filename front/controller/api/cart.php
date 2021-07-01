@@ -430,6 +430,7 @@ class ControllerApiCart extends Controller {
             if (is_array($product_info) && $product_info['status'] == 1) {
                 $this->data[$keys] = [
                     'key' => $keys,
+                    'product_id' => $product_info['product_id'],
                     'product_store_id' => $product_info['product_store_id'],
                     'store_product_variation_id' => 0,
                     'store_id' => $product_info['store_id'],
