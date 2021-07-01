@@ -1625,11 +1625,15 @@ e.preventDefault();
                 },
                 success: function(json) {	 
                     console.log(json.status);
-                    $('.alert').html('Order assigned to delivery partner!');
+                    if(json.status == 200) {
+                    $('.alert').html('Order delivery details updated!');
                     $(".alert").attr('class', 'alert alert-success');
                     $(".alert").show();
-                    if(json.status == 200) {
                     setTimeout(function(){ window.location.reload(false); }, 1500);
+                    } else {
+                    $('.alert').html(json.errors);
+                    $(".alert").attr('class', 'alert alert-danger');
+                    $(".alert").show();
                     }
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
