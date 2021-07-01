@@ -267,9 +267,9 @@ class ControllerSaleAmitruckdelivaries extends Controller {
 
         // echo "<pre>";print_r($filter_data);die; 
 
-        $order_total = $this->model_sale_order->getTotalOrders($filter_data);
+        $order_total = $this->model_sale_order->getTotalOrdersDelivaries($filter_data);
 
-        $results = $this->model_sale_order->getOrders($filter_data);
+        $results = $this->model_sale_order->getOrdersDelivaries($filter_data);
 
         //        echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
