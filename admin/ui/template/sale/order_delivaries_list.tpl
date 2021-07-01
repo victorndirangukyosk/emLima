@@ -1605,7 +1605,6 @@ $('.orderproducts').html('');
 
 $('a[id^=\'delivery_status\']').on('click', function (e) {
 e.preventDefault();
-console.log($(this));
 
                 $.ajax({
 		url: 'index.php?path=amitruck/amitruck/getCurrentDeliveryStatus&token=<?php echo $token; ?>',
