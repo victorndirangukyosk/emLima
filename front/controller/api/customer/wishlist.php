@@ -293,7 +293,7 @@ class ControllerApiCustomerWishlist extends Controller
         $log->write($args['products']);
         $log->write('createWishlist');
         if (isset($args['name']) && isset($args['products'])) {
-            $count = $this->model_account_wishlist->getWishlistPresent($args['name']);
+            $count = $this->model_account_wishlist->getWishlistID($args['name']);
             $log->write($count);
 
             if (!$count) {
@@ -308,11 +308,17 @@ class ControllerApiCustomerWishlist extends Controller
             } else {
                 //wishlist present
 
-                $json['status'] = 10013;
+                $wishlist_id = $count;
+                // $this->model_account_wishlist->addProductToWishlist($wishlist_id, $this->request->get['listproductId']);
+                foreach($args['products'] as $product)
+                {
+                $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id, $product['product_id'], $product['quantity']);
+                }
+                
+                $data['status'] = true; 
 
-                $json['message'][] = ['type' => '', 'body' => $this->language->get('text_error_name_list')];
-
-                http_response_code(400);
+                $json['message'][] = ['type' => '', 'body' => $this->language->get('text_success_created_list')];
+ 
             }
         } else {
             $json['status'] = 10013;
