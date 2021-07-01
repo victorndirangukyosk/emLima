@@ -10,7 +10,7 @@ class ModelAmitruckAmitruck extends Model {
         $log = new Log('error.log');
         $data = json_decode($data, true);
         $log->write($data);
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "order_delivery` SET `order_id` = '" . (int) $order_id . "', `order_reference_id` = '" . $data['delivery']['id'] . "', `delivery_status` = '" . $data['delivery']['status'] . "', `created_at` = NOW()");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "order_delivery` SET `order_id` = '" . (int) $order_id . "', `order_reference_id` = '" . $data['delivery']['id'] . "', `delivery_status` = '" . $data['delivery']['status'] . "', `pickup_latitude` = '" . $data['delivery']['stops'][0]['latitude'] . "', `pickup_longitude` = '" . $data['delivery']['stops'][0]['longitude'] . "', `pickup_location` = '" . $data['delivery']['stops'][0]['name'] . "', `drop_latitude` = '" . $data['delivery']['stops'][1]['latitude'] . "', `drop_longitude` = '" . $data['delivery']['stops'][1]['longitude'] . "', `drop_location` = '" . $data['delivery']['stops'][1]['name'] . "', `drop_location` = '" . $data['delivery']['totalDistance'] . "', `created_at` = NOW()");
     }
 
     public function updateDeliveryStatus($order_id, $data) {

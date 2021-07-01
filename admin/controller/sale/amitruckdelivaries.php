@@ -332,6 +332,7 @@ class ControllerSaleAmitruckdelivaries extends Controller {
                 'SAP_doc_no' => $result['SAP_doc_no'],
                 'all_order_statuses' => $this->model_localisation_order_status->getOrderStatuses(),
                 'order_reference_id' => $result['order_reference_id'],
+                'delivery_status' => $result['delivery_status'],
             ];
         }
 
