@@ -263,6 +263,10 @@
                                                <a href="#" id="driver_location"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-toggle="tooltip" title="Driver Location">
                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                                                </a>
+                                        
+                                        <a href="#" id="delivery_status" data-order-id="<?php echo $order['order_id']; ?>" data-order-reference-id="<?php echo $order['order_reference_id']; ?>" data-toggle="tooltip" title="Delivery Status">
+                                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                                        </a>
                                        </div>
                                     </td>
                                         
@@ -1599,6 +1603,37 @@ $('.orderproducts').html('');
 
 });
 
+$('a[id^=\'delivery_status\']').on('click', function (e) {
+e.preventDefault();
+console.log($(this));
+
+                $.ajax({
+		url: 'index.php?path=amitruck/amitruck/getCurrentDeliveryStatus&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + encodeURIComponent($(this).data('order-id')) + '&order_reference_id='+ encodeURIComponent($(this).data('order-reference-id')),
+		beforeSend: function() {
+                // setting a timeout
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                },
+                success: function(json) {	 
+                    console.log(json.status);
+                    $('.alert').html('Order assigned to delivery partner!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    if(json.status == 200) {
+                    setTimeout(function(){ window.location.reload(false); }, 1500);
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+                }); 
+
+});
+
 
 
 function submit_copy() {
@@ -1718,7 +1753,7 @@ function validateFloatKeyPresswithVarient(el, evt, unitvarient) {
 
 
 
-    </script></div>
+</script></div>
 <?php echo $footer; ?>
 
 <style>
@@ -1728,3 +1763,6 @@ function validateFloatKeyPresswithVarient(el, evt, unitvarient) {
  width: 100%;
 }
 </style>
+<script type="text/javascript">
+
+</script>
