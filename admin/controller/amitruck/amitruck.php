@@ -101,6 +101,10 @@ class ControllerAmitruckAmitruck extends Controller {
             curl_close($curl);
             $result = json_decode($result, true);
             $json = $result;
+            if ($result['status'] == 200) {
+                $this->model_amitruck_amitruck->updateDeliveryStatus($this->request->post['order_id'], json_encode($json));
+                $log->write($result);
+            }
 
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
