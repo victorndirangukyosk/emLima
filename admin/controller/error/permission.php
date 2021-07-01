@@ -78,6 +78,8 @@ class ControllerErrorPermission extends Controller
                 'dashboard/sale',
                 'common/scheduler',
                 'common/loginAPI',
+                'amitruck/amitruckstatus',
+                'amitruck/amitruckquotes',
             ];
 
             if (!in_array($path, $ignore) && !$this->user->hasPermission('access', $path)) {

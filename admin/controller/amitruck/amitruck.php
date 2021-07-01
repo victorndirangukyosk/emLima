@@ -80,7 +80,7 @@ class ControllerAmitruckAmitruck extends Controller {
         }
     }
 
-    public function status() {
+    public function index() {
         $log = new Log('error.log');
         $log->write('AMITRUCK STATUS');
         $log->write($this->request->get);
