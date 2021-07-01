@@ -24,6 +24,9 @@ class ModelAmitruckAmitruck extends Model {
         if ($data['deliveries'][0]['status'] == 'pending_driver') {
             $this->db->query('UPDATE `' . DB_PREFIX . "order_delivery` SET `delivery_status` = '" . $data['deliveries'][0]['status'] . "', `updated_at` = NOW() WHERE order_id = '" . (int) $order_id . "' AND order_reference_id = '" . $data['deliveries'][0]['id'] . "'");
         }
+        if ($data['deliveries'][0]['status'] == 'paid') {
+            $this->db->query('UPDATE `' . DB_PREFIX . "order_delivery` SET `delivery_status` = '" . $data['deliveries'][0]['status'] . "', `driver_name` = '" . $data['deliveries'][0]['driver']['name'] . "', `vehicle_number` = '" . $data['deliveries'][0]['driver']['vehicleRegistration'] . "', `driver_phone` = '" . $data['deliveries'][0]['driver']['phoneNumber'] . "', `updated_at` = NOW() WHERE order_id = '" . (int) $order_id . "' AND order_reference_id = '" . $data['deliveries'][0]['id'] . "'");
+        }
     }
 
     public function updateOrderDelivery($order_id, $data) {
