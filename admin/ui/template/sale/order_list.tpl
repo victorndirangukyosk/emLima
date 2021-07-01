@@ -1057,11 +1057,13 @@ console.log($(this).data('ordertotal'));
                 $(".alert").show();
                 },
                 success: function(json) {	 
-                    console.log(json);
+                    console.log(json.status);
                     $('.alert').html('Order assigned to delivery partner!');
                     $(".alert").attr('class', 'alert alert-success');
                     $(".alert").show();
-                    //setTimeout(function(){ window.location.reload(false); }, 1500);
+                    if(json.status == 200) {
+                    setTimeout(function(){ window.location.reload(false); }, 1500);
+                    }
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
 			 
