@@ -50,15 +50,7 @@
                                     <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
                                     <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
                                 </div>
-                            <?php endif ?> 
-                            
-                            
-                            
-                            <!--<div class="form-group">
-                                <label class="control-label" for="input-customer"><?= $entry_city ?></label>
-                                <input type="text" name="filter_city" value="<?php echo $filter_city; ?>" class="form-control" />
-                            </div>-->
-
+                            <?php endif ?>                             
                              <div class="form-group">
                                 <label class="control-label" for="input-name"><?= $column_delivery_method ?></label>
                                 <input type="text" name="filter_delivery_method" value="<?php echo $filter_delivery_method; ?>" placeholder="<?php echo $column_delivery_method; ?>" id="input-name" class="form-control" />
@@ -109,11 +101,6 @@
                                 <label class="control-label" for="input-total"><?php echo $entry_total; ?></label>
                                 <input type="text" name="filter_total" value="<?php echo $filter_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
                             </div>
-
-                            <!--<div class="form-group">
-                                <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
-                                <input type="text" name="filter_store_name" value="<?php echo $filter_store_name; ?>" placeholder="<?php echo $entry_store_name; ?>" id="input-name" class="form-control" />
-                            </div>-->
 
                             <?php if (!$this->user->isVendor()): ?>
                                 <div class="form-group">
@@ -280,12 +267,9 @@
                                     <td class="text-left"><?php echo $order['delivery_timeslot']; ?></td>
                                     <td class="text-right">
                                     <div style="width: 100%; display:flex; justify-content: space-between; flex-flow: row wrap; gap: 4px;">
-                                     <?php 
-                                            if ( $order['order_status_id']!=15 && $order['order_status_id']!=16 && $order['order_status_id']!=6 && $order['order_status_id']!=8 && $order['order_status_id']!=9 && $order['order_status_id']!=10) { ?>
-                                               <a href="#" id="new_print_invoice"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-toggle="tooltip" title="Print Invoice">
+                                               <a href="#" id="driver_location"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-toggle="tooltip" title="Driver Location">
                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                                                </a>
-                                            <?php } ?>
                                        </div>
                                     </td>
                                         
@@ -1441,6 +1425,10 @@ $('input[name=\'order_delivery_executive\']').autocomplete({
     $('input[name=\'order_delivery_executive\']').val(item['label']);
     $('input[name=\'order_delivery_executive\']').attr('data_delivery_executive_id',item['value']);
   } 
+});
+
+$('a[id^=\'driver_location\']').on('click', function (e) {
+e.preventDefault();
 });
 
 $('a[id^=\'new_print_invoice\']').on('click', function (e) {
