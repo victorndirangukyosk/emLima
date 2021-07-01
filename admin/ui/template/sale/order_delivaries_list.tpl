@@ -189,6 +189,7 @@
                                         <a href="<?php echo $sort_order; ?>"><?php echo $column_order_id; ?></a>
                                         <?php } ?></td>
                                     <td class="text-center">Delivery ID</td>
+                                    <td class="text-center">Delivery Status</td>
 
                                     <?php if (!$this->user->isVendor()): ?>
                                     <td class="text-center">Vendor</td>
@@ -243,6 +244,7 @@
                                     </td>
                                     <td class="text-left"><?php echo $order['order_prefix'].''.$order['order_id']; ?></td>
                                     <td class="text-center"><?php echo $order['order_reference_id']; ?></td>
+                                    <td class="text-center"><?php echo $order['delivery_status']; ?></td>
                                     <?php if (!$this->user->isVendor()): ?>
                                     <td class="text-left"><?php echo $order['vendor_name']; ?></td>
 
