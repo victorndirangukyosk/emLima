@@ -1,4 +1,5 @@
- 
+ <?php echo $header; ?>
+ <div id="content">
  
  <div class="v28_1">
    <div class="v28_2"></div>
@@ -8,31 +9,30 @@
      <span>Your valuable feedback helps us to serve you better</span>
     </div>
     <div class="v34_63">
-      <div class="v28_33"></div>
       </div>
 
       <div class="v29_47"><span>How was your overall shopping experience?</span></div>
      <div class="emoji-container">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 class="emoji"
                 d="M20 0C8.94004 0 3.8147e-05 9 3.8147e-05 20C3.8147e-05 31 8.94004 40 20 40C31 40 40 31 40 20C40 9 31 0 20 0ZM27 12C28.66 12 30 13.34 30 15C30 16.66 28.66 18 27 18C25.34 18 24 16.66 24 15C24 13.34 25.34 12 27 12ZM13 12C14.66 12 16 13.34 16 15C16 16.66 14.66 18 13 18C11.34 18 10 16.66 10 15C10 13.34 11.34 12 13 12ZM9.78004 30C11.38 25.92 15.34 23 20 23C24.66 23 28.62 25.92 30.22 30H9.78004Z"
                 fill="#C4C4C4" />
         </svg>
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path  class="emoji" d="M20 0C16.0444 0 12.1776 1.17298 8.88864 3.37061C5.59966 5.56824 3.03621 8.69181 1.52246 12.3463C0.00870383 16.0009 -0.387363 20.0222 0.384342 23.9018C1.15605 27.7814 3.06086 31.3451 5.85791 34.1421C8.65496 36.9392 12.2186 38.844 16.0982 39.6157C19.9779 40.3874 23.9992 39.9913 27.6537 38.4776C31.3082 36.9638 34.4318 34.4004 36.6294 31.1114C38.8271 27.8224 40 23.9556 40 20C40 17.3736 39.4827 14.7728 38.4776 12.3463C37.4725 9.91982 35.9994 7.71504 34.1422 5.85787C32.285 4.00069 30.0802 2.5275 27.6537 1.52241C25.2272 0.517315 22.6265 0 20 0V0ZM13 12C13.5934 12 14.1734 12.1759 14.6668 12.5056C15.1601 12.8352 15.5446 13.3038 15.7717 13.852C15.9987 14.4001 16.0582 15.0033 15.9424 15.5853C15.8266 16.1672 15.5409 16.7018 15.1214 17.1213C14.7018 17.5409 14.1673 17.8266 13.5853 17.9424C13.0034 18.0581 12.4002 17.9987 11.852 17.7716C11.3038 17.5446 10.8353 17.1601 10.5056 16.6667C10.176 16.1734 10 15.5933 10 15C10.0203 14.2107 10.3429 13.4594 10.9011 12.9011C11.4594 12.3428 12.2108 12.0202 13 12V12ZM30 28H22C20.5938 27.9979 19.2118 28.3666 17.9934 29.0688C16.775 29.7711 15.7632 30.7821 15.06 32L11.6 30C12.6539 28.1746 14.17 26.6591 15.9957 25.6058C17.8214 24.5525 19.8923 23.9987 22 24H30V28ZM27 18C26.4067 18 25.8267 17.8241 25.3333 17.4944C24.84 17.1648 24.4555 16.6962 24.2284 16.1481C24.0013 15.5999 23.9419 14.9967 24.0577 14.4147C24.1734 13.8328 24.4592 13.2982 24.8787 12.8787C25.2983 12.4591 25.8328 12.1734 26.4148 12.0576C26.9967 11.9419 27.5999 12.0013 28.1481 12.2284C28.6963 12.4554 29.1648 12.8399 29.4945 13.3333C29.8241 13.8266 30 14.4067 30 15C29.9798 15.7893 29.6572 16.5406 29.099 17.0989C28.5407 17.6572 27.7893 17.9798 27 18V18Z" fill="#C4C4C4"/>
         </svg>
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path  class="emoji" d="M20 0C17.3735 0 14.7728 0.517315 12.3463 1.52241C9.9198 2.5275 7.71502 4.00069 5.85785 5.85786C2.10712 9.60859 -1.90735e-05 14.6957 -1.90735e-05 20C-1.90735e-05 25.3043 2.10712 30.3914 5.85785 34.1421C7.71502 35.9993 9.9198 37.4725 12.3463 38.4776C14.7728 39.4827 17.3735 40 20 40C25.3043 40 30.3914 37.8929 34.1421 34.1421C37.8928 30.3914 40 25.3043 40 20C40 17.3736 39.4827 14.7728 38.4776 12.3463C37.4725 9.91982 35.9993 7.71504 34.1421 5.85786C32.2849 4.00069 30.0802 2.5275 27.6537 1.52241C25.2271 0.517315 22.6264 0 20 0ZM9.99998 15C9.99998 14.2044 10.3161 13.4413 10.8787 12.8787C11.4413 12.3161 12.2043 12 13 12C13.7956 12 14.5587 12.3161 15.1213 12.8787C15.6839 13.4413 16 14.2044 16 15C16 15.7956 15.6839 16.5587 15.1213 17.1213C14.5587 17.6839 13.7956 18 13 18C12.2043 18 11.4413 17.6839 10.8787 17.1213C10.3161 16.5587 9.99998 15.7956 9.99998 15ZM28 28H12V24H28V28ZM27 18C26.2043 18 25.4413 17.6839 24.8787 17.1213C24.3161 16.5587 24 15.7956 24 15C24 14.2044 24.3161 13.4413 24.8787 12.8787C25.4413 12.3161 26.2043 12 27 12C27.7956 12 28.5587 12.3161 29.1213 12.8787C29.6839 13.4413 30 14.2044 30 15C30 15.7956 29.6839 16.5587 29.1213 17.1213C28.5587 17.6839 27.7956 18 27 18Z" fill="#C4C4C4"/>
         </svg>
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path  class="emoji" d="M20 0C17.3735 0 14.7728 0.517315 12.3463 1.52241C9.9198 2.5275 7.71502 4.00069 5.85785 5.85786C2.10712 9.60859 -1.52588e-05 14.6957 -1.52588e-05 20C-1.52588e-05 25.3043 2.10712 30.3914 5.85785 34.1421C7.71502 35.9993 9.9198 37.4725 12.3463 38.4776C14.7728 39.4827 17.3735 40 20 40C25.3043 40 30.3914 37.8929 34.1421 34.1421C37.8928 30.3914 40 25.3043 40 20C40 17.3736 39.4827 14.7728 38.4776 12.3463C37.4725 9.91982 35.9993 7.71504 34.1421 5.85786C32.2849 4.00069 30.0802 2.5275 27.6537 1.52241C25.2271 0.517315 22.6264 0 20 0V0ZM9.99998 15C9.99998 13.4 11.4 12 13 12C14.6 12 16 13.4 16 15C16 16.6 14.6 18 13 18C11.4 18 9.99998 16.6 9.99998 15ZM20 30.46C16.5 30.46 13.42 29 11.62 26.84L14.46 24C15.36 25.44 17.5 26.46 20 26.46C22.5 26.46 24.64 25.44 25.54 24L28.38 26.84C26.58 29 23.5 30.46 20 30.46ZM27 18C25.4 18 24 16.6 24 15C24 13.4 25.4 12 27 12C28.6 12 30 13.4 30 15C30 16.6 28.6 18 27 18Z" fill="#C4C4C4"/>
         </svg>
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path   class="emoji" d="M20 0C8.93998 0 -1.52588e-05 9 -1.52588e-05 20C-1.52588e-05 25.3043 2.10712 30.3914 5.85785 34.1421C7.71502 35.9993 9.9198 37.4725 12.3463 38.4776C14.7728 39.4827 17.3735 40 20 40C25.3043 40 30.3914 37.8929 34.1421 34.1421C37.8928 30.3914 40 25.3043 40 20C40 17.3736 39.4827 14.7728 38.4776 12.3463C37.4725 9.91982 35.9993 7.71504 34.1421 5.85786C32.2849 4.00069 30.0802 2.5275 27.6537 1.52241C25.2271 0.517315 22.6264 0 20 0ZM27 12C27.7956 12 28.5587 12.3161 29.1213 12.8787C29.6839 13.4413 30 14.2044 30 15C30 15.7956 29.6839 16.5587 29.1213 17.1213C28.5587 17.6839 27.7956 18 27 18C26.2043 18 25.4413 17.6839 24.8787 17.1213C24.3161 16.5587 24 15.7956 24 15C24 14.2044 24.3161 13.4413 24.8787 12.8787C25.4413 12.3161 26.2043 12 27 12ZM13 12C13.7956 12 14.5587 12.3161 15.1213 12.8787C15.6839 13.4413 16 14.2044 16 15C16 15.7956 15.6839 16.5587 15.1213 17.1213C14.5587 17.6839 13.7956 18 13 18C12.2043 18 11.4413 17.6839 10.8787 17.1213C10.3161 16.5587 9.99998 15.7956 9.99998 15C9.99998 14.2044 10.3161 13.4413 10.8787 12.8787C11.4413 12.3161 12.2043 12 13 12ZM20 31C15.34 31 11.38 28.08 9.77998 24H30.22C28.6 28.08 24.66 31 20 31Z" fill="#C4C4C4"/>
         </svg>     
      </div>  
-    <div class="v30_4"><span class="v30_3">To give your feedback, click on the tablets provided and write your opinion in the box given below.</span>
+    <div class="v30_4"><span>You may choose the topic for feedback by clicking the respective tile then write your feedback in the box given below.</span>
       </div>
 <div class="feedback-type">
     <div class="suggestions-box"><div class="suggestions-text">Suggestions</div>
@@ -62,7 +62,7 @@
       </div>
       </div>  
     </div>
-<div class="v30_13"><span class="v30_12">Write your feedback here...</span>
+<div class="v30_13"><span>Write your feedback here...</span>
 </div>
 <div class="v34_56">
 <div class="v34_53"><span class="v34_52">Cancel</span>
@@ -71,43 +71,48 @@
 </div>
 </div>
 
- 
+</div>
+
+  
      <style>  
  
  
 .v28_1 {
-  width: 100%;
-  height: 1024px;
-  background: rgba(242,240,240,1);
-  opacity: 1;
   position: relative;
-  top: 0px;
-  left: 0px;
-  overflow: hidden;
+width: 1440px;
+height: 532px;
+
+background: #F2F1F1;
 }
 .v28_2 {
-  width: 898px;
-  height: 742px;
+ 
+  
   background: rgba(255,255,255,1);
   opacity: 1;
   position: absolute;
-  top: 50px;
-  left: 271px;
+  
+  
   box-shadow: 0px 8px 35px rgba(0, 0, 0, 0.1599999964237213);
   overflow: hidden;
+  
+height: 530px;
+left: 406px;
+right: 406px;
+ 
 }
 .v28_4 {
   position: absolute;
     width: 334px;
     height: 29px;
-    left: 535px;
-    top: 71px;
+    left: 556px;
+    top: 20px;
     font-family: Montserrat;
     font-style: normal;
     font-weight: 600;
     font-size: 24px;
     line-height: 29px;
     color: #000000;
+
 
 }
 .v28_3 {
@@ -125,21 +130,17 @@
 
 }
 .v28_6 {
- position: absolute;
-width: 372px;
-height: 17px;
-left: calc(50% - 372px/2);
-top: 77px;
-
-font-family: Montserrat;
-font-style: normal;
-font-weight: 600;
-font-size: 14px;
-line-height: 17px;
-/* identical to box height */
-
-
-color: #494949;
+     position: absolute;
+    width: 372px;
+    height: 17px;
+    left: 543px;
+    top: 77px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+    color: #494949;
 }
 .v28_5 {
     width: 372px;
@@ -155,11 +156,12 @@ color: #494949;
     line-height: 17px;
 }
 .v34_63 {
-   width: inherit;
-    height: 15px;
-    position: absolute;
-    top: 175px;
-    left: 261px;
+  position: absolute;
+    height: 1px;
+    left: 405px;
+    right: 404px;
+    top: 108px;
+    background: #C4C4C4;
 }
 .v28_33 {
   width: 898px;
@@ -173,20 +175,17 @@ color: #494949;
 }
 .v29_47 {
   position: absolute;
-width: 408px;
-height: 22px;
-left: calc(50% - 408px/2);
-top: 147px;
-
-font-family: Montserrat;
-font-style: normal;
-font-weight: 600;
-font-size: 18px;
-line-height: 22px;
-/* identical to box height */
-
-
-color: #000000;
+    width: 408px;
+    height: 22px;
+    left: 533px;
+    top: 145px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+    color: #000000;
+}
 }
 .v28_7 {
   width: 441px;
@@ -203,19 +202,16 @@ color: #000000;
  
   
 .emoji-container {  
-  width: 424px;
-  height: 72px;
-  background: url("../images/v29_46.png");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  padding: 12px 12px;
-  margin: 40px;
-  opacity: 1;
-  position: absolute;
-  top: 300px;
-  left: 508px;
-  overflow: hidden; 
+ display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px;
+    position: absolute;
+    width: 288px;
+    height: 32px;
+    left: 555px;
+    top: 200px;
            
 }
 
@@ -228,18 +224,19 @@ color: #000000;
         }
        
 .v30_4 {
-  width: 814px;
-  height: 74px; 
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  padding: 10px 10px;
-  margin: 10px;
-  opacity: 1;
   position: absolute;
-  top: 420px;
-  left: 309px;
-  overflow: hidden;
+    height: 32px;
+    left: 437px;
+    right: 16px;
+    top: 280px;
+    width: 550px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #494949;
+
 }
 .v30_3 {
   width: 794px;
@@ -258,15 +255,15 @@ color: #000000;
    display: flex;
 flex-direction: row;
 align-items: flex-start;
-padding: 16px 10px 10px 12px;
+padding: 10px;
 
 position: absolute;
-height: 88px;
-left: 311px;
-right: 311px;
-top: 600px;
+height: 63px;
+left: 429px;
+    right: 438px;
+    top: 400px;
 
-border: 1px solid rgba(28, 28, 28, 0.27);
+border: 1px solid #C8C1C1;
 box-sizing: border-box;
 border-radius: 8px;
 }
@@ -299,29 +296,28 @@ margin: 0px 10px;
  display: flex;
 flex-direction: row;
 justify-content: flex-end;
-align-items: flex-end;
+align-items: center;
 padding: 0px;
 
 position: absolute;
-width: 228px;
-height: 46px;
-right: 311px;
-top: 720px;
+width: 160px;
+height: 33px;
+right: 16px;
+ 
+top: 476px;
+    left: 874px;
 }
 .v34_53 {
    display: flex;
 flex-direction: row;
 align-items: flex-start;
-padding: 12px 16px;
+ 
 
 position: static;
-width: 96px;
-height: 46px;
+ 
 left: 0px;
 top: 0px;
 
-background: #FFFFFF;
-box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.14);
 border-radius: 8px;
 
 /* Inside Auto Layout */
@@ -329,25 +325,24 @@ border-radius: 8px;
 flex: none;
 order: 0;
 flex-grow: 0;
-margin: 0px 32px;
+margin: 0px 24px;
 }
 .v34_52 {
-  
-position: static;
-width: 64px;
-height: 22px;
-left: 16px;
-top: 12px;
+  position: static;
+width: 50px;
+height: 17px;
+left: 8px;
+top: 8px;
 
 font-family: Montserrat;
 font-style: normal;
-font-weight: 600;
-font-size: 18px;
-line-height: 22px;
+font-weight: bold;
+font-size: 14px;
+line-height: 17px;
 /* identical to box height */
 
 
-color: #000000;
+color: rgba(0, 0, 0, 0.42);
 
 
 /* Inside Auto Layout */
@@ -355,17 +350,16 @@ color: #000000;
 flex: none;
 order: 0;
 flex-grow: 0;
-margin: 0px 10px;
+margin: 0px 0px;
 }
 .v30_20 {
    display: flex;
 flex-direction: row;
 align-items: flex-start;
-padding: 12px 16px;
+padding: 5px 0px;
 
 position: static;
-width: 100px;
-height: 46px;
+ 
 left: 128px;
 top: 0px;
 
@@ -409,19 +403,21 @@ margin: 0px 10px;
  
  .lov-box {
 
-   display: flex;
+  display: flex;
 flex-direction: row;
-align-items: flex-start;
-padding: 12px;
+justify-content: center;
+align-items: center;
+padding: 4px 8px;
 
 position: static;
- 
-height: 51px;
-left: 632px;
+width: 153px;
+height: 32px;
+left: 443px;
 top: 0px;
 
 background: #FFFFFF;
-border: 1px solid rgba(56, 51, 51, 0.5);
+border: 1px solid #C8C1C1;
+box-sizing: border-box;
 border-radius: 8px;
 
 /* Inside Auto Layout */
@@ -429,27 +425,28 @@ border-radius: 8px;
 flex: none;
 order: 2;
 flex-grow: 0;
-margin: 0px 25px;
+margin: 0px 17px;
 
  }
 
  .lov-text {
 
-   position: static;
-width: 128px;
-height: 27px;
-left: 12px;
-top: 12px;
+  position: static;
+width: 109px;
+height: 19px;
+left: 8px;
+top: 6.5px;
 
-font-family: Poppins;
+font-family: Sen;
 font-style: normal;
-font-weight: 600;
-font-size: 18px;
-line-height: 27px;
-/* identical to box height */
+font-weight: bold;
+font-size: 16px;
+line-height: 19px;
+display: flex;
+align-items: center;
+letter-spacing: -0.02em;
 
-
-color: #000000;
+color: #2C2B2B;
 
 
 /* Inside Auto Layout */
@@ -457,15 +454,15 @@ color: #000000;
 flex: none;
 order: 0;
 flex-grow: 0;
-margin: 0px 10px;
+margin: 0px 4px;
 
  }
 .lov-image {
-  position: static;
+ position: static;
 width: 24px;
 height: 24px;
-left: 150px;
-top: 12px;
+left: 121px;
+top: 4px;
 
 
 /* Inside Auto Layout */
@@ -473,42 +470,40 @@ top: 12px;
 flex: none;
 order: 1;
 flex-grow: 0;
-margin: 0px 10px;
+margin: 0px 4px;
 }
 
 .feedback-type {
- 
+ display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding: 0px;
 
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0px;
-
-    position: absolute;
-    height: 51px;
-    left: 311px;
-    right: 311px;
-    top: 500px;
-
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+position: absolute;
+width: 596px;
+height: 32px;
+left: 418px;
+top: 340px;
     
 }
 .suggestions-box{
    
 display: flex;
 flex-direction: row;
-align-items: flex-start;
-padding: 12px;
+justify-content: center;
+align-items: center;
+padding: 4px 8px;
 
 position: static;
- 
-height: 51px;
+width: 137px;
+height: 32px;
 left: 0px;
 top: 0px;
 
 background: #FFFFFF;
-border: 1px solid rgba(56, 51, 51, 0.5);
+border: 1px solid #C8C1C1;
+box-sizing: border-box;
 border-radius: 8px;
 
 /* Inside Auto Layout */
@@ -516,35 +511,43 @@ border-radius: 8px;
 flex: none;
 order: 0;
 flex-grow: 0;
-margin: 0px 25px;
+margin: 0px 10px;
 }
 
 .suggestions-text
 { 
 position: static;
-width: 114px;
-height: 27px;
-left: 12px;
-top: 12px;
+width: 93px;
+height: 24px;
+left: 8px;
+top: 4px;
 
-font-family: Poppins;
+font-family: Sen;
 font-style: normal;
-font-weight: 600;
-font-size: 18px;
-line-height: 27px; 
-color: #000000; 
+font-weight: bold;
+font-size: 16px;
+line-height: 19px;
+display: flex;
+align-items: center;
+letter-spacing: -0.02em;
+
+color: #2C2B2B;
+
+
+/* Inside Auto Layout */
+
 flex: none;
 order: 0;
 flex-grow: 0;
-margin: 0px 10px;
+margin: 0px 4px;
 }
 
 .suggestions-image{
  position: static;
 width: 24px;
 height: 24px;
-left: 136px;
-top: 12px;
+left: 105px;
+top: 4px;
 
 
 /* Inside Auto Layout */
@@ -552,24 +555,26 @@ top: 12px;
 flex: none;
 order: 1;
 flex-grow: 0;
-margin: 0px 10px;
+margin: 0px 4px;
 }
 
 
 .problem-box{
  display: flex;
 flex-direction: row;
-align-items: flex-start;
-padding: 12px;
+justify-content: center;
+align-items: center;
+padding: 4px 8px;
 
 position: static;
- 
-height: 51px;
-left: 277.5px;
+width: 202px;
+height: 32px;
+left: 189px;
 top: 0px;
 
 background: #FFFFFF;
-border: 1px solid rgba(56, 51, 51, 0.5);
+border: 1px solid #C8C1C1;
+box-sizing: border-box;
 border-radius: 8px;
 
 /* Inside Auto Layout */
@@ -577,17 +582,16 @@ border-radius: 8px;
 flex: none;
 order: 1;
 flex-grow: 0;
-margin: 0px 25px;
+margin: 0px 17px;
 }
 
 .problem-image
 {
-  
-position: static;
+  position: static;
 width: 24px;
 height: 24px;
-left: 213px;
-top: 12px;
+left: 170px;
+top: 4px;
 
 
 /* Inside Auto Layout */
@@ -595,28 +599,28 @@ top: 12px;
 flex: none;
 order: 1;
 flex-grow: 0;
-margin: 0px 10px;
+margin: 0px 4px;
 
  
 }
 
 .problem-text{
-   
-position: static;
-width: 191px;
-height: 27px;
-left: 12px;
-top: 12px;
+ position: static;
+width: 158px;
+height: 19px;
+left: 8px;
+top: 6.5px;
 
-font-family: Poppins;
+font-family: Sen;
 font-style: normal;
-font-weight: 600;
-font-size: 18px;
-line-height: 27px;
-/* identical to box height */
+font-weight: bold;
+font-size: 16px;
+line-height: 19px;
+display: flex;
+align-items: center;
+letter-spacing: -0.02em;
 
-
-color: #000000;
+color: #2C2B2B;
 
 
 /* Inside Auto Layout */
@@ -624,7 +628,7 @@ color: #000000;
 flex: none;
 order: 0;
 flex-grow: 0;
-margin: 0px 10px;
+margin: 0px 4px;
 }
 
 </style>
