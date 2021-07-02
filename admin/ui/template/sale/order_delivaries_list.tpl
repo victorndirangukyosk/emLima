@@ -1393,6 +1393,8 @@ var $select = $('#order_processor_id');
 
 <script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
+<script type="text/javascript" src="ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gmaps.js/0.4.25/gmaps.min.js"></script>
 <script type="text/javascript" src="ui/javascript/app-maps-google-delivery.js"></script>
 <script type="text/javascript"><!--
