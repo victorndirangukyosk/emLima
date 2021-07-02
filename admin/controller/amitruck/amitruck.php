@@ -54,6 +54,7 @@ class ControllerAmitruckAmitruck extends Controller {
     }
 
     public function getDriverLocation() {
+        $json = array();
         $this->load->model('amitruck/amitruck');
         $this->load->model('sale/order');
         $order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
@@ -76,6 +77,12 @@ class ControllerAmitruckAmitruck extends Controller {
             $json = $result;
 
             if ($result['status'] == 200) {
+                $driver_details = $this->model_amitruck_amitruck->fetchOrderDeliveryInfo($this->request->post['order_id']);
+                $log->write($driver_details['driver_phone']);
+                $log->write($driver_details['vehicle_number']);
+                $log->write($driver_details['driver_name']);
+                $json['driver_details'] = array('driver_phone' => $driver_details['driver_phone'], 'vehicle_number' => $driver_details['vehicle_number'], 'driver_name' => $driver_details['driver_name']);
+
                 $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'FETCH_DRIVER_LOCATION');
                 $log->write($result);
             }

@@ -86,7 +86,7 @@ function initMap(pointA,pointB) {
     google.maps.event.trigger(map,'resize');*/
 }
 
-function initMaps(pointA,pointB) {
+function initMaps(pointA,pointB,driverDetails) {
 
     console.log("apps");
 
@@ -125,7 +125,7 @@ function initMaps(pointA,pointB) {
         }),
         markerA = new google.maps.Marker({
             position: pointA,
-           /* title: "point A",
+           /*title: "point A",
             label: "A",*/
             //map: map
         }),

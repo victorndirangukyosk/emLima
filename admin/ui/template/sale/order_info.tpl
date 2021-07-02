@@ -1602,9 +1602,9 @@
 		return false;
     }
     
-    function initMapLoads(presentlocation,deliverylocation) {
+    function initMapLoads(presentlocation,deliverylocation,driverDetails) {
     
-    	initMaps(presentlocation,deliverylocation);
+    	initMaps(presentlocation,deliverylocation,driverDetails);
         return false;
     }
 
@@ -2438,7 +2438,7 @@ console.log(present_location);
                     //console.log(json.driverLocation.latitude);
                     if(json.status == 200) {
                     var present_location = json.driverLocation.latitude+','+json.driverLocation.longitude;
-                    initMapLoads(present_location,delivery_location);
+                    initMapLoads(present_location,delivery_location,json.driver_details);
                     } else {
                     alert(json.errors);
                     }
