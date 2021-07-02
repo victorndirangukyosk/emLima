@@ -5,7 +5,7 @@ class ModelAccountFeedback extends Model
     public function saveFeedback($data)
     {
         //need to check the insertion of feedback form
-         $this->db->query('INSERT INTO '.DB_PREFIX."feedback SET customer_id = '".(int) $this->customer->getId()."', comments = '".$this->db->escape($data['comments'])."', rating = '".$this->db->escape($data['rating'])."', feedback_type = '".$this->db->escape($data['feedback_type'])."', created_date = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+         $this->db->query('INSERT INTO '.DB_PREFIX."feedback SET customer_id = '".(int) $this->customer->getId()."', comments = '".$this->db->escape($data['comments'])."', rating = '".$this->db->escape($data['rating_id'])."', feedback_type = '".$this->db->escape($data['feedback_type'])."', created_date = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
 
         $feedback_id = $this->db->getLastId();       
 

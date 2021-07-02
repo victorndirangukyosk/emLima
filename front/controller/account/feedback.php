@@ -54,10 +54,11 @@ class ControllerAccountFeedback extends Controller {
  
         $this->load->model('account/feedback');
 
-        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD'])  ) {
             $this->model_account_feedback->saveFeedback($this->request->post);
             $this->session->data['success'] = "Thanks for your feedback";  
-            $this->response->redirect($this->url->link('account/address', '', 'SSL'));
+            $this->response->redirect($this->url->link('common/home', '', 'SSL'));
+
         }
 
         // $this->getForm();
