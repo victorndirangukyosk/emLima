@@ -726,7 +726,9 @@ function saveFeedback()
      alert("Please provide comments");
      return;
    }
+    var redirectURL = '<?php echo $base; ?>';
 
+ 
       $.ajax({
                         url: 'index.php?path=account/feedback/saveFeedback',
                         type: 'post',
@@ -738,7 +740,9 @@ function saveFeedback()
                         success: function(json) {
 
                             console.log(json);
+                             
                             console.log("feedback saving");
+                            
                             if (json.status == 0) {
                                 //$('#feedback-message').html(json['message']);
                                 //$('#feedback-success-message').html('');
@@ -747,8 +751,8 @@ function saveFeedback()
                                 console.log("feedback success");
                                 $('#feedback-panel').html(json.html);
                                 //$('#feedbackModal').modal('hide');
-                                 location=location;
-                                return false;
+                                
+                                //return true;
                             }
                         },
                         error: function(xhr, ajaxOptions, thrownError) {
@@ -756,7 +760,8 @@ function saveFeedback()
                              return false;
                         }
                     });
-                    return true;
+                                                 location=redirectURL;
+
 
 }
         
