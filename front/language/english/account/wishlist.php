@@ -12,6 +12,7 @@ $_['text_success'] = 'Success: You have added <a href="%s">%s</a> to your <a hre
 $_['text_exists'] = '<a href="%s">%s</a> is already in your <a href="%s">wish list</a>!';
 $_['text_remove'] = 'Success: You have modified your list!';
 $_['text_empty'] = 'Your list is empty.';
+$_['text_load_more'] = 'Load More';
 
 // Column
 $_['column_image'] = 'Image';
