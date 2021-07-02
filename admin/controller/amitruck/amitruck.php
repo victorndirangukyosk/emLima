@@ -152,7 +152,7 @@ class ControllerAmitruckAmitruck extends Controller {
             $json = $result;
             if ($result['status'] == 200) {
                 $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'MAKE_PAYMENT');
-                $this->model_amitruck_amitruck->updateDeliveryStatus($this->request->post['order_id'], json_encode($json));
+                $this->model_amitruck_amitruck->updateDeliveryPayment($this->request->post['order_id'], json_encode($json));
                 $log->write($result);
             }
 
