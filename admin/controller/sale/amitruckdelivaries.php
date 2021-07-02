@@ -627,8 +627,8 @@ class ControllerSaleAmitruckdelivaries extends Controller {
                 'all_order_statuses' => $this->model_localisation_order_status->getOrderStatuses(),
                 'order_reference_id' => $result['order_reference_id'],
                 'delivery_status' => $result['delivery_status'],
-                'drop_latitude' => $result['drop_latitude'],
-                'drop_longitude' => $result['drop_longitude'],
+                'drop_latitude' => $result['drop_latitude'] == NULL ? $result['latitude'] : $result['drop_latitude'],
+                'drop_longitude' => $result['drop_longitude'] == NULL ? $result['longitude'] : $result['longitude'],
             ];
         }
 

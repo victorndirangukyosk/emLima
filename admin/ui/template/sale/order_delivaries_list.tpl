@@ -262,7 +262,7 @@
                                     <td class="text-left"><?php echo $order['delivery_timeslot']; ?></td>
                                     <td class="text-right">
                                     <div style="width: 100%; display:flex; justify-content: space-between; flex-flow: row wrap; gap: 4px;">
-                                               <a href="#" id="driver_location"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-delivery_latitide="<?= $order['drop_latitude']; ?>" data-delivery_longitude="<?= $order['drop_longitude']; ?>" data-toggle="tooltip" title="Driver Location">
+                                               <a href="#" id="driver_location"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-delivery_latitide="<?php echo $order['drop_latitude']; ?>" data-delivery_longitude="<?php echo $order['drop_longitude']; ?>" data-toggle="tooltip" title="Driver Location">
                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                                                </a>
                                         
@@ -1472,16 +1472,19 @@ $('#driver_modal').modal('toggle');
 		beforeSend: function() {
                 // setting a timeout
                 },
-                success: function(json) {	 
-                    //console.log(json.driverLocation.latitude);
+                success: function(json) {
                     if(json.status == 200) {
+                    console.log(json.driverLocation.latitude);
                     var present_location = json.driverLocation.latitude+','+json.driverLocation.longitude;
                     initMapLoads(present_location,delivery_location,json.driver_details);
                     } else {
                     alert(json.errors);
                     }
                     //setTimeout(function(){ window.location.reload(false); }, 1500);
-		},			
+		},
+                complete: function(json) {
+	            
+		},
 		error: function(xhr, ajaxOptions, thrownError) {		
 	           alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); 
 		}
