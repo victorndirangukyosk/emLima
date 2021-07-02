@@ -1,4 +1,9 @@
  <?php echo $header; ?>
+
+ <link rel="stylesheet" type="text/css"
+    href="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/css/iziToast.min.css">
+<script src="<?= $base; ?>front/ui/theme/metaorganic/assets_landing_page/js/iziToast.min.js" async
+    defer="defer"></script>
  <div id="content">
  
  <div class="v28_1">
@@ -69,7 +74,7 @@
 </textarea>
 <div class="v34_56">
 <div class="v34_53" style="cursor:pointer"> 
-<a  class="v34_52" href="<?= $base;?>index.php"  >Cancel</a>
+<a  class="v34_52" href="<?= $base;?>index.php"  >Will do later</a>
 </div>
 <div class="v30_20" style="cursor:pointer" onclick="saveFeedback()";><span class="v30_21">Submit</span>
 </div>
@@ -348,7 +353,7 @@ margin: 0px 24px;
 }
 .v34_52 {
   position: static;
-width: 50px;
+width: 100px;
 height: 17px;
 left: 8px;
 top: 8px;
@@ -727,7 +732,10 @@ function saveFeedback()
      return;
    }
     var redirectURL = '<?php echo $base; ?>';
-
+      iziToast.success({
+                                position: 'topRight',
+                                        message: 'Thank you for your valuable feedback'
+                                         });
  
       $.ajax({
                         url: 'index.php?path=account/feedback/saveFeedback',
@@ -766,3 +774,5 @@ function saveFeedback()
 }
         
       </script> 
+
+      

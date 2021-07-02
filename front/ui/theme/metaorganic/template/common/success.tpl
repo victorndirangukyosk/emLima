@@ -25,6 +25,10 @@
                     </div>
                     
                     <br />
+                    <div style="font-size: 16px;" class="col-md-10">
+                        <?php echo html_entity_decode($text_feedback_message);  ?>
+                    </div>
+
                     <br />
                     <br />
                     
@@ -50,6 +54,7 @@
                     
                 </div>
                 
+           
                 <!--ORDER SUMMARY-->
                 <div class="row">
             <div class="col-md-12">
