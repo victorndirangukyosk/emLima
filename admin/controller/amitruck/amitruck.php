@@ -75,6 +75,11 @@ class ControllerAmitruckAmitruck extends Controller {
             $result = json_decode($result, true);
             $json = $result;
 
+            if ($result['status'] == 200) {
+                $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'FETCH_DRIVER_LOCATION');
+                $log->write($result);
+            }
+
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
         }
