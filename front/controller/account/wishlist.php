@@ -119,7 +119,7 @@ class ControllerAccountWishList extends Controller {
         $pagination->total = $wishlist_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('account/order', 'page={page}', 'SSL');
+        $pagination->url = $this->url->link('account/wishlist', 'page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
