@@ -57,4 +57,9 @@ class ModelAmitruckAmitruck extends Model {
         return $query->row;
     }
 
+    public function fetchAddressById($address_id) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "address` WHERE `address_id` = '" . (int) $address_id . "'");
+        return $query->row;
+    }
+
 }
