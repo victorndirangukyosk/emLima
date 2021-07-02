@@ -262,7 +262,7 @@
                                     <td class="text-left"><?php echo $order['delivery_timeslot']; ?></td>
                                     <td class="text-right">
                                     <div style="width: 100%; display:flex; justify-content: space-between; flex-flow: row wrap; gap: 4px;">
-                                               <a href="#" id="driver_location"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-toggle="tooltip" title="Driver Location">
+                                               <a href="#" id="driver_location"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-delivery_latitide="<?= $order['drop_latitude']; ?>" data-delivery_longitude="<?= $order['drop_longitude']; ?>" data-toggle="tooltip" title="Driver Location">
                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                                                </a>
                                         
@@ -901,6 +901,22 @@
                             </div>
                         </div>
                     </div> <!-- /.modal -->
+
+    <div class="modal fade" id="driver_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content"> 
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Driver Location</h4>
+                                </div>
+                                <div class="" id="drivermap" style="height: 100%; min-height: 600px;">
+                                <input type="hidden" name="single_delivery_map_ui" id="single_delivery_map_ui" value="<?= $map_s ?>">
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                   </div>
+                            </div>
+                        </div>
+</div> <!-- /.modal -->                                      
 <script  type="text/javascript">
 
 $('a[id^=\'assign_to_amitruck\']').on('click', function (e) {
@@ -1375,9 +1391,11 @@ var $select = $('#order_processor_id');
 
 
 
-    <script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
-    <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
-    <script type="text/javascript"><!--
+<script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gmaps.js/0.4.25/gmaps.min.js"></script>
+<script type="text/javascript" src="ui/javascript/app-maps-google-delivery.js"></script>
+<script type="text/javascript"><!--
   $('.date').datetimepicker({
             pickTime: false
         });
@@ -1430,8 +1448,43 @@ $('input[name=\'order_delivery_executive\']').autocomplete({
   } 
 });
 
+function initMapLoads(presentlocation,deliverylocation,driverDetails) {
+initMaps(presentlocation,deliverylocation,driverDetails);
+return false;
+}
+
 $('a[id^=\'driver_location\']').on('click', function (e) {
 e.preventDefault();
+console.log($(this).data('order-id'));
+var delivery_latitide = $(this).data('delivery_latitide');
+var delivery_longitude = $(this).data('delivery_longitude');
+var delivery_location = $(this).data('delivery_latitide')+','+$(this).data('delivery_longitude');
+console.log(delivery_location);
+$('#driver_modal').modal('toggle');
+
+                $.ajax({
+		url: 'index.php?path=amitruck/amitruck/getDriverLocation&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + encodeURIComponent($(this).data('order-id')),
+		beforeSend: function() {
+                // setting a timeout
+                },
+                success: function(json) {	 
+                    //console.log(json.driverLocation.latitude);
+                    if(json.status == 200) {
+                    var present_location = json.driverLocation.latitude+','+json.driverLocation.longitude;
+                    initMapLoads(present_location,delivery_location,json.driver_details);
+                    } else {
+                    alert(json.errors);
+                    }
+                    //setTimeout(function(){ window.location.reload(false); }, 1500);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+	           alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); 
+		}
+                }); 
+
 });
 
 $('a[id^=\'new_print_invoice\']').on('click', function (e) {

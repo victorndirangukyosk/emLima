@@ -125,8 +125,8 @@ function initMaps(pointA,pointB,driverDetails) {
         }),
         markerA = new google.maps.Marker({
             position: pointA,
-           /*title: "point A",
-            label: "A",*/
+           title: driverDetails.driver_name,
+            label: "A",
             //map: map
         }),
         markerB = new google.maps.Marker({
