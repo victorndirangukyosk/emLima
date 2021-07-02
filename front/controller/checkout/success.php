@@ -84,8 +84,10 @@ class ControllerCheckoutSuccess extends Controller {
         // Get Order Status enter Message
         if ($this->customer->isLogged() && (empty($_SESSION['parent']) || ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) || $sub_customer_order_approval_required == 0)) {
             $data['text_message'] = sprintf($this->language->get('text_customer'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
+            $data['text_feedback_message'] = sprintf($this->language->get('text_customer_feedback'), $this->url->link('account/feedback', '', 'SSL'));
         } elseif ($this->customer->isLogged() && (!empty($_SESSION['parent']) && ($this->session->data['order_approval_access'] == 0 && $this->session->data['order_approval_access_role'] == NULL && $sub_customer_order_approval_required == 1))) {
             $data['text_message'] = sprintf($this->language->get('text_customer_sub_user_new'), $parent_info['firstname'], $parent_info['lastname'], $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
+            $data['text_feedback_message'] = sprintf($this->language->get('text_customer_feedback'), $this->url->link('account/feedback', '', 'SSL')); 
         } else {
             $data['text_message'] = sprintf($this->language->get('text_guest'), $this->url->link('information/contact'));
         }
