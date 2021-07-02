@@ -113,7 +113,6 @@ class ControllerAmitruckAmitruck extends Controller {
     }
 
     public function MakeDeliveryPayment() {
-        $this->request->post['order_id'] = 3145;
         $this->load->model('amitruck/amitruck');
         $this->load->model('sale/order');
         $order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
@@ -141,6 +140,7 @@ class ControllerAmitruckAmitruck extends Controller {
             $json = $result;
             if ($result['status'] == 200) {
                 $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'MAKE_PAYMENT');
+                $this->model_amitruck_amitruck->updateDeliveryStatus($this->request->post['order_id'], json_encode($json));
                 $log->write($result);
             }
 
@@ -159,6 +159,34 @@ class ControllerAmitruckAmitruck extends Controller {
         curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/wallet');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_POST, 0);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+
+        $log->write($result);
+        curl_close($curl);
+        $result = json_decode($result, true);
+        $json = $result;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function LoadWallet() {
+        $this->load->model('amitruck/amitruck');
+        $log = new Log('error.log');
+        //$log->write($order_info);
+        $body = array('amount' => 1000);
+        //$log->write($body);
+        $body = json_encode($body);
+        //$log->write($body);
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/wallet/load');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
         curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
