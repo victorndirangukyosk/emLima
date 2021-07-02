@@ -29,6 +29,21 @@ class ModelAmitruckAmitruck extends Model {
         }
     }
 
+    public function updateDeliveryPayment($order_id, $data) {
+        $log = new Log('error.log');
+        $data = json_decode($data, true);
+        $log->write($data);
+        if ($data['delivery']['status'] == 'pending_payment') {
+            $this->db->query('UPDATE `' . DB_PREFIX . "order_delivery` SET `delivery_status` = '" . $data['delivery']['status'] . "', `delivery_charges` = '" . $data['delivery']['cost'] . "', `updated_at` = NOW() WHERE order_id = '" . (int) $order_id . "' AND order_reference_id = '" . $data['delivery']['id'] . "'");
+        }
+        if ($data['delivery']['status'] == 'pending_driver') {
+            $this->db->query('UPDATE `' . DB_PREFIX . "order_delivery` SET `delivery_status` = '" . $data['delivery']['status'] . "', `updated_at` = NOW() WHERE order_id = '" . (int) $order_id . "' AND order_reference_id = '" . $data['delivery']['id'] . "'");
+        }
+        if ($data['delivery']['status'] == 'paid') {
+            $this->db->query('UPDATE `' . DB_PREFIX . "order_delivery` SET `delivery_status` = '" . $data['delivery']['status'] . "', `driver_name` = '" . $data['delivery']['driver']['name'] . "', `vehicle_number` = '" . $data['delivery']['driver']['vehicleRegistration'] . "', `driver_phone` = '" . $data['delivery']['driver']['phoneNumber'] . "', `updated_at` = NOW() WHERE order_id = '" . (int) $order_id . "' AND order_reference_id = '" . $data['delivery']['id'] . "'");
+        }
+    }
+
     public function updateOrderDelivery($order_id, $data) {
         $log = new Log('error.log');
         $data = json_decode($data, true);
