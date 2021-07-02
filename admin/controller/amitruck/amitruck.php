@@ -8,6 +8,7 @@ class ControllerAmitruckAmitruck extends Controller {
         $this->load->model('amitruck/amitruck');
         $this->load->model('sale/order');
         $order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
+        $address_info = $this->model_amitruck_amitruck->fetchAddressById($order_info['']);
         if (is_array($order_info) && count($order_info) > 0 && $order_info['delivery_id'] == NULL) {
             $log = new Log('error.log');
             //$log->write($order_info);
