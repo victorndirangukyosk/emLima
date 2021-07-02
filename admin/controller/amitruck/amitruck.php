@@ -189,7 +189,7 @@ class ControllerAmitruckAmitruck extends Controller {
         $this->load->model('amitruck/amitruck');
         $log = new Log('error.log');
         //$log->write($order_info);
-        $body = array('amount' => 1000);
+        $body = array('amount' => 10000);
         //$log->write($body);
         $body = json_encode($body);
         //$log->write($body);
