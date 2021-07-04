@@ -72,6 +72,7 @@ class ModelPaymentInterswitch extends Model {
         $order_history = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_history` WHERE `order_id` = '" . $order_id . "' AND order_status_id='" . (int) $order_status_id . "'")->num_rows;
         $log = new Log('error.log');
         $log->write('INTERSWITCH ORDER HISTORY');
+        $log->write($order_status_id);
         $log->write($order_history);
         if ($order_history <= 0) {
             $log = new Log('error.log');
