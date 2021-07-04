@@ -85,7 +85,7 @@ class ModelPaymentInterswitch extends Model {
             $log->write($order_history);
             $this->db->query('UPDATE `' . DB_PREFIX . "order_history` SET notify = '" . (int) $notify . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
         }
-        $this->insertOrderTransactionFee($order_id, $order_status_id);
+        //$this->insertOrderTransactionFee($order_id, $order_status_id);
     }
 
     public function insertOrderTransactionFee($order_id, $order_status_id) {
