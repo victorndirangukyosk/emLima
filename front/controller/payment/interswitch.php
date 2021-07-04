@@ -84,14 +84,20 @@ class ControllerPaymentInterswitch extends Controller {
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
         if (00 == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
-            $this->response->redirect($this->url->link('checkout/success'));
+            $json['message'] = $payment_gateway_description;
+            $json['redirect_url'] = $this->url->link('checkout/success');
+            //$this->response->redirect($this->url->link('checkout/success'));
         }
 
         if (00 != $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
-            $this->response->redirect($this->url->link('checkout/success/orderfailed'));
+            $json['message'] = $payment_gateway_description;
+            $json['redirect_url'] = $this->url->link('checkout/success/orderfailed');
+            //$this->response->redirect($this->url->link('checkout/success/orderfailed'));
         }
 
         $log->write('interswitch payment response');
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
     public function status() {

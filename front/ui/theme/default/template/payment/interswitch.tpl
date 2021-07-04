@@ -88,20 +88,24 @@ function submitHandler(event) {
 }
 
 function paymentCallback(response) {
-console.log(response);
+//console.log(response);
     $.ajax({
         url: 'index.php?path=payment/interswitch/InterswitchPaymentResponse',
         type: 'post',
         data: {
             payment_response : response
         },
-        dataType: 'html',
+        dataType: 'json',
         cache: false,
         async: true,
         beforeSend: function() {
         },
         success: function(json) {
-            console.log(json);
+            console.log(json.redirect_url);
+            if(json.redirect_url != null) {
+            $(window).attr('location',json.redirect_url);
+        }
+            
         },
         error: function(xhr, ajaxOptions, thrownError) {
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
