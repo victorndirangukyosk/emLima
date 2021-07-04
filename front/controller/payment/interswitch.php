@@ -84,13 +84,14 @@ class ControllerPaymentInterswitch extends Controller {
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
         if (00 == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
-            $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('interswitch_failed_order_status_id'), $customer_info['customer_id'], 'customer');
+            $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_failed_order_status_id'), $customer_info['customer_id'], 'customer');
             $json['message'] = $payment_gateway_description;
             $json['redirect_url'] = $this->url->link('checkout/success');
             //$this->response->redirect($this->url->link('checkout/success'));
         }
 
         if (00 != $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+            $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_failed_order_status_id'), $customer_info['customer_id'], 'customer');
             $json['message'] = $payment_gateway_description;
             $json['redirect_url'] = $this->url->link('checkout/success/orderfailed');
             //$this->response->redirect($this->url->link('checkout/success/orderfailed'));
