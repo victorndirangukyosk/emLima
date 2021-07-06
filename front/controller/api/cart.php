@@ -426,6 +426,7 @@ class ControllerApiCart extends Controller {
             $product_store_id = $product['product_store_id'];
             $this->load->model('assets/product');
             $product_info = $this->model_assets_product->getProduct($product_store_id, true);
+            $tax_info = $this->tax->getRateNameByTaxClassId($product_info['tax_class_id']);
 
             if (is_array($product_info) && $product_info['status'] == 1) {
                 $this->data[$keys] = [
@@ -453,9 +454,9 @@ class ControllerApiCart extends Controller {
                     'percentage_off' => (($product_info['price'] - $product_info['special_price']) / $product_info['price']) * 100,
                     'reward' => 0,
                     'points' => 0,
-                    'tax_name' => '',
+                    'tax_name' => $tax_info != NULL && count($tax_info) > 0 ? $tax_info['name'] : NULL,
                     'tax_amount' => '',
-                    'tax_percentage' => '',
+                    'tax_percentage' => $tax_info != NULL && count($tax_info) > 0 ? $tax_info['rate'] : NULL,
                     'tax_class_id' => $product_info['tax_class_id'],
                     'weight' => 0,
                     'weight_class_id' => 0,
