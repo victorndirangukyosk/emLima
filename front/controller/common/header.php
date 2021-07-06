@@ -383,6 +383,7 @@ class ControllerCommonHeader extends Controller
         $data['text_profile_info'] = 'Other Information';
         $data['text_transactions'] = 'My Transactions';
         $data['text_sub_customer'] = 'Sub Users';
+        $data['text_customer_contacts'] = 'My Contacts';
         $data['text_credit'] = $this->language->get('text_credit');
         $data['text_user_product_notes'] = $this->language->get('text_user_product_notes');
         $data['text_user_notification_settings'] = $this->language->get('text_user_notification_settings');
@@ -405,6 +406,7 @@ class ControllerCommonHeader extends Controller
         $data['profile_info'] = $this->url->link('account/profileinfo', '', 'SSL');
         $data['account_transactions'] = $this->url->link('account/transactions', '', 'SSL');
         $data['sub_users'] = $this->url->link('account/sub_users', '', 'SSL');
+        $data['customer_contacts'] = $this->url->link('account/customer_contacts', '', 'SSL');
         $data['account_edit'] = $this->url->link('account/edit', '', 'SSL');
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['login'] = $this->url->link('account/login', '', 'SSL');

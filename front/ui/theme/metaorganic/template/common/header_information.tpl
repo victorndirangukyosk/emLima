@@ -310,6 +310,20 @@ $(document).ready(function() {
                                                 <i class="fa fa-sticky-note"></i>Incomplete Orders</a>
                                             </li>-->
 
+
+                                              
+                                            <li role="presentation">
+                                                <?php if(strpos($customer_contacts,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                    <a href="<?= $customer_contacts ?>" class="active">
+                                                <?php } else { ?>
+                                                    <a href="<?= $customer_contacts ?>">
+                                                <?php } ?>
+
+                                                <i class="fas fa-address-book"></i><?= $text_customer_contacts ?></a>
+                                            </li>
+                                            
+
+
                                             <?php if($this->config->get('config_credit_enabled')) { ?>
 
                                                 <li role="presentation">
