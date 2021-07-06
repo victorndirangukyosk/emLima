@@ -525,4 +525,15 @@
         });
     });
 </script>
+
+<style>
+.my-order-list-title{
+    font-family: Poppins;
+font-style: normal;
+font-weight: 600;
+font-size: 18px;
+line-height: 27px;
+color: #FA8700;
+}
+</style>
 </html>
