@@ -180,6 +180,9 @@
                         <div class="col-sm-2 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; margin-right: 63px">
                             <button type="submit" data-style="zoom-out" id="save-button" onclick="return validateAndSubmitForm()" class="btn btn-default"><span class="ladda-label"><?= $button_save ?></span><span class="ladda-spinner"></span></button>
                         </div>
+                        <div class="col-sm-2 col-sm-pull-2 secion-row text-center" style="margin-bottom: 20px; float: right; ">
+                            <button type="cancel" data-style="zoom-out" id="cancel-button"  style="background: transparent;color: #b1acac !important;" onclick="return CancelForm()" class="btn btn-default"><span class="ladda-label">Cancel</span><span class="ladda-spinner"></span></button>
+                        </div>
                     </form>
                 </div>
                  
@@ -316,11 +319,22 @@
 
     
 
-        /*if(grecaptcha.getResponse() == ""){
+         if(grecaptcha.getResponse() == ""){
          return_var = false;
          $('<div class="text-danger">Please validate captcha!</div>' ).insertAfter( $(".g-recaptcha"));
-         }    */     
+         }       
         return return_var;
+         
+        
+    }
+
+
+      function CancelForm() {
+          
+         $("#allcontacts").show();
+   $("#addContact").hide();
+             
+        return false;
          
         
     }
