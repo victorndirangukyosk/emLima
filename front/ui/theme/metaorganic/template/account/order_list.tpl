@@ -237,8 +237,8 @@
                     <?php if($order['sub_user_order'] == TfRUE && $order['parent_approval'] == 'Pending' && $order['head_chef'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
                     <li class="list-group-item">
                         <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
-                            <a href="#" id="approve_order_head_chef" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
-                            <a href="#" id="reject_order_head_chef" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
+                            <a href="#" id="approve_order_head_chef" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newapprove">APPROVE ORDER</a>
+                            <a href="#" id="reject_order_head_chef" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newreject">REJECT ORDER</a>
                         </div>
                     </li>
                     <?php } else if($order['sub_user_order'] == TRUE && $order['head_chef'] == 'Approved' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
@@ -274,8 +274,8 @@
                     <?php if($order['sub_user_order'] == TRUE && $order['head_chef'] == 'Approved' && $order['procurement'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement_person') { ?>
                     <li class="list-group-item">
                         <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
-                            <a href="#" id="approve_order_procurement" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
-                            <a href="#" id="reject_order_procurement" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
+                            <a href="#" id="approve_order_procurement" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newapprove">APPROVE ORDER</a>
+                            <a href="#" id="reject_order_procurement" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newreject">REJECT ORDER</a>
                         </div>
                     </li>
                     <?php } else if($order['sub_user_order'] == TRUE && $order['procurement'] == 'Approved' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement_person') { ?>
@@ -310,8 +310,8 @@
                     <?php if($order['sub_user_order'] == TRUE && $order['status'] == 'Order Approval Pending' && $order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] == 'Pending') { ?>
                     <li class="list-group-item">
                         <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
-                            <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
-                            <a href="#" id="reject_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
+                            <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newapprove">APPROVE ORDER</a>
+                            <a href="#" id="reject_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newreject">REJECT ORDER</a>
                         </div>
                     </li>
                     <?php } elseif($order['sub_user_order'] == TRUE && $order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] != 'Pending') { ?>
@@ -925,8 +925,7 @@ function addOrderToCart(orderid,store_id) {
         location = location;
     }, 6000 * 1000); // 60 * 1000 milsec
 
-
-
+ 
 $('select').on("change",function(){
      
     var selectedvalue = this.value;
@@ -1049,20 +1048,51 @@ box-shadow: 0px 6px 12px rgba(154, 154, 154, 0.25);
 
         .my-order-list-headnew
         {
-background: rgba(206, 196, 255, 0.43);
- 
- 
+background: rgba(206, 196, 255, 0.43); 
         }
+
+        .my-order .list-group-item:first-child {
+     
+    padding-left: 18px;
+}
         .list-group-item {
         padding: 1px 2px;
         }
 .newddl{
-    font-size: 13px;line-height: 20px;
-     max-height: calc(1.2em + 24px);
-    height: calc(1.2em + 24px);
+    font-size: 13px;line-height: 20px;   
 }
 
 .my-order-details { 
     font-size:14px
+}
+.btn-newreject {
+    border: 0.3px solid #000000;
+    box-sizing: border-box;
+    filter: drop-shadow(0px 6px 30px rgba(0, 0, 0, 0.18));
+    border-radius: 8px;
+    background: none;
+    color: #3F3D3D !important;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 15px;
+    margin: 0px 16px;
+    padding: 8px 8px;
+}
+.btn-newapprove {
+    background: #7CFFC0;
+    border: 0.3px solid #0C9D46;
+    box-sizing: border-box;
+    box-shadow: 0px 6px 30px rgb(90 244 170 / 25%);
+    border-radius: 8px;
+    color: #0B833B !important;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 15px;
+    margin: 0px 16px;
+    padding: 8px 8px;
 }
  </style>
