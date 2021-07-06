@@ -1198,6 +1198,10 @@ class ControllerCheckoutConfirm extends Controller
             $this->model_checkout_order->addTransaction($transactionData);
 
             $data['payment'] = $this->load->controller('payment/'.$this->session->data['payment_method']['code']);
+            $data['payment_interswitch'] = $this->load->controller('payment/interswitch');
+            $log->write('payment');
+            $log->write($data['payment']);
+            $log->write('payment');
         } else {
             $log->write('Log 4');
             $data['redirect'] = $redirect;
