@@ -432,7 +432,7 @@ class ControllerApiCart extends Controller {
                     'key' => $keys,
                     'product_id' => $product_info['product_id'],
                     'product_store_id' => $product_info['product_store_id'],
-                    'store_product_variation_id' => 0,
+                    'store_product_variation_id' => $product_info['store_product_variation_id'],
                     'store_id' => $product_info['store_id'],
                     'store_name' => '',
                     'product_type' => '',
