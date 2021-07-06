@@ -1444,6 +1444,9 @@ function savePaymentMethod() {
             $('#payment-method-wrapper-loader').hide();
             $('#payment-method-wrapper').show();
             $('#pay-confirm-order').show();
+            if(payment_method == 'interswitch') {
+            submitHandler(event);
+            }
         },
     });
 }
