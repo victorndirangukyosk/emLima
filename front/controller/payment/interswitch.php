@@ -10,12 +10,15 @@ class ControllerPaymentInterswitch extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
 
+        $order_ids = array();
         foreach ($this->session->data['order_id'] as $key => $value) {
+            $order_ids[] = $value;
             $order_id = $value;
+            if ($order_id != NULL) {
+                $this->model_checkout_order->UpdateParentApproval($order_id);
+            }
         }
-        if ($order_id != NULL) {
-            $this->model_checkout_order->UpdateParentApproval($order_id);
-        }
+
 
         $order_info = $this->model_checkout_order->getOrder($order_id);
         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
@@ -29,10 +32,11 @@ class ControllerPaymentInterswitch extends Controller {
         $interswitch_creds = $this->model_setting_setting->getSetting('interswitch', 0);
         $data['interswitch_merchant_code'] = $interswitch_creds['interswitch_merchant_code'];
         $data['interswitch_pay_item_id'] = $interswitch_creds['interswitch_pay_item_id'];
-        $data['interswitch_data_ref'] = base64_encode($order_info['customer_id'] . '_' . $order_id . '_' . $amount . '_' . date("Y-m-d h:i:s"));
+        $data['interswitch_data_ref'] = base64_encode($order_info['customer_id'] . '_' . implode("-", $order_ids) . '_' . $this->cart->getTotal() . '_' . date("Y-m-d h:i:s"));
         $data['interswitch_customer_id'] = $customer_info['customer_id'];
         $data['interswitch_customer_name'] = $customer_info['firstname'] . ' ' . $customer_info['lastname'];
-        $data['interswitch_amount'] = $amount * 100;
+        //$data['interswitch_amount'] = $amount * 100;
+        $data['interswitch_amount'] = $this->cart->getTotal() * 100;
         $log = new Log('error.log');
         $log->write($interswitch_creds['interswitch_merchant_code']);
 
@@ -76,12 +80,22 @@ class ControllerPaymentInterswitch extends Controller {
 
         foreach ($this->session->data['order_id'] as $key => $value) {
             $order_id = $value;
+
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $this->model_payment_interswitch_response->Saveresponse($order_info['customer_id'], $order_id, json_encode($this->request->post['payment_response']));
+            $this->model_payment_interswitch_response->SaveResponseIndv($customer_id, $order_id, $payment_gateway_description, $payment_reference_number, $banking_reference_number, $transaction_reference_number, $approved_amount, $payment_gateway_amount, $card_number, $mac, $response_code, $status);
+            $this->model_payment_interswitch->OrderTransaction($order_id, $payment_reference_number);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
+            if (00 == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+                $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_order_status_id'), $customer_info['customer_id'], 'customer');
+            }
+
+            if (00 != $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+                $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_failed_order_status_id'), $customer_info['customer_id'], 'customer');
+            }
         }
-        $order_info = $this->model_checkout_order->getOrder($order_id);
-        $this->model_payment_interswitch_response->Saveresponse($order_info['customer_id'], $order_id, json_encode($this->request->post['payment_response']));
-        $this->model_payment_interswitch_response->SaveResponseIndv($customer_id, $order_id, $payment_gateway_description, $payment_reference_number, $banking_reference_number, $transaction_reference_number, $approved_amount, $payment_gateway_amount, $card_number, $mac, $response_code, $status);
-        $this->model_payment_interswitch->OrderTransaction($order_id, $payment_reference_number);
-        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
 
         if (00 == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
             $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_order_status_id'), $customer_info['customer_id'], 'customer');
