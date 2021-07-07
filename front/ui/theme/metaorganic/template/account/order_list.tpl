@@ -87,7 +87,7 @@
                                 <div class="col-md-3">
                                 
                 <select name="select"  id="action_id_<?php echo $order['order_id']; ?>" class="form-control newddl" style='height: 45px; font-family:Arial, FontAwesome;'>
-                                <option   value="<?=$order["order_id"] ?>" type="Select Option" order-id="<?=$order["order_id"] ?>"  selected="selected">&#xf46d; &nbsp;Select Option</option>
+                                <option   value="<?=$order["order_id"] ?>" type="Select Option" order-id="<?=$order["order_id"] ?>"  selected="selected">&#xf0ca; &nbsp;Select Option</option>
                                 <option disabled style="height: 1px !important;" ></option>
                                 <option   value="<?=$order["order_id"] ?>" type="Download cart" order-id="<?=$order["order_id"] ?>"  order_company="<?=$order["order_company"] ?>"  >&#xf019; &nbsp;Download cart</option>
                                 <option disabled style="height: 1px !important;" ></option>
