@@ -18,6 +18,7 @@ $_['text_farmer'] = 'Farmers';
 $_['text_farmertransactions'] = 'Farmer Transactions';
 $_['text_customer_group'] = 'Customer Groups';
 $_['text_customer_ban_ip'] = 'Banned IP';
+$_['text_customer_feedback'] = 'Customer Feedback';
 $_['text_account_managers'] = 'Account Managers';
 $_['text_account_managers_customers'] = 'Customers';
 $_['text_custom_field'] = 'Custom Fields';
