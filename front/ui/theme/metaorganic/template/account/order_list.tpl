@@ -309,9 +309,10 @@
                     <?php } ?>
                     <?php if($order['sub_user_order'] == TRUE && $order['status'] == 'Order Approval Pending' && $order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] == 'Pending') { ?>
                     <li class="list-group-item">
-                        <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
+                        <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>" style="padding: 18px;">  
                             <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newapprove">APPROVE ORDER</a>
                             <a href="#" id="reject_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newreject">REJECT ORDER</a>
+                        
                         </div>
                     </li>
                     <?php } elseif($order['sub_user_order'] == TRUE && $order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] != 'Pending') { ?>
@@ -1081,12 +1082,12 @@ background: rgba(206, 196, 255, 0.43);
     padding: 8px 8px;
 }
 .btn-newapprove {
-    background: #7CFFC0;
+    background: green;
     border: 0.3px solid #0C9D46;
     box-sizing: border-box;
     box-shadow: 0px 6px 30px rgb(90 244 170 / 25%);
     border-radius: 8px;
-    color: #0B833B !important;
+    color: white !important;
     font-family: Poppins;
     font-style: normal;
     font-weight: 400;
