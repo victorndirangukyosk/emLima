@@ -81,7 +81,7 @@
                     <input  name="edit_modal_address_locality" type="text"  value="<?= $landmark ?>" class="form-control input-md edit_LocalityId" required="" autocomplete="off">                                                    
                     <span class="input-group-btn">
 
-                        <button class="btn btn-default" style="color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> <?= $locate_me ?> </button>
+                        <button class="btn btn-default" type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> <?= $locate_me ?> </button>
 
                     </span>
                 </div>

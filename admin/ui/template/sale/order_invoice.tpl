@@ -75,6 +75,9 @@
                                 <ul class="list-block">
                                     <li>Name : <?= $order['delivery_executive_name'] ?></li>
                                     <li>Phone : <?= $order['delivery_executive_phone'] ?></li>
+                                <!--<?php if($order['delivery_charge'] != NULL && $order['delivery_charge'] >0) { ?>
+                                    <li>Delivery Charge : <?= $order['delivery_charge'] ?></li>
+                                 <?php } ?>-->
                                 </ul>
                                 <br>
                                 <?php } ?>
@@ -116,7 +119,13 @@
 
                             <?php foreach($order['totals'] as $total) { ?>
                             <tr>
-                                <td colspan="4" class="bold text-right"><?= $total['title'] ?></td>
+                             <?php if($total['title'] == 'VAT on Standard Delivery') { ?>
+                                <td colspan="4" class="text-right" >
+                                <span class="bold text-right"><?= $total['title'] ?></span>                                
+                                <span style="font-weight:2px"> (VAT16)</span></td>
+                                <?php } else { ?>
+                                <td colspan="4" class="bold text-right" ><?= $total['title'] ?></td> 
+                                <?php }   ?>
                                 <td class="bold text-right"><?= $total['text'] ?></td>
                             </tr>
                             <?php } ?>

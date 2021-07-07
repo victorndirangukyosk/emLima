@@ -37,6 +37,13 @@ class ControllerReportUserActivity extends Controller {
             $filter_date_end = '';
         }
 
+        if (isset($this->request->get['filter_key'])) {
+            $filter_key = $this->request->get['filter_key'];
+        } else {
+            $filter_key = null;
+        }
+
+
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
@@ -65,6 +72,9 @@ class ControllerReportUserActivity extends Controller {
             $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
 
+        if (isset($this->request->get['filter_key'])) {
+            $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
+        }
         if (isset($this->request->get['page'])) {
             $url .= '&page=' . $this->request->get['page'];
         }
@@ -91,6 +101,7 @@ class ControllerReportUserActivity extends Controller {
             'filter_ip' => $filter_ip,
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
+            'filter_key' => $filter_key,
             'start' => ($page - 1) * 20,
             'limit' => 20,
         ];
@@ -156,6 +167,7 @@ class ControllerReportUserActivity extends Controller {
         $data['button_hide_filter'] = $this->language->get('button_hide_filter');
 
         $data['token'] = $this->session->data['token'];
+        $data['activity_key'] = $this->model_report_user->getActivityKeys();
 
         $url = '';
 
@@ -179,6 +191,9 @@ class ControllerReportUserActivity extends Controller {
             $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
 
+        if (isset($this->request->get['filter_key'])) {
+            $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
+        }
         $pagination = new Pagination();
         $pagination->total = $activity_total;
         $pagination->page = $page;
@@ -194,6 +209,7 @@ class ControllerReportUserActivity extends Controller {
         $data['filter_ip'] = $filter_ip;
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
+        $data['filter_key'] = $filter_key;
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');

@@ -506,10 +506,11 @@ class ModelAssetsProduct extends Model
         }
         $log = new Log('error.log');
         $log->write($store_id);
-        $this->db->select('product_to_store.*,product_description.*,product.unit,product.image', false);
+        $this->db->select('product_to_store.*,product_description.*,product.unit,product.model,product.image,product.produce_type,store.name as store_name', false);
         $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
         $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
         $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+        $this->db->join('store', 'product_to_store.store_id = store.store_id', 'left');
         $this->db->group_by('product_to_store.product_store_id');
         $this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
@@ -1112,7 +1113,7 @@ class ModelAssetsProduct extends Model
             $offset = isset($data['start']) ? $data['start'] : '';
         }
         if (isset($data['limit']) ? $data['limit'] : ''  < 1) {
-            $data['limit'] = 20;
+            $data['limit'] = 12;
             $limit = $data['limit'];
         } else {
             $limit = $data['limit'];

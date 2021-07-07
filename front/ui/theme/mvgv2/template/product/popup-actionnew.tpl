@@ -10,6 +10,7 @@
 
                                                  <div class="variation-selector-container" style="width: 295px;">
                                                       <p class="variations-title" style="margin-left: -10px; display: none;"> variants</p>
+                                                      <?php if(is_array($product['variations']) && count($product['variations']) > 1) { ?>
                                                       <select class="product-variation">
                                                       <?php foreach($product['variations'] as $variation) { ?>
                                                       <option value="<?php echo isset($variation['variation_id']) ? $variation['variation_id'] : ''; ?>"
@@ -24,6 +25,10 @@
                                                       </option>
                                                       <?php } ?>
                                                       </select>
+                                                      <?php } ?>
+                                                      <?php if(is_array($product['variations']) && count($product['variations']) == 1) { ?>
+                                                      <span><?php  echo 'Per ' . $product['variations'][0]['unit']; ?></span>
+                                                      <?php } ?>
                                                   </div>
 												  <?php 
 												  //echo '<pre>';echo count($product['produce_type']);exit;

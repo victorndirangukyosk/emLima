@@ -103,7 +103,7 @@
                                             <?php if($addresses){ ?>
                                              
                                                 <?php foreach($addresses as $address){ ?>
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-6">
                                                         <div class="address-block">
                                                             <h3 class="address-locations">
                                                             <?php if($address['address_type'] == 'Home') { ?>
@@ -556,6 +556,8 @@
                                         <label class="col-md-12 control-label" for="flat"><?= $text_flat_house_office?></label>
                                         <div class="col-md-12">
                                             <input id="flat" name="modal_address_flat" type="text" placeholder="45, Sunshine Apartments" class="form-control input-md" required="">
+                                            <input id="modal_address_latitude" name="modal_address_latitude" type="hidden" value="">
+                                            <input id="modal_address_longitude" name="modal_address_longitude" type="hidden" value="">
                                         </div>
                                     </div>
                                   
@@ -1431,6 +1433,8 @@ function savePaymentMethod() {
             } else {
                 loadConfirm();
             }
+            CartProducts();
+            CartTotals();
         },
         error: function(xhr, ajaxOptions, thrownError) {
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
@@ -1440,6 +1444,9 @@ function savePaymentMethod() {
             $('#payment-method-wrapper-loader').hide();
             $('#payment-method-wrapper').show();
             $('#pay-confirm-order').show();
+            if(payment_method == 'interswitch') {
+            submitHandler(event);
+            }
         },
     });
 }
@@ -1660,6 +1667,8 @@ function saveInAddressBook() {
     var building_name = $('input[name="modal_address_name"]').val();
     var flat_number = $('input[name="modal_address_flat"]').val();
     var address_type = $('input[name="modal_address_type"]:checked').val();
+    var modal_address_latitude = $('input[name="modal_address_latitude"]').val();
+    var modal_address_longitude = $('input[name="modal_address_longitude"]').val();
     //validate all fields
 
     if (landmark.length <= 0) {
@@ -2064,6 +2073,10 @@ function saveInAddressBook() {
 
         var address= $('#us1').locationpicker('location');
         console.log(address);
+        console.log(address.latitude);
+        console.log(address.longitude);
+        $("#modal_address_latitude").val(address.latitude);
+        $("#modal_address_longitude").val(address.longitude);
 
         /*if(address.addressComponents.streetName && address.addressComponents.streetNumber) {
             $('#street').val(address.addressComponents.streetNumber+' '+address.addressComponents.streetName);
@@ -2126,7 +2139,45 @@ function saveInAddressBook() {
         }
     });
 
+function CartProducts() {
+        $.ajax({
+        url: 'index.php?path=checkout/checkoutitems/index',
+        type: 'post',
+        data: {
+        },
+        dataType: 'html',
+        cache: false,
+        async: true,
+        beforeSend: function() {            
+        },
+        success: function(json) {
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        },
+        complete: function() {
+        },
+    });
+}
 
+function CartTotals() {
+        $.ajax({
+        url: 'index.php?path=checkout/totals/index&city_id=',
+        type: 'post',
+        data: {
+        },
+        dataType: 'html',
+        cache: false,
+        async: true,
+        beforeSend: function() {            
+        },
+        success: function(json) {
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        },
+        complete: function() {
+        },
+    });
+}
 </script>
 <script src="https://api-test.equitybankgroup.com/js/eazzycheckout.js"></script>
 </body>

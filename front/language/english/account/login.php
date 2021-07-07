@@ -32,6 +32,10 @@ $_['error_phone_login'] = 'Your phone no. is not registered with us';
 $_['error_email_login'] = 'Your email id is not registered with us';
 $_['text_otp_sent'] = 'An otp has been sent to number :';
 $_['text_otp_sent_email'] = 'An OTP has been sent to email :';
+$_['text_otp_sent_email_mobile'] = 'OTP has been sent to your registered email and mobile number';
+
+
+
 $_['text_otp_sent_to'] = 'An otp has been sent.';
 $_['error_invalid_otp'] = 'Invalid OTP!';
 $_['text_valid_otp'] = 'Successfully verified otp.';

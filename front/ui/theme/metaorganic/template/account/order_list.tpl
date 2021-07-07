@@ -8,47 +8,40 @@
                 <?php foreach ($orders as $order) { ?>
 
                 <div class="list-group my-order-group">
-                    <li class="list-group-item my-order-list-head">
-                        <i class="fa fa-clock-o"></i> <?= $text_placed_on?> <span><strong><?php echo $order['date_added']; ?></strong></span>, <?php echo $order['time_added']; ?> <span>
+                    <li class="list-group-item my-order-list-headnew">
+                         <strong>#<?php echo $order['order_id']; ?> &nbsp;  &nbsp;  &nbsp; Order Date: <span><?php echo $order['date_added']; ?></strong></span>, <?php echo $order['time_added']; ?> <span>
 
-                            <div class="pull-right">
+                            <!--<div class="pull-right">
                                 <button type="button" style="height:25px" onclick="excel( <?=$order["order_id"] ?>,'<?=$order["order_company"] ?>');" data-toggle="tooltip" title="Download Ordered Products"
                                         class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
-                            </div>
+                            </div>-->
 
-                            
 
-                            <div class="pull-right">
+
+                            <!--<div class="pull-right">
                             <?php if($order['status'] == 'Delivered' || $order['status'] == 'Cancelled' ) { ?>
                               <a data-confirm="Available products  in this order will be added to cart !!" id="additemstocart" class="btn btn-success download" style="margin-right: 4px !important; height: 27px;margin-left:4px;"
                           data-store-id="<?= $order['store_id']; ?>" data-toggle="tooltip"
                           value="<?php echo $order['order_id']; ?>" title="Add To Cart/Reorder"><i
                             class="fa fa-cart-plus"></i></a><?php } ?>
-                            </div>  
+                            </div> --> 
 
-                            <?php if($order['customer_id'] == $this->customer->getId() && $order['edit_own_order'] != NULL) { ?>
+                            <!--<?php if($order['customer_id'] == $this->customer->getId() && $order['edit_own_order'] != NULL) { ?>
                             <a href="<?php echo $order['edit_own_order'];?>" class="btn btn-success" title="Edit Your Order" style="margin-right: 4px !important; height: 27px;margin-left:4px;"><i class="fa fa-edit"></i></a>
-                            <?php } ?>
+                            <?php } ?>-->
 
 
-                            <?php if($order['status'] == 'Arrived for Delivery'){?>
+                            <!--<?php if($order['status'] == 'Arrived for Delivery'){?>
                                                      <a href="<?php echo $order['accept_reject_href']?>"  class="btn btn-default btn-xs btn-accept-reject" >Accept Delivery</a>
-                                                    <?php } ?>
-                             <!--<?php if($order['shipped']) { ?>
+                                                    <?php } ?>-->
 
-                            <a href="#" id="cancelOrder" data-id='<?=$order["order_id"] ?>' class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a>
-
-
-                            <?php } else { ?>
-                            <a href="#" data-toggle="modal" data-target="#contactusModal"  class="btn btn-default btn-xs"><?= $text_report_issue ?></a>
-                            <?php } ?> -->
 
                             
-                            <a href="#" data-toggle="modal" data-target="#contactusModal"  class="btn btn-default btn-xs"><?= $text_report_issue ?></a>
+                            <!--<a href="#" data-toggle="modal" data-target="#contactusModal"  class="btn btn-default btn-xs"><?= $text_report_issue ?></a>
 
                             <?php if($order['status'] == 'Order Recieved' || $order['status'] == 'Order Approval Pending' ){?>
                             <a href="#" id="cancelOrder" data-id='<?=$order["order_id"] ?>' style="margin-right: 4px !important; height: 27px;margin-left:4px;" class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a> 
-                                                    <?php } ?>
+                                                    <?php } ?>-->
                             
 
 
@@ -57,43 +50,89 @@
                     <li class="list-group-item">
                         <div class="my-order-block">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <div class="my-order-delivery">
-                                        <h3 class="my-order-title label" id="orderstatus<?= $order['order_id']; ?>" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2; text-align: center;"><?php echo $order['status']; ?></h3>
-
-                                        <span class="my-order-date">ETA: <?php echo $order['eta_date']; ?>, <?php echo $order['eta_time']; ?></span>
-                                    </div>
-                                </div>
                                 <div class="col-md-5">
+                                    <div class="my-order-delivery">
+                                        <h3 class="my-order-title label" id="orderstatus<?= $order['order_id']; ?>" style="width:75%;border: 1px solid #<?= $order['order_status_color']; ?>;color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2; text-align: center;"><?php echo $order['status']; ?></h3>
+
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="11" viewBox="0 0 20 21" fill="none">
+                                            <path d="M10 18.5001C8.14348 18.5001 6.36301 17.7626 5.05025 16.4499C3.7375 15.1371 3 13.3566 3 11.5001C3 9.64359 3.7375 7.86311 5.05025 6.55036C6.36301 5.23761 8.14348 4.50011 10 4.50011C11.8565 4.50011 13.637 5.23761 14.9497 6.55036C16.2625 7.86311 17 9.64359 17 11.5001C17 13.3566 16.2625 15.1371 14.9497 16.4499C13.637 17.7626 11.8565 18.5001 10 18.5001ZM10 2.50011C7.61305 2.50011 5.32387 3.44832 3.63604 5.13615C1.94821 6.82397 1 9.11316 1 11.5001C1 13.8871 1.94821 16.1762 3.63604 17.8641C5.32387 19.5519 7.61305 20.5001 10 20.5001C12.3869 20.5001 14.6761 19.5519 16.364 17.8641C18.0518 16.1762 19 13.8871 19 11.5001C19 9.11316 18.0518 6.82397 16.364 5.13615C14.6761 3.44832 12.3869 2.50011 10 2.50011ZM10.5 6.50011H9V12.5001L13.75 15.3501L14.5 14.1201L10.5 11.7501V6.50011ZM5.88 1.89011L4.6 0.360107L0 4.21011L1.29 5.74011L5.88 1.89011ZM20 4.22011L15.4 0.360107L14.11 1.89011L18.71 5.75011L20 4.22011Z" fill="#0077CD"/>
+                                            </svg>
+                                                <span class="my-order-date">ETA: <?php echo $order['eta_date']; ?>, <?php echo $order['eta_time']; ?></span>
+                                                                            
+                                  </div>
+                                </div>
+                                <div class="col-md-4">
                                     <div class="my-order-info">
                                         <h3 class="my-order-title"><?php if($order['order_company'] == NULL) { echo $order['store_name']; ?> (<?php echo $order['name']; ?>) <?php } else { echo $order['order_company']; } ?> - <?php echo $order['total']; ?></h3>
 
                                         <?php if($order['realproducts']) { ?>
-
-                                        <span class="my-order-id"><?= $text_order_id?> <?php echo $order['order_id']; ?>  .  <?php echo $order['real_products']; ?> items</span>
-
+                                        <span class="my-order-id">Total Items: <?php echo $order['real_products']; ?></span>
 
                                         <?php } else { ?>
-
-                                        <span class="my-order-id"><?= $text_order_id?> <?php echo $order['order_id']; ?>  .  <?php echo $order['products']; ?> items</span>
-
+                                        <span class="my-order-id">Total Items:  <?php echo $order['products']; ?></span>
+                                        
                                         <?php } ?>
+
+                                         <br>
+
+                                        <span class="my-order-id">Mode of payment:  <?php echo $order['payment_method']; ?></span>
+
 
 
                                     </div>
                                 </div>
                                 <!--<div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['products']; ?> <?= $text_items_ordered?> </a>-->
                                 <!--<div class="col-md-3"><a href="<?php echo $order['href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>-->
-                                <div class="col-md-3"><a href="#"  data-toggle="modal" data-target="#viewProductsModal" onclick="viewProductsModal(('<?php echo $order['order_id']; ?>'));" class="btn-link text_green"><?= $text_view?>  <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>    
+                                <!-- <div class="col-md-3"><a href="#"  data-toggle="modal" data-target="#viewProductsModal" onclick="viewProductsModal(('<?php echo $order['order_id']; ?>'));" class="btn-link text_green"><?= $text_view?>  <?php echo $order['productss']; ?> <?= $text_items_ordered?> </a>   -->
+                                <div class="col-md-3">
+                                
+                <select name="select"  id="action_id_<?php echo $order['order_id']; ?>" class="form-control newddl" style='height: 45px; font-family:Arial, FontAwesome;'>
+                                <option   value="<?=$order["order_id"] ?>" type="Select Option" order-id="<?=$order["order_id"] ?>"  selected="selected">&#xf0ca; &nbsp;Select Option</option>
+                                <option disabled style="height: 1px !important;" ></option>
+                                <option   value="<?=$order["order_id"] ?>" type="Download cart" order-id="<?=$order["order_id"] ?>"  order_company="<?=$order["order_company"] ?>"  >&#xf019; &nbsp;Download cart</option>
+                                <option disabled style="height: 1px !important;" ></option>
+                            <?php if($order['customer_id'] == $this->customer->getId() && $order['edit_own_order'] != NULL) { ?>
+                                
+                                <option   value="<?=$order["order_id"] ?>" type="Edit order"   order-id="<?=$order["order_id"] ?>"  order_href="<?php echo $order['edit_own_order'];?>">&#xf044; &nbsp;Edit Order</option>
+                                <option disabled style="height: 1px !important;" ></option>
+                            
+                                        <?php } ?>                
+                                <?php if($order['status'] == 'Order Recieved' || $order['status'] == 'Order Approval Pending' ){?>
+                                <option   value="<?=$order["order_id"] ?>" type="Cancel order"   order-id="<?=$order["order_id"] ?>" >&#xf05e; &nbsp;Cancel order</option>      
+                                <option disabled style="height: 1px !important;" ></option>
+                                  <?php } ?>  
+                                <option   value="<?=$order["order_id"] ?>" type="Report issue"   order-id="<?=$order["order_id"] ?>">&#xf071; &nbsp;Report Issue</option>
+                                <option disabled style="height: 1px !important;" ></option>
+                                <option   value="<?=$order["order_id"] ?>" type="View items"   order-id="<?=$order["order_id"] ?>">&#xf07a; &nbsp;View Items Ordered</option>
+                                <option disabled style="height: 1px !important;" ></option>
+                                     <?php if($order['realproductss']) { ?>
+                                <option   value="<?=$order["order_id"] ?>" type="View real items"  view_href="<?php echo $order['real_href']; ?>"  order-id="<?=$order["order_id"] ?>"  >&#xf217; &nbsp;View Real Items</option>
+                                <option disabled style="height: 1px !important;" ></option>
+                                        <?php } ?>    
+
+
+                                     <?php if($order['status'] == 'Arrived for Delivery'){?>
+                                                  
+                                <option  value="<?=$order["order_id"] ?>" type="Accept delivery" accept_reject_href="<?php echo $order['accept_reject_href']; ?>"  order-id="<?=$order["order_id"] ?>" >&#xf058; &nbsp;Accept delivery</option>
+                                <option disabled style="height: 1px !important;" ></option>
+                                                   
+                                                 
+                                                    <?php } ?>
+                             
+
+                             
+                               <?php if($order['status'] == 'Delivered' || $order['status'] == 'Cancelled' ) { ?>
+                              
+                               <option   value="<?=$order["order_id"] ?>" type="Add to cart"  data-store-id="<?= $order['store_id']; ?>"  order-id="<?=$order["order_id"] ?>" >&#xf291; &nbsp;Add to cart</option>      
+                                        <?php } ?>
+
+                            </select>
                                 <br/>
 
-                                    <?php //if($order['realproducts']) { ?>
-                                    <!--<a href="<?php echo $order['real_href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['real_products']; ?> <?= $text_real_items_ordered?> </a>-->
-                                    <?php //} ?>
-                                    
-                                      <?php if($order['realproductss']) { ?>
+                                                                        
+                                      <!--<?php if($order['realproductss']) { ?>
                                          <a href="<?php echo $order['real_href']; ?>" class="btn-link text_green"><?= $text_view?> <?php echo $order['realproductss']; ?> <?= $text_real_items_ordered?> </a>
-                                      <?php } ?>
+                                      <?php } ?> -->
 
 
                                 </div>
@@ -103,22 +142,20 @@
                     <li class="list-group-item">
                         <div class="my-order-details" style="border: none !important;">
                             <div class="row">
-                                <div class="col-md-4"><?= $text_delivery_address?></div>
+                                <div class="col-md-5"><?= $text_delivery_address?></div>
                                 <?php if(isset($order['shipping_address'])) { ?>
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <?= $order['shipping_address']['address'] ?>,<?= $order['shipping_address']['city'] ?>,<?= $order['shipping_address']['zipcode'] ?></div>
                                 <?php } else { ?>
-                                <div class="col-md-5"> </div>
+                                <div class="col-md-4"> </div>
                                 <?php } ?>
                                 <div class="col-md-3">  
                             <a class="btn-link text_green" role="button" data-toggle="collapse" href="#<?= $order['order_id'] ?>" aria-expanded="false" aria-controls="<?= $order['order_id'] ?>">View Billing Details</a> </div>
-
+ 
                             </div>
 
                             <div class="row">
-                                <div class="col-md-4"><?= $text_payment_options?></div>
-                                <div class="col-md-8"><?php echo $order['payment_method']; ?></div>
-
+                                
                                 <?php if ($order['payment_method'] == 'mPesa Online'){
                                 if(!empty($order['payment_transaction_id'])){
                                 $payment_status = '<span style="color:green">Success</span>';
@@ -146,23 +183,23 @@
                         <div class="my-order-details" style="border: none !important;">
                             <?php if($order['parent_details'] != NULL /*&& !empty($_SESSION['parent']) && $_SESSION['parent'] > 0*/) { ?>
                             <div class="row">
-                                <div class="col-md-4">Parent User Email</div>
+                                <div class="col-md-5">Parent User Email</div>
                                 <div class="col-md-4"><?php echo $order['parent_details']; ?></div>
-                                <div class="col-md-4 text-right"><?php echo $order['parent_approval']; ?></div>
+                                <div class="col-md-2 text-right"><?php echo $order['parent_approval']; ?></div>
                             </div>
                             <?php if($order['sub_user_order'] == TRUE) { ?>
                             <?php if($order['head_chef_email'] != NULL) { ?>
                             <div class="row">
-                                <div class="col-md-4">First Level Approver</div>
+                                <div class="col-md-5">First Level Approver</div>
                                 <div class="col-md-4"><?php echo $order['head_chef_email']; ?></div>
-                                <div class="col-md-4 text-right"><?php echo $order['head_chef']; ?></div>
+                                <div class="col-md-2 text-right"><?php echo $order['head_chef']; ?></div>
                             </div>
                             <?php } ?>
                             <?php if($order['procurement_person_email'] != NULL) { ?>
                             <div class="row">
-                                <div class="col-md-4">Second Level Approver</div>
+                                <div class="col-md-5">Second Level Approver</div>
                                 <div class="col-md-4"><?php echo $order['procurement_person_email']; ?></div>
-                                <div class="col-md-4 text-right"><?php echo $order['procurement']; ?></div>
+                                <div class="col-md-2 text-right"><?php echo $order['procurement']; ?></div>
                             </div>
                             <?php } ?>
                             <?php } ?>
@@ -174,8 +211,8 @@
                         <div class="collapse" id="<?= $order['order_id'] ?>">
                             <div class="my-order-details">
                                 <div class="row">
-                                    <div class="col-md-4"><?= $text_payment ?></div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-5"><?= $text_payment ?></div>
+                                    <div class="col-md-6">
                                         <div class="">
                                             <?= $order['order_total'] ?>
                                         </div>
@@ -197,11 +234,11 @@
 
 
 
-                    <?php if($order['sub_user_order'] == TRUE && $order['parent_approval'] == 'Pending' && $order['head_chef'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
+                    <?php if($order['sub_user_order'] == TfRUE && $order['parent_approval'] == 'Pending' && $order['head_chef'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
                     <li class="list-group-item">
                         <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
-                            <a href="#" id="approve_order_head_chef" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
-                            <a href="#" id="reject_order_head_chef" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
+                            <a href="#" id="approve_order_head_chef" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newapprove">APPROVE ORDER</a>
+                            <a href="#" id="reject_order_head_chef" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newreject">REJECT ORDER</a>
                         </div>
                     </li>
                     <?php } else if($order['sub_user_order'] == TRUE && $order['head_chef'] == 'Approved' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'head_chef') { ?>
@@ -237,8 +274,8 @@
                     <?php if($order['sub_user_order'] == TRUE && $order['head_chef'] == 'Approved' && $order['procurement'] == 'Pending' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement_person') { ?>
                     <li class="list-group-item">
                         <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
-                            <a href="#" id="approve_order_procurement" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
-                            <a href="#" id="reject_order_procurement" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
+                            <a href="#" id="approve_order_procurement" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newapprove">APPROVE ORDER</a>
+                            <a href="#" id="reject_order_procurement" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newreject">REJECT ORDER</a>
                         </div>
                     </li>
                     <?php } else if($order['sub_user_order'] == TRUE && $order['procurement'] == 'Approved' && $order['order_approval_access'] == true && $order['order_approval_access_role'] == 'procurement_person') { ?>
@@ -272,9 +309,10 @@
                     <?php } ?>
                     <?php if($order['sub_user_order'] == TRUE && $order['status'] == 'Order Approval Pending' && $order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] == 'Pending') { ?>
                     <li class="list-group-item">
-                        <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>">  
-                            <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">APPROVE ORDER</a>
-                            <a href="#" id="reject_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn btn-default btn-xs">REJECT ORDER</a>
+                        <div class="my-order-showaddress" id="<?php echo $order['order_id']; ?>" style="padding: 18px;">  
+                            <a href="#" id="approve_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newapprove">APPROVE ORDER</a>
+                            <a href="#" id="reject_order" data-id="<?= $order['order_id'] ?>" data-custid="<?= $order['customer_id'] ?>" class="btn-newreject">REJECT ORDER</a>
+                        
                         </div>
                     </li>
                     <?php } elseif($order['sub_user_order'] == TRUE && $order['parent_approve_order'] == 'Need Approval' && $order['parent_approval'] != 'Pending') { ?>
@@ -292,11 +330,11 @@
                         </div>
                     </li>
                     <?php } ?>
-                    <li class="list-group-item">
+                   <!-- <li class="list-group-item">
                         <div class="my-order-refund" style="font-size:13px;">
                             <i class="fa fa-money"></i> <span><?= $text_refund_text_part1 ?> <strong><?= $text_refund_text_part2 ?> </strong> <?= $text_refund_text_part3 ?></span>
                         </div>
-                    </li>
+                    </li>-->
                 </div>
                 <?php } ?>
                 <div class="text-right" style='display: none;'>
@@ -673,6 +711,38 @@
     });
 
 
+  function cancelOrder(order_id) {
+          
+        if (!window.confirm("Are you sure?")) {
+            return false;
+        }
+
+           $.ajax({
+            url: 'index.php?path=account/order/refundCancelOrder',
+            type: 'post',
+            data: {
+                order_id: order_id
+            },
+            dataType: 'json',
+            success: function (json) {
+                console.log(json);
+                   alert("Order ID #"+order_id+" is successfully cancelled");
+
+                  ////if (json['status']) {
+                  // alert("Order ID #"+order_id+" is successfully cancelled");
+
+
+                 // } else {
+                  //    alert("Order ID #"+order_id+" cancelling failed");
+                 //}
+
+                setTimeout(function () {
+                    window.location.reload(false);
+                }, 1000);
+            }
+        });
+    }
+
     $(document).delegate('#cancelOrder', 'click', function (e) {
 
         e.preventDefault();
@@ -708,6 +778,7 @@
         });
     });
 
+  
 
        $(document).delegate('.downloadaaaaaaaaaaaa', 'click', function (e) {
     var baseurl = window.location.origin + window.location.pathname;
@@ -775,6 +846,44 @@
 
 
 
+function addOrderToCart(orderid,store_id) {
+
+        
+        if(!window.confirm("All the available products in this order ,will be added to cart.Are you sure?")) {
+            return false;
+        }
+        console.log("additemstocart click");
+        console.log(orderid);
+           
+        $.ajax({
+            url: 'index.php?path=account/wishlist/addAvailableOrderProducts',
+            type: 'post',
+            data: {
+                order_id: orderid
+            },
+            dataType: 'json',
+            success: function(json) {
+                console.log(json);
+                
+                setTimeout(function(){ window.location.reload(false); }, 1000);
+                 var baseurl = window.location.origin + window.location.pathname;
+                   baseurl = baseurl + "?path=checkout/checkoutitems";
+           var win = window.open(baseurl, '_blank');
+           if (win) {
+            //Browser has allowed it to be opened
+             win.focus();
+           } else {
+            //Browser has blocked it
+            alert('Please allow popups for this website');
+          }
+          //opening new window, showing few items, as the products are adding slowly
+         // alert('Available products from the selected order added to cart!');
+            }
+        });
+    }
+
+
+
     $(document).delegate('#additemstocart', 'click', function(e) {
 
         e.preventDefault();
@@ -817,8 +926,73 @@
         location = location;
     }, 6000 * 1000); // 60 * 1000 milsec
 
+ 
+$('select').on("change",function(){
+     
+    var selectedvalue = this.value;
+     //alert(this.value);
+ 
+     var orderid =$("#action_id_"+selectedvalue+" option:selected").attr('order-id');     
+     var type =$("#action_id_"+selectedvalue+" option:selected").attr('type');
+    //alert(type);
 
+    if(type=="Download cart")
+  {
+     var company = $("#action_id_"+selectedvalue+" option:selected").attr('order_company');
+     excel(orderid,company);return;
+  }
+  else if(type=="Edit order")
+  {
+     var edit_url = $("#action_id_"+selectedvalue+" option:selected").attr('order_href');
+location=edit_url;
+return;
+  }
+   
+  else if(type=="Report issue")
+  {
+       $('#contactusModal').modal({
+        show: 'true'
+    });
+  }
+   else if(type=="View items")
+  {
+        $('#viewProductsModal').modal({
+        show: 'true'
+    });
+      viewProductsModal(orderid);
+     
+  }
 
+    else if(type=="View real items")
+  {
+     var view_url = $("#action_id_"+selectedvalue+" option:selected").attr('view_href');
+
+       location=view_url;
+return;
+  }
+      
+
+  else if(type=="Cancel order")
+  {
+      cancelOrder(orderid);
+  }
+
+   else if(type=="Add to cart")
+  {
+     var store_id = $("#action_id_"+selectedvalue+" option:selected").attr('data-store-id');
+
+      addOrderToCart(orderid,store_id);
+  }
+   else if(type=="Accept delivery")
+  {
+     var accept_reject_href = $("#action_id_"+selectedvalue+" option:selected").attr('accept_reject_href');
+
+       location=accept_reject_href;
+return;
+  }
+      
+});
+ 
 
     function excel(order_id, order_company) {
         //alert(order_company);
@@ -866,5 +1040,60 @@
 .editAddressModal modal-dialog {       
    
 }
+ .my-order-group
+        {
+ background: #F6F5F5;
+box-shadow: 0px 6px 12px rgba(154, 154, 154, 0.25);
+ 
+        }
 
+        .my-order-list-headnew
+        {
+background: rgba(206, 196, 255, 0.43); 
+        }
+
+        .my-order .list-group-item:first-child {
+     
+    padding-left: 18px;
+}
+        .list-group-item {
+        padding: 1px 2px;
+        }
+.newddl{
+    font-size: 13px;line-height: 20px;   
+}
+
+.my-order-details { 
+    font-size:14px
+}
+.btn-newreject {
+    border: 0.3px solid #000000;
+    box-sizing: border-box;
+    filter: drop-shadow(0px 6px 30px rgba(0, 0, 0, 0.18));
+    border-radius: 8px;
+    background: none;
+    color: #3F3D3D !important;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 15px;
+    margin: 0px 16px;
+    padding: 8px 8px;
+}
+.btn-newapprove {
+    background: green;
+    border: 0.3px solid #0C9D46;
+    box-sizing: border-box;
+    box-shadow: 0px 6px 30px rgb(90 244 170 / 25%);
+    border-radius: 8px;
+    color: white !important;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 15px;
+    margin: 0px 16px;
+    padding: 8px 8px;
+}
  </style>

@@ -115,7 +115,7 @@
                 </li>
                 <li class="header__search-bar-item header__search-bar-item--location search-location-all">
                   <div class="header__search-location search-location">
-                    <i class="fa fa-map-marker header__search-location-icon" aria-hidden="true"></i>
+                    <i class="fas fa-search header__search-location-icon" aria-hidden="true"></i>
 
                     <!-- SuggestionWidget  start -->
                     <div id="search-area-wrp" class="c-sggstnbx header__search-input-wrapper">
@@ -234,6 +234,7 @@
 
   <div style="clear:both !important"> </div>
   
+  <?php if(count($mostboughtproducts) > 0) { ?>
   <div class="container--full-width featured-categories">
       <div class="container" style="width:100%;">
           <div class="_47ahp" data-test-selector="search-results">
@@ -363,6 +364,7 @@
           <span class="view-all-button"><a href=<?= $mostboughtproducts_url; ?>>View All Featured</a></span>
       </div>
   </div>
+  <?php } ?>
 
   <?php
 					$i=0;
@@ -796,6 +798,15 @@
   <script src="<?= $base;?>front/ui/javascript/common.js?v=2.0.5" type="text/javascript"></script>
   <script src="<?= $base; ?>front/ui/theme/metaorganic/javascript/common.js?v=2.0.7" charset="UTF-8"
     type="text/javascript"></script>
+
+<script type="text/javascript">
+$(document).delegate('#selectedCategory', 'change', function () {
+console.log($( this ).val());
+console.log($( this ).attr('data-url'));
+var url = $( this ).attr('data-url');
+window.location.replace(url+"index.php?path=common/home&filter_category="+$( this ).val());
+});      
+</script>
 
   <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
 

@@ -639,7 +639,8 @@ class ControllerAccountRegister extends Controller
                     $this->model_account_customer->saveOTP($this->request->post['phone'], $data['otp'], 'register');
                     $data['text_verify_otp'] = $this->language->get('text_verify_otp');
 
-                    $data['success_message'] = $this->language->get('text_otp_sent_email').' '.$this->request->post['email'];
+                    // $data['success_message'] = $this->language->get('text_otp_sent_email').' '.$this->request->post['email'];
+                    $data['success_message'] = $this->language->get('text_otp_sent_email_mobile');
                 }
                 
                 try{
@@ -808,6 +809,83 @@ class ControllerAccountRegister extends Controller
             } else {
                 $data['error_account_manager'] = false;
             }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
+    public function register_resend_otp()
+    {
+        $data['status'] = false;
+
+        $this->load->language('account/login');
+        $this->load->language('account/register');
+ 
+        $this->load->model('account/customer');
+
+        $log = new Log('error.log');       
+
+        $data['telephone_mask'] = $this->config->get('config_telephone_mask');
+        $data['taxnumber_mask'] = $this->config->get('config_taxnumber_mask');
+
+        //		echo "<pre>";print_r($this->request->post);die;
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
+            $this->load->model('account/customer');
+
+            $this->request->post['phone'] = $this->request->post['telephone'];
+
+            if (false == strpos($this->request->post['phone'], '#') || !empty($this->request->post['phone'])) {
+                $this->request->post['phone'] = preg_replace('/[^0-9]/', '', $this->request->post['phone']);
+
+                $data['username'] = $this->request->post['firstname'];
+                // $data['otp'] = mt_rand(1000, 9999);
+                $data['otp'] = $this->model_account_customer->getRegisterOTP($this->request->post['phone'], 'register');
+
+
+                $sms_message = $this->emailtemplate->getSmsMessage('registerOTP', 'registerotp_2', $data);
+
+                //                echo "<pre>";print_r($sms_message);die;
+                if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
+                    $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
+
+                    //save in otp table
+                    $data['status'] = true;
+
+                    // $this->model_account_customer->saveOTP($this->request->post['phone'], $data['otp'], 'register');
+                    $data['text_verify_otp'] = $this->language->get('text_verify_otp');
+
+                    // $data['success_message'] = $this->language->get('text_otp_sent_email').' '.$this->request->post['email'];
+                    $data['success_message'] = $this->language->get('text_otp_sent_email_mobile');
+                }
+                
+                try{
+                if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
+                    $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
+                    $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
+
+                    $mail = new mail($this->config->get('config_mail'));
+                    $mail->setTo($this->request->post['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSubject($subject);
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setHtml($message);
+                    $mail->send();
+                }
+                } catch(Exception $e) {
+                    
+                }
+            } else {
+                // enter valid number throw error
+                $data['status'] = false;
+
+                $data['warning'] = $this->language->get('error_telephone');
+            }
+        } else {
+            $data['status'] = false;
+
+            $data['warning'] = "Please try again,after sometime.";
+  
         }
 
         $this->response->addHeader('Content-Type: application/json');

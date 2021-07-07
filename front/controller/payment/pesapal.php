@@ -11,12 +11,15 @@ class ControllerPaymentPesapal extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
 
+        $order_ids = array();
         foreach ($this->session->data['order_id'] as $key => $value) {
+            $order_ids[] = $value;
             $order_id = $value;
+            if ($order_id != NULL) {
+                $this->model_checkout_order->UpdateParentApproval($order_id);
+            }
         }
-        if ($order_id != NULL) {
-            $this->model_checkout_order->UpdateParentApproval($order_id);
-        }
+
 
         $log = new Log('error.log');
         $log->write('Pesapal Order ID');
@@ -33,7 +36,21 @@ class ControllerPaymentPesapal extends Controller {
         $log->write('Pesapal Order Info');
 
         if (count($order_info) > 0) {
-            $amount = (int) ($order_info['total']);
+            $total_data = $this->totalData();
+            $all_sub_total = 0;
+            $all_total = 0;
+            foreach ($total_data as $tots) {
+                foreach ($tots as $tot) {
+                    if ($tot['title'] == 'Sub-Total') {
+                        $all_sub_total = $tot['value'];
+                    }
+
+                    if ($tot['title'] == 'Total') {
+                        $all_total = $tot['value'];
+                    }
+                }
+            }
+            $amount = (int) ($all_total);
         }
 
         $data['text_instruction'] = $this->language->get('text_instruction');
@@ -848,35 +865,35 @@ class ControllerPaymentPesapal extends Controller {
 
         foreach ($this->session->data['order_id'] as $key => $value) {
             $order_id = $value;
+
+            $log->write('Pesapal Order ID');
+            $log->write($this->session->data['order_id']);
+            $log->write('Pesapal Order ID');
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
+
+            $log->write('Pesapal Order Info');
+            $log->write($order_info);
+            $log->write('Pesapal Order Info');
+
+            if (count($order_info) > 0) {
+                $amount = (int) ($order_info['total']);
+            }
+
+            $log->write('PESAPAL CALL BACK');
+            $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+            $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+            $log->write($transaction_tracking_id);
+            $log->write($merchant_reference);
+            $log->write('PESAPAL CALL BACK');
+            $customer_id = $customer_info['customer_id'];
+            $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
+            $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
+            $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
         }
-
-        $log->write('Pesapal Order ID');
-        $log->write($this->session->data['order_id']);
-        $log->write('Pesapal Order ID');
-        $order_info = $this->model_checkout_order->getOrder($order_id);
-        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-        $log->write('Pesapal Creds Customer Info');
-        $log->write($customer_info);
-        $log->write('Pesapal Creds Customer Info');
-
-        $log->write('Pesapal Order Info');
-        $log->write($order_info);
-        $log->write('Pesapal Order Info');
-
-        if (count($order_info) > 0) {
-            $amount = (int) ($order_info['total']);
-        }
-
-        $log->write('PESAPAL CALL BACK');
-        $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
-        $merchant_reference = $this->request->get['pesapal_merchant_reference'];
-        $log->write($transaction_tracking_id);
-        $log->write($merchant_reference);
-        $log->write('PESAPAL CALL BACK');
-        $customer_id = $customer_info['customer_id'];
-        $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
-        $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
-        $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
 
         if ('COMPLETED' == $status) {
             $this->response->redirect($this->url->link('checkout/success'));
@@ -1159,6 +1176,63 @@ class ControllerPaymentPesapal extends Controller {
             }
         }
         echo $status;
+    }
+
+    public function totalData() {
+        $this->load->language('checkout/cart');
+
+        if (isset($this->request->get['city_id'])) {
+            $this->tax->setShippingAddress($this->request->get['city_id']);
+        }
+
+        // Totals
+        $this->load->model('extension/extension');
+
+        $total_data = [];
+        $total = 0;
+        $taxes = $this->cart->getTaxes();
+
+        // Display prices
+        if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+            $sort_order = [];
+
+            $results = $this->model_extension_extension->getExtensions('total');
+
+            foreach ($results as $key => $value) {
+                $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
+            }
+
+            array_multisort($sort_order, SORT_ASC, $results);
+
+            foreach ($results as $result) {
+                if ($this->config->get($result['code'] . '_status')) {
+                    $this->load->model('total/' . $result['code']);
+
+                    $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                }
+            }
+
+            //echo "<pre>";print_r($results);die;
+            $sort_order = [];
+
+            foreach ($total_data as $key => $value) {
+                $sort_order[$key] = $value['sort_order'];
+            }
+
+            array_multisort($sort_order, SORT_ASC, $total_data);
+        }
+
+        $data['totals'] = [];
+
+        foreach ($total_data as $total) {
+            $data['totals'][] = [
+                'title' => $total['title'],
+                'text' => $this->currency->format($total['value']),
+                'value' => $total['value'],
+            ];
+        }
+
+        return $data;
     }
 
 }

@@ -72,10 +72,10 @@
                                 <input type="text" name="filter_city" value="<?php echo $filter_city; ?>" class="form-control" />
                             </div>-->
 
-                             <div class="form-group">
+                             <!--<div class="form-group">
                                 <label class="control-label" for="input-name"><?= $column_delivery_method ?></label>
                                 <input type="text" name="filter_delivery_method" value="<?php echo $filter_delivery_method; ?>" placeholder="<?php echo $column_delivery_method; ?>" id="input-name" class="form-control" />
-                            </div>
+                            </div>-->
                             
                              <div class="form-group">
                              
@@ -96,6 +96,15 @@
                                 </select>
                             </div>
                          
+                          <div class="form-group">
+                                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
 
                             
                         </div>
@@ -118,10 +127,10 @@
                                     <?php } ?>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-total"><?php echo $entry_total; ?></label>
                                 <input type="text" name="filter_total" value="<?php echo $filter_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
-                            </div>
+                            </div>-->
 
                             <!--<div class="form-group">
                                 <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
@@ -144,7 +153,16 @@
                                     
                                 </div>
                             </div>
-
+                            
+                            <div class="form-group">    
+                                <label class="control-label" for="input-date-added-end"><?php echo $entry_date_added_end; ?></label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="<?php echo $entry_date_added_end; ?>" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
 
                         </div>
 
@@ -165,24 +183,8 @@
                             <?php } ?>
 
 
-                            <div class="form-group">
-                                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group">    
-                                <label class="control-label" for="input-date-added-end"><?php echo $entry_date_added_end; ?></label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="<?php echo $entry_date_added_end; ?>" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>
+                            
+                            
                             <!--<div class="form-group">
                                 <label class="control-label" for="input-date-modified"><?php echo $entry_date_modified; ?></label>
                                 <div class="input-group date">
@@ -203,8 +205,10 @@
                                 </div>
                             </div>
                             
-                            <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
-
+                            <div class="form-group">
+                            <button type="button" id="button-filter" class="btn btn-primary pull-left" style="margin-top:20px;"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+                            </div>
+                            
                         </div>
 
                         
@@ -223,9 +227,10 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_order; ?>"><?php echo $column_order_id; ?></a>
                                         <?php } ?></td>
-                                    <td class="text-center">Vendor</td>
 
                                     <?php if (!$this->user->isVendor()): ?>
+                                    <td class="text-center">Vendor</td>
+
 
                                         <td style="width: 3px;" class="text-left">
                                             <?php if ($sort == 'customer') { ?>
@@ -304,8 +309,8 @@
                                         <input type="hidden" name="shipping_code[]" value="<?php echo $order['shipping_code']; ?>" />
                                     </td>
                                     <td class="text-left"><?php echo $order['order_prefix'].''.$order['order_id']; ?></td>
-                                    <td class="text-left"><?php echo $order['vendor_name']; ?></td>
                                     <?php if (!$this->user->isVendor()): ?>
+                                    <td class="text-left"><?php echo $order['vendor_name']; ?></td>
 
                                         <td class="text-left" style="width:200px">
                                             <?php echo $order['customer']; ?>  <br/>
@@ -360,11 +365,15 @@
                                      <?php 
                                              
                                             if ( $order['order_status_id']!=15 && $order['order_status_id']!=16 && $order['order_status_id']!=6 && $order['order_status_id']!=8 && $order['order_status_id']!=9 && $order['order_status_id']!=10) { ?>
-                                               <!--<a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                                                </a> -->
                                               
-                                               <a href="#" id="new_print_invoice" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
+                                               <?php if ($this->user->isVendor()) { ?>
+                                               <a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                                </a>  
+                                               <?php } else { ?> 
+                                               
+                                               <a href="#" id="new_print_invoice"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
+                                           <?php } ?> 
                                             <?php } ?>
                                         
 
@@ -376,26 +385,34 @@
                                        
                                             <?php 
                                             $approvalpending=array("15");
-                                            if ( !in_array( $order['order_status_id'], array_merge( $this->config->get( 'config_refund_status' ), $this->config->get( 'config_complete_status' ) ,$approvalpending) ) ) { ?>
+                                            if ( !in_array( $order['order_status_id'], array_merge( $this->config->get( 'config_refund_status' ), $this->config->get( 'config_complete_status' ) ,$approvalpending) ) && !$this->user->isVendor()) { ?>
                                                 <a href="<?php echo $order['edit']; ?>" data-toggle="tooltip" title="Edit Invoice">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                                 </a> 
                                             <?php } ?>
                                         
                                         <!-- <a href="<?php echo $order['delete']; ?>" id="button-delete<?php echo $order['order_id']; ?>" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger"><i class="fa fa-trash-o"></i></a> -->
+                                       <?php if (!$this->user->isVendor()) { ?>
                                        
                                        <a href="#" onclick="getPO(<?= $order['order_id'] ?>)" data-toggle="modal" data-dismiss="modal" data-target="#poModal" title="PO Details">
                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                                        </a>
-                                       <?php if ($order['order_status_id'] != 5) { ?>
+                                        <?php } ?>
+                                       <?php if ($order['order_status_id'] != 5  && (!$this->user->isVendor())) { ?>
                                        <a href="#" data-toggle="tooltip" title="Update Order Status" data-orderid="<?= $order['order_id'] ?>" id="update_order_status">
                                        <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
                                        </a> 
                                        <?php } ?>
-                                        <?php if ($order['order_status_id'] == 1) { ?>
+                                       <!-- <?php if ($order['order_status_id'] == 1  && (!$this->user->isVendor()))    { ?>
                                        <a href="#" data-toggle="tooltip" data-target="store_modal" title="Order Products List" data-orderid="<?= $order['order_id'] ?>" id="order_products_list">
                                        <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 512 512" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M499.5 385.4L308.9 57.2c-31.8-52.9-74.1-52.9-105.9 0L12.5 385.4c-31.8 52.9 0 95.3 63.5 95.3h360c63.5 0 95.3-42.4 63.5-95.3zm-201.1 52.9h-84.7v-84.7h84.7v84.7zm0-127h-84.7V120.7h84.7v190.6z" fill="#626262"/></svg>
                                        </a> 
+                                        <?php } ?>-->
+                                        
+                                        <?php if ($order['delivery_id'] == NULL)    { ?>
+                                        <!--<a href="#" target="_blank" data-toggle="tooltip" title="Amitruck" data-orderid="<?= $order['order_id'] ?>" data-ordertotal="<?= $order['sub_total_custom'] ?>" id="assign_to_amitruck">
+                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                                        </a>-->
                                         <?php } ?>
                                        </div>
                                     </td>
@@ -815,7 +832,7 @@
     <div class="modal fade" id="driverModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
-                    <div class="modal-body"  style="height:400px;">
+                    <div class="modal-body"  style="height:480px;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="store-find-block">
                             <div class="mydivsss">
@@ -869,6 +886,16 @@
 
                                                     <div class="col-md-12">
                                                         <input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>
+                                                    <br/> </div>
+                                                </div>
+                                            </div>
+
+                                                 <div class="form-row">
+                                                <div class="form-group" id="div_deliverycharge">
+                                                    <label> Delivery Charge </label>
+
+                                                    <div class="col-md-12">
+                                                        <input id="order_delivery_charge" maxlength="10" required style="max-width:100% ;" name="order_delivery_charge" type="number" placeholder="Delivery Charge" class="form-control input-md" required>
                                                     <br/> </div>
                                                 </div>
 
@@ -1017,6 +1044,37 @@
                     </div> <!-- /.modal -->
 <script  type="text/javascript">
 
+$('a[id^=\'assign_to_amitruck\']').on('click', function (e) {
+e.preventDefault();
+console.log($(this).data('orderid'));
+console.log($(this).data('ordertotal'));
+
+                $.ajax({
+		url: 'index.php?path=amitruck/amitruck/createDelivery&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + encodeURIComponent($(this).data('orderid')) + '&order_total='+ encodeURIComponent($(this).data('ordertotal')),
+		beforeSend: function() {
+                // setting a timeout
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                },
+                success: function(json) {	 
+                    console.log(json.status);
+                    $('.alert').html('Order assigned to delivery partner!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    if(json.status == 200) {
+                    setTimeout(function(){ window.location.reload(false); }, 1500);
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+                }); 
+
+});
 
 
 
@@ -1123,9 +1181,11 @@ function savedriverdetails() {
    var driver_id = $('select[name="order_drivers"]').val();
    //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
    var vehicle_number =  $('input[name="order_vehicle_number"]').val();
+   var delivery_charge =  $('input[name="order_delivery_charge"]').val();
    var delivery_executive_id =  $('select[name="order_delivery_executives"]').val();
    //var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
     console.log(vehicle_number);
+    console.log(delivery_charge);
     console.log(driver_id);
     console.log(delivery_executive_id);
 
@@ -1159,7 +1219,7 @@ function savedriverdetails() {
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id },
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge },
                     async: true,
                     success: function(json) {
                         console.log(json); 
@@ -1192,9 +1252,11 @@ function savedriverdetail() {
    var driver_id = $('select[name="order_drivers"]').val();
    //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
    var vehicle_number =  $('input[name="order_vehicle_number"]').val();
+   var delivery_charge =  $('input[name="order_delivery_charge"]').val();
    var delivery_executive_id =  $('select[name="order_delivery_executives"]').val();
    //var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
     console.log(vehicle_number);
+    console.log(delivery_charge);
     console.log(driver_id);
     console.log(delivery_executive_id);
 
@@ -1236,7 +1298,7 @@ function savedriverdetail() {
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id },
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge },
                     async: true,
                     success: function(json) {
                         console.log(json); 
@@ -1515,11 +1577,17 @@ $('a[id^=\'new_print_invoice\']').on('click', function (e) {
 e.preventDefault();
 var invoice = $(this).attr("data-order-invoice");
 var order_id = $(this).attr("data-order-id");
+var order_vendor = $(this).attr("data-order-vendor");
 var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selected').text();
 
  $('select[name="order_delivery_executives"]').selectpicker('val', 0);
  $('select[name="order_drivers"]').selectpicker('val', 0);
  $('input[name="order_vehicle_number"]').val('');
+  $('#div_deliverycharge').hide();
+ if(order_vendor=='Kwik Basket')
+ { 
+ $('#div_deliverycharge').show();
+ }
 
 $.ajax({
 		url: 'index.php?path=sale/order/getDriverDetails&token=<?php echo $token; ?>',

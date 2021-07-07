@@ -82,6 +82,10 @@
 		  <?php if(!$this->user->isVendor()){ ?>
 		  	<li><a href="#tab-location" data-toggle="tab"><?php echo $tab_location; ?></a></li>
 		  <?php } ?>
+                  
+                  <?php if(!$this->user->isVendor()){ ?>
+		  	<li><a href="#tab-driver-location" data-toggle="tab">Driver Location</a></li>
+		  <?php } ?>
 		  
 		  
 
@@ -98,6 +102,22 @@
 					<input type="button" class="btn btn-primary" onclick="initMapLoad()" value="View Map" /> 
 
 					<div class="" id="map" style="height: 100%; min-height: 600px;">
+		    		</div>
+
+		    		<input type="hidden" name="single_delivery_map_ui" id="single_delivery_map_ui" value="<?= $map_s ?>">
+
+				</div>
+
+			<?php } ?>
+                        
+                        <?php if(!$this->user->isVendor()){ ?>
+			  
+			  
+				<div class="tab-pane " id="tab-driver-location">
+
+                                    <input type="button" class="btn btn-primary" id="show_driver_location" data-order_id="<?= $order_id; ?>" data-delivery_id="<?= $delivery_id; ?>" data-delivery_latitide="<?= $delivery_latitude; ?>" data-delivery_longitude="<?= $delivery_longitude; ?>" value="View Map" /> 
+
+					<div class="" id="drivermap" style="height: 100%; min-height: 600px;">
 		    		</div>
 
 		    		<input type="hidden" name="single_delivery_map_ui" id="single_delivery_map_ui" value="<?= $map_s ?>">
@@ -1580,7 +1600,13 @@
     	
 
 		return false;
-	}
+    }
+    
+    function initMapLoads(presentlocation,deliverylocation,driverDetails) {
+    
+    	initMaps(presentlocation,deliverylocation,driverDetails);
+        return false;
+    }
 
 	function locationpickerLoad() {
     
@@ -1637,7 +1663,7 @@
 		}
 	});
 });
-
+                                                                               
 $(document).delegate('#button-invoice', 'click', function() {
 	$.ajax({
 		url: 'index.php?path=sale/order/createinvoiceno&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>',
@@ -2386,7 +2412,44 @@ $(document).delegate('#save_order_vehicle_number', 'click', function() {
                 //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
             }
         });
-});    
+});
+
+$(document).delegate('#show_driver_location', 'click', function(e) {
+e.preventDefault();
+console.log($(this).data('order_id'));
+var delivery_latitide = $(this).data('delivery_latitide');
+var delivery_longitude = $(this).data('delivery_longitude');
+var delivery_location = $(this).data('delivery_latitide')+','+$(this).data('delivery_longitude');
+var present_location = '-1.3068048692017753,36.65802472191967';
+console.log(delivery_location);
+console.log(present_location);
+
+
+
+                $.ajax({
+		url: 'index.php?path=amitruck/amitruck/getDriverLocation&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + encodeURIComponent($(this).data('order_id')),
+		beforeSend: function() {
+                // setting a timeout
+                },
+                success: function(json) {	 
+                    //console.log(json.driverLocation.latitude);
+                    if(json.status == 200) {
+                    var present_location = json.driverLocation.latitude+','+json.driverLocation.longitude;
+                    initMapLoads(present_location,delivery_location,json.driver_details);
+                    } else {
+                    alert(json.errors);
+                    }
+                    //setTimeout(function(){ window.location.reload(false); }, 1500);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+	           alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); 
+		}
+                }); 
+
+});
 
 </script>
 <?php echo $footer; ?> 

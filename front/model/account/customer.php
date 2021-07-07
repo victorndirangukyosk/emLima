@@ -355,6 +355,15 @@ class ModelAccountCustomer extends Model {
 
     }
 
+    public function getRegisterOTP($customer_id, $type) {
+        
+            $query = $this->db->query('SELECT otp FROM ' . DB_PREFIX . "otp WHERE customer_id = '" . $customer_id . "' and type='" . $type . "'");
+
+            return $query->row;
+        
+
+    }
+
     public function saveOTP($customer_id, $otp, $type) {
         $query = $this->db->query('DELETE FROM ' . DB_PREFIX . "otp WHERE customer_id = '" . $customer_id . "' and type='" . $type . "'");
 
@@ -933,4 +942,84 @@ class ModelAccountCustomer extends Model {
             
             }
 
+            public function getCustomerContact($contact_id) {
+                $contact = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.contact_id = '" . (int) $contact_id . "'");
+        //    echo "<pre>";print_r('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.contact_id = '" . (int) $contact_id . "'");die;
+                
+                return $contact->row;
+            }
+
+
+            public function getCustomerContacts($customer_id) {
+                $contacts = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.customer_id = '" . (int) $customer_id . "'");
+                return $contacts->rows;
+            }
+            public function getTotalContactsByEmail($email) {
+                $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "customer_contact WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+        
+                return $query->row['total'];
+            }
+
+
+            public function deletecontact($contact_id) {
+                 
+                    $this->db->query('DELETE FROM `' . DB_PREFIX . "customer_contact` WHERE `contact_id` = '" . (int) $contact_id . "'");
+                 
+            }
+
+            public function SendInvoiceFlagUpdate($contact_id, $send_invoice) {
+                
+                
+                    $this->db->query('UPDATE ' . DB_PREFIX . "customer_contact SET send = '" . (int) $send_invoice . "'  WHERE contact_id = '" . (int) $contact_id . "'");
+                
+            }
+
+
+            public function addCustomerContact($data) 
+            {
+                //    echo '<pre>';print_r($data);exit;
+                 $flag=0;
+                 if($data['customer_contact_send']=="on")
+                 {
+                    $flag=1;
+                 }
+                 $data['email']=$data['input-emailnew'];
+                  $log = new 
+                        Log('error.log'); 
+                        $log->write('contact add');    
+                        $customer_id = $this->customer->getId();             
+                        if (isset($data['telephone'])) {
+                            $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
+                        }
+                        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_contact SET  firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', send = '" . $flag . "', customer_id = '" . (int) $customer_id . "', created_date = NOW(), modified_date = NOW()");
+                                     
+                        $contact_id = $this->db->getLastId();                   
+                
+                        return $contact_id;
+            }
+                
+
+                    public function editCustomerContact($data) 
+                    {
+                 $data['email']=$data['input-emailnew'];
+                 $flag=0;
+                        if($data['customer_contact_send']=="on")
+                        {
+                           $flag=1;
+                        }
+                                $customer_id = $this->customer->getId();
+                        
+                                if (isset($data['telephone'])) { 
+                                    $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
+                                }
+                        
+                        
+                                $this->db->query('UPDATE ' . DB_PREFIX . "customer_contact SET   firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "',  email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', send = '" . $flag. "', customer_id = '" . $this->customer->getId() . "',  modified_date = NOW() WHERE contact_id = '" . (int) $data['contactid'] . "'");
+                                
+                                // echo '<pre>';print_r($data);exit;
+                                // $contact_id = $this->db->getLastId();   return $contact_id;
+                         
+                    }
+                        
+                            
 }

@@ -65,6 +65,8 @@ class ModelAccountOrder extends Model
                 'order_date' => $order_query->row['order_date'],
                 'delivery_id' => $order_query->row['delivery_id'],
                 'settlement_amount' => $order_query->row['settlement_amount'],
+                'latitude' => $order_query->row['latitude'],
+                'longitude' => $order_query->row['longitude'],
             ];
         } else {
             return false;

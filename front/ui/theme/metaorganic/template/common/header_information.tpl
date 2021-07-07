@@ -274,7 +274,7 @@ $(document).ready(function() {
                                                 <a href="<?= $order ?>">
                                             <?php } ?>
 
-                                            <i class="fa fa-reorder"></i><?= $text_order ?></a>
+                                            <i class="fa fa-reorder"></i>My Orders</a>
                                             </li>
 
                                            <!-- <?php if($this->config->get('config_account_return_status') == 'yes') { ?>
@@ -309,6 +309,20 @@ $(document).ready(function() {
 
                                                 <i class="fa fa-sticky-note"></i>Incomplete Orders</a>
                                             </li>-->
+
+
+                                              
+                                            <li role="presentation">
+                                                <?php if(strpos($customer_contacts,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                    <a href="<?= $customer_contacts ?>" class="active">
+                                                <?php } else { ?>
+                                                    <a href="<?= $customer_contacts ?>">
+                                                <?php } ?>
+
+                                                <i class="fas fa-id-card"></i><?= $text_customer_contacts ?></a>
+                                            </li>
+                                            
+
 
                                             <?php if($this->config->get('config_credit_enabled')) { ?>
 

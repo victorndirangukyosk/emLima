@@ -1,6 +1,7 @@
 <?php if(empty($redirect)){ ?>
 
     <?php echo $payment; ?>
+    <?php echo $payment_interswitch; ?>
     
 <?php }else{ ?>
 
