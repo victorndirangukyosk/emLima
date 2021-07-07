@@ -4622,12 +4622,14 @@ class ControllerSaleOrder extends Controller {
                 }
 
                 foreach ($totals as $total) {
+                    if($total['value']>0)
                     $total_data[] = [
                         'title' => $total['title'],
                         'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
                         'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
                     ];
                 }
+                // echo "<pre>";print_r($total_data);die;
 
                 $this->load->model('sale/customer');
                 $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
