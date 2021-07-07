@@ -402,7 +402,7 @@ class ControllerApiCart extends Controller {
                 $log->write(sizeof($product_info));
                 if (is_array($product_info) && $product_info['status'] == 1) {
                     $log->write($product_info);
-                    $this->cart->add($product['product_store_id'], $product['quantity'], $option, false, $product['store_id'], $product['store_product_variation_id']);
+                    $this->cart->add($product['product_store_id'], $product['quantity'], $option, false, $product['store_id'], $product['store_product_variation_id'], 'replacable', $product['product_note']);
                     $json['success'] = $this->language->get('text_success');
                 }
             }
