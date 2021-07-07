@@ -319,7 +319,7 @@ $(document).ready(function() {
                                                     <a href="<?= $customer_contacts ?>">
                                                 <?php } ?>
 
-                                                <i class="fas fa-address-book"></i><?= $text_customer_contacts ?></a>
+                                                <i class="fas fa-id-card"></i><?= $text_customer_contacts ?></a>
                                             </li>
                                             
 
