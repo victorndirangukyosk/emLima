@@ -469,7 +469,9 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
     {
         // Some of the printable ASCII characters are invalid:  * : / \ ? [ ]
         if (str_replace(self::$_invalidCharacters, '', $pValue) !== $pValue) {
-            throw new PHPExcel_Exception('Invalid character found in sheet title');
+            //throw new PHPExcel_Exception('Invalid character found in sheet title');
+            //Hack to remove bad characters from sheet name instead of throwing an exception
+            return str_replace(self::$_invalidCharacters, '', $pValue);
         }
 
         // Maximum 31 characters allowed for sheet title

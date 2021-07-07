@@ -95,9 +95,9 @@
             <div class="radio">
                 <label><input class="option_pay" onchange="payOptionSelected()"  value="pay_full" type="radio" name="pay_option">Pay Full</label>
             </div>
-            <div class="radio">
+            <!--<div class="radio">
                 <label><input type="radio" class="option_pay" onchange="payOptionSelected()" value="pay_other" name="pay_option">Pay Other Amount</label>
-            </div>
+            </div>-->
             <div class="radio">
                 <label><input type="radio" class="option_pay" onchange="payOptionSelected()" value="pay_selected_order" name="pay_option">Pay Selected Orders</label>
             </div>

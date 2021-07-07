@@ -12,6 +12,7 @@ $_['text_success'] = 'Success: You have added <a href="%s">%s</a> to your <a hre
 $_['text_exists'] = '<a href="%s">%s</a> is already in your <a href="%s">wish list</a>!';
 $_['text_remove'] = 'Success: You have modified your list!';
 $_['text_empty'] = 'Your list is empty.';
+$_['text_load_more'] = 'Load More';
 
 // Column
 $_['column_image'] = 'Image';
@@ -34,7 +35,7 @@ $_['text_cancel'] = 'Remove';
 $_['text_wishlist_id'] = 'List ID:';
 $_['text_products_count'] = 'Products :';
 $_['text_wishlist_id_with_colon'] = 'List ID : ';
-$_['text_go_back'] = 'Go back';
+$_['text_go_back'] = 'Back to my baskets';
 $_['text_items'] = 'items';
 $_['text_add_to_cart'] = 'Actions';
 $_['text_add_selection_to_cart'] = 'Add Selection to cart';

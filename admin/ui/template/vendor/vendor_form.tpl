@@ -100,6 +100,15 @@
                                     <input type="text" name="tin_no" value="<?php echo $tin_no; ?>" placeholder="<?php echo $tin_no; ?>" id="input-tin_no" class="form-control" />
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-orderprefix"><?php echo $entry_orderprefix; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="orderprefix" value="<?php echo $orderprefix; ?>" placeholder="<?php echo $orderprefix; ?>" id="input-orderprefix" class="form-control" />
+                                    <?php if ($error_orderprefix) { ?>
+                                    <div class="text-danger"><?php echo $error_orderprefix; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-image"><?php echo $entry_image; ?></label>

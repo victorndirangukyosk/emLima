@@ -27,6 +27,9 @@ class ModelReportUser extends Model {
         if (!empty($data['filter_date_end'])) {
             $implode[] = "DATE(ca.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
         }
+        if (!empty($data['filter_key'])) {
+            $implode[] = "ca.key LIKE '" . $this->db->escape($data['filter_key']) . "'";
+        }
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
@@ -77,6 +80,10 @@ class ModelReportUser extends Model {
             $implode[] = "DATE(ca.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
         }
 
+        if (!empty($data['filter_key'])) {
+            $implode[] = "ca.key LIKE '" . $this->db->escape($data['filter_key']) . "'";
+        }
+
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
@@ -84,6 +91,16 @@ class ModelReportUser extends Model {
         $query = $this->db->query($sql);
 
         return $query->row['total'];
+    }
+
+
+    public function getActivityKeys() {
+
+        $sql = 'SELECT distinct ca.key  FROM ' . DB_PREFIX . "user_activity ca";
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
     }
 
 }

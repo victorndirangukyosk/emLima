@@ -372,6 +372,7 @@ class ControllerCatalogCategory extends Controller
 
         $data['tab_general'] = $this->language->get('tab_general');
         $data['tab_design'] = $this->language->get('tab_design');
+        $data['entry_delivery_time'] = $this->language->get('entry_delivery_time');
 
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -571,6 +572,14 @@ class ControllerCatalogCategory extends Controller
             $data['status'] = $category_info['status'];
         } else {
             $data['status'] = true;
+        }
+        
+        if (isset($this->request->post['delivery_time'])) {
+            $data['delivery_time'] = $this->request->post['delivery_time'];
+        } elseif (!empty($category_info)) {
+            $data['delivery_time'] = $category_info['delivery_time'];
+        } else {
+            $data['delivery_time'] = true;
         }
 
         if (isset($this->request->get['category_id'])) {

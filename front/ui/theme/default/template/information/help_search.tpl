@@ -33,7 +33,7 @@
 
         <div class="row">
             <hr>
-            <div class="footer text-center" style="background: none;">
+            <div class="footer text-center" style="background: none;;padding-bottom:15px;">
                 <p>
                     <?= $label_text ?>
                     <a href="#" data-toggle="modal" data-target="#contactusModal"><?= $text_submit  ?></a>

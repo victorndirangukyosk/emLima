@@ -22,7 +22,7 @@
       <div class="panel-body">
         <div class="well" style="display:none;">
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
               <div class="form-group">
                 <label class="control-label" for="input-date-start"><?php echo $entry_date_start; ?></label>
                 <div class="input-group date">
@@ -40,7 +40,7 @@
                   </span></div>
               </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-4">
               <div class="form-group">
                 <label class="control-label" for="input-user"><?php echo $entry_user; ?></label>
                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" id="input-user" class="form-control" />
@@ -49,7 +49,28 @@
                 <label class="control-label" for="input-ip"><?php echo $entry_ip; ?></label>
                 <input type="text" name="filter_ip" value="<?php echo $filter_ip; ?>" id="input-ip" class="form-control" />
               </div>
-              <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
+            </div>
+
+             <div class="col-sm-4">
+              <div class="form-group">
+                
+                 <label class="control-label" for="input-key">Activity Type</label>
+                 
+                   <select name="filter_key" id="input-key" class="form-control">
+                  <option value="0">All</option>
+                  <?php foreach ($activity_key as $order_status) { ?>
+                  <?php if ($order_status['key'] == $filter_key) { ?>
+                  <option value="<?php echo $order_status['key']; ?>" selected="selected"><?php echo $order_status['key']; ?></option>
+                  <?php } else { ?>
+                  <option value="<?php echo $order_status['key']; ?>"><?php echo $order_status['key']; ?></option>
+                  <?php } ?>
+                  <?php } ?>
+                </select>
+                  
+                </select>
+              </div>
+              </br>
+                <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
             </div>
           </div>
         </div>
@@ -119,6 +140,12 @@ $('#button-filter').on('click', function() {
 	if (filter_date_end) {
 		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
 	}
+
+  	var filter_key = $('select[name=\'filter_key\']').val();
+	
+	if (filter_key != 0) {
+		url += '&filter_key=' + encodeURIComponent(filter_key);
+	}	
 
 	location = url;
 });

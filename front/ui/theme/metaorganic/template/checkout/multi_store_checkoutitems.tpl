@@ -27,6 +27,7 @@
                                                 <th class="text-center" ><span class="nobr">Unit Price</span></th>
                                                 <th class="text-right"><span class="nobr">Unit </span></th>
                         <th rowspan="1" class="text-center">Qty</th>
+                        <th rowspan="1" class="text-center">Tax</th>
                         <th class="text-center">Sub Total</th>
                         <th rowspan="1"></th>
                         <th class="text-center">&nbsp;</th>
@@ -123,7 +124,14 @@
         <td class="a-right hidden-table" >
                     <span class="cart-price">
         
-                                                <span class="price font-bold" id="spancart[<?= $i ?>][qty]"><?php echo $product['total']; ?></span>                            
+                                                <span class="price font-bold"> <?php echo $product['total_tax']; ?></span>                            
+        </span>
+            </td>
+        <td class="a-right hidden-table" >
+                    <span class="cart-price">
+        
+                        <span class="price font-bold" id="spancart[<?= $i ?>][qty]" style="display:none;"><?php echo $product['total']; ?></span>    
+                        <span class="price font-bold"><?php echo $product['total_orginal_price']; ?></span>                            
         </span>
             </td>
               <td   class="a-center hidden-table"  >

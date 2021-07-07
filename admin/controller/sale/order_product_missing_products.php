@@ -12,13 +12,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $this->getMissingProductsList();
     }
 
-    protected function validate() {
-        if (!$this->user->hasPermission('modify', 'sale/order_product_missing_products')) {
-            $this->error['warning'] = $this->language->get('error_permission');
-        }
-        return !$this->error;
-    }
-
+    
     protected function getMissingProductsList() {
         if (isset($this->request->get['filter_city'])) {
             $filter_city = $this->request->get['filter_city'];
@@ -236,12 +230,6 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             'href' => $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        // $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['invoicepdf'] = $this->url->link('sale/order/invoicepdf', 'token=' . $this->session->data['token'], 'SSL');
-        // // $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['shipping'] = $this->url->link('sale/order/shippingNote', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['add'] = $this->url->link('sale/order/add', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['delivery_sheet'] = $this->url->link('sale/order/consolidatedOrderSheet', 'token=' . $this->session->data['token'], 'SSL');
         $data['orders'] = [];
 
         $filter_data = [
@@ -264,30 +252,65 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             'filter_date_modified' => $filter_date_modified,
             'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
-            'order' => $order,
-            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin'),
+            'order' => $order,// all orders are fecting by group, so dont send limit
+            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            // 'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        // echo "<pre>";print_r($filter_data);die; 
+        // echo "<pre>";print_r($filter_data);die;        
 
-        $order_total = $this->model_sale_order->getTotalOrderedMissingProducts($filter_data);
+        // $order_total = $this->model_sale_order->getTotalOrderedMissingProducts($filter_data);
 
-        $results = $this->model_sale_order->getOrderedMissingProducts($filter_data);
+        // $results = $this->model_sale_order->getOrderedMissingProducts($filter_data);
 
-        //        echo "<pre>";print_r($results);die;
-        foreach ($results as $result) {
-            $sub_total = 0;
 
-            // $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
-            //echo "<pre>";print_r($totals);die;
-            // foreach ($totals as $total) {
-            //     if ('sub_total' == $total['code']) {
-            //         $sub_total = $total['value'];
-            //         break;
-            //     }
-            // }
+#region
+        
+        $order_total_final = [];
+        $results_final = [];
 
+        $filter_order_id_temp = $this->model_sale_order->getOrderedMissingProductsOnlyOrder($filter_data);
+
+        if (!empty($filter_order_id_temp) ) {
+             
+            // echo "<pre>";print_r($filter_order_id_temp);die;
+
+            foreach ($filter_order_id_temp as $tmp) {
+                $tmp=$tmp[order_id];
+
+            //   echo "<pre>";print_r($tmp);die;
+
+                // code...
+                $filter_data['filter_order_id'] = $tmp;
+
+                 $order_total = $this->model_sale_order->getTotalOrderedMissingProducts($filter_data);
+
+                  $results = $this->model_sale_order->getOrderedMissingProducts($filter_data);
+
+                //  echo "<pre>";print_r($results);die;
+                
+                array_push($order_total_final, $order_total);
+                array_push($results_final, $results);
+            }
+
+            $order_total = array_sum($order_total_final);
+        } else {
+            $order_total = 0;
+            $results = [];
+        }
+
+
+        foreach ($results_final as $key => $results) {
+            // code...
+
+            
+            $result_order_tmp = null;
+
+            foreach ($results as $result) {
+                
+
+
+                
             if ($this->user->isVendor()) {
                 $result['customer'] = strtok($result['firstname'], ' ');
             }
@@ -295,12 +318,15 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             if ($result['company_name']) {
                 $result['company_name'] = ' (' . $result['company_name'] . ')';
             } else {
-                // $result['company_name'] = "(NA)";
+                $result['company_name'] = "(NA)";
             }
 
-            $this->load->model('localisation/order_status');
-            $data['orders'][] = [
-                'order_id' => $result['order_id'],
+               
+                $this->load->model('localisation/order_status');
+                $data['orders'][$result['order_id']]['orders'][] = [
+
+                    'order_id' => $result['order_id'],
+                'id' => $result['id'],
                 'customer' => $result['customer'],
                 'company_name' => $result['company_name'],
                 'status' => $result['status'],
@@ -309,13 +335,30 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
                 'name' => $result['name'],
                 'unit' => $result['unit'],
                 'quantity' => $result['quantity'],
+                'quantity_required' => $result['quantity_required'],
                 'total' => $result['total'],
                 'price' => $result['price'],
                 'tax' => $result['tax'],
-                'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+                // 'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
                 'order_product_id' => $result['order_product_id'],
-            ];
+
+                   ];
+
+             
+                $result_status_tmp = $result['status'];
+            }
+
+             
         }
+
+
+        #end region
+        // echo "<pre>";print_r($data);die;
+
+        $data['all_orders'] = $data['orders'];
+
+        // echo "<pre>";print_r($data['all_orders']);die;
+
 
         $data['heading_title'] = $this->language->get('heading_title');
         $data['text_vendor'] = $this->language->get('text_vendor');
@@ -609,37 +652,5 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         }
     }
 
-    public function addtomissingproduct() {
-        $json = [];
-        try {
-            $this->load->language('sale/order');
-            // if ($this->request->server['HTTPS']) {
-            //     $data['base'] = HTTPS_SERVER;
-            // } else {
-            //     $data['base'] = HTTP_SERVER;
-            // }
-
-            $this->load->model('sale/order');
-            $data['orders'] = [];
-
-
-            if (isset($this->request->post['selected'])) {
-                $orders = explode(",", $this->request->post['selected']);
-            }
-
-            foreach ($orders as $order_product_id) {
-                //   echo "<pre>";print_r($order_product_id);die;
-
-                $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id);
-                //   echo "<pre>";print_r($order_product_info);die;
-            }
-            $json = 'success';
-        } catch (exception $ex) {
-            $json = 'failed';
-        } finally {
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($json));
-        }
-    }
-
+   
 }

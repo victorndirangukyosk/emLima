@@ -1,6 +1,7 @@
 @@include('./_partials/header.html')
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
+<script type="text/javascript"
+    src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
 
 <main>
     <div class="auth-layout-wrap">
@@ -12,7 +13,7 @@
                             <div class="auth-logo text-center mb-4">
                                 <a class="base_url" href='<?= BASE_URL."/index.php" ?>'>
                                     <img src="<?= $logo ?>" class="logo" alt="KwikBasket Logo">
-<!--                                    <img src="assets/img/logo.svg" class="logo" alt="KwikBasket Logo">-->
+                                    <!--                                    <img src="assets/img/logo.svg" class="logo" alt="KwikBasket Logo">-->
                                 </a>
                             </div>
                             <h1 class="mb-2 auth-card-header">Sign Up</h1>
@@ -28,7 +29,7 @@
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="register-email">Email Address</label>
-                                        <input type="email" class="form-control" id="register-email">
+                                        <input type="email" class="form-control" id="register-email" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -53,24 +54,27 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
                                         <label for="register-business-type">Business Type</label>
-                                        <select class="form-control" id="register-business-type">
+                                        <select class="form-control" id="register-business-type" required>
+                                            <option value="">Business Type</option>
                                             <?php foreach($customer_groups as $customer_group){?>
-                                                <option value="<?=$customer_group['customer_group_id']?>"> <?=$customer_group['name']?></option>
+                                            <option value="<?=$customer_group['customer_group_id']?>">
+                                                <?=$customer_group['name']?>
+                                            </option>
                                             <?php } ?>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label for="register-building-name">House Number / Building Name</label>
+                                        <label for="register-building-name">Address Line 1</label>
                                         <input required type="text" class="form-control" id="register-building-name">
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label for="register-address-line">Address Line 1 (Optional)</label>
+                                        <label for="register-address-line">Address Line 2 (Optional)</label>
                                         <input type="text" class="form-control" id="register-address-line">
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
-                                        <label for="register-location">Location</label>
+                                        <label for="register-location">Geolocation</label>
                                         <input type="text" class="form-control" id="register-location">
                                     </div>
                                     <div class="form-group col-md-4">
@@ -86,16 +90,29 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <label for="register-accountmanager-id">Account Manager Name</label>
-                                        <input type="text" class="form-control" id="register-accountmanager-id" name="register-accountmanager-id" register_accountmanager_id="" placeholder="Search Account Manager">
+                                        <select class="form-control" id="register-accountmanager-id" name="register-accountmanager-id">
+                                            <option value="">Account Manager</option>
+                                            <?php foreach($account_managers as $account_managers){?>
+                                            <option value="<?=$account_managers['user_id']?>">
+                                                <?=$account_managers['firstname'].' '.$account_managers['lastname']?>
+                                            </option>
+                                        <?php } ?>
+                                        </select>
                                     </div>
                                 </div>
+                                <!--<div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="register-accountmanager-id">Account Manager Name</label>
+                                        <input type="text" class="form-control" id="register-accountmanager-id" name="register-accountmanager-id" register_accountmanager_id="" placeholder="Search Account Manager">
+                                    </div>
+                                </div>-->
                                 <div class="form-row mb-3">
                                     <div class="col-md-12 d-flex justify-content-center">
                                         <div class="g-recaptcha" data-sitekey="<?= $site_key ?>"></div>
                                     </div>
                                 </div>
                                 <button id="register-button" class="btn btn-primary mt-1 btn-block">SIGN UP</button>
-                                <input type="hidden" value="0"  id="lat">
+                                <input type="hidden" value="0" id="lat">
                                 <input type="hidden" value="0" id="lng">
                             </form>
                         </div>
@@ -107,18 +124,18 @@
                         <div class="p-4">
                             <div class="auth-logo text-center mb-4">
                                 <a class="base_url" href='<?= BASE_URL."/index.php" ?>'>
-                                        <img src="<?= $logo ?>" class="logo" alt="KwikBasket Logo">
-<!--                                    <img src="assets/img/logo.svg" class="logo" alt="KwikBasket Logo">-->
+                                    <img src="<?= $logo ?>" class="logo" alt="KwikBasket Logo">
+                                    <!--                                    <img src="assets/img/logo.svg" class="logo" alt="KwikBasket Logo">-->
                                 </a>
                             </div>
                             <h1 class="mb-2 auth-card-header">Verify OTP</h1>
-                            <p class="text-muted">We sent you an email with an OTP</p>
+                            <p class="text-muted">We sent you an email and sms with OTP</p>
                             <form>
                                 <div class="form-group">
                                     <label for="otp">Enter OTP</label>
                                     <input required type="text" class="form-control" id="otp-value">
-                                  </div>
-                                  <button id="otp-verify-button" class="btn btn-primary mt-1 btn-block">VERIFY</button>
+                                </div>
+                                <button id="otp-verify-button" class="btn btn-primary mt-1 btn-block">VERIFY</button>
                             </form>
                         </div>
                     </div>
@@ -140,10 +157,10 @@
     autocomplete = new google.maps.places.Autocomplete((document.getElementById('register-location')), {
         types: ['geocode'],
         componentRestrictions: {
-          country: 'KE'
-      }
+            country: 'KE'
+        }
     });
-	
+
     google.maps.event.addListener(autocomplete, 'place_changed', function () {
         var near_place = autocomplete.getPlace();
     });
