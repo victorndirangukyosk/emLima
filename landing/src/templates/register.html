@@ -54,8 +54,8 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
                                         <label for="register-business-type">Business Type</label>
-                                        <select class="form-control" id="register-business-type">
-                                            <option>Business Type</option>
+                                        <select class="form-control" id="register-business-type" required>
+                                            <option value="">Business Type</option>
                                             <?php foreach($customer_groups as $customer_group){?>
                                             <option value="<?=$customer_group['customer_group_id']?>">
                                                 <?=$customer_group['name']?>
@@ -90,8 +90,8 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <label for="register-accountmanager-id">Account Manager Name</label>
-                                        <select class="form-control" id="register-accountmanager-id" name="register-accountmanager-id">
-                                            <option>Account Manager</option>
+                                        <select class="form-control" id="register-accountmanager-id" name="register-accountmanager-id" required>
+                                            <option value="">Account Manager</option>
                                             <?php foreach($account_managers as $account_managers){?>
                                             <option value="<?=$account_managers['user_id']?>">
                                                 <?=$account_managers['firstname'].' '.$account_managers['lastname']?>
