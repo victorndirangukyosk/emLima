@@ -451,6 +451,7 @@ class ControllerApiCart extends Controller {
                     'store_id' => $product_info['store_id'],
                     'store_name' => $product_info['store_name'],
                     'product_type' => trim($product_info['product_type']),
+                    'product_note' => $data['product_note'],
                     'unit' => $product_info['unit'],
                     'name' => $product_info['name'],
                     'model' => $product_info['model'],
