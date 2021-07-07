@@ -408,7 +408,17 @@ class ControllerApiCart extends Controller {
             }
         }
         $json['status'] = 200;
+        $json['session_id'] = $this->session->getId();
         $json['data'] = [];
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getApiSessionId() {
+
+        $json['status'] = 200;
+        $json['success'] = 'Api Session Id';
+        $json['session_id'] = $this->session->getId();
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
