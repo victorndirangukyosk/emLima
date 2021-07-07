@@ -72,10 +72,10 @@
                                 <input type="text" name="filter_city" value="<?php echo $filter_city; ?>" class="form-control" />
                             </div>-->
 
-                             <div class="form-group">
+                             <!--<div class="form-group">
                                 <label class="control-label" for="input-name"><?= $column_delivery_method ?></label>
                                 <input type="text" name="filter_delivery_method" value="<?php echo $filter_delivery_method; ?>" placeholder="<?php echo $column_delivery_method; ?>" id="input-name" class="form-control" />
-                            </div>
+                            </div>-->
                             
                              <div class="form-group">
                              
@@ -96,6 +96,15 @@
                                 </select>
                             </div>
                          
+                          <div class="form-group">
+                                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
 
                             
                         </div>
@@ -118,10 +127,10 @@
                                     <?php } ?>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-total"><?php echo $entry_total; ?></label>
                                 <input type="text" name="filter_total" value="<?php echo $filter_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
-                            </div>
+                            </div>-->
 
                             <!--<div class="form-group">
                                 <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
@@ -144,7 +153,16 @@
                                     
                                 </div>
                             </div>
-
+                            
+                            <div class="form-group">    
+                                <label class="control-label" for="input-date-added-end"><?php echo $entry_date_added_end; ?></label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="<?php echo $entry_date_added_end; ?>" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
 
                         </div>
 
@@ -165,24 +183,8 @@
                             <?php } ?>
 
 
-                            <div class="form-group">
-                                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group">    
-                                <label class="control-label" for="input-date-added-end"><?php echo $entry_date_added_end; ?></label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="<?php echo $entry_date_added_end; ?>" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>
+                            
+                            
                             <!--<div class="form-group">
                                 <label class="control-label" for="input-date-modified"><?php echo $entry_date_modified; ?></label>
                                 <div class="input-group date">
@@ -406,9 +408,9 @@
                                         <?php } ?>
                                         
                                         <?php if ($order['delivery_id'] == NULL)    { ?>
-                                        <a href="#" target="_blank" data-toggle="tooltip" title="Amitruck" data-orderid="<?= $order['order_id'] ?>" data-ordertotal="<?= $order['sub_total_custom'] ?>" id="assign_to_amitruck">
+                                        <!--<a href="#" target="_blank" data-toggle="tooltip" title="Amitruck" data-orderid="<?= $order['order_id'] ?>" data-ordertotal="<?= $order['sub_total_custom'] ?>" id="assign_to_amitruck">
                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                                        </a>
+                                        </a>-->
                                         <?php } ?>
                                        </div>
                                     </td>
