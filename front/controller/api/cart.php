@@ -402,7 +402,7 @@ class ControllerApiCart extends Controller {
                 $log->write(sizeof($product_info));
                 if (is_array($product_info) && $product_info['status'] == 1) {
                     $log->write($product_info);
-                    $this->cart->add($product['product_store_id'], $product['quantity'], $option, false, $product['store_id'], $product['store_product_variation_id']);
+                    $this->cart->add($product['product_store_id'], $product['quantity'], $option, false, $product['store_id'], $product['store_product_variation_id'], 'replacable', $product['product_note'], $product['produce_type']);
                     $json['success'] = $this->language->get('text_success');
                 }
             }
@@ -428,7 +428,9 @@ class ControllerApiCart extends Controller {
         $totalQuantity = 0;
         $json = [];
         $log = new Log('error.log');
+        $log->write('getCartProducts');
         $log->write($this->cart->getProducts());
+        $log->write('getCartProducts');
 
         foreach ($this->session->data['cart'] as $keys => $data) {
 
@@ -449,6 +451,8 @@ class ControllerApiCart extends Controller {
                     'store_id' => $product_info['store_id'],
                     'store_name' => $product_info['store_name'],
                     'product_type' => trim($product_info['product_type']),
+                    'produce_type' => trim($product_info['produce_type']),
+                    'product_note' => $data['product_note'],
                     'unit' => $product_info['unit'],
                     'name' => $product_info['name'],
                     'model' => $product_info['model'],
