@@ -119,7 +119,13 @@
 
                             <?php foreach($order['totals'] as $total) { ?>
                             <tr>
-                                <td colspan="4" class="bold text-right"><?= $total['title'] ?></td>
+                             <?php if($total['title'] == 'VAT on Standard Delivery') { ?>
+                                <td colspan="4" class="text-right" >
+                                <span class="bold text-right"><?= $total['title'] ?></span>                                
+                                <span style="font-weight:2px"> (VAT16)</span></td>
+                                <?php } else { ?>
+                                <td colspan="4" class="bold text-right" ><?= $total['title'] ?></td> 
+                                <?php }   ?>
                                 <td class="bold text-right"><?= $total['text'] ?></td>
                             </tr>
                             <?php } ?>

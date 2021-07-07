@@ -3130,8 +3130,31 @@ class ModelSaleOrder extends Model {
                     $sql = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge . "', order_id = '" . $order_id . "', title = 'Standard Delivery', sort_order = 6, code = 'shipping'";
                     $query = $this->db->query($sql);
             }
-         
-            $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="total"');
+         //insert vat delivery charge
+         $delivery_vat_applicable=0;
+         try{
+         $deliverycharge_temp = $this->db->query('select * from ' . DB_PREFIX . 'temp_deliverycharge Limit 0,1')->row;
+
+            $delivery_vat_applicable=$deliverycharge_temp['delivery_charge_vat'];
+            $delivery_vat_percentage=$deliverycharge_temp['VAT_percent'];
+         }
+         catch(exception $ex)
+         {$delivery_vat_applicable=0;
+
+         }
+            if($delivery_vat_applicable==1)
+            {
+         $delivery_charge_vat=(($delivery_charge)*$delivery_vat_percentage);
+         $Total_amount=$delivery_charge_vat+$delivery_charge;
+
+         $sql2 = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge_vat . "', order_id = '" . $order_id . "', title = 'VAT on Standard Delivery', sort_order = 6, code = 'delivery_vat'";
+         $query2 = $this->db->query($sql2);
+            }
+            else{
+                $Total_amount=$delivery_charge;
+            }
+
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $Total_amount . ' WHERE order_id="' . $order_id . '" and code="total"');
             // echo "<pre>";print_r('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="total"');die;
           
     }
