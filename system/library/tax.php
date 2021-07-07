@@ -151,13 +151,13 @@ final class Tax {
         $tax_rule_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "tax_rule WHERE tax_class_id = '" . (int) $tax_class_id . "'");
 
         if ($tax_rule_query->num_rows) {
-            $tax_rate_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "tax_rate WHERE tax_rate_id = '" . (int) $tax_rule_query['tax_rate_id'] . "'");
+            $tax_rate_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "tax_rate WHERE tax_rate_id = '" . (int) $tax_rule_query->row['tax_rate_id'] . "'");
         } else {
             return false;
         }
 
         if ($tax_rate_query->num_rows) {
-            return $tax_rate_query;
+            return $tax_rate_query->row;
         } else {
             return false;
         }
