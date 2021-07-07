@@ -865,35 +865,35 @@ class ControllerPaymentPesapal extends Controller {
 
         foreach ($this->session->data['order_id'] as $key => $value) {
             $order_id = $value;
+
+            $log->write('Pesapal Order ID');
+            $log->write($this->session->data['order_id']);
+            $log->write('Pesapal Order ID');
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
+
+            $log->write('Pesapal Order Info');
+            $log->write($order_info);
+            $log->write('Pesapal Order Info');
+
+            if (count($order_info) > 0) {
+                $amount = (int) ($order_info['total']);
+            }
+
+            $log->write('PESAPAL CALL BACK');
+            $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+            $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+            $log->write($transaction_tracking_id);
+            $log->write($merchant_reference);
+            $log->write('PESAPAL CALL BACK');
+            $customer_id = $customer_info['customer_id'];
+            $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
+            $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
+            $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
         }
-
-        $log->write('Pesapal Order ID');
-        $log->write($this->session->data['order_id']);
-        $log->write('Pesapal Order ID');
-        $order_info = $this->model_checkout_order->getOrder($order_id);
-        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-        $log->write('Pesapal Creds Customer Info');
-        $log->write($customer_info);
-        $log->write('Pesapal Creds Customer Info');
-
-        $log->write('Pesapal Order Info');
-        $log->write($order_info);
-        $log->write('Pesapal Order Info');
-
-        if (count($order_info) > 0) {
-            $amount = (int) ($order_info['total']);
-        }
-
-        $log->write('PESAPAL CALL BACK');
-        $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
-        $merchant_reference = $this->request->get['pesapal_merchant_reference'];
-        $log->write($transaction_tracking_id);
-        $log->write($merchant_reference);
-        $log->write('PESAPAL CALL BACK');
-        $customer_id = $customer_info['customer_id'];
-        $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
-        $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
-        $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
 
         if ('COMPLETED' == $status) {
             $this->response->redirect($this->url->link('checkout/success'));
