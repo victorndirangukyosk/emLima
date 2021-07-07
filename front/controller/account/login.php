@@ -513,6 +513,10 @@ class ControllerAccountLogin extends Controller {
 
         $this->load->model('assets/information');
         $data['customer_groups'] = $this->model_assets_information->getCustomerGroups();
+        
+        $filter_data = [];
+        $this->load->model('user/user');
+        $data['account_managers'] = $this->model_user_user->getAccountManagerUsers($filter_data);
 
         if (isset($this->error['captcha'])) {
             $data['error_captcha'] = $this->error['captcha'];
