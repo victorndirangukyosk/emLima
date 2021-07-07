@@ -11,12 +11,15 @@ class ControllerPaymentPesapal extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
 
+        $order_ids = array();
         foreach ($this->session->data['order_id'] as $key => $value) {
+            $order_ids[] = $value;
             $order_id = $value;
+            if ($order_id != NULL) {
+                $this->model_checkout_order->UpdateParentApproval($order_id);
+            }
         }
-        if ($order_id != NULL) {
-            $this->model_checkout_order->UpdateParentApproval($order_id);
-        }
+
 
         $log = new Log('error.log');
         $log->write('Pesapal Order ID');
