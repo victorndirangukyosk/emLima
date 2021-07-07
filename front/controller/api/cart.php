@@ -428,7 +428,9 @@ class ControllerApiCart extends Controller {
         $totalQuantity = 0;
         $json = [];
         $log = new Log('error.log');
+        $log->write('getCartProducts');
         $log->write($this->cart->getProducts());
+        $log->write('getCartProducts');
 
         foreach ($this->session->data['cart'] as $keys => $data) {
 
