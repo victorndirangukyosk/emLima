@@ -389,12 +389,12 @@ padding: 10px 12px;
 .btn-newadd{  
   
 
-background: #7CFFC0;
+background: green;
 border: 0.3px solid #0C9D46;
 box-sizing: border-box;
 box-shadow: 0px 6px 30px rgba(90, 244, 170, 0.25);
 border-radius: 8px;
- color:#0B833B !important;
+ color:white !important;
  font-family: Poppins;
 font-style: normal;
 font-weight: 600;
