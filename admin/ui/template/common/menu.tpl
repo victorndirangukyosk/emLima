@@ -178,6 +178,11 @@
             <?php if($preturn_customer_ban_ip) { ?>
             <li><a href="<?php echo $customer_ban_ip; ?>"><?php echo $text_customer_ban_ip; ?></a></li>
             <?php } ?>
+
+
+             <?php if($preturn_customer_feedback) { ?>
+            <li><a href="<?php echo $customer_feedback; ?>"><?php echo $text_customer_feedback; ?></a></li>
+            <?php } ?>
         </ul>
     </li>
     <?php } ?>

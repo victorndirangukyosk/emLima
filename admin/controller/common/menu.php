@@ -90,6 +90,7 @@ class ControllerCommonMenu extends Controller
         $data['customer_fields'] = $this->url->link('sale/customer_field', 'token='.$this->session->data['token'], 'SSL');
         $data['customer_group'] = $this->url->link('sale/customer_group', 'token='.$this->session->data['token'], 'SSL');
         $data['customer_ban_ip'] = $this->url->link('sale/customer_ban_ip', 'token='.$this->session->data['token'], 'SSL');
+        $data['customer_feedback'] = $this->url->link('sale/customer_feedback', 'token='.$this->session->data['token'], 'SSL');
         $data['custom_field'] = $this->url->link('sale/custom_field', 'token='.$this->session->data['token'], 'SSL');
         $data['email_template'] = $this->url->link('system/email_template', 'token='.$this->session->data['token'], 'SSL');
         $data['language_override'] = $this->url->link('system/language_override', 'token='.$this->session->data['token'], 'SSL');
@@ -312,6 +313,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_farmertransactions'] = $this->user->hasPermission('access', 'sale/farmer_transactions');
         $data['preturn_customer_group'] = $this->user->hasPermission('access', 'sale/customer_group');
         $data['preturn_customer_ban_ip'] = $this->user->hasPermission('access', 'sale/customer_ban_ip');
+        $data['preturn_customer_feedback'] = $this->user->hasPermission('access', 'sale/customer_feedback');
         $data['preturn_account_manager'] = $this->user->hasPermission('access', 'sale/accountmanager');
         $data['preturn_account_manager_customers'] = $this->user->hasPermission('access', 'sale/accountmanageruser');
         $data['preturn_account_manager_customer_orders'] = $this->user->hasPermission('access', 'sale/accountmanageruserorders');
