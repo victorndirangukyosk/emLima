@@ -18,6 +18,15 @@ class ControllerPaymentInterswitch extends Controller {
                 $this->model_checkout_order->UpdateParentApproval($order_id);
             }
         }
+        $order_ids_string = NULL;
+        if (is_array($order_ids) && count($order_ids) > 0) {
+            $order_ids_string = implode('-', $order_ids);
+            $log = new Log('error.log');
+            $log->write('order_ids');
+            $log->write($order_ids_string);
+            $log->write($order_ids);
+            $log->write('order_ids');
+        }
 
 
         $order_info = $this->model_checkout_order->getOrder($order_id);
@@ -32,7 +41,7 @@ class ControllerPaymentInterswitch extends Controller {
         $interswitch_creds = $this->model_setting_setting->getSetting('interswitch', 0);
         $data['interswitch_merchant_code'] = $interswitch_creds['interswitch_merchant_code'];
         $data['interswitch_pay_item_id'] = $interswitch_creds['interswitch_pay_item_id'];
-        $data['interswitch_data_ref'] = base64_encode($order_info['customer_id'] . '_' . implode("-", $order_ids) . '_' . $this->cart->getTotal() . '_' . date("Y-m-d h:i:s"));
+        $data['interswitch_data_ref'] = base64_encode($order_info['customer_id'] . '_' . $order_id . '_' . $this->cart->getTotal() . '_' . date("Y-m-d h:i:s"));
         $data['interswitch_customer_id'] = $customer_info['customer_id'];
         $data['interswitch_customer_name'] = $customer_info['firstname'] . ' ' . $customer_info['lastname'];
         //$data['interswitch_amount'] = $amount * 100;
