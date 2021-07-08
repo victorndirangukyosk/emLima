@@ -950,9 +950,12 @@ return;
    
   else if(type=="Report issue")
   {
-       $('#contactusModal').modal({
+       $('#reportissueModal').modal({
         show: 'true'
+       
     });
+    sendSelectedOrderID(orderid);
+      
   }
    else if(type=="View items")
   {
@@ -1030,6 +1033,21 @@ return;
 
      
 
+
+
+ function sendSelectedOrderID($order_id) {
+    console.log($order_id);
+                
+                  var text ="<span class='col-sm-12 control-label orderlabel super' style='background: #FFE4CB;text-align: center;padding-top: 0px'>Order Id:"+$order_id+" </span><input hidden id='selectedorderid' name='selectedorderid' value="+$order_id+"></input>";
+            $("#modal_bodyvalue").html(text);
+             $("#reportissue-success-message").html('');
+              $("#reportissue-message").html('');
+               $("#input-issuesummary").val();
+
+                 
+            }
+
+    
 </script>
 </body>
 
