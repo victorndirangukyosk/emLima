@@ -411,7 +411,7 @@
                     <div class="control__indicator"></div>
                 </label>
                 <label class="control control--radio">Other
-                    <?php if($address['address_type'] == 'other'){ ?> 
+                    <?php if($address['address_type'] == 'other' || $address['address_type'] == NULL){ ?> 
                         <input type="radio" group="type" name="edit_modal_address_type" value="other" checked="checked" />
                     <?php } else { ?>
                     <input type="radio" group="type" name="edit_modal_address_type" value="other"/>
@@ -1241,18 +1241,18 @@ $('.time').datetimepicker({
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="<?= $base?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
+     <script src="../front/ui/theme/mvgv2/js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="<?= $base?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/side-menu-script.js"></script>
-    <script src="<?= $base?>front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script>
-    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/html5lightbox.js"></script>
-    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/jquery.sticky.js"></script>
-    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/header-sticky.js"></script>
+    <script src="../front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../front/ui/theme/mvgv2/js/side-menu-script.js"></script>
+    <script src="../front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../front/ui/theme/mvgv2/js/html5lightbox.js"></script>
+    <script type="text/javascript" src="../front/ui/theme/mvgv2/js/jquery.sticky.js"></script>
+    <script type="text/javascript" src="../front/ui/theme/mvgv2/js/header-sticky.js"></script>
 
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
 
-    <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.2"></script>
+    <script type="text/javascript" src="<?= $base?>ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.2"></script>
     
 
     <script type="text/javascript">
