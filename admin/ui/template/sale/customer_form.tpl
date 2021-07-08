@@ -396,25 +396,25 @@
                 <label class="control control--radio">Home
                     
                     <?php if($address['address_type'] == 'home') {?> 
-                        <input type="radio" group="type" name="edit_modal_address_type" value="home" checked="checked" />
+                        <input type="radio" group="type" name="address[<?php echo $address_row; ?>][address_type]" value="home" checked="checked" />
                     <?php } else {?>
-                    <input type="radio" group="type" name="edit_modal_address_type" value="home"/>
+                    <input type="radio" group="type" name="address[<?php echo $address_row; ?>][address_type]" value="home"/>
                     <?php } ?>
                     <div class="control__indicator"></div>
                 </label>
                 <label class="control control--radio">Office
                     <?php if($address['address_type'] == 'office'){ ?> 
-                        <input type="radio" group="type" name="edit_modal_address_type" value="office" checked="checked" />
+                        <input type="radio" group="type" name="address[<?php echo $address_row; ?>][address_type]" value="office" checked="checked" />
                     <?php } else {?>
-                    <input type="radio" group="type" name="edit_modal_address_type" value="office"/>
+                    <input type="radio" group="type" name="address[<?php echo $address_row; ?>][address_type]" value="office"/>
                     <?php } ?>
                     <div class="control__indicator"></div>
                 </label>
                 <label class="control control--radio">Other
                     <?php if($address['address_type'] == 'other' || $address['address_type'] == NULL){ ?> 
-                        <input type="radio" group="type" name="edit_modal_address_type" value="other" checked="checked" />
+                        <input type="radio" group="type" name="address[<?php echo $address_row; ?>][address_type]" value="other" checked="checked" />
                     <?php } else { ?>
-                    <input type="radio" group="type" name="edit_modal_address_type" value="other"/>
+                    <input type="radio" group="type" name="address[<?php echo $address_row; ?>][address_type]" value="other"/>
                     <?php } ?>
                     <div class="control__indicator"></div>
                 </label>
@@ -453,6 +453,9 @@
                             <label class="col-sm-2 control-label" for="Locality"><?= $text_locality?></label>
                             <div class="col-md-10">
                                 <input type="text" name="address[<?php echo $address_row; ?>][landmark]" value="<?php echo $address['landmark']; ?>" placeholder="" id="input-landmark<?php echo $address_row; ?>" class="form-control" />
+                                <input type="hidden" name="address[<?php echo $address_row; ?>][city_id]" value="32" placeholder="" id="input-city-id<?php echo $address_row; ?>" class="form-control" />
+                                <input type="hidden" name="address[<?php echo $address_row; ?>][latitude]" value="<?php echo $address['latitude']; ?>" placeholder="" id="input-latitude<?php echo $address_row; ?>" class="form-control" />
+                                <input type="hidden" name="address[<?php echo $address_row; ?>][longitude]" value="<?php echo $address['longitude']; ?>" placeholder="" id="input-longitude<?php echo $address_row; ?>" class="form-control" />
                           <?php if (isset($error_address[$address_row]['landmark'])) { ?>
                           <div class="text-danger"><?php echo $error_address[$address_row]['landmark']; ?></div>
                           <?php } ?>

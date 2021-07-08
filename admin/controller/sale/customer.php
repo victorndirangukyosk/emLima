@@ -168,6 +168,10 @@ class ControllerSaleCustomer extends Controller {
             }
 
             //echo "<pre>";print_r($this->request->post);die;
+            $log = new Log('error.log');
+            $log->write('address');
+            $log->write($this->request->post);
+            $log->write('address');
             $this->model_sale_customer->editCustomer($this->request->get['customer_id'], $this->request->post);
             $customer_device_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
             if(is_array($customer_device_info) && array_key_exists('customer_id', $customer_device_info) && array_key_exists('device_id', $customer_device_info) && $customer_device_info['customer_id'] > 0 && $customer_device_info['device_id'] != NULL) {
