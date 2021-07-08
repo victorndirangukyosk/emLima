@@ -442,6 +442,33 @@ class ControllerApiCart extends Controller {
             $tax_name = is_array($tax_info) && $tax_info != NULL && count($tax_info) > 0 ? $tax_info['name'] : NULL;
             $tax_percentage = is_array($tax_info) && $tax_info != NULL && count($tax_info) > 0 ? $tax_info['rate'] : NULL;
 
+            $this->load->model('tool/image');
+            $thumb_width = $this->config->get('config_image_thumb_width', 300);
+            $thumb_height = $this->config->get('config_image_thumb_height', 300);
+
+            $thumb_zoomwidth = $this->config->get('config_zoomimage_thumb_width', 600);
+            $thumb_zoomheight = $this->config->get('config_zoomimage_thumb_height', 600);
+
+            $tmpImg = $product_info['image'];
+            if (!empty($product_info['image'])) {
+                $product_info['image'] = $this->model_tool_image->resize($product_info['image'], $thumb_width, $thumb_height);
+
+                $product_info['zoom_image'] = $this->model_tool_image->resize($tmpImg, $thumb_zoomwidth, $thumb_zoomheight);
+            } else {
+                $product_info['image'] = $this->model_tool_image->resize('placeholder.png', $thumb_width, $thumb_height);
+
+                $product_info['zoom_image'] = $this->model_tool_image->resize('placeholder.png', $thumb_zoomwidth, $thumb_zoomheight);
+            }
+
+            if ($this->request->server['HTTPS']) {
+                $product_info['image'] = str_replace($this->config->get('config_ssl'), '', $product_info['image']);
+
+                $product_info['zoom_image'] = str_replace($this->config->get('config_ssl'), '', $product_info['zoom_image']);
+            } else {
+                $product_info['image'] = str_replace($this->config->get('config_url'), '', $product_info['image']);
+                $product_info['zoom_image'] = str_replace($this->config->get('config_url'), '', $product_info['zoom_image']);
+            }
+
             if (is_array($product_info) && $product_info['status'] == 1) {
                 $this->data[$keys] = [
                     'key' => $keys,
@@ -457,7 +484,7 @@ class ControllerApiCart extends Controller {
                     'name' => $product_info['name'],
                     'model' => $product_info['model'],
                     'shipping' => 0,
-                    'image' => BASE_URL . DIR_IMAGE . $product_info['image'],
+                    'image' => $product_info['image'],
                     'option' => [],
                     'download' => [],
                     'quantity' => $data['quantity'],
