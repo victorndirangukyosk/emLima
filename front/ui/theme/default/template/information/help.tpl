@@ -20,11 +20,27 @@
             <div class="footer text-center" style="background: none;;padding-bottom:15px;">
                 <p>
                     <?= $label_text ?>
-                    <a href="#" data-toggle="modal" data-target="#contactusModal"><?= $text_submit  ?></a>
+                    <!--<a href="#" data-toggle="modal" data-target="#contactusModal"><?= $text_submit  ?></a>-->
+                    <a href="#" data-toggle="modal" onclick="sendSelectedOrderID();" data-target="#reportissueModal"><?= $text_submit  ?></a>
                 </p>
             </div>
         </div>
     </div>
-    <?= $contactus_modal ?>
+    <?= $reportissue_modal ?>
     </body>
 </html>
+
+
+<script>
+
+
+
+ function sendSelectedOrderID() {
+                 
+             $("#reportissue-success-message").html('');
+              $("#reportissue-message").html('');
+               $("#input-issuesummary").val();
+
+                 
+            }
+            </script>
