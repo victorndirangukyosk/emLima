@@ -992,4 +992,20 @@ class ModelAccountCustomer extends Model {
         // $contact_id = $this->db->getLastId();   return $contact_id;
     }
 
+
+
+    public function addCustomerIssue($customer_id, $data) {
+        try {
+             if(!$data['selectedorderid'])
+             $data['selectedorderid']=0;
+                $sql = 'INSERT INTO ' . DB_PREFIX . "issue SET customer_id = '" . (int) $customer_id . "', order_id = '" . $data['selectedorderid'] . "', issue_details = '" . $this->db->escape($data['issuesummary']) . "', issue_type = '" . $this->db->escape($data['selectissuetype']) . "', created_date = NOW()";
+             
+            $this->db->query($sql);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 }

@@ -1261,6 +1261,54 @@ $(document).delegate('#resendVerificationMail', 'click', function () {
     });
 });
 
+
+
+$(document).delegate('#reportissue', 'click', function () {
+    console.log("reportissue click");
+
+    var text = $('.reportissue-modal-text').html();
+    // $('.reportissue-modal-text').html('');
+    $('.reportissue-loader').show();
+
+
+    $.ajax({
+        url: 'index.php?path=information/reportissue',
+        type: 'post',
+        data: $('#reportissue-form').serialize(),
+        dataType: 'json',
+        async: true,
+        success: function (json) {
+            console.log(json);
+            if (json['status']) {
+
+
+                $('#reportissue-message').html('');
+                $('#reportissue-success-message').html(json['text_message']);
+
+                // $('.reportissue-modal-text').html(text);
+                $('.reportissue-loader').hide();
+
+
+                $('#reportissueModal').find('form').trigger('reset');
+
+            } else {
+                $error = '';
+                $('#reportissue-success-message').html('');
+
+                if (json['error_issuesummary']) {
+                    $error += json['error_issuesummary'] + '<br/>';
+                }
+
+
+                // $('.reportissue-modal-text').html(text);
+                $('.reportissue-loader').hide();
+
+                $('#reportissue-message').html("<p style='color:red'>" + $error + "</p>");
+            }
+        }
+    });
+});
+
 $(document).delegate('#contactus', 'click', function () {
     console.log("contactus click");
 
