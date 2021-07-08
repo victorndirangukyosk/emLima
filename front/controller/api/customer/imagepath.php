@@ -3,6 +3,7 @@
 class ControllerApiCustomerImagepath extends Controller {
 
     public function index($image) {
+        $this->load->model('tool/image');
         $thumb_width = $this->config->get('config_image_thumb_width', 300);
         $thumb_height = $this->config->get('config_image_thumb_height', 300);
 
