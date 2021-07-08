@@ -441,7 +441,7 @@ class ControllerApiCart extends Controller {
             $tax_info = $this->tax->getRateNameByTaxClassId($product_info['tax_class_id']);
             $tax_name = is_array($tax_info) && $tax_info != NULL && count($tax_info) > 0 ? $tax_info['name'] : NULL;
             $tax_percentage = is_array($tax_info) && $tax_info != NULL && count($tax_info) > 0 ? $tax_info['rate'] : NULL;
-            $image = $this->load->controller('api/customer/imagepath', $image);
+            $image = $this->load->controller('api/customer/imagepath', $product_info['image']);
 
             if (is_array($product_info) && $product_info['status'] == 1) {
                 $this->data[$keys] = [
