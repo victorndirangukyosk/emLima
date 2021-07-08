@@ -298,6 +298,8 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                         password: password,
                         confirm: passwordConfirmation,
                         accountmanagerid: accountmanagerid,
+                        address_lat:address_lat,
+                        address_lng:address_lng,
                         signup_otp: otp,
                         //accountmanagername:accountmanagername
                     },
