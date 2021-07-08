@@ -57,6 +57,7 @@ class ControllerInformationHelp extends Controller
         $data['q'] = $q;
 
         $data['contactus_modal'] = $this->load->controller('information/contact');
+        $data['reportissue_modal'] = $this->load->controller('information/reportissue');
 
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/information/help_search.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/information/help_search.tpl', $data));
@@ -112,6 +113,7 @@ class ControllerInformationHelp extends Controller
         $data['search'] = $this->url->link('information/help/search');
 
         $data['contactus_modal'] = $this->load->controller('information/contact');
+        $data['reportissue_modal'] = $this->load->controller('information/reportissue');
 
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/information/help.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/information/help.tpl', $data));
@@ -162,6 +164,7 @@ class ControllerInformationHelp extends Controller
         $data['header'] = $this->load->controller('common/header/help');
 
         $data['contactus_modal'] = $this->load->controller('information/contact');
+        $data['reportissue_modal'] = $this->load->controller('information/reportissue');
 
         $data['help'] = $this->url->link('information/help');
         $data['search'] = $this->url->link('information/help/search');
