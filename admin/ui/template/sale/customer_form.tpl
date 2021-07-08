@@ -411,7 +411,7 @@
                     <div class="control__indicator"></div>
                 </label>
                 <label class="control control--radio">Other
-                    <?php if($address['address_type'] == 'other'){ ?> 
+                    <?php if($address['address_type'] == 'other' || $address['address_type'] == NULL){ ?> 
                         <input type="radio" group="type" name="edit_modal_address_type" value="other" checked="checked" />
                     <?php } else { ?>
                     <input type="radio" group="type" name="edit_modal_address_type" value="other"/>
