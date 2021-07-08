@@ -1,13 +1,5 @@
 <?php
 
-require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
-
-require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
-
-require DIR_SYSTEM.'vendor/Facebook/autoload.php';
-
-require_once DIR_APPLICATION.'/controller/api/settings.php';
-
 class ControllerApiCart extends Controller {
 
     private $config;
@@ -432,7 +424,8 @@ class ControllerApiCart extends Controller {
     }
 
     public function getCartProducts() {
-
+        
+        $this->load->library('config');
         $totalQuantity = 0;
         $json = [];
         $log = new Log('error.log');
