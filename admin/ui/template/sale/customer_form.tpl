@@ -1231,7 +1231,7 @@ $('.time').datetimepicker({
                         <div class="row" style="margin-top: 10px;">
                             
                             <center>
-                                <button id="saveLatLng" type="button" class="btn btn btn-primary" onclick="saveLatLng()"><?= $text_ok?></button>
+                                <button id="saveLatLng" type="button" class="btn btn btn-primary" onclick="saveLatLng()">Ok</button>
                             </center>    
                         </div>
                     </div>
@@ -1635,7 +1635,7 @@ $('.time').datetimepicker({
             var autocomplete = new google.maps.places.Autocomplete(acInputs[i]);
             
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                    
+                console.log(autocomplete);
 
 
                 
