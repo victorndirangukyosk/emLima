@@ -178,6 +178,7 @@ class ControllerApiCustomerLogin extends Controller
 
             if ($api_info['status']) {
                 if (!isset($this->session->data['customer_id'])) {
+                    $this->session->data['api_id'] = 4;
                     $this->session->data['customer_id'] = $api_info['customer_id'];
                     $this->session->data['order_approval_access'] = $api_info['order_approval_access'];
                     $this->session->data['order_approval_access_role'] = $api_info['order_approval_access_role'];
