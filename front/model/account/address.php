@@ -54,6 +54,9 @@ class ModelAccountAddress extends Model
             } else {
                 $city = '';
             }
+            
+            $log = new Log('error.log');
+            $log->write($address_query->row);
 
             $address_data = [
                 'address_id' => $address_query->row['address_id'],
