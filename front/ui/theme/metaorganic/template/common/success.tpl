@@ -277,9 +277,9 @@
          <!--</div>-->
     </div>
 </div>
-
+ 
 <?php echo $footer; ?>
-
+<?= $feedback_modal ?>
 <script type="text/javascript">
 
 <?php if(isset($redirect_url_return)) { ?>

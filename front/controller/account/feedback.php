@@ -64,4 +64,35 @@ class ControllerAccountFeedback extends Controller {
 
         // $this->getForm();
     }
+
+
+    public function feedback_popup()
+    {
+        $log = new Log('error.log');
+        $log->write('11'); 
+        //$this->document->setTitle($this->language->get('heading_title'));
+        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
+    
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->request->isAjax()) {
+            $log->write('15.4');
+            if (!$this->validate()) {
+                $data['status'] = false;
+                if ($this->request->isAjax()) {
+                    $this->response->addHeader('Content-Type: application/json');
+                    $this->response->setOutput(json_encode($data));
+                }
+            } else {
+                $data['status'] = true;
+                $data['redirect'] = $this->url->link('account/account', '', 'SSL');
+
+                if ($this->request->isAjax()) {
+                    $this->response->addHeader('Content-Type: application/json');
+                    $this->response->setOutput(json_encode($data));
+                }
+            }
+        }
+ 
+            return $this->load->view('metaorganic/template/account/feedback_popup.tpl', $data);
+         
+    }
 }
