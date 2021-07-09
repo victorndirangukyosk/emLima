@@ -109,7 +109,7 @@
       </div>  
     </div>
                                      
-<div class="form-group">
+<div class="form-group" style="padding-left: 20px;padding-right: 19px;padding-top: 20px;">
 <textarea maxlength="2000" type="text" id="comments" required="" class="v30_13" placeholder="Write your feedback here..."></textarea></div>
 
                                 </div>
@@ -121,7 +121,7 @@
 
                                     <div class="v34_56" style="float:right;">
 <div class="v34_53" style="cursor:pointer"> 
-<a  class="v34_52" href="<?= $base;?>index.php"  >Will do later</a>
+<a  class="v34_52" data-dismiss="modal" aria-label="Close" >Will do later</a>
 </div>
 <div class="v30_20" style="cursor:pointer" onclick="saveFeedback()";><span class="v30_21">Submit</span>
 </div>
@@ -779,7 +779,8 @@ function saveFeedback()
                                            
                                            
                                             setTimeout(function() {
-    location=redirectURL;
+    //location=redirectURL;
+    $("#feedbackModal").modal('hide');
   }, 2000);
         
 

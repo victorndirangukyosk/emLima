@@ -468,7 +468,7 @@ class ControllerCheckoutSuccess extends Controller {
         unset($this->session->data['completed_order_totals']);
         unset($this->session->data['completed_order_ids']);
         /* ORDER SUMMARY */
-
+        $data['feedback_modal'] = $this->load->controller('account/feedback/feedback_popup');
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
         } else {
