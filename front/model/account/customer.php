@@ -1008,4 +1008,20 @@ class ModelAccountCustomer extends Model {
         }
     }
 
+    public function getCustomerLastFeedback($customer_id) {
+
+        $selectquery = $this->db->query('SELECT created_date  FROM ' . DB_PREFIX . "feedback WHERE customer_id = '" . (int) $customer_id . "' Order by feedback_id desc Limit 0, 1");
+        $feedback_date= $selectquery->row['created_date'];
+        if($feedback_date)
+        {
+        $query = $this->db->query('SELECT count(order_id) as Count FROM ' . DB_PREFIX . "order WHERE customer_id = '" . (int) $customer_id . "' and date_added >='" .  $feedback_date . "'");
+        //   echo '<pre>';print_r($query->row['Count']);exit;
+        return $query->row['Count'];
+        }else
+        {
+            return 0;
+        }
+
+    }
+
 }

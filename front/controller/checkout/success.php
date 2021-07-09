@@ -469,6 +469,13 @@ class ControllerCheckoutSuccess extends Controller {
         unset($this->session->data['completed_order_ids']);
         /* ORDER SUMMARY */
         $data['feedback_modal'] = $this->load->controller('account/feedback/feedback_popup');
+       
+        $feedback_order_count = $this->model_account_customer->getCustomerLastFeedback($this->customer->getId());
+       if(($feedback_order_count>3 ) || $feedback_order_count==0)
+       {
+        $data['load_feedback_popup'] = "true";
+       }
+
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
         } else {
