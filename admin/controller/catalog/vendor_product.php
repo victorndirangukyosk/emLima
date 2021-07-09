@@ -770,6 +770,8 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['filter_store_id'] = $filter_store_id;
         $data['filter_status'] = $filter_status;
         $data['filter_category_price'] = $filter_category_price;
+        $this->load->model('localisation/tax_class');
+        $data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
 
         $data['sort'] = $sort;
         $data['order'] = $order;

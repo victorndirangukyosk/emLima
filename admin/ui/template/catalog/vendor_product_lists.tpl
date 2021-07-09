@@ -62,6 +62,20 @@
                                 <label class="control-label" for="input-model"><?php echo $entry_product_id_from; ?></label>
                                 <input type="text" name="filter_product_id_from" value="<?php echo $filter_product_id_from; ?>" placeholder="<?php echo $entry_product_id_from; ?>" id="input-model" class="form-control" />
                             </div>
+                             
+                             <div class="form-group">
+			        <label class="control-label">Tax Class</label>
+                                <select name="tax_class_id" id="input-tax-class" class="form-control" >
+				 <option value="0"><?php echo $text_none; ?></option>
+				 <?php foreach ($tax_classes as $tax_class) { ?>
+				 <?php if ($tax_class['tax_class_id'] == $tax_class_id) { ?>
+				 <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
+				  <?php } else { ?>
+				  <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
+				  <?php } ?>
+				  <?php } ?>
+				</select> 
+                             </div>
 
                         </div>
                         <?php if (!$is_vendor): ?>
