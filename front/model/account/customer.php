@@ -1014,7 +1014,7 @@ class ModelAccountCustomer extends Model {
         $feedback_date= $selectquery->row['created_date'];
         if($feedback_date)
         {
-        $query = $this->db->query('SELECT count(order_id) as Count FROM ' . DB_PREFIX . "order WHERE customer_id = '" . (int) $customer_id . "' and date_added >='" .  $feedback_date . "'");
+        $query = $this->db->query('SELECT count(order_id) as Count FROM ' . DB_PREFIX . "order WHERE customer_id = '" . (int) $customer_id . "' and date(date_added) >date('" .  $feedback_date . "')");
         //   echo '<pre>';print_r($query->row['Count']);exit;
         return $query->row['Count'];
         }else
