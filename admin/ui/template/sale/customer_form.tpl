@@ -653,20 +653,16 @@ function addAddress() {
   html  = '<div class="tab-pane" id="tab-address' + address_row + '">';
   html += '  <input type="hidden" name="address[' + address_row + '][address_id]" value="" />';
 
-  html += '  <div class="form-group">';
-  html += '  <label class="col-sm-1 control control--radio"><?='     Home      '?>';
-  html += '  <input type="radio" name="address[' + address_row + '][address_type]" value="home" checked="checked" />';
-  html += '  <div class="control__indicator"></div>';
-  html += '  </label>';
-  html += ' <label class="col-sm-1 control control--radio"><?='      Office      '  ?>';
-  html += ' <input type="radio" value="office" name="address[' + address_row + '][address_type]" />';
-  html += '  <div class="control__indicator"></div>';
-  html += '    </label>';
-  html += ' <label class="col-sm-1 control control--radio"><?= '     Other     '?>';
-  html += ' <input type="radio" value="other" name="address[' + address_row + '][address_type]" />';
-  html += '  <div class="control__indicator"></div>';
-  html += ' </label>';
+  html += '  <div class="form-group required">';
+  html += '  <label class="col-sm-2 control-label" for="input-address-type'+address_row+'">Address Type</label>';
+  html += '  <div class="col-sm-10">';
+  html += '  <select name="address['+address_row+'][address_type]" class="form-control">';
+  html += '  <option value="home">Home</option>';
+  html += '  <option value="office">Office</option>';
+  html += '  <option value="other">Other</option>';
+  html += '  </select>';
   html += '  </div>';
+  html += ' </div>';
 
 
 
