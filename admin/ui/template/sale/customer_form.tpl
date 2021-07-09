@@ -391,34 +391,18 @@
                     <?php foreach ($addresses as $address) { ?>
                     <div class="tab-pane" id="tab-address<?php echo $address_row; ?>">
                       <input type="hidden" name="address[<?php echo $address_row; ?>][address_id]" value="<?php echo $address['address_id']; ?>" />
-                       
-     <div class="select-locations">
-                <label class="control control--radio">Home
-                    
-                    <?php if($address['address_type'] == 'home') {?> 
-                        <input type="radio" group="type" name="address[<?php echo $address_row; ?>][address_type]" value="home" checked="checked" />
-                    <?php } else {?>
-                    <input type="radio" group="type" name="address[<?php echo $address_row; ?>][address_type]" value="home"/>
-                    <?php } ?>
-                    <div class="control__indicator"></div>
-                </label>
-                <label class="control control--radio">Office
-                    <?php if($address['address_type'] == 'office'){ ?> 
-                        <input type="radio" group="type" name="address[<?php echo $address_row; ?>][address_type]" value="office" checked="checked" />
-                    <?php } else {?>
-                    <input type="radio" group="type" name="address[<?php echo $address_row; ?>][address_type]" value="office"/>
-                    <?php } ?>
-                    <div class="control__indicator"></div>
-                </label>
-                <label class="control control--radio">Other
-                    <?php if($address['address_type'] == 'other' || $address['address_type'] == NULL){ ?> 
-                        <input type="radio" group="type" name="address[<?php echo $address_row; ?>][address_type]" value="other" checked="checked" />
-                    <?php } else { ?>
-                    <input type="radio" group="type" name="address[<?php echo $address_row; ?>][address_type]" value="other"/>
-                    <?php } ?>
-                    <div class="control__indicator"></div>
-                </label>
-            </div>
+      
+     <div class="form-group required">
+                <label class="col-sm-2 control-label" for="input-address-type<?php echo $address_row; ?>">Address Type</label>
+                <div class="col-sm-10">
+                <select name="address[<?php echo $address_row; ?>][address_type]" class="form-control">
+                <option <?php if($address['address_type'] == 'home') { ?> selected="" <?php } ?> value="home">Home</option>
+                <option <?php if($address['address_type'] == 'office') { ?> selected="" <?php } ?> value="office">Office</option>
+                <option <?php if($address['address_type'] == 'other' || $address['address_type'] == NULL) { ?> selected="" <?php } ?> value="other">Other</option>       
+                </select>
+                </div>
+    </div>                 
+
 
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-name<?php echo $address_row; ?>">Name</label>
@@ -669,20 +653,16 @@ function addAddress() {
   html  = '<div class="tab-pane" id="tab-address' + address_row + '">';
   html += '  <input type="hidden" name="address[' + address_row + '][address_id]" value="" />';
 
-  html += '  <div class="form-group">';
-  html += '  <label class="col-sm-1 control control--radio"><?='     Home      '?>';
-  html += '  <input type="radio" name="modal_address_type" value="home" checked="checked" />';
-  html += '  <div class="control__indicator"></div>';
-  html += '  </label>';
-  html += ' <label class="col-sm-1 control control--radio"><?='      Office      '  ?>';
-  html += ' <input type="radio" value="office" name="modal_address_type" />';
-  html += '  <div class="control__indicator"></div>';
-  html += '    </label>';
-  html += ' <label class="col-sm-1 control control--radio"><?= '     Other     '?>';
-  html += ' <input type="radio" value="other" name="modal_address_type" />';
-  html += '  <div class="control__indicator"></div>';
-  html += ' </label>';
+  html += '  <div class="form-group required">';
+  html += '  <label class="col-sm-2 control-label" for="input-address-type'+address_row+'">Address Type</label>';
+  html += '  <div class="col-sm-10">';
+  html += '  <select name="address['+address_row+'][address_type]" class="form-control">';
+  html += '  <option value="home">Home</option>';
+  html += '  <option value="office">Office</option>';
+  html += '  <option value="other">Other</option>';
+  html += '  </select>';
   html += '  </div>';
+  html += ' </div>';
 
 
 
@@ -1244,9 +1224,7 @@ $('.time').datetimepicker({
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-     <script src="../front/ui/theme/mvgv2/js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="../front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../front/ui/theme/mvgv2/js/side-menu-script.js"></script>
     <script src="../front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script>
     <script type="text/javascript" src="../front/ui/theme/mvgv2/js/html5lightbox.js"></script>
