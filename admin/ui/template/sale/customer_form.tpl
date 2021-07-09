@@ -663,7 +663,9 @@ function addAddress() {
   html += '  </select>';
   html += '  </div>';
   html += ' </div>';
-
+  html += '<input type="hidden" name="address['+address_row+'][city_id]" value="32" placeholder="" id="input-city-id<?php echo $address_row; ?>" class="form-control" />';
+  html += '<input type="hidden" name="address['+address_row+'][latitude]" value="" placeholder="" id="input-latitude'+address_row+'" class="form-control" />';
+  html += '<input type="hidden" name="address['+address_row+'][longitude]" value="" placeholder="" id="input-longitude'+address_row+'" class="form-control" />';
 
 
 
@@ -716,7 +718,7 @@ function addAddress() {
   <!-->$check_address-->
 
   html += ' <div class="col-sm-10">';
-  html += ' <input  name="address[' + address_row + '][locality]" type="text"  class="form-control input-md LocalityId" id="input-address_locality' + address_row + '" required=""  class="form-control">';                                                    
+  html += ' <input  name="address[' + address_row + '][landmark]" type="text"  class="form-control input-md LocalityId" id="input-address_locality' + address_row + '" required=""  class="form-control">';                                                    
   html += ' <span class="input-group-btn">';
 
   html += ' <button id="locateme" class="btn btn-default disabled" style="height:38px;color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
@@ -726,7 +728,7 @@ function addAddress() {
   html += '  </div>';
   html += ' <?php } else { ?>';
   html += ' <div class="col-sm-10">';
-  html += ' <input  name="address[' + address_row + '][locality]" type="text"  class="form-control input-md LocalityId" id="input-address_locality' + address_row + '" required="" class="form-control">';
+  html += ' <input  name="address[' + address_row + '][landmark]" type="text"  class="form-control input-md LocalityId" id="input-address_locality' + address_row + '" required="" class="form-control">';
   html += ' </div>';
   html += ' <?php } ?>';
   html += ' </div>';
