@@ -27,7 +27,7 @@ class ModelAccountWishList extends Model
                     $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
                 }
             $store_product = $this->db->query('select * from `'.DB_PREFIX.'product_to_store` WHERE product_id="'.$wishlist['product_id'].'"')->row;
-            $store_product_detail = $store_product->row;
+            $store_product_detail = $store_product;
             $log = new Log('error.log');
             $log->write('store_product_detail');
             $log->write($store_product_detail);
