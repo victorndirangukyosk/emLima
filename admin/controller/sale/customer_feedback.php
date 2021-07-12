@@ -76,14 +76,24 @@ class ControllerSaleCustomerFeedback extends Controller
         $results = $this->model_sale_customer_feedback->getCustomerFeedbacks($filter_data);
 
         foreach ($results as $result) {
+
+            if ($result['company_name']) {
+                $result['company_name'] = ' (' . $result['company_name'] . ')';
+            } else {
+                // $result['company_name'] = "(NA)";
+            }
             $data['customer_feedbacks'][] = [
                 'feedback_id' => $result['feedback_id'],
                 'rating' => $result['rating'],
                 'comments' => $result['comments'],
                 'customer_name' => $result['name'],
                 'company_name' => $result['company_name'],
-                'feedback_type' =>  ($result['feedback_type'] =="s"? "Suggestions" : ($result['feedback_type'] =="p"? "Problem":"Happy")),
+                'feedback_type' =>  ($result['feedback_type'] =="s"? "Suggestions" : ($result['feedback_type'] =="p"? "Issue"." - ".$result['issue_type'] :"Happy")),
                 'order_id' => $result['order_id'],
+                'status' => $result['status'],
+                'created_date' => $result['created_date'],
+                // 'closed_date' => $result['closed_date'],
+                // 'status' => $result['status'],
                  
             ];
         }
