@@ -34,7 +34,7 @@
               <thead>
                 <tr>
                   <!--<td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>-->
-                  <td class="text-left"><?php echo $column_Company; ?></td>
+                  <!--<td class="text-left"><?php echo $column_Company; ?></td>-->
                   <td class="text-left"><?php echo $column_Customer; ?></td>
                  
                   <td class="text-left"><?php echo $column_rating; ?></td>
@@ -53,8 +53,13 @@
                     <?php } else { ?>
                     <input type="checkbox" name="selected[]" value="<?php echo $customer_feedback['feedback_id']; ?>" />
                     <?php } ?></td>-->
-                  <td class="text-left"><?php echo $customer_feedback['company_name']; ?></td>
-                  <td class="text-left"><?php echo $customer_feedback['customer_name']; ?></td>
+                  <td class="text-left">
+                     
+                         <?php echo $customer_feedback['customer_name']; ?>      </br>
+                  <?php echo $customer_feedback['company_name']; ?>
+
+                                            </td>
+                  <!--<td class="text-left"><?php echo $customer_feedback['customer_name']; ?></td>-->
 
                   <td class="text-left"><?php echo $customer_feedback['rating']; ?></td>
 

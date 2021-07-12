@@ -52,10 +52,16 @@ class ControllerAccountFeedback extends Controller {
         // $this->load->language('account/feedback');
         // $this->document->setTitle($this->language->get('heading_title'));
  
-        $this->load->model('account/feedback');
+        // $this->load->model('account/feedback');
 
         if (('POST' == $this->request->server['REQUEST_METHOD'])  ) {
-            $this->model_account_feedback->saveFeedback($this->request->post);
+            // $this->model_account_feedback->saveFeedback($this->request->post);
+           
+           
+            $this->load->model('account/customer');
+            // $stats= $this->model_account_customer->addCustomerIssue($this->customer->getId(), $this->request->post);
+            $stats= $this->model_account_customer->addCustomerfeedback($this->customer->getId(), $this->request->post);
+           
             $this->session->data['success'] = "Thanks for your feedback";  
             // $this->response->redirect($this->url->link('account/account', '', 'SSL'));
 

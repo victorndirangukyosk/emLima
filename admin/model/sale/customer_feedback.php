@@ -12,7 +12,7 @@ class ModelSaleCustomerFeedback extends Model
 
     public function getCustomerFeedbacks($data = [])
     {
-        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,feedback_id,rating,feedback_type,comments,order_id, company_name FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id";
+        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date),f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id";
     
         $sql .= ' ORDER BY `feedback_id`';
 
