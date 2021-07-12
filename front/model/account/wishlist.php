@@ -26,11 +26,13 @@ class ModelAccountWishList extends Model
             } else if($wishlist['image'] == NULL || !file_exists(DIR_IMAGE.$wishlist['image'])) {
                     $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
                 }
-
+            $store_product = $this->db->query('select * from `'.DB_PREFIX.'product_to_store` WHERE product_id="'.$wishlist['product_id'].'"')->row;
+            $store_product_detail = $store_product->row;
                 $temp = [
                     'name' => $wishlist_name,
                     'wishlist_id' => $wishlist['wishlist_id'],
                     'product_id' => $wishlist['product_id'],
+                    'product_store_id' => $store_product_detail['product_store_id'],
                     'quantity' => $wishlist['quantity'],
                     'name' => $wishlist['name'],
                     'image' => $image,
