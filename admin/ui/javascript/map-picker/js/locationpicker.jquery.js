@@ -444,7 +444,7 @@
             $target.data("locationpicker", gmapContext);
             // Subscribe GMap events
             google.maps.event.addListener(gmapContext.marker, "dragend", function(event) {
-                console.log(event.latLng);
+                console.log(gmapContext.marker.getPosition());
                 GmUtility.setPosition(gmapContext, gmapContext.marker.position, function(context){
                     var currentLocation = GmUtility.locationFromLatLng(gmapContext.location);
                     context.settings.onchanged.apply(gmapContext.domContainer, [currentLocation, context.radius, true]);
