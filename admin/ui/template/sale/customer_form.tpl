@@ -65,6 +65,7 @@
                     <div class="tab-pane active" id="tab-customer">
                       <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-customer-group"><?php echo $entry_customer_group; ?></label>
+                        <input type="hidden" id="selected_address" name="selected_address" value="">
                         <div class="col-sm-10">
                           <select name="customer_group_id" id="input-customer-group" class="form-control">
                             <?php foreach ($customer_groups as $customer_group) { ?>
@@ -697,7 +698,7 @@ function addAddress() {
   html += ' <input name="modal_address_locality" type="text" value=""  class="form-control input-md LocalityId" id="address[' + address_row + '][address_locality]" required=""   >     ';                                               
   html += ' <span class="form-group-btn">';
 
-  html += ' <button id="locateme" class="btn btn-default disabled" style=" color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
+  html += ' <button id="locateme" data-address-id="'+address_row+'" class="btn btn-default disabled" style=" color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap('+address_row+')" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
 
   html += ' </span>';
   html += '  </div>';
@@ -721,7 +722,7 @@ function addAddress() {
   html += ' <input  name="address[' + address_row + '][landmark]" type="text"  class="form-control input-md LocalityId" id="input-address_locality' + address_row + '" required=""  class="form-control">';                                                    
   html += ' <span class="input-group-btn">';
 
-  html += ' <button id="locateme" class="btn btn-default" style="height:38px;color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
+  html += ' <button id="locateme" data-address-id="'+address_row+'" class="btn btn-default" style="height:38px;color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap('+address_row+')" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
 
   html += ' </span>';
   
@@ -1566,8 +1567,9 @@ $('.time').datetimepicker({
 <?php } ?>
 <script type="text/javascript">
 
-    function openGMap() {
-
+    function openGMap(address_id) {
+        console.log(address_id);
+        $('input[name^=\'selected_address\']').val(address_id);
         $("#GMapPopup").on('shown.bs.modal', function () {
             $('div#GMapPopup').show();
             $('#us1').locationpicker('autosize');
@@ -1679,6 +1681,8 @@ $('.time').datetimepicker({
         console.log('new_address');
         console.log(address);
         console.log('new_address');
+         var selected_address = $('input[name^=\'selected_address\']').val();
+         console.log(selected_address);
 
         /*if(address.addressComponents.streetName && address.addressComponents.streetNumber ) {
             $('#street').val(address.addressComponents.streetNumber+' '+address.addressComponents.streetName);
