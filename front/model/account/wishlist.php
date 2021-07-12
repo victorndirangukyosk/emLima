@@ -28,6 +28,10 @@ class ModelAccountWishList extends Model
                 }
             $store_product = $this->db->query('select * from `'.DB_PREFIX.'product_to_store` WHERE product_id="'.$wishlist['product_id'].'"')->row;
             $store_product_detail = $store_product->row;
+            $log = new Log('error.log');
+            $log->write('store_product_detail');
+            $log->write($store_product_detail);
+            $log->write('store_product_detail');
                 $temp = [
                     'name' => $wishlist_name,
                     'wishlist_id' => $wishlist['wishlist_id'],
