@@ -721,7 +721,7 @@ function addAddress() {
   html += ' <input  name="address[' + address_row + '][landmark]" type="text"  class="form-control input-md LocalityId" id="input-address_locality' + address_row + '" required=""  class="form-control">';                                                    
   html += ' <span class="input-group-btn">';
 
-  html += ' <button id="locateme" class="btn btn-default disabled" style="height:38px;color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
+  html += ' <button id="locateme" class="btn btn-default" style="height:38px;color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
 
   html += ' </span>';
   
@@ -1246,8 +1246,8 @@ $('.time').datetimepicker({
             
             $('#us1').locationpicker({
                 location: {
-                    latitude: <?= $latitude?$latitude:0 ?>,
-                    longitude: <?= $longitude?$longitude:0 ?>
+                    latitude: <?= $latitude?$latitude: 0.0236 ?>,
+                    longitude: <?= $longitude?$longitude:37.9062 ?>
                 },  
                 radius: 0,
                 inputBinding: {
@@ -1676,7 +1676,9 @@ $('.time').datetimepicker({
         console.log('change LocalityId');
 
         var address= $('#us1').locationpicker('location');
+        console.log('new_address');
         console.log(address);
+        console.log('new_address');
 
         /*if(address.addressComponents.streetName && address.addressComponents.streetNumber ) {
             $('#street').val(address.addressComponents.streetNumber+' '+address.addressComponents.streetName);
