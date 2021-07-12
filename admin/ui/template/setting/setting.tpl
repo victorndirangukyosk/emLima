@@ -664,6 +664,21 @@
                                     <?php } ?>
                                 </div>
                             </div>
+
+
+                             <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-customer-experience-group-id">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="Add Customer Experience Group ID">
+                                        Customer Experience Group ID
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_customer_experience_group_id" value="<?php echo $config_customer_experience_group_id; ?>" placeholder="Enter Account Manager Group ID" id="input-account-manager-group-id" class="form-control" />
+                                    <?php if ($error_customer_experience_group_id) { ?>
+                                    <div class="text-danger"><?php echo $error_customer_experience_group_id; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
                             
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-farmer-id">
