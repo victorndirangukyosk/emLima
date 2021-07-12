@@ -1024,4 +1024,95 @@ class ModelAccountCustomer extends Model {
 
     }
 
+
+    //Customer Feedbacks and issues are clubed to single table
+    public function addCustomerFeedback($customer_id, $data) {
+
+        
+        try {
+             if(!isset($data['selectedorderid']))
+             $data['selectedorderid']=0;
+             if(!isset($data['feedback_type']))
+             $data['feedback_type']='p';
+
+             if(isset($data['comments']))
+             $data['issuesummary']=$data['comments'];
+
+             $data['customer_name']=$this->customer->getFirstName().' '.$this->customer->getLastName();
+             $data['email']=$this->customer->getEmail();
+             $data['mobile']=$this->customer->getTelephone();
+             $data['feedback_type']= ($data['feedback_type'] =="s"? "Suggestions" : ($data['feedback_type'] =="p"? "Issue"." - ".$data['selectissuetype'] :"Happy"));
+             $data['description']=$data['issuesummary'];
+
+
+            //  if(!$data['rating_id'])
+            //  $data['rating_id']=0;
+                // $sql = 'INSERT INTO ' . DB_PREFIX . "feedback SET customer_id = '" . (int) $customer_id . "', order_id = '" . $data['selectedorderid'] . "', issue_details = '" . $this->db->escape($data['issuesummary']) . "', issue_type = '" . $this->db->escape($data['selectissuetype']) . "', created_date = NOW()";
+                $sql ='INSERT INTO '.DB_PREFIX."feedback SET customer_id = '".(int) $customer_id."',order_id = '" . $data['selectedorderid'] . "', comments = '".$this->db->escape($data['issuesummary'])."', rating = '".$this->db->escape($data['rating_id'])."', feedback_type ='".$this->db->escape($data['feedback_type'])."',issue_type= '".$this->db->escape($data['selectissuetype'])."', created_date = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'";
+                //   echo '<pre>';($sql);exit;          
+
+                    $this->db->query($sql);
+
+                    #region send mail to customer experience
+try{
+                    if($data['rating_id']<=3)
+                    {
+                        //get customer experience emails.
+                        $customerexperienceEmails=$this->getCustomerExperienceEmails();
+
+                    }
+
+                    $subject = $this->emailtemplate->getSubject('Feedback', 'feedback_1', $data);
+                    $message = $this->emailtemplate->getMessage('Feedback', 'feedback_1', $data);
+                   
+                    if($subject!=null && $message!=null && $this->emailtemplate->getEmailEnabled('Feedback', 'feedback_1'))
+                {
+                    $Senderemails="";
+                    foreach($customerexperienceEmails as $emailvalue)
+                    {
+                        if($Senderemails=="")
+                        $Senderemails=$emailvalue['email'];
+                        else
+                        $Senderemails=$Senderemails.';'.$emailvalue['email'];
+                    }
+                    if( $Senderemails!="")
+                    {
+                    $mail = new Mail($this->config->get('config_mail'));
+                    // $mail->setTo($this->config->get('config_email'));
+                    $mail->setTo($Senderemails);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    // $mail->setSender($this->request->post['name']);
+                    $mail->setSender($this->config->get('config_name'));
+
+                    $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+                    $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8'));
+                    $mail->send();
+                    }
+                    
+                }
+            }
+            catch(exception $ex)
+            {
+                //write to log
+
+                $log = new Log('error.log');
+        $log->write('error in issue sending mail to customer experience'.$ex);
+            }
+
+                    #endregion
+
+            return true;
+        } catch (Exception $e) {
+ 
+
+            return false;
+        }
+    }
+
+
+    public function getCustomerExperienceEmails() {
+        $customerexperienceEmails = $this->db->query('SELECT email FROM ' . DB_PREFIX . "user u join " . DB_PREFIX . "user_group ug on u.user_group_id =ug.user_group_id WHERE ug.name = 'Customer Experience' and u.status=1");
+        return $customerexperienceEmails->rows;
+    }
+
 }
