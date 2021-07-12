@@ -1678,12 +1678,7 @@ $('.time').datetimepicker({
         console.log('change LocalityId');
 
         var address= $('#us1').locationpicker('location');
-        console.log('new_address');
         console.log(address);
-        console.log('new_address');
-         var selected_address = $('input[name^=\'selected_address\']').val();
-         console.log(selected_address);
-
         /*if(address.addressComponents.streetName && address.addressComponents.streetNumber ) {
             $('#street').val(address.addressComponents.streetNumber+' '+address.addressComponents.streetName);
             $('#edit-street').val(address.addressComponents.streetNumber+' '+address.addressComponents.streetName);

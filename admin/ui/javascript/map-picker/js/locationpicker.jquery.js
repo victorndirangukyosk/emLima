@@ -237,6 +237,7 @@
 
                     console.log("places autocomplete");
                     console.log(place);
+                    console.log(place.name);
 
                     if (!place.geometry) {
                         gmapContext.settings.onlocationnotfound(place.name);
@@ -443,6 +444,7 @@
             $target.data("locationpicker", gmapContext);
             // Subscribe GMap events
             google.maps.event.addListener(gmapContext.marker, "dragend", function(event) {
+                console.log(event.latLng);
                 GmUtility.setPosition(gmapContext, gmapContext.marker.position, function(context){
                     var currentLocation = GmUtility.locationFromLatLng(gmapContext.location);
                     context.settings.onchanged.apply(gmapContext.domContainer, [currentLocation, context.radius, true]);
@@ -461,6 +463,7 @@
     function setAddress(address_components) {
 
         console.log(address_components);
+        var selected_address = $('input[name^=\'selected_address\']').val();
 
         var result = {};
         for (var i = address_components.length-1; i>=0; i--) {
