@@ -87,8 +87,8 @@
                  
                  <?php if (!$this->user->isCustomerExperience() ){ ?>
                   <?php if ($customer_feedback['rating']<=3  && $customer_feedback['status']=='Open') { ?>
-                  <td class="text-center"><button class="btn btn-primary" id="customer_feedback_button" name="customer_feedback_button" data-feedback-id="<?= $customer_feedback['feedback_id'] ?>" style="background:#f56b6b">Accept</button>
-                                  
+                  <td class="text-center">
+                      <a href="#" id="customer_feedback_button" name="customer_feedback_button" data-toggle="tooltip" title="Accept" data-feedback-id="<?= $customer_feedback['feedback_id'] ?>" class="btn btn-danger">Accept</a>
                   </td>
  
 
