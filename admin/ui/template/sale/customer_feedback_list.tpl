@@ -87,7 +87,7 @@
                  
                  <?php if (!$this->user->isCustomerExperience() ){ ?>
                   <?php if ($customer_feedback['rating']<=3  && $customer_feedback['status']=='Open') { ?>
-                  <td class="text-center"><button class="btn btn-primary" onclick="return AcceptIssue(<?= $customer_feedback['feedback_id'] ?>)" style="background:#f56b6b">Accept</button>
+                  <td class="text-center"><button class="btn btn-primary" id="customer_feedback_button" name="customer_feedback_button" data-feedback-id="<?= $customer_feedback['feedback_id'] ?>" style="background:#f56b6b">Accept</button>
                                   
                   </td>
  
@@ -203,12 +203,14 @@
  
  
 
-function AcceptIssue($feedback_id) {
-               
+$('input[name^=\'customer_feedback_button\']').on('click', function (e) {
+e.preventDefault();
+var feedback_id = $(this).attr("feedback-id");
+
                // $('#poModal-message').html('');
                //$('#poModal-success-message').html('');
                  
-              alert(1);
+              alert(feedback_id);
                  $.ajax({
                     url: 'index.php?path=sale/customer_feedback/acceptIssue&token=<?php echo $token; ?>&feedback_id='+$feedback_id,
                     type: 'POST',
@@ -238,7 +240,7 @@ function AcceptIssue($feedback_id) {
 
  
                   
-            }
+});
 
 
 
