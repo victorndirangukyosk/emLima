@@ -2780,7 +2780,7 @@ class Emailtemplate
 
     public function getFeedbackFind()
     {
-        $result = ['{customer_name}','{email}','{mobile}','{feedback_type}','{description}','{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+        $result = ['{customer_name}','{email}','{mobile}','{feedback_type}','{description}', '{issue_status}','{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
         return $result;
     }
 
@@ -2792,6 +2792,7 @@ class Emailtemplate
             'mobile' => $data['mobile'],
             'feedback_type' => $data['feedback_type'],
             'description' => $data['description'],
+            'issue_status' => $data['issue_status'],
 
             'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),

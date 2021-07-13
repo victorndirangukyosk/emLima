@@ -169,4 +169,86 @@ class ControllerCommonScheduler extends Controller
        
      
     }
+
+
+
+
+    public function checkIssueStatus()
+    { 
+            //check issue status and send notification to higher authority
+            $log = new Log('error.log');
+
+            try{
+                $Issues_currentDateTime =   date("Y-m-d  H:i:s");
+                $max_Issues_currentDateTime = date('Y-m-d H:i:s',strtotime('+1 hour',strtotime($Issues_currentDateTime)));
+                $log->write('Issue Status checking -'.$Issues_currentDateTime);
+               
+            $this->load->model('sale/customer_feedback');
+            $result_open=$this->model_sale_customer_feedback->GetNonProcessedIssues($Issues_currentDateTime,$max_Issues_currentDateTime,'Open');   
+            $result_Attending=$this->model_sale_customer_feedback->GetNonProcessedIssues($Issues_currentDateTime,$max_Issues_currentDateTime,'Attending');   
+            if($result_open!=null && $result_Attending!=null)
+            $result=array_merge($result_open, $result_Attending);
+            else if($result_open!=null)
+            $result=$result_open;
+            else
+            $result=$result_Attending;
+            
+            // echo "<pre>";print_r($result);die;  
+                
+               #region mail sending 
+               foreach($result as $feedback)
+               {
+               
+               $maildata['customer_name']=$feedback['name'];
+               $maildata['email']=$feedback['email'];
+               $maildata['mobile']=$feedback['telephone'];
+               $maildata['feedback_type']= ($feedback['feedback_type'] =="s"? "Suggestions" : ($feedback['feedback_type'] =="p"? "Issue"." - ".$feedback['issue_type'] :"Happy"));
+               $maildata['description']=$feedback['comments'];
+               if($feedback['status'] =='Open')
+               {
+               $maildata['issue_status']= "Open";
+               }
+               else if($feedback['status'] =='Attending')
+               {
+               $maildata['issue_status']="Attending. It is Accepted by ".$feedback['AcceptedBy'];
+               }
+               else{
+                $maildata['issue_status']="NA";
+               }
+  
+               $subject = $this->emailtemplate->getSubject('Feedback', 'Feedback_2', $maildata);
+               $message = $this->emailtemplate->getMessage('Feedback', 'Feedback_2', $maildata);
+            //    echo "<pre>";print_r($maildata);die;  
+   
+               // $subject = "Consolidated Order Sheet";                 
+               // $message = "Please find the attachment.  <br>";
+               // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
+               $this->load->model('setting/setting');
+               $email = $this->model_setting_setting->getEmailSetting('issue');
+   
+            //    if (strpos($email, "@") == false) {//if mail Id not set in define.php
+            //        $email = "sridivya.talluri@technobraingroup.com";
+            //    }
+               // $bccemail = "sridivya.talluri@technobraingroup.com";
+               //   echo "<pre>";print_r($email);die;
+               $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
+               $mail = new Mail($this->config->get('config_mail'));
+               $mail->setTo($email);
+               $mail->setBCC($bccemail);
+               $mail->setFrom($this->config->get('config_from_email'));
+               $mail->setSender($this->config->get('config_name'));
+               $mail->setSubject($subject);
+               $mail->setHTML($message);
+               $mail->addAttachment($filepath);
+               $mail->send();
+            }
+               #endregion
+               echo "Issue status checked ";
+            }
+            catch(exception $ex)
+            {
+                $log->write('Issue Status Mail -'.$ex);
+            }     
+           
+    }
 }
