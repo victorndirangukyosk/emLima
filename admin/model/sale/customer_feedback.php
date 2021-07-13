@@ -57,6 +57,15 @@ class ModelSaleCustomerFeedback extends Model
     }
 
 
+    public function closeIssue($feedback_id,$closing_comments,$accepted_user_id) {
+       
+        
+            $this->db->query('UPDATE ' . DB_PREFIX . "feedback SET status = 'Closed' ,  closed_date= NOW(),closed_comments='" .   $closing_comments . "' WHERE feedback_id = '" . (int) $feedback_id . "'");
+                       
+         
+    }
+
+
 
     public function GetNonProcessedIssues($Issues_currentDateTime,$max_Issues_currentDateTime,$issue_status)
     {

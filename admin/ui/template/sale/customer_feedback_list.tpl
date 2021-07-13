@@ -140,7 +140,7 @@
         <div class="modal fade" id="feedbackCloseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
-                    <div class="modal-body"  style="height:385px;">
+                    <div class="modal-body"  style="height:300px;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="store-find-block">
                             <div class="mydivsss">
@@ -160,12 +160,12 @@
  
 
                                             <div class="form-row">
-                                                <div class="form-group">
+                                                <div class="form-group required">
                                                     <label > Closing Comments </label>
                                                         <input id="feedback_id"   name="feedback_id" type="hidden"  class="form-control input-md" required>
 
                                                     <div class="col-md-12">
-                                                        <input id="closing_comments" maxlength="2000" required style="max-width:100% ;" name="closing_comments" type="text" placeholder="CLosing Comments" class="form-control" required>
+                                                        <textarea id="closing_comments"  maxlength="2000" required style="max-width:100% ;" name="closing_comments"  placeholder="Closing Comments" class="form-control" required></textarea>
                                                     <br/> </div>
 
 
@@ -178,7 +178,7 @@
                                                         <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
 
 
-                                                        <button id="fbClose-button" name="fbClose-button" onclick="closeIssue()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
+                                                        <button id="fbClose-button" onclick="CloseIssue()" name="fbClose-button"  type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -253,8 +253,41 @@ console.log($(this).attr("data-feedback-id"));
 $('#feedbackCloseModal').modal('toggle');
 $('#feedbackCloseModal-message').html('');
 $('#feedbackCloseModal-success-message').html(''); 
+ $('input[name="feedback_id"]').val($(this).attr("data-feedback-id")) ;
 
 });
+ 
+function CloseIssue()
+{ 
+
+  $.ajax({
+                    url: 'index.php?path=sale/customer_feedback/closeIssue&token=<?php echo $token; ?>&feedback_id='+$(this).attr("data-feedback-id"),
+                    type: 'POST',
+                    dataType: 'json',
+                    data:$('#feedbackCloseModal-form').serialize(),
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                           
+                          alert('Issue Closed');
+                          location=location;
+                           
+                        }
+                        else {
+                            // $('input[name="po_number"]').val('') ;
+                           
+                            
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) { 
+
+                       //  $('input[name="po_number"]').val('') ;
+                                 
+                                    return false;
+                                }
+                });
+}
 
 </script> 
 
