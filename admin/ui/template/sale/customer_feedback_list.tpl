@@ -91,14 +91,14 @@
                   <?php if ($customer_feedback['rating']<=3  && $customer_feedback['status']=='Open') { ?>
                                     <td class="text-right">
                                     <div style="width: 100%; display:flex; justify-content: space-between; flex-flow: row wrap; gap: 4px;">
-                                               <a href="#" id="new_print_invoice" data-feedback-id="<?= $customer_feedback['feedback_id'] ?>" target="_blank" data-toggle="tooltip" title="Accept">
+                                               <a href="#" id="accept_feedback" data-feedback-id="<?= $customer_feedback['feedback_id'] ?>" target="_blank" data-toggle="tooltip" title="Accept">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
                                                 </a>  
                                               
                                        </div>
                                     </td>
                     <?php } else if($customer_feedback['rating']<=3  && $customer_feedback['status']=='Attending') { ?>
-                  <td class="text-left"><button class="" style="background:green;width:65px"  data-toggle="modal" data-dismiss="modal" data-target="#feedbackcloseModal" title="PO Details">Close</button></td>
+                  <td class="text-left"><a href="#" id="close_feedback" data-feedback-id="<?= $customer_feedback['feedback_id'] ?>" target="_blank" data-toggle="tooltip" title="Accept"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></a></td>
 
 
                  <?php } else { ?>
@@ -128,199 +128,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript"><!--
-    $('input[name=\'filter_store_name\']').autocomplete({
-    'source': function(request, response) {
-        $.ajax({
-            url: 'index.php?path=setting/store/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
-            dataType: 'json',
-            success: function(json) {
-                response($.map(json, function(item) {
-                    return {
-                        label: item['name'],
-                        value: item['store_id']
-                    }
-                }));
-            }
-        });
-    },
-    'select': function(item) {
-        $('input[name=\'filter_store_name\']').val(item['label']);
-    }
-    });
-
-
-    $('input[name=\'filter_vendor\']').autocomplete({
-    'source': function(request, response) {
-        $.ajax({
-            url: 'index.php?path=setting/store/vendor_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
-            dataType: 'json',
-            success: function(json) {
-                response($.map(json, function(item) {
-                    return {
-                        label: item['name'],
-                        value: item['user_id']
-                    }
-                }));
-            }
-        });
-    },
-    'select': function(item) {
-        $('input[name=\'filter_vendor\']').val(item['label']);
-    }
-    });
-
-
-    function excel() {
-      url = 'index.php?path=report/product_purchased/excel&token=<?php echo $token; ?>';
-      
-      var filter_city = $('input[name=\'filter_city\']').val();
-      
-      if (filter_city) {
-        url += '&filter_city=' + encodeURIComponent(filter_city);
-      }
-            
-      var filter_date_start = $('input[name=\'filter_date_start\']').val();
-      
-      if (filter_date_start) {
-        url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
-      }
-
-      var filter_date_end = $('input[name=\'filter_date_end\']').val();
-      
-      if (filter_date_end) {
-        url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
-      }
-      
-      var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
-      
-      if (filter_order_status_id != 0) {
-        url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
-      } 
-
-           
-      location = url;
-    }
-
-
-  $('#button-shipping, #button-invoice').on('click', function () {
-  location = location;
-        });
-
-   $('#button-filter').on('click', function () {
-            url = 'index.php?path=sale/order&token=<?php echo $token; ?>';
-
-             var filter_company = $('input[name=\'filter_company\']').val();
-
-            if (filter_company) {
-                url += '&filter_company=' + encodeURIComponent(filter_company);
-            }
-  
-
-            var filter_city = $('input[name=\'filter_city\']').val();
-
-            if (filter_city) {
-                url += '&filter_city=' + encodeURIComponent(filter_city);
-            }
-            
-            var filter_order_id = $('input[name=\'filter_order_id\']').val();
-
-            if (filter_order_id) {
-                url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
-            }
-
-              var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
-
-            if (filter_order_from_id) {
-                url += '&filter_order_from_id=' + encodeURIComponent(filter_order_from_id);
-            }
-
-
-             var filter_order_to_id = $('input[name=\'filter_order_to_id\']').val();
-
-            if (filter_order_to_id) {
-                url += '&filter_order_to_id=' + encodeURIComponent(filter_order_to_id);
-            }
-
-            var filter_customer = $('input[name=\'filter_customer\']').val();
-
-            if (filter_customer) {
-                url += '&filter_customer=' + encodeURIComponent(filter_customer);
-            }
-
-            var filter_store_name = $('input[name=\'filter_store_name\']').val();
-
-            if (filter_store_name) {
-                url += '&filter_store_name=' + encodeURIComponent(filter_store_name);
-            }
-
-            var filter_delivery_method = $('input[name=\'filter_delivery_method\']').val();
-
-            if (filter_delivery_method) {
-                url += '&filter_delivery_method=' + encodeURIComponent(filter_delivery_method);
-            }
-            
-            var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
-
-            if (filter_delivery_date) {
-                url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
-            }
-
-            var filter_payment = $('input[name=\'filter_payment\']').val();
-
-            if (filter_payment) {
-                url += '&filter_payment=' + encodeURIComponent(filter_payment);
-            }
-
-
-
-            var filter_order_status = $('select[name=\'filter_order_status\']').val();
-
-            if (filter_order_status != '*') {
-                url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
-            }
-
-
-              var filter_order_type = $('select[name=\'filter_order_type\']').val();
-
-            if (filter_order_type != '*') {
-                url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
-            }
-
-
-            var filter_total = $('input[name=\'filter_total\']').val();
-
-            if (filter_total) {
-                url += '&filter_total=' + encodeURIComponent(filter_total);
-            }
-
-            var filter_date_added = $('input[name=\'filter_date_added\']').val();
-
-            if (filter_date_added) {
-                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
-            }
-            
-            var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
-
-            if (filter_date_added_end) {
-                url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
-            }
-
-            var filter_vendor = $('input[name=\'filter_vendor\']').val();
-
-            if (filter_vendor) {
-                url += '&filter_vendor=' + encodeURIComponent(filter_vendor);
-            }
-
-            var filter_date_modified = $('input[name=\'filter_date_modified\']').val();
-
-            if (filter_date_modified) {
-                url += '&filter_date_modified=' + encodeURIComponent(filter_date_modified);
-            }
-
-            location = url;
-        });
-        //--></script>
     <script type="text/javascript"><!--
         
         $('input[name=\'filter_city\']').autocomplete({
@@ -745,7 +552,7 @@
     }, 300 * 1000); // 60 * 1000 milsec
     
         //-->
-$('a[id^=\'new_print_invoice\']').on('click', function (e) {
+$('a[id^=\'accept_feedback\']').on('click', function (e) {
 e.preventDefault();
 console.log($(this).attr("data-feedback-id"));
 $.ajax({
@@ -774,6 +581,35 @@ $.ajax({
                                     return false;
                                 }
                 });
+});
+
+$('a[id^=\'close_feedback\']').on('click', function (e) {
+e.preventDefault();
+$.ajax({
+                    url: 'index.php?path=sale/customer/closeIssue&token=<?php echo $token; ?>&feedback_id='+ $(this).attr("data-feedback-id"),
+                    type: 'POST',
+                    dataType: 'json',
+                    data:{ feedback_id: $(this).attr("data-feedback-id") },
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                           //$('input[name="po_number"]').val(json['po_number']) ;
+                           
+                        }
+                        else {
+                            // $('input[name="po_number"]').val('') ;
+                           
+                            
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) { 
+
+                       //  $('input[name="po_number"]').val('') ;
+                                 
+                                    return false;
+                                }
+    });                  
 });
 </script></div>
 <?php echo $footer; ?>
