@@ -4,7 +4,7 @@
     <div class="container-fluid">
       <div class="pull-right">
       </div>
-      <h1><?php echo $heading_title; ?></h1>
+      <h1><?php echo $heading_title; ?></h1> 
       <ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
         <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
@@ -28,7 +28,7 @@
         <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
       </div>
       <div class="panel-body">
-        <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-customer-ban-ip">
+        <form   method="post" enctype="multipart/form-data"   id="form-customer-feedback">
           <div class="table-responsive">
             <table class="table table-bordered table-hover">
               <thead>
@@ -47,7 +47,7 @@
                   <td class="text-left">Status</td>
                   <td class="text-left">Accepted By</td>
                   <td class="text-left">Closed Date</td>
-<td class="text-left">Closed Comments</td>
+                  <td class="text-left">Closed Comments</td>
                    <?php if ($this->user->isCustomerExperience()){ ?>
                    <td class="text-left">Action</td>  <?php } ?>
                     
@@ -59,14 +59,15 @@
                 <?php if ($customer_feedbacks) { ?>
                 <?php foreach ($customer_feedbacks as $customer_feedback) { ?>
                 <tr>
-            <!--<td class="text-center"><?php if (in_array($customer_feedback['feedback_id'], $selected)) { ?>
+                  <!--<td class="text-center"><?php if (in_array($customer_feedback['feedback_id'], $selected)) { ?>
                     <input type="checkbox" name="selected[]" value="<?php echo $customer_feedback['feedback_id']; ?>" checked="checked" />
                     <?php } else { ?>
                     <input type="checkbox" name="selected[]" value="<?php echo $customer_feedback['feedback_id']; ?>" />
                     <?php } ?></td>-->
                   <td class="text-left">
                      
-                         <?php echo $customer_feedback['customer_name']; ?>      </br>
+                  <?php echo $customer_feedback['customer_name']; ?> 
+                       </br>
                   <?php echo $customer_feedback['company_name']; ?>
 
                                             </td>
@@ -84,15 +85,24 @@
                   <td class="text-left"><?php echo $customer_feedback['closed_date']; ?></td>
                   <td class="text-left"><?php echo $customer_feedback['closed_comments']; ?></td>
                  
-                 <?php if ($this->user->isCustomerExperience() ){ ?>
+                 <?php if (!$this->user->isCustomerExperience() ){ ?>
                   <?php if ($customer_feedback['rating']<=3  && $customer_feedback['status']=='Open') { ?>
-                  <td class="text-center"><button class="btn btn-primary" onclick="Accept(<?= $customer_feedback['feedback_id'] ?>)" style="background:#f56b6b">Accept</button></td>
+                  <td class="text-center"><button class="btn btn-primary" onclick="return AcceptIssue(<?= $customer_feedback['feedback_id'] ?>)" style="background:#f56b6b">Accept</button>
+                                  
+                  </td>
+ 
+
  
                 <?php } else if($customer_feedback['rating']<=3  && $customer_feedback['status']=='Attending'){ ?>
                   <td class="text-left"><button class="" style="background:green;width:65px"  data-toggle="modal" data-dismiss="modal" data-target="#feedbackcloseModal" title="PO Details">Close</button></td>
 
 
-                 <?php  }?>  <?php }  ?>
+                 <?php }else {?>
+                 <td></td>
+                  <?php }?>
+                 
+                 
+                   <?php }  ?>
 
                  
                 </tr>
@@ -187,18 +197,20 @@
     </div>
 
 
+    
+
 <script  type="text/javascript">
-
-
+ 
+ 
 
 function AcceptIssue($feedback_id) {
                
                // $('#poModal-message').html('');
                //$('#poModal-success-message').html('');
                  
-
+              alert(1);
                  $.ajax({
-                    url: 'index.php?path=sale/customer/acceptIssue&token=<?php echo $token; ?>&feedback_id='+$feedback_id,
+                    url: 'index.php?path=sale/customer_feedback/acceptIssue&token=<?php echo $token; ?>&feedback_id='+$feedback_id,
                     type: 'POST',
                     dataType: 'json',
                     data:{feedback_id:$feedback_id},
