@@ -202,8 +202,8 @@
 <script  type="text/javascript">
  
  
-
-$('input[name^=\'customer_feedback_button\']').on('click', function (e) {
+$(document).on('click', 'input[name^=\'customer_feedback_button\']', function(e) {
+//$('input[name^=\'customer_feedback_button\']').on('click', function (e) {
 e.preventDefault();
 var feedback_id = $(this).attr("feedback-id");
 
