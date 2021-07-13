@@ -12,7 +12,7 @@ class ModelSaleCustomerFeedback extends Model
 
     public function getCustomerFeedbacks($data = [])
     {
-        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id";
+        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,CONCAT(u.firstname, ' ', u.lastname) AS accepted_user, feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id left outer join ".DB_PREFIX."user u on u.user_id= f.accepted_by ";
     
         $sql .= ' ORDER BY `feedback_id`';
 
@@ -33,7 +33,7 @@ class ModelSaleCustomerFeedback extends Model
 
             $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
         }
-        // echo $sql;die;
+        //  echo $sql;die;
         $query = $this->db->query($sql);
 
         return $query->rows;
