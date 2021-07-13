@@ -745,49 +745,6 @@
     }, 300 * 1000); // 60 * 1000 milsec
     
         //-->
-    $driverName="";
-$('input[name=\'order_driver\']').autocomplete({
-  'source': function(request, response) {
-    $.ajax({
-      url: 'index.php?path=drivers/drivers_list/autocompletebyDriverName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$driverName,
-      dataType: 'json',     
-      success: function(json) {
-        response($.map(json, function(item) {
-          return {
-            label: item['name'],
-            value: item['driver_id']
-          }
-        }));
-      }
-    });
-  },
-  'select': function(item) {
-    $('input[name=\'order_driver\']').val(item['label']);
-    $('input[name=\'order_driver\']').attr('data_driver_id',item['value']);
-  } 
-});
-
-$('input[name=\'order_delivery_executive\']').autocomplete({
-  'source': function(request, response) {
-    $.ajax({
-      url: 'index.php?path=executives/executives_list/autocompletebyExecutiveName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
-      dataType: 'json',     
-      success: function(json) {
-        response($.map(json, function(item) {
-          return {
-            label: item['name'],
-            value: item['executive_id']
-          }
-        }));
-      }
-    });
-  },
-  'select': function(item) {
-    $('input[name=\'order_delivery_executive\']').val(item['label']);
-    $('input[name=\'order_delivery_executive\']').attr('data_delivery_executive_id',item['value']);
-  } 
-});
-
 $('a[id^=\'new_print_invoice\']').on('click', function (e) {
 e.preventDefault();
 console.log($(this).attr("data-feedback-id"));
@@ -818,47 +775,7 @@ $.ajax({
                                 }
                 });
 });
-
-
-function validateFloatKeyPresswithVarient(el, evt, unitvarient) {
-
-        
-	 	 $optionvalue=unitvarient;
-	 
-	if($optionvalue=="Per Kg" || $optionvalue=="Kg")
-	{
-	 var charCode = (evt.which) ? evt.which : event.keyCode;
-	 var number = el.value.split('.');
-	 if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
-		 return false;
-	 }
-	 //just one dot
-	 if(number.length>1 && charCode == 46){
-		 return false;
-	 }
-	 //get the carat position
-	 var caratPos = getSelectionStart(el);
-	 var dotPos = el.value.indexOf(".");
-	 if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
-		 return false;
-	 }
-	 return true;
-	}
-
-	else{
-	 var charCode = (evt.which) ? evt.which : event.keyCode;
-	 if (charCode > 31 &&
-	   (charCode < 48 || charCode > 57))
-	   return false;
-	   else
-   
-   return true;
-	}
-}
-
-
-
-    </script></div>
+</script></div>
 <?php echo $footer; ?>
 
 <style>
