@@ -52,7 +52,18 @@ class ModelSaleCustomerFeedback extends Model
         //   echo '<pre>';print_r('UPDATE ' . DB_PREFIX . "feedback SET status = 'Attending' , accepted_by= '" . (int) $accepted_user_id . "' , accepted_date= NOW() WHERE feedback_id = '" . (int) $feedback_id . "'");exit;
         
             $this->db->query('UPDATE ' . DB_PREFIX . "feedback SET status = 'Attending' , accepted_by= '" . (int) $accepted_user_id . "' , accepted_date= NOW() WHERE feedback_id = '" . (int) $feedback_id . "'");
-                       
+              
+            
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'feedback_id' => $feedback_id,
+            ];
+            $this->load->model('user/user_activity');
+
+            $this->model_user_user_activity->addActivity('Issue_Accepted', $activity_data);
+
          
     }
 
@@ -61,7 +72,17 @@ class ModelSaleCustomerFeedback extends Model
        
         
             $this->db->query('UPDATE ' . DB_PREFIX . "feedback SET status = 'Closed' ,  closed_date= NOW(),closed_comments='" .   $closing_comments . "' WHERE feedback_id = '" . (int) $feedback_id . "'");
-                       
+               
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'feedback_id' => $feedback_id,
+            ];
+             
+            $this->load->model('user/user_activity');
+            $this->model_user_user_activity->addActivity('Issue_Closed', $activity_data);
+        
          
     }
 
