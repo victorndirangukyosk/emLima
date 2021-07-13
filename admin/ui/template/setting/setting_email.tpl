@@ -65,6 +65,17 @@
                                 </div>
                             </div> 
 
+
+                             <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-issue">Feedback/Issue</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_issue" value="<?php echo $config_issue; ?>" placeholder="Email ID" id="input-issue" class="form-control" />
+                                    <?php if ($error_issue) { ?>
+                                    <div class="text-danger"><?php echo $error_issue; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div> 
+
                       </div>
                        
                     </div>

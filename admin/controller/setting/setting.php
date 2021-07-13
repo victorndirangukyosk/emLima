@@ -2726,6 +2726,16 @@ class ControllerSettingSetting extends Controller
             $data['config_stockout'] = '';
         }
 
+
+        if (isset($this->request->post['config_issue'])) {
+            $data['config_issue'] = $this->request->post['config_issue'];
+        } elseif (isset($email_info[3]['value'])) {
+            $data['config_issue'] =$email_info[3]['value'];
+        } else {
+            $data['config_issue'] = '';
+        }
+
+
         $this->document->setTitle("Email Settings");
         $this->load->model('setting/setting');
 
@@ -2772,6 +2782,10 @@ class ControllerSettingSetting extends Controller
         }
 
         if ((strpos( $this->request->post['config_stockout'],"@")==false) ) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+
+        if ((strpos( $this->request->post['config_issue'],"@")==false) ) {
             $this->error['email'] = "Please enter correct Email";
         }
  
