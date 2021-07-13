@@ -250,6 +250,12 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $filter_name = null;
         }
+        
+        if (isset($this->request->get['filter_tax_class_id'])) {
+            $filter_tax_class_id = $this->request->get['filter_tax_class_id'];
+        } else {
+            $filter_tax_class_id = null;
+        }
 
         if (isset($this->request->get['filter_vendor_name'])) {
             $filter_vendor_name = $this->request->get['filter_vendor_name'];
@@ -369,6 +375,10 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_category_price'])) {
             $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
         }
+        
+        if (isset($this->request->get['filter_tax_class_id'])) {
+            $url .= '&filter_tax_class_id=' . $this->request->get['filter_tax_class_id'];
+        }
 
         if (isset($this->request->get['sort'])) {
             $url .= '&sort=' . $this->request->get['sort'];
@@ -423,6 +433,7 @@ class ControllerCatalogVendorProduct extends Controller {
             'filter_status' => $filter_status,
             'filter_quantity' => $filter_quantity,
             'filter_category_price' => $filter_category_price,
+            'filter_tax_class_id' => $filter_tax_class_id,
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -631,6 +642,10 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_category_price'])) {
             $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
         }
+        
+        if (isset($this->request->get['filter_tax_class_id'])) {
+            $url .= '&filter_tax_class_id=' . $this->request->get['filter_tax_class_id'];
+        }
 
         if ('ASC' == $order) {
             $url .= '&order=DESC';
@@ -734,6 +749,10 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_category_price'])) {
             $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
         }
+        
+        if (isset($this->request->get['filter_tax_class_id'])) {
+            $url .= '&filter_tax_class_id=' . $this->request->get['filter_tax_class_id'];
+        }
 
         if (isset($this->request->get['sort'])) {
             $url .= '&sort=' . $this->request->get['sort'];
@@ -770,6 +789,9 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['filter_store_id'] = $filter_store_id;
         $data['filter_status'] = $filter_status;
         $data['filter_category_price'] = $filter_category_price;
+        $data['filter_tax_class_id'] = $filter_tax_class_id;
+        $this->load->model('localisation/tax_class');
+        $data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
 
         $data['sort'] = $sort;
         $data['order'] = $order;

@@ -54,7 +54,7 @@ class ModelSaleCustomer extends Model {
 
                 $address['address'] = $address['flat_number'] . ', ' . $address['building_name'] . ', ' . $address['landmark'];
 
-                $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET  address_id = '" . (int) $address['address_id'] . "', customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($address['name']) . "', contact_no = '" . $this->db->escape($address['contact_no']) . "', city_id = '" . $this->db->escape($address['city_id']) . "', address_type = '" . $this->db->escape($address['address_type']) . "', flat_number = '" . $this->db->escape($address['flat_number']) . "', building_name = '" . $this->db->escape($address['building_name']) . "', landmark = '" . $this->db->escape($address['landmark']) . "', zipcode = '" . $this->db->escape($address['zipcode']) . "', address = '" . $this->db->escape($address['address']) . "'");
+                $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET  address_id = '" . (int) $address['address_id'] . "', customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($address['name']) . "', contact_no = '" . $this->db->escape($address['contact_no']) . "', city_id = '" . (int) $address['city_id'] . "', address_type = '" . $this->db->escape($address['address_type']) . "', longitude = '" . $this->db->escape($address['longitude']) . "', latitude = '" . $this->db->escape($address['latitude']) . "', flat_number = '" . $this->db->escape($address['flat_number']) . "', building_name = '" . $this->db->escape($address['building_name']) . "', landmark = '" . $this->db->escape($address['landmark']) . "', zipcode = '" . $this->db->escape($address['zipcode']) . "', address = '" . $this->db->escape($address['address']) . "'");
 
                 if (isset($address['default'])) {
                     $address_id = $this->db->getLastId();
@@ -494,6 +494,8 @@ class ModelSaleCustomer extends Model {
                 'contact_no' => $address_query->row['contact_no'],
                 'address' => $address_query->row['address'],
                 'city_id' => $address_query->row['city_id'],
+                'latitude' => $address_query->row['latitude'],
+                'longitude' => $address_query->row['longitude'],
             ];
         }
     }

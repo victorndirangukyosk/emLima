@@ -341,6 +341,10 @@ class ModelSystemEmailtemplate extends Model
             case 'StockOut':
             $codes = $this->emailtemplate->getStockOutFind();
             break;
+
+            case 'Feedback':
+                $codes = $this->emailtemplate->getFeedbackFind();
+                break;
         }
 
         foreach ($codes as $code) {

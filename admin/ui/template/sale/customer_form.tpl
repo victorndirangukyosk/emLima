@@ -65,6 +65,7 @@
                     <div class="tab-pane active" id="tab-customer">
                       <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-customer-group"><?php echo $entry_customer_group; ?></label>
+                        <input type="hidden" id="selected_address" name="selected_address" value="">
                         <div class="col-sm-10">
                           <select name="customer_group_id" id="input-customer-group" class="form-control">
                             <?php foreach ($customer_groups as $customer_group) { ?>
@@ -391,34 +392,18 @@
                     <?php foreach ($addresses as $address) { ?>
                     <div class="tab-pane" id="tab-address<?php echo $address_row; ?>">
                       <input type="hidden" name="address[<?php echo $address_row; ?>][address_id]" value="<?php echo $address['address_id']; ?>" />
-                       
-     <div class="select-locations">
-                <label class="control control--radio">Home
-                    
-                    <?php if($address['address_type'] == 'home') {?> 
-                        <input type="radio" group="type" name="edit_modal_address_type" value="home" checked="checked" />
-                    <?php } else {?>
-                    <input type="radio" group="type" name="edit_modal_address_type" value="home"/>
-                    <?php } ?>
-                    <div class="control__indicator"></div>
-                </label>
-                <label class="control control--radio">Office
-                    <?php if($address['address_type'] == 'office'){ ?> 
-                        <input type="radio" group="type" name="edit_modal_address_type" value="office" checked="checked" />
-                    <?php } else {?>
-                    <input type="radio" group="type" name="edit_modal_address_type" value="office"/>
-                    <?php } ?>
-                    <div class="control__indicator"></div>
-                </label>
-                <label class="control control--radio">Other
-                    <?php if($address['address_type'] == 'other'){ ?> 
-                        <input type="radio" group="type" name="edit_modal_address_type" value="other" checked="checked" />
-                    <?php } else { ?>
-                    <input type="radio" group="type" name="edit_modal_address_type" value="other"/>
-                    <?php } ?>
-                    <div class="control__indicator"></div>
-                </label>
-            </div>
+      
+     <div class="form-group required">
+                <label class="col-sm-2 control-label" for="input-address-type<?php echo $address_row; ?>">Address Type</label>
+                <div class="col-sm-10">
+                <select name="address[<?php echo $address_row; ?>][address_type]" class="form-control">
+                <option <?php if($address['address_type'] == 'home') { ?> selected="" <?php } ?> value="home">Home</option>
+                <option <?php if($address['address_type'] == 'office') { ?> selected="" <?php } ?> value="office">Office</option>
+                <option <?php if($address['address_type'] == 'other' || $address['address_type'] == NULL) { ?> selected="" <?php } ?> value="other">Other</option>       
+                </select>
+                </div>
+    </div>                 
+
 
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-name<?php echo $address_row; ?>">Name</label>
@@ -453,6 +438,9 @@
                             <label class="col-sm-2 control-label" for="Locality"><?= $text_locality?></label>
                             <div class="col-md-10">
                                 <input type="text" name="address[<?php echo $address_row; ?>][landmark]" value="<?php echo $address['landmark']; ?>" placeholder="" id="input-landmark<?php echo $address_row; ?>" class="form-control" />
+                                <input type="hidden" name="address[<?php echo $address_row; ?>][city_id]" value="32" placeholder="" id="input-city-id<?php echo $address_row; ?>" class="form-control" />
+                                <input type="hidden" name="address[<?php echo $address_row; ?>][latitude]" value="<?php echo $address['latitude']; ?>" placeholder="" id="input-latitude<?php echo $address_row; ?>" class="form-control" />
+                                <input type="hidden" name="address[<?php echo $address_row; ?>][longitude]" value="<?php echo $address['longitude']; ?>" placeholder="" id="input-longitude<?php echo $address_row; ?>" class="form-control" />
                           <?php if (isset($error_address[$address_row]['landmark'])) { ?>
                           <div class="text-danger"><?php echo $error_address[$address_row]['landmark']; ?></div>
                           <?php } ?>
@@ -666,21 +654,19 @@ function addAddress() {
   html  = '<div class="tab-pane" id="tab-address' + address_row + '">';
   html += '  <input type="hidden" name="address[' + address_row + '][address_id]" value="" />';
 
-  html += '  <div class="form-group">';
-  html += '  <label class="col-sm-1 control control--radio"><?='     Home      '?>';
-  html += '  <input type="radio" name="modal_address_type" value="home" checked="checked" />';
-  html += '  <div class="control__indicator"></div>';
-  html += '  </label>';
-  html += ' <label class="col-sm-1 control control--radio"><?='      Office      '  ?>';
-  html += ' <input type="radio" value="office" name="modal_address_type" />';
-  html += '  <div class="control__indicator"></div>';
-  html += '    </label>';
-  html += ' <label class="col-sm-1 control control--radio"><?= '     Other     '?>';
-  html += ' <input type="radio" value="other" name="modal_address_type" />';
-  html += '  <div class="control__indicator"></div>';
-  html += ' </label>';
+  html += '  <div class="form-group required">';
+  html += '  <label class="col-sm-2 control-label" for="input-address-type'+address_row+'">Address Type</label>';
+  html += '  <div class="col-sm-10">';
+  html += '  <select name="address['+address_row+'][address_type]" class="form-control">';
+  html += '  <option value="home">Home</option>';
+  html += '  <option value="office">Office</option>';
+  html += '  <option value="other">Other</option>';
+  html += '  </select>';
   html += '  </div>';
-
+  html += ' </div>';
+  html += '<input type="hidden" name="address['+address_row+'][city_id]" value="32" placeholder="" id="input-city-id<?php echo $address_row; ?>" class="form-control" />';
+  html += '<input type="hidden" name="address['+address_row+'][latitude]" value="" placeholder="" id="input-latitude'+address_row+'" class="form-control" />';
+  html += '<input type="hidden" name="address['+address_row+'][longitude]" value="" placeholder="" id="input-longitude'+address_row+'" class="form-control" />';
 
 
 
@@ -712,7 +698,7 @@ function addAddress() {
   html += ' <input name="modal_address_locality" type="text" value=""  class="form-control input-md LocalityId" id="address[' + address_row + '][address_locality]" required=""   >     ';                                               
   html += ' <span class="form-group-btn">';
 
-  html += ' <button id="locateme" class="btn btn-default disabled" style=" color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
+  html += ' <button id="locateme" data-address-id="'+address_row+'" class="btn btn-default disabled" style=" color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap('+address_row+')" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
 
   html += ' </span>';
   html += '  </div>';
@@ -733,17 +719,17 @@ function addAddress() {
   <!-->$check_address-->
 
   html += ' <div class="col-sm-10">';
-  html += ' <input  name="address[' + address_row + '][locality]" type="text"  class="form-control input-md LocalityId" id="input-address_locality' + address_row + '" required=""  class="form-control">';                                                    
+  html += ' <input  name="address[' + address_row + '][landmark]" type="text"  class="form-control input-md LocalityId" id="input-address_locality' + address_row + '" required=""  class="form-control">';                                                    
   html += ' <span class="input-group-btn">';
 
-  html += ' <button id="locateme" class="btn btn-default disabled" style="height:38px;color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap()" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
+  html += ' <button id="locateme" data-address-id="'+address_row+'" class="btn btn-default" style="height:38px;color: #333;background-color: #fff;border-color: #ccc;line-height: 2.438571; " type="button" data-toggle="modal" onclick="openGMap('+address_row+')" data-target="#GMapPopup"  ><i class="fa-crosshairs fa"></i> Locate Me </button>';
 
   html += ' </span>';
   
   html += '  </div>';
   html += ' <?php } else { ?>';
   html += ' <div class="col-sm-10">';
-  html += ' <input  name="address[' + address_row + '][locality]" type="text"  class="form-control input-md LocalityId" id="input-address_locality' + address_row + '" required="" class="form-control">';
+  html += ' <input  name="address[' + address_row + '][landmark]" type="text"  class="form-control input-md LocalityId" id="input-address_locality' + address_row + '" required="" class="form-control">';
   html += ' </div>';
   html += ' <?php } ?>';
   html += ' </div>';
@@ -1231,7 +1217,7 @@ $('.time').datetimepicker({
                         <div class="row" style="margin-top: 10px;">
                             
                             <center>
-                                <button id="saveLatLng" type="button" class="btn btn btn-primary" onclick="saveLatLng()"><?= $text_ok?></button>
+                                <button id="saveLatLng" type="button" class="btn btn btn-primary" onclick="saveLatLng()">Ok</button>
                             </center>    
                         </div>
                     </div>
@@ -1241,18 +1227,16 @@ $('.time').datetimepicker({
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="<?= $base?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="<?= $base?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/side-menu-script.js"></script>
-    <script src="<?= $base?>front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script>
-    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/html5lightbox.js"></script>
-    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/jquery.sticky.js"></script>
-    <script type="text/javascript" src="<?= $base?>front/ui/theme/mvgv2/js/header-sticky.js"></script>
+    <script type="text/javascript" src="../front/ui/theme/mvgv2/js/side-menu-script.js"></script>
+    <script src="../front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../front/ui/theme/mvgv2/js/html5lightbox.js"></script>
+    <script type="text/javascript" src="../front/ui/theme/mvgv2/js/jquery.sticky.js"></script>
+    <script type="text/javascript" src="../front/ui/theme/mvgv2/js/header-sticky.js"></script>
 
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
 
-    <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.2"></script>
+    <script type="text/javascript" src="<?= $base?>ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.2"></script>
     
 
     <script type="text/javascript">
@@ -1263,8 +1247,8 @@ $('.time').datetimepicker({
             
             $('#us1').locationpicker({
                 location: {
-                    latitude: <?= $latitude?$latitude:0 ?>,
-                    longitude: <?= $longitude?$longitude:0 ?>
+                    latitude: <?= $latitude?$latitude: 0.0236 ?>,
+                    longitude: <?= $longitude?$longitude:37.9062 ?>
                 },  
                 radius: 0,
                 inputBinding: {
@@ -1583,8 +1567,9 @@ $('.time').datetimepicker({
 <?php } ?>
 <script type="text/javascript">
 
-    function openGMap() {
-
+    function openGMap(address_id) {
+        console.log(address_id);
+        $('input[name^=\'selected_address\']').val(address_id);
         $("#GMapPopup").on('shown.bs.modal', function () {
             $('div#GMapPopup').show();
             $('#us1').locationpicker('autosize');
@@ -1635,7 +1620,7 @@ $('.time').datetimepicker({
             var autocomplete = new google.maps.places.Autocomplete(acInputs[i]);
             
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                    
+                console.log(autocomplete);
 
 
                 
@@ -1694,7 +1679,6 @@ $('.time').datetimepicker({
 
         var address= $('#us1').locationpicker('location');
         console.log(address);
-
         /*if(address.addressComponents.streetName && address.addressComponents.streetNumber ) {
             $('#street').val(address.addressComponents.streetNumber+' '+address.addressComponents.streetName);
             $('#edit-street').val(address.addressComponents.streetNumber+' '+address.addressComponents.streetName);

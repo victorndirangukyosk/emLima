@@ -62,6 +62,20 @@
                                 <label class="control-label" for="input-model"><?php echo $entry_product_id_from; ?></label>
                                 <input type="text" name="filter_product_id_from" value="<?php echo $filter_product_id_from; ?>" placeholder="<?php echo $entry_product_id_from; ?>" id="input-model" class="form-control" />
                             </div>
+                             
+                             <div class="form-group">
+			        <label class="control-label">Tax Class</label>
+                                <select name="filter_tax_class_id" id="input-tax-class" class="form-control" >
+				 <option value="0"><?php echo $text_none; ?></option>
+				 <?php foreach ($tax_classes as $tax_class) { ?>
+				 <?php if ($tax_class['tax_class_id'] == $filter_tax_class_id) { ?>
+				 <option value="<?php echo $tax_class['tax_class_id']; ?>" selected="selected"><?php echo $tax_class['title']; ?></option>
+				  <?php } else { ?>
+				  <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
+				  <?php } ?>
+				  <?php } ?>
+				</select> 
+                             </div>
 
                         </div>
                         <?php if (!$is_vendor): ?>
@@ -413,6 +427,12 @@ function submit_copy() {
 
             if (filter_store_id) {
                 url += '&filter_store_id=' + encodeURIComponent(filter_store_id);
+            }
+            
+            var filter_tax_class_id = $('select[name=\'filter_tax_class_id\']').val();
+
+            if (filter_tax_class_id > 0) {
+                url += '&filter_tax_class_id=' + encodeURIComponent(filter_tax_class_id);
             }
 
             var filter_status = $('select[name=\'filter_status\']').val();

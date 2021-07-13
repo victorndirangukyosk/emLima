@@ -52,10 +52,16 @@ class ControllerAccountFeedback extends Controller {
         // $this->load->language('account/feedback');
         // $this->document->setTitle($this->language->get('heading_title'));
  
-        $this->load->model('account/feedback');
+        // $this->load->model('account/feedback');
 
         if (('POST' == $this->request->server['REQUEST_METHOD'])  ) {
-            $this->model_account_feedback->saveFeedback($this->request->post);
+            // $this->model_account_feedback->saveFeedback($this->request->post);
+           
+           
+            $this->load->model('account/customer');
+            // $stats= $this->model_account_customer->addCustomerIssue($this->customer->getId(), $this->request->post);
+            $stats= $this->model_account_customer->addCustomerfeedback($this->customer->getId(), $this->request->post);
+           
             $this->session->data['success'] = "Thanks for your feedback";  
             // $this->response->redirect($this->url->link('account/account', '', 'SSL'));
 
@@ -63,5 +69,36 @@ class ControllerAccountFeedback extends Controller {
         }
 
         // $this->getForm();
+    }
+
+
+    public function feedback_popup()
+    {
+        $log = new Log('error.log');
+        $log->write('11'); 
+        //$this->document->setTitle($this->language->get('heading_title'));
+        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_checkout.css');
+    
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->request->isAjax()) {
+            $log->write('15.4');
+            if (!$this->validate()) {
+                $data['status'] = false;
+                if ($this->request->isAjax()) {
+                    $this->response->addHeader('Content-Type: application/json');
+                    $this->response->setOutput(json_encode($data));
+                }
+            } else {
+                $data['status'] = true;
+                $data['redirect'] = $this->url->link('account/account', '', 'SSL');
+
+                if ($this->request->isAjax()) {
+                    $this->response->addHeader('Content-Type: application/json');
+                    $this->response->setOutput(json_encode($data));
+                }
+            }
+        }
+ 
+            return $this->load->view('metaorganic/template/account/feedback_popup.tpl', $data);
+         
     }
 }

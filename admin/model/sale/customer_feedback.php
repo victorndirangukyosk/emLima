@@ -12,7 +12,7 @@ class ModelSaleCustomerFeedback extends Model
 
     public function getCustomerFeedbacks($data = [])
     {
-        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,feedback_id,rating,feedback_type,comments,order_id, company_name FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id";
+        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,CONCAT(u.firstname, ' ', u.lastname) AS accepted_user, feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id left outer join ".DB_PREFIX."user u on u.user_id= f.accepted_by ";
     
         $sql .= ' ORDER BY `feedback_id`';
 
@@ -33,7 +33,7 @@ class ModelSaleCustomerFeedback extends Model
 
             $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
         }
-        // echo $sql;die;
+        //  echo $sql;die;
         $query = $this->db->query($sql);
 
         return $query->rows;
@@ -45,4 +45,72 @@ class ModelSaleCustomerFeedback extends Model
 
         return $query->row['total'];
     }
+
+
+    public function acceptIssue($feedback_id,$accepted_user_id) {
+       
+        //   echo '<pre>';print_r('UPDATE ' . DB_PREFIX . "feedback SET status = 'Attending' , accepted_by= '" . (int) $accepted_user_id . "' , accepted_date= NOW() WHERE feedback_id = '" . (int) $feedback_id . "'");exit;
+        
+            $this->db->query('UPDATE ' . DB_PREFIX . "feedback SET status = 'Attending' , accepted_by= '" . (int) $accepted_user_id . "' , accepted_date= NOW() WHERE feedback_id = '" . (int) $feedback_id . "'");
+              
+            
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'feedback_id' => $feedback_id,
+            ];
+            $this->load->model('user/user_activity');
+
+            $this->model_user_user_activity->addActivity('Issue_Accepted', $activity_data);
+
+         
+    }
+
+
+    public function closeIssue($feedback_id,$closing_comments,$accepted_user_id) {
+       
+        
+            $this->db->query('UPDATE ' . DB_PREFIX . "feedback SET status = 'Closed' ,  closed_date= NOW(),closed_comments='" .   $closing_comments . "' WHERE feedback_id = '" . (int) $feedback_id . "'");
+               
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'feedback_id' => $feedback_id,
+            ];
+             
+            $this->load->model('user/user_activity');
+            $this->model_user_user_activity->addActivity('Issue_Closed', $activity_data);
+        
+         
+    }
+
+
+
+    public function GetNonProcessedIssues($Issues_currentDateTime,$max_Issues_currentDateTime,$issue_status)
+    {
+ 
+        if($issue_status=='Open')
+        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,'' as AcceptedBy,c.email, c.telephone,feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id where f.status ='Open' and DATE_ADD(f.created_date, INTERVAL 2 HOUR) >= '".$Issues_currentDateTime."' and DATE_ADD(f.created_date, INTERVAL 2 HOUR)< '".$max_Issues_currentDateTime."' ";
+          else
+          {
+         $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,CONCAT(u.firstname, ' ', u.lastname) AS AcceptedBy,c.email,c.telephone,feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id  join ".DB_PREFIX."user u on  u.user_id = f.accepted_by  where f.status ='Attending' and DATE_ADD(f.accepted_date, INTERVAL 6 HOUR) >= '".$Issues_currentDateTime."' and DATE_ADD(f.accepted_date, INTERVAL 6 HOUR)< '".$max_Issues_currentDateTime."' ";
+            //   echo $sql;die;
+          }
+        $sql .= ' ORDER BY `feedback_id`';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+       
+            // echo $sql;die;
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
 }
