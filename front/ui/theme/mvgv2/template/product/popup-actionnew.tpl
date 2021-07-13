@@ -156,11 +156,11 @@ function isNumberKey(txt, evt) {
     }
 
     function validateFloatKeyPress(el, evt) {
+       $optionvalue=$('.product-variation option:selected').text().trim();
+       if($optionvalue == null || $optionvalue == '' || $optionvalue == undefined) {
        console.log($('#variationsunitname').html());
        var unit_name = $('#variationsunitname').html();
        var unit_name = unit_name.trim();
-       $optionvalue=$('.product-variation option:selected').text().trim();
-       if($optionvalue == null || $optionvalue == '' || $optionvalue == undefined) {
        $optionvalue = unit_name;
        }
        console.log($optionvalue);
