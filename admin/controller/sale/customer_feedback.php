@@ -94,6 +94,7 @@ class ControllerSaleCustomerFeedback extends Controller
                 'created_date' => $result['created_date'],
                 'closed_date' => $result['closed_date'],
                 'closed_comments' => $result['closed_comments'],
+                'accepted_user' => $result['accepted_user'],
                  
             ];
         }
