@@ -141,6 +141,15 @@ class ControllerSettingSetting extends Controller
             $data['error_account_manager_group_id'] = '';
         }
         
+
+        if (isset($this->error['customer_experience_group_ids'])) {
+            $data['error_customer_experience_group_id'] = $this->error['customer_experience_group_id'];
+        } else {
+            $data['error_customer_experience_group_id'] = '';
+        }
+        
+
+
         if (isset($this->error['farmer_group_ids'])) {
             $data['error_farmer_group_id'] = $this->error['farmer_group_id'];
         } else {
@@ -522,6 +531,12 @@ class ControllerSettingSetting extends Controller
             $data['config_account_manager_group_id'] = $this->request->post['config_account_manager_group_id'];
         } else {
             $data['config_account_manager_group_id'] = $this->config->get('config_account_manager_group_id');
+        }
+
+        if (isset($this->request->post['config_customer_experience_group_id'])) {
+            $data['config_customer_experience_group_id'] = $this->request->post['config_customer_experience_group_id'];
+        } else {
+            $data['config_customer_experience_group_id'] = $this->config->get('config_customer_experience_group_id');
         }
         
         if (isset($this->request->post['config_farmer_group_id'])) {
@@ -2176,6 +2191,10 @@ class ControllerSettingSetting extends Controller
         if (!$this->request->post['config_account_manager_group_id']) {
             $this->error['account_manager_group_id'] = $this->language->get('error_account_manager_group_id');
         }
+
+        if (!$this->request->post['config_customer_experience_group_id']) {
+            $this->error['customer_experience_group_id'] = $this->language->get('error_customer_experience_group_id');
+        }
         
         if (!$this->request->post['config_farmer_group_id']) {
             $this->error['farmer_group_id'] = $this->language->get('error_farmer_group_id');
@@ -2707,6 +2726,16 @@ class ControllerSettingSetting extends Controller
             $data['config_stockout'] = '';
         }
 
+
+        if (isset($this->request->post['config_issue'])) {
+            $data['config_issue'] = $this->request->post['config_issue'];
+        } elseif (isset($email_info[3]['value'])) {
+            $data['config_issue'] =$email_info[3]['value'];
+        } else {
+            $data['config_issue'] = '';
+        }
+
+
         $this->document->setTitle("Email Settings");
         $this->load->model('setting/setting');
 
@@ -2753,6 +2782,10 @@ class ControllerSettingSetting extends Controller
         }
 
         if ((strpos( $this->request->post['config_stockout'],"@")==false) ) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+
+        if ((strpos( $this->request->post['config_issue'],"@")==false) ) {
             $this->error['email'] = "Please enter correct Email";
         }
  

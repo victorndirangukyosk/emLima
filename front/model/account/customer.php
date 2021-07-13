@@ -130,6 +130,9 @@ class ModelAccountCustomer extends Model {
             $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . ' ' . $this->db->escape($data['lastname']) . "',  address = '" . $this->db->escape($data['address']) . ' ' . $this->db->escape($data['location']) . "', building_name = '" . $this->db->escape($data['house_building']) . "'");
             $address_id = $this->db->getLastId();
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
+            if (!empty($data['address_lat']) && !empty($data['address_lng'])) {
+                $this->db->query('UPDATE ' . DB_PREFIX . "address SET latitude = '" . $data['address_lat'] . "', longitude = '" . $data['address_lng'] . "', city_id = 32 WHERE customer_id = '" . (int) $customer_id . "' AND address_id = '" . $address_id . "'");
+            }
         }
 
         if (!empty($data['company_address'])) {
@@ -342,26 +345,20 @@ class ModelAccountCustomer extends Model {
     }
 
     public function getOTP($customer_id, $otp, $type) {
-        if($customer_id ==540 || $customer_id =="540")//hardcoded for testing.
-        {
-            return "1234";      
-        }
-        else
-        {
+        if ($customer_id == 540 || $customer_id == "540") {//hardcoded for testing.
+            return "1234";
+        } else {
             $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "otp WHERE otp='" . $this->db->escape($otp) . "' AND customer_id = '" . $customer_id . "' and type='" . $type . "'");
 
             return $query->row;
         }
-
     }
 
     public function getRegisterOTP($customer_id, $type) {
-        
-            $query = $this->db->query('SELECT otp FROM ' . DB_PREFIX . "otp WHERE customer_id = '" . $customer_id . "' and type='" . $type . "'");
 
-            return $query->row;
-        
+        $query = $this->db->query('SELECT otp FROM ' . DB_PREFIX . "otp WHERE customer_id = '" . $customer_id . "' and type='" . $type . "'");
 
+        return $query->row;
     }
 
     public function saveOTP($customer_id, $otp, $type) {
@@ -646,7 +643,6 @@ class ModelAccountCustomer extends Model {
 
         $query = $this->db->query('SELECT c.order_approval_access,c.order_approval_access_role FROM ' . DB_PREFIX . "customer c WHERE customer_id = '" . (int) $this->customer->getId() . "'");
 
-
         // echo '<pre>';print_r($query->row);exit;
         return $query->row;
     }
@@ -868,158 +864,255 @@ class ModelAccountCustomer extends Model {
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET token = '" . $this->db->escape($token) . "' WHERE customer_id = '" . (int) $customer_id . "'");
     }
 
+    public function editCustomerNew($data) {
+        // echo "<pre>";print_r($data);die;
+        $this->trigger->fire('pre.customer.edit', $data);
 
-    public function editCustomerNew($data) 
-    {
-            // echo "<pre>";print_r($data);die;
-                $this->trigger->fire('pre.customer.edit', $data);
-        
-                $customer_id = $this->customer->getId();
-        
-               
-        $sql='UPDATE ' . DB_PREFIX . "customer SET "; 
+        $customer_id = $this->customer->getId();
+
+        $sql = 'UPDATE ' . DB_PREFIX . "customer SET ";
         if (isset($data['customer_group_id'])) {
-            $sql .= ' customer_group_id = '.(int) $data['customer_group_id'] .' , ';
-        } 
+            $sql .= ' customer_group_id = ' . (int) $data['customer_group_id'] . ' , ';
+        }
 
         if (isset($data['lastname'])) {
-            $sql .= ' lastname = "'.$this->db->escape($data['lastname']) .'" , ';
-        } 
-        
+            $sql .= ' lastname = "' . $this->db->escape($data['lastname']) . '" , ';
+        }
+
         if (isset($data['firstname'])) {
-            $sql .= ' firstname = "'. $this->db->escape($data['firstname']) .'" , ';
-        } 
+            $sql .= ' firstname = "' . $this->db->escape($data['firstname']) . '" , ';
+        }
 
         if (isset($data['telephone'])) {
             //(21) 42353-5255
             $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
-            $sql .= ' telephone = '. $data['telephone'].' ,';
+            $sql .= ' telephone = ' . $data['telephone'] . ' ,';
         }
 
         if (isset($data['fax'])) {
-            $sql .= ' fax = "'. $this->db->escape($data['fax']) .'" , ';
-
+            $sql .= ' fax = "' . $this->db->escape($data['fax']) . '" , ';
         }
 
         if (isset($data['gender'])) {
-            $sql .= ' gender = "'.$this->db->escape($data['gender']) .'" , ';
-
+            $sql .= ' gender = "' . $this->db->escape($data['gender']) . '" , ';
         }
         if (isset($data['companyname'])) {
-            $sql .= ' company_name = "'. $this->db->escape($data['companyname']) .'" , ';
-
+            $sql .= ' company_name = "' . $this->db->escape($data['companyname']) . '" , ';
         }
         if (isset($data['companyaddress'])) {
-            $sql .= ' company_address = "'. $this->db->escape($data['companyaddress']) .'" , ';
-
+            $sql .= ' company_address = "' . $this->db->escape($data['companyaddress']) . '" , ';
         }
 
         if (isset($data['email'])) {
-            $sql .= ' email = "'. $this->db->escape($data['email']) .'" , ';
-
+            $sql .= ' email = "' . $this->db->escape($data['email']) . '" , ';
         }
         // if (isset($data['custom_field'])) {
         //     $sql .= ' custom_field = "'. $this->db->escape($data['custom_field'])  ? serialize($data['custom_field']) : '' .' , ';
-
         // }
 
-            if(isset($data['dob'])) {
-            $sql .= ' dob = '.$data['dob'] .' , ';
+        if (isset($data['dob'])) {
+            $sql .= ' dob = ' . $data['dob'] . ' , ';
+        }
+        $customer = 'customer';
+        $sql .= ' modified_by = ' . $this->customer->getId() . ' , date_modified = NOW() , modifier_role = "' . $this->db->escape($customer) . '" WHERE customer_id =' . (int) $customer_id;
 
-             }
-             $customer='customer';
-             $sql .= ' modified_by = '.$this->customer->getId()  .' , date_modified = NOW() , modifier_role = "'.$this->db->escape($customer). '" WHERE customer_id ='. (int) $customer_id;
-             
         //     ';
+        //    echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
 
-            
+        $this->trigger->fire('post.customer.edit', $customer_id);
+    }
+
+    public function getCustomerContact($contact_id) {
+        $contact = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.contact_id = '" . (int) $contact_id . "'");
+        //    echo "<pre>";print_r('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.contact_id = '" . (int) $contact_id . "'");die;
+
+        return $contact->row;
+    }
+
+    public function getCustomerContacts($customer_id) {
+        $contacts = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.customer_id = '" . (int) $customer_id . "'");
+        return $contacts->rows;
+    }
+
+    public function getTotalContactsByEmail($email) {
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "customer_contact WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+
+        return $query->row['total'];
+    }
+
+    public function deletecontact($contact_id) {
+
+        $this->db->query('DELETE FROM `' . DB_PREFIX . "customer_contact` WHERE `contact_id` = '" . (int) $contact_id . "'");
+    }
+
+    public function SendInvoiceFlagUpdate($contact_id, $send_invoice) {
+
+
+        $this->db->query('UPDATE ' . DB_PREFIX . "customer_contact SET send = '" . (int) $send_invoice . "'  WHERE contact_id = '" . (int) $contact_id . "'");
+    }
+
+    public function addCustomerContact($data) {
+        //    echo '<pre>';print_r($data);exit;
+        $flag = 0;
+        if ($data['customer_contact_send'] == "on") {
+            $flag = 1;
+        }
+        $data['email'] = $data['input-emailnew'];
+        $log = new
+                Log('error.log');
+        $log->write('contact add');
+        $customer_id = $this->customer->getId();
+        if (isset($data['telephone'])) {
+            $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
+        }
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_contact SET  firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', send = '" . $flag . "', customer_id = '" . (int) $customer_id . "', created_date = NOW(), modified_date = NOW()");
+
+        $contact_id = $this->db->getLastId();
+
+        return $contact_id;
+    }
+
+    public function editCustomerContact($data) {
+        $data['email'] = $data['input-emailnew'];
+        $flag = 0;
+        if ($data['customer_contact_send'] == "on") {
+            $flag = 1;
+        }
+        $customer_id = $this->customer->getId();
+
+        if (isset($data['telephone'])) {
+            $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
+        }
+
+
+        $this->db->query('UPDATE ' . DB_PREFIX . "customer_contact SET   firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "',  email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', send = '" . $flag . "', customer_id = '" . $this->customer->getId() . "',  modified_date = NOW() WHERE contact_id = '" . (int) $data['contactid'] . "'");
+
+        // echo '<pre>';print_r($data);exit;
+        // $contact_id = $this->db->getLastId();   return $contact_id;
+    }
+
+
+
+    public function addCustomerIssue($customer_id, $data) {
+        try {
+             if(!$data['selectedorderid'])
+             $data['selectedorderid']=0;
+                $sql = 'INSERT INTO ' . DB_PREFIX . "issue SET customer_id = '" . (int) $customer_id . "', order_id = '" . $data['selectedorderid'] . "', issue_details = '" . $this->db->escape($data['issuesummary']) . "', issue_type = '" . $this->db->escape($data['selectissuetype']) . "', created_date = NOW()";
+             
+            $this->db->query($sql);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function getCustomerLastFeedback($customer_id) {
+
+        $selectquery = $this->db->query('SELECT created_date  FROM ' . DB_PREFIX . "feedback WHERE customer_id = '" . (int) $customer_id . "' Order by feedback_id desc Limit 0, 1");
+        $feedback_date= $selectquery->row['created_date'];
+        if($feedback_date)
+        {
+        $query = $this->db->query('SELECT count(order_id) as Count FROM ' . DB_PREFIX . "order WHERE customer_id = '" . (int) $customer_id . "' and date(date_added) >date('" .  $feedback_date . "')");
+        //   echo '<pre>';print_r($query->row['Count']);exit;
+        return $query->row['Count'];
+        }else
+        {
+            return 0;
+        }
+
+    }
+
+
+    //Customer Feedbacks and issues are clubed to single table
+    public function addCustomerFeedback($customer_id, $data) {
+
+        
+        try {
+             if(!isset($data['selectedorderid']))
+             $data['selectedorderid']=0;
+             if(!isset($data['feedback_type']))
+             $data['feedback_type']='p';
+
+             if(isset($data['comments']))
+             $data['issuesummary']=$data['comments'];
+
+             $data['customer_name']=$this->customer->getFirstName().' '.$this->customer->getLastName();
+             $data['email']=$this->customer->getEmail();
+             $data['mobile']=$this->customer->getTelephone();
+             $data['feedback_type']= ($data['feedback_type'] =="s"? "Suggestions" : ($data['feedback_type'] =="p"? "Issue"." - ".$data['selectissuetype'] :"Happy"));
+             $data['description']=$data['issuesummary'];
+
+
+            //  if(!$data['rating_id'])
+            //  $data['rating_id']=0;
+                // $sql = 'INSERT INTO ' . DB_PREFIX . "feedback SET customer_id = '" . (int) $customer_id . "', order_id = '" . $data['selectedorderid'] . "', issue_details = '" . $this->db->escape($data['issuesummary']) . "', issue_type = '" . $this->db->escape($data['selectissuetype']) . "', created_date = NOW()";
+                $sql ='INSERT INTO '.DB_PREFIX."feedback SET customer_id = '".(int) $customer_id."',order_id = '" . $data['selectedorderid'] . "', comments = '".$this->db->escape($data['issuesummary'])."', rating = '".$this->db->escape($data['rating_id'])."', feedback_type ='".$this->db->escape($data['feedback_type'])."',issue_type= '".$this->db->escape($data['selectissuetype'])."', created_date = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'";
+                //   echo '<pre>';($sql);exit;          
+
+                    $this->db->query($sql);
+
+                    #region send mail to customer experience
+try{
+                    if($data['rating_id']<=3)
+                    {
+                        //get customer experience emails.
+                        $customerexperienceEmails=$this->getCustomerExperienceEmails();
+
+                    }
+
+                    $subject = $this->emailtemplate->getSubject('Feedback', 'feedback_1', $data);
+                    $message = $this->emailtemplate->getMessage('Feedback', 'feedback_1', $data);
+                   
+                    if($subject!=null && $message!=null && $this->emailtemplate->getEmailEnabled('Feedback', 'feedback_1'))
+                {
+                    $Senderemails="";
+                    foreach($customerexperienceEmails as $emailvalue)
+                    {
+                        if($Senderemails=="")
+                        $Senderemails=$emailvalue['email'];
+                        else
+                        $Senderemails=$Senderemails.';'.$emailvalue['email'];
+                    }
+                    if( $Senderemails!="")
+                    {
+                    $mail = new Mail($this->config->get('config_mail'));
+                    // $mail->setTo($this->config->get('config_email'));
+                    $mail->setTo($Senderemails);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    // $mail->setSender($this->request->post['name']);
+                    $mail->setSender($this->config->get('config_name'));
+
+                    $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+                    $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8'));
+                    $mail->send();
+                    }
+                    
+                }
+            }
+            catch(exception $ex)
+            {
+                //write to log
+
+                $log = new Log('error.log');
+        $log->write('error in issue sending mail to customer experience'.$ex);
+            }
+
+                    #endregion
+
+            return true;
+        } catch (Exception $e) {
  
 
-        //    echo "<pre>";print_r($sql);die;
-         $query = $this->db->query($sql);
-        
-          $this->trigger->fire('post.customer.edit', $customer_id);
-            
-            }
-
-            public function getCustomerContact($contact_id) {
-                $contact = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.contact_id = '" . (int) $contact_id . "'");
-        //    echo "<pre>";print_r('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.contact_id = '" . (int) $contact_id . "'");die;
-                
-                return $contact->row;
-            }
+            return false;
+        }
+    }
 
 
-            public function getCustomerContacts($customer_id) {
-                $contacts = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.customer_id = '" . (int) $customer_id . "'");
-                return $contacts->rows;
-            }
-            public function getTotalContactsByEmail($email) {
-                $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "customer_contact WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
-        
-                return $query->row['total'];
-            }
+    public function getCustomerExperienceEmails() {
+        $customerexperienceEmails = $this->db->query('SELECT email FROM ' . DB_PREFIX . "user u join " . DB_PREFIX . "user_group ug on u.user_group_id =ug.user_group_id WHERE ug.name = 'Customer Experience' and u.status=1");
+        return $customerexperienceEmails->rows;
+    }
 
-
-            public function deletecontact($contact_id) {
-                 
-                    $this->db->query('DELETE FROM `' . DB_PREFIX . "customer_contact` WHERE `contact_id` = '" . (int) $contact_id . "'");
-                 
-            }
-
-            public function SendInvoiceFlagUpdate($contact_id, $send_invoice) {
-                
-                
-                    $this->db->query('UPDATE ' . DB_PREFIX . "customer_contact SET send = '" . (int) $send_invoice . "'  WHERE contact_id = '" . (int) $contact_id . "'");
-                
-            }
-
-
-            public function addCustomerContact($data) 
-            {
-                //    echo '<pre>';print_r($data);exit;
-                 $flag=0;
-                 if($data['customer_contact_send']=="on")
-                 {
-                    $flag=1;
-                 }
-                 $data['email']=$data['input-emailnew'];
-                  $log = new 
-                        Log('error.log'); 
-                        $log->write('contact add');    
-                        $customer_id = $this->customer->getId();             
-                        if (isset($data['telephone'])) {
-                            $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
-                        }
-                        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_contact SET  firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', send = '" . $flag . "', customer_id = '" . (int) $customer_id . "', created_date = NOW(), modified_date = NOW()");
-                                     
-                        $contact_id = $this->db->getLastId();                   
-                
-                        return $contact_id;
-            }
-                
-
-                    public function editCustomerContact($data) 
-                    {
-                 $data['email']=$data['input-emailnew'];
-                 $flag=0;
-                        if($data['customer_contact_send']=="on")
-                        {
-                           $flag=1;
-                        }
-                                $customer_id = $this->customer->getId();
-                        
-                                if (isset($data['telephone'])) { 
-                                    $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
-                                }
-                        
-                        
-                                $this->db->query('UPDATE ' . DB_PREFIX . "customer_contact SET   firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "',  email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', send = '" . $flag. "', customer_id = '" . $this->customer->getId() . "',  modified_date = NOW() WHERE contact_id = '" . (int) $data['contactid'] . "'");
-                                
-                                // echo '<pre>';print_r($data);exit;
-                                // $contact_id = $this->db->getLastId();   return $contact_id;
-                         
-                    }
-                        
-                            
 }

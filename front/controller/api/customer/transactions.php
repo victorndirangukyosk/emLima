@@ -14,7 +14,10 @@ class ControllerApiCustomerTransactions extends Controller {
         $filters = [
             'filter_order_status_id' => '14, 1, 2, 3, 4',
         ];
-
+        $log = new Log('error.log');
+        $log->write('customer_id');
+        $log->write($this->customer->getId());
+        $log->write('customer_id');
         if (!empty($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {

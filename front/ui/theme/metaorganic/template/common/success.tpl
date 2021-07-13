@@ -277,10 +277,18 @@
          <!--</div>-->
     </div>
 </div>
-
+ 
 <?php echo $footer; ?>
-
+<?= $feedback_modal ?>
 <script type="text/javascript">
+
+
+
+$( document ).ready(function() {
+    <?php if(isset($load_feedback_popup)) { ?>
+        $('#feedbackModal').modal('show');
+    <?php }?>
+});
 
 <?php if(isset($redirect_url_return)) { ?>
     $(function(){

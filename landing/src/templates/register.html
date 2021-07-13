@@ -66,6 +66,8 @@
                                     <div class="form-group col-md-4">
                                         <label for="register-building-name">Address Line 1</label>
                                         <input required type="text" class="form-control" id="register-building-name">
+                                        <input type="hidden" value="0" id="address_lat">
+                                        <input type="hidden" value="0" id="address_lng">
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="register-address-line">Address Line 2 (Optional)</label>
@@ -163,6 +165,10 @@
 
     google.maps.event.addListener(autocomplete, 'place_changed', function () {
         var near_place = autocomplete.getPlace();
+        $("#address_lat").val(autocomplete.getPlace().geometry.location.lat());
+        $("#address_lng").val(autocomplete.getPlace().geometry.location.lng());
+        console.log(autocomplete.getPlace().geometry.location.lat());
+        console.log(autocomplete.getPlace().geometry.location.lng());
     });
 </script>
 @@include('./_partials/footer.html')

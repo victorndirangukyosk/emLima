@@ -54,6 +54,12 @@ $_['text_vehicle_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="vehicle
 $_['text_vehicle_add'] = '<a href="user_id=%d">%s</a> created a new <a href="vehicle_id=%d">vehicle</a>.';
 $_['text_vehicle_delete'] = '<a href="user_id=%d">%s</a> deleted a <a href="vehicle_id=%d">vehicle</a>.';
 
+
+$_['text_Issue_Accepted'] = '<a href="user_id=%d">%s</a> accepted  <a href="feedback_id=%d">Issue</a>.';
+$_['text_Issue_Closed'] = '<a href="user_id=%d">%s</a> closed  <a href="feedback_id=%d">Issue</a>.';
+
+
+
 // Column
 $_['column_user'] = 'User';
 $_['column_comment'] = 'User Activity';

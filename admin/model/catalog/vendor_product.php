@@ -145,6 +145,10 @@ class ModelCatalogVendorProduct extends Model {
         if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
             $sql .= " AND p2c.category_id = '" . $this->db->escape($data['filter_category']) . "'";
         }
+        
+        if (isset($data['filter_tax_class_id']) && !is_null($data['filter_tax_class_id'])) {
+            $sql .= " AND ps.tax_class_id = '" . (int) $data['filter_tax_class_id'] . "'";
+        }
 
         if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
             $lGroup = false;
@@ -253,6 +257,10 @@ class ModelCatalogVendorProduct extends Model {
         if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
             $sql .= " AND p2c.category_id = '" . $this->db->escape($data['filter_category']) . "'";
         }
+        
+        if (isset($data['filter_tax_class_id']) && !is_null($data['filter_tax_class_id'])) {
+            $sql .= " AND ps.tax_class_id = '" . (int) $data['filter_tax_class_id'] . "'";
+        }
 
         if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
             $lGroup = false;
@@ -332,6 +340,10 @@ class ModelCatalogVendorProduct extends Model {
 
         if (!empty($data['filter_name'])) {
             $sql .= " AND pd.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+        
+        if (isset($data['filter_tax_class_id']) && !is_null($data['filter_tax_class_id'])) {
+            $sql .= " AND ps.tax_class_id = '" . (int) $data['filter_tax_class_id'] . "'";
         }
 
         if (isset($data['filter_price']) && !is_null($data['filter_price'])) {

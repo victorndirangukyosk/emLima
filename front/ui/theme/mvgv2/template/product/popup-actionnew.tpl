@@ -27,7 +27,7 @@
                                                       </select>
                                                       <?php } ?>
                                                       <?php if(is_array($product['variations']) && count($product['variations']) == 1) { ?>
-                                                      <span><?php  echo 'Per ' . $product['variations'][0]['unit']; ?></span>
+                                                      <span id="variationsunitname"><?php  echo 'Per ' . $product['variations'][0]['unit']; ?></span>
                                                       <?php } ?>
                                                   </div>
 												  <?php 
@@ -61,7 +61,7 @@
 </div>
 <div class="col-md-5">
 <div class="qtybtns-addbtnd addcart-block" id="add-btn-container">
- <input type="text" onkeypress="return validateFloatKeyPress(this, event);" autocomplete="off"  style="margin-left: -15px;" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?php if($product['qty_in_cart']>0){echo $product['qty_in_cart'];}?>" placeholder="Add Qty">
+ <input type="text" product_store_id="<?= $product['product_store_id'] ?>" onkeypress="return validateFloatKeyPress(this, event);" autocomplete="off"  style="margin-left: -15px;" class="input-cart-qty" id="cart-qty-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" value="<?php if($product['qty_in_cart']>0){echo $product['qty_in_cart'];}?>" placeholder="Add Qty">
  <a id="AtcButton-id-<?= $product['store_product_variation_id'] ?>" style="<?php if($product['qty_in_cart']>0){echo "background-color:#ea7128";}?>" class="AtcButton__container___1RZ9c AtcButton__with_counter___3YxLq atc_ AtcButton__small___1a1kH" >
  <span data-action="<?= $product['qty_in_cart'] ? 'update' : 'add'; ?>"
        data-key='<?= $product["key"] ?>'
@@ -156,8 +156,14 @@ function isNumberKey(txt, evt) {
     }
 
     function validateFloatKeyPress(el, evt) {
-
        $optionvalue=$('.product-variation option:selected').text().trim();
+       if($optionvalue == null || $optionvalue == '' || $optionvalue == undefined) {
+       console.log($('#variationsunitname').html());
+       var unit_name = $('#variationsunitname').html();
+       var unit_name = unit_name.trim();
+       $optionvalue = unit_name;
+       }
+       console.log($optionvalue);
        //alert($optionvalue);
        if($optionvalue=="Per Kg")
        {

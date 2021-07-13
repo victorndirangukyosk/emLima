@@ -37,13 +37,8 @@
 					<li><a href="#tab-import" data-toggle="tab"><?php echo $tab_import; ?></a></li>
 					
 					<?php if(!$this->user->isVendor()){ ?>
-					
 					<li><a href="#tab-settings" data-toggle="tab"><?php echo $tab_settings; ?></a></li>
-					
-					<?php }else{ ?>
-					
-					<li><a href="#tab-sample" data-toggle="tab"><?= $tab_sample_data ?></a></li>
-					
+                                        <li><a href="#tab-sample" data-toggle="tab"><?= $tab_sample_data ?></a></li>
 					<?php } ?>
 
 					<li><a href="#tab_import_prices" data-toggle="tab"><?php echo $tab_import_prices; ?></a></li>

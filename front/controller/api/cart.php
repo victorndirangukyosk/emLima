@@ -441,6 +441,7 @@ class ControllerApiCart extends Controller {
             $tax_info = $this->tax->getRateNameByTaxClassId($product_info['tax_class_id']);
             $tax_name = is_array($tax_info) && $tax_info != NULL && count($tax_info) > 0 ? $tax_info['name'] : NULL;
             $tax_percentage = is_array($tax_info) && $tax_info != NULL && count($tax_info) > 0 ? $tax_info['rate'] : NULL;
+            $image = $this->load->controller('api/customer/imagepath', $product_info['image']);
 
             if (is_array($product_info) && $product_info['status'] == 1) {
                 $this->data[$keys] = [
@@ -451,13 +452,14 @@ class ControllerApiCart extends Controller {
                     'store_id' => $product_info['store_id'],
                     'store_name' => $product_info['store_name'],
                     'product_type' => trim($product_info['product_type']),
-                    'produce_type' => trim($product_info['produce_type']),
+                    'produce_type' => $data['produce_type'],
                     'product_note' => $data['product_note'],
                     'unit' => $product_info['unit'],
                     'name' => $product_info['name'],
                     'model' => $product_info['model'],
                     'shipping' => 0,
-                    'image' => BASE_URL . DIR_IMAGE . $product_info['image'],
+                    'image' => BASE_URL . '/' . $image,
+                    'orginal_image' => $product_info['image'],
                     'option' => [],
                     'download' => [],
                     'quantity' => $data['quantity'],

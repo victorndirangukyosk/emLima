@@ -132,6 +132,7 @@ class ControllerApiCustomerLogin extends Controller
             }
             $json['success'] = $this->language->get('text_success');
             $json['token'] = $jwt; //json_encode($unencodedArray);
+            $json['cookie'] = $this->session->getId();
             $json['status'] = true;
 
             $json['data'] = $customer_info;

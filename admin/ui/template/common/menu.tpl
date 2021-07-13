@@ -183,6 +183,11 @@
              <?php if($preturn_customer_feedback) { ?>
             <li><a href="<?php echo $customer_feedback; ?>"><?php echo $text_customer_feedback; ?></a></li>
             <?php } ?>
+
+
+             <?php if($preturn_customer_issue) { ?>
+            <li><a href="<?php echo $customer_issue; ?>"><?php echo $text_customer_issue; ?></a></li>
+            <?php } ?>
         </ul>
     </li>
     <?php } ?>

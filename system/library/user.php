@@ -189,6 +189,16 @@ class User extends SmartObject {
         }
     }
 
+
+    public function isCustomerExperience() {
+        $customer_experience_group_id = $this->config->get('config_customer_experience_group_id');
+        if ($this->user_group_id == $customer_experience_group_id) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function isFarmer() {
         $farmer_group_id = $this->config->get('config_farmer_group_id');
         if ($this->user_group_id == $farmer_group_id) {

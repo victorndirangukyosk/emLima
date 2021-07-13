@@ -179,6 +179,8 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     const registrationView = $('#registration-view');
                     const otpView = $('#otp-view');
                     const registerButton = $('#register-button');
+                    const address_lat = $('#address_lat').val();
+                    const address_lng = $('#address_lng').val();
                     const registerForm = $('#register-form')[0];
                     const formIsValid = registerForm.reportValidity();
                     if (formIsValid) {
@@ -217,6 +219,8 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                 password: password,
                                 confirm: passwordConfirmation,
                                 accountmanagerid:accountmanagerid,
+                                address_lat:address_lat,
+                                address_lng:address_lng,
                                 //accountmanagername:accountmanagername
                             },
                             success: function (json) {
@@ -265,6 +269,8 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     const password = $('#register-password').val();
                     const passwordConfirmation = $('#register-password-confirm').val();
                     const accountmanagerid = $('#register-accountmanager-id').val();
+                    const address_lat = $('#address_lat').val();
+                    const address_lng = $('#address_lng').val();
                     //const accountmanagerid = $('#register-accountmanager-id').attr('register_accountmanager_id');
                     const otp = $('#otp-value').val();
                     const verifyButton = $('#otp-verify-button');
@@ -292,6 +298,8 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                         password: password,
                         confirm: passwordConfirmation,
                         accountmanagerid: accountmanagerid,
+                        address_lat:address_lat,
+                        address_lng:address_lng,
                         signup_otp: otp,
                         //accountmanagername:accountmanagername
                     },

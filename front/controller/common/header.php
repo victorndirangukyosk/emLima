@@ -469,6 +469,7 @@ class ControllerCommonHeader extends Controller
         // echo '<pre>';print_r($data);exit;
         $data['language'] = $this->load->controller('common/language/dropdown');
         $data['contactus_modal'] = $this->load->controller('information/contact');
+        $data['reportissue_modal'] = $this->load->controller('information/reportissue');
         if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/header_information.tpl')) {
             return $this->load->view($this->config->get('config_template').'/template/common/header_information.tpl', $data);
         } else {

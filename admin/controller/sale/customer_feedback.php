@@ -76,14 +76,25 @@ class ControllerSaleCustomerFeedback extends Controller
         $results = $this->model_sale_customer_feedback->getCustomerFeedbacks($filter_data);
 
         foreach ($results as $result) {
+
+            if ($result['company_name']) {
+                $result['company_name'] = ' (' . $result['company_name'] . ')';
+            } else {
+                // $result['company_name'] = "(NA)";
+            }
             $data['customer_feedbacks'][] = [
                 'feedback_id' => $result['feedback_id'],
                 'rating' => $result['rating'],
                 'comments' => $result['comments'],
                 'customer_name' => $result['name'],
                 'company_name' => $result['company_name'],
-                'feedback_type' =>  ($result['feedback_type'] =="s"? "Suggestions" : ($result['feedback_type'] =="p"? "Problem":"Happy")),
+                'feedback_type' =>  ($result['feedback_type'] =="s"? "Suggestions" : ($result['feedback_type'] =="p"? "Issue"." - ".$result['issue_type'] :"Happy")),
                 'order_id' => $result['order_id'],
+                'status' => $result['status'],
+                'created_date' => $result['created_date'],
+                'closed_date' => $result['closed_date'],
+                'closed_comments' => $result['closed_comments'],
+                'accepted_user' => $result['accepted_user'],
                  
             ];
         }
@@ -157,9 +168,71 @@ class ControllerSaleCustomerFeedback extends Controller
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+        $data['token'] = $this->session->data['token'];
 
         $this->response->setOutput($this->load->view('sale/customer_feedback_list.tpl', $data));
     }
 
      
+
+     
+
+    public function acceptIssue() {
+        $this->load->model('sale/customer_feedback');
+        //echo 'date.timezone ' ;;
+        $data = $this->request->post;
+
+        //   echo '<pre>';print_r($this->request->post);exit;
+
+        if ('POST' == $this->request->server['REQUEST_METHOD']) {
+            $data = $this->model_sale_customer_feedback->acceptIssue($this->request->post['feedback_id'],$this->user->getId());
+
+            $data['status'] = true;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        } else {
+            $data['status'] = false;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
+        //  echo '<pre>';print_r($data);exit;
+
+        return true;
+    }
+
+
+    public function closeIssue() {
+        $this->load->model('sale/customer_feedback');
+        //echo 'date.timezone ' ;;
+        $data = $this->request->post;
+
+        //    echo '<pre>';print_r($this->request->post);exit;
+
+        if ('POST' == $this->request->server['REQUEST_METHOD']) {
+            $data = $this->model_sale_customer_feedback->closeIssue($this->request->post['feedback_id'],$this->request->post['closing_comments'],$this->user->getId());
+
+            $data['status'] = true;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        } else {
+            $data['status'] = false;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
+        //  echo '<pre>';print_r($data);exit;
+
+        return true;
+    }
 }
