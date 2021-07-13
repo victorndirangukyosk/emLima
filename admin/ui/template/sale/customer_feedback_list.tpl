@@ -98,7 +98,7 @@
                                        </div>
                                     </td>
                     <?php } else if($customer_feedback['rating']<=3  && $customer_feedback['status']=='Attending') { ?>
-                  <td class="text-left"><a href="#" id="open_close_feedback" data-feedback-id="<?= $customer_feedback['feedback_id'] ?>"   onclick="getfeedbackClosePopup(<?= $customer_feedback['feedback_id'] ?>)" data-toggle="modal" data-dismiss="modal" data-target="#feedbackcloseModal" title="Close Issue" >
+                  <td class="text-left"><a href="#" id="open_close_feedback" data-feedback-id="<?= $customer_feedback['feedback_id'] ?>" data-toggle="modal" data-dismiss="modal" data-target="#feedbackcloseModal" title="Close Issue" >
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
                   </a></td>
 
@@ -202,65 +202,8 @@
  width: 100%;
 }
 </style>
-
-
-    <script type="text/javascript"><!--
-        
-       
-         $companyName="";
-        $('input[name=\'filter_customer\']').autocomplete({
-            'source': function (request, response) {
-                $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company=' +$companyName,
-                    dataType: 'json',
-                    success: function (json) {
-                        response($.map(json, function (item) {
-                            return {
-                                label: item['name'],
-                                value: item['customer_id']
-                            }
-                        }));
-                    }
-                });
-            },
-            'select': function (item) {
-                $('input[name=\'filter_customer\']').val(item['label']);
-            }
-        });
-
-
-           $('input[name=\'filter_company\']').autocomplete({
-            'source': function (request, response) {
-                $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
-                    dataType: 'json',
-                    success: function (json) {
-                        response($.map(json, function (item) {
-                            return {
-                                label: item['name'],
-                                value: item['name']
-                            }
-                        }));
-
-                        
-                    }
-                });
-                $companyName="";
-            },
-            'select': function (item) {
-                $('input[name=\'filter_company\']').val(item['label']);
-                $('input[name=\'filter_customer\']').val('');
-                $companyName=item['label'];
-            }
-        });
-        
-        //--></script> 
-    
-
-  
-     
-      <script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
-    <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+<script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
     <script type="text/javascript"><!--
   $('.date').datetimepicker({
             pickTime: false
@@ -304,16 +247,14 @@ $.ajax({
 });
 
  
-function getfeedbackClosePopup($feedback_id) {
-   
-               
-                $('#feedbackCloseModal-message').html('');
-               $('#feedbackCloseModal-success-message').html(''); 
+$('a[id^=\'open_close_feedback\']').on('click', function (e) {
+e.preventDefault();
+console.log($(this).attr("data-feedback-id"));
+$('#feedbackCloseModal').modal('toggle');
+$('#feedbackCloseModal-message').html('');
+$('#feedbackCloseModal-success-message').html(''); 
 
-               
-               //$('input[name="feedback_id"]').val($feedback_id) ;
-                  
-            }
+});
 
 </script> 
 
