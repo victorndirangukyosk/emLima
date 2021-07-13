@@ -204,4 +204,34 @@ class ControllerSaleCustomerFeedback extends Controller
 
         return true;
     }
+
+
+    public function closeIssue() {
+        $this->load->model('sale/customer_feedback');
+        //echo 'date.timezone ' ;;
+        $data = $this->request->post;
+
+        //    echo '<pre>';print_r($this->request->post);exit;
+
+        if ('POST' == $this->request->server['REQUEST_METHOD']) {
+            $data = $this->model_sale_customer_feedback->closeIssue($this->request->post['feedback_id'],$this->request->post['closing_comments'],$this->user->getId());
+
+            $data['status'] = true;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        } else {
+            $data['status'] = false;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
+        //  echo '<pre>';print_r($data);exit;
+
+        return true;
+    }
 }
