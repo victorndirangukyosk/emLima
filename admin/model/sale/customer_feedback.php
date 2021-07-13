@@ -54,4 +54,32 @@ class ModelSaleCustomerFeedback extends Model
                        
          
     }
+
+
+
+    public function GetNonProcessedIssues($Issues_currentDateTime,$max_Issues_currentDateTime,$issue_status)
+    {
+ 
+        if($issue_status=='Open')
+        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,'' as AcceptedBy,c.email, c.telephone,feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id where f.status ='Open' and DATE_ADD(f.created_date, INTERVAL 2 HOUR) >= '".$Issues_currentDateTime."' and DATE_ADD(f.created_date, INTERVAL 2 HOUR)< '".$max_Issues_currentDateTime."' ";
+          else
+          {
+         $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,CONCAT(u.firstname, ' ', u.lastname) AS AcceptedBy,c.email,c.telephone,feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id  join ".DB_PREFIX."user u on  u.user_id = f.accepted_by  where f.status ='Attending' and DATE_ADD(f.accepted_date, INTERVAL 6 HOUR) >= '".$Issues_currentDateTime."' and DATE_ADD(f.accepted_date, INTERVAL 6 HOUR)< '".$max_Issues_currentDateTime."' ";
+            //   echo $sql;die;
+          }
+        $sql .= ' ORDER BY `feedback_id`';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+       
+            // echo $sql;die;
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
 }
