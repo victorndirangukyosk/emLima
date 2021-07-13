@@ -132,6 +132,7 @@ class ControllerApiCustomerLogin extends Controller
             }
             $json['success'] = $this->language->get('text_success');
             $json['token'] = $jwt; //json_encode($unencodedArray);
+            $json['cookie'] = $this->session->getId();
             $json['status'] = true;
 
             $json['data'] = $customer_info;
@@ -182,7 +183,7 @@ class ControllerApiCustomerLogin extends Controller
                     $this->session->data['order_approval_access'] = $api_info['order_approval_access'];
                     $this->session->data['order_approval_access_role'] = $api_info['order_approval_access_role'];
 
-                    $json['cookie'] = $this->session->getId();
+                    //$json['cookie'] = $this->session->getId();
                 }
 
                 //$json['success'] = $this->language->get('text_success');
