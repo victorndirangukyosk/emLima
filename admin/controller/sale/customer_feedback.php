@@ -181,7 +181,7 @@ class ControllerSaleCustomerFeedback extends Controller
         //echo 'date.timezone ' ;;
         $data = $this->request->post;
 
-        /// echo '<pre>';print_r($this->request->post);exit;
+        //   echo '<pre>';print_r($this->request->post);exit;
 
         if ('POST' == $this->request->server['REQUEST_METHOD']) {
             $data = $this->model_sale_customer_feedback->acceptIssue($this->request->post['feedback_id'],$this->user->getId());

@@ -49,8 +49,9 @@ class ModelSaleCustomerFeedback extends Model
 
     public function acceptIssue($feedback_id,$accepted_user_id) {
        
+        //   echo '<pre>';print_r('UPDATE ' . DB_PREFIX . "feedback SET status = 'Attending' , accepted_by= '" . (int) $accepted_user_id . "' , accepted_date= NOW() WHERE feedback_id = '" . (int) $feedback_id . "'");exit;
         
-            $this->db->query('UPDATE ' . DB_PREFIX . "feedback SET status = 'Attending' , accepted_by= '" . (int) $accepted_user_id . "'  accepted_date= NOW() WHERE feedback_id = '" . (int) $feedback_id . "'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "feedback SET status = 'Attending' , accepted_by= '" . (int) $accepted_user_id . "' , accepted_date= NOW() WHERE feedback_id = '" . (int) $feedback_id . "'");
                        
          
     }
