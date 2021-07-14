@@ -1058,7 +1058,7 @@ class ModelAccountCustomer extends Model {
                     $this->db->query($sql);
 
                     #region send mail to customer experience
-try{
+                try{
                     if($data['rating_id']<=3)
                     {
                         //get customer experience emails.
