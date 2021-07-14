@@ -3,6 +3,7 @@
 <div id="content">
     <div class="page-header">
         <div class="container-fluid">
+        
             <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
                 <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -37,6 +38,72 @@
                 </div>		
             </div>
             <div class="panel-body">
+
+
+               <div class="well" style="display:none;">
+          <div class="row">
+
+           <div class="col-sm-3">
+ <div class="form-group">
+                                <label class="control-label" for="input-company">Company Name</label>
+                                <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
+                            </div>
+
+                              
+           </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label class="control-label" for="input-name">Customer</label>
+                <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="Customer Name" id="input-name" class="form-control" />
+              </div>
+              
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label class="control-label" for="input-filter-rating">Rating</label>
+                <select name="filter_customer_rating" id="input-filter-rating" class="form-control">
+                  <option value="*"></option>
+                  <?php foreach ($customer_ratings as $customer_rating) { ?>
+                  <?php if ($customer_rating['customer_rating_id'] == $filter_customer_rating_id) { ?>
+                  <option value="<?php echo $customer_rating['customer_rating_id']; ?>" selected="selected"><?php echo $customer_rating['customer_rating_id']; ?></option>
+                  <?php } else { ?>
+                  <option value="<?php echo $customer_rating['customer_rating_id']; ?>"><?php echo $customer_rating['customer_rating_id']; ?></option>
+                  <?php } ?>
+                  <?php } ?>
+                </select>
+              </div>
+               
+            </div>
+            <div class="col-sm-3">
+              
+             <div class="form-group">
+                <label class="control-label" for="input-filter-status">Status</label>
+                 
+                 <select name="filter_status" id="input-filter-status" class="form-control">
+                  <option value="*"></option>
+                  <?php foreach ($issue_statuses as $issue_statuse) { ?>
+                  <?php if ($issue_statuse['name'] == $filter_issue_statuse) { ?>
+                  <option value="<?php echo $issue_statuse['name']; ?>" selected="selected"><?php echo $issue_statuse['name']; ?></option>
+                  <?php } else { ?>
+                  <option value="<?php echo $issue_statuse['name']; ?>"><?php echo $issue_statuse['name']; ?></option>
+                  <?php } ?>
+                  <?php } ?>
+                </select>
+                 
+                    </div>
+              </div>
+
+               <div class="form-group">
+                  <label class="control-label"></label>
+                  </br>
+                  <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
+              </div>
+            </div>
+             
+               
+          </div>
+        </div>
+
 
                 <form method="post" enctype="multipart/form-data" target="_blank" id="form-order">
                     <div class="table-responsive">
@@ -202,6 +269,92 @@
  width: 100%;
 }
 </style>
+
+ <script type="text/javascript">
+ $companyName="";
+$('input[name=\'filter_name\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$companyName,
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['customer_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'filter_name\']').val(item['label']);
+  } 
+});
+
+
+ $('input[name=\'filter_company\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['name']
+                            }
+                        }));
+
+                        
+                    }
+                });
+                $companyName="";
+            },
+            'select': function (item) {
+                $('input[name=\'filter_company\']').val(item['label']);
+                $('input[name=\'filter_customer\']').val('');
+                $companyName=item['label'];
+            }
+        });
+
+
+
+        $('#button-filter').on('click', function() {
+  url = 'index.php?path=sale/customer_feedback&token=<?php echo $token; ?>';
+
+   var filter_company = $('input[name=\'filter_company\']').val();
+
+   if (filter_company) {
+     url += '&filter_company=' + encodeURIComponent(filter_company);
+   } 
+        
+  var filter_name = $('input[name=\'filter_name\']').val();
+  
+  if (filter_name) {
+    url += '&filter_name=' + encodeURIComponent(filter_name);
+  }
+   
+  
+  var filter_customer_rating_id = $('select[name=\'filter_customer_rating\']').val();
+  
+  if (filter_customer_rating_id != '*') {
+    url += '&filter_customer_rating_id=' + encodeURIComponent(filter_customer_rating_id);
+  } 
+  
+  var filter_status = $('select[name=\'filter_status\']').val();
+  
+  if (filter_status != '*') {
+    url += '&filter_status=' + encodeURIComponent(filter_status); 
+  } 
+   
+      
+  location = url;
+});
+
+ 
+</script>
+
 <script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
     <script type="text/javascript"><!--
