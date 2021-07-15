@@ -685,9 +685,9 @@ class ControllerApiOrders extends Controller
 
         $json = [];
 
-        if (!isset($this->session->data['api_id'])) {
+        /*if (!isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
-        } else {
+        } else {*/
             $this->load->model('api/orders');
             $this->load->model('account/order');
 
@@ -819,7 +819,7 @@ class ControllerApiOrders extends Controller
             $json['orders_value'] = $this->currency->format($orderValue);
 
             //$log->write($json);
-        }
+        //}
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
