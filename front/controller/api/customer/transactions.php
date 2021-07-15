@@ -39,10 +39,11 @@ class ControllerApiCustomerTransactions extends Controller {
 
         $this->load->model('account/customer');
 
-        $data['orders'] = [];
+        //$data['orders'] = [];
 
         $this->load->model('account/order');
-        //$order_total = $this->model_account_order->getTotalOrders();
+        $order_total = $this->model_account_order->getTotalOrders();
+        $data['total_orders'] = $order_total;
         if (!empty($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
