@@ -22,7 +22,7 @@ class ControllerApiCustomerFeedback extends Controller
            
             $this->load->model('account/customer');
             // $stats= $this->model_account_customer->addCustomerIssue($this->customer->getId(), $this->request->post);
-            $stats= $this->model_account_customer->addCustomerfeedback($this->customer->getId(), $this->request->post);
+            $stats= $this->model_account_customer->addCustomerFeedback($this->customer->getId(), $this->request->post);
            
             if($stats==true) 
          {          

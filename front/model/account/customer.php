@@ -1045,6 +1045,9 @@ class ModelAccountCustomer extends Model {
              $data['description']=$data['issuesummary'];
              $status='Open';
 
+             if(!isset($data['issue_status']))
+             $data['issue_status']=Null;
+             
              if(!isset($data['rating_id']))
               $data['rating_id']=1;
               if($data['rating_id']>3)
@@ -1059,6 +1062,7 @@ class ModelAccountCustomer extends Model {
 
                     #region send mail to customer experience
                 try{
+                    $customerexperienceEmails=null;
                     if($data['rating_id']<=3)
                     {
                         //get customer experience emails.
