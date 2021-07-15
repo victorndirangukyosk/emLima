@@ -109,6 +109,15 @@
                                     <?php } ?>
                                 </div>
                             </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-orderprefix"><?php echo $entry_display_name; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="display_name" value="<?php echo $display_name; ?>" placeholder="<?php echo $display_name; ?>" id="input-display-name" class="form-control" />
+                                    <?php if ($error_display_name) { ?>
+                                    <div class="text-danger"><?php echo $error_display_name; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-image"><?php echo $entry_image; ?></label>
