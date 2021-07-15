@@ -8,7 +8,7 @@ class ControllerApiCustomerFeedback extends Controller
     public function addFeedback()//saveFeedback
     {        
        
-        // echo "<pre>";print_r($this->request->post);die;
+        //  echo "<pre>";print_r($this->request->post);die;
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
@@ -16,10 +16,14 @@ class ControllerApiCustomerFeedback extends Controller
         //params selectedorderid,feedback_type,comments,selectissuetype,rating_id
         try{       
 
+            $log = new Log('error.log');
+            $log->write('Feedback Api '.$this->customer->getId());
+            $log->write('Feedback Api '.echo "<pre>";print_r($this->request->post););
+             
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm() ) {
             // $this->model_account_feedback->saveFeedback($this->request->post);
            
-           
+            $log->write('Validated Feedback Api'.$this->customer->getId());
             $this->load->model('account/customer');
             // $stats= $this->model_account_customer->addCustomerIssue($this->customer->getId(), $this->request->post);
             $stats= $this->model_account_customer->addCustomerfeedback($this->customer->getId(), $this->request->post);
