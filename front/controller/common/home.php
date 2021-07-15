@@ -1804,6 +1804,7 @@ class ControllerCommonHome extends Controller {
     public function getMostBoughtProducts() {
         $this->load->model('assets/product');
         $this->load->model('tool/image');
+        $this->load->model('user/user');
 
         $cachePrice_data = $this->cache->get('category_price_data');
         //echo '<pre>';print_r(ACTIVE_STORE_ID);exit;
@@ -1813,6 +1814,11 @@ class ControllerCommonHome extends Controller {
 
         //  echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
+            $vendor_details = $this->model_user_user->getUser($result['merchant_id']);
+            $log = new Log('error.log');
+            $log->write('vendor_details');
+            $log->write($vendor_details);
+            $log->write('vendor_details');
             // if qty less then 1 dont show product
             if ($result['quantity'] <= 0) {
                 continue;
@@ -1940,6 +1946,7 @@ class ControllerCommonHome extends Controller {
                     'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                     'rating' => 0,
                     'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
+                    'vendor_display_name' => $vendor_details['display_name']
                 ];
             }
         }
