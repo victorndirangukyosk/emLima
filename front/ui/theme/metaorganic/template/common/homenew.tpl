@@ -413,6 +413,7 @@
                   <?php echo $product['qty_in_cart']?>
                   items in cart <i class="fas fa-flag"></i>
                 </span>
+                <span class="view-all-buttons"><?php echo $product['vendor_display_name']; ?></span>
               </div>
             </a>
           </li>
