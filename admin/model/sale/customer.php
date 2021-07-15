@@ -1492,4 +1492,92 @@ class ModelSaleCustomer extends Model {
         return $listId;
     }
 
+
+    public function getCustomerContacts($customer_id,$start,$limit) {
+
+        if ($start < 0) {
+            $start = 0;
+        }
+
+        if ($limit < 1) {
+            $limit = 10;
+        }
+
+
+
+        $contacts = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.customer_id = '" . (int) $customer_id . "'ORDER BY contact_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
+        //  echo "<pre>";print_r($contacts); die;
+        
+        
+        return $contacts->rows;
+    }
+
+
+
+
+    public function getTotalContacts($customer_id) {
+        $contacts = $this->db->query('SELECT count(*) as total FROM ' . DB_PREFIX . "customer_contact c WHERE c.customer_id = '" . (int) $customer_id . "'");
+       
+        // echo "<pre>";print_r('SELECT count(*) as total FROM ' . DB_PREFIX . "customer_contact c WHERE c.customer_id = '" . (int) $customer_id . "'"); die;
+        return $contacts->row['total'];
+    }
+
+
+ 
+    public function addEditContact($customer_id, $firstname , $lastname = '', $email,$phone,$customer_contact_send,$contact_id=0) {
+        $customer_info = $this->getCustomer($customer_id);
+
+        $log = new Log('error.log');
+
+        if ($customer_info) {
+
+            $flag = 0;
+
+        //   echo "<pre>";print_r(); die;
+
+            if ($customer_contact_send == "on") {
+                $flag = 1;
+            }
+               if($contact_id==0)
+               {
+                   $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_contact SET  firstname = '" . $firstname . "', lastname = '" . $lastname . "', email = '" . $email . "', telephone = '" . $phone . "', send = '" . $flag . "', customer_id = '" . (int) $customer_id . "', created_date = NOW()");
+                    $contact_id = $this->db->getLastId(); 
+               }else{
+                    $this->db->query('UPDATE ' . DB_PREFIX . "customer_contact SET   firstname = '" . $firstname . "', lastname = '" . $lastname . "',  email = '" . $email . "', telephone = '" . $phone . "', send = '" . $flag . "', customer_id = '" . $customer_id . "',  modified_date = NOW() WHERE contact_id = '" . (int) $contactid . "'");
+             
+              }
+       
+        return $contact_id;
+
+                        
+        }
+    }
+
+
+
+    
+    
+    public function getCustomerContact($contact_id) {      
+        //    echo "<pre>";print_r('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.contact_id = '" . (int) $contact_id . "'"'); die;
+
+
+        $contact = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.contact_id = '" . (int) $contact_id . "'");
+        
+        
+        return $contact->row;
+    }
+
+    public function deleteContact($contact_id) {
+        
+        
+        $this->db->query('DELETE FROM `' . DB_PREFIX . "customer_contact` WHERE `contact_id` = '" . (int) $contact_id . "'");
+        
+       
+    }
+
+
+
+
+
+
 }
