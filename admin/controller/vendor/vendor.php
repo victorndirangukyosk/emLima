@@ -459,7 +459,7 @@ class ControllerVendorVendor extends Controller {
         $data['entry_fixed_commision'] = $this->language->get('entry_fixed_commision'); 
         $data['entry_tin_no'] = $this->language->get('entry_tin_no'); 
         $data['entry_orderprefix'] = $this->language->get('entry_orderprefix'); 
-
+        $data['entry_display_name'] = $this->language->get('entry_display_name'); 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');
         $data['button_saveclose'] = $this->language->get('button_saveclose');
@@ -591,6 +591,12 @@ class ControllerVendorVendor extends Controller {
             $data['error_orderprefix'] = $this->error['orderprefix'];
         } else {
             $data['error_orderprefix'] = '';
+        }
+        
+        if (isset($this->error['display_name'])) {
+            $data['error_display_name'] = $this->error['display_name'];
+        } else {
+            $data['error_display_name'] = '';
         }
 
         $url = '';
@@ -806,6 +812,14 @@ class ControllerVendorVendor extends Controller {
             $data['orderprefix'] = '';
         }
         
+        if (isset($this->request->post['display_name'])) {
+            $data['display_name'] = $this->request->post['display_name'];
+        } elseif (!empty($vendor_info)) {
+            $data['display_name'] = $vendor_info['display_name'];
+        } else {
+            $data['display_name'] = '';
+        }
+        
         if (isset($this->request->post['address'])) {
             $data['address'] = $this->request->post['address'];
         } elseif (!empty($vendor_info)) {
@@ -951,6 +965,10 @@ class ControllerVendorVendor extends Controller {
             $this->error['mobile'] = $this->language->get('error_mobile');
         }
         
+        if(empty($this->request->post['display_name'])){
+            $this->error['display_name'] = $this->language->get('error_display_name');
+        }
+        
         if (!filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
         }
@@ -967,6 +985,10 @@ class ControllerVendorVendor extends Controller {
 
         if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
             $this->error['firstname'] = $this->language->get('error_firstname');
+        }
+        
+        if ((utf8_strlen(trim($this->request->post['display_name'])) < 5) || (utf8_strlen(trim($this->request->post['display_name'])) > 10)) {
+            $this->error['display_name'] = $this->language->get('error_display_name_length');
         }
 
         if ((utf8_strlen(trim($this->request->post['lastname'])) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
