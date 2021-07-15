@@ -85,8 +85,9 @@ class ControllerApiCustomerFeedback extends Controller
     public function getFeedback()//saveFeedback
     {        
        
-         echo "<pre>";print_r('$this->customer->getId()');;
-         echo "<pre>";print_r($this->customer->getId());die;
+         echo "<pre>";print_r('$this->customer->getId()');
+
+        //  echo "<pre>";print_r($this->customer->getId());die;
         
         
     }
