@@ -996,7 +996,7 @@ class ControllerApiOrders extends Controller
             $this->response->setOutput(json_encode($json));
             return;
         }
-        $isValidOrder=$this->model_account_order->checkValidOrder($orderid);
+        $isValidOrder=$this->model_account_order->checkValidOrder($orderid,$this->customer->getId());
 
         if($isValidOrder=="false")
         {
