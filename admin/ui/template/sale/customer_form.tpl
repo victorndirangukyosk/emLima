@@ -1864,21 +1864,22 @@ $('#button-contact').on('click', function(e) {
   $(document).delegate('.contactdelete', 'click', function () {
         var choice = confirm($(this).attr('data-confirm'));
         if (choice) {
-           
-            var contact_id = $(this).attr('data-contact-id');
-          //alert(contact_id);
+          
+            $contact_id = $(this).attr('data-contact-id');
+          //alert($contact_id);
             $.ajax({
-                url: 'index.php?path=sale/customer/DeleteCustomerContacts&token=<?php echo $token; ?>',
+                url: 'index.php?path=sale/customer/DeleteCustomerContacts&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
                 type: 'post',
-                data: {contact_id: contact_id},
-                dataType: 'json',
-                success: function (json) {
-                    console.log(json);
+                dataType: 'html',
+                data: 'contact_id=' + $contact_id,
+                success: function (html) {
+                      $('.alert').remove();
+                    
                      $('#contact').html(html);
-                    //$('#contact' + contact_id).remove();
-                     // $("#message_text").hide();
                 }
             });
+
+            
         }
     });
 

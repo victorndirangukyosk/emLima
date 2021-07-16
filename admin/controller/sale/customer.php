@@ -2870,6 +2870,7 @@ class ControllerSaleCustomer extends Controller {
 
     public function DeleteCustomerContacts() {
         
+        
         $contact_id = $this->request->post['contact_id'];
         $this->load->model('sale/customer');
         $this->model_sale_customer->deletecontact($contact_id);
@@ -2885,9 +2886,63 @@ class ControllerSaleCustomer extends Controller {
 
         $this->model_account_activity->addActivity('customer_contact_deleted', $activity_data);
 
-        $json['success'] = 'Contact deleted!';
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+        // $json['success'] = 'Contact deleted!';
+        // $this->response->addHeader('Content-Type: application/json');
+        // $this->response->setOutput(json_encode($json));
+        $data['success'] = '';
+
+        $this->load->language('sale/customer');
+
+        // $this->load->model('sale/customer');
+
+        
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && !$this->user->hasPermission('modify', 'sale/customer')) {
+            $data['error_warning'] = $this->language->get('error_permission');
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        $data['text_no_results'] = $this->language->get('text_no_results');
+         
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['contacts'] = [];
+
+        $results = $this->model_sale_customer->getCustomerContacts($this->request->get['customer_id'], ($page - 1) * 10, 10);
+        //  echo "<pre>";print_r($results);die;
+        foreach ($results as $result) {
+            $data['contacts'][] = [
+                'contact_id' =>$result['contact_id'],
+                'customer_id' => $result['customer_id'],  
+                'firstname' => $result['firstname'],  
+                'lastname' => $result['lastname'],  
+                'email' => $result['email'],  
+                'telephone' => $result['telephone'],  
+                'send' => $result['send'],  
+                'customer_id' => $result['description'],  
+            
+            ];
+        }
+
+
+        $contact_total = $this->model_sale_customer->getTotalContacts($this->request->get['customer_id']);
+
+        $pagination = new Pagination();
+        $pagination->total = $contact_total;
+        $pagination->page = $page;
+        $pagination->limit = 10;
+        $pagination->url = $this->url->link('sale/customer/contact', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($contact_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($contact_total - 10)) ? $contact_total : ((($page - 1) * 10) + 10), $contact_total, ceil($contact_total / 10));
+
+        $this->response->setOutput($this->load->view('sale/customer_contact.tpl', $data));
+   
     }
 
     public function EmailUnique() {//not used

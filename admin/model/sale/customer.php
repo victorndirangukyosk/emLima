@@ -1533,7 +1533,7 @@ class ModelSaleCustomer extends Model {
 
             $flag = 0;
 
-        //   echo "<pre>";print_r(); die;
+            // echo "<pre>";print_r($contact_id); die;
 
             if ($customer_contact_send == "on") {
                 $flag = 1;
@@ -1543,8 +1543,8 @@ class ModelSaleCustomer extends Model {
                    $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_contact SET  firstname = '" . $firstname . "', lastname = '" . $lastname . "', email = '" . $email . "', telephone = '" . $phone . "', send = '" . $flag . "', customer_id = '" . (int) $customer_id . "', created_date = NOW()");
                     $contact_id = $this->db->getLastId(); 
                }else{
-                    $this->db->query('UPDATE ' . DB_PREFIX . "customer_contact SET   firstname = '" . $firstname . "', lastname = '" . $lastname . "',  email = '" . $email . "', telephone = '" . $phone . "', send = '" . $flag . "', customer_id = '" . $customer_id . "',  modified_date = NOW() WHERE contact_id = '" . (int) $contactid . "'");
-             
+                    $this->db->query('UPDATE ' . DB_PREFIX . "customer_contact SET   firstname = '" . $firstname . "', lastname = '" . $lastname . "',  email = '" . $email . "', telephone = '" . $phone . "', send = '" . $flag . "', customer_id = '" . $customer_id . "',  modified_date = NOW() WHERE contact_id = '" . (int) $contact_id . "'");
+                    // echo "<pre>";print_r('UPDATE ' . DB_PREFIX . "customer_contact SET   firstname = '" . $firstname . "', lastname = '" . $lastname . "',  email = '" . $email . "', telephone = '" . $phone . "', send = '" . $flag . "', customer_id = '" . $customer_id . "',  modified_date = NOW() WHERE contact_id = '" . (int) $contact_id . "'"); die;
               }
        
         return $contact_id;
