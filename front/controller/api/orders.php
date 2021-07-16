@@ -991,7 +991,19 @@ class ControllerApiOrders extends Controller
         $this->load->model('account/order');
         if(($this->customer->getId()==NULL || $this->customer->getId()==""))
         {
-            return "Please login again";
+            $json['error'] =  "Please login again";
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+        $isValidOrder=$this->model_account_order->checkValidOrder($orderid);
+
+        if($isValidOrder=="false")
+        {
+            $json['error'] =  "Invalid Order";
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
         }
         $order_info = $this->model_account_order->getOrder($orderid);
         //   echo "<pre>";print_r($order_info);die;
