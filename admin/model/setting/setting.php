@@ -144,13 +144,16 @@ class ModelSettingSetting extends Model
         if($this->db->escape($data['config_issue']))         
         $this->db->query('UPDATE '.DB_PREFIX."setting_email SET `value` = '".$this->db->escape($data['config_issue'])."' WHERE `code` = 'issue' AND `key` =  'issue' ");
        
+        if($this->db->escape($data['config_financeteam']))         
+        $this->db->query('UPDATE '.DB_PREFIX."setting_email SET `value` = '".$this->db->escape($data['config_financeteam'])."' WHERE `code` = 'financeteam' AND `key` =  'financeteam' ");
+       
     }
 
     
     public function getEmailSettings()
     {
         
-        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."setting_email WHERE  `code` =  'consolidatedorder' or `code` =  'careers'  or `code` =  'stockout' or `code` =  'issue' ");
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."setting_email WHERE  `code` =  'consolidatedorder' or `code` =  'careers'  or `code` =  'stockout' or `code` =  'issue' or `code` =  'financeteam' ");
        
         return $query->rows;
     }
