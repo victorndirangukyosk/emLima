@@ -187,10 +187,24 @@
                             <div id="collapseDeliveryOptions" class="panel-collapse collapse">
                                 <div class="checkout-step-body">
                                     <input type="hidden" value="" name="dates_selected" >
-                                    <div class="checkout-payment-mode" id="shipping-method-wrapper-75">
+                                    <?php if(count($store_data) >= 2) { ?>
+                                    <?php foreach ($store_data as $os): ?>
+                                            <?php if($os['store_id'] == 75) { ?>
+                                            <b>     <?php echo $os['name'] ?> </b>
+                                            <div class="checkout-payment-mode" id="shipping-method-wrapper-<?php echo $os['store_id'] ?>">
                                                 <!-- shipping method will goes here -->
 
+                                            </div>
+                                    <?php } ?>
+                                    <?php endforeach ?>
+                                    <?php } ?>
+                                    <?php if(count($store_data) >= 1) { ?>
+                                    <b>Kwik Basket</b>
+                                    <div class="checkout-payment-mode" id="shipping-method-wrapper-75">
+                                    <!-- shipping method will goes here -->
+
                                     </div>
+                                    <?php } ?>
                                     <div class="goto-next">
                                         <div class="row">
                                             <div class="col-md-12 pull-left">
@@ -221,9 +235,22 @@
                             <div id="collapseThree" class="panel-collapse collapse">
                                 <div class="checkout-step-body">
                                     <input type="hidden" value="" name="shipping_time_selected" >
+                                    <?php if(count($store_data) >= 2) { ?>
+                                    <?php foreach ($store_data as $os): ?>
+                                    <?php if($os['store_id'] == 75) { ?>
+                                        <b>     <?php echo $os['name'] ?> </b>
+                                        <div class="checkout-time-table" id="delivery-time-wrapper-<?php echo $os['store_id'] ?>">
+
+                                        </div>
+                                    <?php } ?>
+                                    <?php endforeach; ?>
+                                    <?php } ?>
+                                    <?php if(count($store_data) >= 1) { ?>
+                                    <b>Kwik Basket</b>
                                     <div class="checkout-time-table" id="delivery-time-wrapper-75">
 
                                     </div>
+                                    <?php } ?>
                                     <a class="collapsed btn btn-grey"  style="border-radius:20px" disabled="disabled" role="button" data-toggle="collapse" data-parent="#accordion" href="#" id="payment-next">  <?= $text_next?>  
 
                                     </a>
