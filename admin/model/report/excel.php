@@ -5954,7 +5954,7 @@ class ModelReportExcel extends Model {
                     $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
 
                     #region mail sending 
-                    $maildata['firstname'] = $data['filter_customer'];
+                    $maildata['customer_name'] = $data['filter_customer'];
                     $maildata['start_date'] = $data['filter_date_start'];
                     $maildata['end_date'] = $data['filter_date_end'];
 
@@ -5982,7 +5982,7 @@ class ModelReportExcel extends Model {
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($email);
                     // $mail->setBcc($bccemail);
-                    $mail->setCc($bccemail);
+                    // $mail->setCc($bccemail);
                     $mail->setFrom($this->config->get('config_from_email'));
                     $mail->setSender($this->config->get('config_name'));
                     $mail->setSubject($subject);
