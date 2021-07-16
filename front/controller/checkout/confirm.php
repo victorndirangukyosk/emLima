@@ -231,15 +231,15 @@ class ControllerCheckoutConfirm extends Controller
 
                 if ($this->cart->hasShipping()) {
                     if (isset($this->session->data['shipping_method'][$store_id]['shipping_method']['title'])) {
-                        $order_data[$store_id]['shipping_method'] = $this->session->data['shipping_method'][$store_id]['shipping_method']['title'];
+                        $order_data[$store_id]['shipping_method'] = $this->session->data['shipping_method'][75]['shipping_method']['title'];
                     } else {
-                        $order_data[$store_id]['shipping_method'] = '';
+                        $order_data[$store_id]['shipping_method'] = $this->session->data['shipping_method'][75]['shipping_method']['title'];
                     }
 
                     if (isset($this->session->data['shipping_method'][$store_id]['shipping_method']['code'])) {
-                        $order_data[$store_id]['shipping_code'] = $this->session->data['shipping_method'][$store_id]['shipping_method']['code'];
+                        $order_data[$store_id]['shipping_code'] = $this->session->data['shipping_method'][75]['shipping_method']['code'];
                     } else {
-                        $order_data[$store_id]['shipping_code'] = '';
+                        $order_data[$store_id]['shipping_code'] = $this->session->data['shipping_method'][75]['shipping_method']['code'];
                     }
                 } else {
                     $order_data[$store_id]['shipping_method'] = '';
@@ -963,29 +963,33 @@ class ControllerCheckoutConfirm extends Controller
                     $order_data[$store_id]['login_mode'] = '';
                 }
                  
-                if (isset($this->session->data['payment_method']['title'])) {
+                if (isset($this->session->data['payment_method']['title']) && $store_id == 75) {
                     $order_data[$store_id]['payment_method'] = $this->session->data['payment_method']['title'];
+                } elseif(isset($this->session->data['payment_method']['title']) && $store_id != 75) {
+                   $order_data[$store_id]['payment_method'] = 'Corporate Account/ Cheque Payment'; 
                 } else {
                     $order_data[$store_id]['payment_method'] = '';
                 }
 
-                if (isset($this->session->data['payment_method']['code'])) {
+                if (isset($this->session->data['payment_method']['code']) && $store_id == 75) {
                     $order_data[$store_id]['payment_code'] = $this->session->data['payment_method']['code'];
+                } elseif(isset($this->session->data['payment_method']['code']) && $store_id != 75) {
+                   $order_data[$store_id]['payment_code'] = 'cod'; 
                 } else {
                     $order_data[$store_id]['payment_code'] = '';
                 }
 
                 if ($this->cart->hasShipping()) {
                     if (isset($this->session->data['shipping_method'][$store_id]['shipping_method']['title'])) {
-                        $order_data[$store_id]['shipping_method'] = $this->session->data['shipping_method'][$store_id]['shipping_method']['title'];
+                        $order_data[$store_id]['shipping_method'] = $this->session->data['shipping_method'][75]['shipping_method']['title'];
                     } else {
-                        $order_data[$store_id]['shipping_method'] = '';
+                        $order_data[$store_id]['shipping_method'] = $this->session->data['shipping_method'][75]['shipping_method']['title'];
                     }
 
                     if (isset($this->session->data['shipping_method'][$store_id]['shipping_method']['code'])) {
-                        $order_data[$store_id]['shipping_code'] = $this->session->data['shipping_method'][$store_id]['shipping_method']['code'];
+                        $order_data[$store_id]['shipping_code'] = $this->session->data['shipping_method'][75]['shipping_method']['code'];
                     } else {
-                        $order_data[$store_id]['shipping_code'] = '';
+                        $order_data[$store_id]['shipping_code'] = $this->session->data['shipping_method'][75]['shipping_method']['code'];
                     }
                 } else {
                     $order_data[$store_id]['shipping_method'] = '';
