@@ -1733,4 +1733,23 @@ class ModelAccountOrder extends Model {
     }
 
 
+    public function checkValidOrder($orderid,$customer_id) {
+
+        $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
+            $sub_users = $sub_users_query->rows;
+
+            $s_users = array_column($sub_users, 'customer_id');
+            array_push($s_users, $customer_id);
+            $sub_users_od = implode(',', $s_users);
+
+        $orderavailable = $this->db->query('SELECT order_id FROM ' . DB_PREFIX . "order WHERE customer_id IN (" . $sub_users_od . ") and order_id='".$orderid."'");
+        // echo "<pre>";print_r('SELECT company_name FROM ' . DB_PREFIX . "customer WHERE customer_id='".$customer_id."'");die;
+        
+        if($orderavailable!=null)
+        return "true";
+        else
+        return "fasle"; 
+    }
+
+
 }
