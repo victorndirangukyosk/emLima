@@ -345,6 +345,9 @@ class ModelSystemEmailtemplate extends Model
             case 'Feedback':
                 $codes = $this->emailtemplate->getFeedbackFind();
                 break;
+                case 'customerstatement':
+                    $codes = $this->emailtemplate->getCustomerStatementFind();
+                    break;
         }
 
         foreach ($codes as $code) {
