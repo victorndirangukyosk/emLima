@@ -1304,4 +1304,46 @@ class ModelReportCustomer extends Model {
         return $query->rows;
     }
 
+
+    public function getCustomerWithOrders($data = []) {
+
+        
+        $sql = 'SELECT distinct CONCAT(c.firstname, " ", c.lastname) AS name,c.customer_id,c.email FROM `' . DB_PREFIX . 'order` o  LEFT JOIN `' . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) WHERE o.customer_id > '0'";
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        } else {
+            $sql .= " AND o.order_status_id > '0'";
+        }
+
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            // $sql .= " AND o.customer_id = '" . (int)$data['filter_customer'] . "'";
+            $sql .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND  c.company_name  LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+        // echo "<pre>";print_r($sql);die;
+
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+
+    public function getCustomerContacts($customer_id) {
+        $contacts = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.customer_id = '" . (int) $customer_id . "' and c.send=1");
+        return $contacts->rows;
+    }
+
 }
