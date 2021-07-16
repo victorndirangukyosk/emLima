@@ -1723,4 +1723,14 @@ class ModelAccountOrder extends Model {
         return $query->rows;
     }
 
+
+    public function getCompanyName($customer_id) {
+        $companyNAme = $this->db->query('SELECT company_name FROM ' . DB_PREFIX . "customer WHERE customer_id='".$customer_id."'");
+        // echo "<pre>";print_r('SELECT company_name FROM ' . DB_PREFIX . "customer WHERE customer_id='".$customer_id."'");die;
+        
+        
+        return $companyNAme->row['company_name'];
+    }
+
+
 }

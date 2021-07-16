@@ -4353,8 +4353,8 @@ class ControllerAccountOrder extends Controller {
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-    }
-
+    } 
+     //if below method modified , please check in API-->Orders.php-getOrderProductsWithVariancesNew
     public function getOrderProductsWithVariancesNew($order_id) {
 
         $this->load->model('account/order');
