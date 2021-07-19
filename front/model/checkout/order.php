@@ -417,7 +417,8 @@ class ModelCheckoutOrder extends Model {
     public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '') {
 
         //$notify = true;
-
+        $log = new Log('error.log');
+        $log->write('mod loop addOrderHistory' . $order_id);
         $this->trigger->fire('pre.order.history.add', $order_id);
 
         $order_info = $this->getOrder($order_id);
