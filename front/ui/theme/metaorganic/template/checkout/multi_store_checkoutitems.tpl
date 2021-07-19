@@ -655,8 +655,8 @@
                             <div class="addnews-address-form">
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary">I AGREE</button>
-                                        <button type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">HOME</button>
+                                        <button id="agree_vendor_terms" name="agree_vendor_terms" type="button" class="btn btn-primary">I AGREE</button>
+                                        <button id="cancel_vendor_terms" name="cancel_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">HOME</button>
                                     </div>
                                 </div>
                             </div>
@@ -704,7 +704,13 @@
 
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
-    
+    <style>
+    #agree_vendor_terms {
+    width: 49%;
+    float: left;
+    margin-top: 10px;
+    }
+    </style>
   <script type="text/javascript">
           $(function() {
         $.ajax({
@@ -723,7 +729,11 @@
                 }
             }
         });
-        });    
+        });
+        
+        $('#agree_vendor_terms').on('click', function(){
+        
+        });
   //as in header page , clear cart funtionality is already mentioned.Commented here
      /* $(document).delegate('#clearcart', 'click', function(){
         var choice = confirm($(this).attr('data-confirm'));
