@@ -1261,4 +1261,13 @@ class ControllerCheckoutConfirm extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function AcceptOtherVendorOrderTerms() {
+
+        $log = new Log('error.log');
+        $json['vendor_terms'] = $this->request->post['accept_terms'];
+        $this->session->data['accept_vendor_terms'] = $this->request->post['accept_terms'];
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
