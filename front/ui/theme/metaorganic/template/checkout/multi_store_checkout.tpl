@@ -607,7 +607,7 @@
                                     <!-- Button -->
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary btnsetall" onclick="saveInAddressBook()" style="height: 45px;border-radius:20px;"><?= $text_save?></button>
+                                            <button id="agree_vendor_terms" name="agree_vendor_terms" type="button" class="btn btn-primary btnsetall" onclick="saveInAddressBook()" style="height: 45px;border-radius:20px;"><?= $text_save?></button>
                                             <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:49%; float: right; margin-top: 10px; height: 45px;border-radius:20px"><?= $text_close?></button>
                                         </div>
                                     </div>
@@ -726,7 +726,7 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary">I AGREE</button>
-                                    <button type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">HOME</button>
+                                    <button id="cancel_vendor_terms" name="cancel_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">HOME</button>
                                 </div>
                             </div>
                         </div>
@@ -784,7 +784,13 @@
 
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
-    
+    <style>
+    #agree_vendor_terms {
+    width: 49%;
+    float: left;
+    margin-top: 10px;
+    }    
+    </style>
     <script type="text/javascript">
         $(function() {
         $.ajax({
@@ -803,6 +809,9 @@
                 }
             }
         });
+        });
+        $('.replacable').on('click', function(){
+        
         });
         console.log("map address");
             
