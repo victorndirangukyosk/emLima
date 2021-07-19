@@ -1,9 +1,8 @@
 <?php
 
-class ControllerCheckoutConfirm extends Controller
-{
-    public function index()
-    {
+class ControllerCheckoutConfirm extends Controller {
+
+    public function index() {
         $log = new Log('error.log');
         $log->write('Log 1.cs');
 
@@ -40,12 +39,12 @@ class ControllerCheckoutConfirm extends Controller
                 $i = explode(':', $timeDiff);
                 $min = $min + $i[0] * 60 + $i[1]; //add difference minut to current time
             }
-            $to = date('h:ia', strtotime('+'.$min.' minutes', strtotime(date('h:ia'))));
+            $to = date('h:ia', strtotime('+' . $min . ' minutes', strtotime(date('h:ia'))));
 
-            $delivery_timeslot = date('h:ia').' - '.$to;
+            $delivery_timeslot = date('h:ia') . ' - ' . $to;
 
             $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
-        //print_r(date('h:ia'));print_r($delivery_timeslot);
+            //print_r(date('h:ia'));print_r($delivery_timeslot);
         } else {
             $delivery_timeslot = '';
         }
@@ -58,9 +57,9 @@ class ControllerCheckoutConfirm extends Controller
         }
 
         if (isset($this->session->data['payment_methods'])) {
-            /*if(!array_key_exists($payment_method, $this->session->data['payment_methods'])) {
-                $payment_method = 'cod';
-            }*/
+            /* if(!array_key_exists($payment_method, $this->session->data['payment_methods'])) {
+              $payment_method = 'cod';
+              } */
 
             //$this->session->data['payment_method'] = $this->session->data['payment_methods'][$payment_method];
         }
@@ -122,7 +121,7 @@ class ControllerCheckoutConfirm extends Controller
                 $results = $this->model_extension_extension->getExtensions('total');
 
                 foreach ($results as $key => $value) {
-                    $sort_order[$key] = $this->config->get($value['code'].'_sort_order');
+                    $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
                 }
 
                 array_multisort($sort_order, SORT_ASC, $results);
@@ -131,12 +130,12 @@ class ControllerCheckoutConfirm extends Controller
                 foreach ($results as $result) {
                     //print_r("zz".$result['code']."yy".$this->config->get( $result['code']. '_status')."xx");
 
-                    if ($this->config->get($result['code'].'_status')) {
-                        $this->load->model('total/'.$result['code']);
-                        $log->write('in loop'.$result['code']);
-                        $log->write('in loop'.$total);
+                    if ($this->config->get($result['code'] . '_status')) {
+                        $this->load->model('total/' . $result['code']);
+                        $log->write('in loop' . $result['code']);
+                        $log->write('in loop' . $total);
 
-                        $this->{'model_total_'.$result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes, $store_id);
+                        $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes, $store_id);
                     }
                 }
 
@@ -151,7 +150,6 @@ class ControllerCheckoutConfirm extends Controller
                 $log->write('Log 3.2');
                 $log->write($order_data[$store_id]['totals']);
                 //echo "<pre>";print_r($order_data[$store_id]['totals']);die;
-
                 //$this->db->select('store.store_id,store.name,store.min_order_amount,store.city_id,store.commision,user.commision as vendor_commision', FALSE);
                 $this->db->select('store.store_id,store.name,store.min_order_amount,store.city_id,store.commision,store.fixed_commision,user.commision as vendor_commision ,user.fixed_commision as vendor_fixed_commision', false);
                 $this->db->join('user', 'user.user_id = store.vendor_id', 'left');
@@ -312,7 +310,7 @@ class ControllerCheckoutConfirm extends Controller
                             'price' => $product['price'],
                             'total' => $product['total'],
                             'tax' => $this->tax->getTax($product['price'], $product['tax_class_id']),
-                               'reward' => $product['reward'],
+                            'reward' => $product['reward'],
                         ];
                     }
                 }
@@ -385,9 +383,9 @@ class ControllerCheckoutConfirm extends Controller
                         $i = explode(':', $timeDiff);
                         $min = $min + $i[0] * 60 + $i[1]; //add difference minut to current time
                     }
-                    $to = date('h:ia', strtotime('+'.$min.' minutes', strtotime(date('h:ia'))));
+                    $to = date('h:ia', strtotime('+' . $min . ' minutes', strtotime(date('h:ia'))));
 
-                    $delivery_timeslot = date('h:ia').' - '.$to;
+                    $delivery_timeslot = date('h:ia') . ' - ' . $to;
 
                     $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
                 }
@@ -408,12 +406,12 @@ class ControllerCheckoutConfirm extends Controller
             foreach ($stores as $store_id) {
                 $data['totals'] = [];
                 foreach ($order_data[$store_id]['totals'] as $total) {
-                    if($total['code'] != 'total') {
-                    $data['totals'][] = [
-                        'title' => $total['title'],
-                        'text' => $this->currency->format($total['value']),
-                    ];
-                    $tot += $total['value'];
+                    if ($total['code'] != 'total') {
+                        $data['totals'][] = [
+                            'title' => $total['title'],
+                            'text' => $this->currency->format($total['value']),
+                        ];
+                        $tot += $total['value'];
                     }
                 }
             }
@@ -422,7 +420,7 @@ class ControllerCheckoutConfirm extends Controller
                 'total' => $tot,
             ];
             $this->model_checkout_order->addTransaction($transactionData);
-            $data['payment'] = $this->load->controller('payment/'.$this->session->data['payment_method']['code']);
+            $data['payment'] = $this->load->controller('payment/' . $this->session->data['payment_method']['code']);
         } else {
             $log->write('Log 4');
             $data['redirect'] = $redirect;
@@ -434,7 +432,7 @@ class ControllerCheckoutConfirm extends Controller
             $information_info = $this->model_assets_information->getInformation($this->config->get('config_checkout_id'));
 
             if ($information_info) {
-                $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id='.$this->config->get('config_checkout_id'), 'SSL'), $information_info['title'], $information_info['title']);
+                $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_checkout_id'), 'SSL'), $information_info['title'], $information_info['title']);
             } else {
                 $data['text_agree'] = '';
             }
@@ -449,18 +447,16 @@ class ControllerCheckoutConfirm extends Controller
         }
 
         //echo json_encode(array('status'=>1,'redirect' => $this->url->link('checkout/success')));
-
         //return $this->url->link('checkout/success');
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/confirm.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/confirm.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/confirm.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/checkout/confirm.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/checkout/confirm.tpl', $data));
         }
     }
 
-    public function validateTimeslotEditOrder($argsData = [])
-    {
+    public function validateTimeslotEditOrder($argsData = []) {
         //echo "<pre>";print_r($argsData);die;
         $json = [];
         $json['status'] = 200;
@@ -486,7 +482,6 @@ class ControllerCheckoutConfirm extends Controller
         $log->write($args);
 
         //echo "<pre>";print_r($args);die;
-
         //echo "<pre>";print_r($args['products']);die;
         $this->load->language('api/general');
 
@@ -500,7 +495,7 @@ class ControllerCheckoutConfirm extends Controller
             $count = count($stores);
             //print_r($stores);
 
-            $log->write('count'.$count);
+            $log->write('count' . $count);
             $i = 1;
             foreach ($stores as $store_id) {
                 if (isset($args['stores'][$store_id]['shipping_code'])) {
@@ -571,16 +566,15 @@ class ControllerCheckoutConfirm extends Controller
 
         return $json;
 
-        /*$this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));*/
+        /* $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($json)); */
     }
 
-    private function timeIsBetween($from, $to, $time, $time_diff = false)
-    {
+    private function timeIsBetween($from, $to, $time, $time_diff = false) {
         //echo "time";print_r($from.$to.$time.$time_diff);die;
         $log = new Log('error.log');
         $log->write('time diff');
-        $log->write($from.$to.$time.$time_diff);
+        $log->write($from . $to . $time . $time_diff);
 
         /* to calc */
         $to = trim($to);
@@ -617,7 +611,7 @@ class ControllerCheckoutConfirm extends Controller
             $min = $min + $i[0] * 60 + $i[1]; //add difference minut to current time
         }
 
-        /* from calc*/
+        /* from calc */
 
         $from = trim($from);
         //calculate from_time in minuts
@@ -633,7 +627,7 @@ class ControllerCheckoutConfirm extends Controller
             $from_min += 12 * 60;
         }
 
-        /*from calc end*/
+        /* from calc end */
 
         //echo "<pre>";print_r($min."cer".$to_min."from_min".$from_min);die;
 
@@ -646,15 +640,13 @@ class ControllerCheckoutConfirm extends Controller
         }
     }
 
-    public function getSettings($code, $store_id = 0)
-    {
+    public function getSettings($code, $store_id = 0) {
         $this->load->model('setting/setting');
 
         return $this->model_setting_setting->getSetting($code, $store_id);
     }
 
-    public function confirmPayment()
-    {
+    public function confirmPayment() {
         $log = new Log('error.log');
         $log->write('Log 1.x');
         $redirect = '';
@@ -690,9 +682,9 @@ class ControllerCheckoutConfirm extends Controller
         }
 
         // Validate cart has products and has stock.
-        /*if ( ( !$this->cart->hasProducts() && empty( $this->session->data['vouchers'] ) ) || ( !$this->cart->hasStock() && !$this->config->get( 'config_stock_checkout' ) ) ) {
-            $redirect = $this->url->link( 'checkout/cart' );
-        }*/
+        /* if ( ( !$this->cart->hasProducts() && empty( $this->session->data['vouchers'] ) ) || ( !$this->cart->hasStock() && !$this->config->get( 'config_stock_checkout' ) ) ) {
+          $redirect = $this->url->link( 'checkout/cart' );
+          } */
 
         $products = $this->cart->getProducts();
 
@@ -719,7 +711,7 @@ class ControllerCheckoutConfirm extends Controller
             //$log->write($this->session->data['payment_method']);
             if (isset($this->session->data['payment_method']['code'])) {
                 //$log->write($this->session->data['payment_method']['code']);
-                $data['payment'] = $this->load->controller('payment/'.$this->session->data['payment_method']['code']);
+                $data['payment'] = $this->load->controller('payment/' . $this->session->data['payment_method']['code']);
             } else {
                 $data['payment'] = '';
             }
@@ -734,7 +726,7 @@ class ControllerCheckoutConfirm extends Controller
             $information_info = $this->model_assets_information->getInformation($this->config->get('config_checkout_id'));
 
             if ($information_info) {
-                $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id='.$this->config->get('config_checkout_id'), 'SSL'), $information_info['title'], $information_info['title']);
+                $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_checkout_id'), 'SSL'), $information_info['title'], $information_info['title']);
             } else {
                 $data['text_agree'] = '';
             }
@@ -749,18 +741,16 @@ class ControllerCheckoutConfirm extends Controller
         }
 
         //echo json_encode(array('status'=>1,'redirect' => $this->url->link('checkout/success')));
-
         //return $this->url->link('checkout/success');
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/confirm.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/confirm.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/confirm.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/checkout/confirm.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/checkout/confirm.tpl', $data));
         }
     }
 
-    public function multiStoreIndex()
-    {
+    public function multiStoreIndex() {
         $log = new Log('error.log');
         $log->write('Log 1.cs');
 
@@ -779,9 +769,9 @@ class ControllerCheckoutConfirm extends Controller
         }
 
         if (isset($this->session->data['payment_methods'])) {
-            /*if(!array_key_exists($payment_method, $this->session->data['payment_methods'])) {
-                $payment_method = 'cod';
-            }*/
+            /* if(!array_key_exists($payment_method, $this->session->data['payment_methods'])) {
+              $payment_method = 'cod';
+              } */
 
             //$this->session->data['payment_method'] = $this->session->data['payment_methods'][$payment_method];
         }
@@ -806,9 +796,9 @@ class ControllerCheckoutConfirm extends Controller
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
         // Validate cart has products and has stock.
-        /*if ( ( !$this->cart->hasProducts() && empty( $this->session->data['vouchers'] ) ) || ( !$this->cart->hasStock() && !$this->config->get( 'config_stock_checkout' ) ) ) {
-            $redirect = $this->url->link( 'checkout/cart' );
-        }*/
+        /* if ( ( !$this->cart->hasProducts() && empty( $this->session->data['vouchers'] ) ) || ( !$this->cart->hasStock() && !$this->config->get( 'config_stock_checkout' ) ) ) {
+          $redirect = $this->url->link( 'checkout/cart' );
+          } */
 
         $products = $this->cart->getProducts();
 
@@ -822,11 +812,11 @@ class ControllerCheckoutConfirm extends Controller
                 }
             }
 
-            /*if ( $product['minimum'] > $product_total ) {
-                $redirect = $this->url->link( 'checkout/cart' );
+            /* if ( $product['minimum'] > $product_total ) {
+              $redirect = $this->url->link( 'checkout/cart' );
 
-                break;
-            }*/
+              break;
+              } */
         }
 
         if (!$redirect) {
@@ -852,18 +842,18 @@ class ControllerCheckoutConfirm extends Controller
                 $results = $this->model_extension_extension->getExtensions('total');
 
                 foreach ($results as $key => $value) {
-                    $sort_order[$key] = $this->config->get($value['code'].'_sort_order');
+                    $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
                 }
                 array_multisort($sort_order, SORT_ASC, $results);
 
                 foreach ($results as $result) {
-                    if ($this->config->get($result['code'].'_status')) {
-                        $this->load->model('total/'.$result['code']);
+                    if ($this->config->get($result['code'] . '_status')) {
+                        $this->load->model('total/' . $result['code']);
 
-                        $log->write('in multiStoreIndex'.$result['code']);
-                        $log->write('in loop'.$total);
+                        $log->write('in multiStoreIndex' . $result['code']);
+                        $log->write('in loop' . $total);
 
-                        $this->{'model_total_'.$result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
+                        $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
                     }
                 }
 
@@ -944,7 +934,7 @@ class ControllerCheckoutConfirm extends Controller
                     $order_data[$store_id]['comment'] = '';
                 }
 
-                if (isset($this->request->post['login_latitude']) ) {
+                if (isset($this->request->post['login_latitude'])) {
                     $order_data[$store_id]['login_latitude'] = $this->request->post['login_latitude'];
                 } else {
                     $order_data[$store_id]['login_latitude'] = 0;
@@ -956,25 +946,25 @@ class ControllerCheckoutConfirm extends Controller
                     $order_data[$store_id]['login_longitude'] = 0;
                 }
 
-                
+
                 if (isset($this->request->post['login_mode'])) {
                     $order_data[$store_id]['login_mode'] = $this->request->post['login_mode'];
                 } else {
                     $order_data[$store_id]['login_mode'] = '';
                 }
-                 
+
                 if (isset($this->session->data['payment_method']['title']) && $store_id == 75) {
                     $order_data[$store_id]['payment_method'] = $this->session->data['payment_method']['title'];
-                } elseif(isset($this->session->data['payment_method']['title']) && $store_id != 75) {
-                   $order_data[$store_id]['payment_method'] = 'Corporate Account/ Cheque Payment'; 
+                } elseif (isset($this->session->data['payment_method']['title']) && $store_id != 75) {
+                    $order_data[$store_id]['payment_method'] = 'Corporate Account/ Cheque Payment';
                 } else {
                     $order_data[$store_id]['payment_method'] = '';
                 }
 
                 if (isset($this->session->data['payment_method']['code']) && $store_id == 75) {
                     $order_data[$store_id]['payment_code'] = $this->session->data['payment_method']['code'];
-                } elseif(isset($this->session->data['payment_method']['code']) && $store_id != 75) {
-                   $order_data[$store_id]['payment_code'] = 'cod'; 
+                } elseif (isset($this->session->data['payment_method']['code']) && $store_id != 75) {
+                    $order_data[$store_id]['payment_code'] = 'cod';
                 } else {
                     $order_data[$store_id]['payment_code'] = '';
                 }
@@ -1069,7 +1059,7 @@ class ControllerCheckoutConfirm extends Controller
                             'price' => $product['price'],
                             'total' => $product['total'],
                             'tax' => $this->tax->getTax($product['price'], $product['tax_class_id']),
-                               'reward' => $product['reward'],
+                            'reward' => $product['reward'],
                         ];
                     }
                 }
@@ -1122,18 +1112,18 @@ class ControllerCheckoutConfirm extends Controller
                 //$order_data[$store_id]['order_id'] = '';
                 $this->load->model('checkout/order');
 
-                /*if ( isset( $this->session->data['dates'][$store_id] ) ) {
+                /* if ( isset( $this->session->data['dates'][$store_id] ) ) {
 
-                    $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][$store_id];
-                } else {
-                    $order_data[$store_id]['delivery_date'] = '';
-                }
+                  $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][$store_id];
+                  } else {
+                  $order_data[$store_id]['delivery_date'] = '';
+                  }
 
-                if ( isset( $this->session->data['timeslot'][$store_id] ) ) {
-                    $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id];
-                } else {
-                    $order_data[$store_id]['delivery_timeslot'] = '';
-                }*/
+                  if ( isset( $this->session->data['timeslot'][$store_id] ) ) {
+                  $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id];
+                  } else {
+                  $order_data[$store_id]['delivery_timeslot'] = '';
+                  } */
 
                 if (isset($this->session->data['dates'][$store_id])) {
                     $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][$store_id];
@@ -1154,9 +1144,9 @@ class ControllerCheckoutConfirm extends Controller
                         $i = explode(':', $timeDiff);
                         $min = $min + $i[0] * 60 + $i[1]; //add difference minut to current time
                     }
-                    $to = date('h:ia', strtotime('+'.$min.' minutes', strtotime(date('h:ia'))));
+                    $to = date('h:ia', strtotime('+' . $min . ' minutes', strtotime(date('h:ia'))));
 
-                    $delivery_timeslot = date('h:ia').' - '.$to;
+                    $delivery_timeslot = date('h:ia') . ' - ' . $to;
 
                     $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
                 }
@@ -1181,12 +1171,12 @@ class ControllerCheckoutConfirm extends Controller
             foreach ($stores as $store_id) {
                 $data['totals'] = [];
                 foreach ($order_data[$store_id]['totals'] as $total) {
-                    if($total['code'] != 'total') {
-                    $data['totals'][] = [
-                        'title' => $total['title'],
-                        'text' => $this->currency->format($total['value']),
-                    ];
-                    $tot += $total['value'];
+                    if ($total['code'] != 'total') {
+                        $data['totals'][] = [
+                            'title' => $total['title'],
+                            'text' => $this->currency->format($total['value']),
+                        ];
+                        $tot += $total['value'];
                     }
                 }
             }
@@ -1201,7 +1191,7 @@ class ControllerCheckoutConfirm extends Controller
 
             $this->model_checkout_order->addTransaction($transactionData);
 
-            $data['payment'] = $this->load->controller('payment/'.$this->session->data['payment_method']['code']);
+            $data['payment'] = $this->load->controller('payment/' . $this->session->data['payment_method']['code']);
             $data['payment_interswitch'] = $this->load->controller('payment/interswitch');
             $log->write('payment');
             $log->write($data['payment']);
@@ -1217,7 +1207,7 @@ class ControllerCheckoutConfirm extends Controller
             $information_info = $this->model_assets_information->getInformation($this->config->get('config_checkout_id'));
 
             if ($information_info) {
-                $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id='.$this->config->get('config_checkout_id'), 'SSL'), $information_info['title'], $information_info['title']);
+                $data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/agree', 'information_id=' . $this->config->get('config_checkout_id'), 'SSL'), $information_info['title'], $information_info['title']);
             } else {
                 $data['text_agree'] = '';
             }
@@ -1232,27 +1222,43 @@ class ControllerCheckoutConfirm extends Controller
         }
 
         //echo json_encode(array('status'=>1,'redirect' => $this->url->link('checkout/success')));
-
         //return $this->url->link('checkout/success');
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/confirm.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/checkout/confirm.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/confirm.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/checkout/confirm.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/checkout/confirm.tpl', $data));
         }
     }
 
-    public function setAddressIdSession()
-    {
+    public function setAddressIdSession() {
         //echo "<pre>";print_r($this->request->post['shipping_address_id']);die;
         $this->session->data['shipping_address_id'] = $this->request->post['shipping_address_id'];
 
         $this->load->model('account/address');
         $shipping_address_data = $this->model_account_address->getAddress($this->request->post['shipping_address_id']);
 
-        $data['address'] = strlen($shipping_address_data['address']) > 27 ? substr($shipping_address_data['address'], 0, 27).'...' : $shipping_address_data['address'];
+        $data['address'] = strlen($shipping_address_data['address']) > 27 ? substr($shipping_address_data['address'], 0, 27) . '...' : $shipping_address_data['address'];
         //$this->session->data['shipping_address'] = strlen($shipping_address_data['address']) > 100 ? substr($shipping_address_data['address'],0,100)."..." : $shipping_address_data['address'];;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }
+
+    public function CheckOtherVendorOrderExists() {
+
+        $log = new Log('error.log');
+        $json['modal_open'] = FALSE;
+        foreach ($this->cart->getProducts() as $store_products) {
+            /* FOR KWIKBASKET ORDERS */
+            $log->write('CheckOtherVendorOrderExists');
+            $log->write($store_products['store_id']);
+            $log->write('CheckOtherVendorOrderExists');
+            if ($store_products['store_id'] > 75) {
+                $json['modal_open'] = TRUE;
+            }
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
