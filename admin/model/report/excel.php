@@ -5750,16 +5750,18 @@ class ModelReportExcel extends Model {
          $customerswithOrders = $this->model_report_customer->getCustomerWithOrders($data);
 
         //Firstly get all customers
-        // echo "<pre>";print_r($customerswithOrders);die;
-
-        // foreach($customerswithOrders as $validcust)
+        echo "<pre>";print_r($customerswithOrders);
+        $log = new Log('error.log');
+         foreach($customerswithOrders as $validcust)
         {
-        // $data['filter_customer']=$validcust['name'];
-        // $data['filter_customer_email']=$validcust['email'];
-        // $data['filter_customer_id']=$validcust['customer_id'];
-        $data['filter_customer']='Product Team Kdsfsdf';
-        $data['filter_customer_id']=273;
-        $data['filter_customer_email']='stalluri89@gmail.com';
+        $data['filter_customer']=$validcust['name'];
+        $data['filter_customer_email']=$validcust['email'];
+        $data['filter_customer_id']=$validcust['customer_id'];
+
+        // $data['filter_customer']='Product Team Kdsfsdf';
+        // $data['filter_customer_id']=273;
+        // $data['filter_customer_email']='stalluri89@gmail.com';
+                
 
             $results = $this->model_report_customer->getValidCustomerOrders($data);
             if($results!=null)
@@ -5767,7 +5769,7 @@ class ModelReportExcel extends Model {
                 $this->load->model('sale/order');
                 $data['customers'] = [];
 
-                // echo "<pre>";print_r($results);die;
+                    // echo "<pre>";print_r($results);die;
                 foreach ($results as $result) {
                     $products_qty = 0;
                     if ($this->model_sale_order->hasRealOrderProducts($result['order_id'])) {
@@ -5778,6 +5780,7 @@ class ModelReportExcel extends Model {
                     $sub_total = 0;
                     $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
                     // echo "<pre>";print_r($totals);die;
+                    // $data['customers']= (array) null;
                     foreach ($totals as $total) {
                         if ('sub_total' == $total['code']) {
                             $sub_total = $total['value'];
@@ -5803,7 +5806,7 @@ class ModelReportExcel extends Model {
                         'SAP_customer_no' => $result['SAP_customer_no'],
                     ];
                 }
-
+                echo "<pre>";print_r($data);
                 // echo "<pre>";print_r($data['customers']);die;
                 try {
                     // set appropriate timeout limit
@@ -5957,9 +5960,11 @@ class ModelReportExcel extends Model {
                     $maildata['customer_name'] = $data['filter_customer'];
                     $maildata['start_date'] = $data['filter_date_start'];
                     $maildata['end_date'] = $data['filter_date_end'];
+                    $maildata['email'] = $data['filter_customer_email'];
+                    // $maildata['end_date'] = $data['filter_date_end'];
 
-                    $subject = $this->emailtemplate->getSubject('customerstatement', 'customer_25', $maildata);
-                    $message = $this->emailtemplate->getMessage('customerstatement', 'customer_25', $maildata);
+                    $subject = $this->emailtemplate->getSubject('customerstatement', 'customerstatement_25', $maildata);
+                    $message = $this->emailtemplate->getMessage('customerstatement', 'customerstatement_25', $maildata);
 
                     // $subject = "Consolidated Order Sheet";                 
                     // $message = "Please find the attachment.  <br>";
@@ -5972,7 +5977,9 @@ class ModelReportExcel extends Model {
                     {
                         $email=$email.';'.$econtact['email'];
                     }
-                    //   echo "<pre>";print_r($bccemail);die;
+                    $log->write('customer Statement Emails ' . $email . ' '  . 'CC mails'. $bccemail );
+                 
+                        echo "<pre>";print_r($email);
                     // if (strpos($email, "@") == false) {//if mail Id not set in define.php
                     //     $email = "sridivya.talluri@technobraingroup.com";
                     // }
@@ -5982,22 +5989,22 @@ class ModelReportExcel extends Model {
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($email);
                     // $mail->setBcc($bccemail);
-                    // $mail->setCc($bccemail);
+                    $mail->setCc($bccemail);
                     $mail->setFrom($this->config->get('config_from_email'));
                     $mail->setSender($this->config->get('config_name'));
                     $mail->setSubject($subject);
                     $mail->setHTML($message);
                     $mail->addAttachment($filepath);
-                    $mail->send();
+                     $mail->send();
                     #endregion
-                    
-                    exit;
+                    // $data['customers'][]=null;//empty the previous
+                    // exit;
                 } catch (Exception $e) {
                     $errstr = $e->getMessage();
                     $errline = $e->getLine();
                     $errfile = $e->getFile();
                     $errno = $e->getCode();
-                    $log = new Log('error.log');
+                   
                     $log->write($errstr . ' ' . $errline . ' ' . $errfile . ' ' . $errno . ' ' . 'download_customer_statement_excel');
                     $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
                     if ($this->config->get('config_error_log')) {

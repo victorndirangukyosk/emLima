@@ -209,6 +209,7 @@ class mail
             $mg->messages()->send($mailgun_domain, [
               'from' => $this->from,
               'to' => $this->to,
+              'cc' => $this->cc,
              // 'bcc'     => BCC_MAILS,
              'bcc' => 'email.kbtest@gmail.com',
               'subject' => $this->subject,
@@ -223,6 +224,7 @@ class mail
                 $mg->messages()->send($mailgun_domain, [
                     'from' => $this->from,
                     'to' => $this->to,
+                    'cc' => $this->cc,
                    // 'bcc'     => BCC_MAILS,
                    'bcc' => 'email.kbtest@gmail.com',
                     'subject' => $this->subject,
