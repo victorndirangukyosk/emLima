@@ -62,6 +62,7 @@ class ControllerPaymentInterswitch extends Controller {
     }
 
     public function InterswitchPaymentResponse() {
+        $json = [];
         $log = new Log('error.log');
         $log->write('interswitch payment response');
         $log->write($this->request->post['payment_response']);
