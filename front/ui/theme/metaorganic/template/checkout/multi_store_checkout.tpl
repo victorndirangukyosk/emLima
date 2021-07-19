@@ -810,8 +810,25 @@
             }
         });
         });
-        $('.replacable').on('click', function(){
-        
+        $('#agree_vendor_terms').on('click', function(){
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/AcceptOtherVendorOrderTerms',
+            type: 'post',
+            data: 'accept_terms=true',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                console.log(json);
+                if (json['modal_open']) {
+                 $('#exampleModal').modal('hide'); 
+                }else{
+                 $('#exampleModal').modal('show');
+                }
+            }
+        });
         });
         console.log("map address");
             

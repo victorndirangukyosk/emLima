@@ -732,7 +732,24 @@
         });
         
         $('#agree_vendor_terms').on('click', function(){
-        
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/AcceptOtherVendorOrderTerms',
+            type: 'post',
+            data: 'accept_terms=true',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                console.log(json);
+                if (json['modal_open']) {
+                   $('#exampleModal').modal('hide');   
+                }else{
+                  $('#exampleModal').modal('show');
+                }
+            }
+        });
         });
   //as in header page , clear cart funtionality is already mentioned.Commented here
      /* $(document).delegate('#clearcart', 'click', function(){
