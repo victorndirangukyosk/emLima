@@ -546,7 +546,7 @@ class ModelCheckoutOrder extends Model {
             }
 
 
-            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', vendor_terms_cod ='" . $this->session->data['accept_vendor_terms'] . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
 
             $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
 
