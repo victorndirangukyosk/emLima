@@ -164,6 +164,6 @@ class ModelSettingSetting extends Model
         
         $query = $this->db->query('SELECT value FROM '.DB_PREFIX."setting_email WHERE  `code` =  '".$code."'   ");
         //echo "<pre>";print_r($query->row[value]);die;
-        return $query->row[value];
+        return $query->row['value'];
     }
 }

@@ -2816,7 +2816,7 @@ class Emailtemplate
     
     public function getCustomerstatementFind()
     {
-        $result = ['{customer_name}','{email}','{mobile}','{start_date}','{end_date}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
+        $result = ['{customer_name}','{email}','{start_date}','{end_date}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}'];
         return $result;
     }
 
@@ -2825,7 +2825,7 @@ class Emailtemplate
         $result = [
             'customer_name' => $data['customer_name'],
             'email' => $data['email'],
-            'mobile' => $data['mobile'],
+            // 'mobile' => $data['mobile'],
             'start_date' => $data['start_date'],
             'end_date' => $data['end_date'],
              
