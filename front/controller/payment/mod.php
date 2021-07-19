@@ -51,7 +51,6 @@ class ControllerPaymentMod extends Controller {
                     $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
                     $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), 'mPesa On Delivery By Customer', TRUE, $customer_info['customer_id'], 'customer');
-                    $log->write('FOR KWIKBASKET ORDERS3');
                     $this->load->controller('payment/cod/confirmnonkb');
                 }
             }
