@@ -719,13 +719,14 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <div class="row">
                         <div class="col-md-12">
+                            <h3>ACCEPT TERMS</h3>
                         </div>
 
                         <div class="addnews-address-form">
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary">SAVE</button>
-                                    <button type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">CLOSE</button>
+                                    <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary">I AGREE</button>
+                                    <button type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">HOME</button>
                                 </div>
                             </div>
                         </div>
