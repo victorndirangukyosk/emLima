@@ -193,6 +193,7 @@ class ControllerCheckoutSuccess extends Controller {
                 unset($this->session->data['totals']);
                 unset($this->session->data['transaction_id']);
                 unset($this->session->data['shipping_address_id']);
+                unset($this->session->data['accept_vendor_terms']);
             }
         }
 
