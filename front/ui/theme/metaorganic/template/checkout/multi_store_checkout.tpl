@@ -830,6 +830,9 @@
             }
         });
         });
+        $('#cancel_vendor_terms').on('click', function(){
+            window.location.href = "<?= $base;?>";
+        });
         console.log("map address");
             
         $('#us1').locationpicker({

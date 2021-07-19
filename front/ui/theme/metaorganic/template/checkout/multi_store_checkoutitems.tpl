@@ -751,6 +751,9 @@
             }
         });
         });
+        $('#cancel_vendor_terms').on('click', function(){
+            window.location.href = "<?= $base;?>";
+        });
   //as in header page , clear cart funtionality is already mentioned.Commented here
      /* $(document).delegate('#clearcart', 'click', function(){
         var choice = confirm($(this).attr('data-confirm'));
