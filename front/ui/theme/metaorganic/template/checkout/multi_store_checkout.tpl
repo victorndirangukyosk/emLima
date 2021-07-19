@@ -725,7 +725,7 @@
                         <div class="addnews-address-form">
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary">I AGREE</button>
+                                    <button id="agree_vendor_terms" name="agree_vendor_terms" type="button" class="btn btn-primary">I AGREE</button>
                                     <button id="cancel_vendor_terms" name="cancel_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">HOME</button>
                                 </div>
                             </div>
