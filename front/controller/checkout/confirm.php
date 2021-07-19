@@ -1248,13 +1248,17 @@ class ControllerCheckoutConfirm extends Controller {
 
         $log = new Log('error.log');
         $json['modal_open'] = FALSE;
-        foreach ($this->cart->getProducts() as $store_products) {
-            /* FOR KWIKBASKET ORDERS */
-            $log->write('CheckOtherVendorOrderExists');
-            $log->write($store_products['store_id']);
-            $log->write('CheckOtherVendorOrderExists');
-            if ($store_products['store_id'] > 75) {
-                $json['modal_open'] = TRUE;
+        if (isset($this->session->data['accept_vendor_terms']) && $this->session->data['accept_vendor_terms'] == TRUE) {
+            $json['modal_open'] = FALSE;
+        } else {
+            foreach ($this->cart->getProducts() as $store_products) {
+                /* FOR KWIKBASKET ORDERS */
+                $log->write('CheckOtherVendorOrderExists');
+                $log->write($store_products['store_id']);
+                $log->write('CheckOtherVendorOrderExists');
+                if ($store_products['store_id'] > 75) {
+                    $json['modal_open'] = TRUE;
+                }
             }
         }
         $this->response->addHeader('Content-Type: application/json');
