@@ -16,13 +16,13 @@ class ControllerPaymentMod extends Controller {
         $order_ids = array();
         foreach ($this->session->data['order_id'] as $key => $value) {
             /* FOR KWIKBASKET ORDERS */
-            if ($key == 75) {
-                $order_ids[] = $value;
-                $order_id = $value;
-                if ($order_id != NULL) {
-                    $this->model_checkout_order->UpdateParentApproval($order_id);
-                }
+            //if ($key == 75) {
+            $order_ids[] = $value;
+            $order_id = $value;
+            if ($order_id != NULL) {
+                $this->model_checkout_order->UpdateParentApproval($order_id);
             }
+            //}
         }
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/mod.tpl')) {
@@ -38,6 +38,7 @@ class ControllerPaymentMod extends Controller {
         $log->write($this->session->data['payment_method']['code']);
         if ('mod' == $this->session->data['payment_method']['code']) {
             $this->load->model('checkout/order');
+            $this->load->model('account/customer');
 
             $log->write($this->session->data['order_id']);
             $log->write($this->config->get('mod_order_status_id'));
@@ -46,11 +47,11 @@ class ControllerPaymentMod extends Controller {
                 /* FOR KWIKBASKET ORDERS */
                 if ($key == 75) {
                     $order_id = $value;
-                    $log->write('mod loop' . $order_id);
                     $order_info = $this->model_checkout_order->getOrder($order_id);
                     $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
                     $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), 'mPesa On Delivery By Customer', TRUE, $customer_info['customer_id'], 'customer');
+                    $log->write('FOR KWIKBASKET ORDERS3');
                     $this->load->controller('payment/cod/confirmnonkb');
                 }
             }
