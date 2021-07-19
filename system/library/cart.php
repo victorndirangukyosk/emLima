@@ -825,6 +825,25 @@ class Cart {
         return $total;
     }
 
+    public function getTotalForKwikBasket() {
+        $store_id = 75;
+        $total = 0;
+        //echo '<pre>';print_r($this->getProducts());exit;
+        $log = new Log('error.log');
+        $log->write('getTotal system_library_cart.php');
+        $log->write($this->getProducts());
+        $log->write('getTotal system_library_cart.php');
+        if (is_array($this->getProducts())) {
+            foreach ($this->getProducts() as $product) {
+                if ($product['store_id'] == $store_id) {
+                    $total += $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];
+                }
+            }
+        }
+        //echo '<pre>';echo $total;exit;
+        return $total;
+    }
+
     public function getTotalByStore($store_id) {
         $total = 0;
 
