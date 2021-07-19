@@ -546,6 +546,10 @@ class ModelCheckoutOrder extends Model {
             }
             $log->write('accept_vendor_terms');
             $log->write($this->session->data['accept_vendor_terms']);
+            $log->write((int) $this->session->data['accept_vendor_terms']);
+            if (isset($this->session->data['accept_vendor_terms']) && $this->session->data['accept_vendor_terms'] == TRUE) {
+            $this->session->data['accept_vendor_terms'] = TRUE;
+            }
             $log->write('accept_vendor_terms');
             $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', vendor_terms_cod ='" . (int) $this->session->data['accept_vendor_terms'] . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
 
