@@ -706,11 +706,36 @@
 {
      border-radius:20px
 } 
- 
+</style>
 
-    </style>
+<?= $footer ?>
 
-    <?= $footer ?>
+<!-- Modal -->
+<div class="addressModal">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="row">
+                        <div class="col-md-12">
+                        </div>
+
+                        <div class="addnews-address-form">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary">SAVE</button>
+                                    <button type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">CLOSE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/revslider.css" >
@@ -760,6 +785,10 @@
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     
     <script type="text/javascript">
+        $(function() {
+        console.log("multiVendorOrder");
+        $('#exampleModal').modal('toggle');
+        });
         console.log("map address");
             
         $('#us1').locationpicker({

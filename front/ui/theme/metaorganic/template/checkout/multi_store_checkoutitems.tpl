@@ -640,7 +640,31 @@
     </style>
 
     <?= $footer ?>
+    <!-- Modal -->
+    <div class="addressModal">
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="row">
+                            <div class="col-md-12">
+                            </div>
 
+                            <div class="addnews-address-form">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary">SAVE</button>
+                                        <button type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">CLOSE</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- CSS Style -->
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
@@ -681,6 +705,10 @@
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     
   <script type="text/javascript">
+  $(function() {
+    console.log("multiVendorOrder");
+    $('#exampleModal').modal('toggle');
+  });    
   //as in header page , clear cart funtionality is already mentioned.Commented here
      /* $(document).delegate('#clearcart', 'click', function(){
         var choice = confirm($(this).attr('data-confirm'));
@@ -1383,6 +1411,7 @@ __kdt.push({"post_on_load": false});
 
 <script type="text/javascript">
     $('#button-reward').on('click', function() {
+    
         $.ajax({
             url: 'index.php?path=checkout/reward/reward',
             type: 'post',
