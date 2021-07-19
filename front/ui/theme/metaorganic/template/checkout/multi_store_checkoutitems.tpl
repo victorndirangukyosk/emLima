@@ -743,7 +743,7 @@
             },
             success: function(json) {
                 console.log(json);
-                if (json['modal_open']) {
+                if (json['vendor_terms']) {
                    $('#exampleModal').modal('hide');   
                 }else{
                   $('#exampleModal').modal('show');
