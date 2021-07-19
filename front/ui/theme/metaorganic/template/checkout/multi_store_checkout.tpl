@@ -786,8 +786,22 @@
     
     <script type="text/javascript">
         $(function() {
-        console.log("multiVendorOrder");
-        $('#exampleModal').modal('toggle');
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                if (json['modal_open']) {
+                        $('#exampleModal').modal('toggle');
+                }else{
+                     $('#exampleModal').modal('hide');   
+                }
+            }
+        });
         });
         console.log("map address");
             

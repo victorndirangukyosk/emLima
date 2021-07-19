@@ -705,10 +705,24 @@
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     
   <script type="text/javascript">
-  $(function() {
-    console.log("multiVendorOrder");
-    $('#exampleModal').modal('toggle');
-  });    
+          $(function() {
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                if (json['modal_open']) {
+                        $('#exampleModal').modal('toggle');
+                }else{
+                     $('#exampleModal').modal('hide');   
+                }
+            }
+        });
+        });    
   //as in header page , clear cart funtionality is already mentioned.Commented here
      /* $(document).delegate('#clearcart', 'click', function(){
         var choice = confirm($(this).attr('data-confirm'));
