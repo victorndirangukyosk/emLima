@@ -792,7 +792,7 @@
     }    
     </style>
     <script type="text/javascript">
-        $(function() {
+/*$(function() {
         $.ajax({
             url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
             type: 'post',
@@ -809,7 +809,7 @@
                 }
             }
         });
-        });
+});*/
         $('#agree_vendor_terms').on('click', function(){
         $.ajax({
             url: 'index.php?path=checkout/confirm/AcceptOtherVendorOrderTerms',
