@@ -861,6 +861,7 @@ class ModelSaleOrder extends Model {
                 'head_chef' => $order_query->row['head_chef'],
                 'procurement' => $order_query->row['procurement'],
                 'delivery_charge' => $order_query->row['delivery_charges'],
+                'vendor_terms_cod' => $order_query->row['vendor_terms_cod'],
             ];
         } else {
             return;

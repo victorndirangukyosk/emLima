@@ -1000,7 +1000,6 @@ class ModelAccountOrder extends Model {
         $this->load->library('excel');
         $this->load->library('iofactory');
 
-
         // echo "<pre>";print_r($rows);die;
 
         try {
@@ -1054,7 +1053,6 @@ class ModelAccountOrder extends Model {
             $objPHPExcel->getActiveSheet()->setCellValue('A6', 'Payment Method: ');
             $objPHPExcel->getActiveSheet()->setCellValue('A7', 'Shipping Address: ');
 
-
             $objPHPExcel->getActiveSheet()->setCellValue('B2', $sheet_title0);
             $objPHPExcel->getActiveSheet()->setCellValue('B3', $sheet_subtitle);
             $objPHPExcel->getActiveSheet()->setCellValue('B4', $sheet_subtitle1);
@@ -1082,7 +1080,6 @@ class ModelAccountOrder extends Model {
             $objPHPExcel->getActiveSheet()->getStyle('A6:D6')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '51AB66',
             ]]);
-
 
             $objPHPExcel->getActiveSheet()->getStyle('A7:D7')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '51AB66',
@@ -1127,8 +1124,6 @@ class ModelAccountOrder extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, $row)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, 'Amount');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $Amount);
-
-
 
             $objPHPExcel->setActiveSheetIndex(0);
 
@@ -1723,34 +1718,36 @@ class ModelAccountOrder extends Model {
         return $query->rows;
     }
 
-
     public function getCompanyName($customer_id) {
-        $companyNAme = $this->db->query('SELECT company_name FROM ' . DB_PREFIX . "customer WHERE customer_id='".$customer_id."'");
+        $companyNAme = $this->db->query('SELECT company_name FROM ' . DB_PREFIX . "customer WHERE customer_id='" . $customer_id . "'");
         // echo "<pre>";print_r('SELECT company_name FROM ' . DB_PREFIX . "customer WHERE customer_id='".$customer_id."'");die;
-        
-        
+
+
         return $companyNAme->row['company_name'];
     }
 
-
-    public function checkValidOrder($orderid,$customer_id) {
-      $valid="false";
+    public function checkValidOrder($orderid, $customer_id) {
+        $valid = "false";
         $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "'");
-            $sub_users = $sub_users_query->rows;
+        $sub_users = $sub_users_query->rows;
 
-            $s_users = array_column($sub_users, 'customer_id');
-            array_push($s_users, $customer_id);
-            $sub_users_od = implode(',', $s_users);
+        $s_users = array_column($sub_users, 'customer_id');
+        array_push($s_users, $customer_id);
+        $sub_users_od = implode(',', $s_users);
 
-        $orderavailable = $this->db->query('SELECT order_id FROM ' . DB_PREFIX . "order WHERE customer_id IN (" . $sub_users_od . ") and order_id='".$orderid."'")->row;
+        $orderavailable = $this->db->query('SELECT order_id FROM ' . DB_PREFIX . "order WHERE customer_id IN (" . $sub_users_od . ") and order_id='" . $orderid . "'")->row;
         //   echo "<pre>";print_r('SELECT order_id FROM ' . DB_PREFIX . "order WHERE customer_id IN (" . $sub_users_od . ") and order_id='".$orderid."'");die;
-        
-        if($orderavailable!=null)
-        $valid= "true";
+
+        if ($orderavailable != null)
+            $valid = "true";
         // echo "<pre>";print_r($valid);
-         
-        return $valid; 
+
+        return $valid;
     }
 
+    public function getCustomerTotalOrders() {
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order WHERE customer_id = '" . (int) $this->customer->getId() . "'");
+        return $query->row['total'];
+    }
 
 }
