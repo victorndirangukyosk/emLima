@@ -383,8 +383,8 @@
                                 <?php if($min_order_amount_reached == TRUE) { ?>
                                 <div class="checkout-promocode-form"  >
                                  <div class="form-group">
-                                        <span class="input-group-btn"  onclick="setOrderNotes()">
-                                            <a id="button-reward" href="<?php echo $continue.'/index.php?path=checkout/checkout'; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">Proceed to Check out
+                                        <span class="input-group-btn" id="proceed_to_checkout"  onclick="setOrderNotes()">
+                                            <a id="button-reward" href="#" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">Proceed to Check out
                                             </a>
                                         </span>
                                     </div>
@@ -745,7 +745,8 @@
             success: function(json) {
                 console.log(json);
                 if (json['vendor_terms']) {
-                   $('#exampleModal').modal('hide');   
+                   $('#exampleModal').modal('hide');
+                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";
                 }else{
                   $('#exampleModal').modal('show');
                 }
@@ -857,14 +858,18 @@ $("cart["+key+"][qty]").removeAttr('disabled');
 });
 
 
-  function setOrderNotes()
-{
-    
-     var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
-     
-  
- document.cookie = "dropoff_notes="+dropoff_notes;
+function setOrderNotes()
+{    
+var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
+document.cookie = "dropoff_notes="+dropoff_notes;
 }
+
+$(document).delegate('#proceed_to_checkout', 'click', function(e) {
+e.preventDefault();    
+var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
+document.cookie = "dropoff_notes="+dropoff_notes;
+$('#exampleModal').modal('toggle');
+});
 
   $(document).delegate('#updatecart', 'click', function(){    
 
