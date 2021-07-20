@@ -38,8 +38,10 @@
 					
 					<?php if(!$this->user->isVendor()){ ?>
 					<li><a href="#tab-settings" data-toggle="tab"><?php echo $tab_settings; ?></a></li>
+                                        <li><a href="#tab-samplesuperadmin" data-toggle="tab"><?= $tab_sample_data ?></a></li>
+					<?php } else { ?>
                                         <li><a href="#tab-sample" data-toggle="tab"><?= $tab_sample_data ?></a></li>
-					<?php } ?>
+                                        <?php } ?>
 
 					<li><a href="#tab_import_prices" data-toggle="tab"><?php echo $tab_import_prices; ?></a></li>
                                         <?php } ?>
@@ -308,6 +310,41 @@
 						<p><?= $text_p ?></p>
 
 						<form action="<?php echo $exportgeneral; ?>" method="post" enctype="multipart/form-data" id="exportgeneral" class="form-horizontal">
+							<table class="form">
+								<tr>
+									<td><?php echo $entry_export; ?></td>
+								</tr>
+								<tr id="range_type">
+									<td style="vertical-align:top;"><br />
+										<input type="radio" name="range_type" value="id" id="range_type_id" checked="checked"><?php echo $button_export_id; ?> &nbsp;&nbsp;
+										<input type="radio" name="range_type" value="page" id="range_type_page"><?php echo $button_export_page; ?>
+										<br /><br />
+										<span class="id"><?php echo $entry_start_id; ?></span>
+										<span class="page"><?php echo $entry_start_index; ?></span>
+										<br />
+										<input type="text" name="min" value="<?php echo $min; ?>" />
+										<br />
+										<span class="id"><?php echo $entry_end_id; ?></span>
+										<span class="page"><?php echo $entry_end_index; ?></span>
+										<br />
+										<input type="text" name="max" value="<?php echo $max; ?>" />
+									</td>
+								</tr>
+
+								<tr>
+									<td class="buttons"><button  type="submit" id="" class="btn btn-primary"><span><?php echo $button_export; ?></span></button></td>
+								</tr>
+							</table>
+						</form>
+
+
+					</div>
+                                        
+                                        <div class="tab-pane" id="tab-samplesuperadmin">
+
+						<p><?= $text_p ?><?php echo $exportgeneralsuperadmin; ?></p>
+
+						<form action="<?php echo $exportgeneralsuperadmin; ?>" method="post" enctype="multipart/form-data" id="exportgeneral" class="form-horizontal">
 							<table class="form">
 								<tr>
 									<td><?php echo $entry_export; ?></td>

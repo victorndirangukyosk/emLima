@@ -81,7 +81,7 @@
                                 <div class="form-group required">
                                      
 <div class="feedback-type">
-    <div class="suggestions-box" id="sbox" onclick="getFeedbackType('s')"><div class="suggestions-text">Suggestions</div>
+    <div class="suggestions-box" id="sbox" onclick="getFeedbackType('S')"><div class="suggestions-text">Suggestions</div>
       <div class="suggestions-image">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 <path d="M20 2H4C3.46957 2 2.96086 2.21071 2.58579 2.58579C2.21071 2.96086 2 3.46957 2 4V22L6 18H20C20.5304 18 21.0391 17.7893 21.4142 17.4142C21.7893 17.0391 22 16.5304 22 16V4C22 3.46957 21.7893 2.96086 21.4142 2.58579C21.0391 2.21071 20.5304 2 20 2ZM8 14H6V12H8V14ZM8 11H6V9H8V11ZM8 8H6V6H8V8ZM15 14H10V12H15V14ZM18 11H10V9H18V11ZM18 8H10V6H18V8Z" fill="#A493FD" style=""></path>
@@ -90,7 +90,7 @@
       </div>
       </div> 
 
-      <div class="problem-box" id="pbox" onclick="getFeedbackType('p')"><div class="problem-text">I’m facing a problem</div>
+      <div class="problem-box" id="pbox" onclick="getFeedbackType('I')"><div class="problem-text">I’m facing a problem</div>
       <div class="problem-image">
       <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
       <path d="M13.5 14H11.5V9H13.5V14ZM13.5 18H11.5V16H13.5V18ZM1.5 21H23.5L12.5 2L1.5 21Z" fill="#FF900D"></path>
@@ -98,7 +98,7 @@
       </div>
       </div>  
 
-      <div class="lov-box" id="lbox" onclick="getFeedbackType('l')">
+      <div class="lov-box" id="lbox" onclick="getFeedbackType('H')">
       <div class="lov-text">I’m loving this</div>
       <div class="lov-image">
 
@@ -693,19 +693,19 @@ emoji5.style.fill='#F3D02F';
            $('input[name="feedback_type"]').val($feedback_type);                    
  
 
-          if($feedback_type=='s')
+          if($feedback_type=='S')
           {
           sbox.style.borderColor='#48E112';
           pbox.style.borderColor='#C8C1C1';
           lbox.style.borderColor='#C8C1C1';          
           }
-          else if($feedback_type=='p')
+          else if($feedback_type=='I')
           {
           pbox.style.borderColor='#48E112';
            sbox.style.borderColor='#C8C1C1';
           lbox.style.borderColor='#C8C1C1'; 
           }
-          else if($feedback_type=='l')
+          else if($feedback_type=='H')
           {
           lbox.style.borderColor='#48E112'; 
           pbox.style.borderColor='#C8C1C1';

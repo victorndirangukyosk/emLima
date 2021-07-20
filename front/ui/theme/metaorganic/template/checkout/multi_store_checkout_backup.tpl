@@ -1,418 +1,503 @@
-<?php echo $header; ?>
-    <div >
-        <div >
-            <div class="main-container col1-layout wow bounceInUp animated">   
-                
-                       
-	       <div class="main">  
+<?php echo $header; ?> 
+    <div class="checkout-wrapper">
+        <div class="container">
+
+
+        <div class="row">
+        <div class="col-md-8">
+        </div>
+
+        <div class="col-md-4">
+
+        
+                            <!-- Continue shopping --> 
+                                <div class="checkout-promocode-form">
+                                
+                                    <div class="form-group">
+                                        <span class="input-group-btn">
+                                            <a id="button-reward" href="<?php echo $continue; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button"><?php echo $button_continue; ?>
+                                            </a>
+                                        </span>
+                                    </div>
+                                
+                                </div>
+                            <!-- END Continue shopping --> 
+        </div>
+
+        </div>
+            <div class="row">
+                <div class="col-md-16"> 
+ <div class="main-container col1-layout wow bounceInUp animated">   
+                 <div class="main">  
                            <div class="cart wow bounceInUp animated">
-                         <div class="table-responsive shopping-cart-tbl  container">
-                            <?php $this->load->model('account/address'); ?>
-                            <fieldset>
- <table id="shopping-cart-table" class="data-table cart-table table-striped">
-                <colgroup><col width="1">
-                <col>
-                <col width="1">
-                                        <col width="1">
-                                        <col width="1">
-                            <col width="1">
-                                        <col width="1">
+                         <div class="table-responsive shopping-cart-tbl  container"> 
+                <form role="form" id="place-order-form" novalidate="novalidate" class="bv-form" method="post">
+                    <div id="accordion" class="checkout">
+                        <div class="panel checkout-step">
+                            <input type="hidden" value="<?php echo $loggedin; ?>" name="user_loggedin" id="user_loggedin">
+                            <input type="hidden" value="" name="shipping_method" id="shipping_method">
+                            <?php if($loggedin) { ?>
+                                
+                                <div>
 
-                            </colgroup><thead>
-                    <tr class="first last">
-                        <th rowspan="1">SNo.</th>
-                        <th rowspan="1">&nbsp;</th>
-                        <th rowspan="1"><span class="nobr">Product Name</span></th>
-                        <!--<th rowspan="1"><span class="nobr">Product Note</span></th>-->
-                                                <th class="text-center" ><span class="nobr">Unit Price</span></th>
-                                                <th class="text-right"><span class="nobr">Unit </span></th>
-                        <th rowspan="1" class="text-center">Qty</th>
-                        <th rowspan="1" class="text-center">Tax</th>
-                        <th class="text-center">Sub Total</th>
-                        <th rowspan="1"></th>
-                        <th class="text-center">&nbsp;</th>
-                        <th rowspan="1"></th>
-                    </tr>
-                                    </thead>
-               
-                <tbody>  
-                         </tbody>
-           
-            
+                                    <span id="step-1" class="checkout-step-number checkout-step-color hidden-xs"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                    <h4 class="checkout-step-title"> 
+
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" > </a> <?= $loginform ?> 
+
+                                    </h4>
+
+                                    <a id='checkoutLogout' type='button' class='checkoutLogoutButton btn btn-primary btnsetall checkoutChange'  style="border-radius:20px;"> Logout </a>
+                                </div>  
+                                <a type="hidden" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" id="address-next"></a>
+                            <?php } else { ?>
+
                             
-                            <?php foreach ($arrs as $key=> $products) { ?>
-                             
-                                <div >
-                                    <div  class="checkout-cart-merchant-box text-center"> <span  ><h1>Order Summary</h1></span> <span class="checkout-cart-merchant-item"></span> </div>
-                                    <div >
-                                        <div class="collapse in" id="collapseExample<?= $key ?>">
-                                            <div class="checkout-item-list">
+                                
+                                <div id="collapseOne" class="collapse in">
+                                    <div>
+                                        <div class="mydivs">
+                                            <div class="row">
+                                                <a href="#" type="button" class="btn btn-primary col-sm-2 btnsetall" type="button" data-toggle="modal" data-target="#phoneModal" style="margin-right:10px;"><?= $text_sign_in ?></a>
 
-                                                  <?php echo $product ;?>
-                                                    <?php 
-                                                      $orderNotes ='';
-                                                      $i = 1; 
-													  foreach ($products as $key=>$product) {
-                                                       //echo '<pre>';print_r($product);exit;
-                                                        if((isset($product['product_note']) && ($product['product_note'] != null) && ($product['product_note'] != 'null') ) || (isset($product['produce_type']) && ($product['produce_type'] != null) && ($product['produce_type'] != 'null'))){ 
-                                                         $orderNotes .= $product['name'];
-														 
-                                                         if(isset($product['produce_type']) && ($product['produce_type'] != null) && ($product['produce_type'] != 'null'))
-                                                         $orderNotes .='( '.$product['produce_type'].') ';
-													 
-                                                         if(isset($product['product_note']) && ($product['product_note'] != null) && ($product['product_note'] != 'null'))
-                                                         $orderNotes .='( Note: '.$product['product_note'].') ';
-													 
-                                                         if($key != (count($products)-1))
-                                                         $orderNotes .=" / ";
-                                                          
-                                                     }    
-                                                     ?>
+                                               
 
-                                                
+                                                <a href="#" type="button" class="btn btn-primary btnsetall col-sm-4" type="button" data-toggle="modal" data-target="#signupModal-popup"><?= $text_register ?></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                        <div class="panel checkout-step">
+                            <div role="tab" id="headingTwo"> 
+
+                                <span id="step-2" class="checkout-step-number hidden-xs"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                <h4 class="checkout-step-title">
+                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" id="address_panel_link">
+                                        <?= $text_delivery_address ?>
+                                    </a>
+
+                                </h4>
+
+                                <?php if($loggedin) { ?>
+                                    <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeButton checkoutChange" style="border-radius:20px;"  data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" style="display: none;"> Change </a> 
+                                <?php } ?>
+
+
+                                
+                                <h5 id="select-address" style="float:left; color:#555; margin-top:5px;">
+                                   Please select address
+                               </h5>
+                                
+                            </div>
+                            <a type="hidden" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseDeliveryOptions" id="delivery-option"></a>
+
+                            <div id="collapseTwo" class="panel-collapse collapse">
+                                <div class="checkout-step-body">
+                                    <div class="checout-address-step">
+                                        <input type="hidden" value="<?php echo $city_id; ?>" name="shipping_city_id" id="shipping_city_id">
+                                        <input type="hidden" value="" name="shipping_address_id" id="shipping_address_id">
+
+                                        <div class="row" id="address-panel">
+                                            <?php if($addresses){ ?>
+                                             
+                                                <?php foreach($addresses as $address){ ?>
+                                                    <div class="col-md-6">
+                                                        <div class="address-block">
+                                                            <h3 class="address-locations">
+                                                            <?php if($address['address_type'] == 'Home') { ?>
+                                                                <?= $text_home_address ?>
+
+                                                            <?php } elseif($address['address_type'] == 'Office') { ?>
+                                                                    <?= $text_office ?>
+                                                            <?php } else {?>
+                                                                    <?= $text_other ?>
+                                                            <?php }?>
+                                                            </h3>
+                                                            <h4 class="address-name"><?= $address['name'] ?></h4>
+                                                            <p><?php echo $address['address'].', ' ?><br>
+                                                            <?php //echo $address['flat_number'].', ' ?><br>
+                                                            <?php //echo $address['building_name'] ?><br>
+                                                            <br><?php echo $address['city']; ?>
+                                                            </p>
+
+
+                                                            <?php if($this->config->get('config_store_location') == 'zipcode') { ?>
+
+                                                                <?php $enableAddress = true; foreach ($store_data as $os): ?>
+
+                                                                    <?php if( !in_array($address['zipcode'], $os['servicable_zipcodes']) ) { 
+                                                                        $enableAddress = false;
+                                                                    } ?>
+
+                                                                    
+                                                                <?php endforeach ?> 
+
+                                                                <?php if( $enableAddress ) { ?>
+                                                                    <a  data-address-id="<?= $address['address_id'] ?>" id="open-address" class="btn btn-primary btnsetall btn-block"><?= $text_deliver_here ?></a>
+                                                                <?php } else { ?>
+                                                                    <a  data-address-id="<?= $address['address_id'] ?>" id="open-address" class="btn btn-primary btnsetall btn-block"><?= $text_deliver_here ?></a>
+                                                                    <!--Restriction Removed --->
+                                                                    <!--<a href="#" class="btn btn-grey btn-block disabled" role="button"><?= $text_not_deliver_here ?></a>-->
+                                                                <?php } ?>
+                                                            
+
+                                                            <?php } else { ?>
+
+                                                                <?php if( $address['show_enabled'] ) { ?>
+                                                                    <a  data-address-id="<?= $address['address_id'] ?>" id="open-address" class="btn btn-primary btnsetall btnsetall btn-block" ><?= $text_deliver_here ?></a>
+                                                                <?php } else { ?>
+                                                                    <a data-address-id="<?= $address['address_id'] ?>" id="open-address" class="btn btn-primary btnsetall btn-block"><?= $text_deliver_here ?></a>
+                                                                    <!--Restriction Removed --->
+                                                                    <!--<a href="#" class="btn btn-grey btn-block disabled" role="button"><?= $text_not_deliver_here ?></a>-->
+                                                                <?php } ?>
+                                                            
+
+                                                            <?php } ?>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                <?php } ?>
+                                            <?php } ?>
+                                        </div>
+                                        <div class="col-md-12" style="text-align:left; padding:0px;"><a href="#" type="button" class="btn-link" data-toggle="modal" data-target="#addressModal"><i class="fa fa-plus-circle"></i> <?= $text_new_delivery_adddress?></a>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel checkout-step">
+                            <div role="tab" id="headingDeliveryOptions"> 
+                                <span id="step-3" class="checkout-step-number hidden-xs"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                <h4 class="checkout-step-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseDeliveryOptions" id="delivery_option__panel_link" > <?= $text_delivery_option?> </a> </h4>
+
+                                <?php if($loggedin) { ?>
+                                    <a type="button" class="btn btn-primary btnsetall collapsed checkoutDeliveryOptionsChangeButton checkoutChange"  data-toggle="collapse" data-parent="#accordion" href="#collapseDeliveryOptions" style="display: none;"> Change </a> 
+
+                                    <!-- <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeTimeButton checkoutChange"   data-toggle="collapse" data-parent="#accordion" href="#collapseThree" style="display: none;"> Change </a>  -->   
+
+                                <?php } ?>     
+
+                                   <h5 id="select-delivery-method" style="color:#555; margin-top:5px;">
+                                       Please select delivery method
+                                   </h5>
+                                
+                            </div>
+                            <div id="collapseDeliveryOptions" class="panel-collapse collapse">
+                                <div class="checkout-step-body">
+                                    <input type="hidden" value="" name="dates_selected" >
+                                    <?php if(count($store_data) >= 2) { ?>
+                                    <?php foreach ($store_data as $os): ?>
+                                            <?php if($os['store_id'] == 75) { ?>
+                                            <b>     <?php echo $os['name'] ?> </b>
+                                            <div class="checkout-payment-mode" id="shipping-method-wrapper-<?php echo $os['store_id'] ?>">
+                                                <!-- shipping method will goes here -->
+
+                                            </div>
+                                    <?php } ?>
+                                    <?php endforeach ?>
+                                    <?php } ?>
+                                    <?php if(count($store_data) >= 1) { ?>
+                                    <b>Kwik Basket</b>
+                                    <div class="checkout-payment-mode" id="shipping-method-wrapper-75">
+                                    <!-- shipping method will goes here -->
+
+                                    </div>
+                                    <?php } ?>
+                                    <div class="goto-next">
+                                        <div class="row">
+                                            <div class="col-md-12 pull-left">
+
+                                                <a class="collapsed btn btn-default  pull-left"  role="button" data-toggle="collapse" data-parent="#accordion" href="#" id="timeslot-next" > <?= $text_next?> </a>
+
+                                                <a type="hidden" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" id="timeslot-next-hidden"></a>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel checkout-step">
+                            <div role="tab" id="headingThree"> <span id="step-4" class="checkout-step-number hidden-xs"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                <h4 class="checkout-step-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" id="delivery_time_panel_link" > <?= $text_delivery_timedate?> </a> </h4>
+
+                                <a type="button" class="btn btn-primary btnsetall collapsed checkoutChangeTimeButton checkoutChange"  data-toggle="collapse" data-parent="#accordion" href="#collapseThree" style="display: none;"> Change </a>                                  
+    
+                                    <h5 id="select-timeslot" style="float:left;color:#555; margin-top:5px;">
+                                        Please select a timeslot
+                                   </h5>
+
+
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse">
+                                <div class="checkout-step-body">
+                                    <input type="hidden" value="" name="shipping_time_selected" >
+                                    <?php if(count($store_data) >= 2) { ?>
+                                    <?php foreach ($store_data as $os): ?>
+                                    <?php if($os['store_id'] == 75) { ?>
+                                        <b>     <?php echo $os['name'] ?> </b>
+                                        <div class="checkout-time-table" id="delivery-time-wrapper-<?php echo $os['store_id'] ?>">
+
+                                        </div>
+                                    <?php } ?>
+                                    <?php endforeach; ?>
+                                    <?php } ?>
+                                    <?php if(count($store_data) >= 1) { ?>
+                                    <b>Kwik Basket</b>
+                                    <div class="checkout-time-table" id="delivery-time-wrapper-75">
+
+                                    </div>
+                                    <?php } ?>
+                                    <a class="collapsed btn btn-grey"  style="border-radius:20px" disabled="disabled" role="button" data-toggle="collapse" data-parent="#accordion" href="#" id="payment-next">  <?= $text_next?>  
+
+                                    </a>
+
+                                    <!-- <a type="hidden" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="delivery-time-wrapper"></a> -->
+
+                                    <?php if(!$checkout_question_enabled) { ?>
+                                        <a type="hidden" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="delivery-time-wrapper"></a>
+                                    <?php } else { ?>
+                                        <a type="hidden" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseQuestion" id="delivery-time-wrapper"></a>
+                                    <?php } ?>
                                     
-<tr class="odd">
 
-  <td class="a-left hidden-table">
-                            <span class="cart-price">
-                                                <span class="price"><?= $i?></span>                
-            </span>
+                                </div>
+                            </div>
+                        </div>
 
+                        <?php if($checkout_question_enabled){ ?>
+                            <div class="panel checkout-step">
+                                <div role="tab" id="headingFour"> <span id="step-5" class="checkout-step-number hidden-xs"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                    <h4 class="checkout-step-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseQuestion" id="question_panel_link"  > <?= $text_question?> </a> </h4>
+                                </div>
+                                <div id="collapseQuestion" class="panel-collapse collapse">
+                                    <div class="checkout-step-body">
+                                        
+                                        <div style="margin-bottom: 30px;">
 
-                    </td>
-    <td class="image hidden-table"><img src="<?= $product['thumb'] ?>" width="75" alt=""></td>
-    <td class="a-left hidden-table"  style="width:400px">
-     <span ><?= $product['name']?></span> 
-<div style="font-size:13px;">
-      <?php  $fpt ='';
-      if(is_array($product) && array_key_exists('produce_type', $product) && is_array($product['produce_type'])) {
-       foreach ($product['produce_type'] as $pt) {
-           if($pt['type']!= null &&  $pt['type']!= 'null')
-       $fpt.=' '.  $pt['type'].'-'.$pt['value'] ;
-        }
-        }
-         ?><?= $fpt?></div>  
+                                           
 
-     <?php if(isset($product['product_note']) && ($product['product_note'] != null) && ($product['product_note'] != 'null')){?>
-     <div style="font-size:13px;">( <?= $product['product_note']?> )</div> 
-     <?php } ?>
-    </td>
-    <!--<td class="a-left hidden-table"  style="width:300px">
-     <span style="font-size:13px;"><?= $product['product_note']?></span> 
-    </td>-->
-  
-    
-    
-                <td class="a-right hidden-table">
-                            <span class="cart-price">
-                                                <span class="price"><?= $product['price']?></span>                
-            </span>
+                                                <?php foreach ($questions as $question): ?>
 
+                                                    <div style="margin-top: 20px" class="form-group">
 
-                    </td>
+                                                        <b><?php echo $question['question'] ?> </b>
 
-                     <td class="a-right hidden-table"  style="width:150px">
-                            <span class="cart-price">
-                                                <span style="font-size:13px;" class="font-bold"><?= $product['unit'] ?></span>                
-            </span>
+                                                        <div style="margin-top: 5px">
+                                                            <label class="control control--radio radio-inline" style="display: inline;">
+                                                            
+                                                                <input type="radio" name="question-<?php echo $question['checkout_question_id'] ?>"   data-id="<?php echo $question['checkout_question_id'] ?>" value="yes" class="question-inputs" />
 
+                                                                <?= $text_yes?>
+                                                                <div class="control__indicator"></div>
 
-                    </td> 
-                        <td class="a-right movewishlist">
-        <input  type="number" onkeypress="return validateFloatKeyPresswithVarient(this, event,'<?= $product['unit']?>');" name="cart[<?= $i ?>][qty]" id="cart[<?= $i ?>][qty]" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" min="1" maxlength="12" style="width:80px !important;disabled">
-    </td>
-        <td class="a-right hidden-table" >
-                    <span class="cart-price">
-        
-                                                <span class="price font-bold"> <?php echo $product['total_tax']; ?></span>                            
-        </span>
-            </td>
-        <td class="a-right hidden-table" >
-                    <span class="cart-price">
-        
-                        <span class="price font-bold" id="spancart[<?= $i ?>][qty]" style="display:none;"><?php echo $product['total']; ?></span>    
-                        <span class="price font-bold"><?php echo $product['total_orginal_price']; ?></span>                            
-        </span>
-            </td>
-              <td   class="a-center hidden-table"  >
-               <stop> <a  style="display:none"     class="edit-bnt" title="Edit item parameters"><span><?= $i?></span></a><stop>
-            
+                                                            </label>
 
-            </td>
-   <!--<td class="a-center hidden-table a">
-     <a id="update_quantity" class="fa fa-refresh" title="Update product quantity" data-id="<?= $product['key']?>" data-prodorderid="<?= $i?>"><span data-id="<?= $product['key']?>"></span></a>
-  </td>-->
-  <td class="a-center hidden-table">
-      <!--<p> <a title="Remove item" class="button remove-item" style="background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p>-->
-     <a id="remove_product" class="button remove-item" title="Remove item" data-id="<?= $product['key']?>" style="background-color: #ec9f4e ;" data-prodorderid="<?= $i?>"><span data-id="<?= $product['key']?>"></span></a>
+                                                            <label class="control control--radio radio-inline" style="display: inline;">
+                                                                
+                                                                
+                                                                <input type="radio" name="question-<?php echo $question['checkout_question_id'] ?>"   data-id="<?php echo $question['checkout_question_id'] ?>"  value="no" class="question-inputs"/>
 
-  </td>
+                                                                <?= $text_no?>
+                                                                <div class="control__indicator"></div>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach ?> 
+
+                                            <!-- <form id="question-forms" action="">
+                                                <input type="radio" name="question" value="yes" class="question-inputs" />
+                                            </form> -->
+                                        </div>
+
+                                        <a class="collapsed btn btn-grey" disabled="disabled" role="button" data-toggle="collapse" data-parent="#accordion" href="#" id="question-payment-next">  <?= $text_next?>  
+                                        </a>
+
+                                        <a type="hidden" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="question-next-button"></a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+                       
 
 
+                        <div class="panel checkout-step">
+                            <?php if($checkout_question_enabled) { ?>
+                                <div role="tab" id="headingFour"> <span id="step-6" class="checkout-step-number hidden-xs"><i class="fa fa-check" aria-hidden="true"></i></span>
+                            <?php } else { ?>
+                                <div role="tab" id="headingFour"> <span id="step-5" class="checkout-step-number hidden-xs"><i class="fa fa-check" aria-hidden="true"></i></span>
+                            <?php } ?>
+
+                            
+                                <h4 class="checkout-step-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" id="payment_panel_link"  > <?= $text_payment?> </a> </h4>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse">
+                                <div class="checkout-step-body">
+                                    <div id="payment-method-wrapper" class="checkout-payment-mode">
+                                        <!-- payment method will goes here -->
+                                    </div>
+                                    <div id="pay-confirm-order">
+
+                                    </div>
+
+                                    <div id="payment-method-wrapper-loader">
+                                        <center><div class="payment-loader"></div></center>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+               </div>
+                </div>
+                </div>
+  </div>     
 
 
+                </div>
+                <div class="col-md-4"  style="display:none">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="checkout-sidebar" id="checkout-total-wrapper">
 
-</tr>  
+                                
+
+                            </div>
+                            <div class="login-loader" style="display: none;"></div>
+
+                                
+                           
+
+                            <div class="promo-code-success-message" style="color: green;">
+                            </div>
+                            <div class="promo-code-message" style="color: red;">
+                            </div>
+
+                            <?php if($this->config->get('coupon_status')) { ?>
+
+                                <div class="checkout-promocode-form">
+                                    <form class="promo-form">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <label class="control-label sr-only" for="code"></label>
+                                                <input type="text" name="coupon" class="form-control" placeholder="<?= $text_promo_code?>" id="coupon" required="">
+                                                <span class="input-group-btn">
+                                            <button class="btn btn-primary btnsetall" type="button" id="promo-form-button"><?= $button_apply?></button>
+                                          </span>
+                                            </div>
+                                            <!-- /input-group -->
+                                        </div>
+                                    </form>
+                                </div>
+                            <?php } ?>
+                             
+                            <form id="comment-order-form">
+
+                            <?php $this->load->model('account/address'); ?>
+                            <?php foreach ($arrs as $key=> $products) { ?>
+
+                                <div class="checkout-sidebar-merchant-box-old">
+                                    <div class="checkout-cart-merchant-box-old"> <span class="checkout-cart-merchant-name"><?php echo $this->model_account_address->getStoreNameById($key); ?></span></div>
+                                    
+                                    <div class="checkout-promocode-form">
+                                        
+                                        <textarea name="dropoff_notes-<?= $key?>" class="form-control" maxlength="200" placeholder="<?= $text_dropoff_notes?>" value="order notes received" id="dropoff_notes" style="height: 100px;"></textarea>
+                                        
+                                    </div>
+
+                                </div>
+                            <?php } ?>
+                            </form>
+
+                            <!-- Start reward form --> 
+                            <?php if($this->config->get('reward_status')) { ?>
+                                <div class="checkout-promocode-form">
+                                
+                                        
+                                    <h5 id="reward-error" style="display: none;color: red;"></h5>                                        
+                                    <h5 id="reward-success" style="display: none;color: green;"></h5>
+                                        
+                                    <form id="coupon-form" class="coupon-forms" action="">
+                                        <div class="form-group">
+
+                                            <div class="input-group">
+                                                <input type="text" name="reward" class="form-control" placeholder="<?= $entry_reward_points ?>" maxlength="10" />
+
+                                                <span class="input-group-btn">
+                                                    <button id="button-reward" class="btn btn-primary btnsetall" type="button">
+                                                    <?= $button_add ?>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </form>                                        
+                                        
+                                </div>
+                            
+                            <?php } ?>
+                            
+                                   
+                            <!-- END reward form --> 
+
+                            <?php $this->load->model('account/address'); ?>
+                            <?php foreach ($arrs as $key=> $products) { ?>
+
+                                <div class="checkout-sidebar-merchant-box">
+                                    <div class="checkout-cart-merchant-box"> <span class="checkout-cart-merchant-name" style="margin-left:100px"> Order Summary</span>   </div>
+                                    <div class="checkout-cart-products">
+                                        <div class="collapse" id="collapseExample<?= $key ?>">
+                                            <div class="checkout-item-list">
+                                                <?php $i = 1; foreach ($products as $product) { ?>
+
+                                                    <div class="checkout-cart-item">
+                                                        <div class="checkout-item-img"  style="align:left"><img src="<?= $product['thumb'] ?>" alt="" class="img-responsive"></div>
+                                                        <div class="checkout-item-name-box">
+                                                            <div class="checkout-item-title"><?= $product['name'] ?></div>
+                                                        
+
+                                                            <div class="checkout-item-unit"><?= $product['unit'] ?>
+                                                                <!-- &nbsp;
+                                                                <?php if($product['product_type'] == 'replacable') { ?>
+                                                                <span class="badge badge-success replacable" style="cursor: pointer;" data-key='<?= $product["key"] ?>' data-value="replacable" data-toggle="tooltip" data-placement="left" title="<?= $text_replacable_title ?>">
+                                                                 <?= $text_replacable ?>
+                                                                </span>
+                                                            <?php } else { ?>
+                                                                <span  class="badge badge-danger replacable"  style="cursor: pointer;" data-key='<?= $product["key"] ?>' data-value="not-replacable" data-toggle="tooltip" data-placement="left" title="<?= $text_not_replacable_title ?>">
+                                                                    <?= $text_not_replacable ?>
+                                                                </span>
+                                                            <?php } ?> -->
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="checkout-item-count" ><?= $product['quantity']?></div>
+                                                        <div class="checkout-item-price"><?php echo $product['total']; ?></div>
+                                                    </div>
+
                                                 <?php $i++; } ?>
                                             </div>
                                         </div>
-                                        
+                                        <div class="checkout-viewmore-btn"> <a class="btn-link" role="button" data-toggle="collapse" href="#collapseExample<?= $key ?>" aria-expanded="false" aria-controls="collapseExample<?= $key ?>" ><?= $text_view ?> <?php echo $this->cart->getTotalProductsByStore($key); ?> <?= $text_item ?></a> </div>
                                     </div>
                                 </div>
                             <?php $i++; } ?>
 
-<tfoot>
-    
-<!--<tr class="first last">
-<td colspan="4" class="a-right last">                                                       
-</td>    
-<td colspan="4" class="a-left last">                                                       
-<button type="submit" style="width:170px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button"><span id="updatecart"><i class="fa fa-refresh"></i>
- Update Cart</span></button>
-</td>
-<td colspan="4" class="a-right last">                                                       
-</td>
-</tr>-->
 
-<tr class="first last">
-<td colspan="6" class="a-right last">
-<a  href="<?php echo $continue; ?>"> <button type="button" title="Continue Shopping" class="button btn-continue" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" ><span><span>Continue Shopping</span></span></button></a>
-</td>
 
-<td colspan="6" class="a-right last">
-<button type="submit" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="save_basket_action" id="save_basket_action" value="save_basket" title="Save Basket" class="button" data-confirm="This will add products to basket!!"><span id="savebasket"><i class="fa fa-refresh"></i> Save Basket</span></button>
-</td>
-</tr>
-
-<tr class="first last">
-<td colspan="6" class="a-left last">
-    <button type="submit"  style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="empty_cart" title="Clear Cart" class="button" id="empty_cart_button"><span id="clearcart" class="cart-header_items-count clear-cart1" style="border-bottom:none;" data-confirm="This will empty your cart!!" >Clear Cart</span></button>
-</td>
-<td colspan="6" class="a-right last">                                                       
-<button type="submit" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button"><span id="updatecart"><i class="fa fa-refresh"></i>
- Update Cart</span></button>
-</td>
-</tr>
-</tfoot>
- </table>
-  </fieldset>
-
-   
-                  
-                           
 
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <p hidden id="latitudevalue"></p>
+        <p hidden id="longitudevalue"></p>
     </div>
-
-<div class="cart-collaterals container"> 
-
-
-<div class="container">
-	<div class="row">
-		<div class="col-md-12">
-			<h2><b>Products You May Like</b></h2>
-			<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="0" data-wrap="false">
-			<!-- Carousel indicators -->
-			<!-- <ol class="carousel-indicators">
-				<li data-target="#myCarousel" data-slide-to="0" class="active"></li>				 			 
-			</ol>   -->
-			<!-- Wrapper for carousel items -->
-			<div class="carousel-inner">
-				   <?php echo $mostboughtproducts; ?>
-			</div>
-			<!-- Carousel controls -->
-			<a class="carousel-control left" href="#myCarousel" data-slide="prev">
-				<i class="fa fa-angle-left"></i>
-			</a>
-			<a class="carousel-control right" href="#myCarousel" data-slide="next">
-				<i class="fa fa-angle-right"></i>
-			</a>
-		</div>
-		</div>
-	</div>
-</div>
-
-
- <!--<div >
-          <div>
-            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-              <ol class="carousel-indicators">
-                <li class="active" data-target="#carousel-example-generic" data-slide-to="0"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
-                <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
-              </ol>
-              <div class="carousel-inner">
-                <div class="item active"><img src="../front/ui/theme/organic/images/slide2.jpg" alt="slide3">
-                  <div class="carousel-caption">
-                  <h4>Fruit Shop</h4>
-                    <h3><a title=" Sample Product" href="product-detail.html">Up to 70% Off</a></h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    <a class="link" href="#">Buy Now</a></div>
-                </div>
-                <div class="item"><img src="../front/ui/theme/organic/images/slide3.jpg" alt="slide1">
-                  <div class="carousel-caption">
-                   <h4>Black Grapes</h4>
-                    <h3><a title=" Sample Product" href="product-detail.html">Mega Sale</a></h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                     <a class="link" href="#">Buy Now</a>
-                  </div>
-                </div>
-                <div class="item"><img src="../front/ui/theme/organic/images/slide1.jpg" alt="slide2">
-                  <div class="carousel-caption">
-                  <h4>Food Farm</h4>
-                    <h3><a title=" Sample Product" href="product-detail.html">Up to 50% Off</a></h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                     <a class="link" href="#">Buy Now</a>
-                  </div>
-                </div>
-              </div>
-              <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"> <span class="sr-only">Previous</span> </a> <a class="right carousel-control" href="#carousel-example-generic" data-slide="next"> <span class="sr-only">Next</span> </a></div>
-          </div>
-        </div>-->
-
-
-
- 
-        
-
-</div>
-
-<div class="cart-collaterals container"> 
-<!-- BEGIN COL2 SEL COL 1 -->
-<div class="row">
-
-<!-- BEGIN TOTALS COL 2 -->
-<div class="col-sm-4">
-
-        
-<div class="shipping">
-
-        <h3>Order Notes</h3>
-        <div class="sEstimate Shipping and Taxhipping-form">
-       <form  id="comment-order-form" >
-            
-            <ul class="form-list">
-            <li>
-            </li>
-                 
-                                        <li>
-                   <label for="order_note">Please add order note, if you have any.</label>
-
-                     <?php foreach ($arrs as $key=> $products) { ?>
-                      <div class="checkout-promocode-form">
-                                        
-                                        <textarea name="dropoff_notes" class="form-control" maxlength="200" placeholder="<?= $text_dropoff_notes?>" id="dropoff_notes" style="height: 100px;"><?php // echo $orderNotes;?></textarea>
-                                        
-                                    </div>
-                                     <?php } ?>
-                </li>
-            </ul>
-           
-        </form>
-      
-
-    </div>
-</div>
- 
-</div>   
-
-<div class="col-sm-4"> 
-<?php if($customer_orders_count == 0 || $customer_orders_count == 4 || $customer_orders_count == 14) { ?>                                        
-<div class="discount" >
-      <h3>Discount Codes</h3>
-  <form id="discount-coupon-form" action="" method="post" class="promo-form">  
-
-    <div class="promo-code-success-message" style="color: green;">
-                            </div>
-                            <div class="promo-code-message" style="color: red;">
-                            </div>
-                                                 
-            <label for="coupon_code">Enter your coupon code if you have one.</label>
-            <input type="hidden" name="remove" id="remove-coupone" value="0">                          
-                <input class="form-control" type="text" id="coupon" name="coupon" value="">                                                      
-                  <button type="button" title="Apply Coupon" class="button coupon "style="width:180px;background-color: #ec9f4e;align:center;margin-top:20px; padding:20px 0px 27px 0px"  id="promo-form-button" value="Apply Coupon"><span>Apply Coupon</span></button>                
-                               
-</form>
-
-</div> <!--discount--> 
-<?php } ?>
-</div> <!--col-sm-4-->
-
-<div class="col-sm-4">
- <div class="totals">
-<h3>Shopping Cart Total</h3>
-<div class="inner">
-
-    <table id="shopping-cart-totals-table" class="table shopping-cart-table-total">
-        <colgroup><col>
-        <col width="1">
-        </colgroup><tfoot>
-            <tr>
-  <!--  <td style="" class="a-left" >
-        <strong>Grand Total</strong>
-    </td>
-    <td style="" class="a-right">
-        <strong><span class="price"><?= $product_total_amount?></span></strong>
-    </td>-->
-</tr>
-        </tfoot>
-        <tbody>
-          <tr >
-    <!--<td style="" class="a-left" >
-        Subtotal    </td>
-    <td style="" class="a-right">
-        <span class="price"><?= $product_total_amount?></span>    </td>-->
-
-
-         <div class="checkout-sidebar" id="checkout-total-wrapper">
-
-                                
-
-                            </div>
-</tr>
-        </tbody>
-    </table>
-  
-<ul class="checkoutnew">           
-<li>
-     <!-- Continue shopping --> 
-                                <?php if($min_order_amount_reached == TRUE) { ?>
-                                <div class="checkout-promocode-form"  >
-                                 <div class="form-group">
-                                        <span class="input-group-btn" id="proceed_to_checkout"  onclick="setOrderNotes()">
-                                            <a id="button-reward" href="#" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">Proceed to Check out
-                                            </a>
-                                        </span>
-                                    </div>
-                                
-                                </div>
-                                <?php } else { ?>
-                                <div class="checkout-promocode-form"  >
-                                 <div class="form-group">
-                                        <span class="input-group-btn">
-                                            <a id="button-reward" href="<?php echo $server; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">CONTINUE SHOPPING</a>
-                                        </span>
-                                    </div>
-                                
-                                </div>
-                                <?php } ?>
-                            <!-- END Continue shopping --> 
-</li>
-</ul>                
-</div><!--inner-->
- </div><!--totals-->
-</div> <!--col-sm-4-->
-
-
-</div> <!--cart-collaterals-->
-
-
-</div>
-    
     
     <?= $login_modal ?>
     <?= $signup_modal ?>
@@ -471,6 +556,8 @@
                                         <label class="col-md-12 control-label" for="flat"><?= $text_flat_house_office?></label>
                                         <div class="col-md-12">
                                             <input id="flat" name="modal_address_flat" type="text" placeholder="45, Sunshine Apartments" class="form-control input-md" required="">
+                                            <input id="modal_address_latitude" name="modal_address_latitude" type="hidden" value="">
+                                            <input id="modal_address_longitude" name="modal_address_longitude" type="hidden" value="">
                                         </div>
                                     </div>
                                   
@@ -547,8 +634,8 @@
                                     <!-- Button -->
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary btnsetall" onclick="saveInAddressBook()"><?= $text_save?></button>
-                                            <button type="button" class="btn btn-grey" data-dismiss="modal"><?= $text_close?></button>
+                                            <button id="singlebutton" name="singlebutton" type="button" class="btn btn-primary btnsetall" onclick="saveInAddressBook()" style="height: 45px;border-radius:20px;"><?= $text_save?></button>
+                                            <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:49%; float: right; margin-top: 10px; height: 45px;border-radius:20px"><?= $text_close?></button>
                                         </div>
                                     </div>
 
@@ -621,9 +708,6 @@
         </div>
     </div>
 
-
-
-
     <style type="text/css">
         .pac-container {
           z-index: 99999999;
@@ -632,57 +716,53 @@
             overflow:visible;
         }
 
+        
 
-        .promo-form:before {             
-           top: 46px;
-           content:none;
-  
+.btn-block
+ {
+	display: block;
+	width: 100%;
+	border-radius:20px
 }
+
+.pull-left
+{
+    border-radius:20px
+}
+.checkoutChange  
+{
+     border-radius:20px
+} 
+ 
+
     </style>
 
     <?= $footer ?>
-    <!-- Modal -->
-    <div class="addressModal">
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <div class="row">
-                            <div class="col-md-12">
-                              <h3>ACCEPT TERMS</h3>
-                            </div>
-
-                            <div class="addnews-address-form">
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        <button id="agree_vendor_terms" name="agree_vendor_terms" type="button" class="btn btn-primary">I AGREE</button>
-                                        <button id="cancel_vendor_terms" name="cancel_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">HOME</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- CSS Style -->
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/revslider.css" >
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/owl.carousel.css">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/owl.theme.css">
-<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/jquery.bxslider.css">
-<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/jquery.mobile-menu.css">
-<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/style.css" media="all">
-<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/responsive.css" media="all">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/jquery.bxslider.css"> 
+
 
 <link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Oswald:300,400,500,600,700" rel="stylesheet">
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:700,600,800,400' rel='stylesheet' type='text/css'>
 <link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i,900" rel="stylesheet">
+    
+    <!-- CSS Style -->
+ 
+<!--
+ 
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/style.css" media="all"> 
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/responsive.css" media="all">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/jquery.mobile-menu.css">
+
+
+ 
+-->
+
 
    
     <script type="text/javascript" src="<?= $base;?>front/ui/theme/mvgv2/js/side-menu-script.js"></script>
@@ -705,507 +785,7 @@
 
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
-    <style>
-    #agree_vendor_terms {
-    width: 49%;
-    float: left;
-    margin-top: 10px;
-    }
-    </style>
-  <script type="text/javascript">
-          $(function() {
-        $.ajax({
-            url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
-            type: 'post',
-            dataType: 'json',
-            beforeSend: function() {
-            },
-            complete: function() {
-            },
-            success: function(json) {
-                if (json['modal_open']) {
-                        $('#exampleModal').modal('toggle');
-                }else{
-                     $('#exampleModal').modal('hide');   
-                }
-            }
-        });
-        });
-        
-        $('#agree_vendor_terms').on('click', function(){
-        $.ajax({
-            url: 'index.php?path=checkout/confirm/AcceptOtherVendorOrderTerms',
-            type: 'post',
-            data: 'accept_terms=true',
-            dataType: 'json',
-            beforeSend: function() {
-            },
-            complete: function() {
-            },
-            success: function(json) {
-                console.log(json);
-                if (json['vendor_terms']) {
-                   $('#exampleModal').modal('hide');
-                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";
-                }else{
-                  $('#exampleModal').modal('show');
-                }
-            }
-        });
-        });
-        $('#cancel_vendor_terms').on('click', function(){
-            window.location.href = "<?= $base;?>";
-        });
-  //as in header page , clear cart funtionality is already mentioned.Commented here
-     /* $(document).delegate('#clearcart', 'click', function(){
-        var choice = confirm($(this).attr('data-confirm'));
-
-        if(choice) {
-
-            $.ajax({
-                url: 'index.php?path=checkout/cart/clear_cart',
-                type: 'post',
-                data:'',
-                dataType: 'json',
-                success: function(json) {
-                if (json['location']) {
-                    location = json.redirect;
-                    location = location;
-                }}
-            });
-        }
-    });*/
-
- $(document).delegate('#save_basket_action', 'click', function(){
-  
-  var list_name;   
-  var input_val = prompt("Please enter list name:", "");
-  if (input_val == null || input_val == "") {
-    list_name = null;
-  }else {
-    list_name = input_val;
-  }
-        
-        if(list_name == null || list_name == "") {
-            console.log('Save Basket Cancelled!');
-            return false;
-        }
-        if(list_name != null || list_name != "") {
-
-            $.ajax({
-                url: 'index.php?path=checkout/cart/save_basket',
-                type: 'post',
-                data: { 'list_name' : list_name },
-                dataType: 'json',
-                success: function(json) {
-                console.log(json); 
-                if (json['location']) {
-                    console.log('success');
-                    console.log(json.location); 
-                    window.location.href = json.location;
-                    return false;
-                    //location = json.redirect;
-                    //location = location;
-                }}
-            });
-        }
-    });
- $("#shopping-cart-table tbody").find("stop").click(function (){
-
-      
-   
-var key=$(this).text().trim();
-//alert($(this).text().trim());
-console.log("cart["+key+"][qty]");
-$("cart["+key+"][qty]").removeAttr('disabled');
- document.getElementById("cart["+key+"][qty]").disabled = false;
-
- });
-
-
-  //$("#shopping-cart-table tbody").find("p").click(function (){
-
-      
     
-           // var key=$(this).text().trim();
-           // console.log(key);
-
-    $(document).delegate('#remove_product', 'click', function() {
-        
-        
-       // console.log($(this).attr('data-id'));
-       // console.log($(this).attr('data-prodorderid'));
-       var key=$(this).attr('data-id');
-           console.log(key);
-         
-
- 	$.ajax({
-			url: 'index.php?path=checkout/cart/remove',
-			type: 'post',
-			data: 'key=' + key,
-			dataType: 'json',
-			beforeSend: function() {
-				//$('#cart > button').button('loading');
-			},
-			complete: function() {
-				//$('#cart > button').button('reset');
-			},			
-			success: function(json) {	
-                            //refresh page 
-                            location = location;
-			}
-		});
-});
-
-
-function setOrderNotes()
-{    
-var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
-document.cookie = "dropoff_notes="+dropoff_notes;
-}
-
-$(document).delegate('#proceed_to_checkout', 'click', function(e) {
-e.preventDefault();    
-var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
-document.cookie = "dropoff_notes="+dropoff_notes;
-$('#exampleModal').modal('toggle');
-});
-
-  $(document).delegate('#updatecart', 'click', function(){    
-
-      console.log("updating the cart");  
-   
- var complex = <?php echo json_encode($products); ?>;
-
-   console.log(complex); 
- var i,j, len, text;
- j=1;
-                for (i = 0, len = complex.length, text = ""; i < len; i++) {
-                text = complex[i]['key']  ;
-                console.log(text);
-                console.log(j);
-                // alert("cart["+j+"][qty]");
-            var updatedQuantity =  
-                document.getElementById("cart["+j+"][qty]").value;  
-               j++;
-               // alert(updatedQuantity) ;  
-         
-	 $.ajax({
-			url: 'index.php?path=checkout/cart/update',
-			type: 'post',
-			data: 'key=' + complex[i]['key'] + '&quantity=' + (typeof(updatedQuantity) != 'undefined' ? updatedQuantity : 1),
-			dataType: 'json',
-			async: false, 
-			beforeSend: function() {
-				//$('#cart > button').button('loading');
-			},
-			complete: function() {
-				//$('#cart > button').button('reset');
-				
-			},			
-			success: function(json) {
-                // Hide for qnty Box
-				/*$qty_wrapper = $(document).find('#'+$product_store_id+'-'+$variation_id+' .middle-quantity').html($qty);
-    			 $qty_wrapper = $(document).find('.unique'+$product_store_id+'-'+$variation_id+' .middle-quantity').html($qty);
-    			 $qty_wrapper = $(document).find('.unique_middle_button'+$product_store_id+'-'+$variation_id).html($qty);
-				*/
-				 //reflact changes in list 
-                $('#action_'+json['product_id']+'[data-variation-id="'+json['variation_id']+'"] .middle-quantity').html(json['quantity']);
-                	location = 'index.php?path=checkout/checkoutitems';
-                
-				/*	if (json['location'] == 'cart-checkout') {
-					location = 'index.php?path=checkout/cart';
-				} else {
-                
-                    //update total count for mobile 
-                    $('.shoppingitem-fig').html(json['count_products']);
-                        
-					$('#cart').load('index.php?path=common/cart/info');
-
-					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
-
-					$('.cart-count').html(json['count_products']+' ITEMS IN CART ');
-                    $('.cart-total-amount').html(json['total_amount']);
-				}*/
-
-				$.ajax({
-			        url: 'index.php?path=common/home/cartDetails',
-			        type: 'post',
-			        dataType: 'json',
-
-			        success: function(json) {
-			            console.log(json);
-
-			            for (var key in json['store_note']) {
-	                        //alert("User " + data[key] + " is #" + key); // "User john is #234"
-	                        $('.store_note'+key).html(json['store_note'][key]);
-
-	                        console.log(json['store_note'][key]);
-	                    }
-
-			            if (json['status']) {
-			                console.log("yesz");
-			                
-			                $("#proceed_to_checkout").removeAttr("disabled");
-			                $("#proceed_to_checkout").attr("href", json['href']);
-			                //$("#proceed_to_checkout_button").html(json['text_proceed_to_checkout']);
-			                //$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
-
-			                $("#proceed_to_checkout_button").css({ 'background-color' : '', 'border-color' : '' });
-			                $('.checkout-modal-text').html(json['text_proceed_to_checkout']);
-                        	$('.checkout-loader').hide();
-			                
-			            } else {    
-			                console.log("no frm jsz");
-			                $("#proceed_to_checkout").attr("disabled", "disabled");
-			                $("#proceed_to_checkout").removeAttr("href");
-			                //$("#proceed_to_checkout_button").html(json['amount']);
-			                //$('.checkout-modal-text').html(json['amount']);
-                        	$('.checkout-loader').hide();
-                        	$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
-                        	$("#proceed_to_checkout_button").css('background-color', '#ccc');
-			                $("#proceed_to_checkout_button").css('border-color', '#ccc');
-
-                        	
-
-			            }
-			            
-			            
-			        }
-			    });
-
-			    
-
-
-			}
-		});
- }
-         window.location.reload(true);
-    });
-
-      
-// Cart add remove functions
-var cart = {
-	'add': function(product_id, quantity, variation_id, store_id=null) {
-
-		
-		console.log("add variation id", variation_id);
-		$.ajax({
-			url: 'index.php?path=checkout/cart/add',
-			type: 'post',
-			data: 'variation_id='+variation_id+'&product_id=' + product_id + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1)+'&store_id=' + store_id,
-			dataType: 'json',
-			beforeSend: function() {
-				//$('#cart > button').button('loading');
-			},
-			complete: function() {
-				//$('#cart > button').button('reset');
-			},			
-			success: function(json) {
-				console.log(json);
-				console.log("jsonxxxxx");
-				//console.log($('.normalalert').html());
-				console.log("json");
-				//$('.alert, .text-danger').remove();
-
-				if (json['redirect']) {
-					location = json['redirect'];
-				}
-
-				if (json['success']) {
-
-					$('.plus-quantity[data-id="'+product_id+'"]').attr('data-key', json['key']);
-					$('.minus-quantity[data-id="'+product_id+'"]').attr('data-key', json['key']);
-
-					//$('#add-btn[data-id="'+product_id+'"]').css({ 'display': "none" });
-					//$('#add-btn[data-id="'+product_id+'"]').removeAttr('display');
-					$('#add-btn[data-id="'+product_id+'"]').css({ 'display': "none" });
-
-
-					$('.inc-dec-quantity[data-id="'+product_id+'"]').css({ 'display': "block" });
-					
-
-					//$('html, body').animate({ scrollTop: 0 }, 'slow');
-					//update total count for mobile 
-					$('.shoppingitem-fig').html(json['count_products']);
-					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
-                    $('#cart').load('index.php?path=common/cart/info');
-
-                    $('.cart-count').html(json['count_products']+' ITEMS IN CART ');
-                    $('.cart-total-amount').html(json['total_amount']);
-
-                    $('.cart-total-amount').html(json['total_amount']);
-				}
-
-				
-
-				 window.location.reload(true);
-			}
-		});
-	},
-	'update': function(key, quantity) {
-
-		var text = $('.checkout-modal-text').html();
-	    $('.checkout-modal-text').html('');
-	    $('.checkout-loader').show();
-
-		console.log("cart update api js file");
-		$.ajax({
-			url: 'index.php?path=checkout/cart/update',
-			type: 'post',
-			data: 'key=' + key + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1),
-			dataType: 'json',
-			async: false, 
-			beforeSend: function() {
-				//$('#cart > button').button('loading');
-			},
-			complete: function() {
-				//$('#cart > button').button('reset');
-				
-			},			
-			success: function(json) {
-                // Hide for qnty Box
-				/*$qty_wrapper = $(document).find('#'+$product_store_id+'-'+$variation_id+' .middle-quantity').html($qty);
-    			 $qty_wrapper = $(document).find('.unique'+$product_store_id+'-'+$variation_id+' .middle-quantity').html($qty);
-    			 $qty_wrapper = $(document).find('.unique_middle_button'+$product_store_id+'-'+$variation_id).html($qty);
-				*/
-				 //reflact changes in list 
-                $('#action_'+json['product_id']+'[data-variation-id="'+json['variation_id']+'"] .middle-quantity').html(json['quantity']);
-                
-				if (json['location'] == 'cart-checkout') {
-					location = 'index.php?path=checkout/cart';
-				} else {
-                
-                    //update total count for mobile 
-                    $('.shoppingitem-fig').html(json['count_products']);
-                        
-					$('#cart').load('index.php?path=common/cart/info');
-
-					$('.cart-panel-content').load('index.php?path=common/cart/newInfo');
-
-					$('.cart-count').html(json['count_products']+' ITEMS IN CART ');
-
-                    $('.cart-total-amount').html(json['total_amount']);
-				}
-
-				$.ajax({
-			        url: 'index.php?path=common/home/cartDetails',
-			        type: 'post',
-			        dataType: 'json',
-
-			        success: function(json) {
-			            console.log(json);
-
-			            for (var key in json['store_note']) {
-	                        //alert("User " + data[key] + " is #" + key); // "User john is #234"
-	                        $('.store_note'+key).html(json['store_note'][key]);
-
-	                        console.log(json['store_note'][key]);
-	                    }
-
-			            if (json['status']) {
-			                console.log("yesz");
-			                
-			                $("#proceed_to_checkout").removeAttr("disabled");
-			                $("#proceed_to_checkout").attr("href", json['href']);
-			                //$("#proceed_to_checkout_button").html(json['text_proceed_to_checkout']);
-			                //$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
-
-			                $("#proceed_to_checkout_button").css({ 'background-color' : '', 'border-color' : '' });
-			                $('.checkout-modal-text').html(json['text_proceed_to_checkout']);
-                        	$('.checkout-loader').hide();
-			                
-			            } else {    
-			                console.log("no frm jsz");
-			                $("#proceed_to_checkout").attr("disabled", "disabled");
-			                $("#proceed_to_checkout").removeAttr("href");
-			                //$("#proceed_to_checkout_button").html(json['amount']);
-			                //$('.checkout-modal-text').html(json['amount']);
-                        	$('.checkout-loader').hide();
-                        	$('.checkout-modal-text').html(json['text_proceed_to_checkout']);
-                        	$("#proceed_to_checkout_button").css('background-color', '#ccc');
-			                $("#proceed_to_checkout_button").css('border-color', '#ccc');
-
-                        	
-
-			            }
-			            
-			            
-			        }
-			    });
-
-			    
-
-
-			}
-		});
-
-		
-	},
-	'remove': function(key) {
-
-		var text = $('.checkout-modal-text').html();
-	    $('.checkout-modal-text').html('');
-	    $('.checkout-loader').show();
-
-	
-		
-	},
-	'update_product_type': function(key,value) {
-		console.log("update product_type");
-		$.ajax({
-			url: 'index.php?path=checkout/cart/updateProductType',
-			type: 'post',
-			data: 'key=' + key+ '&product_type='+value,
-			dataType: 'json',
-			beforeSend: function() {
-			},
-			complete: function() {
-			},			
-			success: function(json) {	
-				console.log("update product_type end");
-				console.log(json);
-				console.log("update product_type");
-			}
-		});
-	}
-}
-
-	
-    </script>;
-    <style>
-    #shopping-cart-table a.remove-item {
-	background-color: #ec9f4e !important;
-	background-image: none;
-	color: #333;
-	cursor: pointer;
-	padding: 8px 13px;
-	cursor: pointer;
-	text-decoration: none;
-	float: left;
-	transition: all 0.3s linear;
-	-moz-transition: all 0.3s linear;
-	-webkit-transition: all 0.3s linear;
-	border: 1px #ddd solid;
-	border-radius: 999px;
-
-}
-#shopping-cart-table a.remove-item:hover {
-	background-color: #ed6663;
-	color: #fff;
-	border: 1px #ed6663 solid
-}
-#shopping-cart-table a.remove-item:before {
-	content: "\f014";
-	font-family: FontAwesome;
-	font-size: 25px;
-    background-color: #ec9f4e !important;
-}
-#shopping-cart-table a.remove-item span {
-	display: none;
-}
-</style>
-
     <script type="text/javascript">
         console.log("map address");
             
@@ -1294,6 +874,23 @@ var cart = {
                 alert("Geolocation is not supported by this browser.");
             }
         }
+                var lat = document.getElementById("latitudevalue");
+                var lng = document.getElementById("longitudevalue");
+
+                function getLocationOnly() {
+                    
+                if (navigator.geolocation) {                                    
+                    navigator.geolocation.getCurrentPosition(showPositionOnly);                    
+                } else { 
+                   console.log("Geolocation is not supported by this browser.");
+                   lat.innerHTML =   0 ;
+                   lng.innerHTML = 0;
+                }
+                }
+                function showPositionOnly(position) {                                  
+                lat.innerHTML =   position.coords.latitude ;
+                 lng.innerHTML = position.coords.longitude;
+                }
 
         function showPosition(position) {
             //var latlon = position.coords.latitude + "," + position.coords.longitude;
@@ -1400,9 +997,8 @@ __kdt.push({"post_on_load": false});
     function hide() {
         $(".overlayed").hide();
     }
-
-   
     $(document).ready(function() {
+          getLocationOnly();
 
         $('.replacable').on('click', function(){
             console.log("replacable");
@@ -1424,7 +1020,6 @@ __kdt.push({"post_on_load": false});
                 $(this).attr('title', '<?= $text_replacable_title ?>');
             }   
 
-
             $product_type = $(this).attr('data-value');  
 
             console.log($product_type);
@@ -1436,8 +1031,6 @@ __kdt.push({"post_on_load": false});
                 console.log($this.attr('data-key'));
                 var response = cart.update_product_type($this.attr('data-key'),$product_type);
             }
-
-             loadTotals($(this).attr('data-city_id'));
         });
 
         $('.dropdown-toggle').dropdown();
@@ -1462,7 +1055,6 @@ __kdt.push({"post_on_load": false});
 
 <script type="text/javascript">
     $('#button-reward').on('click', function() {
-    
         $.ajax({
             url: 'index.php?path=checkout/reward/reward',
             type: 'post',
@@ -1505,8 +1097,6 @@ __kdt.push({"post_on_load": false});
 // Load totals
 function loadTotals($city_id) {
 
-    console.log('sri divya');
-
     $('#checkout-total-wrapper').html('<center><div class="login-loader" style=""></div></center>');
 
     $.ajax({
@@ -1528,6 +1118,7 @@ function loadTotals($city_id) {
 }
 //Load Delivery Time
 function loadDeliveryTime(store_id) {
+    var store_id = 75;
 
     $('#delivery-time-wrapper-'+store_id+'').html('<center><div class="login-loader" style=""></div></center>');
 
@@ -1566,9 +1157,53 @@ function loadDeliveryTime(store_id) {
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
         }
     });
+    //setDeliveryTime();
 }
 
+//Load Delivery Time
+function setDeliveryTime() {
+    var store_id = 75;
 
+    $('#delivery-time-wrapper-'+store_id+'').html('<center><div class="login-loader" style=""></div></center>');
+
+    console.log("loadDeliveryTime");
+    var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value')
+    console.log(shipping_method);
+    console.log("shipping_method");
+    //$('input[id="shipping_method"]').val(shipping_method);
+
+    if($('input[id="shipping_method"]').val() == 'express.express') {
+        $('#timeslot-next-hidden').attr("href","#collapseFour");
+        $('#delivery_time_panel_link').attr("href","");
+
+        $('input[name="shipping_time_selected"]').val('');
+        $('input[name="dates_selected"]').val('');
+    } else {
+        $('#timeslot-next-hidden').attr("href","#collapseThree");
+        $('#delivery_time_panel_link').attr("href","#collapseThree");
+    }
+
+    $.ajax({
+        url: 'index.php?path=checkout/delivery_time/indexNew&shipping_method='+shipping_method+'&store_id='+store_id+'',
+        type: 'get',
+        dataType: 'json',
+        cache: false,
+        async: true,
+        beforeSend: function() {
+            // $('#delivery-time-wrapper-'+store_id+'').html('<div class="text-center"><i class="fa fa-spinner fa-spin checkout-spin"></i></div>');
+        },
+        success: function(json) {
+            $('#select-timeslot').html("Selected : "+ json['dates'][0]+ ', ' + json['selected_slot']);
+            $('.timeslot-selected[data-value="' + json['selected_slot'] + '"][data-date="'+json['dates'][0]+'"]').children().children().prop("checked", true);
+            $('#payment-next').removeAttr('disabled');
+            $('#payment-next').removeClass('btn-grey');
+            $('#payment-next').addClass('btn-default');
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+}
 function getTimeSlot(store_id,date) {
 
     var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value')
@@ -1596,8 +1231,7 @@ function getTimeSlot(store_id,date) {
 // Methods related with shipping
 $(document).ready(function() {
     console.log("logged in as ");
-
-     loadTotals($(this).attr('data-city_id'));
+ 
     <?php
 
         if($loggedin && $profile_complete) { ?>
@@ -1634,6 +1268,7 @@ if ($shipping_required) {
 ?>
     // Load shipping methods
     function loadShippingMethods(store_id) {
+        var store_id = 75;
         data = {
             store_id : store_id
         }
@@ -1668,7 +1303,8 @@ if ($shipping_required) {
 
         $('#timeslot-next').removeAttr('disabled');
 
-        var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value');
+        //var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value');
+        var shipping_method = $('input[name=\'shipping_method-'+75+'\']:checked').attr('value');
         console.log(shipping_method); 
         if (shipping_method == undefined) {
             shipping_method = 0;
@@ -1797,6 +1433,8 @@ function savePaymentMethod() {
             } else {
                 loadConfirm();
             }
+            CartProducts();
+            CartTotals();
         },
         error: function(xhr, ajaxOptions, thrownError) {
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
@@ -1806,6 +1444,9 @@ function savePaymentMethod() {
             $('#payment-method-wrapper-loader').hide();
             $('#payment-method-wrapper').show();
             $('#pay-confirm-order').show();
+            if(payment_method == 'interswitch') {
+            submitHandler(event);
+            }
         },
     });
 }
@@ -1854,6 +1495,31 @@ function saveNewTimeSlot(store_id,timeslot,date) {
 function saveOrder() {
 
     console.log("saveOrder");
+    console.log("sri ");
+
+var name="dropoff_notes";
+
+     var cookieArr = document.cookie.split(";");
+    
+    // Loop through the array elements
+    for(var i = 0; i < cookieArr.length; i++) {
+        var cookiePair = cookieArr[i].split("=");
+        
+        /* Removing whitespace at the beginning of the cookie name
+        and compare it with the given string */
+        if(name == cookiePair[0].trim()) {
+            // Decode the cookie value and return
+            // alert( decodeURIComponent(cookiePair[1]));
+             var notes=decodeURIComponent(cookiePair[1]);
+
+          // $('textarea[name="dropoff_notes"]').val(decodeURIComponent(cookiePair[1]));
+
+        }
+    }
+
+
+
+
 
     /*$.ajax({
         url: 'index.php?path=checkout/confirm/confirmPayment',
@@ -1893,10 +1559,14 @@ function saveOrder() {
     var flat_number = $('input[name="flat_number"]').val();
     var address_type = $('input[name="address_type"]').val();
 
+ 
 
-    var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
+    //var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
+    var dropoff_notes = notes;
+
     
-
+    
+ 
     //$('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
     if ($('input[name="shipping_address_id"]').val().length <= 0) {
         $error = true;
@@ -1905,30 +1575,39 @@ function saveOrder() {
     }
 
     appendDataToSend = '';
-    <?php foreach ($store_data as $os):  ?>
-        var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value')
+     <?php foreach ($store_data as $os):  ?>
+          var shipping_method = $('input[name=\'shipping_method-'+75+'\']:checked').attr('value')
+        //var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value')
         if (shipping_method.length <= 0) {
             console.log("shipping_method selected");
             $error = true;
         }
-        console.log("shipping-method-wrapper"+shipping_method);
+        console.log("shipping-method-wrapper"+shipping_method+'QWERTY');
 
         /*if($('#delivery-time-wrapper-<?php echo $os["store_id"] ?> ul.list-group input[type=radio]:checked').val() == undefined ) {
             $error = true;
             console.log("shipping-method-wrappercer not selected");
         }*/
         var note =  encodeURIComponent($('textarea[name=dropoff_notes-<?php echo $os["store_id"] ?>]').val());
-        appendDataToSend += '&dropoff_notes['+<?php echo $os['store_id'] ?>+']='+note;
+        appendDataToSend += '&dropoff_notes['+<?php echo $os['store_id'] ?>+']='+notes;
 
-    <?php endforeach; ?>
+    <?php endforeach; ?>  
 
 
    // var sendData = $('#place-order-form').serialize() + '&dropoff_notes=' + dropoff_notes+appendDataToSend;
-    var sendData =   '&dropoff_notes=' + dropoff_notes+appendDataToSend;
+    var sendData =  '&dropoff_notes=' + dropoff_notes+appendDataToSend;
+    console.log("qwerty");
     console.log('sendData');
-    console.log(sendData);
+     
+    
     if (!$error) {
-
+     
+        
+       console.log(lat.innerHTML);
+       sendData=sendData+'&login_latitude=' + lat.innerHTML+'&login_longitude=' + lng.innerHTML+'&login_mode=web';
+    
+       console.log(sendData);
+      
         $valid_address = 0;
         $.ajax({
             url: 'index.php?path=checkout/confirm/multiStoreIndex',
@@ -1988,6 +1667,8 @@ function saveInAddressBook() {
     var building_name = $('input[name="modal_address_name"]').val();
     var flat_number = $('input[name="modal_address_flat"]').val();
     var address_type = $('input[name="modal_address_type"]:checked').val();
+    var modal_address_latitude = $('input[name="modal_address_latitude"]').val();
+    var modal_address_longitude = $('input[name="modal_address_longitude"]').val();
     //validate all fields
 
     if (landmark.length <= 0) {
@@ -2154,41 +1835,6 @@ function saveInAddressBook() {
         });
     });
     
-    $(document).delegate('#update_quantity', 'click', function() {
-        
-        var quantity;
-        console.log($('.cart-count').text());
-        console.log($(this).attr('data-id'));
-        console.log($(this).attr('data-prodorderid'));
-        var prod_order_id = $(this).attr('data-prodorderid');
-        console.log('Update Quantity');
-        
-        $('input[id^="cart['+prod_order_id+'][qty]"]').each(function(input){
-        quantity = $('input[id^="cart['+prod_order_id+'][qty]"]').val();
-        var input_id = $('input[id^="cart['+prod_order_id+'][qty]"]').attr('id');
-        console.log($('span[id^="spancart['+prod_order_id+'][qty]"]').text());
-        console.log('id: ' + input_id + ' value:' + quantity);
-        });
-        
-        console.log(quantity);
-        $.ajax({
-            url: 'index.php?path=checkout/cart/update',
-            type: 'post',
-            data: { key: $(this).attr('data-id'), quantity: quantity },
-            dataType: 'json',
-            success: function(json) {
-             console.log(json);
-             $('.cart-count').text(json.count_products+' ITEMS IN CART ');
-             $('.cart-total-amount').text(json.total_amount);
-             $('.checout-invoice-price').text(json.total_amount);
-             $('.checkout-payable .checkout-payable-price').text(json.total_amount);
-             
-             $('input[id^="cart['+prod_order_id+'][qty]"]').each(function(input){
-             console.log($('span[id^="spancart['+prod_order_id+'][qty]"]').text(json.products_details.total));
-             });
-            }
-        });
-    });
 
     $(document).delegate('#timeslot-next', 'click', function() {
         $('#step-3').addClass('checkout-step-color');
@@ -2199,7 +1845,8 @@ function saveInAddressBook() {
         var bothExpress = true;
 
         <?php foreach ($store_data as $os):  ?>
-            var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value');
+              var shipping_method = $('input[name=\'shipping_method-'+75+'\']:checked').attr('value');
+            //var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value');
 
             console.log("shipping_method"+shipping_method);
             
@@ -2249,7 +1896,7 @@ function saveInAddressBook() {
         $error = false;
 
         <?php foreach ($store_data as $os):  ?>
-            var shipping_method = $('input[name=\'shipping_method-'+<?php echo $os['store_id'] ?>+'\']:checked').attr('value')
+            var shipping_method = $('input[name=\'shipping_method-'+75+'\']:checked').attr('value')
             if (shipping_method.length <= 0) {
                 console.log("shipping_method not selected");
                 $error = true;
@@ -2383,6 +2030,7 @@ function saveInAddressBook() {
     });
 
 
+
     $(document).delegate('#headingDeliveryOptions', 'click', function() {
         console.log("headingDeliveryOptions click");
         $('#timeslot-next-hidden').attr("href","#collapseThree");
@@ -2425,6 +2073,10 @@ function saveInAddressBook() {
 
         var address= $('#us1').locationpicker('location');
         console.log(address);
+        console.log(address.latitude);
+        console.log(address.longitude);
+        $("#modal_address_latitude").val(address.latitude);
+        $("#modal_address_longitude").val(address.longitude);
 
         /*if(address.addressComponents.streetName && address.addressComponents.streetNumber) {
             $('#street').val(address.addressComponents.streetNumber+' '+address.addressComponents.streetName);
@@ -2487,253 +2139,47 @@ function saveInAddressBook() {
         }
     });
 
-
-
-
-
-    function validateFloatKeyPresswithVarient(el, evt, unitvarient) {
-
-	// $optionvalue=$('.product-variation option:selected').text().trim();
-	$optionvalue=unitvarient;
-	   //alert($optionvalue);
-	if($optionvalue=="Per Kg" || $optionvalue=="Kg" || $optionvalue=="kg")
-	{
-	 var charCode = (evt.which) ? evt.which : event.keyCode;
-	 var number = el.value.split('.');
-	 if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
-		 return false;
-	 }
-	 //just one dot
-	 if(number.length>1 && charCode == 46){
-		 return false;
-	 }
-	 //get the carat position
-	 var caratPos = getSelectionStart(el);
-	 var dotPos = el.value.indexOf(".");
-	 if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
-		 return false;
-	 }
-	 return true;
-	}
-
-	else{
-	 var charCode = (evt.which) ? evt.which : event.keyCode;
-	 if (charCode > 31 &&
-	   (charCode < 48 || charCode > 57))
-	   return false;
-	   else
-   
-   return true;
-	}
+function CartProducts() {
+        $.ajax({
+        url: 'index.php?path=checkout/checkoutitems/index',
+        type: 'post',
+        data: {
+        },
+        dataType: 'html',
+        cache: false,
+        async: true,
+        beforeSend: function() {            
+        },
+        success: function(json) {
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        },
+        complete: function() {
+        },
+    });
 }
 
-
+function CartTotals() {
+        $.ajax({
+        url: 'index.php?path=checkout/totals/index&city_id=',
+        type: 'post',
+        data: {
+        },
+        dataType: 'html',
+        cache: false,
+        async: true,
+        beforeSend: function() {            
+        },
+        success: function(json) {
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        },
+        complete: function() {
+        },
+    });
+}
 </script>
 <script src="https://api-test.equitybankgroup.com/js/eazzycheckout.js"></script>
-<script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/owl.carousel.min.js"></script>
-    <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/slider-carousel.js"></script>
-   
-  
-  <link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/mvgv2/css/custom.min.css?v=1.1.0">
-  <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/list.min.css">
-
 </body>
 
 </html>
-
-<style>
-body {
-	font-family: "Open Sans", sans-serif;
-}
-h2 {
-	color: #000;
-	font-size: 26px;
-	font-weight: 300;
-	text-align: center;
-	text-transform: uppercase;
-	position: relative;
-	margin: 30px 0 80px;
-}
-h2 b {
-	color: #ffc000;
-}
-h2::after {
-	content: "";
-	width: 100px;
-	position: absolute;
-	margin: 0 auto;
-	height: 4px;
-	background: rgba(0, 0, 0, 0.2);
-	left: 0;
-	right: 0;
-	bottom: -20px;
-}
-.carousel {
-	margin: 1px auto;
-	padding: 0 80px;
-}
-.carousel .item {
-	min-height: 230px;
-    text-align: center;
-	overflow: hidden;
-}
-.carousel .item .img-box {
-	height: 100px;
-	width: 100%;
-	position: relative;
-}
-.carousel .item img {	
-	max-width: 100%;
-	max-height: 100%;
-	display: inline-block;
-	position: absolute;
-	bottom: 0;
-	margin: 0 auto;
-	left: 0;
-	right: 0;
-}
-.carousel .item h4 {
-	font-size: 18px;
-	margin: 10px 0;
-}
-.carousel .item .btn {
-	color: #333;
-    border-radius: 0;
-    font-size: 11px;
-    text-transform: uppercase;
-    font-weight: bold;
-    background: none;
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-    margin-top: 5px;
-    line-height: 16px;
-}
-.carousel .item .btn:hover, .carousel .item .btn:focus {
-	color: #fff;
-	background: #000;
-	border-color: #000;
-	box-shadow: none;
-}
-.carousel .item .btn i {
-	font-size: 14px;
-    font-weight: bold;
-    margin-left: 5px;
-}
-.carousel .thumb-wrapper {
-	text-align: center;
-}
-.carousel .thumb-content {
-	padding: 15px;
-}
-.carousel .carousel-control {
-	height: 100px;
-    width: 40px;
-    background: none;
-    margin: auto 0;
-    background: rgba(0, 0, 0, 0.2);
-}
-.carousel .carousel-control i {
-    font-size: 30px;
-    position: absolute;
-    top: 50%;
-    display: inline-block;
-    margin: -16px 0 0 0;
-    z-index: 5;
-    left: 0;
-    right: 0;
-    color: rgba(0, 0, 0, 0.8);
-    text-shadow: none;
-    font-weight: bold;
-}
-.carousel .item-price {
-	font-size: 13px;
-	padding: 2px 0;
-}
-.carousel .item-price strike {
-	color: #999;
-	margin-right: 5px;
-}
-.carousel .item-price span {
-	color: #86bd57;
-	font-size: 110%;
-}
-.carousel .carousel-control.left i {
-	margin-left: -3px;
-}
-.carousel .carousel-control.left i {
-	margin-right: -3px;
-}
-.carousel .carousel-indicators {
-	bottom: -50px;
-}
-.carousel-indicators li, .carousel-indicators li.active {
-	width: 10px;
-	height: 10px;
-	margin: 4px;
-	border-radius: 50%;
-	border-color: transparent;
-}
-.carousel-indicators li {	
-	background: rgba(0, 0, 0, 0.2);
-}
-.carousel-indicators li.active {	
-	background: rgba(0, 0, 0, 0.6);
-}
-.star-rating li {
-	padding: 0;
-}
-.star-rating i {
-	font-size: 14px;
-	color: #ffc000;
-}
-</style>
-
-
-<script>
-
-// get the carousel
-var $carousel = $(".carousel");
-
-// pause it
-$carousel.carousel('pause');
-
-// get right & left controls
-var $rightControl = $carousel.find(".right.carousel-control");
-var $leftControl = $carousel.find(".left.carousel-control");
-
-// hide the left control (first slide)
-$leftControl.hide();
-
-// get 'slid' event (slide changed)
-$carousel.on('slid.bs.carousel', function() {
-    
-    // get active slide
-    var $active = $carousel.find(".item.active");
-    
-    // if the last slide,
-    if (!$active.next().length) {
-        // hide the right control
-        $rightControl.fadeOut();
-    // if not,
-    } else {
-        // show the right control
-        $rightControl.fadeIn();
-    }
-    
-    // if the first slide,
-    if (!$active.prev().length) {
-        // hide the left control
-        $leftControl.fadeOut();
-    // if not,
-    } else {
-        // show it
-        $leftControl.fadeIn();
-    }
-}); 
-
-
-</script>
-
-
-
-

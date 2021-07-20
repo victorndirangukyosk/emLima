@@ -1,9 +1,8 @@
 <?php
 
-class ControllerPaymentMod extends Controller
-{
-    public function index()
-    {
+class ControllerPaymentMod extends Controller {
+
+    public function index() {
         $data['button_confirm'] = $this->language->get('button_confirm');
 
         $this->load->language('payment/mod');
@@ -13,34 +12,52 @@ class ControllerPaymentMod extends Controller
         $data['continue'] = $this->url->link('checkout/success');
         $data['continue'] = $this->url->link('checkout/success');
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/payment/mod.tpl')) {
-            return $this->load->view($this->config->get('config_template').'/template/payment/mod.tpl', $data);
+        $this->load->model('checkout/order');
+        $order_ids = array();
+        foreach ($this->session->data['order_id'] as $key => $value) {
+            /* FOR KWIKBASKET ORDERS */
+            //if ($key == 75) {
+            $order_ids[] = $value;
+            $order_id = $value;
+            if ($order_id != NULL) {
+                $this->model_checkout_order->UpdateParentApproval($order_id);
+            }
+            //}
+        }
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/mod.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/payment/mod.tpl', $data);
         } else {
             return $this->load->view('default/template/payment/mod.tpl', $data);
         }
     }
 
-    public function confirm()
-    {
+    public function confirm() {
         $log = new Log('error.log');
         $log->write('mod confirm');
         $log->write($this->session->data['payment_method']['code']);
         if ('mod' == $this->session->data['payment_method']['code']) {
             $this->load->model('checkout/order');
+            $this->load->model('account/customer');
 
             $log->write($this->session->data['order_id']);
             $log->write($this->config->get('mod_order_status_id'));
 
-            foreach ($this->session->data['order_id'] as $order_id) {
-                $log->write('mod loop'.$order_id);
+            foreach ($this->session->data['order_id'] as $key => $value) {
+                /* FOR KWIKBASKET ORDERS */
+                if ($key == 75) {
+                    $order_id = $value;
+                    $order_info = $this->model_checkout_order->getOrder($order_id);
+                    $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
-                $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'));
+                    $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), 'mPesa On Delivery By Customer', TRUE, $customer_info['customer_id'], 'customer');
+                    $this->load->controller('payment/cod/confirmnonkb');
+                }
             }
         }
     }
 
-    public function apiConfirm($orders)
-    {
+    public function apiConfirm($orders) {
         $log = new Log('error.log');
         $log->write('apiConfirm mod confirm');
 
@@ -49,15 +66,14 @@ class ControllerPaymentMod extends Controller
         $log->write($this->config->get('mod_order_status_id'));
 
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-        $comment="";  
+        $comment = "";
         foreach ($orders as $order_id) {
-            $log->write('mod loop'.$order_id);
+            $log->write('mod loop' . $order_id);
 
-
-            if($customer_info!=null)
-            $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), $comment, true, $customer_info['customer_id'], 'customer');
+            if ($customer_info != null)
+                $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), $comment, true, $customer_info['customer_id'], 'customer');
             else
-            $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true, 0, 'customer');
+                $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true, 0, 'customer');
 
             $this->load->model('account/activity');
             $activity_data = [
@@ -67,8 +83,7 @@ class ControllerPaymentMod extends Controller
             ];
 
             $this->model_account_activity->addActivity('order_account', $activity_data);
- 
         }
-
     }
+
 }

@@ -47,6 +47,13 @@
     body {
       padding-right: 0 !important;
     }
+    .view-all-buttons {
+    margin-top: 5px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
 
     @media (min-width:768px) and (max-width:1023px) {
 
@@ -256,6 +263,7 @@
                                   <?php echo $cartproduct['quantity']; ?> items in cart <i class="fas fa-flag"></i>
                               </span>
                               <?php } } } ?>
+                              <span class="view-all-buttons"><?php echo $mostboughtproduct['vendor_display_name']; ?></span>
                           </div>
                       </a>
                   </li>
@@ -405,6 +413,7 @@
                   <?php echo $product['qty_in_cart']?>
                   items in cart <i class="fas fa-flag"></i>
                 </span>
+                <span class="view-all-buttons"><?php echo $product['vendor_display_name']; ?></span>
               </div>
             </a>
           </li>

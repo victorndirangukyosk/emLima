@@ -983,4 +983,115 @@ class ControllerApiOrders extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
+    public function export_products_excel($args = []) {
+        $data = [];
+
+        $orderid = $this->request->get['order_id'];
+
+        $this->load->model('account/order');
+        if(($this->customer->getId()==NULL || $this->customer->getId()==""))
+        {
+            $json['error'] =  "Please login again";
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+        $isValidOrder=$this->model_account_order->checkValidOrder($orderid,$this->customer->getId());
+
+        if($isValidOrder=="false")
+        {
+            $json['error'] =  "Invalid Order";
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+            return;
+        }
+        $order_info = $this->model_account_order->getOrder($orderid);
+        //   echo "<pre>";print_r($order_info);die;
+
+        $customer_id = $order_info['customer_id'];
+        
+        $customer = $order_info['firstname'] . ' ' . $order_info['lastname'];
+        $company = $this->model_account_order->getCompanyName($customer_id);;
+        $date = $order_info['date_added'];
+        $deliverydate = $order_info['delivery_date'];
+        $shippingaddress = $order_info['shipping_address'] . ' . ' . $order_info['shipping_city'] . ' ' . $order_info['zipcode'];
+        $paymentmethod = $order_info['payment_method'];
+
+        //   echo "<pre>";print_r($company);die;
+
+
+
+        $data['consolidation'][] = [
+            'orderid' => $orderid,
+            'customer' => $customer,
+            'company' => $company,
+            'date' => $date,
+            'deliverydate' => $deliverydate,
+            'shippingaddress' => $shippingaddress,
+            'paymentmethod' => $paymentmethod,
+        ];
+
+        $orderProducts = $this->getOrderProductsWithVariancesNew($orderid);
+        $data['products'] = $orderProducts;
+
+        // echo "<pre>";print_r($orderProducts);die;
+        // $sum = 0;
+        // foreach ($orderProducts as $item) {
+        //     $sum += $item['total_updatedvalue'];
+        // } 
+
+
+        $this->load->model('account/order');
+        $this->model_account_order->download_products_excel($data);
+    }
+
+    public function getOrderProductsWithVariancesNew($order_id) {
+
+        $this->load->model('account/order');
+        $orderProducts = [];
+
+
+        if ($this->model_account_order->hasRealOrderProduct($order_id)) {
+            // Order products with weight change
+            $originalProducts = $products = $this->model_account_order->getOnlyRealOrderProducts($order_id);
+        } else {
+
+            // Products as the user ordered them on the platform
+            $originalProducts = $products = $this->model_account_order->getOnlyOrderProducts($order_id);
+        }
+
+        //echo "<pre>";print_r($originalProducts);die;
+
+        foreach ($originalProducts as $originalProduct) {
+            // $totalUpdated = $originalProduct['price'] * $originalProduct['quantity']
+            //     + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0);
+            //in admin orders screen, directly showing total
+            $totalUpdated = $originalProduct['total'];
+
+            $uomOrderedWithoutApproximations = trim(explode('(', $originalProduct['unit'])[0]);
+
+            $orderProducts[] = [
+                'order_product_id' => $originalProduct['order_product_id'],
+                'product_id' => $originalProduct['product_id'],
+                'vendor_id' => $originalProduct['vendor_id'],
+                'store_id' => $originalProduct['store_id'],
+                'name' => $originalProduct['name'],
+                'unit' => $uomOrderedWithoutApproximations,
+                'product_type' => $originalProduct['product_type'],
+                'model' => $originalProduct['model'],
+                'quantity' => $originalProduct['quantity'],
+                'quantity_updated' => $originalProduct['quantity'],
+                'unit_updated' => $uomOrderedWithoutApproximations,
+                'price' => $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                'total_updated' => $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']),
+                'total_updated_currency' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[0]),
+                'total_updated_value' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[1]),
+                'total_updatedvalue' => $totalUpdated,
+            ];
+        }
+
+        return $orderProducts;
+    }
+
 }

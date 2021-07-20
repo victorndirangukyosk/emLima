@@ -1033,7 +1033,7 @@ class ModelAccountCustomer extends Model {
              if(!isset($data['selectedorderid']))
              $data['selectedorderid']=0;
              if(!isset($data['feedback_type']))
-             $data['feedback_type']='p';
+             $data['feedback_type']='I';
 
              if(isset($data['comments']))
              $data['issuesummary']=$data['comments'];
@@ -1041,20 +1041,28 @@ class ModelAccountCustomer extends Model {
              $data['customer_name']=$this->customer->getFirstName().' '.$this->customer->getLastName();
              $data['email']=$this->customer->getEmail();
              $data['mobile']=$this->customer->getTelephone();
-             $data['feedback_type']= ($data['feedback_type'] =="s"? "Suggestions" : ($data['feedback_type'] =="p"? "Issue"." - ".$data['selectissuetype'] :"Happy"));
+             $data['feedback_type']= ($data['feedback_type'] =="S"? "Suggestions" : ($data['feedback_type'] =="I"? "Issue"." - ".$data['selectissuetype'] :"Happy"));
              $data['description']=$data['issuesummary'];
+             $status='Open';
 
-
-            //  if(!$data['rating_id'])
-            //  $data['rating_id']=0;
+             if(!isset($data['issue_status']))
+             $data['issue_status']=Null;
+             
+             if(!isset($data['rating_id']))
+              $data['rating_id']=1;
+              if($data['rating_id']>3)
+              {
+                  $status='Closed';
+              }
                 // $sql = 'INSERT INTO ' . DB_PREFIX . "feedback SET customer_id = '" . (int) $customer_id . "', order_id = '" . $data['selectedorderid'] . "', issue_details = '" . $this->db->escape($data['issuesummary']) . "', issue_type = '" . $this->db->escape($data['selectissuetype']) . "', created_date = NOW()";
-                $sql ='INSERT INTO '.DB_PREFIX."feedback SET customer_id = '".(int) $customer_id."',order_id = '" . $data['selectedorderid'] . "', comments = '".$this->db->escape($data['issuesummary'])."', rating = '".$this->db->escape($data['rating_id'])."', feedback_type ='".$this->db->escape($data['feedback_type'])."',issue_type= '".$this->db->escape($data['selectissuetype'])."', created_date = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'";
+                $sql ='INSERT INTO '.DB_PREFIX."feedback SET customer_id = '".(int) $customer_id."',order_id = '" . $data['selectedorderid'] . "', comments = '".$this->db->escape($data['issuesummary'])."', rating = '".$this->db->escape($data['rating_id'])."', feedback_type ='".$this->db->escape($data['feedback_type'])."',issue_type= '".$this->db->escape($data['selectissuetype'])."', created_date = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',Status='" . $status . "'";
                 //   echo '<pre>';($sql);exit;          
 
                     $this->db->query($sql);
 
                     #region send mail to customer experience
-try{
+                try{
+                    $customerexperienceEmails=null;
                     if($data['rating_id']<=3)
                     {
                         //get customer experience emails.

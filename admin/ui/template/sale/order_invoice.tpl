@@ -44,7 +44,12 @@
 
                                 </div>
                             </div>
-                            <div class="col-md-4 offset-md-4 text-right">
+                            <div class="col-md-4 text-center">
+                                <?php if($order['vendor_terms_cod'] == 1) { ?>
+                                <img width="210" src="ui/images/cod.png" alt="COD" class="mb-2">
+                                <?php } ?>
+                            </div>
+                            <div class="col-md-4 text-right">
                                 <h5 class="bold">TAX INVOICE #<?= $order['invoice_no'] ?></h5>
                                 <?php if($order['po_number']) { ?>
                                     <h5 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h5>

@@ -152,6 +152,7 @@ class ControllerToolExportImport extends Controller
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateDownloadForm()) {
             $export_type = $this->request->post['export_type'];
+            $export_type = 'p';
 
             if (!$this->user->isVendor()) {
                 switch ($export_type) {
@@ -435,6 +436,7 @@ class ControllerToolExportImport extends Controller
         $data['upload_max_filesize'] = $this->return_bytes(ini_get('upload_max_filesize'));
 
         $data['exportgeneral'] = $this->url->link('tool/export_import/downloadGeneralProducts', 'token='.$this->session->data['token'], 'SSL');
+        $data['exportgeneralsuperadmin'] = $this->url->link('tool/export_import/download', 'token='.$this->session->data['token'], 'SSL');
         $data['exportcatprices'] = $this->url->link('tool/export_import/downloadCategoryPricesSheet', 'token='.$this->session->data['token'], 'SSL');
         if (isset($this->request->post['export_type'])) {
             $data['export_type'] = $this->request->post['export_type'];

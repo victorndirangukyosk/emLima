@@ -2736,6 +2736,15 @@ class ControllerSettingSetting extends Controller
         }
 
 
+        if (isset($this->request->post['config_financeteam'])) {
+            $data['config_financeteam'] = $this->request->post['config_financeteam'];
+        } elseif (isset($email_info[4]['value'])) {
+            $data['config_financeteam'] =$email_info[4]['value'];
+        } else {
+            $data['config_financeteam'] = '';
+        }
+
+
         $this->document->setTitle("Email Settings");
         $this->load->model('setting/setting');
 
@@ -2789,6 +2798,12 @@ class ControllerSettingSetting extends Controller
             $this->error['email'] = "Please enter correct Email";
         }
  
+
+        if ((strpos( $this->request->post['config_financeteam'],"@")==false) ) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+ 
+
 
         if ($this->error && !isset($this->error['warning'])) {
             $this->error['warning'] = $this->language->get('error_warning');

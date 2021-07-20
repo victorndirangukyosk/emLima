@@ -187,24 +187,10 @@
                             <div id="collapseDeliveryOptions" class="panel-collapse collapse">
                                 <div class="checkout-step-body">
                                     <input type="hidden" value="" name="dates_selected" >
-                                    <?php if(count($store_data) >= 2) { ?>
-                                    <?php foreach ($store_data as $os): ?>
-                                            <?php if($os['store_id'] == 75) { ?>
-                                            <b>     <?php echo $os['name'] ?> </b>
-                                            <div class="checkout-payment-mode" id="shipping-method-wrapper-<?php echo $os['store_id'] ?>">
+                                    <div class="checkout-payment-mode" id="shipping-method-wrapper-75">
                                                 <!-- shipping method will goes here -->
 
-                                            </div>
-                                    <?php } ?>
-                                    <?php endforeach ?>
-                                    <?php } ?>
-                                    <?php if(count($store_data) <= 1) { ?>
-                                    <b>Kwik Basket</b>
-                                    <div class="checkout-payment-mode" id="shipping-method-wrapper-75">
-                                    <!-- shipping method will goes here -->
-
                                     </div>
-                                    <?php } ?>
                                     <div class="goto-next">
                                         <div class="row">
                                             <div class="col-md-12 pull-left">
@@ -235,22 +221,9 @@
                             <div id="collapseThree" class="panel-collapse collapse">
                                 <div class="checkout-step-body">
                                     <input type="hidden" value="" name="shipping_time_selected" >
-                                    <?php if(count($store_data) >= 2) { ?>
-                                    <?php foreach ($store_data as $os): ?>
-                                    <?php if($os['store_id'] == 75) { ?>
-                                        <b>     <?php echo $os['name'] ?> </b>
-                                        <div class="checkout-time-table" id="delivery-time-wrapper-<?php echo $os['store_id'] ?>">
-
-                                        </div>
-                                    <?php } ?>
-                                    <?php endforeach ?>
-                                    <?php } ?>
-                                    <?php if(count($store_data) <= 1) { ?>
-                                    <b>Kwik Basket</b>
                                     <div class="checkout-time-table" id="delivery-time-wrapper-75">
 
                                     </div>
-                                    <?php } ?>
                                     <a class="collapsed btn btn-grey"  style="border-radius:20px" disabled="disabled" role="button" data-toggle="collapse" data-parent="#accordion" href="#" id="payment-next">  <?= $text_next?>  
 
                                     </a>
@@ -733,11 +706,37 @@
 {
      border-radius:20px
 } 
- 
+</style>
 
-    </style>
+<?= $footer ?>
 
-    <?= $footer ?>
+<!-- Modal -->
+<div class="addressModal">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3>ACCEPT TERMS</h3>
+                        </div>
+
+                        <div class="addnews-address-form">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button id="agree_vendor_terms" name="agree_vendor_terms" type="button" class="btn btn-primary">I AGREE</button>
+                                    <button id="cancel_vendor_terms" name="cancel_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">HOME</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/revslider.css" >
@@ -785,8 +784,55 @@
 
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
-    
+    <style>
+    #agree_vendor_terms {
+    width: 49%;
+    float: left;
+    margin-top: 10px;
+    }    
+    </style>
     <script type="text/javascript">
+        $(function() {
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                if (json['modal_open']) {
+                        $('#exampleModal').modal('toggle');
+                }else{
+                     $('#exampleModal').modal('hide');   
+                }
+            }
+        });
+        });
+        $('#agree_vendor_terms').on('click', function(){
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/AcceptOtherVendorOrderTerms',
+            type: 'post',
+            data: 'accept_terms=true',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                console.log(json);
+                if (json['vendor_terms']) {
+                 $('#exampleModal').modal('hide'); 
+                }else{
+                 $('#exampleModal').modal('show');
+                }
+            }
+        });
+        });
+        $('#cancel_vendor_terms').on('click', function(){
+            window.location.href = "<?= $base;?>";
+        });
         console.log("map address");
             
         $('#us1').locationpicker({
@@ -1741,36 +1787,51 @@ function saveInAddressBook() {
     });
 
     $(document).delegate('#open-address', 'click', function() {
-        $('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
-        console.log("address id selected"+$(this).attr('data-address-id'));        
         
+        var selected_address_id = $(this).attr('data-address-id');
+        $('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
+        console.log("address id selected"+$(this).attr('data-address-id'));
+        
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                if (json['modal_open']) {
+                    $('#exampleModal').modal('show');
+                    return false;
+                }else{
+                     $('#exampleModal').modal('hide');
         $.ajax({
             url: 'index.php?path=checkout/confirm/setAddressIdSession',
             type: 'post',
             async: true,
-            data: {'shipping_address_id' : $(this).attr('data-address-id') },
+            data: { 'shipping_address_id' : selected_address_id },
             dataType: 'json',
             success: function(json) {
                 console.log("address selected");
                 $('#select-address').html(json['address']);
 
-                <?php 
-
-                foreach ($store_data as $os): 
-                ?>
+                <?php foreach ($store_data as $os): ?>
                     console.log("call to loadShippingMethods");
                     loadShippingMethods('<?php echo $os["store_id"] ?>'); 
                     
-                <?php
-                endforeach;?>
+                <?php endforeach; ?>
 
                 $('#step-2').addClass('checkout-step-color');
-
 
                 $('#delivery-option').click();
 
             }
         });
+                }
+            }
+        });
+    
 
         
         //$(this).css({'background-color' : "green",'border-color' : "green"});
@@ -2183,5 +2244,3 @@ function CartTotals() {
 </body>
 
 </html>
-
-
