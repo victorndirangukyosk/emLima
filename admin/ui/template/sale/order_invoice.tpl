@@ -44,7 +44,7 @@
 
                                 </div>
                             </div>
-                            <div class="col-md-4 company-details">
+                            <div class="col-md-4 text-center">
                                 <?php if($order['vendor_terms_cod'] == 1) { ?>
                                 <img width="210" src="ui/images/cod.png" alt="COD" class="mb-2">
                                 <?php } ?>
