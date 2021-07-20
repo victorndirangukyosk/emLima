@@ -4697,6 +4697,7 @@ class ControllerSaleOrder extends Controller {
                     'delivery_executive_name' => $delivery_executive_name,
                     'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $delivery_executive_phone,
                     'delivery_charge' => $order_info['delivery_charge'],
+                    'vendor_terms_cod' => $order_info['vendor_terms_cod']
 
                 ];
             }
