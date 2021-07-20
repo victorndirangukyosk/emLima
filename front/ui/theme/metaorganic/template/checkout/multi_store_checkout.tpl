@@ -1787,7 +1787,21 @@ function saveInAddressBook() {
     });
 
     $(document).delegate('#open-address', 'click', function() {
-        $('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
+        
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                if (json['modal_open']) {
+                        $('#exampleModal').modal('show');
+                }else{
+                     $('#exampleModal').modal('hide');
+                     $('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
         console.log("address id selected"+$(this).attr('data-address-id'));        
         
         $.ajax({
@@ -1820,6 +1834,9 @@ function saveInAddressBook() {
 
         
         //$(this).css({'background-color' : "green",'border-color' : "green"});
+                }
+            }
+        });
     });
     $(document).delegate('#dates_selected', 'click', function() {
         $('input[name="dates_selected"]').val($(this).attr('data-value'));
