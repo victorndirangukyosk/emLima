@@ -1800,8 +1800,12 @@ function saveInAddressBook() {
                 if (json['modal_open']) {
                         $('#exampleModal').modal('show');
                 }else{
-                     $('#exampleModal').modal('hide');
-                     $('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
+                     $('#exampleModal').modal('hide');   
+                }
+            }
+        });
+        
+        $('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
         console.log("address id selected"+$(this).attr('data-address-id'));        
         
         $.ajax({
@@ -1834,9 +1838,6 @@ function saveInAddressBook() {
 
         
         //$(this).css({'background-color' : "green",'border-color' : "green"});
-                }
-            }
-        });
     });
     $(document).delegate('#dates_selected', 'click', function() {
         $('input[name="dates_selected"]').val($(this).attr('data-value'));
