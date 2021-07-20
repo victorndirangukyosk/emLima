@@ -1788,6 +1788,10 @@ function saveInAddressBook() {
 
     $(document).delegate('#open-address', 'click', function() {
         
+        var selected_address_id = $(this).attr('data-address-id');
+        $('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
+        console.log("address id selected"+$(this).attr('data-address-id'));
+        
         $.ajax({
             url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
             type: 'post',
@@ -1798,43 +1802,36 @@ function saveInAddressBook() {
             },
             success: function(json) {
                 if (json['modal_open']) {
-                        $('#exampleModal').modal('show');
+                    $('#exampleModal').modal('show');
+                    return false;
                 }else{
-                     $('#exampleModal').modal('hide');   
-                }
-            }
-        });
-        
-        $('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
-        console.log("address id selected"+$(this).attr('data-address-id'));        
-        
+                     $('#exampleModal').modal('hide');
         $.ajax({
             url: 'index.php?path=checkout/confirm/setAddressIdSession',
             type: 'post',
             async: true,
-            data: {'shipping_address_id' : $(this).attr('data-address-id') },
+            data: { 'shipping_address_id' : selected_address_id },
             dataType: 'json',
             success: function(json) {
                 console.log("address selected");
                 $('#select-address').html(json['address']);
 
-                <?php 
-
-                foreach ($store_data as $os): 
-                ?>
+                <?php foreach ($store_data as $os): ?>
                     console.log("call to loadShippingMethods");
                     loadShippingMethods('<?php echo $os["store_id"] ?>'); 
                     
-                <?php
-                endforeach;?>
+                <?php endforeach; ?>
 
                 $('#step-2').addClass('checkout-step-color');
-
 
                 $('#delivery-option').click();
 
             }
         });
+                }
+            }
+        });
+    
 
         
         //$(this).css({'background-color' : "green",'border-color' : "green"});
