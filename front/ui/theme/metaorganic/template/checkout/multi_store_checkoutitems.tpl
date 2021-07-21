@@ -868,7 +868,25 @@ $(document).delegate('#proceed_to_checkout', 'click', function(e) {
 e.preventDefault();    
 var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
 document.cookie = "dropoff_notes="+dropoff_notes;
-$('#exampleModal').modal('toggle');
+//$('#exampleModal').modal('toggle');
+
+$.ajax({
+            url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                if (json['modal_open']) {
+                        $('#exampleModal').modal('show');
+                }else{
+                     $('#exampleModal').modal('hide');   
+                }
+            }
+});
+
 });
 
   $(document).delegate('#updatecart', 'click', function(){    
