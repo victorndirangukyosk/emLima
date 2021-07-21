@@ -1815,7 +1815,7 @@ class ControllerCommonHome extends Controller {
 
         $cachePrice_data = $this->cache->get('category_price_data');
         //echo '<pre>';print_r(ACTIVE_STORE_ID);exit;
-        $results = $this->model_assets_product->getMostBoughtProducts(ACTIVE_STORE_ID, $this->customer->getId(), null);
+        $results = $this->model_assets_product->getMostBoughtProducts(null, $this->customer->getId(), null);
 
         $data['products'] = [];
 
@@ -1827,9 +1827,9 @@ class ControllerCommonHome extends Controller {
             $log->write($vendor_details);
             $log->write('vendor_details');*/
             // if qty less then 1 dont show product
-            if ($result['quantity'] <= 0) {
+            /*if ($result['quantity'] <= 0) {
                 continue;
-            }
+            }*/
 
             if ($result['image'] != NULL && file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
