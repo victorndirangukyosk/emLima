@@ -880,9 +880,11 @@ $.ajax({
             },
             success: function(json) {
                 if (json['modal_open']) {
-                        $('#exampleModal').modal('show');
+                $('#exampleModal').modal('show');
+                return false;
                 }else{
-                     $('#exampleModal').modal('hide');   
+                $('#exampleModal').modal('hide'); 
+                window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";     
                 }
             }
 });
