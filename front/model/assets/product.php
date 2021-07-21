@@ -1424,7 +1424,7 @@ class ModelAssetsProduct extends Model
 
     // bought products in last 10 orders
     //if orders less than 5 then fecth from Top selling products
-    public function getMostBoughtProducts($store_id, $customer_id, $productsID = null)
+    public function getMostBoughtProducts($store_id = null, $customer_id, $productsID = null)
     {
         // $date = date('Y-m-d', strtotime('-30 day'));
         //$sql ="SELECT SUM( op.quantity )AS total,pd.name,op.unit FROM " . DB_PREFIX . "order_product AS op LEFT JOIN " . DB_PREFIX . "order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  " . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.customer_id = " . $customer_id . " AND o.date_added >= " . $date . " GROUP BY pd.name  having sum(op.quantity)>100   ";
@@ -1466,7 +1466,9 @@ class ModelAssetsProduct extends Model
         $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
 
         $this->db->group_by('product_description.name');
-        $this->db->where('product_to_store.store_id', $store_id);
+        if ($store_id) {
+        $this->db->where('product_to_store.store_id', $store_id);            
+        }
         $this->db->where('product_to_store.status', 1);
         //REMOVED QUANTITY CHECK CONDITION
         //$this->db->where('product_to_store.quantity >=', 1);
