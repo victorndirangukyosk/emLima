@@ -241,7 +241,7 @@
 
   <div style="clear:both !important"> </div>
   
-  <?php if(count($mostboughtproducts) > 0 && $this->customer->getId() == 0) { ?>
+  <?php if(count($mostboughtproducts) > 0) { ?>
   <div class="container--full-width featured-categories">
       <div class="container" style="width:100%;">
           <div class="_47ahp" data-test-selector="search-results">
