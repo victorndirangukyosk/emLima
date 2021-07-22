@@ -125,7 +125,9 @@ class ControllerSaleOrderReceivables extends Controller
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
+
+        if ('' != $filter_customer || '' != $filter_company) {
+           // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
         $order_total_grandTotal = $this->model_sale_order_receivables->getTotalOrderReceivablesAndGrandTotal($filter_data);
         
         //    echo'<pre>';print_r($order_total_grandTotal['total']);exit;
@@ -133,6 +135,14 @@ class ControllerSaleOrderReceivables extends Controller
         $order_total =$order_total_grandTotal['total'];
         $amount =$order_total_grandTotal['GrandTotal'];
         $results = $this->model_sale_order_receivables->getOrderReceivables($filter_data);
+        } else {
+            $order_total_grandTotal = null;
+            $order_total=0;
+            $amount=0;
+            $results = null;
+        }
+
+
         // $amount=0;
         $totalPages = ceil($order_total / $this->config->get('config_limit_admin'));
         
@@ -159,6 +169,7 @@ class ControllerSaleOrderReceivables extends Controller
                 // 'no_of_products' => $result['no_of_products'],
                 'customer' => $result['firstname'].' '.$result['lastname'],
                 'total' => $this->currency->format($result['total']),
+                'total_value' =>($result['total']),
                 // 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'grand_total' => $this->currency->format($amount),
                 'total_pages' => $totalPages,
