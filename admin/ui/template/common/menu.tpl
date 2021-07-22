@@ -160,6 +160,11 @@
             <li><a href="<?php echo $order_delivaries; ?>">Order Delivaries</a></li>
             <?php } ?>
 
+            <?php if($preturn_order_receivables) { ?>
+            <li><a href="<?php echo $order_receivables; ?>">Order Receivables</a></li>
+            <?php } ?>
+
+
         </ul>
     </li>
     <?php } ?>
