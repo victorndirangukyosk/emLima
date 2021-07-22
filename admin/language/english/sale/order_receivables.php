@@ -1,7 +1,7 @@
 <?php
 
 // Heading
-$_['heading_title'] = 'Order Receivables';
+$_['heading_title'] = 'Payment Receivables';
 
 // Text
 $_['text_list'] = 'Receivables List'; 
