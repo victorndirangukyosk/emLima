@@ -858,6 +858,7 @@
         });
         });
         $('#cancel_vendor_terms').on('click', function(){
+            $('#exampleModal2_text').text('Remove Other Vendor Products!');
             $('#exampleModal2').modal('show');
             //window.location.href = "<?= $base;?>";
         });
@@ -870,13 +871,17 @@
             type: 'post',
             dataType: 'json',
             beforeSend: function() {
+            $('#exampleModal2_text').text('Your Cart Updating!');
             },
             complete: function() {
             },
             success: function(json) {
             if (json['products_removed']) {
+                   $('#exampleModal2_text').text('Your Cart Updated!');
+                   setTimeout(function(){ 
                    $('#exampleModal2').modal('hide');
                    window.location.href = "<?= $continue.'/index.php?path=checkout/checkoutitems'; ?>";
+                   },3000);
             }    
             }
         });  
