@@ -657,7 +657,7 @@
                                 <div class="form-group">
                                     <div class="col-md-12">
                                         <button id="agree_vendor_terms" name="agree_vendor_terms" type="button" class="btn btn-primary">I AGREE</button>
-                                        <button id="cancel_vendor_terms" name="cancel_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">HOME</button>
+                                        <button id="cancel_vendor_terms" name="cancel_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
                                     </div>
                                 </div>
                             </div>
