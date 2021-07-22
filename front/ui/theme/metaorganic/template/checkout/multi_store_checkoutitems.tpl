@@ -668,13 +668,16 @@
         </div>
     </div>
     
-    <div class="addressModal">
+<div class="addressModal">
         <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
                         <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
                         <div class="row">
+                            <div class="modal-body">
+                                <p id="exampleModal2_text"></p>
+                            </div>
                             <div class="addnews-address-form">
                                 <div class="form-group">
                                     <div class="col-md-12">
@@ -780,6 +783,7 @@
         });
         });
         $('#cancel_vendor_terms').on('click', function(){
+            $('#exampleModal2_text').text('Remove Other Vendor Products!');
             $('#exampleModal2').modal('show');
             //window.location.href = "<?= $base;?>";
         });
@@ -792,13 +796,17 @@
             type: 'post',
             dataType: 'json',
             beforeSend: function() {
+            $('#exampleModal2_text').text('Your Cart Updating!');
             },
             complete: function() {
             },
             success: function(json) {
             if (json['products_removed']) {
+                   $('#exampleModal2_text').text('Your Cart Updated!');
+                   setTimeout(function(){ 
                    $('#exampleModal2').modal('hide');
                    window.location.href = "<?= $continue.'/index.php?path=checkout/checkoutitems'; ?>";
+                   },3000);
             }    
             }
         });  
