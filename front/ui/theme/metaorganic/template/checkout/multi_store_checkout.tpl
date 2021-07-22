@@ -712,11 +712,11 @@
 
 <!-- Modal -->
 <div class="addressModal">
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
                     <div class="row">
                         <div class="col-md-12">
                             <h3>ACCEPT TERMS</h3>
@@ -726,7 +726,7 @@
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <button id="agree_vendor_terms" name="agree_vendor_terms" type="button" class="btn btn-primary">I AGREE</button>
-                                    <button id="cancel_vendor_terms" name="cancel_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">HOME</button>
+                                    <button id="cancel_vendor_terms" name="cancel_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
                                 </div>
                             </div>
                         </div>

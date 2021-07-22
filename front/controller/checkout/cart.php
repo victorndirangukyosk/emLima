@@ -1300,4 +1300,30 @@ class ControllerCheckoutCart extends Controller
 
         return $p;
     }
+    
+    public function removeothervendorproductsfromcart() {
+        $json = [];
+        $json['products_removed'] = FALSE;
+        $log = new Log('error.log');
+        $log->write($this->cart->countProducts());
+        $previous_count = $this->cart->countProducts();
+        foreach ($this->cart->getProducts() as $store_products) {
+            /* FOR KWIKBASKET ORDERS */
+            if ($store_products['store_id'] > 75) {
+                $log->write('CheckOtherVendorOrderExists');
+                $log->write($store_products['key']);
+                $this->cart->remove($store_products['key']);
+                $log->write('CheckOtherVendorOrderExists');
+            }
+        }
+        $log->write($this->cart->countProducts());
+        $present_count = $this->cart->countProducts();
+        if ($previous_count > $present_count) {
+            $json['products_removed'] = TRUE;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

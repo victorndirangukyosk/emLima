@@ -161,7 +161,7 @@
             <?php } ?>
 
             <?php if($preturn_order_receivables) { ?>
-            <li><a href="<?php echo $order_receivables; ?>">Order Receivables</a></li>
+            <li><a href="<?php echo $order_receivables; ?>">Payment Receivables</a></li>
             <?php } ?>
 
 
