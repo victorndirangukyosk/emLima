@@ -737,6 +737,31 @@
     </div>
 </div>
 
+<div class="addressModal">
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                    <div class="row">
+                        <div class="modal-body">
+                                <p id="exampleModal2_text"></p>
+                        </div>
+                        <div class="addnews-address-form">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button id="remove_vendor_products" name="remove_vendor_products" type="button" class="btn btn-primary">REMOVE</button>
+                                    <button id="cancel_products_vendor_terms" name="cancel_products_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">CANCEL</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/revslider.css" >
@@ -789,7 +814,12 @@
     width: 49%;
     float: left;
     margin-top: 10px;
-    }    
+    }
+    #remove_vendor_products {
+    width: 49%;
+    float: left;
+    margin-top: 10px;
+    }
     </style>
     <script type="text/javascript">
 /*$(function() {
@@ -831,7 +861,33 @@
         });
         });
         $('#cancel_vendor_terms').on('click', function(){
+            $('#exampleModal2_text').text('Remove Other Vendor Products!');
+            $('#exampleModal2').modal('show');
+            //window.location.href = "<?= $base;?>";
+        });
+        $('#cancel_products_vendor_terms').on('click', function(){
             window.location.href = "<?= $base;?>";
+        });
+        $('#remove_vendor_products').on('click', function(){
+          $.ajax({
+            url: 'index.php?path=checkout/cart/removeothervendorproductsfromcart',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            $('#exampleModal2_text').text('Your Cart Updating!');
+            },
+            complete: function() {
+            },
+            success: function(json) {
+            if (json['products_removed']) {
+                   $('#exampleModal2_text').text('Your Cart Updated!');
+                   setTimeout(function(){ 
+                   $('#exampleModal2').modal('hide');
+                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkoutitems'; ?>";
+                   },3000);
+            }    
+            }
+        });  
         });
         console.log("map address");
             
