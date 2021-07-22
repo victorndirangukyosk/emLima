@@ -1599,7 +1599,7 @@ class ControllerProductStore extends Controller {
 
         $cachePrice_data = $this->cache->get('category_price_data');
         //echo '<pre>';print_r(ACTIVE_STORE_ID);exit;
-        $results = $this->model_assets_product->getMostBoughtProducts(null, $this->customer->getId(), null);
+        $results = $this->model_assets_product->getMostBoughtProducts(ACTIVE_STORE_ID, $this->customer->getId(), null);
 
         $data['products'] = [];
 
