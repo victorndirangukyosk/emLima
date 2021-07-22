@@ -414,7 +414,7 @@ class ModelCheckoutOrder extends Model {
         }
     }
 
-    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '') {
+    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '', $other_vendor_terms = null) {
 
         //$notify = true;
         $log = new Log('error.log');
@@ -544,13 +544,12 @@ class ModelCheckoutOrder extends Model {
                     $log->write("deliverSystemStatus elsex");
                 }
             }
+            
+            if ($other_vendor_terms != NULL) {
             $log->write('accept_vendor_terms');
-            $log->write($this->session->data['accept_vendor_terms']);
-            $log->write((int) $this->session->data['accept_vendor_terms']);
-            if (isset($this->session->data['accept_vendor_terms']) && $this->session->data['accept_vendor_terms'] == TRUE) {
-            $this->session->data['accept_vendor_terms'] = TRUE;
+            $log->write($other_vendor_terms);
             $log->write('accept_vendor_terms');
-            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', vendor_terms_cod ='" . (int) $this->session->data['accept_vendor_terms'] . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', vendor_terms_cod ='" . (int) $other_vendor_terms . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
             } else {
             $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");    
             }
