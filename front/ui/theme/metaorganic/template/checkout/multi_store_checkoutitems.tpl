@@ -667,7 +667,28 @@
             </div>
         </div>
     </div>
-
+    
+    <div class="addressModal">
+        <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <div class="row">
+                            <div class="addnews-address-form">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button id="remove_vendor_products" name="remove_vendor_products" type="button" class="btn btn-primary">REMOVE</button>
+                                        <button id="cancel_products_vendor_terms" name="cancel_products_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">CANCEL</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- CSS Style -->
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
@@ -707,6 +728,11 @@
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     <style>
     #agree_vendor_terms {
+    width: 49%;
+    float: left;
+    margin-top: 10px;
+    }
+    #remove_vendor_products {
     width: 49%;
     float: left;
     margin-top: 10px;
@@ -754,7 +780,25 @@
         });
         });
         $('#cancel_vendor_terms').on('click', function(){
+            $('#exampleModal2').modal('show');
+            //window.location.href = "<?= $base;?>";
+        });
+        $('#cancel_products_vendor_terms').on('click', function(){
             window.location.href = "<?= $base;?>";
+        });
+        $('#remove_vendor_products').on('click', function(){
+          $.ajax({
+            url: 'index.php?path=checkout/cart/removeothervendorproductsfromcart',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                
+            }
+        });  
         });
   //as in header page , clear cart funtionality is already mentioned.Commented here
      /* $(document).delegate('#clearcart', 'click', function(){

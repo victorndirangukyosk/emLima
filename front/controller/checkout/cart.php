@@ -1300,4 +1300,18 @@ class ControllerCheckoutCart extends Controller
 
         return $p;
     }
+    
+    public function removeothervendorproductsfromcart() {
+        foreach ($this->cart->getProducts() as $store_products) {
+            /* FOR KWIKBASKET ORDERS */
+            $log = new Log('error.log');
+            if ($store_products['store_id'] > 75) {
+                $log->write('CheckOtherVendorOrderExists');
+                $log->write($store_products['key']);
+                $this->cart->remove($store_products['key']);
+                $log->write('CheckOtherVendorOrderExists');
+            }
+        }
+    }
+
 }
