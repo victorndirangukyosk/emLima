@@ -748,7 +748,7 @@
 
 						<?php } else { ?>
 
-							//<?php if($total['code'] == 'sub_total') { ?>
+							
 								<tr>
 									<td colspan="4"></td>
 									<td class="text-right"><b><?php echo $total['title']; ?>:</b></td>
@@ -756,7 +756,7 @@
 									
 									
 								</tr>
-							//<?php } ?>
+							
 
 						<?php } ?>
 
