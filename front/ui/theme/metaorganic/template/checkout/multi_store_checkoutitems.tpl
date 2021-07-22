@@ -796,7 +796,10 @@
             complete: function() {
             },
             success: function(json) {
-                
+            if (json['products_removed']) {
+                   $('#exampleModal2').modal('hide');
+                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkoutitems'; ?>";
+            }    
             }
         });  
         });
