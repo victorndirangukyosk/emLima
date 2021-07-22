@@ -4,7 +4,9 @@ class ModelSaleOrderReceivables extends Model
 {
     public function getOrderReceivables($data = [])
     {
-        $sql = "SELECT o.order_id, c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer, o.total,o.date_added  FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id)';
+        $sql = "SELECT o.order_id, c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
+
+        $sql .= " Where (o.paid = 'P' or o.paid = 'N') ";//and  ot.transaction_id ==null;
 
         if (!empty($data['filter_order_id'])) {
             $sql .= " AND o.order_id LIKE '".$data['filter_order_id']."%'";
@@ -62,14 +64,15 @@ class ModelSaleOrderReceivables extends Model
         }
 
         $query = $this->db->query($sql);
-        // echo $this->db->last_query();die;
+        //  echo $this->db->last_query();die;
         return $query->rows;
     }
 
   
     public function getTotalOrderReceivablesAndGrandTotal($data = [])
     {
-        $sql = 'SELECT COUNT(*) as total,sum(ot.value) as GrandTotal FROM `'.DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) inner join '.DB_PREFIX.'order_total ot on(o.order_id =ot.order_id) and ot.code="total" ';
+        $sql = 'SELECT COUNT(*) as total,sum(ot.value) as GrandTotal FROM `'.DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join '.DB_PREFIX.'order_total ot on(o.order_id =ot.order_id) and ot.code="total" ';
+        $sql .= " Where (o.paid = 'P' or o.paid = 'N') ";//and  ot.transaction_id ==null;
 
         if (!empty($data['filter_order_id'])) {
             $sql .= " AND o.order_id LIKE '".$data['filter_order_id']."%'";
