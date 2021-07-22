@@ -744,6 +744,9 @@
                 <div class="modal-body">
                     <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
                     <div class="row">
+                        <div class="modal-body">
+                                <p id="exampleModal2_text"></p>
+                        </div>
                         <div class="addnews-address-form">
                             <div class="form-group">
                                 <div class="col-md-12">
