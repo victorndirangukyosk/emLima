@@ -70,18 +70,35 @@
                             </div>-->
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
                         </div>
-                        <div class="col-sm-4">
-                            
-                            
-                            
-                        </div>
+                       
                     </div>
                 </div>
                 <form method="post" enctype="multipart/form-data" target="_blank" id="form-order">
                     <div class="table-responsive">
+
+ 
+                      <div class="btn-group" >                            
+                         <div class="row">
+                             <div class="col-sm-6">
+                                        <input disabled type="text" name="grand_total" value="" placeholder="No Order Selected" id="input-grand-total" class="form-control" />
+                             </div>  
+                             <div class="col-sm-4">
+                                    <button type="button" id="button-bulkpayment" class="btn btn-primary" onclick="showConfirmPopup(-1)"  data-toggle="modal" data-dismiss="modal" data-target="#paidModal" title="Payment Confirmation">  Receive Bulk Payment</button>
+                             </div>    
+                         </div>                             
+                            
+                      </div>
+                      <br>
+                      <br>
+
+
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+
+                                  <td style="width: 1px;" class="text-center">
+                                        <input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);"  name="selected[]"/>
+                                    </td>
                                     
                                     <td class="text-right">
                                         <?php echo $column_order_id; ?></td>
@@ -113,6 +130,15 @@
                                 <?php if ($orders) { ?>
                                 <?php foreach ($orders as $order) { ?>
                                 <tr>
+
+                                 <td class="text-center"><?php if (in_array($order['order_id'], $selected)) { ?>
+                                        <input type="checkbox" name="selected[]" value="<?php echo $order['order_id']; ?>" checked="checked" />
+                                        <?php } else { ?>
+                                        <input type="checkbox" name="selected[]" value="<?php echo $order['order_id']; ?>" />
+                                        <?php } ?>
+                                        <input type="hidden" name="order_value[]" value="<?php echo $order['total_value']; ?>" />
+                                    </td>
+
                                     
                                     <td class="text-right">
                                         <?php $or = explode(',',$order['order_id']) ?>
@@ -124,11 +150,11 @@
                                     <!--<td class="text-left"><?php echo $order['no_of_products']; ?></td>-->
                                     <td class="text-right"><?php echo $order['total']; ?></td>
                                    <!-- <td class="text-left"><?php echo $order['date_added']; ?></td>-->
-                                    
+                                    <td><a class="btn btn-default" onclick="showConfirmPopup(<?= $order['order_id'] ?>)"  data-toggle="modal"   data-target="#paidModal" title="Payment Confirmation" >Receive Payment</a></td>
                                 </tr>
                                 <?php } ?>
                                 <tr>
-                                 <td  colspan="2" class="text-right">
+                                 <td  colspan="3" class="text-right">
                                      <b>Grand Total</b>
                                     </td>
                                     
@@ -154,7 +180,27 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript"><!--
+    <script type="text/javascript"> 
+
+     $('input[name^=\'selected\']').on('change', function () {
+            var selected = $('input[name^=\'selected\']:checked');
+            $grand_total_array=0;
+            for (i = 0; i < selected.length; i++) {
+               $total_array= ($(selected[i]).parent().find('input[name^=\'order_value\']').val()) ;
+                    
+                    $grand_total_array += parseInt($total_array);
+                
+            }
+            //alert($grand_total_array);
+            if($grand_total_array>0)
+             $('input[name=\'grand_total\']').val($grand_total_array);
+
+           
+
+        });
+
+        $('input[name^=\'selected\']:first').trigger('change');
+
   $('#button-filter').on('click', function () {
             url = 'index.php?path=sale/order_receivables&token=<?php echo $token; ?>';
 
@@ -171,6 +217,11 @@
                 url += '&filter_customer=' + encodeURIComponent(filter_customer);
             }
 
+            if(filter_customer==0 && filter_order_id==0)
+            {
+                alert("Please select either customer or order_id ");
+                return;
+            }
 
 
             /*var filter_total = $('input[name=\'filter_total\']').val();
@@ -221,7 +272,7 @@
   $('.date').datetimepicker({
             pickTime: false
         });
-        //-->
+         
         
         
         
@@ -242,7 +293,11 @@ function excel() {
                 url += '&filter_customer=' + encodeURIComponent(filter_customer);
             }
 
-
+ if(filter_customer==0 && filter_order_id==0)
+            {
+                alert("Please select either customer or order_id ");
+                return;
+            }
 
             /*var filter_total = $('input[name=\'filter_total\']').val();
 
@@ -261,6 +316,119 @@ function excel() {
     
 }
 
+
+
+
+
+
+function showConfirmPopup($order_id) {
+               
+            $('input[name="paid_order_id"]').val($order_id) ;    
+            if($order_id>0)
+            {
+             var text ="<span class='col-sm-12 control-label orderlabel super' style='background: #FFE4CB;text-align: center;padding-top: 0px'>Order Id:"+$order_id+" </span><br><br>";
+            $("#modal_bodyvalue").html(text);   
+            }
+            else{
+              
+                 $("#modal_bodyvalue").html(''); 
+            }
+            }
+
+
+
+
 </script>
 </div>
 <?php echo $footer; ?>
+
+
+
+
+
+<div class="phoneModal-popup">
+        <div class="modal fade" id="paidModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"  >
+                    <div class="modal-body"  style="height:385px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="store-find-block">
+                            <div class="mydivsss">
+                                <div class="store-find">
+                                    <div class="store-head">
+                                        <h2>  Payment Confirmation     </h2>
+                                          </br> 
+                                    </div>
+                                    <div id="paidModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                    </div>
+                                    <div id="paidModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                    </div>  
+                                      </br>
+                                    <!-- Text input-->
+                                    <div class="store-form">
+                                        <form id="paidModal-form" action="" method="post" enctype="multipart/form-data">
+ 
+                                                 <div class="form-group">
+                                              <div class="form-group" id="modal_bodyvalue"></div>
+                                             </div>
+                                              
+ 
+ 
+                                                <div class="form-group">
+
+                                                    <label > Transaction ID </label>
+                                                        <div class="col-md-12">
+                                                        <input id="transaction_id" maxlength="30" required style="max-width:100% ;" name="transaction_id" type="text" placeholder="Transaction ID" class="form-control" required>
+                                                        <input hidden id="paid_order_id" maxlength="30" required style="max-width:100% ;" name="paid_order_id" type="text">
+                                                    
+                                                                <br/> </div> 
+
+                                                </div> 
+                                                  
+ 
+                                                 <div class="form-group">
+                                                    <label    > Amount Received </label>
+
+                                                    <div class="col-md-12">
+                                                        <input id="paid_amount" maxlength="30" required style="max-width:100% ;" name="paid_amount" type="text" placeholder="Amount Received" class="form-control" required>
+                                                    <br/> </div> 
+                                                    
+                                                </div>
+                                                
+
+
+                                                 <div class="form-group">
+                                                    <div class="col-md-12">
+                                                       </br>
+                                                     
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-12"> 
+                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+
+
+                                                        <button id="paid-button" name="paid-button" onclick="confirmPayment()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Confirm</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>  
+                                </div>
+                            </div>
+                           
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+<script>
+

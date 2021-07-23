@@ -414,13 +414,14 @@ class ControllerSaleOrder extends Controller {
     }
 
     public function getProductVariantsInfo() {
-
+        
         $this->load->model('sale/order');
+        $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
         $log = new Log('error.log');
         $log->write($this->request->get['order_id']);
         $log->write($this->request->get['product_store_id']);
-        $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, 75);
-        $variations = $this->model_sale_order->getProductVariationsNew($product_info['name'], 75, $this->request->get['order_id']);
+        $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, $order_info['store_id']);
+        $variations = $this->model_sale_order->getProductVariationsNew($product_info['name'], $order_info['store_id'], $this->request->get['order_id']);
         //$log->write($variations);
         $json = $variations;
 
@@ -4396,6 +4397,8 @@ class ControllerSaleOrder extends Controller {
                     'products' => $product_data,
                     'totals' => $total_data,
                     'comment' => nl2br($order_info['comment']),
+                    'vendor_terms_cod' => $order_info['vendor_terms_cod'],
+                    'payment_terms' => $order_customer_detials['payment_terms'],
                 ];
             }
         }
@@ -4697,8 +4700,8 @@ class ControllerSaleOrder extends Controller {
                     'delivery_executive_name' => $delivery_executive_name,
                     'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $delivery_executive_phone,
                     'delivery_charge' => $order_info['delivery_charge'],
-                    'vendor_terms_cod' => $order_info['vendor_terms_cod']
-
+                    'vendor_terms_cod' => $order_info['vendor_terms_cod'],
+                    'payment_terms' => $order_customer_detials['payment_terms'],
                 ];
             }
         }
