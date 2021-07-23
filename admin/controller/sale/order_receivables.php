@@ -173,6 +173,11 @@ class ControllerSaleOrderReceivables extends Controller
                 // 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'grand_total' => $this->currency->format($amount),
                 'total_pages' => $totalPages,
+                // o.paid,o.amount_partialy_paid
+                'paid' => $result['paid'],
+
+                'amount_partialy_paid' => $result['amount_partialy_paid'],
+
 
 
             ];

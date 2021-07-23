@@ -116,6 +116,10 @@
                                     <td class="text-right"> 
                                        <?php echo $column_total; ?> 
                                         </td>
+
+                                         <td class="text-right"> 
+                                      Partialy Paid Amount 
+                                        </td>
                                     <!--<td class="text-left">
                                         <?php if ($sort == 'o.date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
@@ -137,6 +141,7 @@
                                         <input type="checkbox" name="selected[]" value="<?php echo $order['order_id']; ?>" />
                                         <?php } ?>
                                         <input type="hidden" name="order_value[]" value="<?php echo $order['total_value']; ?>" />
+                                        <input type="hidden" name="partially_paid_value[]" value="<?php echo $order['amount_partialy_paid']; ?>" />
                                     </td>
 
                                     
@@ -149,6 +154,7 @@
                                     <td class="text-left"><?php echo $order['customer']; ?></td>
                                     <!--<td class="text-left"><?php echo $order['no_of_products']; ?></td>-->
                                     <td class="text-right"><?php echo $order['total']; ?></td>
+                                    <td class="text-right"><?php echo $order['amount_partialy_paid']; ?></td>
                                    <!-- <td class="text-left"><?php echo $order['date_added']; ?></td>-->
                                     <td><a class="btn btn-default" onclick="showConfirmPopup(<?= $order['order_id'] ?>,<?= $order['total_value'] ?>)"  data-toggle="modal"   data-target="#paidModal" title="Payment Confirmation" >Receive Payment</a></td>
                                 </tr>
@@ -196,7 +202,12 @@
             $grand_total_array=0;
             for (i = 0; i < selected.length; i++) {
                $total_array= ($(selected[i]).parent().find('input[name^=\'order_value\']').val()) ;
+               $partial_array= ($(selected[i]).parent().find('input[name^=\'partially_paid_value\']').val()) ;
                     
+                    if($partial_array!='' && $partial_array!=null)
+                    {
+                        $total_array=$total_array-$partial_array;
+                    }
                     $grand_total_array += parseInt($total_array);
                 
             }
