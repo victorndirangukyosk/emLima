@@ -506,7 +506,7 @@ function confirmPayment() {
                         return n.value;
                         }).join(','); 
 
-                         alert(selected_order_id);
+                         //alert(selected_order_id);
                         if(selected_order_id=='' || selected_order_id==null)
                         {
                         alert("Please Select the order");
