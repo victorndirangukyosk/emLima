@@ -6,7 +6,7 @@ class ModelSaleOrderReceivables extends Model
     {
         $sql = "SELECT o.order_id, c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
 
-        $sql .= " Where (o.paid = 'P' or o.paid = 'N') ";//and  ot.transaction_id ==null;
+        $sql .= " Where (o.paid = 'P' or o.paid = 'N') " and  ot.transaction_id ==null;
 
         if (!empty($data['filter_order_id'])) {
             $sql .= " AND o.order_id LIKE '".$data['filter_order_id']."%'";
@@ -71,8 +71,8 @@ class ModelSaleOrderReceivables extends Model
   
     public function getTotalOrderReceivablesAndGrandTotal($data = [])
     {
-        $sql = 'SELECT COUNT(*) as total,sum(ot.value) as GrandTotal FROM `'.DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join '.DB_PREFIX.'order_total ot on(o.order_id =ot.order_id) and ot.code="total" ';
-        $sql .= " Where (o.paid = 'P' or o.paid = 'N') ";//and  ot.transaction_id ==null;
+        $sql = 'SELECT COUNT(*) as total,sum(ort.value) as GrandTotal FROM `'.DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join '.DB_PREFIX.'order_total ort on(o.order_id =ort.order_id) and ort.code="total" left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
+        $sql .= " Where (o.paid = 'P' or o.paid = 'N') " and  ot.transaction_id ==null;
 
         if (!empty($data['filter_order_id'])) {
             $sql .= " AND o.order_id LIKE '".$data['filter_order_id']."%'";
@@ -94,8 +94,57 @@ class ModelSaleOrderReceivables extends Model
         // }
 
         $query = $this->db->query($sql);
+        //    echo $sql;die;
+
 
         // return $query->row['total'];
         return $query->row;
     }
+
+
+    public function confirmPaymentReceived($paid_order_id, $transaction_id, $amount_received = '') {
+  
+            $this->db->query('update `' . DB_PREFIX . 'order` SET paid="Y" WHERE order_id="' . $paid_order_id . '"');
+           
+            
+            $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $paid_order_id . "'";
+
+            $query = $this->db->query($sql);
+    
+            $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "'";
+    
+            $query = $this->db->query($sql);
+
+    }
+
+
+    public function confirmPartialPaymentReceived($paid_order_id, $transaction_id='', $amount_received = '',$amount_partialy_paid=0) {
+  
+        // $this->db->query('update `' . DB_PREFIX . 'order` SET amount_partialy_paid='" .  $amount_partialy_paid . "'  WHERE order_id="' . $paid_order_id . '"');
+        
+
+        $sql = 'UPDATE ' . DB_PREFIX . "order SET amount_partialy_paid = '" . $amount_partialy_paid . "', paid = 'P' WHERE order_id = '" . (int) $paid_order_id . "'";
+
+        $query = $this->db->query($sql);
+        // $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $paid_order_id . "'";
+
+        // $query = $this->db->query($sql);
+
+        // $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "'";
+
+        // $query = $this->db->query($sql);
+
+}
+public function getOrderTotal($order_id)
+{
+    $sql = 'SELECT ort.value as order_total FROM `'.DB_PREFIX.'order` o left outer join '.DB_PREFIX.'order_total ort on(o.order_id =ort.order_id) and ort.code="total" ';
+    $sql .= " Where o.order_id = '".$order_id."'";
+    $query = $this->db->query($sql);
+    //    echo $sql;die;
+
+
+      return $query->row['order_total'];
+    // return $query->row;
+}
+ 
 }
