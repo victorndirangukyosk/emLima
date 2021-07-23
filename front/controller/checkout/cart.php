@@ -406,9 +406,9 @@ class ControllerCheckoutCart extends Controller
 
         $product_info = $this->model_assets_product->getProduct($product_store_id, false, $store_id);
 
-        $log->write('PROD INFO');
+        /*$log->write('PROD INFO');
         $log->write($product_info);
-        $log->write('PROD INFO');
+        $log->write('PROD INFO');*/
 
         if ($product_info) {
             if (isset($this->request->post['quantity'])) {
