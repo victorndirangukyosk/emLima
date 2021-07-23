@@ -209,6 +209,7 @@ class ModelSaleOrder extends Model {
         }
 
         $store_id = $store_id;
+        
 
         $this->db->select('product_to_store.*,product_to_category.category_id,product.*,product_description.*,product_description.name as pd_name', false);
         $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
@@ -241,6 +242,9 @@ class ModelSaleOrder extends Model {
         //$this->db->where('product_to_store.quantity >=', 1);
         $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
         $this->db->where('product.status', 1);
+        if ($store_id > 0) {
+            $this->db->where('product_to_store.store_id', $store_id);
+        }
         $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
         $ret2 = array();
         foreach ($ret as $re) {
