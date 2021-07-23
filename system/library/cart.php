@@ -756,9 +756,9 @@ class Cart {
         $total = 0;
 
         $log = new Log('error.log');
-        $log->write('getSubTotal system_library_cart.php');
+        /*$log->write('getSubTotal system_library_cart.php');
         $log->write($this->getProducts());
-        $log->write('getSubTotal system_library_cart.php');
+        $log->write('getSubTotal system_library_cart.php');*/
         foreach ($this->getProducts() as $product) {
             if ($store_id && $product['store_id'] != $store_id) {
                 continue;
@@ -813,9 +813,9 @@ class Cart {
         $total = 0;
         //echo '<pre>';print_r($this->getProducts());exit;
         $log = new Log('error.log');
-        $log->write('getTotal system_library_cart.php');
+        /*$log->write('getTotal system_library_cart.php');
         $log->write($this->getProducts());
-        $log->write('getTotal system_library_cart.php');
+        $log->write('getTotal system_library_cart.php');*/
         if (is_array($this->getProducts())) {
             foreach ($this->getProducts() as $product) {
                 $total += $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];
