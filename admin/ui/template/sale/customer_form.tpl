@@ -367,6 +367,10 @@
                         <div class="col-sm-10">
                             <select name="payment_terms" id="input-payment-terms" class="form-control">
                             <option value="">Payment Terms</option>
+                            <option value="">Payment On Delivery</option>
+                            <option value="">7 Days Credit</option>
+                            <option value="">15 Days Credit</option>
+                            <option value="">30 Days Credit</option>
                             </select>
                         </div>
                         </div>
