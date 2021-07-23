@@ -1155,10 +1155,10 @@ class ControllerCommonHome extends Controller {
         $data['mostboughtproducts'] = array_slice($this->getMostBoughtProducts(), 0, 6);
         $data['mostboughtproducts_url'] = $this->url->link('product/store/featuredproducts', '', 'SSL');
         $data['cartproducts'] = $this->cart->getProducts();
-        $log->write('mostboughtproducts');
+        /*$log->write('mostboughtproducts');
         $log->write($this->cart->getProducts());
         $log->write($this->getMostBoughtProducts());
-        $log->write('mostboughtproducts');
+        $log->write('mostboughtproducts');*/
         $data['category_url'] = $this->url->link('common/home', '', 'SSL');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl') && isset($this->session->data['customer_id'])) {
