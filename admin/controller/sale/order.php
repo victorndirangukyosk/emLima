@@ -4397,6 +4397,8 @@ class ControllerSaleOrder extends Controller {
                     'products' => $product_data,
                     'totals' => $total_data,
                     'comment' => nl2br($order_info['comment']),
+                    'vendor_terms_cod' => $order_info['vendor_terms_cod'],
+                    'payment_terms' => $order_customer_detials['payment_terms'],
                 ];
             }
         }
@@ -4698,8 +4700,8 @@ class ControllerSaleOrder extends Controller {
                     'delivery_executive_name' => $delivery_executive_name,
                     'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $delivery_executive_phone,
                     'delivery_charge' => $order_info['delivery_charge'],
-                    'vendor_terms_cod' => $order_info['vendor_terms_cod']
-
+                    'vendor_terms_cod' => $order_info['vendor_terms_cod'],
+                    'payment_terms' => $order_customer_detials['payment_terms'],
                 ];
             }
         }
