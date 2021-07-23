@@ -1256,7 +1256,7 @@ class ControllerCheckoutConfirm extends Controller {
                 $log->write('CheckOtherVendorOrderExists');
                 $log->write($store_products['store_id']);
                 $log->write('CheckOtherVendorOrderExists');
-                if ($store_products['store_id'] > 75) {
+                if ($store_products['store_id'] > 75 && $this->customer->getPaymentTerms() == 'Payment On Delivery') {
                     $json['modal_open'] = TRUE;
                 }
             }
