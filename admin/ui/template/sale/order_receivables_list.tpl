@@ -83,7 +83,7 @@
                                         <input disabled type="text" name="grand_total" value="" placeholder="No Order Selected" id="input-grand-total" class="form-control" />
                              </div>  
                              <div class="col-sm-4">
-                                    <button type="button" id="button-bulkpayment" class="btn btn-primary" onclick="showConfirmPopup(-1)"  data-toggle="modal" data-dismiss="modal" data-target="#paidModal" title="Payment Confirmation">  Receive Bulk Payment</button>
+                                    <button type="button" id="button-bulkpayment" class="btn btn-primary" onclick="showConfirmPopup(-1,0)"  data-toggle="modal" data-dismiss="modal" data-target="#paidModal" title="Payment Confirmation">  Receive Bulk Payment</button>
                              </div>    
                          </div>                             
                             
@@ -150,7 +150,7 @@
                                     <!--<td class="text-left"><?php echo $order['no_of_products']; ?></td>-->
                                     <td class="text-right"><?php echo $order['total']; ?></td>
                                    <!-- <td class="text-left"><?php echo $order['date_added']; ?></td>-->
-                                    <td><a class="btn btn-default" onclick="showConfirmPopup(<?= $order['order_id'] ?>)"  data-toggle="modal"   data-target="#paidModal" title="Payment Confirmation" >Receive Payment</a></td>
+                                    <td><a class="btn btn-default" onclick="showConfirmPopup(<?= $order['order_id'] ?>,<?= $order['total_value'] ?>)"  data-toggle="modal"   data-target="#paidModal" title="Payment Confirmation" >Receive Payment</a></td>
                                 </tr>
                                 <?php } ?>
                                 <tr>
@@ -183,7 +183,16 @@
     <script type="text/javascript"> 
 
      $('input[name^=\'selected\']').on('change', function () {
+
+           $('#button-bulkpayment').prop('disabled', true);    
+
             var selected = $('input[name^=\'selected\']:checked');
+
+            
+            if (selected.length) {
+                $('#button-bulkpayment').prop('disabled', false);
+                
+            }
             $grand_total_array=0;
             for (i = 0; i < selected.length; i++) {
                $total_array= ($(selected[i]).parent().find('input[name^=\'order_value\']').val()) ;
@@ -194,6 +203,8 @@
             //alert($grand_total_array);
             if($grand_total_array>0)
              $('input[name=\'grand_total\']').val($grand_total_array);
+             else
+              $('input[name=\'grand_total\']').val();
 
            
 
@@ -321,17 +332,23 @@ function excel() {
 
 
 
-function showConfirmPopup($order_id) {
+function showConfirmPopup($order_id,$order_value) {
                
             $('input[name="paid_order_id"]').val($order_id) ;    
             if($order_id>0)
             {
              var text ="<span class='col-sm-12 control-label orderlabel super' style='background: #FFE4CB;text-align: center;padding-top: 0px'>Order Id:"+$order_id+" </span><br><br>";
-            $("#modal_bodyvalue").html(text);   
+            $("#modal_bodyvalue").html(text);  
+             $("#paid_amount").val($order_value); 
+             $("#paid_amount").prop('disabled',true); 
+
             }
             else{
               
                  $("#modal_bodyvalue").html(''); 
+                  $("#paid_amount").val(''); 
+             $("#paid_amount").prop('disabled',false); 
+            
             }
             }
 
@@ -431,4 +448,127 @@ function showConfirmPopup($order_id) {
 
 
 <script>
+
+
+
+function confirmPayment() { 
+ 
+    $('#paidModal-message').html('');
+               $('#paidModal-success-message').html('');
+   var transactionid = $('input[name="transaction_id"]').val();
+    var amountreceived =  $('input[name="paid_amount"]').val() ;
+     var orde_id =   $('input[name="paid_order_id"]').val() ;
+     var grand_total =   $('input[name="grand_total"]').val() ;
+
+              console.log($('#paidModal-form').serialize());
+              
+  
+                if (transactionid.length  <= 1 || amountreceived.length<=1) {
+                   
+                      $('#paidModal-message').html("Please enter data");
+                       return false;
+                } 
+                if(orde_id == -1)
+                {
+
+                    if(amountreceived>grand_total)
+                    {
+                        alert("Amount received is more.please select more orders");
+                        return;
+                    }
+
+
+                    if(amountreceived<grand_total)
+
+                  {
+                     var result = confirm("Amount received and Grand total are different.Do you want to proceed with automatic updation of orders by system based on total ?");
+                            if (result == true) {
+                                //doc = "OK was pressed.";
+                                //go to Ajax call
+                            } else {
+                                return;
+                            }  
+                  }
+
+
+                     var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
+                        return n.value;
+                        }).join(','); 
+
+                         alert(selected_order_id);
+                        if(selected_order_id=='' || selected_order_id==null)
+                        {
+                        alert("Please Select the order");
+                            return;
+                        }
+
+
+                  $.ajax({
+                    url: 'index.php?path=sale/order_receivables/confirmBulkPaymentReceived&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data: 'selected=' + selected_order_id + '&transaction_id='+ transactionid+ '&grand_total='+ grand_total+ '&amount_received='+ amountreceived,
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                            $('#paidModal-success-message').html(' Saved Successfully');
+                            setTimeout(function() {
+                        location=location;
+                    }, 1000);
+                           
+                        }
+                        else {
+                            $('#paidModal-success-message').html('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+
+                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                $('#paidModal-message').html("Please try again");
+                                    return false;
+                                }
+                });
+
+
+                  
+
+                   
+                }
+                else if(orde_id>0)
+                {  
+                  
+                
+
+                    $.ajax({
+                    url: 'index.php?path=sale/order_receivables/confirmPaymentReceived&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data:$('#paidModal-form').serialize(),
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                            $('#paidModal-success-message').html(' Saved Successfully');
+                            setTimeout(function() {
+                        location=location;
+                    }, 1000);
+                           
+                        }
+                        else {
+                            $('#paidModal-success-message').html('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+
+                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                $('#paidModal-message').html("Please try again");
+                                    return false;
+                                }
+                });
+                }
+               
+            }
+
+</script>
 
