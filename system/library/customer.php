@@ -15,6 +15,7 @@ class Customer
     private $sms_notification;
     private $mobile_notification;
     private $email_notification;
+    private $payment_terms;
 
 
     public function __construct($registry)
@@ -41,6 +42,7 @@ class Customer
                 $this->sms_notification = $customer_query->row['sms_notification'];
                 $this->mobile_notification = $customer_query->row['mobile_notification'];
                 $this->email_notification = $customer_query->row['email_notification'];
+                $this->payment_terms = $customer_query->row['payment_terms'];
 
 
                 $this->db->query('UPDATE '.DB_PREFIX."customer SET cart = '".$this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '')."', wishlist = '".$this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '')."', ip = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."' WHERE customer_id = '".(int) $this->customer_id."'");
@@ -108,6 +110,7 @@ class Customer
             $this->sms_notification = $customer_query->row['sms_notification'];
             $this->mobile_notification = $customer_query->row['mobile_notification'];
             $this->email_notification = $customer_query->row['email_notification'];
+            $this->payment_terms = $customer_query->row['payment_terms'];
 
             $this->db->query('UPDATE '.DB_PREFIX."customer SET ip = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."' WHERE customer_id = '".(int) $this->customer_id."'");
 
@@ -169,6 +172,7 @@ class Customer
             $this->sms_notification = $customer_query->row['sms_notification'];
             $this->mobile_notification = $customer_query->row['mobile_notification'];
             $this->email_notification = $customer_query->row['email_notification'];
+            $this->payment_terms = $customer_query->row['payment_terms'];
 
             $this->db->query('UPDATE '.DB_PREFIX."customer SET ip = '".$this->db->escape($this->request->server['REMOTE_ADDR'])."' WHERE customer_id = '".(int) $this->customer_id."'");
 
@@ -196,6 +200,7 @@ class Customer
         $this->sms_notification = '';
         $this->mobile_notification = '';
         $this->email_notification = '';
+        $this->payment_terms = '';
     }
 
     public function isLogged()
@@ -282,6 +287,11 @@ class Customer
         return $this->email_notification;
     }
     
+    public function getPaymentTerms()
+    {
+        return $this->payment_terms;
+    }
+    
     public function setVariables($data)
     {
         $this->customer_id = $data['customer_id'];
@@ -297,5 +307,6 @@ class Customer
         $this->sms_notification = $data['sms_notification'];
         $this->mobile_notification = $data['mobile_notification'];
         $this->email_notification = $data['email_notification'];
+        $this->payment_terms = $data['payment_terms'];
     }
 }
