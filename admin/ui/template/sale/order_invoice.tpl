@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4 text-center">
-                                <?php if($order['vendor_terms_cod'] == 1) { ?>
+                                <?php if($order['vendor_terms_cod'] == 1 || $order['payment_terms'] == 'Payment On Delivery') { ?>
                                <!-- <img width="210" src="ui/images/cod.png" alt="COD" class="mb-2">-->
 
                                 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="100 230 600 600" fill="none">

@@ -362,6 +362,18 @@
                                     <input type="text" maxlength=30  name="SAP_customer_no" value="<?php echo $SAP_customer_no; ?>"  placeholder="SAP Custumer Number"  id="input-SAP_customer_no" class="form-control" />
                                 </div>
                         </div>
+                        <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-payment-terms">Payment Terms</label>
+                        <div class="col-sm-10">
+                            <select name="payment_terms" id="input-payment-terms" class="form-control">
+                            <option value="">Payment Terms</option>
+                            <option <?php if($payment_terms == "Payment On Delivery") { ?> selected="selected" <?php } ?> value="Payment On Delivery">Payment On Delivery</option>
+                            <option <?php if($payment_terms == "7 Days Credit") { ?>  selected="selected" <?php } ?> value="7 Days Credit">7 Days Credit</option>
+                            <option <?php if($payment_terms == "15 Days Credit") { ?>  selected="selected" <?php } ?> value="15 Days Credit">15 Days Credit</option>
+                            <option <?php if($payment_terms == "30 Days Credit") { ?>  selected="selected" <?php } ?> value="30 Days Credit">30 Days Credit</option>
+                            </select>
+                        </div>
+                        </div>
 
 
                       <?php if(count($referee) > 0) { ?>
