@@ -1372,6 +1372,7 @@ class ControllerSaleCustomer extends Controller {
         $data['parent_user_phone'] = NULL;
         if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+            $data['payment_terms'] = $customer_info['payment_terms'];
             $data['customer_category'] = $customer_info['customer_category'];
             $data['customer_category_disabled'] = '';
             $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
@@ -1609,6 +1610,14 @@ class ControllerSaleCustomer extends Controller {
             $data['account_manager'] = $customer_info['account_manager_id'];
         } else {
             $data['account_manager'] = '';
+        }
+        
+        if (isset($this->request->post['payment_terms'])) {
+            $data['payment_terms'] = $this->request->post['payment_terms'];
+        } elseif (!empty($customer_info)) {
+            $data['payment_terms'] = $customer_info['payment_terms'];
+        } else {
+            $data['payment_terms'] = '';
         }
 
         // $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
