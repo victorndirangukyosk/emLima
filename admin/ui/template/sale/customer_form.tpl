@@ -362,6 +362,14 @@
                                     <input type="text" maxlength=30  name="SAP_customer_no" value="<?php echo $SAP_customer_no; ?>"  placeholder="SAP Custumer Number"  id="input-SAP_customer_no" class="form-control" />
                                 </div>
                         </div>
+                        <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-payment-terms">Payment Terms</label>
+                        <div class="col-sm-10">
+                            <select name="payment_terms" id="input-payment-terms" class="form-control">
+                            <option value="">Payment Terms</option>
+                            </select>
+                        </div>
+                        </div>
 
 
                       <?php if(count($referee) > 0) { ?>
