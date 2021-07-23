@@ -488,15 +488,18 @@ class ControllerSaleOrderReceivables extends Controller
                     $amount_partialy_paid=0;
                 foreach($orders as $order)
                 {
-                    $ordertotal=$this->model_sale_order_receivables->getOrderTotal($order);
-                $log->write($ordertotal);
+                    $ordertotal_array=$this->model_sale_order_receivables->getOrderTotal($order);
+                    $ordertotal= $ordertotal_array[order_total];
+                    $amount_partialy_paid=$ordertotal_array[amount_partialy_paid];
+                
+                    $log->write($ordertotal);
                 $log->write("ordertotal");
                     
-                    $amount_partialy_paid=$pendingAmount;
+                    $amount_partialy_paid=$amount_partialy_paid+$pendingAmount;
                     $pendingAmount=$pendingAmount-$ordertotal;
                     $log->write("pendingAmount");
                     $log->write($pendingAmount);
-                    //   exit;
+                    //    exit;
                     if($pendingAmount>=0)
                 $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id);
                 else

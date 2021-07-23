@@ -137,13 +137,13 @@ class ModelSaleOrderReceivables extends Model
 }
 public function getOrderTotal($order_id)
 {
-    $sql = 'SELECT ort.value as order_total FROM `'.DB_PREFIX.'order` o left outer join '.DB_PREFIX.'order_total ort on(o.order_id =ort.order_id) and ort.code="total" ';
+    $sql = 'SELECT ort.value as order_total,o.amount_partialy_paid FROM `'.DB_PREFIX.'order` o left outer join '.DB_PREFIX.'order_total ort on(o.order_id =ort.order_id) and ort.code="total" ';
     $sql .= " Where o.order_id = '".$order_id."'";
     $query = $this->db->query($sql);
-    //    echo $sql;die;
+        // echo $sql;die;
 
-
-      return $query->row['order_total'];
+        // $req_amount=$query->row['order_total']-$query->row['amount_partialy_paid'];
+      return $query->row;
     // return $query->row;
 }
  
