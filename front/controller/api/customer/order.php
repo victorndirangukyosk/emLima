@@ -3513,6 +3513,10 @@ class ControllerApiCustomerOrder extends Controller {
 
     public function addAcceptOtherVendorOrderTerms() {
 
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
         $log = new Log('error.log');
         $json['vendor_terms'] = $this->request->post['accept_terms'];
         $this->session->data['accept_vendor_terms'] = $this->request->post['accept_terms'];
@@ -3522,6 +3526,10 @@ class ControllerApiCustomerOrder extends Controller {
 
     public function getCheckOtherVendorOrderExists() {
 
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
         $log = new Log('error.log');
         $json['modal_open'] = FALSE;
         if (isset($this->session->data['accept_vendor_terms']) && $this->session->data['accept_vendor_terms'] == TRUE) {
@@ -3543,6 +3551,9 @@ class ControllerApiCustomerOrder extends Controller {
 
     public function getremoveothervendorproductsfromcart() {
         $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
         $json['products_removed'] = FALSE;
         $log = new Log('error.log');
         $log->write($this->cart->countProducts());
