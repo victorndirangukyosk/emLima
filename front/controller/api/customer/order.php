@@ -3511,7 +3511,7 @@ class ControllerApiCustomerOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addAcceptOtherVendorOrderTerms() {
+    public function addAcceptOtherVendorOrderTerm() {
 
         $json = [];
         $json['status'] = 200;
@@ -3524,7 +3524,7 @@ class ControllerApiCustomerOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getCheckOtherVendorOrderExists() {
+    public function getCheckOtherVendorOrderExist() {
 
         $json = [];
         $json['status'] = 200;
