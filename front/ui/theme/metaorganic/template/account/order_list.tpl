@@ -9,6 +9,7 @@
 
                 <div class="list-group my-order-group">
                     <li class="list-group-item my-order-list-headnew">
+                        <div class="row"><div class="col">  1 of 3</div><div class="col">  2 of 3</div><div class="col"> 3 of 3</div>
                          <strong>#<?php echo $order['order_id']; ?> &nbsp;  &nbsp;  &nbsp; Store Name: <span><?php echo $order['store_name']; ?>&nbsp;  &nbsp;  &nbsp; Order Date: <span><?php echo $order['date_added']; ?></strong></span>, <?php echo $order['time_added']; ?> <span>
 
                             <!--<div class="pull-right">
