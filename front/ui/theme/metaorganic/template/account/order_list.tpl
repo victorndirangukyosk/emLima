@@ -9,7 +9,7 @@
 
                 <div class="list-group my-order-group">
                     <li class="list-group-item my-order-list-headnew">
-                         <strong>#<?php echo $order['order_id']; ?> &nbsp;  &nbsp;  &nbsp; Order Date: <span><?php echo $order['date_added']; ?></strong></span>, <?php echo $order['time_added']; ?> <span>
+                         <strong>#<?php echo $order['order_id']; ?> &nbsp;  &nbsp;  &nbsp; Store Name: <span><?php echo $order['store_name']; ?>&nbsp;  &nbsp;  &nbsp; Order Date: <span><?php echo $order['date_added']; ?></strong></span>, <?php echo $order['time_added']; ?> <span>
 
                             <!--<div class="pull-right">
                                 <button type="button" style="height:25px" onclick="excel( <?=$order["order_id"] ?>,'<?=$order["order_company"] ?>');" data-toggle="tooltip" title="Download Ordered Products"
