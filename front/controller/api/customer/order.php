@@ -1260,7 +1260,6 @@ class ControllerApiCustomerOrder extends Controller {
             $procurement_person = NULL;
             $head_chef = NULL;
 
-
             if (($customer_info['order_approval_access'] == NULL || $customer_info['order_approval_access'] == 0) && $customer_info['order_approval_access_role'] == NULL && $customer_parent_info != NULL) {
                 $log = new Log('error.log');
                 $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $customer_parent_info['customer_id'] . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
@@ -2154,6 +2153,11 @@ class ControllerApiCustomerOrder extends Controller {
             $this->error['error_products'] = $this->language->get('error_products');
         }
 
+        $vendor_terms = json_decode($this->getCheckOtherVendorOrderExists(), true);
+        if ($vendor_terms['modal_open'] == TRUE) {
+            $this->error['vendor_terms'] = 'Please accept vendor terms!';
+        }
+
         if ((!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
             $this->response->redirect($this->url->link('checkout/cart'));
         }
@@ -2359,7 +2363,6 @@ class ControllerApiCustomerOrder extends Controller {
                     $product['total_without_tax'] = $total_without_tax;
                     $product['total_with_tax'] = $total_with_tax;
                     $product['single_product_tax'] = $single_product_tax;
-
 
                     // new code end
 
@@ -2878,7 +2881,7 @@ class ControllerApiCustomerOrder extends Controller {
                         $order_products_updated = $this->model_account_order->getOrderProducts($order_id);
                         $total_tax_updated = 0;
                         foreach ($order_products_updated as $order_products_update) {
-                            $total_tax_updated+= $order_products_update['quantity'] * $order_products_update['tax'];
+                            $total_tax_updated += $order_products_update['quantity'] * $order_products_update['tax'];
                         }
 
                         $order_tax_totals = $this->db->query('SELECT SUM(tax) AS tax FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
@@ -2892,7 +2895,6 @@ class ControllerApiCustomerOrder extends Controller {
                         $this->db->query('UPDATE ' . DB_PREFIX . "order_total SET `value` = '" . $order_total . "' WHERE order_id = '" . $order_id . "' AND code='total'");
                         $this->db->query('UPDATE ' . DB_PREFIX . "order_total SET `value` = '" . $total_tax_updated . "' WHERE order_id = '" . $order_id . "' AND code='tax'");
                         $this->db->query('UPDATE ' . DB_PREFIX . "order_total SET `value` = '" . $order_totals->row['total'] . "' WHERE order_id = '" . $order_id . "' AND code='sub_total'");
-
 
                         $total_products = $this->db->query('SELECT SUM(quantity) AS quantity FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
                         $this->db->query('UPDATE ' . DB_PREFIX . "order SET `total` = '" . $order_total . "' WHERE order_id = '" . $order_id . "'");
@@ -2933,9 +2935,6 @@ class ControllerApiCustomerOrder extends Controller {
                         $log->write('account edit1');
 
                         $this->model_account_activity->addActivity('order_product_quaantity_changed', $activity_data);
-
-
-
 
                         // $log->write('order_products COUNT 1');
                         // $log->write(count($order_products));
@@ -3040,7 +3039,6 @@ class ControllerApiCustomerOrder extends Controller {
                         $log->write($product_id);
                         $log->write($product_id);
 
-
                         $this->load->model('extension/extension');
                         $product_info['vendor_id'] = $this->model_extension_extension->getVendorId($product['store_id']);
 
@@ -3079,7 +3077,7 @@ class ControllerApiCustomerOrder extends Controller {
                         $order_products_updated = $this->model_account_order->getOrderProducts($order_id);
                         $total_tax_updated = 0;
                         foreach ($order_products_updated as $order_products_update) {
-                            $total_tax_updated+= $order_products_update['quantity'] * $order_products_update['tax'];
+                            $total_tax_updated += $order_products_update['quantity'] * $order_products_update['tax'];
                         }
                         $order_tax_totals = $this->db->query('SELECT SUM(tax) AS tax FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
                         $log->write($order_totals->row['total']);
@@ -3087,9 +3085,6 @@ class ControllerApiCustomerOrder extends Controller {
                         $log->write($order_totals->row['total'] + $total_tax_updated);
                         $order_total = $order_totals->row['total'] + $total_tax_updated;
                         $order_product_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_products[$key]['order_product_id'] . "' AND order_id  = '" . (int) $order_id . "' AND product_id = '" . (int) $product_id . "'");
-
-
-
 
                         $this->db->query('UPDATE ' . DB_PREFIX . "order_total SET `value` = '" . $order_total . "' WHERE order_id = '" . $order_id . "' AND code='total'");
                         $this->db->query('UPDATE ' . DB_PREFIX . "order_total SET `value` = '" . $total_tax_updated . "' WHERE order_id = '" . $order_id . "' AND code='tax'");
@@ -3122,8 +3117,6 @@ class ControllerApiCustomerOrder extends Controller {
                         $log->write('account edit1');
 
                         $this->model_account_activity->addActivity('order_new_product_added', $activity_data);
-
-
 
                         // $log->write('order_products COUNT 2');
                         // $log->write(count($order_products));
@@ -3320,7 +3313,6 @@ class ControllerApiCustomerOrder extends Controller {
             $procurement_person = NULL;
             $head_chef = NULL;
 
-
             if (($customer_info['order_approval_access'] == NULL || $customer_info['order_approval_access'] == 0) && $customer_info['order_approval_access_role'] == NULL && $customer_parent_info != NULL) {
                 $log = new Log('error.log');
                 $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $customer_parent_info['customer_id'] . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
@@ -3466,7 +3458,7 @@ class ControllerApiCustomerOrder extends Controller {
                     if (isset($product_info['special_price']) && isset($product_info['price']) && 0 != $product_info['price'] && 0 != $product_info['special_price']) {
                         $percent_off = (($product_info['price'] - $product_info['special_price']) / $product_info['price']) * 100;
                     }
-                    
+
                     $this->load->model('tool/image');
                     if (file_exists(DIR_IMAGE . $product_info['image'])) {
                         $image = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
@@ -3513,6 +3505,72 @@ class ControllerApiCustomerOrder extends Controller {
             }
 
             http_response_code(400);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function addAcceptOtherVendorOrderTerm() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $log = new Log('error.log');
+        $json['vendor_terms'] = $this->request->post['accept_terms'];
+        $this->session->data['accept_vendor_terms'] = $this->request->post['accept_terms'];
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getCheckOtherVendorOrderExist() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $log = new Log('error.log');
+        $json['modal_open'] = FALSE;
+        if (isset($this->session->data['accept_vendor_terms']) && $this->session->data['accept_vendor_terms'] == TRUE) {
+            $json['modal_open'] = FALSE;
+        } else {
+            foreach ($this->cart->getProducts() as $store_products) {
+                /* FOR KWIKBASKET ORDERS */
+                $log->write('CheckOtherVendorOrderExists');
+                $log->write($store_products['store_id']);
+                $log->write('CheckOtherVendorOrderExists');
+                if ($store_products['store_id'] > 75 && $this->customer->getPaymentTerms() != 'Payment On Delivery') {
+                    $json['modal_open'] = TRUE;
+                }
+            }
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getremoveothervendorproductsfromcart() {
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $json['products_removed'] = FALSE;
+        $log = new Log('error.log');
+        $log->write($this->cart->countProducts());
+        $previous_count = $this->cart->countProducts();
+        foreach ($this->cart->getProducts() as $store_products) {
+            /* FOR KWIKBASKET ORDERS */
+            if ($store_products['store_id'] > 75) {
+                $log->write('CheckOtherVendorOrderExists');
+                $log->write($store_products['key']);
+                $this->cart->remove($store_products['key']);
+                $log->write('CheckOtherVendorOrderExists');
+            }
+        }
+        $log->write($this->cart->countProducts());
+        $present_count = $this->cart->countProducts();
+        if ($previous_count > $present_count) {
+            $json['products_removed'] = TRUE;
         }
 
         $this->response->addHeader('Content-Type: application/json');

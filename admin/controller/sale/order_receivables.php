@@ -173,6 +173,11 @@ class ControllerSaleOrderReceivables extends Controller
                 // 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'grand_total' => $this->currency->format($amount),
                 'total_pages' => $totalPages,
+                // o.paid,o.amount_partialy_paid
+                'paid' => $result['paid'],
+
+                'amount_partialy_paid' => $result['amount_partialy_paid'],
+
 
 
             ];
@@ -375,4 +380,166 @@ class ControllerSaleOrderReceivables extends Controller
         // $this->model_report_excel->download_sale_ordertransaction_excel($filter_data);
         $this->model_report_excel->download_sale_order_receivables_excel($filter_data);
     }
+
+
+
+
+    public function confirmPaymentReceived() {
+        try{
+        $this->load->model('sale/order_receivables'); 
+         // echo '<pre>';print_r($this->request->post);exit;
+        if (!$this->user->hasPermission('modify', 'sale/order_receivables')) {
+            $data['error'] = $this->language->get('error_permission');
+            $data['status']=false;
+        } else {            
+
+             $this->model_sale_order_receivables->confirmPaymentReceived($this->request->post['paid_order_id'], $this->request->post['transaction_id']);
+            
+            $data['success'] = 'Updated Successfully';
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $this->request->post['paid_order_id'],
+            ];
+            $log->write('order transaction id added');
+            $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
+            $log->write('order transaction id added');
+        $data['status']=true;
+
+        }
+    }
+    catch(exception $ex)
+    {
+        $data['error']="Please try again";
+        $data['status']=false;
+    }
+    finally{
+
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        }
+    }
+ 
+    }
+
+
+    public function confirmBulkPaymentReceived() {
+
+    if (isset($this->request->post['selected'])) {
+        $orders =explode(",",$this->request->post['selected']);;
+    }  
+ 
+    if (isset($this->request->post['amount_received'])) {
+        $amount_received = $this->request->post['amount_received'];
+    }  
+    if (isset($this->request->post['grand_total'])) {
+        $grand_total = $this->request->post['grand_total'];
+    }  
+    if (isset($this->request->post['transaction_id'])) {
+        $transaction_id = $this->request->post['transaction_id'];
+    }  
+
+    // echo'<pre>';print_r($orders);exit;
+
+    try{
+        $this->load->model('sale/order_receivables'); 
+         // echo '<pre>';print_r($this->request->post);exit;
+        if (!$this->user->hasPermission('modify', 'sale/order_receivables')) {
+            $data['error'] = $this->language->get('error_permission');
+            $data['status']=false;
+        } else {           
+            
+            if($amount_received ==$grand_total)
+            {
+
+                foreach($orders as $order)
+                {
+
+                $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id);
+                // Add to activity log
+                $log = new Log('error.log');
+                $this->load->model('user/user_activity');
+                $activity_data = [
+                    'user_id' => $this->user->getId(),
+                    'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                    'user_group_id' => $this->user->getGroupId(),
+                    'order_id' => $this->request->post['order'],
+                ];
+                $log->write('order transaction id added');
+                $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
+                $log->write('order transaction id added');
+                
+                }
+            }
+
+            else
+            {
+                $log = new Log('error.log');
+                $log->write('check for payment receivables');
+
+                    $pendingAmount=$amount_received;
+                $log->write($pendingAmount);
+
+                    $amount_partialy_paid=0;
+                foreach($orders as $order)
+                {
+                    $ordertotal_array=$this->model_sale_order_receivables->getOrderTotal($order);
+                    $ordertotal= $ordertotal_array[order_total];
+                    $amount_partialy_paid=$ordertotal_array[amount_partialy_paid];
+                
+                    $log->write($ordertotal);
+                $log->write("ordertotal");
+                    
+                    $amount_partialy_paid=$amount_partialy_paid+$pendingAmount;
+                    $pendingAmount=$pendingAmount-$ordertotal;
+                    $log->write("pendingAmount");
+                    $log->write($pendingAmount);
+                    //    exit;
+                    if($pendingAmount>=0)
+                $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id);
+                else
+                {
+                $this->model_sale_order_receivables->confirmPartialPaymentReceived($order, $transaction_id,'',$amount_partialy_paid);
+                }
+                // Add to activity log
+               
+                $this->load->model('user/user_activity');
+                $activity_data = [
+                    'user_id' => $this->user->getId(),
+                    'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                    'user_group_id' => $this->user->getGroupId(),
+                    'order_id' => $this->request->post['order'],
+                ];
+                $log->write('order transaction id added');
+                $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
+                $log->write('order transaction id added');
+                
+                }
+            }
+            $data['success'] = 'Updated Successfully';
+           
+        $data['status']=true;
+
+        }
+    }
+    catch(exception $ex)
+    {
+        $data['error']="Please try again";
+        $data['status']=false;
+    }
+    finally{
+
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        }
+    }
+ 
+
+}
 }
