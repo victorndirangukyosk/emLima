@@ -9,9 +9,7 @@
 
                 <div class="list-group my-order-group">
                     <li class="list-group-item my-order-list-headnew">
-                        <div class="row"><div class="col-md-4">  1 of 3</div><div class="col-md-4">  2 of 3</div><div class="col-md-4"> 3 of 3</div></div>
-                         <strong>#<?php echo $order['order_id']; ?> &nbsp;  &nbsp;  &nbsp; Store Name: <span><?php echo $order['store_name']; ?>&nbsp;  &nbsp;  &nbsp; Order Date: <span><?php echo $order['date_added']; ?></strong></span>, <?php echo $order['time_added']; ?> <span>
-
+                        <div class="row"><div class="col-md-4"><strong>#<?php echo $order['order_id']; ?></strong></div><div class="col-md-4">Store Name: <span><?php echo $order['store_name']; ?></div><div class="col-md-4">Order Date: <span><?php echo $order['date_added']; ?>, <?php echo $order['time_added']; ?></div></div>
                             <!--<div class="pull-right">
                                 <button type="button" style="height:25px" onclick="excel( <?=$order["order_id"] ?>,'<?=$order["order_company"] ?>');" data-toggle="tooltip" title="Download Ordered Products"
                                         class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
