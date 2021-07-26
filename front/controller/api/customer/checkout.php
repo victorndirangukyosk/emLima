@@ -304,6 +304,23 @@ class ControllerApiCustomerCheckout extends Controller {
                         }
                     }
                 }
+            } else if ($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') {
+                foreach ($results as $result) {
+                    if ($result['code'] == 'cod') {
+                        if ($this->config->get($result['code'] . '_status')) {
+                            $this->load->model('payment/' . $result['code']);
+
+                            $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+
+                            if ($method) {
+                                $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
+                                //removed  (No Transaction Fee) from terms,as suggested
+                                //echo "<pre>";print_r($method);die;
+                                $method_data[] = $method;
+                            }
+                        }
+                    }
+                }
             }
 
             $sort_order = [];
