@@ -157,7 +157,7 @@
                                         <input type="checkbox" name="selected[]" value="<?php echo $order['order_id']; ?>" />
                                         <?php } ?>
                                         <input type="hidden" name="order_value[]" value="<?php echo $order['total_value']; ?>" />
-                                        <input type="hidden" name="partially_paid_value[]" value="<?php echo $order['amount_partialy_paid']; ?>" />
+                                        <input type="hidden" name="partially_paid_value[]" value="<?php echo $order['amount_partialy_paid_value']; ?>" />
                                     </td>
 
                                     
@@ -219,27 +219,33 @@
             }
             $grand_total_array=0;
             for (i = 0; i < selected.length; i++) {
+                
                $total_array= ($(selected[i]).parent().find('input[name^=\'order_value\']').val()) ;
+               console.log($total_array);
+               
                $partial_array= ($(selected[i]).parent().find('input[name^=\'partially_paid_value\']').val()) ;
-                    
-                    if($partial_array!='' && $partial_array!=null)
-                    {
+                     
+                    if($partial_array!='' && $partial_array!=null && $total_array!=null)
+                    {                      
                         $total_array=$total_array-$partial_array;
                     }
-                    $grand_total_array += parseInt($total_array);
+                    if($total_array!=null)
+                    {
+                    $grand_total_array += parseFloat($total_array);
+                    }
                 
             }
-            //alert($grand_total_array);
+            
             if($grand_total_array>0)
-             $('input[name=\'grand_total\']').val($grand_total_array);
+             $('input[name=\'grand_total\']').val(parseFloat($grand_total_array).toFixed(2));
              else
-              $('input[name=\'grand_total\']').val();
+              $('input[name=\'grand_total\']').val('');
 
            
 
         });
 
-        $('input[name^=\'selected\']:first').trigger('change');
+         $('input[name^=\'selected\']:first').trigger('change'); 
 
   $('#button-filter').on('click', function () {
             url = 'index.php?path=sale/order_receivables&token=<?php echo $token; ?>';
