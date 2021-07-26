@@ -660,6 +660,7 @@ class Cart {
                 }
             } else {
                 $this->remove($key);
+                $this->removeTempCart($key);
             }
 
             if ($qty && ($qty > 0)) {
