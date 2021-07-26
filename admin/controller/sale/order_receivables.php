@@ -35,6 +35,13 @@ class ControllerSaleOrderReceivables extends Controller
             $filter_customer = null;
         }
 
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
         if (isset($this->request->get['filter_total'])) {
             $filter_total = $this->request->get['filter_total'];
         } else {
@@ -73,6 +80,10 @@ class ControllerSaleOrderReceivables extends Controller
 
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_order_status'])) {
@@ -116,6 +127,7 @@ class ControllerSaleOrderReceivables extends Controller
         $filter_data = [
             'filter_order_id' => $filter_order_id,
             'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
 
@@ -163,11 +175,16 @@ class ControllerSaleOrderReceivables extends Controller
                     $result['total'] = $total['value'];
                 }
             }
-
+            if ($result['company']) {
+                $result['company'] = ' (' . $result['company'] . ')';
+            } else {
+                // $result['company_name'] = "(NA)";
+            }
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
                 // 'no_of_products' => $result['no_of_products'],
                 'customer' => $result['firstname'].' '.$result['lastname'],
+                'company' => $result['company'],
                 'total' => $this->currency->format($result['total']),
                 'total_value' =>($result['total']),
                 // 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
@@ -176,7 +193,9 @@ class ControllerSaleOrderReceivables extends Controller
                 // o.paid,o.amount_partialy_paid
                 'paid' => $result['paid'],
 
-                'amount_partialy_paid' => $result['amount_partialy_paid'],
+                'amount_partialy_paid_value' => $result['amount_partialy_paid'],
+                'amount_partialy_paid' => $result['amount_partialy_paid']?$this->currency->format($result['amount_partialy_paid']):'',
+                'pending_amount' => $this->currency->format ($result['total']-$result['amount_partialy_paid']),
 
 
 
@@ -192,6 +211,7 @@ class ControllerSaleOrderReceivables extends Controller
 
         $data['column_order_id'] = $this->language->get('column_order_id');
         $data['column_customer'] = $this->language->get('column_customer');
+        $data['column_company'] = $this->language->get('column_company');
         $data['column_status'] = $this->language->get('column_status');
         $data['column_total'] = $this->language->get('column_total');
         $data['column_date_added'] = $this->language->get('column_date_added');
@@ -201,6 +221,7 @@ class ControllerSaleOrderReceivables extends Controller
         $data['entry_return_id'] = $this->language->get('entry_return_id');
         $data['entry_order_id'] = $this->language->get('entry_order_id');
         $data['entry_customer'] = $this->language->get('entry_customer');
+        $data['entry_company'] = $this->language->get('entry_company');
         $data['entry_order_status'] = $this->language->get('entry_order_status');
         $data['entry_total'] = $this->language->get('entry_total');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
@@ -280,6 +301,10 @@ class ControllerSaleOrderReceivables extends Controller
             $url .= '&filter_customer='.urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total='.$this->request->get['filter_total'];
         }
@@ -307,6 +332,7 @@ class ControllerSaleOrderReceivables extends Controller
         $data['results'] = sprintf($this->language->get('text_pagination'), ($order_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($order_total - $this->config->get('config_limit_admin'))) ? $order_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $order_total, ceil($order_total / $this->config->get('config_limit_admin')));
 
         $data['filter_customer'] = $filter_customer;
+        $data['filter_company'] = $filter_company;
 
         $data['filter_total'] = $filter_total;
         $data['filter_date_added'] = $filter_date_added;
@@ -340,6 +366,12 @@ class ControllerSaleOrderReceivables extends Controller
             $filter_customer = null;
         }
 
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
         // if (isset($this->request->get['filter_total'])) {
         //     $filter_total = $this->request->get['filter_total'];
         // } else {
@@ -369,6 +401,7 @@ class ControllerSaleOrderReceivables extends Controller
         $filter_data = [
             'filter_order_id' => $filter_order_id,
             'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
             // 'filter_total' => $filter_total,
             // 'filter_date_added' => $filter_date_added,
             // 'sort' => $sort,
@@ -482,30 +515,35 @@ class ControllerSaleOrderReceivables extends Controller
                 $log = new Log('error.log');
                 $log->write('check for payment receivables');
 
-                    $pendingAmount=$amount_received;
-                $log->write($pendingAmount);
+                    $grand_amount_availble=$amount_received;
+                $log->write($grand_amount_availble);
 
-                    $amount_partialy_paid=0;
                 foreach($orders as $order)
                 {
+                    $amount_partialy_paid=0;$ordertotal_remaining=0;
                     $ordertotal_array=$this->model_sale_order_receivables->getOrderTotal($order);
                     $ordertotal= $ordertotal_array[order_total];
                     $amount_partialy_paid=$ordertotal_array[amount_partialy_paid];
                 
                     $log->write($ordertotal);
-                $log->write("ordertotal");
+                    $log->write("ordertotal");
                     
-                    $amount_partialy_paid=$amount_partialy_paid+$pendingAmount;
-                    $pendingAmount=$pendingAmount-$ordertotal;
-                    $log->write("pendingAmount");
-                    $log->write($pendingAmount);
+                    $ordertotal_needtopay=$ordertotal-$amount_partialy_paid;
+                    $order_amount_sufficient=$grand_amount_availble-$ordertotal_needtopay;
+                    $log->write("order_amount_sufficient");
+                    $log->write($order_amount_sufficient);
                     //    exit;
-                    if($pendingAmount>=0)
+                    if($order_amount_sufficient>=0){
                 $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id);
-                else
+                    }
+                    else
                 {
+
+                    $amount_partialy_paid=$amount_partialy_paid+$grand_amount_availble;
                 $this->model_sale_order_receivables->confirmPartialPaymentReceived($order, $transaction_id,'',$amount_partialy_paid);
                 }
+                $grand_amount_availble=$grand_amount_availble-$ordertotal_needtopay;
+
                 // Add to activity log
                
                 $this->load->model('user/user_activity');
@@ -519,6 +557,11 @@ class ControllerSaleOrderReceivables extends Controller
                 $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
                 $log->write('order transaction id added');
                 
+
+                if($grand_amount_availble<=0)
+                {
+                    break;//break the loop if avaialble grand total received becomes 0
+                }
                 }
             }
             $data['success'] = 'Updated Successfully';
