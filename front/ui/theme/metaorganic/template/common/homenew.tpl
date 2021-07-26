@@ -258,11 +258,9 @@
                                   <?= $mostboughtproduct['variations'][0]['special'];?>
                                   <?php  echo '/ Per ' . $mostboughtproduct['variations'][0]['unit']; ?>
                               </div>
-                              <?php if(isset($cartproducts) && count($cartproducts) > 0) { foreach($cartproducts as $cartproduct) { if($cartproduct['product_store_id'] == $mostboughtproduct['product_store_id'] && $cartproduct['quantity'] > 0) { ?>
-                              <span id="flag-qty-id-<?= $mostboughtproduct['product_store_id']; ?>-<?= $mostboughtproduct['store_product_variation_id']; ?>">
-                                  <?php echo $cartproduct['quantity']; ?> items in cart <i class="fas fa-flag"></i>
+                              <span id="flag-qty-id-<?= $mostboughtproduct['product_store_id']; ?>-<?= $mostboughtproduct['store_product_variation_id']; ?>" style="padding:5px;display: <?= $mostboughtproduct['qty_in_cart'] > 0 ? 'block' : 'none'; ?>">
+                                  <?php echo $mostboughtproduct['qty_in_cart']; ?> items in cart <i class="fas fa-flag"></i>
                               </span>
-                              <?php } } } ?>
                               <span class="view-all-buttons"><?php echo $mostboughtproduct['vendor_display_name']; ?></span>
                           </div>
                       </a>
