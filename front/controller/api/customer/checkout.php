@@ -293,6 +293,8 @@ class ControllerApiCustomerCheckout extends Controller {
                     $this->load->model('payment/' . $result['code']);
 
                     $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+                    $log = new Log('error.log');
+                    $log->write($method);
 
                     if ($method) {
                         $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
