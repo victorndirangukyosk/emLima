@@ -739,6 +739,8 @@ function saveFeedback()
      alert("Please provide comments");
      return;
    }
+    $("#feedbackModal").modal('hide');
+
     var redirectURL = '<?php echo $base; ?>';
       iziToast.success({
                                 position: 'topRight',
@@ -775,13 +777,8 @@ function saveFeedback()
                             //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
                              return false;
                         }
-                    });
-                                           
-                                           
-                                            setTimeout(function() {
-    //location=redirectURL;
-    $("#feedbackModal").modal('hide');
-  }, 2000);
+                    }); 
+  
         
 
 

@@ -1264,8 +1264,8 @@ $(document).delegate('#resendVerificationMail', 'click', function () {
 
 
 $(document).delegate('#reportissue', 'click', function () {
+    $('#reportissue').prop('disabled', true);
     console.log("reportissue click");
-
     var text = $('.reportissue-modal-text').html();
     // $('.reportissue-modal-text').html('');
     $('.reportissue-loader').show();
@@ -1290,6 +1290,8 @@ $(document).delegate('#reportissue', 'click', function () {
 
 
                 $('#reportissueModal').find('form').trigger('reset');
+                $('.reportissue-loader').hide(); $('#reportissue').prop('disabled', false);
+
 
             } else {
                 $error = '';
@@ -1301,7 +1303,7 @@ $(document).delegate('#reportissue', 'click', function () {
 
 
                 // $('.reportissue-modal-text').html(text);
-                $('.reportissue-loader').hide();
+                $('.reportissue-loader').hide(); $('#reportissue').prop('disabled', false);
 
                 $('#reportissue-message').html("<p style='color:red'>" + $error + "</p>");
             }
