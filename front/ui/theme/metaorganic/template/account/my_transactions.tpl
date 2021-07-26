@@ -21,6 +21,7 @@
                                 <th></th>
                                 <th class="order_id">Order Id </th>
                                 <th class="order_id">Order Date</th>
+                                <th class="order_id">Order Total</th>
                                 <th class="order_id">Amount Payable</th>
                                 <th class="order_id">Payment Method</th>
                                 <th class="order_id">Action</th>
@@ -429,12 +430,13 @@
             $('#emp_body').html('');
             for (var i = 0; i < displayRecords.length; i++) {
                 tr = $('<tr/>');
-                tr.append("<td><input type='checkbox' id='order_id_selected' data-id='" + displayRecords[i].order_id + "' data-amount='" + displayRecords[i].value + "' name='order_id_selected' value='" + displayRecords[i].order_id + "'></td>");
+                tr.append("<td><input type='checkbox' id='order_id_selected' data-id='" + displayRecords[i].order_id + "' data-amount='" + displayRecords[i].pending_amount + "' name='order_id_selected' value='" + displayRecords[i].order_id + "'></td>");
                 tr.append("<td class='order_id'>" + displayRecords[i].order_id + "</td>");
                 tr.append("<td>" + displayRecords[i].date_added + "</td>");
                 tr.append("<td class='amount'>" + displayRecords[i].total_currency + "</td>");
+                tr.append("<td class='amount'>" + displayRecords[i].pending_amount_currency + "</td>");
                 tr.append("<td>" + displayRecords[i].payment_method + "</td>");
-                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPay(" + displayRecords[i].order_id + "," + displayRecords[i].value + ")'>Pay Now</a></td>");
+                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPay(" + displayRecords[i].order_id + "," + displayRecords[i].pending_amount + ")'>Pay Now</a></td>");
                 $('#emp_body').append(tr);
             }
         }
