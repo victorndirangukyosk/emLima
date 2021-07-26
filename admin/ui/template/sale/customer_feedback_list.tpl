@@ -4,6 +4,11 @@
     <div class="page-header">
         <div class="container-fluid">
         
+
+        <div class="pull-right">       
+        <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
+      </div>
+
             <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
                 <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -441,6 +446,44 @@ function CloseIssue()
                                 }
                 });
 }
+
+
+
+
+function excel() {
+            
+    url = 'index.php?path=sale/customer_feedback/export_excel&token=<?php echo $token; ?>';
+    
+
+     var filter_company = $('input[name=\'filter_company\']').val();
+
+   if (filter_company) {
+     url += '&filter_company=' + encodeURIComponent(filter_company);
+   } 
+        
+  var filter_name = $('input[name=\'filter_name\']').val();
+  
+  if (filter_name) {
+    url += '&filter_name=' + encodeURIComponent(filter_name);
+  }
+   
+  
+  var filter_customer_rating_id = $('select[name=\'filter_customer_rating\']').val();
+  
+  if (filter_customer_rating_id != '*') {
+    url += '&filter_customer_rating_id=' + encodeURIComponent(filter_customer_rating_id);
+  } 
+  
+  var filter_status = $('select[name=\'filter_status\']').val();
+  
+  if (filter_status != '*') {
+    url += '&filter_status=' + encodeURIComponent(filter_status); 
+  } 
+   
+
+    location = url;
+}
+
 
 </script> 
 
