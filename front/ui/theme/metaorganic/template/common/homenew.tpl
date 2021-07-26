@@ -246,7 +246,7 @@
       <div class="container" style="width:100%;">
           <div class="_47ahp" data-test-selector="search-results">
               <div style="margin-top: 16px" class="clearfix featured-categories__header">
-                  <h2 class="featured-categories__header-title"><span>Featured</span></h2>
+                  <h2 class="featured-categories__header-title"><span>Frequently Bought</span></h2>
               </div>
               <ul id="items-ul" class="row" data-test-selector="item-cards-layout-grid">
                   <?php if(count($mostboughtproducts) > 0) { foreach($mostboughtproducts as $mostboughtproduct ) { ?>
@@ -369,7 +369,7 @@
                   <?php } } ?>
               </ul>
           </div>
-          <span class="view-all-button"><a href=<?= $mostboughtproducts_url; ?>>View All Featured</a></span>
+          <span class="view-all-button"><a href=<?= $mostboughtproducts_url; ?>>View All Frequently Bought</a></span>
       </div>
   </div>
   <?php } ?>
