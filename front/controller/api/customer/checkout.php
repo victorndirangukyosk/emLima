@@ -287,20 +287,21 @@ class ControllerApiCustomerCheckout extends Controller {
 
             //echo "<pre>";print_r($results);die;
             $total = $this->request->get['total'];
+            if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
+                foreach ($results as $result) {
+                    if ($result['code'] == 'cod' || $result['code'] != 'mod' || $result['code'] != 'pesapal' || $result['code'] != 'interswitch') {
+                        if ($this->config->get($result['code'] . '_status')) {
+                            $this->load->model('payment/' . $result['code']);
 
-            foreach ($results as $result) {
-                if ($this->config->get($result['code'] . '_status')) {
-                    $this->load->model('payment/' . $result['code']);
+                            $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
 
-                    $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
-                    $log = new Log('error.log');
-                    $log->write($method);
-
-                    if ($method) {
-                        $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
-                        //removed  (No Transaction Fee) from terms,as suggested
-                        //echo "<pre>";print_r($method);die;
-                        $method_data[] = $method;
+                            if ($method) {
+                                $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
+                                //removed  (No Transaction Fee) from terms,as suggested
+                                //echo "<pre>";print_r($method);die;
+                                $method_data[] = $method;
+                            }
+                        }
                     }
                 }
             }
