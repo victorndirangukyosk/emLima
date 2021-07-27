@@ -118,6 +118,15 @@
                                     <?php } ?>
                                 </div>
                             </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-deliverytime"><?php echo $entry_delivery_time; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="delivery_time" value="<?php echo $delivery_time; ?>" placeholder="<?php echo $delivery_time; ?>" id="input-delivery-time" class="form-control" />
+                                    <?php if ($error_delivery_time) { ?>
+                                    <div class="text-danger"><?php echo $error_delivery_time; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-image"><?php echo $entry_image; ?></label>
