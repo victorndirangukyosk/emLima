@@ -267,7 +267,7 @@ class ModelUserUser extends Model {
 
             $_sql[] = "status LIKE '" . $this->db->escape($data['filter_status']) . "%'";
         } else {
-           $_sql[] = "status = 1";
+            $_sql[] = "status = 1";
         }
 
         if ($_sql) {
@@ -307,6 +307,12 @@ class ModelUserUser extends Model {
         $query = $this->db->query($sql);
 
         return $query->rows;
+    }
+
+    public function getVendor($store_id) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "store` WHERE store_id = '" . (int) $store_id . "'");
+
+        return $query->row;
     }
 
 }
