@@ -138,7 +138,7 @@ class ControllerSaleOrderReceivables extends Controller
         ];
 
 
-        if ('' != $filter_customer || '' != $filter_company) {
+        if ('' != $filter_customer || '' != $filter_company || '' != $filter_order_id) {
            // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
         $order_total_grandTotal = $this->model_sale_order_receivables->getTotalOrderReceivablesAndGrandTotal($filter_data);
         
