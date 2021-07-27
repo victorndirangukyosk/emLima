@@ -5566,6 +5566,29 @@ class ModelReportExcel extends Model {
                     break;
                 }
             }
+
+            if($result['paid']=='N')
+            {
+                //check transaction Id Exists are not// if exists, it is paid order,
+               $transcation_id =  $this->model_sale_order->getOrderTransactionId($result['order_id']);
+                if (!empty($transcation_id)) {
+                    $result['paid']='Paid';
+                }
+                else{
+                    $result['paid']='Pending';
+                }
+            }
+            else if($result['paid']=='P')
+            {
+                // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
+                $result['paid']='Few Amount Paid';
+            }
+            else if($result['paid']=='Y')
+            {
+                // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
+                $result['paid']='Paid';
+            }
+
             $data['customers'][] = [
                 'company' => $result['company'],
                 'customer' => $result['customer'],
@@ -5583,6 +5606,7 @@ class ModelReportExcel extends Model {
                 'po_number' => $result['po_number'],
                 'subtotal' => str_replace('KES', ' ', $this->currency->format($sub_total)),
                 'SAP_customer_no' => $result['SAP_customer_no'],
+                'paid'=> $result['paid']
             ];
         }
 
@@ -5673,6 +5697,7 @@ class ModelReportExcel extends Model {
 
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'P.O. Number');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Order Value');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Payment Status');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -5681,6 +5706,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 7;
@@ -5701,6 +5727,8 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['delivery_date']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['po_number']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['subtotal']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['paid']);
+
                 $Amount = $Amount + $result['subtotalvalue'];
                 ++$row;
             }
@@ -5787,6 +5815,28 @@ class ModelReportExcel extends Model {
                             break;
                         }
                     }
+                    if($result['paid']=='N')
+                    {
+                        //check transaction Id Exists are not// if exists, it is paid order,
+                       $transcation_id =  $this->model_sale_order->getOrderTransactionId($result['order_id']);
+                        if (!empty($transcation_id)) {
+                            $result['paid']='Paid';
+                        }
+                        else{
+                            $result['paid']='Pending';
+                        }
+                    }
+                    else if($result['paid']=='P')
+                    {
+                        // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
+                        $result['paid']='Few Amount Paid';
+                    }
+                    else if($result['paid']=='Y')
+                    {
+                        // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
+                        $result['paid']='Paid';
+                    }
+
                     $data['customers'][] = [
                         'company' => $result['company'],
                         'customer' => $result['customer'],
@@ -5804,6 +5854,7 @@ class ModelReportExcel extends Model {
                         'po_number' => $result['po_number'],
                         'subtotal' => str_replace('KES', ' ', $this->currency->format($sub_total)),
                         'SAP_customer_no' => $result['SAP_customer_no'],
+                        'paid'=> $result['paid']
                     ];
                 }
                 echo "<pre>";print_r($data);
@@ -5885,6 +5936,7 @@ class ModelReportExcel extends Model {
 
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'P.O. Number');
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Order Value');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Payment Status');
 
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -5893,6 +5945,7 @@ class ModelReportExcel extends Model {
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+                    $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
 
                     // Fetching the table data
                     $row = 7;
@@ -5910,6 +5963,7 @@ class ModelReportExcel extends Model {
                         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['delivery_date']);
                         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['po_number']);
                         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['subtotal']);
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['paid']);
                         $Amount = $Amount + $result['subtotalvalue'];
                         ++$row;
                     }
