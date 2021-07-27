@@ -984,9 +984,9 @@ class ControllerVendorVendor extends Controller {
             $this->error['display_name'] = $this->language->get('error_display_name');
         }
         
-        if(empty($this->request->post['delivery_time'])){
+        /*if(empty($this->request->post['delivery_time'])){
             $this->error['delivery_time'] = $this->language->get('error_delivery_time');
-        }
+        }*/
         
         if (!filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');

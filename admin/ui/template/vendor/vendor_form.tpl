@@ -118,14 +118,14 @@
                                     <?php } ?>
                                 </div>
                             </div>
-                            <div class="form-group required">
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-deliverytime"><?php echo $entry_delivery_time; ?></label>
                                 <div class="col-sm-10">
                                     <select name="delivery_time" id="input-delivery-time" class="form-control">
                                         <option value="0">Select Delivery Time</option>
-                                        <option value="24">24</option>
-                                        <option value="48">48</option>
-                                        <option value="72">72</option>
+                                        <option value="24" <?php if($delivery_time == 24) { ?> selected="selected" <?php } ?> >24</option>
+                                        <option value="48" <?php if($delivery_time == 48) { ?> selected="selected" <?php } ?> >48</option>
+                                        <option value="72" <?php if($delivery_time == 72) { ?> selected="selected" <?php } ?> >72</option>
                                     </select>
                                     <?php if ($error_delivery_time) { ?>
                                     <div class="text-danger"><?php echo $error_delivery_time; ?></div>
