@@ -284,13 +284,22 @@ class ControllerReportCustomerOrder extends Controller
                     //check transaction Id Exists are not// if exists, it is paid order,
                    $transcation_id =  $this->model_sale_order->getOrderTransactionId($result['order_id']);
                     if (!empty($transcation_id)) {
-                        $result['paid']='Y';
+                        $result['paid']='Paid';
+                    }
+                    else{
+                        $result['paid']='Pending';
                     }
                 }
-                // else if($result['paid']=='P')
-                // {
-                //     $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
-                // }
+                else if($result['paid']=='P')
+                {
+                    // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
+                    $result['paid']='Few Amount Paid';
+                }
+                else if($result['paid']=='Y')
+                {
+                    // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
+                    $result['paid']='Paid';
+                }
                 $data['customers'][] = [
                 'company' => $result['company'],
                 'customer' => $result['customer'],
