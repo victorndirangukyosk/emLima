@@ -118,7 +118,7 @@
                                     <?php } ?>
                                 </div>
                             </div>
-                            <div class="form-group required">
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-deliverytime"><?php echo $entry_delivery_time; ?></label>
                                 <div class="col-sm-10">
                                     <select name="delivery_time" id="input-delivery-time" class="form-control">
