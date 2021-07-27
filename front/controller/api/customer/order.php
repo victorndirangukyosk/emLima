@@ -2153,7 +2153,7 @@ class ControllerApiCustomerOrder extends Controller {
             $this->error['error_products'] = $this->language->get('error_products');
         }
 
-        $vendor_terms = json_decode($this->getCheckOtherVendorOrderExists(), true);
+        $vendor_terms = json_decode($this->getCheckOtherVendorOrderExist(), true);
         if ($vendor_terms['modal_open'] == TRUE) {
             $this->error['vendor_terms'] = 'Please accept vendor terms!';
         }
