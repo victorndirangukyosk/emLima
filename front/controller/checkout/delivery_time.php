@@ -12,7 +12,7 @@ class Controllercheckoutdeliverytime extends Controller {
         $rangetwoend = "22:00:00";
 
         $rangethreestart = "22:00:00";
-        $rangethreeend = "00:00:00";
+        $rangethreeend = "23:59:59";
 
         $rangefourstart = "00:00:00";
         $rangefourend = "05:00:00";
@@ -1749,7 +1749,7 @@ class Controllercheckoutdeliverytime extends Controller {
         $rangetwoend = "22:00:00";
 
         $rangethreestart = "22:00:00";
-        $rangethreeend = "00:00:00";
+        $rangethreeend = "23:59:59";
 
         $rangefourstart = "00:00:00";
         $rangefourend = "05:00:00";
