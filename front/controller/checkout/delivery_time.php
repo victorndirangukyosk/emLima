@@ -1974,7 +1974,7 @@ class Controllercheckoutdeliverytime extends Controller {
 
         if ($data['selected_time_slot'] != NULL) {
             $selected_time_slot = explode(' ', $data['selected_time_slot']);
-            $this->session->data['timeslot'][$store_id] = $selected_time_slot[1] . ' - ' . $selected_time_slot[2];
+            $this->session->data['timeslot'][$store_id] = $selected_time_slot[1] . ' - ' . $selected_time_slot[3];
             $this->session->data['dates'][$store_id] = $selected_time_slot[0];
         }
 
