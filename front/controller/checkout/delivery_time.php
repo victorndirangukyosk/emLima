@@ -1972,7 +1972,7 @@ class Controllercheckoutdeliverytime extends Controller {
         $log->write($data);
         $log->write('getothervendordeliverytime');
 
-        if ($data['$selected_time_slot'] != NULL) {
+        if ($data['selected_time_slot'] != NULL) {
             $selected_time_slot = explode(' ', $data['selected_time_slot']);
             $this->session->data['timeslot'][$store_id] = $selected_time_slot[1];
             $this->session->data['dates'][$store_id] = $selected_time_slot[0];
