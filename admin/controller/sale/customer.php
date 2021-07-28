@@ -1953,7 +1953,7 @@ class ControllerSaleCustomer extends Controller {
             if(!isset($this->request->post['contact_id']))
             $this->request->post['contact_id']=0;
 
-            $this->model_sale_customer->addEditContact($this->request->get['customer_id'], $this->request->post['firstname'], $this->request->post['lastname'], $this->request->post['email'], $this->request->post['phone'], $this->request->post['customer_contact_send'], $this->request->post['contact_id']);
+            $this->model_sale_customer->addEditContact($this->request->get['customer_id'], $this->request->post['firstname'], $this->request->post['lastname'], $this->request->post['email'], $this->request->post['phone'], $this->request->post['customer_contact_send'], $this->request->post['statement_duration'], $this->request->post['contact_id']);
 
             $data['success'] = $this->language->get('text_success');
         } else {
@@ -1977,7 +1977,7 @@ class ControllerSaleCustomer extends Controller {
         $data['contacts'] = [];
 
         $results = $this->model_sale_customer->getCustomerContacts($this->request->get['customer_id'], ($page - 1) * 10, 10);
-        //  echo "<pre>";print_r($results);die;
+        //    echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $data['contacts'][] = [
                 'contact_id' =>$result['contact_id'],
@@ -1987,7 +1987,7 @@ class ControllerSaleCustomer extends Controller {
                 'email' => $result['email'],  
                 'telephone' => $result['telephone'],  
                 'send' => $result['send'],  
-                'customer_id' => $result['description'],  
+                'statement_duration' => $result['statement_duration'],  
             
             ];
         }

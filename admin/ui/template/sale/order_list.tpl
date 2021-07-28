@@ -1197,7 +1197,7 @@ function savedriverdetails() {
                        return false;
                 } 
                 else{
-                    var clicked_orderid = order_id;
+                var clicked_orderid = order_id;
                 $.ajax({
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
@@ -1225,6 +1225,22 @@ function savedriverdetails() {
                         console.log(json); 
                         if (json['status']) {
                             $('#driverModal-success-message').html('Saved Successfully');
+                            
+                            //ORDER STATUS UPDATE TO TRANSIT
+                            $.ajax({
+		            url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
+		            type: 'post',
+		            dataType: 'json',
+		            data: 'order_status_id=4&notify=1',
+		            success: function(json) {	 
+                            console.log(json);
+		            },			
+		            error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		            }
+                            });
+                            //ORDER STATUS UPDATE TO TRANSIT
+                            
                             window.open(invoice, '_blank');
                             setTimeout(function(){ window.location.reload(false); }, 1500);
                         }
@@ -1303,6 +1319,22 @@ function savedriverdetail() {
                     success: function(json) {
                         console.log(json); 
                         if (json['status']) {
+                            
+                            //ORDER STATUS UPDATE TO TRANSIT
+                            $.ajax({
+		            url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
+		            type: 'post',
+		            dataType: 'json',
+		            data: 'order_status_id=4&notify=1',
+		            success: function(json) {	 
+                            console.log(json);
+		            },			
+		            error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		            }
+                            });
+                            //ORDER STATUS UPDATE TO TRANSIT
+                            
                             $('#driverModal-success-message').html('Saved Successfully');
                             setTimeout(function(){ window.location.reload(false); }, 1500);
                         }

@@ -1295,6 +1295,12 @@ function setDeliveryTime() {
             // $('#delivery-time-wrapper-'+store_id+'').html('<div class="text-center"><i class="fa fa-spinner fa-spin checkout-spin"></i></div>');
         },
         success: function(json) {
+            console.log(json['disabled_slot']);
+            
+            $.each(json['disabled_slot'], function( index, value ) {
+            $('.timeslot-selected[data-value="' + value + '"][data-date="'+json['dates'][0]+'"]').addClass( "disabled" );
+            });
+            
             $('#select-timeslot').html("Selected : "+ json['dates'][0]+ ', ' + json['selected_slot']);
             $('.timeslot-selected[data-value="' + json['selected_slot'] + '"][data-date="'+json['dates'][0]+'"]').children().children().prop("checked", true);
             $('#payment-next').removeAttr('disabled');
