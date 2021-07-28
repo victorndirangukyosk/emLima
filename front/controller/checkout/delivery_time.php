@@ -1834,6 +1834,7 @@ class Controllercheckoutdeliverytime extends Controller {
         foreach ($stores as $store_id) {
             $this->session->data['timeslot'][$store_id] = $data['selected_slot'];
             $this->session->data['dates'][$store_id] = $data['dates'][0];
+            $this->load->model('user/user');
             $store_details = $this->model_user_user->getVendor($store_id);
             $vendor_details = $this->model_user_user->getUser($store_details['vendor_id']);
             if ($store_id > 75 && $vendor_details['delivery_time'] != NULL && $vendor_details['delivery_time'] > 0) {
