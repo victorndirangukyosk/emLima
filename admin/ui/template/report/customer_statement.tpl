@@ -106,6 +106,7 @@
                 <td class="text-right">P.O. Number</td>
                 <!--<td class="text-right"><?php echo $column_total; ?></td>-->
                 <td class="text-right">Order value</td>
+                <td class="text-right">Payment Status</td>
                 <td class="text-center"><?php echo $column_action; ?></td>
               </tr>
             </thead>
@@ -127,6 +128,7 @@
                 <!--<td class="text-right"><?php echo $customer['total']; ?></td>-->
                 <td class="text-right"><?php echo $customer['po_number']; ?></td>
                 <td class="text-right"><?php echo $customer['subtotal']; ?></td>
+                <td class="text-right"><?php echo $customer['paid']; ?></td>
                 <td class="text-center"><a class="download" id="download-order-products"  data-toggle="tooltip" order_date="<?php echo $customer['date_added']; ?>" company="<?php echo $customer['company']; ?>" data="<?php echo $customer['customer']; ?>" value=<?php echo $customer['order_id']; ?>  title="Download Statements" class="btn btn-info"><i  style="cursor: pointer;height:20px;width:20px" class="fa fa-file-excel-o"></i></a></td>
               </tr>
               <?php } ?>

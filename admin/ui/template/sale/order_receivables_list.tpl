@@ -40,7 +40,7 @@
             <div class="panel-body">
                 <div class="well" style="display:none;">
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <div class="form-group">
                                 <label class="control-label" for="input-order-id"><?php echo $entry_order_id; ?></label>
                                 <input type="text" name="filter_order_id" value="<?php echo $filter_order_id; ?>" placeholder="<?php echo $entry_order_id; ?>" id="input-order-id" class="form-control" />
@@ -53,7 +53,19 @@
                            
                             
                         </div>
-                        <div class="col-sm-6">
+
+                         <div class="col-sm-4">
+                             
+                            <div class="form-group">
+                                <label class="control-label" for="input-company"><?php echo $entry_company; ?></label>
+                                <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="<?php echo $entry_company; ?>" id="input-company" class="form-control" />
+                            </div>
+                            
+                           
+                            
+                        </div>
+
+                        <div class="col-sm-4">
                             
                             <!--<div class="form-group">
                                 <label class="control-label" for="input-total"><?php echo $entry_total; ?></label>
@@ -118,7 +130,11 @@
                                         </td>
 
                                          <td class="text-right"> 
-                                      Partialy Paid Amount 
+                                       Paid Amount 
+                                        </td>
+
+                                         <td class="text-right"> 
+                                       Pending Amount 
                                         </td>
                                     <!--<td class="text-left">
                                         <?php if ($sort == 'o.date_added') { ?>
@@ -141,7 +157,7 @@
                                         <input type="checkbox" name="selected[]" value="<?php echo $order['order_id']; ?>" />
                                         <?php } ?>
                                         <input type="hidden" name="order_value[]" value="<?php echo $order['total_value']; ?>" />
-                                        <input type="hidden" name="partially_paid_value[]" value="<?php echo $order['amount_partialy_paid']; ?>" />
+                                        <input type="hidden" name="partially_paid_value[]" value="<?php echo $order['amount_partialy_paid_value']; ?>" />
                                     </td>
 
                                     
@@ -151,10 +167,12 @@
                                             <a href="<?php echo $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $o, 'SSL'); ?>" data-toggle="tooltip" title="<?php echo $button_view; ?>" class="btn btn-info"><?php echo $o; ?></a> 
                                         <?php endforeach ?>
                                     </td>
-                                    <td class="text-left"><?php echo $order['customer']; ?></td>
+                                    <td class="text-left"><?php echo $order['customer']; ?> <br/>
+                                            <?php echo $order['company']  ; ?></td>
                                     <!--<td class="text-left"><?php echo $order['no_of_products']; ?></td>-->
                                     <td class="text-right"><?php echo $order['total']; ?></td>
                                     <td class="text-right"><?php echo $order['amount_partialy_paid']; ?></td>
+                                    <td class="text-right"><?php echo $order['pending_amount']; ?></td>
                                    <!-- <td class="text-left"><?php echo $order['date_added']; ?></td>-->
                                     <td><a class="btn btn-default" onclick="showConfirmPopup(<?= $order['order_id'] ?>,<?= $order['total_value'] ?>)"  data-toggle="modal"   data-target="#paidModal" title="Payment Confirmation" >Receive Payment</a></td>
                                 </tr>
@@ -201,27 +219,33 @@
             }
             $grand_total_array=0;
             for (i = 0; i < selected.length; i++) {
+                
                $total_array= ($(selected[i]).parent().find('input[name^=\'order_value\']').val()) ;
+               console.log($total_array);
+               
                $partial_array= ($(selected[i]).parent().find('input[name^=\'partially_paid_value\']').val()) ;
-                    
-                    if($partial_array!='' && $partial_array!=null)
-                    {
+                     
+                    if($partial_array!='' && $partial_array!=null && $total_array!=null)
+                    {                      
                         $total_array=$total_array-$partial_array;
                     }
-                    $grand_total_array += parseInt($total_array);
+                    if($total_array!=null)
+                    {
+                    $grand_total_array += parseFloat($total_array);
+                    }
                 
             }
-            //alert($grand_total_array);
+            
             if($grand_total_array>0)
-             $('input[name=\'grand_total\']').val($grand_total_array);
+             $('input[name=\'grand_total\']').val(parseFloat($grand_total_array).toFixed(2));
              else
-              $('input[name=\'grand_total\']').val();
+              $('input[name=\'grand_total\']').val('');
 
            
 
         });
 
-        $('input[name^=\'selected\']:first').trigger('change');
+         $('input[name^=\'selected\']:first').trigger('change'); 
 
   $('#button-filter').on('click', function () {
             url = 'index.php?path=sale/order_receivables&token=<?php echo $token; ?>';
@@ -239,9 +263,17 @@
                 url += '&filter_customer=' + encodeURIComponent(filter_customer);
             }
 
-            if(filter_customer==0 && filter_order_id==0)
+
+ var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company) {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+  
+
+            if(filter_customer==0 && filter_order_id==0 && filter_company==0)
             {
-                alert("Please select either customer or order_id ");
+                alert("Please select either customer or order_id or company ");
                 return;
             }
 
@@ -266,11 +298,12 @@
     <script type="text/javascript"><!--
         
         
-        
+         $companyName="";
         $('input[name=\'filter_customer\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/customer/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company=' +$companyName,
+
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -286,6 +319,34 @@
                 $('input[name=\'filter_customer\']').val(item['label']);
             }
         });
+
+
+          $('input[name=\'filter_company\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['name']
+                            }
+                        }));
+
+                        
+                    }
+                });
+                $companyName="";
+            },
+            'select': function (item) {
+                $('input[name=\'filter_company\']').val(item['label']);
+                $('input[name=\'filter_customer\']').val('');
+                $companyName=item['label'];
+            }
+        });
+
+
         //--></script> 
    
     <script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
@@ -308,16 +369,21 @@ function excel() {
             if (filter_order_id) {
                 url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
             }
+ var filter_company = $('input[name=\'filter_company\']').val();
 
+            if (filter_company) {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+  
             var filter_customer = $('input[name=\'filter_customer\']').val();
 
             if (filter_customer) {
                 url += '&filter_customer=' + encodeURIComponent(filter_customer);
             }
 
- if(filter_customer==0 && filter_order_id==0)
+ if(filter_customer==0 && filter_order_id==0 && filter_company==0)
             {
-                alert("Please select either customer or order_id ");
+                alert("Please select either customer or order_id or company");
                 return;
             }
 

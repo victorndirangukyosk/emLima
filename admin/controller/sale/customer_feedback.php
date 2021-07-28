@@ -355,4 +355,98 @@ class ControllerSaleCustomerFeedback extends Controller
 
         return true;
     }
+
+
+
+    public function export_excel() {
+        
+        $this->load->model('report/excel');
+
+        if (isset($this->request->get['feedback_id'])) {
+            $filter_feedback_id = $this->request->get['feedback_id'];
+        }  
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
+
+
+        if (isset($this->request->get['filter_customer_rating_id'])) {
+            $filter_customer_rating_id = $this->request->get['filter_customer_rating_id'];
+        } else {
+            $filter_customer_rating_id = null;
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $filter_status = $this->request->get['filter_status'];
+        } else {
+            $filter_status = null;
+        }
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            //  $sort = 'rating';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'DESC';
+        }
+
+        $filter_data = [
+            
+            'filter_feedback_id' => $filter_feedback_id,
+            'filter_company' => $filter_company,
+            'filter_name' => $filter_name,
+            'filter_customer_rating_id' => $filter_customer_rating_id,
+            'filter_status' => $filter_status,
+            'sort' => $sort,
+            'order' => $order,
+            
+        ];      
+        $this->load->model('sale/customer_feedback');
+
+        $results = $this->model_sale_customer_feedback->getCustomerFeedbacks($filter_data);
+        
+        //  echo print_r( $results);die;
+        
+        
+        foreach ($results as $result) {
+
+            if ($result['company_name']) {
+                $result['company_name'] = ' (' . $result['company_name'] . ')';
+            } else {
+                // $result['company_name'] = "(NA)";
+            }
+            $data['customer_feedbacks'][] = [
+                'feedback_id' => $result['feedback_id'],
+                'rating' => $result['rating'],
+                'comments' => $result['comments'],
+                'customer_name' => $result['name'],
+                'company_name' => $result['company_name'],
+                'feedback_type' =>  ($result['feedback_type'] =="S"? "Suggestions" : ($result['feedback_type'] =="I"? "Issue"." - ".$result['issue_type'] :"Happy")),
+                'order_id' => ($result['order_id']==0?"NA":$result['order_id']),
+                'status' => $result['status'],
+                'created_date' => $result['created_date'],
+                'closed_date' => $result['closed_date'],
+                'closed_comments' => $result['closed_comments'],
+                'accepted_user' => $result['accepted_user'],
+                 
+            ];
+        }
+
+        //  echo print_r( $data);die;
+
+        $this->model_report_excel->download_feedback_excel($data);
+    }
+
 }

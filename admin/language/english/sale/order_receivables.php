@@ -12,6 +12,7 @@ $_['text_invoice_date'] = 'Invoice Date:';
 $_['text_store_name'] = 'Store Name:';
 $_['text_store_url'] = 'Store Url:';
 $_['text_customer'] = 'Customer:';
+$_['text_company'] = 'Company:';
 $_['text_customer_group'] = 'Customer Group:';
 $_['text_email'] = 'E-Mail:';
 $_['text_telephone'] = 'Telephone:';
@@ -121,6 +122,7 @@ $_['text_history'] = 'Add transaction History';
 // Column
 $_['column_order_id'] = 'Order IDs';
 $_['column_customer'] = 'Customer';
+$_['column_companyr'] = 'Company';
 $_['column_status'] = 'Status';
 $_['column_date_added'] = 'Date Added';
 $_['column_date_modified'] = 'Date Modified';
@@ -139,6 +141,7 @@ $_['column_weight'] = 'Product weight';
 // Entry
 $_['entry_store'] = 'Store';
 $_['entry_customer'] = 'Customer';
+$_['entry_company'] = 'Company';
 $_['entry_customer_group'] = 'Customer Group';
 $_['entry_firstname'] = 'First Name';
 $_['entry_lastname'] = 'Last Name';

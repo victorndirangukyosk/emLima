@@ -49,7 +49,7 @@
     }
     .view-all-buttons {
     margin-top: 5px;
-    margin-bottom: 24px;
+    /*margin-bottom: 24px;*/
     display: flex;
     align-items: center;
     justify-content: center;
@@ -246,11 +246,12 @@
       <div class="container" style="width:100%;">
           <div class="_47ahp" data-test-selector="search-results">
               <div style="margin-top: 16px" class="clearfix featured-categories__header">
-                  <h2 class="featured-categories__header-title"><span>Featured</span></h2>
+                  <h2 class="featured-categories__header-title"><span>Frequently Bought</span></h2>
               </div>
               <ul id="items-ul" class="row" data-test-selector="item-cards-layout-grid">
                   <?php if(count($mostboughtproducts) > 0) { foreach($mostboughtproducts as $mostboughtproduct ) { ?>
                   <li class="col-md-2" style="min-height: 265px">
+                      <span class="view-all-buttons"><?php echo $mostboughtproduct['vendor_display_name']; ?></span>
                       <a class="product-detail-bnt open-popup" role="button" data-store="<?= $mostboughtproduct['store_id'] ?>" data-id="<?= $mostboughtproduct['product_store_id'] ?>" target="_blank" aria-label="<?= $mostboughtproduct['name'] ?>">
                           <img class="_1xvs1" src="<?= $mostboughtproduct['thumb'] ?>" title="<?= $mostboughtproduct['name'] ?>" alt="<?= $mostboughtproduct['name'] ?>">
                           <div class="_25ygu"><?= $mostboughtproduct['name'] ?><br>
@@ -258,12 +259,9 @@
                                   <?= $mostboughtproduct['variations'][0]['special'];?>
                                   <?php  echo '/ Per ' . $mostboughtproduct['variations'][0]['unit']; ?>
                               </div>
-                              <?php if(isset($cartproducts) && count($cartproducts) > 0) { foreach($cartproducts as $cartproduct) { if($cartproduct['product_store_id'] == $mostboughtproduct['product_store_id'] && $cartproduct['quantity'] > 0) { ?>
-                              <span id="flag-qty-id-<?= $mostboughtproduct['product_store_id']; ?>-<?= $mostboughtproduct['store_product_variation_id']; ?>">
-                                  <?php echo $cartproduct['quantity']; ?> items in cart <i class="fas fa-flag"></i>
+                              <span id="flag-qty-id-<?= $mostboughtproduct['product_store_id']; ?>-<?= $mostboughtproduct['store_product_variation_id']; ?>" style="padding:5px;display: <?= $mostboughtproduct['qty_in_cart'] > 0 ? 'block' : 'none'; ?>">
+                                  <?php echo $mostboughtproduct['qty_in_cart']; ?> items in cart <i class="fas fa-flag"></i>
                               </span>
-                              <?php } } } ?>
-                              <span class="view-all-buttons"><?php echo $mostboughtproduct['vendor_display_name']; ?></span>
                           </div>
                       </a>
                   </li>
@@ -369,7 +367,7 @@
                   <?php } } ?>
               </ul>
           </div>
-          <span class="view-all-button"><a href=<?= $mostboughtproducts_url; ?>>View All Featured</a></span>
+          <span class="view-all-button"><a href=<?= $mostboughtproducts_url; ?>>View All Frequently Bought</a></span>
       </div>
   </div>
   <?php } ?>
@@ -397,6 +395,7 @@
 
           <?php foreach($category['products'] as $product) { ?>
           <li class="col-md-2" style="min-height: 265px">
+            <span class="view-all-buttons"><?php echo $product['vendor_display_name']; ?></span>
             <a class="product-detail-bnt open-popup" role="button" data-store="<?= $product['store_id'] ?>"
               data-id="<?= $product['product_store_id'] ?>" target="_blank" aria-label="<?=$product['name']?>">
               <img class="_1xvs1" src="<?=$product['thumb']?>" title="<?=$product['name']?>"
@@ -413,7 +412,6 @@
                   <?php echo $product['qty_in_cart']?>
                   items in cart <i class="fas fa-flag"></i>
                 </span>
-                <span class="view-all-buttons"><?php echo $product['vendor_display_name']; ?></span>
               </div>
             </a>
           </li>

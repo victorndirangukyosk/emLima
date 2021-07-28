@@ -279,6 +279,27 @@ class ControllerReportCustomerOrder extends Controller
                         break;
                     }
                 }
+                if($result['paid']=='N')
+                {
+                    //check transaction Id Exists are not// if exists, it is paid order,
+                   $transcation_id =  $this->model_sale_order->getOrderTransactionId($result['order_id']);
+                    if (!empty($transcation_id)) {
+                        $result['paid']='Paid';
+                    }
+                    else{
+                        $result['paid']='Pending';
+                    }
+                }
+                else if($result['paid']=='P')
+                {
+                    // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
+                    $result['paid']='Few Amount Paid';
+                }
+                else if($result['paid']=='Y')
+                {
+                    // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
+                    $result['paid']='Paid';
+                }
                 $data['customers'][] = [
                 'company' => $result['company'],
                 'customer' => $result['customer'],
@@ -294,10 +315,11 @@ class ControllerReportCustomerOrder extends Controller
                 // 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')).replace("KES",""),
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
                 'subtotal' => str_replace('KES', ' ', $this->currency->format($sub_total)),
+                'paid'=> $result['paid']
             ];
             }
         }
-        //  echo "<pre>";print_r($data['customers']);die;
+        //   echo "<pre>";print_r($data['customers']);die;
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_list'] = $this->language->get('text_list');

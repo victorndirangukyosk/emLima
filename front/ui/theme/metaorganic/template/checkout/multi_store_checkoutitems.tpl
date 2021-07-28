@@ -652,7 +652,9 @@
                             <div class="col-md-12">
                               <h3>ACCEPT TERMS</h3>
                             </div>
-
+                            <div class="modal-body">
+                            <p>The above products from the cart are available only for "Payment On Delivery"</p>
+                            </div>
                             <div class="addnews-address-form">
                                 <div class="form-group">
                                     <div class="col-md-12">

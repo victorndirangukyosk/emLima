@@ -460,6 +460,7 @@ class ControllerVendorVendor extends Controller {
         $data['entry_tin_no'] = $this->language->get('entry_tin_no'); 
         $data['entry_orderprefix'] = $this->language->get('entry_orderprefix'); 
         $data['entry_display_name'] = $this->language->get('entry_display_name'); 
+        $data['entry_delivery_time'] = $this->language->get('entry_delivery_time'); 
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');
         $data['button_saveclose'] = $this->language->get('button_saveclose');
@@ -597,6 +598,12 @@ class ControllerVendorVendor extends Controller {
             $data['error_display_name'] = $this->error['display_name'];
         } else {
             $data['error_display_name'] = '';
+        }
+        
+        if (isset($this->error['delivery_time'])) {
+            $data['error_delivery_time'] = $this->error['delivery_time'];
+        } else {
+            $data['error_delivery_time'] = '';
         }
 
         $url = '';
@@ -820,6 +827,14 @@ class ControllerVendorVendor extends Controller {
             $data['display_name'] = '';
         }
         
+        if (isset($this->request->post['delivery_time'])) {
+            $data['delivery_time'] = $this->request->post['delivery_time'];
+        } elseif (!empty($vendor_info)) {
+            $data['delivery_time'] = $vendor_info['delivery_time'];
+        } else {
+            $data['delivery_time'] = '';
+        }
+        
         if (isset($this->request->post['address'])) {
             $data['address'] = $this->request->post['address'];
         } elseif (!empty($vendor_info)) {
@@ -968,6 +983,10 @@ class ControllerVendorVendor extends Controller {
         if(empty($this->request->post['display_name'])){
             $this->error['display_name'] = $this->language->get('error_display_name');
         }
+        
+        /*if(empty($this->request->post['delivery_time'])){
+            $this->error['delivery_time'] = $this->language->get('error_delivery_time');
+        }*/
         
         if (!filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');

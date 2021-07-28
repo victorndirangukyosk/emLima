@@ -401,6 +401,11 @@ $(document).delegate('#add-cart-btnnew', 'click', function () {
             $('#AtcButton-id-' + $product_id + '-' + $variation_id).css("background-color", "#ea7128");
             $('#flag-qty-id-' + $product_id + '-' + $variation_id).html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
             $('#flag-qty-id-' + $product_id + '-' + $variation_id).css("display", "block");
+            
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(1)").css("display", "block");
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(1)").html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(2)").css("display", "block");
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(2)").html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
         } else {
             //cart.update($key,$quantity,$ripe); 
             cart.update($key, $quantity, $product_notes, $produce_type);
@@ -408,6 +413,11 @@ $(document).delegate('#add-cart-btnnew', 'click', function () {
             $('#AtcButton-id-' + $product_id + '-' + $variation_id).css("background-color", "#ea7128");
             $('#flag-qty-id-' + $product_id + '-' + $variation_id).html($quantity + ' items in cart <i class="fas fa-flag"></i>');
             $('#flag-qty-id-' + $product_id + '-' + $variation_id).css("display", "block");
+            
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(1)").css("display", "block");
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(1)").html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(2)").css("display", "block");
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(2)").html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
         }
         console.log('#popup_product_' + $product_id);
 
@@ -428,6 +438,11 @@ $(document).delegate('#add-cart-btnnew', 'click', function () {
             $('#flag-qty-id-' + $product_id + '-' + $variation_id).html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
 
             $('#flag-qty-id-' + $product_id + '-' + $variation_id).css("display", "none");
+            
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(1)").css("display", "none");
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(1)").html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(2)").css("display", "none");
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(2)").html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
 
         }
 
@@ -439,11 +454,21 @@ $(document).delegate('#add-cart-btnnew', 'click', function () {
                 $('#AtcButton-id-' + $product_id + '-' + $variation_id).css("background-color", "#ea7128");
                 $('#flag-qty-id-' + $product_id + '-' + $variation_id).html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
                 $('#flag-qty-id-' + $product_id + '-' + $variation_id).css("display", "block");
+                
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(1)").css("display", "block");
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(1)").html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(2)").css("display", "block");
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(2)").html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
             }
             else {
                 $('#AtcButton-id-' + $product_id + '-' + $variation_id).css("background-color", "#3baa33");
                 $('#flag-qty-id-' + $product_id + '-' + $variation_id).html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
                 $('#flag-qty-id-' + $product_id + '-' + $variation_id).css("display", "none");
+                
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(1)").css("display", "none");
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(1)").html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(2)").css("display", "none");
+            $("[id=flag-qty-id-"+ $product_id +'-'+ $variation_id +"]:eq(2)").html($newquantityvalue + ' items in cart <i class="fas fa-flag"></i>');
             }
 
         }
@@ -1264,8 +1289,8 @@ $(document).delegate('#resendVerificationMail', 'click', function () {
 
 
 $(document).delegate('#reportissue', 'click', function () {
+    $('#reportissue').prop('disabled', true);
     console.log("reportissue click");
-
     var text = $('.reportissue-modal-text').html();
     // $('.reportissue-modal-text').html('');
     $('.reportissue-loader').show();
@@ -1290,6 +1315,8 @@ $(document).delegate('#reportissue', 'click', function () {
 
 
                 $('#reportissueModal').find('form').trigger('reset');
+                $('.reportissue-loader').hide(); $('#reportissue').prop('disabled', false);
+
 
             } else {
                 $error = '';
@@ -1301,7 +1328,7 @@ $(document).delegate('#reportissue', 'click', function () {
 
 
                 // $('.reportissue-modal-text').html(text);
-                $('.reportissue-loader').hide();
+                $('.reportissue-loader').hide(); $('#reportissue').prop('disabled', false);
 
                 $('#reportissue-message').html("<p style='color:red'>" + $error + "</p>");
             }
