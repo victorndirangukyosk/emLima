@@ -1458,7 +1458,7 @@ class ControllerApiCustomerCheckout extends Controller {
             $rangetwoend = "22:00:00";
 
             $rangethreestart = "22:00:00";
-            $rangethreeend = "00:00:00";
+            $rangethreeend = "23:59:59";
 
             $rangefourstart = "00:00:00";
             $rangefourend = "05:00:00";
@@ -1476,6 +1476,7 @@ class ControllerApiCustomerCheckout extends Controller {
                 $pre_defined_slots = array('06:00am - 08:00am');
                 $selected_slot = $pre_defined_slots[0];
                 $data['selected_slot'] = $selected_slot;
+                $data['disabled_slot'] = array();
                 $log->write($selected_slot);
                 $log->write('RANGE ONE');
             }
@@ -1484,6 +1485,7 @@ class ControllerApiCustomerCheckout extends Controller {
                 $pre_defined_slots = array('08:00am - 10:00am');
                 $selected_slot = $pre_defined_slots[0];
                 $data['selected_slot'] = $selected_slot;
+                $data['disabled_slot'] = array('06:00am - 08:00am');
                 $log->write('RANGE TWO');
             }
 
@@ -1491,6 +1493,7 @@ class ControllerApiCustomerCheckout extends Controller {
                 $pre_defined_slots = array('12:00pm - 02:00pm');
                 $selected_slot = $pre_defined_slots[0];
                 $data['selected_slot'] = $selected_slot;
+                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am');
                 $log->write('RANGE THREE');
             }
 
@@ -1498,6 +1501,7 @@ class ControllerApiCustomerCheckout extends Controller {
                 $pre_defined_slots = array('12:00pm - 02:00pm');
                 $selected_slot = $pre_defined_slots[0];
                 $data['selected_slot'] = $selected_slot;
+                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am');
                 $log->write('RANGE FOUR');
             }
 
@@ -1505,6 +1509,7 @@ class ControllerApiCustomerCheckout extends Controller {
                 $pre_defined_slots = array('02:00pm - 04:00pm');
                 $selected_slot = $pre_defined_slots[0];
                 $data['selected_slot'] = $selected_slot;
+                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '12:00pm - 02:00pm');
                 $log->write('RANGE FIVE');
             }
 
