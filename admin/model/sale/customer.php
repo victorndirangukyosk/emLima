@@ -1524,7 +1524,7 @@ class ModelSaleCustomer extends Model {
 
 
  
-    public function addEditContact($customer_id, $firstname , $lastname = '', $email,$phone,$customer_contact_send,$contact_id=0) {
+    public function addEditContact($customer_id, $firstname , $lastname = '', $email,$phone,$customer_contact_send,$statement_duration,$contact_id=0) {
         $customer_info = $this->getCustomer($customer_id);
 
         $log = new Log('error.log');
@@ -1540,10 +1540,10 @@ class ModelSaleCustomer extends Model {
             }
                if($contact_id==0)
                {
-                   $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_contact SET  firstname = '" . $firstname . "', lastname = '" . $lastname . "', email = '" . $email . "', telephone = '" . $phone . "', send = '" . $flag . "', customer_id = '" . (int) $customer_id . "', created_date = NOW()");
+                   $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_contact SET  firstname = '" . $firstname . "', lastname = '" . $lastname . "', email = '" . $email . "', telephone = '" . $phone . "', send = '" . $flag . "', customer_id = '" . (int) $customer_id . "',statement_duration='" . (int) $statement_duration . "', created_date = NOW()");
                     $contact_id = $this->db->getLastId(); 
                }else{
-                    $this->db->query('UPDATE ' . DB_PREFIX . "customer_contact SET   firstname = '" . $firstname . "', lastname = '" . $lastname . "',  email = '" . $email . "', telephone = '" . $phone . "', send = '" . $flag . "', customer_id = '" . $customer_id . "',  modified_date = NOW() WHERE contact_id = '" . (int) $contact_id . "'");
+                    $this->db->query('UPDATE ' . DB_PREFIX . "customer_contact SET   firstname = '" . $firstname . "', lastname = '" . $lastname . "',  email = '" . $email . "', telephone = '" . $phone . "', send = '" . $flag . "', customer_id = '" . $customer_id . "',statement_duration='" . (int) $statement_duration . "',  modified_date = NOW() WHERE contact_id = '" . (int) $contact_id . "'");
                     // echo "<pre>";print_r('UPDATE ' . DB_PREFIX . "customer_contact SET   firstname = '" . $firstname . "', lastname = '" . $lastname . "',  email = '" . $email . "', telephone = '" . $phone . "', send = '" . $flag . "', customer_id = '" . $customer_id . "',  modified_date = NOW() WHERE contact_id = '" . (int) $contact_id . "'"); die;
               }
        
