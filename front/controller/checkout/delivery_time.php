@@ -1834,6 +1834,11 @@ class Controllercheckoutdeliverytime extends Controller {
         foreach ($stores as $store_id) {
             $this->session->data['timeslot'][$store_id] = $data['selected_slot'];
             $this->session->data['dates'][$store_id] = $data['dates'][0];
+            $store_details = $this->model_user_user->getVendor($store_id);
+            $vendor_details = $this->model_user_user->getUser($store_details['vendor_id']);
+            if ($store_id > 75 && $vendor_details['delivery_time'] != NULL && $vendor_details['delivery_time'] > 0) {
+                $this->getothervendordeliverytime($store_id);
+            }
         }
         /* $log = new Log('error.log');
           $log->write('SLOTS');
@@ -1965,6 +1970,13 @@ class Controllercheckoutdeliverytime extends Controller {
         }
         $log->write($data);
         $log->write('getothervendordeliverytime');
+
+        if ($data['$selected_time_slot'] != NULL) {
+            $selected_time_slot = explode(' ', $data['selected_time_slot']);
+            $this->session->data['timeslot'][$store_id] = $selected_time_slot[1];
+            $this->session->data['dates'][$store_id] = $selected_time_slot[0];
+        }
+
         return $data;
     }
 
