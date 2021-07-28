@@ -633,12 +633,25 @@
                                 </div>
      
                                <div class="form-group required">
-                                  <label class="col-sm-3 control-label" for="input-contactsend">Send Invoice</label>
+                                  <label class="col-sm-3 control-label" for="input-contactsend">Send Statement</label>
                                    </br><div class="col-sm-6 col-xs-12">
                                  
                                         <input type="checkbox" checked   id="customer_contact_send" name="customer_contact_send">
                                              
                                         </input>
+                                    </div> 
+                               </div>
+
+
+                                <div class="form-group required">
+                                  <label class="col-sm-3 control-label" for="input-statement_duration">Statement Duration</label>
+                                  <div class="col-sm-6 col-xs-12">
+                                  <select name="statement_duration" id="input-statement_duration" class="form-control">
+                            <option value="7">7 Days</option>
+                            <option value="15">15 Days</option>
+                            <option value="30">30 Days</option>
+                            </select>   
+                                      
                                     </div> 
                                </div>
                                
@@ -1847,7 +1860,7 @@ $('#button-contact').on('click', function(e) {
     url: 'index.php?path=sale/customer/contact&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
     type: 'post',
     dataType: 'html',
-    data: 'firstname=' + encodeURIComponent($('#tab-contact input[name=\'contactpersonfirstname\']').val()) + '&lastname=' + encodeURIComponent($('#tab-contact input[name=\'contactpersonlastname\']').val())+ '&email=' + encodeURIComponent($('#tab-contact input[name=\'contactpersonemail\']').val())+'&phone=' + encodeURIComponent($('#tab-contact input[name=\'contactpersontelephone\']').val())+'&customer_contact_send=' + encodeURIComponent($('#tab-contact input[name=\'customer_contact_send\']').val())+'&contact_id=' + encodeURIComponent($('#tab-contact input[name=\'contactid\']').val()),
+    data: 'firstname=' + encodeURIComponent($('#tab-contact input[name=\'contactpersonfirstname\']').val()) + '&lastname=' + encodeURIComponent($('#tab-contact input[name=\'contactpersonlastname\']').val())+ '&email=' + encodeURIComponent($('#tab-contact input[name=\'contactpersonemail\']').val())+'&phone=' + encodeURIComponent($('#tab-contact input[name=\'contactpersontelephone\']').val())+'&customer_contact_send=' + encodeURIComponent($('#tab-contact input[name=\'customer_contact_send\']').val())+'&contact_id=' + encodeURIComponent($('#tab-contact input[name=\'contactid\']').val())+'&statement_duration=' + encodeURIComponent($('#tab-contact select[name=\'statement_duration\']').val()),
     beforeSend: function() {
       $('#button-contact').button('loading');
          },
@@ -1913,6 +1926,7 @@ $('#button-contact').on('click', function(e) {
                 success: function (json) {
                      console.log(json['data']['lastname']);
                     console.log(json['data']['telephone']);
+                    console.log(json['data']['statement_duration']);
                     console.log(json['data']);
                       //$("#message_text").hide();
                         $('#input-contactpersonfirstname').val(json['data']['firstname']);
@@ -1926,6 +1940,7 @@ $('#button-contact').on('click', function(e) {
                         $('#customer_contact_send').prop( "checked", true );
                         else
                         $('#customer_contact_send').prop( "checked", false );
+                        $('#input-statement_duration').val(json['data']['statement_duration']).change();;
  
                 }
             });
