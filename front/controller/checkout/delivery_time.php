@@ -5,41 +5,61 @@ class Controllercheckoutdeliverytime extends Controller {
     public function index() {
         $data = [];
 
-        $rangetwostart = "08:00:00";
-        $rangetwoend = "09:59:59";
+        $rangeonestart = "09:00:00";
+        $rangeoneend = "17:00:00";
 
-        $rangeonestart = "10:00:00";
-        $rangeoneend = "23:59:59";
+        $rangetwostart = "17:00:00";
+        $rangetwoend = "22:00:00";
 
-        $rangethreestart = "00:00:00";
-        $rangethreeend = "07:59:59";
+        $rangethreestart = "22:00:00";
+        $rangethreeend = "00:00:00";
+
+        $rangefourstart = "00:00:00";
+        $rangefourend = "05:00:00";
+
+        $rangefivestart = "05:00:00";
+        $rangefiveend = "09:00:00";
 
         $log = new Log('error.log');
         $log->write('RANGE');
+        $log->write(date("H:i:s"));
         $log->write(time());
         $log->write('RANGE');
 
         if (time() >= strtotime($rangeonestart) && time() <= strtotime($rangeoneend)) {
-            $pre_defined_slots = array('10:00am - 12:00pm', '12:00pm - 02:00pm', '02:00pm - 04:00pm', '04:00pm - 06:00pm');
-            $k = array_rand($pre_defined_slots);
-            $selected_slot = $pre_defined_slots[$k];
+            $pre_defined_slots = array('06:00am - 08:00am');
+            $selected_slot = $pre_defined_slots[0];
             $data['selected_slot'] = $selected_slot;
             $log->write($selected_slot);
             $log->write('RANGE ONE');
         }
 
         if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
-            $pre_defined_slots = array('04:00pm - 06:00pm');
+            $pre_defined_slots = array('08:00am - 10:00am');
             $selected_slot = $pre_defined_slots[0];
             $data['selected_slot'] = $selected_slot;
             $log->write('RANGE TWO');
         }
 
         if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
-            $pre_defined_slots = array('02:00pm - 04:00pm');
+            $pre_defined_slots = array('12:00pm - 02:00pm');
             $selected_slot = $pre_defined_slots[0];
             $data['selected_slot'] = $selected_slot;
             $log->write('RANGE THREE');
+        }
+
+        if (time() >= strtotime($rangefourstart) && time() <= strtotime($rangefourend)) {
+            $pre_defined_slots = array('12:00pm - 02:00pm');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $log->write('RANGE FOUR');
+        }
+
+        if (time() >= strtotime($rangefivestart) && time() <= strtotime($rangefiveend)) {
+            $pre_defined_slots = array('02:00pm - 04:00pm');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $log->write('RANGE FIVE');
         }
 
         $this->language->load('checkout/delivery_time');
@@ -1722,41 +1742,61 @@ class Controllercheckoutdeliverytime extends Controller {
     public function indexNew() {
         $data = [];
 
-        $rangetwostart = "08:00:00";
-        $rangetwoend = "09:59:59";
+        $rangeonestart = "09:00:00";
+        $rangeoneend = "17:00:00";
 
-        $rangeonestart = "10:00:00";
-        $rangeoneend = "23:59:59";
+        $rangetwostart = "17:00:00";
+        $rangetwoend = "22:00:00";
 
-        $rangethreestart = "00:00:00";
-        $rangethreeend = "07:59:59";
+        $rangethreestart = "22:00:00";
+        $rangethreeend = "00:00:00";
+
+        $rangefourstart = "00:00:00";
+        $rangefourend = "05:00:00";
+
+        $rangefivestart = "05:00:00";
+        $rangefiveend = "09:00:00";
 
         $log = new Log('error.log');
         $log->write('RANGE');
+        $log->write(date("H:i:s"));
         $log->write(time());
         $log->write('RANGE');
 
         if (time() >= strtotime($rangeonestart) && time() <= strtotime($rangeoneend)) {
-            $pre_defined_slots = array('10:00am - 12:00pm', '12:00pm - 02:00pm', '02:00pm - 04:00pm', '04:00pm - 06:00pm');
-            $k = array_rand($pre_defined_slots);
-            $selected_slot = $pre_defined_slots[$k];
+            $pre_defined_slots = array('06:00am - 08:00am');
+            $selected_slot = $pre_defined_slots[0];
             $data['selected_slot'] = $selected_slot;
             $log->write($selected_slot);
             $log->write('RANGE ONE');
         }
 
         if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
-            $pre_defined_slots = array('04:00pm - 06:00pm');
+            $pre_defined_slots = array('08:00am - 10:00am');
             $selected_slot = $pre_defined_slots[0];
             $data['selected_slot'] = $selected_slot;
             $log->write('RANGE TWO');
         }
 
         if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
-            $pre_defined_slots = array('02:00pm - 04:00pm');
+            $pre_defined_slots = array('12:00pm - 02:00pm');
             $selected_slot = $pre_defined_slots[0];
             $data['selected_slot'] = $selected_slot;
             $log->write('RANGE THREE');
+        }
+
+        if (time() >= strtotime($rangefourstart) && time() <= strtotime($rangefourend)) {
+            $pre_defined_slots = array('12:00pm - 02:00pm');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $log->write('RANGE FOUR');
+        }
+
+        if (time() >= strtotime($rangefivestart) && time() <= strtotime($rangefiveend)) {
+            $pre_defined_slots = array('02:00pm - 04:00pm');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $log->write('RANGE FIVE');
         }
 
         $this->language->load('checkout/delivery_time');
