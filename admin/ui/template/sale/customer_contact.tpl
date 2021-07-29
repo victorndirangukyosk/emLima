@@ -16,8 +16,7 @@
         <td class="text-left">Last Name</td>
         <td class="text-left">Email</td>
         <td class="text-left">Phone No</td>
-        <td class="text-left">Send Statement</td>
-        <td class="text-left">Statement Duration</td>
+        <td class="text-left">Send Invoice</td>
         <td class="text-left">Action</td>
       </tr>
     </thead>
@@ -34,8 +33,6 @@
                                 <?php } else { ?>
                                 <td><input type="checkbox"   id="send_invoice_required" name="send_invoice_required" data-contactid="<?php echo $contact['contact_id']; ?>" title="Don't send invoice" disabled ?></td>
                                 <?php } ?>
-        <td class="text-left"><?php echo $contact['statement_duration']; ?> days</td>
-
                                 <td> 
                                 <a  class="btn btn-success contactedit"   data-contact-id="<?php echo $contact['contact_id']; ?>" data-toggle="tooltip" title="Edit contact"><i class="fa fa-edit"></i></a>
                                 <a data-confirm="Delete contact!" class="btn btn-success contactdelete"   data-contact-id="<?php echo $contact['contact_id']; ?>" data-toggle="tooltip" title="Delete contact"><i class="fa fa-trash"></i></a>
