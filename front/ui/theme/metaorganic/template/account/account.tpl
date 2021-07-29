@@ -43,7 +43,7 @@
 <div class="form-group required has-feedback">
                 <label for="name" class="col-sm-3 control-label"><?= $entry_companyname ?></label>
                 <div class="col-sm-6">
-                    <input type="text" value="<?php echo $companyname; ?>" size="30" placeholder="Company Name" name="companyname" maxlength="100" id="name" class="form-control input-lg" />
+                    <input type="text" value="<?php echo $companyname; ?>" size="30" placeholder="Company Name" name="companyname" maxlength="100" id="name" class="form-control input-lg" readonly/>
                      <?php if($error_companyname) { ?>
                       <div class="text-danger"><?php echo $error_companyname; ?></div>
                       <?php } ?>
