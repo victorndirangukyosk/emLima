@@ -679,7 +679,7 @@
                         <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
                         <div class="row">
                             <div class="modal-body">
-                                <p id="exampleModal2_text"></p>
+                                <p id="exampleModal2_text" style="font-weight: bold; font-size: 12px;"></p>
                             </div>
                             <div class="addnews-address-form">
                                 <div class="form-group">
