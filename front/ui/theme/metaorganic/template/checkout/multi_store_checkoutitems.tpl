@@ -653,7 +653,8 @@
                               <h2>ACCEPT TERMS</h2>
                             </div>
                             <div class="modal-body">
-                            <p style="font-weight: bold;">The above products from the cart are available only for "Payment On Delivery"</p>
+                            <p style="font-weight: bold; font-size: 12px;
+">The above products from the cart are available only for <span style="color:#ea7128;">"Payment On Delivery"</span></p>
                             </div>
                             <div class="addnews-address-form">
                                 <div class="form-group">
