@@ -653,7 +653,7 @@
                               <h2>ACCEPT TERMS</h2>
                             </div>
                             <div class="modal-body">
-                            <p>The above products from the cart are available only for "Payment On Delivery"</p>
+                            <p style="font-weight: bold;">The above products from the cart are available only for "Payment On Delivery"</p>
                             </div>
                             <div class="addnews-address-form">
                                 <div class="form-group">
