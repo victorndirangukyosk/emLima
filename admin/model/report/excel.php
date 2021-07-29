@@ -5836,7 +5836,7 @@ class ModelReportExcel extends Model {
                     // echo "<pre>";print_r($totals);die;
                     // $data['customers']= (array) null;
                     foreach ($totals as $total) {
-                        if ('sub_total' == $total['code']) {
+                        if ('total' == $total['code']) {
                             $sub_total = $total['value'];
                             break;
                         }
@@ -5847,20 +5847,29 @@ class ModelReportExcel extends Model {
                        $transcation_id =  $this->model_sale_order->getOrderTransactionId($result['order_id']);
                         if (!empty($transcation_id)) {
                             $result['paid']='Paid';
+                            $result['amountpaid']=$sub_total;
+                            $result['pendingamount']=$sub_total-$result['amountpaid'];
+    
                         }
                         else{
                             $result['paid']='Pending';
+                            $result['amountpaid']=0;
+                            $result['pendingamount']=$sub_total-$result['amountpaid'];
                         }
                     }
                     else if($result['paid']=='P')
                     {
                         // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
-                        $result['paid']='Few Amount Paid';
+                         $result['paid']='Few Amount Paid';
+                         $result['amountpaid']=$result['amount_partialy_paid'];
+                         $result['pendingamount']=$sub_total-$result['amountpaid'];
                     }
                     else if($result['paid']=='Y')
                     {
                         // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
                         $result['paid']='Paid';
+                        $result['amountpaid']=$sub_total;
+                        $result['pendingamount']=$sub_total-$result['amountpaid'];
                     }
 
                     $data['customers'][] = [
@@ -5880,7 +5889,10 @@ class ModelReportExcel extends Model {
                         'po_number' => $result['po_number'],
                         'subtotal' => str_replace('KES', ' ', $this->currency->format($sub_total)),
                         'SAP_customer_no' => $result['SAP_customer_no'],
-                        'paid'=> $result['paid']
+                        'paid'=> $result['paid'],
+                        'amountpaid'=> number_format($result['amountpaid'],2),
+                        'pendingamount'=> number_format($result['pendingamount'],2),
+                        'pendingamountvalue'=> ($result['pendingamount']),
                     ];
                 }
                 echo "<pre>";print_r($data);
@@ -5948,7 +5960,9 @@ class ModelReportExcel extends Model {
                     $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
                     $objPHPExcel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
                     $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
+                    $objPHPExcel->getActiveSheet()->getStyle('G')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                    $objPHPExcel->getActiveSheet()->getStyle('H')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                    $objPHPExcel->getActiveSheet()->getStyle('I')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                     foreach (range('A', 'L') as $columnID) {
                         $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
                                 ->setAutoSize(true);
@@ -5961,8 +5975,10 @@ class ModelReportExcel extends Model {
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Delivery Date');
 
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'P.O. Number');
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Order Value');
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Payment Status');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Order Value'); 
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Amount Paid');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'Pending Amount');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 4, 'Payment Status');
 
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -5972,10 +5988,11 @@ class ModelReportExcel extends Model {
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
-
+                    $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 4)->applyFromArray($title);
+                    $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(9, 4)->applyFromArray($title);
                     // Fetching the table data
                     $row = 7;
-                    $Amount = 0;
+                    $Amount = 0; $PendingAmountTotal = 0;
                     foreach ($data['customers'] as $result) {
                         /* if($result['pt']) {
                         $amount = $result['pt'];
@@ -5989,16 +6006,20 @@ class ModelReportExcel extends Model {
                         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['delivery_date']);
                         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['po_number']);
                         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['subtotal']);
-                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['paid']);
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['amountpaid']);
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['pendingamount']);
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['paid']);
                         $Amount = $Amount + $result['subtotalvalue'];
+                        $PendingAmountTotal = $PendingAmountTotal + $result['pendingamountvalue'];
                         ++$row;
                     }
                     $Amount = str_replace('KES', ' ', $this->currency->format($Amount));
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, $row)->applyFromArray($title);
+                    $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, $row)->applyFromArray($title);
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, 'Amount');
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $Amount);
-
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $PendingAmountTotal);
                     $objPHPExcel->setActiveSheetIndex(0);
                     //$objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
                     // Sending headers to force the user to download the file
