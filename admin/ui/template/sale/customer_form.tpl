@@ -376,6 +376,21 @@
                         </div>
 
 
+                         <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-statement_duration">Statement Duration</label>
+                        <div class="col-sm-10">
+                            <select name="statement_duration" id="input-statement_duration" class="form-control">
+                            
+                            <option <?php if($statement_duration == "7") { ?> selected="selected" <?php } ?> value="7">Weekly</option>
+                            <option <?php if($statement_duration == "15") { ?>  selected="selected" <?php } ?> value="15">Bi-Weekly</option>
+                            <option <?php if($statement_duration == "30") { ?>  selected="selected" <?php } ?> value="30">Monthly</option>
+                            </select>
+
+                                
+                        </div>
+                        </div>
+
+
                       <?php if(count($referee) > 0) { ?>
                           <div class="form-group">
                             <label class="col-sm-2 control-label" for="input-lastname"><?php echo $entry_referred_by; ?></label>
