@@ -43,6 +43,7 @@ class ControllerAccountLogout extends Controller {
             unset($this->session->data['order_approval_access']);
             unset($this->session->data['order_approval_access_role']);
             unset($this->session->data['adminlogin']);
+            unset($this->session->data['accept_vendor_terms']);
             
 
             setcookie('zipcode', null, time() - 3600, '/');
