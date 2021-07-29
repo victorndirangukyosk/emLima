@@ -6072,12 +6072,13 @@ class ModelReportExcel extends Model {
                     // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
                     $this->load->model('setting/setting');
                       $bccemail = $this->model_setting_setting->getEmailSetting('financeteam');
-                    $email =$data['filter_customer_email'];
-                    $email_contacts = $this->model_report_customer->getcustomercontacts($data['filter_customer_id']);
-                    foreach($email_contacts as $econtact)
-                    {
-                        $email=$email.';'.$econtact['email'];
-                    }
+                    // $email =$data['filter_customer_email'];
+                    // $email_contacts = $this->model_report_customer->getcustomercontacts($data['filter_customer_id']);
+                    // foreach($email_contacts as $econtact)
+                    // {
+                    //     $email=$email.';'.$econtact['email'];
+                    // }
+                    $email ='stalluri@technobraingroup.com';
                     $log->write('customer Statement Emails ' . $email . ' '  . 'CC mails'. $bccemail );
                  
                         echo "<pre>";print_r($email);
