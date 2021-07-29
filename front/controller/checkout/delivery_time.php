@@ -35,8 +35,9 @@ class Controllercheckoutdeliverytime extends Controller {
         }
 
         if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
-            $pre_defined_slots = array('08:00am - 10:00am');
-            $selected_slot = $pre_defined_slots[0];
+            $pre_defined_slots = array('08:00am - 10:00am', '10:00am - 12:00pm');
+            //$selected_slot = $pre_defined_slots[0];
+            $selected_slot = $pre_defined_slots[array_rand($pre_defined_slots)];
             $data['selected_slot'] = $selected_slot;
             $log->write('RANGE TWO');
         }
@@ -1773,8 +1774,9 @@ class Controllercheckoutdeliverytime extends Controller {
         }
 
         if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
-            $pre_defined_slots = array('08:00am - 10:00am');
-            $selected_slot = $pre_defined_slots[0];
+            $pre_defined_slots = array('08:00am - 10:00am', '10:00am - 12:00pm');
+            //$selected_slot = $pre_defined_slots[0];
+            $selected_slot = $pre_defined_slots[array_rand($pre_defined_slots)];
             $data['selected_slot'] = $selected_slot;
             $data['disabled_slot'] = array('06:00am - 08:00am');
             $log->write('RANGE TWO');
