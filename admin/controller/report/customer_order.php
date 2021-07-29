@@ -274,7 +274,7 @@ class ControllerReportCustomerOrder extends Controller
                 $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
                 //echo "<pre>";print_r($results);die;
                 foreach ($totals as $total) {
-                    if ('sub_total' == $total['code']) {
+                    if ('total' == $total['code']) {
                         $sub_total = $total['value'];
                         break;
                     }
@@ -285,20 +285,29 @@ class ControllerReportCustomerOrder extends Controller
                    $transcation_id =  $this->model_sale_order->getOrderTransactionId($result['order_id']);
                     if (!empty($transcation_id)) {
                         $result['paid']='Paid';
+                        $result['amountpaid']=$sub_total;
+                        $result['pendingamount']=$sub_total-$result['amountpaid'];
+
                     }
                     else{
                         $result['paid']='Pending';
+                        $result['amountpaid']=0;
+                        $result['pendingamount']=$sub_total-$result['amountpaid'];
                     }
                 }
                 else if($result['paid']=='P')
                 {
                     // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
-                    $result['paid']='Few Amount Paid';
+                     $result['paid']='Few Amount Paid';
+                     $result['amountpaid']=$result['amount_partialy_paid'];
+                     $result['pendingamount']=$sub_total-$result['amountpaid'];
                 }
                 else if($result['paid']=='Y')
                 {
                     // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
                     $result['paid']='Paid';
+                    $result['amountpaid']=$sub_total;
+                    $result['pendingamount']=$sub_total-$result['amountpaid'];
                 }
                 $data['customers'][] = [
                 'company' => $result['company'],
@@ -315,7 +324,9 @@ class ControllerReportCustomerOrder extends Controller
                 // 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')).replace("KES",""),
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
                 'subtotal' => str_replace('KES', ' ', $this->currency->format($sub_total)),
-                'paid'=> $result['paid']
+                'paid'=> $result['paid'],
+                'amountpaid'=> number_format($result['amountpaid'],2),
+                'pendingamount'=> number_format($result['pendingamount'],2),
             ];
             }
         }
