@@ -2008,7 +2008,6 @@ function saveInAddressBook() {
         $('#timeslot-next-hidden').click();
 
         $('#delivery_option__panel_link').attr("href","#collapseDeliveryOptions");
-        setDeliveryTime();
     });
 
     $(document).delegate('#payment-next', 'click', function() {
