@@ -1897,7 +1897,6 @@ function saveInAddressBook() {
 
         
         //$(this).css({'background-color' : "green",'border-color' : "green"});
-    setDeliveryTime();
     });
     $(document).delegate('#dates_selected', 'click', function() {
         $('input[name="dates_selected"]').val($(this).attr('data-value'));
