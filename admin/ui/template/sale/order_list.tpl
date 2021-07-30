@@ -339,8 +339,11 @@
                                     <!--<h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $order['status']; ?></h3>-->
                                     </td>
                                    
-
+                                    <?php if($this->user->isVendor()) { ?>
+                                    <td class="text-right"><?php echo $order['vendor_total']; /*echo $order['total'];*/ ?></td>
+                                    <?php } else { ?>
                                     <td class="text-right"><?php echo $order['sub_total']; /*echo $order['total'];*/ ?></td>
+                                    <?php } ?>
                                     <td class="text-left"><?php echo $order['date_added']; ?></td>
                                     <!-- <td class="text-left"><?php echo $order['date_modified']; ?></td> -->
 
