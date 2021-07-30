@@ -1358,7 +1358,7 @@ class ModelReportCustomer extends Model {
 
     public function getValidCustomerOrdersByDates($data = []) {
 
-        $dt = date("Y-m-d");
+        $dt = strtotime(date("Y-m-d"));
         
         
         if(date('l', $dt)=='Sunday')//weekly
