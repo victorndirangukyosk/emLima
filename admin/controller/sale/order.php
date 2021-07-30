@@ -1242,7 +1242,7 @@ class ControllerSaleOrder extends Controller {
             } else {
                 // $result['company_name'] = "(NA)";
             }
-
+            $vendor_total = $this->currency->format(($result['total'] - ($result['total'] * $result['commission']) / 100), $this->config->get('config_currency'));
             $this->load->model('localisation/order_status');
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
@@ -1261,6 +1261,7 @@ class ControllerSaleOrder extends Controller {
                 'order_status_id' => $result['order_status_id'],
                 'order_status_color' => $result['color'],
                 'city' => $result['city'],
+                'vendor_total' => $vendor_total,
                 'total' => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
                 'sub_total' => $this->currency->format($sub_total, $result['currency_code'], $result['currency_value']),
                 'sub_total_custom' => $sub_total, $result['currency_code'],

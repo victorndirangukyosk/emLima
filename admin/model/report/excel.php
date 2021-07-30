@@ -5797,18 +5797,37 @@ class ModelReportExcel extends Model {
 
 
         //download_customer_statement_excel
-    public function mail_download_customer_statement_excel($data) {
+    public function mail_download_customer_statement_excel($data,$pdf=0) {
 
 
-        $dt = date("Y-m-d");
+        $dt = strtotime(date("Y-m-d"));
         
         
+        echo "<pre>";print_r(date('l', $dt)); 
+        echo "<pre>";print_r(date(d, $dt)); 
         if(date('l', $dt)!='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
         {
+          echo "<pre>";print_r('No execution today');
+
             return;
         }
-        $this->load->library('excel');
-        $this->load->library('iofactory');
+        else
+        {
+            if(date(d, $dt)=='01')
+            {
+                $dtp =  date("Y-m-d",strtotime("-1 days"));
+        $data['filter_date_end'] =   date("Y-m-t", strtotime($dtp));
+        $data['filter_date_start'] =   date("Y-m-01", strtotime($dtp));
+            }
+            else
+            {
+                $data['filter_date_end'] =   date("Y-m-t", strtotime($dt));
+        $data['filter_date_start'] =   date("Y-m-01", strtotime($dt));
+            }
+        }
+        echo "<pre>";print_r($data);
+
+       
         $this->load->model('report/customer');
          $customerswithOrders = $this->model_report_customer->getCustomerWithOrders($data);
 
@@ -5907,7 +5926,20 @@ class ModelReportExcel extends Model {
                 }
                 echo "<pre>";print_r($data);
                 // echo "<pre>";print_r($data['customers']);die;
+
+                if($pdf==1)
+                {
+
+                }
+                else
+                {
+
+                
                 try {
+
+                    $this->load->library('excel');
+                    $this->load->library('iofactory');
+
                     // set appropriate timeout limit
                     set_time_limit(3500);
 
@@ -6125,6 +6157,8 @@ class ModelReportExcel extends Model {
 
                     return;
                 }
+
+            }
             }
         }
     }

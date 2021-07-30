@@ -484,7 +484,7 @@ function showConfirmPopup($order_id,$order_value) {
                                                     <label    > Amount Received </label>
 
                                                     <div class="col-md-12">
-                                                        <input id="paid_amount" maxlength="30" required style="max-width:100% ;" name="paid_amount" type="text" placeholder="Amount Received" class="form-control" required>
+                                                        <input id="paid_amount" value="" maxlength="30" required style="max-width:100% ;" name="paid_amount" type="number" placeholder="Amount Received" class="form-control" required>
                                                     <br/> </div> 
                                                     
                                                 </div>
@@ -526,18 +526,23 @@ function showConfirmPopup($order_id,$order_value) {
 
 <script>
 
-
+////$("#paid_amount").change(function(){
+   //alert("The text has been changed.");
+//});
 
 function confirmPayment() { 
  
     $('#paidModal-message').html('');
                $('#paidModal-success-message').html('');
    var transactionid = $('input[name="transaction_id"]').val();
-    var amountreceived =  $('input[name="paid_amount"]').val() ;
+    var amountreceived = 0;
+     amountreceived =($('input[name="paid_amount"]').val());
      var orde_id =   $('input[name="paid_order_id"]').val() ;
-     var grand_total =   $('input[name="grand_total"]').val() ;
+     var grand_total =   ($('input[name="grand_total"]').val() );
 
               console.log($('#paidModal-form').serialize());
+              console.log(amountreceived);
+              console.log(grand_total);
               
   
                 if (transactionid.length  <= 1 || amountreceived.length<=1) {
@@ -547,7 +552,7 @@ function confirmPayment() {
                 } 
                 if(orde_id == -1)
                 {
-
+                    amountreceived=parseFloat(amountreceived);
                     if(amountreceived>grand_total)
                     {
                         alert("Amount received is more.please select more orders");

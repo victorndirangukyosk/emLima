@@ -339,8 +339,11 @@
                                     <!--<h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $order['status']; ?></h3>-->
                                     </td>
                                    
-
+                                    <?php if($this->user->isVendor()) { ?>
+                                    <td class="text-right"><?php echo $order['vendor_total']; /*echo $order['total'];*/ ?></td>
+                                    <?php } else { ?>
                                     <td class="text-right"><?php echo $order['sub_total']; /*echo $order['total'];*/ ?></td>
+                                    <?php } ?>
                                     <td class="text-left"><?php echo $order['date_added']; ?></td>
                                     <!-- <td class="text-left"><?php echo $order['date_modified']; ?></td> -->
 
@@ -367,9 +370,9 @@
                                             if ( $order['order_status_id']!=15 && $order['order_status_id']!=16 && $order['order_status_id']!=6 && $order['order_status_id']!=8 && $order['order_status_id']!=9 && $order['order_status_id']!=10) { ?>
                                               
                                                <?php if ($this->user->isVendor()) { ?>
-                                               <a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice">
+                                               <!--<a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                                                </a>  
+                                                </a>-->  
                                                <?php } else { ?> 
                                                
                                                <a href="#" id="new_print_invoice"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
