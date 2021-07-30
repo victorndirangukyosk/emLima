@@ -1373,6 +1373,7 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
             $data['payment_terms'] = $customer_info['payment_terms'];
+            $data['statement_duration'] = $customer_info['statement_duration'];
             $data['customer_category'] = $customer_info['customer_category'];
             $data['customer_category_disabled'] = '';
             $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
@@ -1618,6 +1619,14 @@ class ControllerSaleCustomer extends Controller {
             $data['payment_terms'] = $customer_info['payment_terms'];
         } else {
             $data['payment_terms'] = '';
+        }
+
+        if (isset($this->request->post['statement_duration'])) {
+            $data['statement_duration'] = $this->request->post['statement_duration'];
+        } elseif (!empty($customer_info)) {
+            $data['statement_duration'] = $customer_info['statement_duration'];
+        } else {
+            $data['statement_duration'] = '';
         }
 
         // $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
@@ -1953,7 +1962,7 @@ class ControllerSaleCustomer extends Controller {
             if(!isset($this->request->post['contact_id']))
             $this->request->post['contact_id']=0;
 
-            $this->model_sale_customer->addEditContact($this->request->get['customer_id'], $this->request->post['firstname'], $this->request->post['lastname'], $this->request->post['email'], $this->request->post['phone'], $this->request->post['customer_contact_send'], $this->request->post['statement_duration'], $this->request->post['contact_id']);
+            $this->model_sale_customer->addEditContact($this->request->get['customer_id'], $this->request->post['firstname'], $this->request->post['lastname'], $this->request->post['email'], $this->request->post['phone'], $this->request->post['customer_contact_send'], $this->request->post['contact_id']);
 
             $data['success'] = $this->language->get('text_success');
         } else {
@@ -1977,7 +1986,7 @@ class ControllerSaleCustomer extends Controller {
         $data['contacts'] = [];
 
         $results = $this->model_sale_customer->getCustomerContacts($this->request->get['customer_id'], ($page - 1) * 10, 10);
-        //    echo "<pre>";print_r($results);die;
+        //  echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $data['contacts'][] = [
                 'contact_id' =>$result['contact_id'],
@@ -1987,7 +1996,7 @@ class ControllerSaleCustomer extends Controller {
                 'email' => $result['email'],  
                 'telephone' => $result['telephone'],  
                 'send' => $result['send'],  
-                'statement_duration' => $result['statement_duration'],  
+                'customer_id' => $result['description'],  
             
             ];
         }

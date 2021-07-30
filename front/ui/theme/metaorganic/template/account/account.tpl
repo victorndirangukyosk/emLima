@@ -14,7 +14,7 @@
             <div class="form-group required has-feedback">
                 <label for="name" class="col-sm-3 control-label"><?= $entry_firstname ?></label>
                 <div class="col-sm-6">
-                    <input type="text" value="<?php echo $firstname; ?>" size="30" placeholder="First Name" name="firstname" maxlength="100" id="name" class="form-control input-lg" />
+                    <input type="text" value="<?php echo $firstname; ?>" size="30" placeholder="First Name" name="firstname" maxlength="100" id="name" class="form-control input-lg" readonly/>
                      <?php if($error_firstname) { ?>
                       <div class="text-danger"><?php echo $error_firstname; ?></div>
                       <?php } ?>
@@ -23,7 +23,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label" for="input-lastname"><?php echo $entry_lastname; ?></label>
             <div class="col-sm-6 col-xs-12">
-              <input type="text" name="lastname" value="<?php echo $lastname; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control input-lg" />
+              <input type="text" name="lastname" value="<?php echo $lastname; ?>" placeholder="<?php echo $entry_lastname; ?>" id="input-lastname" class="form-control input-lg" readonly/>
               <?php if($error_lastname) { ?>
               <div class="text-danger"><?php echo $error_lastname; ?></div>
               <?php } ?>
@@ -32,7 +32,7 @@
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-email"><?php echo $entry_email; ?></label>
             <div class="col-sm-6 col-xs-12">
-              <input type="email" name="email" id="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control input-lg" />
+              <input type="email" name="email" id="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control input-lg" readonly/>
               <?php if($error_email) { ?>
                <div class="text-danger"><?php echo $error_email; ?></div>
               <?php } ?>
@@ -43,7 +43,7 @@
 <div class="form-group required has-feedback">
                 <label for="name" class="col-sm-3 control-label"><?= $entry_companyname ?></label>
                 <div class="col-sm-6">
-                    <input type="text" value="<?php echo $companyname; ?>" size="30" placeholder="Company Name" name="companyname" maxlength="100" id="name" class="form-control input-lg" />
+                    <input type="text" value="<?php echo $companyname; ?>" size="30" placeholder="Company Name" name="companyname" maxlength="100" id="name" class="form-control input-lg" readonly/>
                      <?php if($error_companyname) { ?>
                       <div class="text-danger"><?php echo $error_companyname; ?></div>
                       <?php } ?>
@@ -88,7 +88,7 @@
 
                 </span>
 
-                <input type="tel" name="telephone" id="tel" value="<?php echo $telephone; ?>"  id="input-telephone" class="form-control input-lg" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" />
+                <input type="tel" name="telephone" id="tel" value="<?php echo $telephone; ?>"  id="input-telephone" class="form-control input-lg" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" readonly/>
 
               <?php if ($error_telephone) { ?>
               <div class="text-danger"><?php echo $error_telephone; ?></div>

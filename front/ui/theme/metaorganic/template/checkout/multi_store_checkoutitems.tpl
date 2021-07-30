@@ -650,10 +650,11 @@
                         <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
                         <div class="row">
                             <div class="col-md-12">
-                              <h3>ACCEPT TERMS</h3>
+                              <h2>ACCEPT TERMS</h2>
                             </div>
                             <div class="modal-body">
-                            <p>The above products from the cart are available only for "Payment On Delivery"</p>
+                            <p style="font-weight: bold; font-size: 12px;
+">The above products from the cart are available only for <span style="color:#ea7128;">"Payment On Delivery"</span></p>
                             </div>
                             <div class="addnews-address-form">
                                 <div class="form-group">
@@ -678,7 +679,7 @@
                         <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
                         <div class="row">
                             <div class="modal-body">
-                                <p id="exampleModal2_text"></p>
+                                <p id="exampleModal2_text" style="font-weight: bold; font-size: 12px;"></p>
                             </div>
                             <div class="addnews-address-form">
                                 <div class="form-group">

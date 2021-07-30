@@ -1482,8 +1482,9 @@ class ControllerApiCustomerCheckout extends Controller {
             }
 
             if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
-                $pre_defined_slots = array('08:00am - 10:00am');
-                $selected_slot = $pre_defined_slots[0];
+                $pre_defined_slots = array('08:00am - 10:00am', '10:00am - 12:00pm');
+                //$selected_slot = $pre_defined_slots[0];
+                $selected_slot = $pre_defined_slots[array_rand($pre_defined_slots)];
                 $data['selected_slot'] = $selected_slot;
                 $data['disabled_slot'] = array('06:00am - 08:00am');
                 $log->write('RANGE TWO');
@@ -1584,6 +1585,7 @@ class ControllerApiCustomerCheckout extends Controller {
             $json['data']['timeslots'] = $data['timeslots'];
             $json['data']['selected_time_slot'] = $data['selected_slot'];
             $json['data']['selected_date_slot'] = $data['dates'][0];
+            $json['data']['disabled_slot'] = $data['disabled_slot'];
             $json['message'] = 'Please Pre Populate These Date And Time Slots!';
 
             $stores = $this->cart->getStores();

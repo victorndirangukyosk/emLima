@@ -733,6 +733,11 @@ class ModelReportCustomer extends Model {
             $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";
         }
 
+
+        if (!empty($data['statement_duration'])) {
+            $sql .= " AND c.statement_duration= '" . $this->db->escape($data['statement_duration']) . "'";
+        }
+
         if (!empty($data['filter_date_start'])) {
             $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
         }
@@ -767,6 +772,9 @@ class ModelReportCustomer extends Model {
         }
 
         $query = $this->db->query($sql);
+
+        // echo  ($sql);die;
+        
 
         return $query->rows;
     }
@@ -1345,5 +1353,102 @@ class ModelReportCustomer extends Model {
         $contacts = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.customer_id = '" . (int) $customer_id . "' and c.send=1");
         return $contacts->rows;
     }
+
+
+
+    public function getValidCustomerOrdersByDates($data = []) {
+
+        $dt = date("Y-m-d");
+        
+        
+        if(date('l', $dt)=='Sunday')//weekly
+        {
+            $data['filter_date_start']=date("Y-m-d",strtotime("-1 days"));
+            $data['filter_date_end']=date("Y-m-d",strtotime("-7 days"));
+            $data['statement_duration']=7;
+            $results_weekly=$this->getValidCustomerOrders($data);
+        }
+        if(date(d, $dt)=='01' || date(d, $dt)=='16')//bi-wwekly
+        {
+
+            if(date(d, $dt)=='01')//monthly
+            {
+                $dtp=date("Y-m-d",strtotime("-1 days"));
+                $data['filter_date_end'] =   date("Y-m-t", strtotime($dtp));
+                $data['filter_date_start']=   date("Y-m-16", strtotime($dtp));
+                $data['statement_duration']=15;
+                $results_biweekly_1=$this->getValidCustomerOrders($data);
+                // echo "<pre>";print_r(date('l', $results_biweekly_1));die;
+     
+            }
+            else
+            {
+                 $dtp=date("Y-m-d",strtotime("-1 days"));
+                 $data['filter_date_start']=   date("Y-m-01", strtotime($dtp));
+                $data['filter_date_end']=$dtp;
+                $data['statement_duration']=15;
+                $results_biweekly_2=$this->getValidCustomerOrders($data);
+            }
+        }
+        if(date(d, $dt)=='01')//monthly
+        {
+            $dtp=date("Y-m-d",strtotime("-1 days"));
+            $data['filter_date_end'] =   date("Y-m-t", strtotime($dtp));
+            $data['filter_date_start']=   date("Y-m-01", strtotime($dtp));
+            $data['statement_duration']=30;
+             
+            $results_monthly = $this->getValidCustomerOrders($data);
+            
+
+            // echo "<pre>";print_r( $results_monthly );die;
+
+ 
+        }
+        // echo "<pre>";print_r(date(d, $dt));die;
+
+        if(!isset($data['statement_duration']))
+        {
+            return;
+        }
+
+        echo "<pre>";print_r(date(d, $dt));
+        echo "<pre>";print_r('no data fetched');;
+  
+        $results;
+        if($results_weekly!=null)
+        {
+            $results=$results_weekly;       
+
+        }
+        if($results_biweekly_1!=null)
+        {
+            if($results!=null)
+            $results=array_merge($results,$results_biweekly_1);
+            else
+            $results=$results_biweekly_1;    
+            
+        }
+
+        if($results_biweekly_2!=null)
+        {
+            if($results!=null)
+            $results=array_merge($results,$results_biweekly_2);
+            else
+            $results=$results_biweekly_2;
+ 
+        }
+
+        if($results_monthly!=null)
+        {
+            if($results!=null)
+            $results=array_merge($results,$results_monthly);
+            else
+            $results=$results_monthly; 
+        }
+
+        // echo "<pre>";print_r($results);die;
+        return $results;
+    }
+
 
 }
