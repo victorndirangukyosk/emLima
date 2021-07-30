@@ -464,7 +464,8 @@ class ControllerSaleOrderReceivables extends Controller
     public function confirmBulkPaymentReceived() {
 
     if (isset($this->request->post['selected'])) {
-        $orders =explode(",",$this->request->post['selected']);;
+        $orders =explode(",",$this->request->post['selected']);
+        sort($orders);
     }  
  
     if (isset($this->request->post['amount_received'])) {
