@@ -16,6 +16,10 @@ class ModelCheckoutOrder extends Model {
 
         $log = new Log('error.log');
         $log->write('addorder 1');
+        /*TIME ZONE ISSUE*/
+        $tz = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('P');
+        $this->db->query("SET time_zone='$tz';");
+        /*TIME ZONE ISSUE*/
         $this->trigger->fire('pre.order.add', $stores);
         //print_r($data);die;
         //unset($this->session->data['order_id']);die;
@@ -109,6 +113,10 @@ class ModelCheckoutOrder extends Model {
 
         $log = new Log('error.log');
         $log->write('addMultiOrder 1');
+        /*TIME ZONE ISSUE*/
+        $tz = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('P');
+        $this->db->query("SET time_zone='$tz';");
+        /*TIME ZONE ISSUE*/
         //$log->write($stores);
         $this->trigger->fire('pre.order.add', $stores);
 
