@@ -1988,6 +1988,7 @@ class ControllerApiCustomerOrder extends Controller {
             $log->write('count' . $count);
             $i = 1;
             foreach ($stores as $store_id) {
+                $store_id = 75;
                 if (isset($args['stores'][$store_id]['shipping_code'])) {
                     $args['stores'][$store_id]['shipping_method'] = $args['stores'][$store_id]['shipping_code'];
                 }
