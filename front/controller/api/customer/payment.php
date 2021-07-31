@@ -433,6 +433,8 @@ class Controllerapicustomerpayment extends Controller
     public function addInterswitchpaymentresponse() {
         
         $json = [];
+        $json['status'] = 200;
+        $json['message'] = [];
         $json['data'] = $this->request->post;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
