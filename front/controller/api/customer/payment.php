@@ -429,4 +429,12 @@ class Controllerapicustomerpayment extends Controller
         }
         echo $status;
     }
+    
+    public function addInterswitchpaymentresponse() {
+        
+        $json = [];
+        $json['data'] = $this->request->post;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
