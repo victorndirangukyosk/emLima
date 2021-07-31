@@ -1971,6 +1971,7 @@ class ControllerApiCustomerOrder extends Controller {
         $log = new Log('error.log');
         $log->write('addValidateOrderDetails');
         $log->write($args['stores']);
+        $log->write('addValidateOrderDetails');
 
         //echo "<pre>";print_r($args['products']);die;
         $this->load->language('api/general');
