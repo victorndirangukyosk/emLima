@@ -658,6 +658,7 @@ class ModelCheckoutOrder extends Model {
 
             //this is solely used to send mails
             //if ( in_array( $order_status_id, array_merge( $this->config->get( 'config_processing_status' ), $this->config->get( 'config_complete_status' ) ) ) ) {
+            try {
             if ($notify) {
 
                 //this is solely used to send mails
@@ -1002,7 +1003,13 @@ class ModelCheckoutOrder extends Model {
                       } */
                 }
             }
-
+            }
+            catch(exception $ex)
+            {
+            $log->write('Order History Mail Error');
+            $log->write($ex);
+            }
+            
             $this->load->model('account/activity');
 
             if (in_array($order_status_id, $this->config->get('config_complete_status'))) {
