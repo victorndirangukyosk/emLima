@@ -3712,4 +3712,33 @@ class ControllerApiCustomerOrder extends Controller {
         return $data;
     }
 
+    public function addTotalByStore() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->request->post['store_id'];
+        $data = $this->cart->getTotalByStore($this->request->post['store_id']);
+        $json['data'] = $data;
+        $json['message'] = 'Store Total';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function addTotalKwikBasketStore() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $data = $this->cart->getTotalForKwikBasket();
+        $json['data'] = $data;
+        $json['message'] = 'Store Total';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
