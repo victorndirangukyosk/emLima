@@ -1970,8 +1970,7 @@ class ControllerApiCustomerOrder extends Controller {
 
         $log = new Log('error.log');
         $log->write('addValidateOrderDetails');
-        $log->write($args['stores']);
-        $log->write('addValidateOrderDetails');
+        $log->write($args);
 
         //echo "<pre>";print_r($args['products']);die;
         $this->load->language('api/general');
@@ -1989,7 +1988,6 @@ class ControllerApiCustomerOrder extends Controller {
             $log->write('count' . $count);
             $i = 1;
             foreach ($stores as $store_id) {
-                $store_id = 75;
                 if (isset($args['stores'][$store_id]['shipping_code'])) {
                     $args['stores'][$store_id]['shipping_method'] = $args['stores'][$store_id]['shipping_code'];
                 }
@@ -2001,8 +1999,8 @@ class ControllerApiCustomerOrder extends Controller {
 
                     if ($store_id) {
                         $timeDiff = $settings['express_how_much_time'];
-
-                        $store_open_hours = $this->model_tool_image->getStoreOpenHours($store_id, date('w'));
+                        //KWIKBASKET STORE TIME SLOTS USING
+                        $store_open_hours = $this->model_tool_image->getStoreOpenHours(75, date('w'));
 
                         if ($store_open_hours && isset($store_open_hours['timeslot'])) {
                             $temp = explode('-', $store_open_hours['timeslot']);
@@ -2016,7 +2014,11 @@ class ControllerApiCustomerOrder extends Controller {
                     }
                 } else {
                     if (isset($args['stores'][$store_id]['timeslot_selected']) && isset($args['stores'][$store_id]['shipping_method']) && isset($args['stores'][$store_id]['store_id']) && isset($args['stores'][$store_id]['delivery_date'])) {
-                        $response = $this->load->controller('api/customer/checkout/getApiDeliveryTimeslot', $args['stores'][$store_id]);
+                        //KWIKBASKET STORE TIME SLOTS USING
+                        $kwikb = $args['stores'][$store_id];
+                        $kwikb['store_id'] = 75;
+                        $log->write($kwikb);
+                        $response = $this->load->controller('api/customer/checkout/getApiDeliveryTimeslot', $kwikb);
 
                         $log->write('getApiDeliveryTimeslot');
                         //$log->write($response);
@@ -2155,10 +2157,10 @@ class ControllerApiCustomerOrder extends Controller {
             $this->error['error_products'] = $this->language->get('error_products');
         }
 
-        /*$vendor_terms = json_decode($this->getCheckOtherVendorOrderExist(), true);
-        if ($vendor_terms['modal_open'] == TRUE) {
-            $this->error['vendor_terms'] = 'Please accept vendor terms!';
-        }*/
+        /* $vendor_terms = json_decode($this->getCheckOtherVendorOrderExist(), true);
+          if ($vendor_terms['modal_open'] == TRUE) {
+          $this->error['vendor_terms'] = 'Please accept vendor terms!';
+          } */
 
         if ((!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
             $this->response->redirect($this->url->link('checkout/cart'));
