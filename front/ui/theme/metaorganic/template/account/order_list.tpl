@@ -166,10 +166,10 @@
                                 $payment_status = '<span style="color:#'.$order['order_status_color'].'">Cancelled</span>';
                                 }
                                 ?>
-                                <div class="col-md-4">Payment Status</div>
-                                <div class="col-md-8"><?php echo $payment_status; ?></div>
+                                <div class="col-md-5">Payment Status</div>
+                                <div class="col-md-4"><?php echo $payment_status; ?></div>
                                 <?php if(!empty($order['payment_transaction_id'])){?>
-																<div class="col-md-4">Transaction Id</div>
+																<div class="col-md-5">Transaction Id</div>
 																<div class="col-md-8"><?php echo $order['payment_transaction_id']; ?></div>
 	
 																<?php } ?>
