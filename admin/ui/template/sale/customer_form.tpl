@@ -44,6 +44,8 @@
             <li><a href="#tab-ip" data-toggle="tab"><?php echo $tab_ip; ?></a></li>
             <li><a href="#tab-referral" data-toggle="tab"><?php echo $tab_referral; ?></a></li>
 			<li><a href="#tab-sub-customer" data-toggle="tab"><?php echo $tab_sub_customer; ?></a></li>
+            <li><a href="#tab-contact" data-toggle="tab"><?php echo $tab_contact; ?></a></li>
+           
             <?php } ?>
           </ul>
           <div class="tab-content">
@@ -360,6 +362,33 @@
                                     <input type="text" maxlength=30  name="SAP_customer_no" value="<?php echo $SAP_customer_no; ?>"  placeholder="SAP Custumer Number"  id="input-SAP_customer_no" class="form-control" />
                                 </div>
                         </div>
+                        <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-payment-terms">Payment Terms</label>
+                        <div class="col-sm-10">
+                            <select name="payment_terms" id="input-payment-terms" class="form-control">
+                            <option value="">Payment Terms</option>
+                            <option <?php if($payment_terms == "Payment On Delivery") { ?> selected="selected" <?php } ?> value="Payment On Delivery">Payment On Delivery</option>
+                            <option <?php if($payment_terms == "7 Days Credit") { ?>  selected="selected" <?php } ?> value="7 Days Credit">7 Days Credit</option>
+                            <option <?php if($payment_terms == "15 Days Credit") { ?>  selected="selected" <?php } ?> value="15 Days Credit">15 Days Credit</option>
+                            <option <?php if($payment_terms == "30 Days Credit") { ?>  selected="selected" <?php } ?> value="30 Days Credit">30 Days Credit</option>
+                            </select>
+                        </div>
+                        </div>
+
+
+                         <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-statement_duration">Statement Duration</label>
+                        <div class="col-sm-10">
+                            <select name="statement_duration" id="input-statement_duration" class="form-control">
+                            
+                            <option <?php if($statement_duration == "7") { ?> selected="selected" <?php } ?> value="7">Weekly</option>
+                            <option <?php if($statement_duration == "15") { ?>  selected="selected" <?php } ?> value="15">Bi-Weekly</option>
+                            <option <?php if($statement_duration == "30") { ?>  selected="selected" <?php } ?> value="30">Monthly</option>
+                            </select>
+
+                                
+                        </div>
+                        </div>
 
 
                       <?php if(count($referee) > 0) { ?>
@@ -560,6 +589,82 @@
               </div>
             </div>
             
+
+
+              <div class="tab-pane" id="tab-contact">
+              <div id="contact"></div>
+              <br />
+              <div class="form-group required">
+                 <label for="input-contactpersonfirstname" class="col-sm-3 control-label">Contact Person First Name</label>
+                                    <div class="col-sm-6">
+                                        <input type="text"  value=""  hidden name="contactid" maxlength="100" id="input-contactid"   />
+
+                                        <input type="text"  value=""  size="30" placeholder="Contact Person First Name" name="contactpersonfirstname" maxlength="100" id="input-contactpersonfirstname" class="form-control input-lg" />
+                                        <?php if($error_contactpersonfirstname) { ?>
+                                        <div class="text-danger"><?php echo $error_contactpersonfirstname; ?></div>
+                                        <?php } ?>
+                                    </div> 
+              </div>
+              <div class="form-group">
+                 <label class="col-sm-3 control-label" for="input-contactpersonlastname">Contact Person Last Name</label>
+                                    <div class="col-sm-6 col-xs-12">
+                                        <input type="text" name="contactpersonlastname" value="" placeholder="Contact Person Last Name" id="input-contactpersonlastname" class="form-control input-lg" />
+                                        <?php if($error_contactpersonlastname) { ?>
+                                        <div class="text-danger"><?php echo $error_contactpersonlastname; ?></div>
+                                        <?php } ?>
+                                    </div>
+
+              </div>
+
+
+
+               <div class="form-group required">
+                                    <label class="col-sm-3 control-label" for="input-contactpersonemail">Contact Person Email</label>
+                                    <div class="col-sm-6 col-xs-12">
+                                        <input type="email" name="contactpersonemail"  value="" placeholder="Contact Person Email"  id="input-contactpersonemail"  class="form-control input-lg" />
+                                        <?php if($error_contactpersonemail) { ?>
+                                        <div class="text-danger"><?php echo $error_contactpersonemail; ?></div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+
+
+
+
+                                   <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="input-contactpersontelephone">Phone</label>
+
+                                    <div class="col-sm-6 col-xs-12" style="padding-right: 15px;padding-left: 15px;">
+ 
+
+                                        <input type="tel" name="contactpersontelephone"  value=""  id="input-contactpersontelephone" placeholder="Phone" class="form-control input-lg" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 & amp;
+                                                & amp;
+                                                event.charCode <= 57" minlength="9" maxlength="9" />
+
+                                        <?php if ($error_contactpersontelephone) { ?>
+                                        <div class="text-danger"><?php echo $error_contactpersontelephone; ?></div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+     
+                               <div class="form-group required">
+                                  <label class="col-sm-3 control-label" for="input-contactsend">Send Invoice</label>
+                                   </br><div class="col-sm-6 col-xs-12">
+                                 
+                                        <input type="checkbox" checked   id="customer_contact_send" name="customer_contact_send">
+                                             
+                                        </input>
+                                    </div> 
+                               </div>
+                               
+                                  
+
+                                  
+              <div class="text-right">
+                <button type="button" id="button-contact" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i> <?php echo $button_contact_add; ?></button>
+              </div>
+            </div>
+
             <div class="tab-pane" id="tab-ip">
               <div id="ip"></div>
               <br />
@@ -1727,7 +1832,121 @@ $('.time').datetimepicker({
          return true;
       }
     
+
+
+
+    $('#contact').delegate('.pagination a', 'click', function(e) {
+  e.preventDefault();
+
+  $('#contact').load(this.href);
+});
+
+$('#contact').load('index.php?path=sale/customer/contact&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
+
+$('#button-contact').on('click', function(e) {
+
+  if(encodeURIComponent($('#tab-contact input[name=\'contactpersonfirstname\']').val())==0)
+  {
+    alert("please enter contact person first name");
+    return;
+  }
+
+  if(encodeURIComponent($('#tab-contact input[name=\'contactpersonemail\']').val())==0)
+  {
+    alert("please enter contact person email");
+    return;
+  }
+  e.preventDefault();
+
+        $.ajax({
+    url: 'index.php?path=sale/customer/contact&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
+    type: 'post',
+    dataType: 'html',
+    data: 'firstname=' + encodeURIComponent($('#tab-contact input[name=\'contactpersonfirstname\']').val()) + '&lastname=' + encodeURIComponent($('#tab-contact input[name=\'contactpersonlastname\']').val())+ '&email=' + encodeURIComponent($('#tab-contact input[name=\'contactpersonemail\']').val())+'&phone=' + encodeURIComponent($('#tab-contact input[name=\'contactpersontelephone\']').val())+'&customer_contact_send=' + encodeURIComponent($('#tab-contact input[name=\'customer_contact_send\']').val())+'&contact_id=' + encodeURIComponent($('#tab-contact input[name=\'contactid\']').val()),
+    beforeSend: function() {
+      $('#button-contact').button('loading');
+         },
+    complete: function() {
+      $('#button-contact').button('reset');
+    },
+    success: function(html) {
+        $('.alert').remove();
+
+      $('#contact').html(html);
+
+       $('#tab-contact input[name=\'contactpersonfirstname\']').val('');
+       $('#tab-contact input[name=\'contactid\']').val('0');
+      $('#tab-contact input[name=\'contactpersonlastname\']').val('');
+      $('#tab-contact input[name=\'contactpersonemail\']').val('');
+
+      $('#tab-contact input[name=\'contactpersontelephone\']').val('');
+      $('#tab-contact input[name=\'customer_contact_send\']').prop('checked', true);;
+
+    }
+  });
+});
+
+
+
+  $(document).delegate('.contactdelete', 'click', function () {
+        var choice = confirm($(this).attr('data-confirm'));
+        if (choice) {
+          
+            $contact_id = $(this).attr('data-contact-id');
+          //alert($contact_id);
+            $.ajax({
+                url: 'index.php?path=sale/customer/DeleteCustomerContacts&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
+                type: 'post',
+                dataType: 'html',
+                data: 'contact_id=' + $contact_id,
+                success: function (html) {
+                      $('.alert').remove();
+                    
+                     $('#contact').html(html);
+                }
+            });
+
+            
+        }
+    });
+
     
+
+
+       $(document).delegate('.contactedit', 'click', function () {
+          
+            
+            var contact_id = $(this).attr('data-contact-id');
+          
+
+
+            $.ajax({
+                url: 'index.php?path=sale/customer/getCustomerContact&token=<?php echo $token; ?>',
+                type: 'get',
+                data: {contact_id: contact_id},
+                dataType: 'json',
+                success: function (json) {
+                     console.log(json['data']['lastname']);
+                    console.log(json['data']['telephone']);
+                    console.log(json['data']);
+                      //$("#message_text").hide();
+                        $('#input-contactpersonfirstname').val(json['data']['firstname']);
+                        $('#input-contactpersonlastname').val(json['data']['lastname']);
+                        $('#input-contactpersonemail').val(json['data']['email']);
+                        $('#input-contactpersontelephone').val(json['data']['telephone']);
+                        $('#input-contactid').val(json['data']['contact_id']);
+                        $checked=json['data']['send'];
+                        //alert($('#contactid').val());
+                        if($checked=="1")
+                        $('#customer_contact_send').prop( "checked", true );
+                        else
+                        $('#customer_contact_send').prop( "checked", false );
+ 
+                }
+            });
+        
+    });
+
 </script>
 </body>
 

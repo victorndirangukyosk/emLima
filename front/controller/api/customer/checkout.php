@@ -287,18 +287,38 @@ class ControllerApiCustomerCheckout extends Controller {
 
             //echo "<pre>";print_r($results);die;
             $total = $this->request->get['total'];
+            if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
+                foreach ($results as $result) {
+                    if ($result['code'] == 'cod' || $result['code'] != 'mod' || $result['code'] != 'pesapal' || $result['code'] != 'interswitch') {
+                        if ($this->config->get($result['code'] . '_status')) {
+                            $this->load->model('payment/' . $result['code']);
 
-            foreach ($results as $result) {
-                if ($this->config->get($result['code'] . '_status')) {
-                    $this->load->model('payment/' . $result['code']);
+                            $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
 
-                    $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+                            if ($method) {
+                                $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
+                                //removed  (No Transaction Fee) from terms,as suggested
+                                //echo "<pre>";print_r($method);die;
+                                $method_data[] = $method;
+                            }
+                        }
+                    }
+                }
+            } else if ($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') {
+                foreach ($results as $result) {
+                    if ($result['code'] == 'cod') {
+                        if ($this->config->get($result['code'] . '_status')) {
+                            $this->load->model('payment/' . $result['code']);
 
-                    if ($method) {
-                        $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
-                        //removed  (No Transaction Fee) from terms,as suggested
-                        //echo "<pre>";print_r($method);die;
-                        $method_data[] = $method;
+                            $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+
+                            if ($method) {
+                                $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
+                                //removed  (No Transaction Fee) from terms,as suggested
+                                //echo "<pre>";print_r($method);die;
+                                $method_data[] = $method;
+                            }
+                        }
                     }
                 }
             }
@@ -1431,41 +1451,67 @@ class ControllerApiCustomerCheckout extends Controller {
         if ($this->customer->isLogged()) {
             $data = [];
 
-            $rangetwostart = "08:00:00";
-            $rangetwoend = "09:59:59";
+            $rangeonestart = "09:00:00";
+            $rangeoneend = "17:00:00";
 
-            $rangeonestart = "10:00:00";
-            $rangeoneend = "23:59:59";
+            $rangetwostart = "17:00:00";
+            $rangetwoend = "22:00:00";
 
-            $rangethreestart = "00:00:00";
-            $rangethreeend = "07:59:59";
+            $rangethreestart = "22:00:00";
+            $rangethreeend = "23:59:59";
+
+            $rangefourstart = "00:00:00";
+            $rangefourend = "05:00:00";
+
+            $rangefivestart = "05:00:00";
+            $rangefiveend = "09:00:00";
 
             $log = new Log('error.log');
             $log->write('RANGE');
+            $log->write(date("H:i:s"));
             $log->write(time());
             $log->write('RANGE');
 
             if (time() >= strtotime($rangeonestart) && time() <= strtotime($rangeoneend)) {
-                $pre_defined_slots = array('10:00am - 12:00pm', '12:00pm - 02:00pm', '02:00pm - 04:00pm', '04:00pm - 06:00pm');
-                $k = array_rand($pre_defined_slots);
-                $selected_slot = $pre_defined_slots[$k];
+                $pre_defined_slots = array('06:00am - 08:00am');
+                $selected_slot = $pre_defined_slots[0];
                 $data['selected_slot'] = $selected_slot;
+                $data['disabled_slot'] = array();
                 $log->write($selected_slot);
                 $log->write('RANGE ONE');
             }
 
             if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
-                $pre_defined_slots = array('04:00pm - 06:00pm');
-                $selected_slot = $pre_defined_slots[0];
+                $pre_defined_slots = array('08:00am - 10:00am', '10:00am - 12:00pm');
+                //$selected_slot = $pre_defined_slots[0];
+                $selected_slot = $pre_defined_slots[array_rand($pre_defined_slots)];
                 $data['selected_slot'] = $selected_slot;
+                $data['disabled_slot'] = array('06:00am - 08:00am');
                 $log->write('RANGE TWO');
             }
 
             if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
+                $pre_defined_slots = array('12:00pm - 02:00pm');
+                $selected_slot = $pre_defined_slots[0];
+                $data['selected_slot'] = $selected_slot;
+                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am');
+                $log->write('RANGE THREE');
+            }
+
+            if (time() >= strtotime($rangefourstart) && time() <= strtotime($rangefourend)) {
+                $pre_defined_slots = array('12:00pm - 02:00pm');
+                $selected_slot = $pre_defined_slots[0];
+                $data['selected_slot'] = $selected_slot;
+                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am');
+                $log->write('RANGE FOUR');
+            }
+
+            if (time() >= strtotime($rangefivestart) && time() <= strtotime($rangefiveend)) {
                 $pre_defined_slots = array('02:00pm - 04:00pm');
                 $selected_slot = $pre_defined_slots[0];
                 $data['selected_slot'] = $selected_slot;
-                $log->write('RANGE THREE');
+                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '12:00pm - 02:00pm');
+                $log->write('RANGE FIVE');
             }
 
             $this->language->load('checkout/delivery_time');
@@ -1539,6 +1585,7 @@ class ControllerApiCustomerCheckout extends Controller {
             $json['data']['timeslots'] = $data['timeslots'];
             $json['data']['selected_time_slot'] = $data['selected_slot'];
             $json['data']['selected_date_slot'] = $data['dates'][0];
+            $json['data']['disabled_slot'] = $data['disabled_slot'];
             $json['message'] = 'Please Pre Populate These Date And Time Slots!';
 
             $stores = $this->cart->getStores();

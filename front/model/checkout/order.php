@@ -16,6 +16,10 @@ class ModelCheckoutOrder extends Model {
 
         $log = new Log('error.log');
         $log->write('addorder 1');
+        /*TIME ZONE ISSUE*/
+        $tz = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('P');
+        $this->db->query("SET time_zone='$tz';");
+        /*TIME ZONE ISSUE*/
         $this->trigger->fire('pre.order.add', $stores);
         //print_r($data);die;
         //unset($this->session->data['order_id']);die;
@@ -109,6 +113,10 @@ class ModelCheckoutOrder extends Model {
 
         $log = new Log('error.log');
         $log->write('addMultiOrder 1');
+        /*TIME ZONE ISSUE*/
+        $tz = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('P');
+        $this->db->query("SET time_zone='$tz';");
+        /*TIME ZONE ISSUE*/
         //$log->write($stores);
         $this->trigger->fire('pre.order.add', $stores);
 
@@ -405,7 +413,8 @@ class ModelCheckoutOrder extends Model {
                 'delivery_date_formatted' => date($this->language->get('date_format_short'), strtotime($order_query->row['delivery_date'])),
                 'delivery_timeslot' => $order_query->row['delivery_timeslot'],
                 'dropoff_latitude' => $order_query->row['latitude'],
-                'dropoff_longitude' => $order_query->row['longitude']
+                'dropoff_longitude' => $order_query->row['longitude'],
+                'amount_partialy_paid'=> $order_query->row['amount_partialy_paid']
                     /* 'date_modified' => $order_query->row['date_modified'],
                       'date_added' => $order_query->row['date_added'] */
             );
@@ -414,10 +423,11 @@ class ModelCheckoutOrder extends Model {
         }
     }
 
-    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '') {
+    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '', $other_vendor_terms = null) {
 
         //$notify = true;
-
+        $log = new Log('error.log');
+        $log->write('mod loop addOrderHistory' . $order_id);
         $this->trigger->fire('pre.order.history.add', $order_id);
 
         $order_info = $this->getOrder($order_id);
@@ -543,9 +553,15 @@ class ModelCheckoutOrder extends Model {
                     $log->write("deliverSystemStatus elsex");
                 }
             }
-
-
-            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+            
+            if ($other_vendor_terms != NULL) {
+            $log->write('accept_vendor_terms');
+            $log->write($other_vendor_terms);
+            $log->write('accept_vendor_terms');
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', vendor_terms_cod ='" . (int) $other_vendor_terms . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+            } else {
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");    
+            }
 
             $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
 
@@ -642,6 +658,7 @@ class ModelCheckoutOrder extends Model {
 
             //this is solely used to send mails
             //if ( in_array( $order_status_id, array_merge( $this->config->get( 'config_processing_status' ), $this->config->get( 'config_complete_status' ) ) ) ) {
+            try {
             if ($notify) {
 
                 //this is solely used to send mails
@@ -986,7 +1003,13 @@ class ModelCheckoutOrder extends Model {
                       } */
                 }
             }
-
+            }
+            catch(exception $ex)
+            {
+            $log->write('Order History Mail Error');
+            $log->write($ex);
+            }
+            
             $this->load->model('account/activity');
 
             if (in_array($order_status_id, $this->config->get('config_complete_status'))) {

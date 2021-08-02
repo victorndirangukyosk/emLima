@@ -406,9 +406,9 @@ class ControllerCheckoutCart extends Controller
 
         $product_info = $this->model_assets_product->getProduct($product_store_id, false, $store_id);
 
-        $log->write('PROD INFO');
+        /*$log->write('PROD INFO');
         $log->write($product_info);
-        $log->write('PROD INFO');
+        $log->write('PROD INFO');*/
 
         if ($product_info) {
             if (isset($this->request->post['quantity'])) {
@@ -609,8 +609,8 @@ class ControllerCheckoutCart extends Controller
 
         $ripe = $this->request->post['ripe'];
 
-        console.log('ripe');
-        console.log($ripe);
+        /*console.log('ripe');
+        console.log($ripe);*/
 
         //echo $this->request->post['ripe'];
         $this->cart->update($this->request->post['key'], $this->request->post['quantity'], $this->request->post['product_note'], $this->request->post['produce_type']);
@@ -1300,4 +1300,30 @@ class ControllerCheckoutCart extends Controller
 
         return $p;
     }
+    
+    public function removeothervendorproductsfromcart() {
+        $json = [];
+        $json['products_removed'] = FALSE;
+        $log = new Log('error.log');
+        $log->write($this->cart->countProducts());
+        $previous_count = $this->cart->countProducts();
+        foreach ($this->cart->getProducts() as $store_products) {
+            /* FOR KWIKBASKET ORDERS */
+            if ($store_products['store_id'] > 75) {
+                $log->write('CheckOtherVendorOrderExists');
+                $log->write($store_products['key']);
+                $this->cart->remove($store_products['key']);
+                $log->write('CheckOtherVendorOrderExists');
+            }
+        }
+        $log->write($this->cart->countProducts());
+        $present_count = $this->cart->countProducts();
+        if ($previous_count > $present_count) {
+            $json['products_removed'] = TRUE;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

@@ -320,8 +320,8 @@
  
 </div>   
 
-<div class="col-sm-4">    
-    
+<div class="col-sm-4"> 
+<?php if($customer_orders_count == 0 || $customer_orders_count == 4 || $customer_orders_count == 14) { ?>                                        
 <div class="discount" >
       <h3>Discount Codes</h3>
   <form id="discount-coupon-form" action="" method="post" class="promo-form">  
@@ -339,6 +339,7 @@
 </form>
 
 </div> <!--discount--> 
+<?php } ?>
 </div> <!--col-sm-4-->
 
 <div class="col-sm-4">
@@ -382,8 +383,8 @@
                                 <?php if($min_order_amount_reached == TRUE) { ?>
                                 <div class="checkout-promocode-form"  >
                                  <div class="form-group">
-                                        <span class="input-group-btn"  onclick="setOrderNotes()">
-                                            <a id="button-reward" href="<?php echo $continue.'/index.php?path=checkout/checkout'; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">Proceed to Check out
+                                        <span class="input-group-btn" id="proceed_to_checkout"  onclick="setOrderNotes()">
+                                            <a id="button-reward" href="#" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">Proceed to Check out
                                             </a>
                                         </span>
                                     </div>
@@ -640,8 +641,60 @@
     </style>
 
     <?= $footer ?>
-
-
+    <!-- Modal -->
+    <div class="addressModal">
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <div class="row">
+                            <div class="col-md-12">
+                              <h2>ACCEPT TERMS</h2>
+                            </div>
+                            <div class="modal-body">
+                            <p style="font-weight: bold; font-size: 12px;
+">The above products from the cart are available only for <span style="color:#ea7128;">"Payment On Delivery"</span></p>
+                            </div>
+                            <div class="addnews-address-form">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button id="agree_vendor_terms" name="agree_vendor_terms" type="button" class="btn btn-primary">I AGREE</button>
+                                        <button id="cancel_vendor_terms" name="cancel_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<div class="addressModal">
+        <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <div class="row">
+                            <div class="modal-body">
+                                <p id="exampleModal2_text" style="font-weight: bold; font-size: 12px;"></p>
+                            </div>
+                            <div class="addnews-address-form">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button id="remove_vendor_products" name="remove_vendor_products" type="button" class="btn btn-primary">REMOVE</button>
+                                        <button id="cancel_products_vendor_terms" name="cancel_products_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">CANCEL</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- CSS Style -->
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
@@ -679,8 +732,88 @@
 
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
-    
+    <style>
+    #agree_vendor_terms {
+    width: 49%;
+    float: left;
+    margin-top: 10px;
+    }
+    #remove_vendor_products {
+    width: 49%;
+    float: left;
+    margin-top: 10px;
+    }
+    </style>
   <script type="text/javascript">
+/*$(function() {
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                if (json['modal_open']) {
+                        $('#exampleModal').modal('toggle');
+                }else{
+                     $('#exampleModal').modal('hide');   
+                }
+            }
+        });
+});*/
+        
+        $('#agree_vendor_terms').on('click', function(){
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/AcceptOtherVendorOrderTerms',
+            type: 'post',
+            data: 'accept_terms=true',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                console.log(json);
+                if (json['vendor_terms']) {
+                   $('#exampleModal').modal('hide');
+                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";
+                }else{
+                  $('#exampleModal').modal('show');
+                }
+            }
+        });
+        });
+        $('#cancel_vendor_terms').on('click', function(){
+            $('#exampleModal2_text').text('Remove Other Vendor Products!');
+            $('#exampleModal2').modal('show');
+            //window.location.href = "<?= $base;?>";
+        });
+        $('#cancel_products_vendor_terms').on('click', function(){
+            window.location.href = "<?= $base;?>";
+        });
+        $('#remove_vendor_products').on('click', function(){
+          $.ajax({
+            url: 'index.php?path=checkout/cart/removeothervendorproductsfromcart',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            $('#exampleModal2_text').text('Your Cart Updating!');
+            },
+            complete: function() {
+            },
+            success: function(json) {
+            if (json['products_removed']) {
+                   $('#exampleModal2_text').text('Your Cart Updated!');
+                   setTimeout(function(){ 
+                   $('#exampleModal2').modal('hide');
+                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkoutitems'; ?>";
+                   },3000);
+            }    
+            }
+        });  
+        });
   //as in header page , clear cart funtionality is already mentioned.Commented here
      /* $(document).delegate('#clearcart', 'click', function(){
         var choice = confirm($(this).attr('data-confirm'));
@@ -783,14 +916,38 @@ $("cart["+key+"][qty]").removeAttr('disabled');
 });
 
 
-  function setOrderNotes()
-{
-    
-     var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
-     
-  
- document.cookie = "dropoff_notes="+dropoff_notes;
+function setOrderNotes()
+{    
+var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
+document.cookie = "dropoff_notes="+dropoff_notes;
 }
+
+$(document).delegate('#proceed_to_checkout', 'click', function(e) {
+e.preventDefault();    
+var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
+document.cookie = "dropoff_notes="+dropoff_notes;
+//$('#exampleModal').modal('toggle');
+
+$.ajax({
+            url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                if (json['modal_open']) {
+                $('#exampleModal').modal('show');
+                return false;
+                }else{
+                $('#exampleModal').modal('hide'); 
+                window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";     
+                }
+            }
+});
+
+});
 
   $(document).delegate('#updatecart', 'click', function(){    
 
@@ -1383,6 +1540,7 @@ __kdt.push({"post_on_load": false});
 
 <script type="text/javascript">
     $('#button-reward').on('click', function() {
+    
         $.ajax({
             url: 'index.php?path=checkout/reward/reward',
             type: 'post',

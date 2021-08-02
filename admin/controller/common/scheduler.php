@@ -251,4 +251,28 @@ class ControllerCommonScheduler extends Controller
             }     
            
     }
+
+
+
+    public function customerStatement()
+    {
+         
+        $dt = date("Y-m-d");
+        //   echo 'First day : '. date("Y-m-01", strtotime($dt)).' - Last day : '. date("Y-m-t", strtotime($dt)); 
+        // echo "<pre>";print_r($this->request->get['pdf']);die;
+        $pdf=$this->request->get['pdf'];
+
+        $filter_date_end =   date("Y-m-t", strtotime($dt));
+        $filter_date_start =   date("Y-m-01", strtotime($dt));
+
+        $filter_data = [
+            'filter_date_start' => $filter_date_start,
+            'filter_date_end' => $filter_date_end,
+        ];        
+         
+          $this->load->model('report/excel');
+          $this->model_report_excel->mail_download_customer_statement_excel($filter_data,$pdf);
+   
+        }
+    
 }

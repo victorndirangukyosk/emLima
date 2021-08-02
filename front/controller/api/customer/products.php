@@ -2271,12 +2271,13 @@ class ControllerApiCustomerProducts extends Controller {
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $sql .= " AND p.status = '" . (int) $data['filter_status'] . "'";
-        }
+            $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
 
+        }
         //$sql .= " GROUP BY p.product_id";
         //$sql .= " LIMIT 10";
         //$sql .= " LIMIT " . (int) $data['start'] . "," . (int) $data['limit'];
-        //echo $sql;exit;
+        // echo $sql;exit;
         $sort_data = [
             'pd.name',
             'p.model',

@@ -1175,6 +1175,7 @@ class ControllerSaleCustomer extends Controller {
         $data['button_reward_add'] = $this->language->get('button_reward_add');
         $data['button_remove'] = $this->language->get('button_remove');
         $data['button_upload'] = $this->language->get('button_upload');
+        $data['button_contact_add'] = $this->language->get('button_contact_add');
 
         $data['tab_general'] = $this->language->get('tab_general');
         $data['tab_address'] = $this->language->get('tab_address');
@@ -1184,6 +1185,7 @@ class ControllerSaleCustomer extends Controller {
         $data['tab_referral'] = $this->language->get('tab_referral');
         $data['tab_sub_customer'] = $this->language->get('tab_sub_customer');
         $data['tab_ip'] = $this->language->get('tab_ip');
+        $data['tab_contact'] = $this->language->get('tab_contact');
 
         $data['token'] = $this->session->data['token'];
 
@@ -1370,6 +1372,8 @@ class ControllerSaleCustomer extends Controller {
         $data['parent_user_phone'] = NULL;
         if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+            $data['payment_terms'] = $customer_info['payment_terms'];
+            $data['statement_duration'] = $customer_info['statement_duration'];
             $data['customer_category'] = $customer_info['customer_category'];
             $data['customer_category_disabled'] = '';
             $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
@@ -1607,6 +1611,22 @@ class ControllerSaleCustomer extends Controller {
             $data['account_manager'] = $customer_info['account_manager_id'];
         } else {
             $data['account_manager'] = '';
+        }
+        
+        if (isset($this->request->post['payment_terms'])) {
+            $data['payment_terms'] = $this->request->post['payment_terms'];
+        } elseif (!empty($customer_info)) {
+            $data['payment_terms'] = $customer_info['payment_terms'];
+        } else {
+            $data['payment_terms'] = '';
+        }
+
+        if (isset($this->request->post['statement_duration'])) {
+            $data['statement_duration'] = $this->request->post['statement_duration'];
+        } elseif (!empty($customer_info)) {
+            $data['statement_duration'] = $customer_info['statement_duration'];
+        } else {
+            $data['statement_duration'] = '';
         }
 
         // $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
@@ -1928,6 +1948,73 @@ class ControllerSaleCustomer extends Controller {
         $data['results'] = sprintf($this->language->get('text_pagination'), ($credit_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($credit_total - 10)) ? $credit_total : ((($page - 1) * 10) + 10), $credit_total, ceil($credit_total / 10));
 
         $this->response->setOutput($this->load->view('sale/customer_credit.tpl', $data));
+    }
+
+
+    public function contact() {
+        $this->load->language('sale/customer');
+
+        $this->load->model('sale/customer');
+
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->user->hasPermission('modify', 'sale/customer')) {
+        // echo "<pre>";print_r($this->request->post);die;
+            
+            if(!isset($this->request->post['contact_id']))
+            $this->request->post['contact_id']=0;
+
+            $this->model_sale_customer->addEditContact($this->request->get['customer_id'], $this->request->post['firstname'], $this->request->post['lastname'], $this->request->post['email'], $this->request->post['phone'], $this->request->post['customer_contact_send'], $this->request->post['contact_id']);
+
+            $data['success'] = $this->language->get('text_success');
+        } else {
+            $data['success'] = '';
+        }
+
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && !$this->user->hasPermission('modify', 'sale/customer')) {
+            $data['error_warning'] = $this->language->get('error_permission');
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        $data['text_no_results'] = $this->language->get('text_no_results');
+         
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['contacts'] = [];
+
+        $results = $this->model_sale_customer->getCustomerContacts($this->request->get['customer_id'], ($page - 1) * 10, 10);
+        //  echo "<pre>";print_r($results);die;
+        foreach ($results as $result) {
+            $data['contacts'][] = [
+                'contact_id' =>$result['contact_id'],
+                'customer_id' => $result['customer_id'],  
+                'firstname' => $result['firstname'],  
+                'lastname' => $result['lastname'],  
+                'email' => $result['email'],  
+                'telephone' => $result['telephone'],  
+                'send' => $result['send'],  
+                'customer_id' => $result['description'],  
+            
+            ];
+        }
+
+
+        $contact_total = $this->model_sale_customer->getTotalContacts($this->request->get['customer_id']);
+
+        $pagination = new Pagination();
+        $pagination->total = $contact_total;
+        $pagination->page = $page;
+        $pagination->limit = 10;
+        $pagination->url = $this->url->link('sale/customer/contact', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($contact_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($contact_total - 10)) ? $contact_total : ((($page - 1) * 10) + 10), $contact_total, ceil($contact_total / 10));
+
+        $this->response->setOutput($this->load->view('sale/customer_contact.tpl', $data));
     }
 
     public function reward() {
@@ -2532,6 +2619,7 @@ class ControllerSaleCustomer extends Controller {
         $data['button_reward_add'] = $this->language->get('button_reward_add');
         $data['button_remove'] = $this->language->get('button_remove');
         $data['button_upload'] = $this->language->get('button_upload');
+        $data['button_contact_add'] = $this->language->get('button_contact_add');
 
         $data['tab_general'] = $this->language->get('tab_general');
         $data['tab_address'] = $this->language->get('tab_address');
@@ -2541,6 +2629,7 @@ class ControllerSaleCustomer extends Controller {
         $data['tab_referral'] = $this->language->get('tab_referral');
         $data['tab_sub_customer'] = $this->language->get('tab_sub_customer');
         $data['tab_ip'] = $this->language->get('tab_ip');
+        $data['tab_contact'] = $this->language->get('tab_contact');
 
         $data['token'] = $this->session->data['token'];
 
@@ -2791,4 +2880,120 @@ class ControllerSaleCustomer extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+
+
+
+ 
+
+    public function DeleteCustomerContacts() {
+        
+        
+        $contact_id = $this->request->post['contact_id'];
+        $this->load->model('sale/customer');
+        $this->model_sale_customer->deletecontact($contact_id);
+        
+        // Add to activity log
+        $this->load->model('account/activity');
+
+        $activity_data = [
+            'customer_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'customer_contact_id' => $this->request->post['contact_id']
+        ];
+
+        $this->model_account_activity->addActivity('customer_contact_deleted', $activity_data);
+
+        // $json['success'] = 'Contact deleted!';
+        // $this->response->addHeader('Content-Type: application/json');
+        // $this->response->setOutput(json_encode($json));
+        $data['success'] = '';
+
+        $this->load->language('sale/customer');
+
+        // $this->load->model('sale/customer');
+
+        
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && !$this->user->hasPermission('modify', 'sale/customer')) {
+            $data['error_warning'] = $this->language->get('error_permission');
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        $data['text_no_results'] = $this->language->get('text_no_results');
+         
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['contacts'] = [];
+
+        $results = $this->model_sale_customer->getCustomerContacts($this->request->get['customer_id'], ($page - 1) * 10, 10);
+        //  echo "<pre>";print_r($results);die;
+        foreach ($results as $result) {
+            $data['contacts'][] = [
+                'contact_id' =>$result['contact_id'],
+                'customer_id' => $result['customer_id'],  
+                'firstname' => $result['firstname'],  
+                'lastname' => $result['lastname'],  
+                'email' => $result['email'],  
+                'telephone' => $result['telephone'],  
+                'send' => $result['send'],  
+                'customer_id' => $result['description'],  
+            
+            ];
+        }
+
+
+        $contact_total = $this->model_sale_customer->getTotalContacts($this->request->get['customer_id']);
+
+        $pagination = new Pagination();
+        $pagination->total = $contact_total;
+        $pagination->page = $page;
+        $pagination->limit = 10;
+        $pagination->url = $this->url->link('sale/customer/contact', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($contact_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($contact_total - 10)) ? $contact_total : ((($page - 1) * 10) + 10), $contact_total, ceil($contact_total / 10));
+
+        $this->response->setOutput($this->load->view('sale/customer_contact.tpl', $data));
+   
+    }
+
+    public function EmailUnique() {//not used
+        $log = new Log('error.log');
+        $log->write($this->request->post['email']);
+        $this->load->model('account/customer');
+        $count = $this->model_account_customer->getTotalContactsByEmail($this->request->post['email']);
+        $log->write($count . 'Email Count');
+
+        $json['success'] = 0 == $count || null == $count ? true : false;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+ 
+
+    
+    public function getCustomerContact() {
+                //  echo "<pre>";print_r($this->request->get);die;
+        
+        $contact_id = $this->request->get['contact_id'];
+        $json['success'] = true;
+         
+        $this->load->model('sale/customer');
+        $cust_contacts = $this->model_sale_customer->getCustomerContact($contact_id);
+        // $this->model_sale_customer->getCustomerContact($contact_id);
+        
+        $json['data'] = $cust_contacts;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+     
+
+
+
+
 }

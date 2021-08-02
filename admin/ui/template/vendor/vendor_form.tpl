@@ -109,6 +109,29 @@
                                     <?php } ?>
                                 </div>
                             </div>
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-orderprefix"><?php echo $entry_display_name; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="display_name" value="<?php echo $display_name; ?>" placeholder="<?php echo $display_name; ?>" id="input-display-name" class="form-control" />
+                                    <?php if ($error_display_name) { ?>
+                                    <div class="text-danger"><?php echo $error_display_name; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-deliverytime"><?php echo $entry_delivery_time; ?></label>
+                                <div class="col-sm-10">
+                                    <select name="delivery_time" id="input-delivery-time" class="form-control">
+                                        <option value="0">Select Delivery Time</option>
+                                        <option value="24" <?php if($delivery_time == 24) { ?> selected="selected" <?php } ?> >24</option>
+                                        <option value="48" <?php if($delivery_time == 48) { ?> selected="selected" <?php } ?> >48</option>
+                                        <option value="72" <?php if($delivery_time == 72) { ?> selected="selected" <?php } ?> >72</option>
+                                    </select>
+                                    <?php if ($error_delivery_time) { ?>
+                                    <div class="text-danger"><?php echo $error_delivery_time; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-image"><?php echo $entry_image; ?></label>

@@ -76,6 +76,18 @@
                                 </div>
                             </div> 
 
+
+                              <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-financeteam">Finance Team</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_financeteam" value="<?php echo $config_financeteam; ?>" placeholder="Email ID" id="input-financeteam" class="form-control" />
+                                    <?php if ($error_financeteam) { ?>
+                                    <div class="text-danger"><?php echo $error_financeteam; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div> 
+
+
                       </div>
                        
                     </div>

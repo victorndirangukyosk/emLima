@@ -20,6 +20,13 @@ class ControllerPaymentPesapal extends Controller {
             }
         }
 
+        foreach ($this->session->data['order_id'] as $key => $value) {
+            /* FOR KWIKBASKET ORDERS */
+            if ($key == 75) {
+                $order_id = $value;
+            }
+        }
+
 
         $log = new Log('error.log');
         $log->write('Pesapal Order ID');
@@ -87,6 +94,7 @@ class ControllerPaymentPesapal extends Controller {
         $iframelink = 'https://www.pesapal.com/api/PostPesapalDirectOrderV4'; //change to
         //https://www.pesapal.com/API/PostPesapalDirectOrderV4 when you are ready to go live!
         //get form details
+        $amount = $this->cart->getTotalForKwikBasket();
         $transaction_fee = 0;
         $percentage = 3.5;
         $transaction_fee = ($percentage / 100) * $amount;
@@ -127,320 +135,6 @@ class ControllerPaymentPesapal extends Controller {
         } else {
             return $this->load->view('default/template/payment/pesapal.tpl', $data);
         }
-    }
-
-    public function confirm() {
-        $log = new Log('error.log');
-        $json['processed'] = false;
-
-        if ('pesapal' == $this->session->data['payment_method']['code'] || 'pesapal' == $this->request->post['payment_method']) {
-            $this->load->language('payment/pesapal');
-
-            $this->load->model('payment/pesapal');
-
-            $this->load->model('checkout/order');
-            foreach ($this->session->data['order_id'] as $key => $value) {
-                $order_id = $value;
-            }
-
-            if (isset($this->request->post['order_id'])) {
-                $order_id = $this->request->post['order_id'];
-            }
-
-            $amount = 0;
-
-            if (isset($order_id)) {
-                $order_info = $this->model_checkout_order->getOrder($order_id);
-                if (count($order_info) > 0) {
-                    $amount = (int) ($order_info['total']);
-                }
-            }
-
-            if (empty($order_id)) {
-                $amount = (int) $this->request->post['amount'];
-            }
-
-            $live = 'true';
-
-            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
-
-            //$sta = $this->checkMpesaStatus($order_id,$mpesa);
-
-            $sta = false;
-
-            $log->write('STKPushSimulation confirm');
-            $log->write($sta);
-
-            if (!$sta) {
-                $PartyA = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
-
-                $BusinessShortCode = $this->config->get('mpesa_business_short_code');
-                $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
-                $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
-                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
-                //$CallBackURL = 'https://a1c6dda0aaba.ngrok.io/kwikbasket/index.php?path=deliversystem/deliversystem/mpesaOrderStatus';
-
-                $Amount = $amount;
-                //$Amount = 10;
-                $PartyB = $this->config->get('mpesa_business_short_code');
-
-                $PhoneNumber = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
-                $AccountReference = 'GPK'; //$this->config->get('config_name');
-                $TransactionDesc = '#' . $order_id;
-
-                if (empty($order_id)) {
-                    if (isset($this->request->post['paymode']) && !empty($this->request->post['paymode']) && 'pay_other' == $this->request->post['paymode']) {
-                        $TransactionDesc = '#' . $this->request->post['pending_order_ids'] . '##' . $this->request->post['customer'];
-                    } else {
-                        $TransactionDesc = '#' . $this->request->post['pending_order_ids'];
-                    }
-                }
-
-                $Remarks = 'PAYMENT';
-
-                $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
-
-                $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
-
-                // Void the order first
-                $log->write('STKPushSimulation');
-                $log->write($stkPushSimulation);
-
-                $stkPushSimulation = json_decode($stkPushSimulation);
-
-                $json['response'] = $stkPushSimulation;
-                $json['error'] = '';
-                if (isset($json['response']->errorMessage)) {
-                    $json['error'] = $json['response']->errorMessage;
-                }
-
-                if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
-                    if (!empty($order_id)) {
-                        //save in
-                        $this->model_payment_mpesa->addOrder($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
-                    } else {
-                        if (isset($this->request->post['paymode']) && !empty($this->request->post['paymode']) && 'pay_other' == $this->request->post['paymode']) {
-                            //$TransactionDesc = '#'.$this->request->post['pending_order_ids'].'##'.$this->request->post['customer'];
-                        } else {
-                            $pendingOrdersIds = explode('--', $this->request->post['pending_order_ids']);
-                            if (count($pendingOrdersIds)) {
-                                foreach ($pendingOrdersIds as $key => $value) {
-                                    $order_info = $this->model_checkout_order->getOrder($value);
-                                    $this->model_payment_mpesa->addOrder($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
-                                }
-                            }
-                        }
-                    }
-                    /* foreach ($this->session->data['order_id'] as $order_id) {
-
-                      $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mpesa_order_status_id'));
-                      } */
-
-                    $json['processed'] = true;
-                } else {
-                    $json['processed'] = false;
-                }
-            } else {
-                $json['processed'] = true;
-            }
-        }
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
-
-    public function complete() {
-        $log = new Log('error.log');
-        $json['processed'] = false;
-        $json['status'] = false;
-
-        $json['error'] = 'Transaction Failed. Please Try again.';
-
-        if ('mpesa' == $this->session->data['payment_method']['code'] || 'mpesa' == $this->request->post['payment_method']) {
-            $this->load->language('payment/mpesa');
-
-            $this->load->model('payment/mpesa');
-
-            $this->load->model('checkout/order');
-
-            foreach ($this->session->data['order_id'] as $key => $value) {
-                $order_id = $value;
-            }
-
-            if (isset($this->request->post['order_id'])) {
-                $order_id = $this->request->post['order_id'];
-            }
-
-            /* $mpesa= new \Safaricom\Mpesa\Mpesa('shiabWTekqy4Iod73mTmWJdD9VIhC3fl','TqNNiqllXfRqayxz','live','true');
-              $BusinessShortCode = '705705';
-              $LipaNaMpesaPasskey = '8007821ca4a18721c0518a67938c855cd7c552c782a298f5dfd280ef22ae3cf7';
-
-              $checkoutRequestID = 'ws_CO_28032018142406660';
-              $live = "true";
-              $timestamp='20'.date(    "ymdhis");
-              $password=base64_encode($BusinessShortCode.$LipaNaMpesaPasskey.$timestamp);
-              $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
-
-              echo "<pre>";print_r($stkPushSimulation);die; */
-
-            //$order_id = 2;
-            $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderId($order_id);
-
-            $live = true;
-
-            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
-
-            if ($mpesaDetails) {
-                foreach ($mpesaDetails as $mpesaDetail) {
-                    //echo "<pre>";print_r($mpesaDetail);die;
-
-                    $BusinessShortCode = $this->config->get('mpesa_business_short_code');
-                    $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
-
-                    $checkoutRequestID = $mpesaDetail['checkout_request_id']; //'ws_CO_28032018142406660';
-                    $timestamp = '20' . date('ymdhis');
-                    $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
-
-                    $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
-
-                    // Void the order first
-                    $log->write('STKPushSimulation');
-                    $log->write($stkPushSimulation);
-
-                    $stkPushSimulation = json_decode($stkPushSimulation);
-
-                    /* stdClass Object
-                      (
-                      [ResponseCode] => 0
-                      [ResponseDescription] => The service request has been accepted successsfully
-                      [MerchantRequestID] => 12365-2129383-1
-                      [CheckoutRequestID] => ws_CO_28032018142406660
-                      [ResultCode] => 0
-                      [ResultDesc] => The service request is processed successfully.
-                      )
-                     */
-
-                    if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
-                        //success pending to processing
-                        $order_status_id = $this->config->get('mpesa_order_status_id');
-
-                        $log->write('updateMpesaOrderStatus validatex');
-
-                        $this->load->model('localisation/order_status');
-
-                        $order_status = $this->model_localisation_order_status->getOrderStatuses();
-
-                        $dataAddHisory['order_id'] = $order_id;
-                        $dataAddHisory['order_status_id'] = $order_status_id;
-                        $dataAddHisory['notify'] = 0;
-                        $dataAddHisory['append'] = 0;
-                        $dataAddHisory['comment'] = '';
-
-                        $url = HTTPS_SERVER;
-                        $api = 'api/order/addHistory';
-
-                        if (isset($api)) {
-                            $url_data = [];
-                            $log->write('if');
-                            foreach ($dataAddHisory as $key => $value) {
-                                if ('path' != $key && 'token' != $key && 'store_id' != $key) {
-                                    $url_data[$key] = $value;
-                                }
-                            }
-
-                            $curl = curl_init();
-
-                            // Set SSL if required
-                            if ('https' == substr($url, 0, 5)) {
-                                curl_setopt($curl, CURLOPT_PORT, 443);
-                            }
-
-                            curl_setopt($curl, CURLOPT_HEADER, false);
-                            curl_setopt($curl, CURLINFO_HEADER_OUT, true);
-                            curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
-                            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                            curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
-                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                            curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
-
-                            $resp = curl_exec($curl);
-                            $log->write('resp');
-                            $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
-
-                            $log->write($resp);
-                            curl_close($curl);
-
-                            $json['status'] = true;
-
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
-
-    public function checkPesapalStatus($order_id, $mpesa) {
-        $log = new Log('error.log');
-        $json['processed'] = false;
-        $status = false;
-
-        $json['error'] = 'Transaction Failed. Please Try again.';
-
-        if (true) {
-            $this->load->language('payment/mpesa');
-
-            $this->load->model('payment/mpesa');
-
-            $this->load->model('checkout/order');
-
-            /* foreach ($this->session->data['order_id'] as $key => $value) {
-              $order_id = $value;
-              } */
-
-            $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderId($order_id);
-
-            $live = 'true';
-
-            //$mpesa= new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'),$this->config->get('mpesa_customer_secret'),$this->config->get('mpesa_environment'),$live);
-
-            if ($mpesaDetails) {
-                foreach ($mpesaDetails as $mpesaDetail) {
-                    //echo "<pre>";print_r($mpesaDetail);die;
-
-                    $BusinessShortCode = $this->config->get('mpesa_business_short_code');
-                    $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
-
-                    $checkoutRequestID = $mpesaDetail['checkout_request_id']; //'ws_CO_28032018142406660';
-                    $timestamp = '20' . date('ymdhis');
-                    $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
-
-                    $log->write($live . 'xx' . $checkoutRequestID . 'xx' . $BusinessShortCode . 'xx' . $password . 'xx' . $timestamp);
-
-                    $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
-
-                    // Void the order first
-                    $log->write('STKPushSimulation');
-                    $log->write($stkPushSimulation);
-
-                    $stkPushSimulation = json_decode($stkPushSimulation);
-
-                    if (isset($stkPushSimulation->ResultCode) && 1001 == $stkPushSimulation->ResultCode) {
-                        //success pending to processing
-
-                        $status = true;
-
-                        break;
-                    }
-                }
-            }
-        }
-
-        return $status;
     }
 
     public function apiConfirm($data) {
@@ -864,42 +558,47 @@ class ControllerPaymentPesapal extends Controller {
         $this->load->model('account/customer');
 
         foreach ($this->session->data['order_id'] as $key => $value) {
-            $order_id = $value;
+            /* FOR KWIKBASKET ORDERS */
+            if ($key == 75) {
+                $order_id = $value;
 
-            $log->write('Pesapal Order ID');
-            $log->write($this->session->data['order_id']);
-            $log->write('Pesapal Order ID');
-            $order_info = $this->model_checkout_order->getOrder($order_id);
-            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-            $log->write('Pesapal Creds Customer Info');
-            $log->write($customer_info);
-            $log->write('Pesapal Creds Customer Info');
+                $log->write('Pesapal Order ID');
+                $log->write($this->session->data['order_id']);
+                $log->write('Pesapal Order ID');
+                $order_info = $this->model_checkout_order->getOrder($order_id);
+                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                $log->write('Pesapal Creds Customer Info');
+                $log->write($customer_info);
+                $log->write('Pesapal Creds Customer Info');
 
-            $log->write('Pesapal Order Info');
-            $log->write($order_info);
-            $log->write('Pesapal Order Info');
+                $log->write('Pesapal Order Info');
+                $log->write($order_info);
+                $log->write('Pesapal Order Info');
 
-            if (count($order_info) > 0) {
-                $amount = (int) ($order_info['total']);
+                if (count($order_info) > 0) {
+                    $amount = (int) ($order_info['total']);
+                }
+
+                $log->write('PESAPAL CALL BACK');
+                $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+                $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+                $log->write($transaction_tracking_id);
+                $log->write($merchant_reference);
+                $log->write('PESAPAL CALL BACK');
+                $customer_id = $customer_info['customer_id'];
+                $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
+                $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
+                $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
             }
-
-            $log->write('PESAPAL CALL BACK');
-            $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
-            $merchant_reference = $this->request->get['pesapal_merchant_reference'];
-            $log->write($transaction_tracking_id);
-            $log->write($merchant_reference);
-            $log->write('PESAPAL CALL BACK');
-            $customer_id = $customer_info['customer_id'];
-            $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
-            $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
-            $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
         }
 
         if ('COMPLETED' == $status) {
+            $this->load->controller('payment/cod/confirmnonkb');
             $this->response->redirect($this->url->link('checkout/success'));
         }
 
         if ('COMPLETED' != $status || null == $status) {
+            $this->load->controller('payment/cod/confirmnonkb');
             $this->response->redirect($this->url->link('checkout/success/orderfailed'));
         }
     }

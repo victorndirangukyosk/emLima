@@ -725,12 +725,17 @@ class ModelReportCustomer extends Model {
     }
 
     public function getValidCustomerOrders($data = []) {
-        $sql = "SELECT c.company_name  as company,c.SAP_customer_no, o.delivery_date  as delivery_date,c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer, c.email, cgd.name AS customer_group, c.status, o.order_id,o.po_number,o.date_added,o.order_status_id, SUM(op.quantity) as products, SUM(DISTINCT o.total) AS total FROM `" . DB_PREFIX . 'order` o LEFT JOIN `' . DB_PREFIX . 'order_product` op ON (o.order_id = op.order_id)LEFT JOIN `' . DB_PREFIX . 'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `' . DB_PREFIX . "customer_group_description` cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE o.customer_id > 0 AND cgd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
+        $sql = "SELECT c.company_name  as company,c.SAP_customer_no, o.delivery_date  as delivery_date,c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer, c.email, cgd.name AS customer_group, c.status, o.order_id,o.po_number,o.date_added,o.order_status_id, SUM(op.quantity) as products, SUM(DISTINCT o.total) AS total,o.amount_partialy_paid,o.paid FROM `" . DB_PREFIX . 'order` o LEFT JOIN `' . DB_PREFIX . 'order_product` op ON (o.order_id = op.order_id)LEFT JOIN `' . DB_PREFIX . 'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `' . DB_PREFIX . "customer_group_description` cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE o.customer_id > 0 AND cgd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         } else {
             $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";
+        }
+
+
+        if (!empty($data['statement_duration'])) {
+            $sql .= " AND c.statement_duration= '" . $this->db->escape($data['statement_duration']) . "'";
         }
 
         if (!empty($data['filter_date_start'])) {
@@ -767,6 +772,9 @@ class ModelReportCustomer extends Model {
         }
 
         $query = $this->db->query($sql);
+
+        // echo  ($sql);die;
+        
 
         return $query->rows;
     }
@@ -1303,5 +1311,144 @@ class ModelReportCustomer extends Model {
 
         return $query->rows;
     }
+
+
+    public function getCustomerWithOrders($data = []) {
+
+        
+        $sql = 'SELECT distinct CONCAT(c.firstname, " ", c.lastname) AS name,c.customer_id,c.email FROM `' . DB_PREFIX . 'order` o  LEFT JOIN `' . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) WHERE o.customer_id > '0'";
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        } else {
+            $sql .= " AND o.order_status_id > '0'";
+        }
+
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            // $sql .= " AND o.customer_id = '" . (int)$data['filter_customer'] . "'";
+            $sql .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND  c.company_name  LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+        // echo "<pre>";print_r($sql);die;
+
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+
+    public function getCustomerContacts($customer_id) {
+        $contacts = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_contact c WHERE c.customer_id = '" . (int) $customer_id . "' and c.send=1");
+        return $contacts->rows;
+    }
+
+
+
+    public function getValidCustomerOrdersByDates($data = []) {
+
+        $dt = strtotime(date("Y-m-d"));
+        
+        
+        if(date('l', $dt)=='Sunday')//weekly
+        {
+            $data['filter_date_start']=date("Y-m-d",strtotime("-1 days"));
+            $data['filter_date_end']=date("Y-m-d",strtotime("-7 days"));
+            $data['statement_duration']=7;
+            $results_weekly=$this->getValidCustomerOrders($data);
+        }
+        if(date(d, $dt)=='01' || date(d, $dt)=='16')//bi-wwekly
+        {
+
+            if(date(d, $dt)=='01')//monthly
+            {
+                $dtp=date("Y-m-d",strtotime("-1 days"));
+                $data['filter_date_end'] =   date("Y-m-t", strtotime($dtp));
+                $data['filter_date_start']=   date("Y-m-16", strtotime($dtp));
+                $data['statement_duration']=15;
+                $results_biweekly_1=$this->getValidCustomerOrders($data);
+                // echo "<pre>";print_r(date('l', $results_biweekly_1));die;
+     
+            }
+            else
+            {
+                 $dtp=date("Y-m-d",strtotime("-1 days"));
+                 $data['filter_date_start']=   date("Y-m-01", strtotime($dtp));
+                $data['filter_date_end']=$dtp;
+                $data['statement_duration']=15;
+                $results_biweekly_2=$this->getValidCustomerOrders($data);
+            }
+        }
+        if(date(d, $dt)=='01')//monthly
+        {
+            $dtp=date("Y-m-d",strtotime("-1 days"));
+            $data['filter_date_end'] =   date("Y-m-t", strtotime($dtp));
+            $data['filter_date_start']=   date("Y-m-01", strtotime($dtp));
+            $data['statement_duration']=30;
+             
+            $results_monthly = $this->getValidCustomerOrders($data);
+            
+
+            // echo "<pre>";print_r( $results_monthly );die;
+
+ 
+        }
+        // echo "<pre>";print_r(date(d, $dt));die;
+
+        if(!isset($data['statement_duration']))
+        {
+            return;
+        }
+
+        echo "<pre>";print_r(date(d, $dt));
+        echo "<pre>";print_r('no data fetched');;
+  
+        $results;
+        if($results_weekly!=null)
+        {
+            $results=$results_weekly;       
+
+        }
+        if($results_biweekly_1!=null)
+        {
+            if($results!=null)
+            $results=array_merge($results,$results_biweekly_1);
+            else
+            $results=$results_biweekly_1;    
+            
+        }
+
+        if($results_biweekly_2!=null)
+        {
+            if($results!=null)
+            $results=array_merge($results,$results_biweekly_2);
+            else
+            $results=$results_biweekly_2;
+ 
+        }
+
+        if($results_monthly!=null)
+        {
+            if($results!=null)
+            $results=array_merge($results,$results_monthly);
+            else
+            $results=$results_monthly; 
+        }
+
+        // echo "<pre>";print_r($results);die;
+        return $results;
+    }
+
 
 }

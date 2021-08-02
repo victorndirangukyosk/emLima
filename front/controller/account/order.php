@@ -4353,8 +4353,8 @@ class ControllerAccountOrder extends Controller {
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-    }
-
+    } 
+     //if below method modified , please check in API-->Orders.php-getOrderProductsWithVariancesNew
     public function getOrderProductsWithVariancesNew($order_id) {
 
         $this->load->model('account/order');
@@ -4416,7 +4416,7 @@ class ControllerAccountOrder extends Controller {
 
         $customer = $order_info['firstname'] . ' ' . $order_info['lastname'];
         $company = $this->request->get['company'];
-        $date = $order_info['date_added'];
+        $date = $order_info['order_date'];
         $deliverydate = $order_info['delivery_date'];
         $shippingaddress = $order_info['shipping_address'] . ' . ' . $order_info['shipping_city'] . ' ' . $order_info['zipcode'];
         $paymentmethod = $order_info['payment_method'];
@@ -4433,7 +4433,7 @@ class ControllerAccountOrder extends Controller {
             'shippingaddress' => $shippingaddress,
             'paymentmethod' => $paymentmethod,
         ];
-
+        
         $orderProducts = $this->getOrderProductsWithVariancesNew($orderid);
         $data['products'] = $orderProducts;
 

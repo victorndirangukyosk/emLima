@@ -316,33 +316,7 @@ class Controlleraccountcustomercontacts extends Controller {
         $this->response->redirect($this->url->link('account/customer_contacts', '', 'SSL'));
     }
 
-    public function SendInvoiceFlagUpdate() {
-        $contact_id = $this->request->post['contact_id'];        
-        $this->load->model('account/customer');
-        $this->model_account_customer->SendInvoiceFlagUpdate($contact_id, $this->request->post['active_status']);
-        
-        // Add to activity log
-        $this->load->model('account/activity');
-
-        $activity_data = [
-            'customer_id' => $this->customer->getId(),
-            'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
-            'sub_customers_id' => $this->request->post['user_id']
-        ];
-        
-        if($this->request->post['active_status'] == 1) {
-        $this->model_account_activity->addActivity('sub_user_activated', $activity_data);
-        }
-        
-        if($this->request->post['active_status'] == 0) {
-        $this->model_account_activity->addActivity('sub_user_deactivated', $activity_data);
-        }
-
-
-        $json['success'] = 'User activated!';
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
+    
 
     public function DeleteCustomerContacts() {
         

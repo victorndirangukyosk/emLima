@@ -12,10 +12,48 @@ class ModelSaleCustomerFeedback extends Model
 
     public function getCustomerFeedbacks($data = [])
     {
+       
+       
         $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,CONCAT(u.firstname, ' ', u.lastname) AS accepted_user, feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id left outer join ".DB_PREFIX."user u on u.user_id= f.accepted_by ";
     
-        $sql .= ' ORDER BY `feedback_id`';
+       
 
+
+        $implode = [];
+
+        if (!empty($data['filter_company'])) {
+            if ('' != $data['filter_company']) {
+                $implode[] = "c.company_name = '" . $this->db->escape($data['filter_company']) . "'";
+            }
+        }
+
+        if (!empty($data['filter_name'])) {
+            if ($this->user->isVendor()) {
+                $implode[] = "c.firstname LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            } else {
+                $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            }
+        }
+
+        if (!empty($data['filter_customer_rating_id'])) {
+            $implode[] = "f.rating = '" . (int) $data['filter_customer_rating_id'] . "'";
+        }
+ 
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $implode[] = "f.status = '" .  $data['filter_status'] . "'";
+        }
+
+        if (isset($data['filter_feedback_id']) && !is_null($data['filter_feedback_id'])) {
+            $implode[] = "f.feedback_id = '" .  $data['filter_feedback_id'] . "'";
+        }
+
+
+        if ($implode) {
+            $sql .= ' Where ' . implode(' AND ', $implode);
+        }
+
+        $sql .= ' ORDER BY `feedback_id`';
         if (isset($data['order']) && ('DESC' == $data['order'])) {
             $sql .= ' DESC';
         } else {
@@ -92,10 +130,10 @@ class ModelSaleCustomerFeedback extends Model
     {
  
         if($issue_status=='Open')
-        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,'' as AcceptedBy,c.email, c.telephone,feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id where f.status ='Open' and DATE_ADD(f.created_date, INTERVAL 2 HOUR) >= '".$Issues_currentDateTime."' and DATE_ADD(f.created_date, INTERVAL 2 HOUR)< '".$max_Issues_currentDateTime."' ";
+        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,'' as AcceptedBy,c.email, c.telephone,feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id where f.status ='Open' and DATE_ADD(f.created_date, INTERVAL 12 HOUR) >= '".$Issues_currentDateTime."' and DATE_ADD(f.created_date, INTERVAL 12 HOUR)< '".$max_Issues_currentDateTime."' ";
           else
           {
-         $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,CONCAT(u.firstname, ' ', u.lastname) AS AcceptedBy,c.email,c.telephone,feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id  join ".DB_PREFIX."user u on  u.user_id = f.accepted_by  where f.status ='Attending' and DATE_ADD(f.accepted_date, INTERVAL 6 HOUR) >= '".$Issues_currentDateTime."' and DATE_ADD(f.accepted_date, INTERVAL 6 HOUR)< '".$max_Issues_currentDateTime."' ";
+         $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,CONCAT(u.firstname, ' ', u.lastname) AS AcceptedBy,c.email,c.telephone,feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id  join ".DB_PREFIX."user u on  u.user_id = f.accepted_by  where f.status ='Attending' and DATE_ADD(f.accepted_date, INTERVAL 24 HOUR) >= '".$Issues_currentDateTime."' and DATE_ADD(f.accepted_date, INTERVAL 24 HOUR)< '".$max_Issues_currentDateTime."' ";
             //   echo $sql;die;
           }
         $sql .= ' ORDER BY `feedback_id`';

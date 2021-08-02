@@ -314,13 +314,21 @@ class Controlleraccounttransactions extends Controller {
                     } elseif (!in_array($order['status'], $statusCancelledFilter)) {
                         if (is_array($order) && array_key_exists('value', $order)) {
                             $order['total_currency'] = $this->currency->format($order['value']);
+                            $order['pending_amount']=$order['value']-$order['amount_partialy_paid'];
+                            $order['pending_amount_currency']=$this->currency->format($order['pending_amount']);
+                        
                         }
                         /* $log = new Log('error.log');
                           $log->write('NON NUMERIC');
                           $log->write($totalPendingAmount);
                           $log->write($order['total']);
                           $log->write('NON NUMERIC'); */
-                        $totalPendingAmount = $totalPendingAmount + $order['value'];
+
+                        if( $order['pending_amount']>0)
+                        $totalPendingAmount = $totalPendingAmount +  $order['pending_amount'];
+                        else
+                        $totalPendingAmount = $totalPendingAmount +  $order['value'];
+
                         //$totalPendingAmount = $this->currency->format($totalPendingAmount);
                         $data['pending_order_id'][] = $order['order_id'];
                         $data['pending_transactions'][] = $order;
@@ -451,8 +459,13 @@ class Controlleraccounttransactions extends Controller {
             $log->write($order_info);
             $log->write('Pesapal Order Info');
 
+            
             if (count($order_info) > 0) {
+                if($order_info['amount_partialy_paid']>0)
+                $amount = (int) ($order_info['total']-$order_info['amount_partialy_paid']);
+                else
                 $amount = (int) ($order_info['total']);
+
             }
 
             $this->model_checkout_order->UpdatePaymentMethod($order_id, 'PesaPal', 'pesapal');
