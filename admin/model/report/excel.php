@@ -5803,6 +5803,7 @@ class ModelReportExcel extends Model {
         $dt = strtotime(date("Y-m-d"));
         
         
+        // echo "<pre>";print_r($pdf); die;
         echo "<pre>";print_r(date('l', $dt)); 
         echo "<pre>";print_r(date(d, $dt)); 
         if(date('l', $dt)!='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
@@ -5930,6 +5931,29 @@ class ModelReportExcel extends Model {
                 if($pdf==1)
                 {
 
+
+                    try {
+                        require_once DIR_ROOT . '/vendor/autoload.php';
+                        
+                            $pdf = new \mikehaertl\wkhtmlto\Pdf;
+                            $template = $this->load->view('report/customer_statement_pdf.tpl', $data['customers']);
+                            $pdf->addPage($template);
+                            if (!$pdf->send("Customer_Order_Statement #" . $data['customers'][0]['customer'] . ".pdf")) {
+                                $error = $pdf->getError();
+                                echo $error;
+                                die;
+                            }
+                        }
+                        catch(Exception $e)
+                        {
+                            $errstr = $e->getMessage();
+                            $errline = $e->getLine();
+                            $errfile = $e->getFile();
+                            $errno = $e->getCode();
+                            $log->write($errstr . ' ' . $errline . ' ' . $errfile . ' ' . $errno . ' ' . 'download_customer_statement_excel');
+                            $this->log->write('Error in Automatic PDF Statement');
+
+                        } 
                 }
                 else
                 {
