@@ -259,6 +259,8 @@ class ControllerCommonScheduler extends Controller
          
         $dt = date("Y-m-d");
         //   echo 'First day : '. date("Y-m-01", strtotime($dt)).' - Last day : '. date("Y-m-t", strtotime($dt)); 
+        // echo "<pre>";print_r($this->request->get['pdf']);die;
+        $pdf=$this->request->get['pdf'];
 
         $filter_date_end =   date("Y-m-t", strtotime($dt));
         $filter_date_start =   date("Y-m-01", strtotime($dt));
@@ -269,7 +271,7 @@ class ControllerCommonScheduler extends Controller
         ];        
          
           $this->load->model('report/excel');
-          $this->model_report_excel->mail_download_customer_statement_excel($filter_data);
+          $this->model_report_excel->mail_download_customer_statement_excel($filter_data,$pdf);
    
         }
     
