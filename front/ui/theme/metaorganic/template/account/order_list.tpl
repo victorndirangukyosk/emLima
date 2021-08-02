@@ -926,7 +926,8 @@ function addOrderToCart(orderid,store_id) {
     }, 6000 * 1000); // 60 * 1000 milsec
 
  
-$('select').on("change",function(){
+//$('select').on("change",function(){
+$(document).on('change', 'select.newddl', function(){
      
     var selectedvalue = this.value;
      //alert(this.value);
