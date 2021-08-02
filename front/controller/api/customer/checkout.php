@@ -321,6 +321,21 @@ class ControllerApiCustomerCheckout extends Controller {
                         }
                     }
                 }
+            } else {
+                foreach ($results as $result) {
+                    if ($this->config->get($result['code'] . '_status')) {
+                        $this->load->model('payment/' . $result['code']);
+
+                        $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+
+                        if ($method) {
+                            $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
+                            //removed  (No Transaction Fee) from terms,as suggested
+                            //echo "<pre>";print_r($method);die;
+                            $method_data[] = $method;
+                        }
+                    }
+                }
             }
 
             $sort_order = [];
