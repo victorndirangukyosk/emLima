@@ -1205,7 +1205,7 @@ function savedriverdetails() {
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
 		dataType: 'json',
-		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1',
+		data: 'order_status_id=4&notify=1',
 		success: function(json) {	 
                     console.log(json);
                     $('.alert').html('Order status updated successfully!');
@@ -1295,7 +1295,7 @@ function savedriverdetail() {
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
 		dataType: 'json',
-		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1',
+		data: 'order_status_id=4&notify=1',
 		beforeSend: function() {
                 // setting a timeout
                 $('.alert').html('Please wait your request is processing!');
