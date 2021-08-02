@@ -48,7 +48,7 @@
                                 <?php if($order['vendor_terms_cod'] == 1 || $order['payment_terms'] == 'Payment On Delivery') { ?>
                                <!-- <img width="210" src="ui/images/cod.png" alt="COD" class="mb-2">-->
 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="100 230 600 600" fill="none">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="600" height="300" viewBox="100 230 600 600" fill="none">
                                 <rect width="400" height="400" fill="white"></rect>
                                 <mask id="path-1-inside-1" fill="white">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M387.194 296.866C389.707 302.932 391 309.434 391 316L393 316C397.418 316 401 319.582 401 324V343H380.993C380.998 342.834 381 342.667 381 342.5C381 333.387 373.613 326 364.5 326C355.387 326 348 333.387 348 342.5C348 342.667 348.002 342.834 348.007 343H270.993C270.998 342.834 271 342.667 271 342.5C271 333.387 263.613 326 254.5 326C245.387 326 238 333.387 238 342.5C238 342.667 238.002 342.834 238.007 343H211V316L341 316V266C347.566 266 354.068 267.293 360.134 269.806C366.2 272.319 371.712 276.002 376.355 280.645C380.998 285.288 384.681 290.8 387.194 296.866Z"></path>
