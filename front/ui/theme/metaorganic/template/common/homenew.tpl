@@ -969,7 +969,7 @@ window.location.replace(url+"index.php?path=common/home&filter_category="+$( thi
         $("#searchTextField").mask("<?= $zipcode_mask_number ?>", { autoclear: false, placeholder: "<?= $zipcode_mask ?>" });
       });
 
-    <? php } ?>
+    <?php } ?>
   </script>
 </body>
 
