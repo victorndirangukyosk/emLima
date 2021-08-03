@@ -5797,33 +5797,44 @@ class ModelReportExcel extends Model {
 
 
         //download_customer_statement_excel
-    public function mail_download_customer_statement_excel($data,$pdf=0) {
-
-
-        $dt = strtotime(date("Y-m-d"));
-        
-        
-        // echo "<pre>";print_r($pdf); die;
+    public function mail_download_customer_statement_excel($data,$dt,$pdf=0) {        
+       
+        $log = new Log('error.log');
         echo "<pre>";print_r(date('l', $dt)); 
         echo "<pre>";print_r(date(d, $dt)); 
         if(date('l', $dt)!='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
         {
           echo "<pre>";print_r('No execution today');
-
             return;
         }
         else
         {
             if(date(d, $dt)=='01')
             {
-                $dtp =  date("Y-m-d",strtotime("-1 days"));
+        echo "<pre>";print_r($dt); 
+
+                $dtp =  date("Y-m-d",strtotime("-1 days", $dt));
+                echo "<pre>";print_r($dtp); 
         $data['filter_date_end'] =   date("Y-m-t", strtotime($dtp));
         $data['filter_date_start'] =   date("Y-m-01", strtotime($dtp));
             }
-            else
+            else if(date('l', $dt)=='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
+            {
+                $data['filter_date_start']=date("Y-m-d",strtotime("-1 days", $dt));
+                $data['filter_date_end']=date("Y-m-d",strtotime("-7 days", $dt));
+            }
+            else if(date(d, $dt)=='16')//incase of 15 days or week
             {
                 $data['filter_date_end'] =   date("Y-m-t", strtotime($dt));
         $data['filter_date_start'] =   date("Y-m-01", strtotime($dt));
+            }
+            else
+            {
+                echo "<pre>";print_r('Date Varient missed');
+          $log->write("Date Varient missed- Automatic statement error");
+
+
+                return; 
             }
         }
         echo "<pre>";print_r($data);
@@ -5834,7 +5845,8 @@ class ModelReportExcel extends Model {
 
         //Firstly get all customers
         echo "<pre>";print_r($customerswithOrders);
-        $log = new Log('error.log');
+        echo "<pre>";print_r("$customerswithOrders");
+        // $log = new Log('error.log');
          foreach($customerswithOrders as $validcust)
         {
         $data['filter_customer']=$validcust['name'];
@@ -5847,7 +5859,7 @@ class ModelReportExcel extends Model {
                 
 
             // $results = $this->model_report_customer->getValidCustomerOrders($data);
-            $results = $this->model_report_customer->getValidCustomerOrdersByDates($data);
+            $results = $this->model_report_customer->getValidCustomerOrdersByDates($data,$dt);
             if($results!=null)
             {
                 $this->load->model('sale/order');
@@ -5937,12 +5949,83 @@ class ModelReportExcel extends Model {
                         
                             $pdf = new \mikehaertl\wkhtmlto\Pdf;
                             $template = $this->load->view('report/customer_statement_pdf.tpl', $data['customers']);
+                //   $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/report/customer_statement_pdf.tpl', $data));
                             $pdf->addPage($template);
-                            if (!$pdf->send("Customer_Order_Statement #" . $data['customers'][0]['customer'] . ".pdf")) {
-                                $error = $pdf->getError();
-                                echo $error;
-                                die;
+                     $filename = 'Customer_order_statement_' . $data['customers'][0]['customer'] . '.pdf';
+
+                           
+
+
+                            if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
+                                mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
                             }
+                            // unlink($filename);
+                            $folder_path = DIR_UPLOAD . 'schedulertemp';
+                            $files = glob($folder_path . '/*');
+                            // Deleting all the files in the list 
+                            foreach ($files as $file) {
+                                if (is_file($file))
+                                    unlink($file); // Delete the given file  
+                            }
+                            // echo "<pre>";print_r($file);;
+                             // if (!$pdf->send("Customer_Order_Statement #" . $data['customers'][0]['customer'] . ".pdf")) {
+                               
+                               
+                            //     // $mpdf->Output('my_filename.pdf','D'); 
+                            //      $error = $pdf->getError();
+                            //     echo $error;
+                            //     die;
+                            // }
+                            if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . $filename)) {
+                                echo $pdf->getError();
+                            }
+
+                            // $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
+        
+                            #region mail sending 
+                            $maildata['customer_name'] = $data['filter_customer'];
+                            $maildata['start_date'] = $data['filter_date_start'];
+                            $maildata['end_date'] = $data['filter_date_end'];
+                            $maildata['email'] = $data['filter_customer_email'];
+                            // $maildata['end_date'] = $data['filter_date_end'];
+        
+                            $subject = $this->emailtemplate->getSubject('customerstatement', 'customerstatement_25', $maildata);
+                            $message = $this->emailtemplate->getMessage('customerstatement', 'customerstatement_25', $maildata);
+        
+                            // $subject = "Consolidated Order Sheet";                 
+                            // $message = "Please find the attachment.  <br>";
+                            // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
+                            $this->load->model('setting/setting');
+                              $bccemail = $this->model_setting_setting->getEmailSetting('financeteam');
+                            // $email =$data['filter_customer_email'];
+                            // $email_contacts = $this->model_report_customer->getcustomercontacts($data['filter_customer_id']);
+                            // foreach($email_contacts as $econtact)
+                            // {
+                            //     $email=$email.';'.$econtact['email'];
+                            // }
+                            $email ='stalluri@technobraingroup.com';
+                            $log->write('customer Statement Emails ' . $email . ' '  . 'CC mails'. $bccemail );
+                         
+                                echo "<pre>";print_r($email);
+                            // if (strpos($email, "@") == false) {//if mail Id not set in define.php
+                            //     $email = "sridivya.talluri@technobraingroup.com";
+                            // }
+                            // $bccemail = "sridivya.talluri@technobraingroup.com";
+                            //   echo "<pre>";print_r($email);die;
+                            $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
+                            $mail = new Mail($this->config->get('config_mail'));
+                            $mail->setTo($email);
+                            // $mail->setBcc($bccemail);
+                            $mail->setCc($bccemail);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setSubject($subject);
+                            $mail->setHTML($message);
+                            $mail->addAttachment($filepath);
+                             $mail->send();
+                            #endregion
+
+                            
                         }
                         catch(Exception $e)
                         {

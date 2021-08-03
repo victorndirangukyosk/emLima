@@ -1356,15 +1356,15 @@ class ModelReportCustomer extends Model {
 
 
 
-    public function getValidCustomerOrdersByDates($data = []) {
+    public function getValidCustomerOrdersByDates($data = [],$dt) {
 
-        $dt = strtotime(date("Y-m-d"));
+          
         
         
         if(date('l', $dt)=='Sunday')//weekly
         {
-            $data['filter_date_start']=date("Y-m-d",strtotime("-1 days"));
-            $data['filter_date_end']=date("Y-m-d",strtotime("-7 days"));
+            $data['filter_date_start']=date("Y-m-d",strtotime("-1 days",$dt));
+            $data['filter_date_end']=date("Y-m-d",strtotime("-7 days",$dt));
             $data['statement_duration']=7;
             $results_weekly=$this->getValidCustomerOrders($data);
         }
@@ -1373,7 +1373,7 @@ class ModelReportCustomer extends Model {
 
             if(date(d, $dt)=='01')//monthly
             {
-                $dtp=date("Y-m-d",strtotime("-1 days"));
+                $dtp=date("Y-m-d",strtotime("-1 days",$dt));
                 $data['filter_date_end'] =   date("Y-m-t", strtotime($dtp));
                 $data['filter_date_start']=   date("Y-m-16", strtotime($dtp));
                 $data['statement_duration']=15;
@@ -1383,7 +1383,7 @@ class ModelReportCustomer extends Model {
             }
             else
             {
-                 $dtp=date("Y-m-d",strtotime("-1 days"));
+                 $dtp=date("Y-m-d",strtotime("-1 days",$dt));
                  $data['filter_date_start']=   date("Y-m-01", strtotime($dtp));
                 $data['filter_date_end']=$dtp;
                 $data['statement_duration']=15;
@@ -1392,7 +1392,7 @@ class ModelReportCustomer extends Model {
         }
         if(date(d, $dt)=='01')//monthly
         {
-            $dtp=date("Y-m-d",strtotime("-1 days"));
+            $dtp=date("Y-m-d",strtotime("-1 days",$dt));
             $data['filter_date_end'] =   date("Y-m-t", strtotime($dtp));
             $data['filter_date_start']=   date("Y-m-01", strtotime($dtp));
             $data['statement_duration']=30;
@@ -1404,15 +1404,15 @@ class ModelReportCustomer extends Model {
 
  
         }
-        // echo "<pre>";print_r(date(d, $dt));die;
+        // echo "<pre>";print_r($data);die;
 
         if(!isset($data['statement_duration']))
         {
             return;
         }
 
-        echo "<pre>";print_r(date(d, $dt));
-        echo "<pre>";print_r('no data fetched');;
+        // echo "<pre>";print_r(date(d, $dt));
+        // echo "<pre>";print_r('no data fetched');;
   
         $results;
         if($results_weekly!=null)
@@ -1446,7 +1446,7 @@ class ModelReportCustomer extends Model {
             $results=$results_monthly; 
         }
 
-        // echo "<pre>";print_r($results);die;
+        //   echo "<pre>";print_r($results);die;
         return $results;
     }
 
