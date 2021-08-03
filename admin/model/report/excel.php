@@ -6036,7 +6036,8 @@ class ModelReportExcel extends Model {
                             $log->write($errstr . ' ' . $errline . ' ' . $errfile . ' ' . $errno . ' ' . 'download_customer_statement_excel');
                             $this->log->write('Error in Automatic PDF Statement');
 
-                        } 
+                        }
+                        exit;//for testing purpose one mail is enough, will uncomment later 
                 }
                 else
                 {
