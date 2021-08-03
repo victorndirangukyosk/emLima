@@ -119,19 +119,19 @@
 
                     </td> 
                         <td class="a-right movewishlist">
-        <input  type="number" onkeypress="return validateFloatKeyPresswithVarient(this, event,'<?= $product['unit']?>');" name="cart[<?= $i ?>][qty]" id="cart[<?= $i ?>][qty]" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" min="1" maxlength="12" style="width:80px !important;disabled">
+                            <input  type="number" onkeypress="return validateFloatKeyPresswithVarient(this, event,'<?= $product['unit']?>');" name="cart[<?= $i ?>][qty]" id="cart[<?= $i ?>][qty]" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" min="1" maxlength="12" style="width:80px !important;disabled" data-id="<?= $product['product_store_id']?>" data-encid="<?= $product['key']?>">
     </td>
         <td class="a-right hidden-table" >
                     <span class="cart-price">
         
-                                                <span class="price font-bold"> <?php echo $product['total_tax']; ?></span>                            
+                                                <span class="price font-bold tax<?= $product['product_store_id']?>"> <?php echo $product['total_tax']; ?></span>                            
         </span>
             </td>
         <td class="a-right hidden-table" >
                     <span class="cart-price">
         
                         <span class="price font-bold" id="spancart[<?= $i ?>][qty]" style="display:none;"><?php echo $product['total']; ?></span>    
-                        <span class="price font-bold"><?php echo $product['total_orginal_price']; ?></span>                            
+                        <span class="price font-bold orgprice<?= $product['product_store_id']?>"><?php echo $product['total_orginal_price']; ?></span>                            
         </span>
             </td>
               <td   class="a-center hidden-table"  >
@@ -189,7 +189,7 @@
     <button type="submit"  style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="empty_cart" title="Clear Cart" class="button" id="empty_cart_button"><span id="clearcart" class="cart-header_items-count clear-cart1" style="border-bottom:none;" data-confirm="This will empty your cart!!" >Clear Cart</span></button>
 </td>
 <td colspan="6" class="a-right last">                                                       
-<button type="submit" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button" id="updatecart"><span id="updatecart"><i class="fa fa-refresh"></i>
+<button type="button" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button" id="updatecar"><span id="updatecart"><i class="fa fa-refresh"></i>
  Update Cart</span></button>
 </td>
 </tr>
@@ -949,8 +949,39 @@ $.ajax({
 
 });
 
-  $(document).delegate('#updatecart', 'click', function(){    
+$(document).delegate('#updatecart, #updatecar', 'click', function() {
+        
+        $( "input[name^='cart[']" ).each(function(){
+        console.log($(this).attr("data-id"));
+        console.log($(this).attr("data-encid"));
+        console.log($(this).val());
+        
+        $.ajax({
+	    url: 'index.php?path=checkout/cart/update',
+	    type: 'post',
+	    data: 'key=' + $(this).attr("data-encid") + '&quantity=' + (typeof($(this).val()) != 'undefined' ? $(this).val() : 1),
+	    dataType: 'json',
+	    async: false, 
+	    beforeSend: function() {
+	    },
+	    complete: function() {				
+	    },			
+	    success: function(json) {
+            console.log(json.products_details.tax); 
+            console.log(json.products_details.total); 
+            $(".tax"+json.products_details.product_store_id).html(json.products_details.tax);
+            $(".orgprice"+json.products_details.product_store_id).html(json.products_details.orginal_price);
+            $('.cart-total-amount').html(json['total_amount']);
+            loadTotals($('input#shipping_city_id').val());
+            }
+        });
+        
+        });
+        
+});
 
+  $(document).delegate('#updatecart,#updatecar', 'click', function(){    
+      return false;
       console.log("updating the cart");  
    
  var complex = <?php echo json_encode($products); ?>;
