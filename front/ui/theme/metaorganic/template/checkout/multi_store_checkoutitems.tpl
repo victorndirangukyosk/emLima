@@ -976,8 +976,10 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
             $('.cart-total-amount').html(json['total_amount']);
             loadTotals($('input#shipping_city_id').val());
             
+            setTimeout(function(){ 
             $("#updatecar").attr("disabled",false);
             $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-spinner').addClass('fa fa-refresh');
+            },1500);
             }
         });
         
