@@ -962,7 +962,7 @@ window.location.replace(url+"index.php?path=common/home&filter_category="+$( thi
   </script>
   <script type="text/javascript">
 
-    <? php if ($this -> config -> get('config_store_location') == 'zipcode') { ?>
+    <?php if ($this->config->get('config_store_location') == 'zipcode') { ?>
 
       jQuery(function ($) {
         console.log("mask");
