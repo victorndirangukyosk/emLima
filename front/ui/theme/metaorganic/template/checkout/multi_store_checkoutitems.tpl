@@ -964,7 +964,7 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
 	    async: false, 
 	    beforeSend: function() {
             $("#updatecar").attr("disabled",true);
-            $("span[id^='updatecart']").html("<i class='fa fa-spinner'> Updating Cart</i>");
+            $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-refresh').addClass('fa fa-spinner');
 	    },
 	    complete: function() {				
 	    },			
@@ -977,7 +977,7 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
             loadTotals($('input#shipping_city_id').val());
             
             $("#updatecar").attr("disabled",false);
-            $("span[id^='updatecart']").html("<i class='fa fa-refresh'> <b>Update Cart</b></i>");
+            $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-spinner').addClass('fa fa-refresh');
             }
         });
         
