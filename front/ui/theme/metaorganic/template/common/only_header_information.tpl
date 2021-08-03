@@ -966,4 +966,4 @@ width: 550px;
 
 
 </style>
-<?php echo $multi_store_checkoutitems_css; ?>
+<?php if(isset($multi_store_checkoutitems_css) && $multi_store_checkoutitems_css != NULL) { echo $multi_store_checkoutitems_css; } ?>
