@@ -290,7 +290,19 @@ class ControllerCommonScheduler extends Controller
 
 
 
-        public function testpdf() {
+        
+    public function testpdf() {
+
+            $dt = $this->request->get['dt'];
+
+            if($dt=='' || $dt==null)
+            {
+            $dt = strtotime(date("Y-m-d"));
+            }
+            else
+            {
+            $dt =strtotime(($dt));
+            }
             $this->load->language('sale/order');
     
             $data['title'] = $this->language->get('text_invoice');
@@ -301,262 +313,154 @@ class ControllerCommonScheduler extends Controller
                 $data['base'] = HTTP_SERVER;
             }
     
-            $data['direction'] = $this->language->get('direction');
-            $data['lang'] = $this->language->get('code');
-    
-            $data['text_date_delivered'] = $this->language->get('text_date_delivered');
-            $data['text_invoice'] = $this->language->get('text_invoice');
-            $data['text_order_detail'] = $this->language->get('text_order_detail');
-            $data['text_order_id'] = $this->language->get('text_order_id');
-            $data['text_invoice_no'] = $this->language->get('text_invoice_no');
-            $data['text_invoice_date'] = $this->language->get('text_invoice_date');
-            $data['text_date_added'] = $this->language->get('text_date_added');
-            $data['text_telephone'] = $this->language->get('text_telephone');
-            $data['text_fax'] = $this->language->get('text_fax');
-            $data['text_name'] = $this->language->get('text_name');
-            $data['text_contact_no'] = $this->language->get('text_contact_no');
-            $data['text_email'] = $this->language->get('text_email');
-            $data['text_website'] = $this->language->get('text_website');
-            $data['text_to'] = $this->language->get('text_to');
-            $data['text_po_no'] = $this->language->get('text_po_no');
-            $data['text_ship_to'] = $this->language->get('text_ship_to');
-            $data['text_payment_method'] = $this->language->get('text_payment_method');
-            $data['text_shipping_method'] = $this->language->get('text_shipping_method');
-    
-            $data['column_product'] = $this->language->get('column_product');
-            $data['column_produce_type'] = $this->language->get('column_produce_type');
-    
-            $data['column_model'] = $this->language->get('column_model');
-            $data['column_unit'] = $this->language->get('column_unit') . ' Ordered';
-            $data['column_quantity'] = $this->language->get('column_quantity') . ' Ordered';
-            $data['column_unit_change'] = $this->language->get('column_unit') . ' Change';
-            $data['column_quantity_change'] = $this->language->get('column_quantity') . ' Change';
-            $data['column_price'] = $this->language->get('column_price');
-            $data['column_total'] = $this->language->get('column_total');
-            $data['column_comment'] = $this->language->get('column_comment');
-    
-            $data['text_tax'] = $this->language->get('text_tax');
-            $data['text_cpf_number'] = $this->language->get('text_cpf_number');
-    
-            $this->load->model('sale/order');
-    
-            $this->load->model('setting/setting');
-    
-            $data['orders'] = [];
-    
-            $orders = [];
-    
-            if (isset($this->request->post['selected'])) {
-                $orders = $this->request->post['selected'];
-            } elseif (isset($this->request->get['order_id'])) {
-                $orders[] = $this->request->get['order_id'];
+            
+            $log = new Log('error.log');
+            // echo "<pre>";print_r(date('l', $dt)); 
+            // echo "<pre>";print_r(date(d, $dt)); 
+            if(date('l', $dt)!='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
+            {
+              echo "<pre>";print_r('No execution today');
+                return;
             }
+            else
+            {
+                if(date(d, $dt)=='01')
+                {
+            // echo "<pre>";print_r($dt); 
     
-            if (isset($this->request->get['store_id'])) {
-                $store_id = $this->request->get['store_id'];
-            } else {
-                $store_id = 0;
-            }
-    
-            foreach ($orders as $order_id) {
-                $order_info = $this->model_sale_order->getOrder($order_id);
-                //check vendor order
-    
-                if ($this->user->isVendor()) {
-                    if (!$this->isVendorOrder($order_id)) {
-                        $this->response->redirect($this->url->link('error/not_found'));
-                    }
+                    $dtp =  date("Y-m-d",strtotime("-1 days", $dt));
+                    // echo "<pre>";print_r($dtp); 
+            $data['filter_date_end'] =   date("Y-m-t", strtotime($dtp));
+            $data['filter_date_start'] =   date("Y-m-01", strtotime($dtp));
                 }
-    
-                if ($order_info) {
-                    $this->load->model('drivers/drivers');
-                    $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
-                    $driver_name = NULL;
-                    $driver_phone = NULL;
-                    if ($driver_info) {
-                        $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
-                        $driver_phone = $driver_info['telephone'];
-                    }
-                    $data['driver_name'] = $driver_name;
-                    $data['driver_phone'] = $driver_phone;
-    
-                    $this->load->model('executives/executives');
-                    $executive_info = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
-                    $executive_name = NULL;
-                    $executive_phone = NULL;
-                    if ($executive_info) {
-                        $executive_name = $executive_info['firstname'] . ' ' . $executive_info['lastname'];
-                        $executive_phone = $executive_info['telephone'];
-                    }
-                    $data['delivery_executive_name'] = $executive_name;
-                    $data['delivery_executive_phone'] = $executive_phone;
-                    $store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
-                    // if ($store_info) {
-                    //     $store_address = $store_info['config_address'];
-                    //     $store_email = $store_info['config_email'];
-                    //     $store_telephone = $store_info['config_telephone'];
-                    //     $store_fax = $store_info['config_fax'];
-                    // } else {
-                    //     $store_address = $this->config->get('config_address');
-                    //     $store_email = $this->config->get('config_email');
-                    //     $store_telephone = $this->config->get('config_telephone');
-                    //     $store_fax = $this->config->get('config_fax');
-                    // }
-    
-                    $store_data = $this->model_sale_order->getStoreData($order_info['store_id']);
-                    if ($store_data) {
-                        $store_address = $store_data['address'];
-                        $store_email = $store_data['email'];
-                        $store_telephone = $store_data['telephone'];
-                        $store_fax = $store_data['fax'];
-                        $store_tax = $store_data['tax'];
-                    } else {
-                        $store_address = $this->config->get('config_address');
-                        $store_email = $this->config->get('config_email');
-                        $store_telephone = $this->config->get('config_telephone');
-                        $store_fax = $this->config->get('config_fax');
-                        $store_tax = '';
-                    }
+                else if(date('l', $dt)=='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
+                {
+                    $data['filter_date_start']=date("Y-m-d",strtotime("-1 days", $dt));
+                    $data['filter_date_end']=date("Y-m-d",strtotime("-7 days", $dt));
+                }
+                else if(date(d, $dt)=='16')//incase of 15 days or week
+                {
+                    $data['filter_date_end'] =   date("Y-m-t", strtotime($dt));
+            $data['filter_date_start'] =   date("Y-m-01", strtotime($dt));
+                }
+                else
+                {
+                    echo "<pre>";print_r('Date Varient missed');
+              $log->write("Date Varient missed- Automatic statement error");
     
     
-                    $data['store_name'] = $store_data['name'];
+                    return; 
+                }
+            }
+            // echo "<pre>";print_r($data);
     
-                    if ($order_info['invoice_no']) {
-                        $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'] . $order_info['invoice_sufix'];
-                    } else {
-                        $invoice_no = '';
-                    }
+           
+            $this->load->model('report/customer');
+             $customerswithOrders = $this->model_report_customer->getCustomerWithOrders($data);
     
-                    $this->load->model('tool/upload');
+            //Firstly get all customers
+            // echo "<pre>";print_r($customerswithOrders);
+            // echo "<pre>";print_r("$customerswithOrders");
+            // $log = new Log('error.log');
+             foreach($customerswithOrders as $validcust)
+            {
+            $data['filter_customer']=$validcust['name'];
+            $data['filter_customer_email']=$validcust['email'];
+            $data['filter_customer_id']=$validcust['customer_id'];
     
-                    $product_data = [];
+            // $data['filter_customer']='Product Team Kdsfsdf';
+            // $data['filter_customer_id']=273;
+            // $data['filter_customer_email']='stalluri89@gmail.com';
+                    
     
-                    if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
-                        $products = $this->model_sale_order->getRealOrderProducts($order_id);
-                    } else {
-                        $products = $this->model_sale_order->getOrderProducts($order_id);
-                    }
+                // $results = $this->model_report_customer->getValidCustomerOrders($data);
+                $results = $this->model_report_customer->getValidCustomerOrdersByDates($data,$dt);
+                if($results!=null)
+                {
+                    $this->load->model('sale/order');
+                    $data['customers'] = [];
     
-                    foreach ($products as $product) {
-                        if ($store_id && $product['store_id'] != $store_id) {
-                            continue;
+                        // echo "<pre>";print_r($results);die;
+                    foreach ($results as $result) {
+                        $products_qty = 0;
+                        if ($this->model_sale_order->hasRealOrderProducts($result['order_id'])) {
+                            $products_qty = $this->model_sale_order->getRealOrderProductsItems($result['order_id']);
+                        } else {
+                            $products_qty = $this->model_sale_order->getOrderProductsItems($result['order_id']);
                         }
-                        $option_data = [];
-    
-                        $options = $this->model_sale_order->getOrderOptions($order_id, $product['order_product_id']);
-    
-                        foreach ($options as $option) {
-                            if ('file' != $option['type']) {
-                                $value = $option['value'];
-                            } else {
-                                $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
-    
-                                if ($upload_info) {
-                                    $value = $upload_info['name'];
-                                } else {
-                                    $value = '';
-                                }
+                        $sub_total = 0;
+                        $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
+                        // echo "<pre>";print_r($totals);die;
+                        // $data['customers']= (array) null;
+                        foreach ($totals as $total) {
+                            if ('total' == $total['code']) {
+                                $sub_total = $total['value'];
+                                break;
                             }
-    
-                            $option_data[] = [
-                                'name' => $option['name'],
-                                'value' => $value,
-                            ];
+                        }
+                        if($result['paid']=='N')
+                        {
+                            //check transaction Id Exists are not// if exists, it is paid order,
+                           $transcation_id =  $this->model_sale_order->getOrderTransactionId($result['order_id']);
+                            if (!empty($transcation_id)) {
+                                $result['paid']='Paid';
+                                $result['amountpaid']=$sub_total;
+                                $result['pendingamount']=$sub_total-$result['amountpaid'];
+        
+                            }
+                            else{
+                                $result['paid']='Pending';
+                                $result['amountpaid']=0;
+                                $result['pendingamount']=$sub_total-$result['amountpaid'];
+                            }
+                        }
+                        else if($result['paid']=='P')
+                        {
+                            // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
+                             $result['paid']='Few Amount Paid';
+                             $result['amountpaid']=$result['amount_partialy_paid'];
+                             $result['pendingamount']=$sub_total-$result['amountpaid'];
+                        }
+                        else if($result['paid']=='Y')
+                        {
+                            // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
+                            $result['paid']='Paid';
+                            $result['amountpaid']=$sub_total;
+                            $result['pendingamount']=$sub_total-$result['amountpaid'];
                         }
     
-                        $product_data[] = [
-                            'product_id' => $product['product_id'],
-                            'name' => $product['name'],
-                            'model' => $product['model'],
-                            'unit' => $product['unit'],
-                            'option' => $option_data,
-                            'quantity' => $product['quantity'],
-                            'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-                            'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                        $data['customers'][] = [
+                            'company' => $result['company'],
+                            'customer' => $result['customer'],
+                            'email' => $result['email'],
+                            'customer_group' => $result['customer_group'],
+                            'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+                            'order_id' => $result['order_id'],
+                            'products' => $result['products'],
+                            'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])),
+                            'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                            'editedproducts' => (int) $products_qty,
+                            'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
+                            //'subtotal'     => $this->currency->format($sub_total),
+                            'subtotalvalue' => $sub_total,
+                            'po_number' => $result['po_number'],
+                            'subtotal' => str_replace('KES', ' ', $this->currency->format($sub_total)),
+                            'SAP_customer_no' => $result['SAP_customer_no'],
+                            'paid'=> $result['paid'],
+                            'amountpaid'=> number_format($result['amountpaid'],2),
+                            'pendingamount'=> number_format($result['pendingamount'],2),
+                            'pendingamountvalue'=> ($result['pendingamount']),
                         ];
+                        
+
                     }
-    
-                    $total_data = [];
-    
-                    if ($store_id) {
-                        $totals = $this->model_sale_order->getVendorOrderTotals($order_id, $store_id);
-                    } else {
-                        $totals = $this->model_sale_order->getOrderTotals($order_id);
-                    }
-    
-                    foreach ($totals as $total) {
-                        $total_data[] = [
-                            'title' => $total['title'],
-                            'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                            'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
-                        ];
-                    }
-    
-                    $this->load->model('sale/customer');
-                    $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
-                    $order_customer_first_last_name = NULL;
-                    $company_name = NULL;
-                    if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
-                        $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
-                        $company_name = $order_customer_detials['company_name'];
-                    }
-    
-                    $this->load->model('drivers/drivers');
-                    $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
-                    $driver_name = NULL;
-                    $driver_phone = NULL;
-                    if ($driver_info) {
-                        $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
-                        $driver_phone = $driver_info['telephone'];
-                    }
-                    $data['driver_name'] = $driver_name;
-                    $data['driver_phone'] = $driver_phone;
-    
-                    $delivery_executive_info = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
-                    $delivery_executive_name = NULL;
-                    $delivery_executive_phone = NULL;
-                    if ($delivery_executive_info) {
-                        $delivery_executive_name = $delivery_executive_info['firstname'] . ' ' . $delivery_executive_info['lastname'];
-                        $delivery_executive_phone = $delivery_executive_info['telephone'];
-                    }
-                    $data['delivery_executive_name'] = $delivery_executive_name;
-                    $data['delivery_executive_phone'] = $delivery_executive_phone;
-    
-                    $data['orders'][] = [
-                        'order_id' => $order_id,
-                        'invoice_no' => $invoice_no,
-                        'date_added' => date($this->language->get('datetime_format'), strtotime($order_info['date_added'])),
-                        'delivery_date' => date($this->language->get('date_format_short'), strtotime($order_info['delivery_date'])),
-                        'delivery_timeslot' => $order_info['delivery_timeslot'],
-                        'store_name' => $order_info['store_name'],
-                        'store_url' => rtrim($order_info['store_url'], '/'),
-                        'store_address' => nl2br($store_address),
-                        'store_email' => $store_email,
-                        'store_tax' => $store_tax,
-                        'store_telephone' => $store_telephone,
-                        'store_fax' => $store_fax,
-                        'email' => $order_info['email'],
-                        'cpf_number' => $this->getUser($order_info['customer_id']),
-                        'telephone' => $order_info['telephone'],
-                        'shipping_address' => $order_info['shipping_address'],
-                        'shipping_city' => $order_info['shipping_city'],
-                        'shipping_flat_number' => $order_info['shipping_flat_number'],
-                        'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
-                        /* 'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'], */
-                        'shipping_name' => $order_customer_first_last_name == NULL ? $order_info['firstname'] . ' ' . $order_info['lastname'] : $order_customer_first_last_name,
-                        'customer_company_name' => $company_name == NULL ? $order_info['customer_company_name'] : $company_name,
-                        'shipping_method' => $order_info['shipping_method'],
-                        'po_number' => $order_info['po_number'],
-                        'payment_method' => $order_info['payment_method'],
-                        'products' => $product_data,
-                        'totals' => $total_data,
-                        'comment' => nl2br($order_info['comment']),
-                        'shipping_name_original' => $order_info['shipping_name'],
-                        'driver_name' => $driver_name,
-                        'driver_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $driver_phone,
-                        'delivery_executive_name' => $delivery_executive_name,
-                        'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $delivery_executive_phone
-                    ];
+                    // echo "<pre>";print_r($data);die;
+                    $data['token'] = $this->session->data['token'];
+            // $this->response->redirect($this->url->link('report/customer_statement_pdf.tpl', $data));
+        $this->response->setOutput($this->load->view('report/customer_statement_pdf.tpl', $data));
+            // return;
+
+
                 }
             }
     
@@ -565,9 +469,9 @@ class ControllerCommonScheduler extends Controller
                 require_once DIR_ROOT . '/vendor/autoload.php';
                  
                     $pdf = new \mikehaertl\wkhtmlto\Pdf;
-                    $template = $this->load->view('sale/order_invoice_pdf.tpl', $data['orders'][0]);
+                    $template = $this->load->view('sale/order_invoice_pdf.tpl', $data['customers'][0]);
                     $pdf->addPage($template);
-                    if (!$pdf->send("KwikBasket Invoice #" . $data['orders'][0]['order_id'] . ".pdf")) {
+                    if (!$pdf->send("KwikBasket Invoice #" . $data['customers'][0]['order_id'] . ".pdf")) {
                         $error = $pdf->getError();
                         echo $error;
                         die;

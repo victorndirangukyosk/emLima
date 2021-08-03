@@ -1,25 +1,39 @@
  
+<link type="text/css" href="ui/stylesheet/stylesheet.css" rel="stylesheet" media="screen" />
+<link href="ui/javascript/bootstrap/shop/shop.css" type="text/css" rel="stylesheet" />
+<link href="ui/javascript/font-awesome/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
+<link href="ui/javascript/summernote/summernote.css" rel="stylesheet">
+<link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+<link href="ui/javascript/bootstrap-select/css/bootstrap-select.min.css" type="text/css" rel="stylesheet" />
+<link href="ui/stylesheet/custom.css" type="text/css" rel="stylesheet" />
+ 
+<script type="text/javascript" src="ui/javascript/jquery/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="ui/javascript/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="ui/javascript/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="ui/javascript/tinymce/jquery.tinymce.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.7.0/jquery.tinymce.min.js"></script> -->
+
+<script src="ui/javascript/common.js" type="text/javascript"></script>
+<script src="ui/javascript/jscolor-2.0.4/jscolor.js" type="text/javascript"></script>
+
+  
+
+
 <div id="content">
   <div class="page-header">
-    <div class="container-fluid">
-      <h1>Customer Statement</h1>
+    <div class="container-fluid" style="align:center">
+      <h1 >Customer Orders Statement</h1>
       
     </div>
   </div>
   <div class="container-fluid">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><i class="fa fa-bar-chart"></i>List</h3>
-		  <div class="pull-right">
-      
-                 </div>		
+        
+		 	
       </div>
       <div class="panel-body">
-        <div class="well" style="display:none;">
-          <div class="row"> 
-              
-          </div>
-        </div>
+        
         <div class="table-responsive">
           <table class="table table-bordered table-hover">
             <thead>
@@ -42,11 +56,13 @@
                 <td class="text-right">Amount Paid</td>
                 <td class="text-right">Pending Amount</td>
                 <td class="text-right">Payment Status</td>
-                <td class="text-center"><?php echo $column_action; ?></td>
               </tr>
             </thead>
             <tbody>
-              <?php if ($customers) { ?>
+              <?php 
+              
+               
+               if ($customers) { ?>
               <?php foreach ($customers as $customer) { ?>
               <tr>
                 <td class="text-left"><?php echo $customer['customer']; ?></td>
@@ -66,7 +82,6 @@
                 <td class="text-right"><?php echo $customer['amountpaid']; ?></td>
                 <td class="text-right"><?php echo $customer['pendingamount']; ?></td>
                 <td class="text-right"><?php echo $customer['paid']; ?></td>
-                <td class="text-center"><a class="download" id="download-order-products"  data-toggle="tooltip" order_date="<?php echo $customer['date_added']; ?>" company="<?php echo $customer['company']; ?>" data="<?php echo $customer['customer']; ?>" value=<?php echo $customer['order_id']; ?>  title="Download Statements" class="btn btn-info"><i  style="cursor: pointer;height:20px;width:20px" class="fa fa-file-excel-o"></i></a></td>
               </tr>
               <?php } ?>
               <?php } else { ?>
@@ -84,202 +99,7 @@
       </div>
     </div>
   </div>
-  <script type="text/javascript"><!--
-$('#button-filter').on('click', function() {
-	url = 'index.php?path=report/customer_order/statement&token=<?php echo $token; ?>';
-
-  
-            var filter_customer = $('input[name=\'filter_customer\']').val();
-
-            if (filter_customer) {
-                url += '&filter_customer=' + encodeURIComponent(filter_customer);
-            }
-
-
-    var filter_company = $('input[name=\'filter_company\']').val();
-
-            if (filter_company) {
-                url += '&filter_company=' + encodeURIComponent(filter_company);
-            }
-  
-  if(filter_customer==0 && filter_company==0)
-  {
-    alert("Please select either customer or company ");
-    return;
-  }
-
-	
-	var filter_date_start = $('input[name=\'filter_date_start\']').val();
-	
-	if (filter_date_start) {
-		url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
-	}
-
-	var filter_date_end = $('input[name=\'filter_date_end\']').val();
-	
-	if (filter_date_end) {
-		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
-	}
-	
-	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
-	
-	if (filter_order_status_id != 0) {
-		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
-	}	
-
-  
-
-
-	location = url;
-});
-//--></script> 
-  <script type="text/javascript"><!--
-
-
-
-
-   $companyName="";
-        $('input[name=\'filter_customer\']').autocomplete({
-          
-
-            'source': function (request, response) {
-                $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company=' +$companyName,
-                    dataType: 'json',
-                    success: function (json) {
-                        response($.map(json, function (item) {
-                            return {
-                                label: item['name'],
-                                value: item['customer_id']
-                            }
-                        }));
-                    }
-                });
-            },
-            'select': function (item) {
-                $('input[name=\'filter_customer\']').val(item['label']);
-            }
-        });
-
-
-   $('input[name=\'filter_company\']').autocomplete({
-            'source': function (request, response) {
-                $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
-                    dataType: 'json',
-                    success: function (json) {
-                        response($.map(json, function (item) {
-                            return {
-                                label: item['name'],
-                                value: item['name']
-                            }
-                        }));
-
-                        
-                    }
-                });
-                $companyName="";
-            },
-            'select': function (item) {
-                $('input[name=\'filter_company\']').val(item['label']);
-                $('input[name=\'filter_customer\']').val('');
-                $companyName=item['label'];
-            }
-        });
-
- 
-function excel() {
-       url = 'index.php?path=report/customer_order/statementexcel&token=<?php echo $token; ?>';
       
-        
-     var filter_customer = $('input[name=\'filter_customer\']').val();
-
-            if (filter_customer) {
-                url += '&filter_customer=' + encodeURIComponent(filter_customer);
-            }
-
-
-    var filter_company = $('input[name=\'filter_company\']').val();
-
-            if (filter_company) {
-                url += '&filter_company=' + encodeURIComponent(filter_company);
-            }
-  
-  if(filter_customer==0 && filter_company==0)
-  {
-    alert("Please select either customer or company ");
-    return;
-  }
   
 
-	
-	var filter_date_start = $('input[name=\'filter_date_start\']').val();
-	
-	if (filter_date_start) {
-		url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
-	}
-
-	var filter_date_end = $('input[name=\'filter_date_end\']').val();
-	
-	if (filter_date_end) {
-		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
-	}
-	
-	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
-	
-	if (filter_order_status_id != 0) {
-		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
-	}	
-
-    location = url;
-}
-
-
-     $(document).delegate('.download', 'click', function(e) {
-  
-            e.preventDefault();
-            $orderid = $(this).attr('value');
-            $customer = $(this).attr('data');
-            $company = $(this).attr('company');
-            $orderdate = $(this).attr('order_date');
-           
  
-            if ($orderid > 0) {                
-                const url = 'index.php?path=sale/order/consolidatedOrderProducts&token=<?php echo $token; ?>&order_id=' + encodeURIComponent($orderid)+'&customer='+$customer+'&date='+$orderdate+'&company='+$company;
-                location = url;
-            }
-        });
-
- </script>
-
-
-
-
-    <script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
-    <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
-    <script type="text/javascript"><!--
-  $('.date').datetimepicker({
-            pickTime: false,
-             widgetParent: 'body'
-        });
-
-    setInterval(function() {
-     location = location;
-    }, 300 * 1000); // 60 * 1000 milsec
-    
-        //--></script></div>
-
-
-
-        
-<?php echo $footer; ?>
- <style>
-
- .download
- {
-   font-size: 1.5em;
- }
- body {
-    position: relative;
-}
- </style>
