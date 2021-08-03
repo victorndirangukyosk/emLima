@@ -706,10 +706,10 @@
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/style.css" media="all">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/responsive.css" media="all">-->
 
-<link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700" rel="stylesheet">
+<!--<link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Oswald:300,400,500,600,700" rel="stylesheet">
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:700,600,800,400' rel='stylesheet' type='text/css'>
-<link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i,900" rel="stylesheet">-->
 
    
     <script type="text/javascript" src="<?= $base;?>front/ui/theme/mvgv2/js/side-menu-script.js"></script>
