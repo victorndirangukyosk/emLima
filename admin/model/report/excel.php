@@ -5951,8 +5951,9 @@ class ModelReportExcel extends Model {
                             $template = $this->load->view('report/customer_statement_pdf.tpl', $data['customers']);
                 //   $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/report/customer_statement_pdf.tpl', $data));
                             $pdf->addPage($template);
+                            // echo "<pre>";print_r($template);die;
                      $filename = 'Customer_order_statement_' . $data['customers'][0]['customer'] . '.pdf';
-
+                        // echo "<pre>";print_r($filename);die;
                            
 
 
