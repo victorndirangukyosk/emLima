@@ -189,7 +189,7 @@
     <button type="submit"  style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="empty_cart" title="Clear Cart" class="button" id="empty_cart_button"><span id="clearcart" class="cart-header_items-count clear-cart1" style="border-bottom:none;" data-confirm="This will empty your cart!!" >Clear Cart</span></button>
 </td>
 <td colspan="6" class="a-right last">                                                       
-<button type="submit" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button"><span id="updatecart"><i class="fa fa-refresh"></i>
+<button type="submit" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button" id="updatecart"><span id="updatecart"><i class="fa fa-refresh"></i>
  Update Cart</span></button>
 </td>
 </tr>
