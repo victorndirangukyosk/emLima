@@ -966,3 +966,4 @@ width: 550px;
 
 
 </style>
+<?php echo $multi_store_checkoutitems_css; ?>

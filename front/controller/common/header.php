@@ -1,10 +1,9 @@
 <?php
 
-class ControllerCommonHeader extends Controller
-{
+class ControllerCommonHeader extends Controller {
+
     //header for help pages
-    public function help()
-    {
+    public function help() {
         $this->load->model('tool/image');
         $data['title'] = $this->document->getTitle();
 
@@ -29,8 +28,8 @@ class ControllerCommonHeader extends Controller
             $server = $this->config->get('config_url');
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
-            $data['icon'] = $server.'image/'.$this->config->get('config_icon');
+        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
+            $data['icon'] = $server . 'image/' . $this->config->get('config_icon');
         } else {
             $data['icon'] = '';
         }
@@ -41,9 +40,9 @@ class ControllerCommonHeader extends Controller
             $data['config_language'] = 'pt-BR';
         }
 
-        /*if(!$server){
-            $server = HTTP_SERVER;
-        }*/
+        /* if(!$server){
+          $server = HTTP_SERVER;
+          } */
 
         $this->document->setDescription($this->config->get('config_meta_description'));
         $this->document->setKeywords($this->config->get('config_meta_keyword'));
@@ -59,11 +58,10 @@ class ControllerCommonHeader extends Controller
         $data['direction'] = $this->language->get('direction');
 
         //$data['store'] = $this->url->link('product/store', '', 'SSL');
-
         //$data['store'] = $this->url->link('product/store','store_id='.$this->session->data['config_store_id'].'');
 
         if (isset($this->session->data['config_store_id'])) {
-            $data['store'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+            $data['store'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
         } else {
             $data['store'] = $this->url->link('product/store');
         }
@@ -76,23 +74,23 @@ class ControllerCommonHeader extends Controller
 
         $data['name'] = $this->config->get('config_name');
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
             //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
             $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 30, 30);
         } else {
             $data['icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_small_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_small_icon'))) {
             //$data['small_icon'] = $server . 'image/' . $this->config->get('config_small_icon');
             $data['small_icon'] = $this->model_tool_image->resize($this->config->get('config_small_icon'), 30, 30);
         } else {
             $data['small_icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
-            $data['logo'] = $server.'image/'.$this->config->get('config_logo');
-        //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
         } else {
             $data['logo'] = '';
         }
@@ -191,7 +189,7 @@ class ControllerCommonHeader extends Controller
         $data['refer'] = $this->url->link('account/refer', '', 'SSL');
         $data['help'] = $this->url->link('information/help');
 
-        /***Sigup / register /contact modals **/
+        /*         * *Sigup / register /contact modals * */
         $data['contactus_modal'] = $this->load->controller('information/contact');
         $data['login_modal'] = $this->load->controller('common/login_modal');
         $data['signup_modal'] = $this->load->controller('common/signup_modal');
@@ -199,29 +197,28 @@ class ControllerCommonHeader extends Controller
 
         $data['language'] = $this->load->controller('common/language/dropdown');
         if (isset($this->session->data['config_store_id'])) {
-            $data['go_to_store'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+            $data['go_to_store'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
         } else {
             $data['go_to_store'] = $this->url->link('product/store');
         }
         $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
         //echo "<pre>";print_r($data);die;
         $data['refer'] = $this->url->link('account/refer', '', 'SSL');
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/header_help.tpl')) {
-            return $this->load->view($this->config->get('config_template').'/template/common/header_help.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header_help.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/common/header_help.tpl', $data);
         } else {
             return $this->load->view('default/template/common/header_help.tpl', $data);
         }
     }
 
     //header for information pages
-    public function information()
-    {
+    public function information() {
         $data['title'] = $this->document->getTitle();
         if (!empty($this->request->get['path']) and ('common/home' != $this->request->get['path'])) {
             if ('pre' == $this->config->get('config_meta_title_add', 0)) {
-                $data['title'] = $this->config->get('config_meta_title', '').' - '.$data['title'];
+                $data['title'] = $this->config->get('config_meta_title', '') . ' - ' . $data['title'];
             } elseif ('post' == $this->config->get('config_meta_title_add', 0)) {
-                $data['title'] = $data['title'].' - '.$this->config->get('config_meta_title', '');
+                $data['title'] = $data['title'] . ' - ' . $this->config->get('config_meta_title', '');
             }
         }
 
@@ -269,8 +266,8 @@ class ControllerCommonHeader extends Controller
         }
 
         //echo "<pre>";print_r($server);die;
-        if (is_file(DIR_APPLICATION.'view/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css')) {
-            $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css');
+        if (is_file(DIR_APPLICATION . 'view/theme/' . $this->config->get('config_template') . '/stylesheet/customizer.css')) {
+            $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/customizer.css');
             $this->checkFont();
             $this->checkCustom();
         }
@@ -303,23 +300,23 @@ class ControllerCommonHeader extends Controller
 
         $data['name'] = $this->config->get('config_name');
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
             //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
             $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 30, 30);
         } else {
             $data['icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_small_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_small_icon'))) {
             //$data['small_icon'] = $server . 'image/' . $this->config->get('config_small_icon');
             $data['small_icon'] = $this->model_tool_image->resize($this->config->get('config_small_icon'), 30, 30);
         } else {
             $data['small_icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
-            $data['logo'] = $server.'image/'.$this->config->get('config_logo');
-        // $data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+            // $data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
         } else {
             $data['logo'] = '';
         }
@@ -428,7 +425,7 @@ class ControllerCommonHeader extends Controller
         //$data['store'] = $this->url->link('product/store', '', 'SSL');
 
         if (isset($this->session->data['config_store_id'])) {
-            $data['store'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+            $data['store'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
         } else {
             $data['store'] = $this->url->link('product/store');
         }
@@ -452,16 +449,16 @@ class ControllerCommonHeader extends Controller
         // For page specific css
         if (isset($this->request->get['path'])) {
             if (isset($this->request->get['product_id'])) {
-                $class = '-'.$this->request->get['product_id'];
+                $class = '-' . $this->request->get['product_id'];
             } elseif (isset($this->request->get['category'])) {
-                $class = '-'.$this->request->get['category'];
+                $class = '-' . $this->request->get['category'];
             } elseif (isset($this->request->get['manufacturer_id'])) {
-                $class = '-'.$this->request->get['manufacturer_id'];
+                $class = '-' . $this->request->get['manufacturer_id'];
             } else {
                 $class = '';
             }
 
-            $data['class'] = str_replace('/', '-', $this->request->get['path']).$class;
+            $data['class'] = str_replace('/', '-', $this->request->get['path']) . $class;
         } else {
             $data['class'] = 'common-home';
         }
@@ -470,15 +467,14 @@ class ControllerCommonHeader extends Controller
         $data['language'] = $this->load->controller('common/language/dropdown');
         $data['contactus_modal'] = $this->load->controller('information/contact');
         $data['reportissue_modal'] = $this->load->controller('information/reportissue');
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/header_information.tpl')) {
-            return $this->load->view($this->config->get('config_template').'/template/common/header_information.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header_information.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/common/header_information.tpl', $data);
         } else {
             return $this->load->view('default/template/common/header_information.tpl', $data);
         }
     }
 
-    public function index()
-    {
+    public function index() {
         $data['title'] = $this->document->getTitle();
 
         $data['breadcrumbs_title'] = $data['title'];
@@ -487,9 +483,9 @@ class ControllerCommonHeader extends Controller
 
         if (!empty($this->request->get['path']) and ('common/home' != $this->request->get['path'])) {
             if ('pre' == $this->config->get('config_meta_title_add', 0)) {
-                $data['title'] = $this->config->get('config_meta_title', '').' - '.$data['title'];
+                $data['title'] = $this->config->get('config_meta_title', '') . ' - ' . $data['title'];
             } elseif ('post' == $this->config->get('config_meta_title_add', 0)) {
-                $data['title'] = $data['title'].' - '.$this->config->get('config_meta_title', '');
+                $data['title'] = $data['title'] . ' - ' . $this->config->get('config_meta_title', '');
             }
         }
 
@@ -506,7 +502,7 @@ class ControllerCommonHeader extends Controller
             $data['store'] = $this->model_assets_category->getStoreData($this->session->data['config_store_id']);
         }
 
-        if (isset($data['store']) && is_file(DIR_IMAGE.$data['store']['big_logo'])) {
+        if (isset($data['store']) && is_file(DIR_IMAGE . $data['store']['big_logo'])) {
             $data['store_big_logo'] = $this->model_tool_image->resize($data['store']['big_logo'], 320, 103);
         } else {
             $data['store_big_logo'] = $this->model_tool_image->resize('placeholder.png', 320, 103);
@@ -530,12 +526,12 @@ class ControllerCommonHeader extends Controller
             $server = $this->config->get('config_url');
         }
 
-        /*if(!$server){
-            $server = HTTP_SERVER;
-        }*/
+        /* if(!$server){
+          $server = HTTP_SERVER;
+          } */
 
-        if (is_file(DIR_APPLICATION.'view/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css')) {
-            $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css');
+        if (is_file(DIR_APPLICATION . 'view/theme/' . $this->config->get('config_template') . '/stylesheet/customizer.css')) {
+            $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/customizer.css');
             $this->checkFont();
             $this->checkCustom();
         }
@@ -561,7 +557,7 @@ class ControllerCommonHeader extends Controller
 
         $data['name'] = $this->config->get('config_name');
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
             //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
             //24x30
             $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 30, 30);
@@ -569,16 +565,16 @@ class ControllerCommonHeader extends Controller
             $data['icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_small_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_small_icon'))) {
             //$data['small_icon'] = $server . 'image/' . $this->config->get('config_small_icon');
             $data['small_icon'] = $this->model_tool_image->resize($this->config->get('config_small_icon'), 30, 30);
         } else {
             $data['small_icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
-            $data['logo'] = $server.'image/'.$this->config->get('config_logo');
-        //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
         } else {
             $data['logo'] = '';
         }
@@ -654,10 +650,10 @@ class ControllerCommonHeader extends Controller
         $data['help'] = $this->url->link('information/help');
         //$data['go_to_store'] = $this->url->link('product/store', '', 'SSL');
 
-        /*$data['go_to_store'] = $this->url->link('product/store','store_id='.$this->session->data['config_store_id'].'');*/
+        /* $data['go_to_store'] = $this->url->link('product/store','store_id='.$this->session->data['config_store_id'].''); */
 
         if (isset($this->session->data['config_store_id'])) {
-            $data['go_to_store'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+            $data['go_to_store'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
         } else {
             $data['go_to_store'] = $this->url->link('product/store');
         }
@@ -716,15 +712,15 @@ class ControllerCommonHeader extends Controller
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort='.$this->request->get['sort'];
+                $url .= '&sort=' . $this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order='.$this->request->get['order'];
+                $url .= '&order=' . $this->request->get['order'];
             }
 
             if (isset($this->request->get['limit'])) {
-                $url .= '&limit='.$this->request->get['limit'];
+                $url .= '&limit=' . $this->request->get['limit'];
             }
 
             $path = '';
@@ -744,14 +740,14 @@ class ControllerCommonHeader extends Controller
                 if (!$path) {
                     $path = (int) $path_id;
                 } else {
-                    $path .= '_'.(int) $path_id;
+                    $path .= '_' . (int) $path_id;
                 }
 
                 $category_info = $this->model_assets_category->getCategory($path_id);
                 if ($category_info) {
                     $data['breadcrumbs'][] = [
                         'text' => $category_info['name'],
-                        'href' => $this->url->link('product/category', 'category='.$path.$url),
+                        'href' => $this->url->link('product/category', 'category=' . $path . $url),
                     ];
                 }
             }
@@ -759,16 +755,16 @@ class ControllerCommonHeader extends Controller
             $category_id = 0;
         }
 
-        /*search breadcrumb start*/
+        /* search breadcrumb start */
 
         if (isset($this->request->get['search'])) {
             $data['breadcrumbs'][] = [
-                'text' => 'searched: '.$this->request->get['search'],
-                'href' => $this->url->link('product/search', 'search='.$this->request->get['search']),
+                'text' => 'searched: ' . $this->request->get['search'],
+                'href' => $this->url->link('product/search', 'search=' . $this->request->get['search']),
             ];
         }
 
-        /*search breadcrumb end*/
+        /* search breadcrumb end */
 
         $data['categories'] = [];
 
@@ -784,21 +780,21 @@ class ControllerCommonHeader extends Controller
             //echo "<pre>";print_r($children);die;
             foreach ($children as $child) {
                 $children_data[] = [
-                                'name' => $child['name'],
-                                'id' => $child['category_id'],
-                                'href' => $this->url->link('product/category', 'category='.$category['category_id'].'_'.$child['category_id']),
-                        ];
+                    'name' => $child['name'],
+                    'id' => $child['category_id'],
+                    'href' => $this->url->link('product/category', 'category=' . $category['category_id'] . '_' . $child['category_id']),
+                ];
             }
 
             // Level 1
             $data['categories'][] = [
-                        'name' => $category['name'],
-                        'id' => $category['category_id'],
-                        'thumb' => $this->model_tool_image->resize($category['image'], 300, 300),
-                        'children' => $children_data,
-                        'column' => $category['column'] ? $category['column'] : 1,
-                        'href' => $this->url->link('product/category', 'category='.$category['category_id']),
-                ];
+                'name' => $category['name'],
+                'id' => $category['category_id'],
+                'thumb' => $this->model_tool_image->resize($category['image'], 300, 300),
+                'children' => $children_data,
+                'column' => $category['column'] ? $category['column'] : 1,
+                'href' => $this->url->link('product/category', 'category=' . $category['category_id']),
+            ];
         }
 
         $data['language'] = $this->load->controller('common/language');
@@ -812,16 +808,16 @@ class ControllerCommonHeader extends Controller
         // For page specific css
         if (isset($this->request->get['path'])) {
             if (isset($this->request->get['product_id'])) {
-                $class = '-'.$this->request->get['product_id'];
+                $class = '-' . $this->request->get['product_id'];
             } elseif (isset($this->request->get['category'])) {
-                $class = '-'.$this->request->get['category'];
+                $class = '-' . $this->request->get['category'];
             } elseif (isset($this->request->get['manufacturer_id'])) {
-                $class = '-'.$this->request->get['manufacturer_id'];
+                $class = '-' . $this->request->get['manufacturer_id'];
             } else {
                 $class = '';
             }
 
-            $data['class'] = str_replace('/', '-', $this->request->get['path']).$class;
+            $data['class'] = str_replace('/', '-', $this->request->get['path']) . $class;
         } else {
             $data['class'] = 'common-home';
         }
@@ -837,9 +833,9 @@ class ControllerCommonHeader extends Controller
             $link = $this->url->link('information/locations/stores');
 
             if (false !== strpos($link, '?')) {
-                $data['link'] = $link.'&zipcode='.$data['zipcode'];
+                $data['link'] = $link . '&zipcode=' . $data['zipcode'];
             } else {
-                $data['link'] = $link.'?zipcode='.$data['zipcode'];
+                $data['link'] = $link . '?zipcode=' . $data['zipcode'];
             }
 
             $rows = $this->model_assets_category->getNoticeData($data['zipcode']);
@@ -849,24 +845,24 @@ class ControllerCommonHeader extends Controller
         } elseif (count($_COOKIE) > 0 && isset($_COOKIE['location'])) {
             $data['zipcode'] = $this->getHeaderPlace($_COOKIE['location']);
 
-            /*if(isset($_COOKIE['location_name'])) {
-                $data['zipcode'] = $_COOKIE['location_name'];
-            }*/
+            /* if(isset($_COOKIE['location_name'])) {
+              $data['zipcode'] = $_COOKIE['location_name'];
+              } */
 
             $data['zipcode_full'] = $data['zipcode'];
-            $data['zipcode'] = strlen($data['zipcode']) > 20 ? substr($data['zipcode'], 0, 20).'...' : $data['zipcode'];
+            $data['zipcode'] = strlen($data['zipcode']) > 20 ? substr($data['zipcode'], 0, 20) . '...' : $data['zipcode'];
 
-            /*$addressTmp = $this->getZipcode($_COOKIE['location']);
+            /* $addressTmp = $this->getZipcode($_COOKIE['location']);
 
 
-            $data['zipcode'] = $addressTmp?$addressTmp:'';*/
+              $data['zipcode'] = $addressTmp?$addressTmp:''; */
 
             $link = $this->url->link('information/locations/stores');
 
             if (false !== strpos($link, '?')) {
-                $data['link'] = $link.'&zipcode='.$data['zipcode'];
+                $data['link'] = $link . '&zipcode=' . $data['zipcode'];
             } else {
-                $data['link'] = $link.'?zipcode='.$data['zipcode'];
+                $data['link'] = $link . '?zipcode=' . $data['zipcode'];
             }
 
             $rows = $this->model_assets_category->getFullNoticeData($_COOKIE['location']);
@@ -880,15 +876,14 @@ class ControllerCommonHeader extends Controller
         }
         $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/header.tpl')) {
-            return $this->load->view($this->config->get('config_template').'/template/common/header.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/common/header.tpl', $data);
         } else {
             return $this->load->view('default/template/common/header.tpl', $data);
         }
     }
 
-    public function getMenuLink($parent, $child = null)
-    {
+    public function getMenuLink($parent, $child = null) {
         $item = empty($child) ? $parent : $child;
 
         switch ($item['menu_type']) {
@@ -896,22 +891,22 @@ class ControllerCommonHeader extends Controller
                 $path = 'product/category';
 
                 if (!empty($child)) {
-                    $args = 'category='.$parent['link'].'_'.$item['link'];
+                    $args = 'category=' . $parent['link'] . '_' . $item['link'];
                 } else {
-                    $args = 'category='.$item['link'];
+                    $args = 'category=' . $item['link'];
                 }
                 break;
             case 'product':
                 $path = 'product/product';
-                $args = 'product_id='.$item['link'];
+                $args = 'product_id=' . $item['link'];
                 break;
             case 'manufacturer':
                 $path = 'product/manufacturer/info';
-                $args = 'manufacturer_id='.$item['link'];
+                $args = 'manufacturer_id=' . $item['link'];
                 break;
             case 'information':
                 $path = 'information/information';
-                $args = 'information_id='.$item['link'];
+                $args = 'information_id=' . $item['link'];
                 break;
             default:
                 $tmp = explode('&', str_replace('index.php?path=', '', $item['link']));
@@ -938,30 +933,27 @@ class ControllerCommonHeader extends Controller
         return $link;
     }
 
-    public function checkFont()
-    {
+    public function checkFont() {
         $this->load->model('appearance/customizer');
 
         $data = $this->model_appearance_customizer->getDefaultData('customizer');
 
         if (!empty($data['font']) && 'inherit' != $data['font'] && 'Georgia, serif' != $data['font'] && 'Helvetica, sans-serif' != $data['font']) {
-            $this->document->addStyle('//fonts.googleapis.com/css?family='.str_replace(' ', '+', $data['font']), 'stylesheet', '');
+            $this->document->addStyle('//fonts.googleapis.com/css?family=' . str_replace(' ', '+', $data['font']), 'stylesheet', '');
         }
     }
 
-    public function checkCustom()
-    {
-        if (is_file(DIR_APPLICATION.'view/theme/'.$this->config->get('config_template').'/stylesheet/custom.css')) {
-            $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/custom.css');
+    public function checkCustom() {
+        if (is_file(DIR_APPLICATION . 'view/theme/' . $this->config->get('config_template') . '/stylesheet/custom.css')) {
+            $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/custom.css');
         }
 
-        if (is_file(DIR_APPLICATION.'view/theme/'.$this->config->get('config_template').'/javascript/custom.js')) {
-            $this->document->addScript('front/ui/theme/'.$this->config->get('config_template').'/javascript/custom.js');
+        if (is_file(DIR_APPLICATION . 'view/theme/' . $this->config->get('config_template') . '/javascript/custom.js')) {
+            $this->document->addScript('front/ui/theme/' . $this->config->get('config_template') . '/javascript/custom.js');
         }
     }
 
-    public function onlyHeader()
-    {
+    public function onlyHeader($param = null) {
         $this->load->language('common/header');
         $this->load->model('tool/image');
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
@@ -977,9 +969,9 @@ class ControllerCommonHeader extends Controller
 
         if (!empty($this->request->get['path']) and ('common/home' != $this->request->get['path'])) {
             if ('pre' == $this->config->get('config_meta_title_add', 0)) {
-                $data['title'] = $this->config->get('config_meta_title', '').' - '.$data['title'];
+                $data['title'] = $this->config->get('config_meta_title', '') . ' - ' . $data['title'];
             } elseif ('post' == $this->config->get('config_meta_title_add', 0)) {
-                $data['title'] = $data['title'].' - '.$this->config->get('config_meta_title', '');
+                $data['title'] = $data['title'] . ' - ' . $this->config->get('config_meta_title', '');
             }
         }
 
@@ -1018,12 +1010,12 @@ class ControllerCommonHeader extends Controller
         }
 
         //echo "<pre>";print_r($data['success']);die;
-        /*if(!$server){
-            $server = HTTP_SERVER;
-        }*/
+        /* if(!$server){
+          $server = HTTP_SERVER;
+          } */
 
-        if (is_file(DIR_APPLICATION.'view/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css')) {
-            $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css');
+        if (is_file(DIR_APPLICATION . 'view/theme/' . $this->config->get('config_template') . '/stylesheet/customizer.css')) {
+            $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/customizer.css');
             $this->checkFont();
             $this->checkCustom();
         }
@@ -1042,7 +1034,7 @@ class ControllerCommonHeader extends Controller
             $data['text_profile_incomplete_msg1'] = $this->language->get('text_profile_incomplete_msg1');
             $data['text_profile_incomplete_msg2'] = $this->language->get('text_profile_incomplete_msg2');
 
-            $data['notices'][] = $data['text_profile_incomplete'].' <a href='.$account_link.' style="color: #fff;text-decoration: underline;"> '.$data['text_profile_incomplete_msg1'].' </a>'.$data['text_profile_incomplete_msg2'];
+            $data['notices'][] = $data['text_profile_incomplete'] . ' <a href=' . $account_link . ' style="color: #fff;text-decoration: underline;"> ' . $data['text_profile_incomplete_msg1'] . ' </a>' . $data['text_profile_incomplete_msg2'];
         }
 
         $this->document->setDescription($this->config->get('config_meta_description'));
@@ -1074,7 +1066,7 @@ class ControllerCommonHeader extends Controller
 
         $data['name'] = $this->config->get('config_name');
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
             //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
             //24x30
             $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 30, 30);
@@ -1082,16 +1074,16 @@ class ControllerCommonHeader extends Controller
             $data['icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_small_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_small_icon'))) {
             //$data['small_icon'] = $server . 'image/' . $this->config->get('config_small_icon');
             $data['small_icon'] = $this->model_tool_image->resize($this->config->get('config_small_icon'), 30, 30);
         } else {
             $data['small_icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
-            $data['logo'] = $server.'image/'.$this->config->get('config_logo');
-        //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
         } else {
             $data['logo'] = '';
         }
@@ -1169,17 +1161,17 @@ class ControllerCommonHeader extends Controller
         $data['label_my_address'] = $this->language->get('label_my_address');
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
-        /***Sigup / register /contact modals **/
+        /*         * *Sigup / register /contact modals * */
         $data['contactus_modal'] = $this->load->controller('information/contact');
         $data['login_modal'] = $this->load->controller('common/login_modal');
         $data['signup_modal'] = $this->load->controller('common/signup_modal');
         $data['forget_modal'] = $this->load->controller('common/forget_modal');
         //$data['store'] = $this->url->link('product/store', '', 'SSL');
 
-        /* $data['store'] = $this->url->link('product/store','store_id='.$this->session->data['config_store_id'].'');*/
+        /* $data['store'] = $this->url->link('product/store','store_id='.$this->session->data['config_store_id'].''); */
 
         if (isset($this->session->data['config_store_id'])) {
-            $data['store'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+            $data['store'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
         } else {
             $data['store'] = $this->url->link('product/store');
         }
@@ -1202,37 +1194,37 @@ class ControllerCommonHeader extends Controller
         // For page specific css
         if (isset($this->request->get['path'])) {
             if (isset($this->request->get['product_id'])) {
-                $class = '-'.$this->request->get['product_id'];
+                $class = '-' . $this->request->get['product_id'];
             } elseif (isset($this->request->get['category'])) {
-                $class = '-'.$this->request->get['category'];
+                $class = '-' . $this->request->get['category'];
             } elseif (isset($this->request->get['manufacturer_id'])) {
-                $class = '-'.$this->request->get['manufacturer_id'];
+                $class = '-' . $this->request->get['manufacturer_id'];
             } else {
                 $class = '';
             }
 
-            $data['class'] = str_replace('/', '-', $this->request->get['path']).$class;
+            $data['class'] = str_replace('/', '-', $this->request->get['path']) . $class;
         } else {
             $data['class'] = 'common-home';
         }
 
         $data['language'] = $this->load->controller('common/language/dropdown');
         if (isset($this->session->data['config_store_id'])) {
-            $data['go_to_store'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+            $data['go_to_store'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
         } else {
             $data['go_to_store'] = $this->url->link('product/store');
         }
         $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
+        $data['multi_store_checkoutitems_css'] = $param;
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/only_header_information.tpl')) {
-            return $this->load->view($this->config->get('config_template').'/template/common/only_header_information.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/only_header_information.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/common/only_header_information.tpl', $data);
         } else {
             return $this->load->view('default/template/common/only_header_information.tpl', $data);
         }
     }
 
-    public function orderSummaryHeader()
-    {
+    public function orderSummaryHeader() {
         $this->load->language('common/header');
         $this->load->model('tool/image');
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
@@ -1248,9 +1240,9 @@ class ControllerCommonHeader extends Controller
 
         if (!empty($this->request->get['path']) and ('common/home' != $this->request->get['path'])) {
             if ('pre' == $this->config->get('config_meta_title_add', 0)) {
-                $data['title'] = $this->config->get('config_meta_title', '').' - '.$data['title'];
+                $data['title'] = $this->config->get('config_meta_title', '') . ' - ' . $data['title'];
             } elseif ('post' == $this->config->get('config_meta_title_add', 0)) {
-                $data['title'] = $data['title'].' - '.$this->config->get('config_meta_title', '');
+                $data['title'] = $data['title'] . ' - ' . $this->config->get('config_meta_title', '');
             }
         }
 
@@ -1289,12 +1281,12 @@ class ControllerCommonHeader extends Controller
         }
 
         //echo "<pre>";print_r($data['success']);die;
-        /*if(!$server){
-            $server = HTTP_SERVER;
-        }*/
+        /* if(!$server){
+          $server = HTTP_SERVER;
+          } */
 
-        if (is_file(DIR_APPLICATION.'view/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css')) {
-            $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css');
+        if (is_file(DIR_APPLICATION . 'view/theme/' . $this->config->get('config_template') . '/stylesheet/customizer.css')) {
+            $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/customizer.css');
             $this->checkFont();
             $this->checkCustom();
         }
@@ -1313,7 +1305,7 @@ class ControllerCommonHeader extends Controller
             $data['text_profile_incomplete_msg1'] = $this->language->get('text_profile_incomplete_msg1');
             $data['text_profile_incomplete_msg2'] = $this->language->get('text_profile_incomplete_msg2');
 
-            $data['notices'][] = $data['text_profile_incomplete'].' <a href='.$account_link.' style="color: #fff;text-decoration: underline;"> '.$data['text_profile_incomplete_msg1'].' </a>'.$data['text_profile_incomplete_msg2'];
+            $data['notices'][] = $data['text_profile_incomplete'] . ' <a href=' . $account_link . ' style="color: #fff;text-decoration: underline;"> ' . $data['text_profile_incomplete_msg1'] . ' </a>' . $data['text_profile_incomplete_msg2'];
         }
 
         $this->document->setDescription($this->config->get('config_meta_description'));
@@ -1345,7 +1337,7 @@ class ControllerCommonHeader extends Controller
 
         $data['name'] = $this->config->get('config_name');
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
             //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
             //24x30
             $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 30, 30);
@@ -1353,16 +1345,16 @@ class ControllerCommonHeader extends Controller
             $data['icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_small_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_small_icon'))) {
             //$data['small_icon'] = $server . 'image/' . $this->config->get('config_small_icon');
             $data['small_icon'] = $this->model_tool_image->resize($this->config->get('config_small_icon'), 30, 30);
         } else {
             $data['small_icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
-            $data['logo'] = $server.'image/'.$this->config->get('config_logo');
-        //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
         } else {
             $data['logo'] = '';
         }
@@ -1441,17 +1433,17 @@ class ControllerCommonHeader extends Controller
         $data['label_my_address'] = $this->language->get('label_my_address');
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
-        /***Sigup / register /contact modals **/
+        /*         * *Sigup / register /contact modals * */
         $data['contactus_modal'] = $this->load->controller('information/contact');
         $data['login_modal'] = $this->load->controller('common/login_modal');
         $data['signup_modal'] = $this->load->controller('common/signup_modal');
         $data['forget_modal'] = $this->load->controller('common/forget_modal');
         //$data['store'] = $this->url->link('product/store', '', 'SSL');
 
-        /* $data['store'] = $this->url->link('product/store','store_id='.$this->session->data['config_store_id'].'');*/
+        /* $data['store'] = $this->url->link('product/store','store_id='.$this->session->data['config_store_id'].''); */
 
         if (isset($this->session->data['config_store_id'])) {
-            $data['store'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+            $data['store'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
         } else {
             $data['store'] = $this->url->link('product/store');
         }
@@ -1474,35 +1466,34 @@ class ControllerCommonHeader extends Controller
         // For page specific css
         if (isset($this->request->get['path'])) {
             if (isset($this->request->get['product_id'])) {
-                $class = '-'.$this->request->get['product_id'];
+                $class = '-' . $this->request->get['product_id'];
             } elseif (isset($this->request->get['category'])) {
-                $class = '-'.$this->request->get['category'];
+                $class = '-' . $this->request->get['category'];
             } elseif (isset($this->request->get['manufacturer_id'])) {
-                $class = '-'.$this->request->get['manufacturer_id'];
+                $class = '-' . $this->request->get['manufacturer_id'];
             } else {
                 $class = '';
             }
 
-            $data['class'] = str_replace('/', '-', $this->request->get['path']).$class;
+            $data['class'] = str_replace('/', '-', $this->request->get['path']) . $class;
         } else {
             $data['class'] = 'common-home';
         }
 
         $data['language'] = $this->load->controller('common/language/dropdown');
         if (isset($this->session->data['config_store_id'])) {
-            $data['go_to_store'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+            $data['go_to_store'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
         } else {
             $data['go_to_store'] = $this->url->link('product/store');
         }
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/order_summary_header.tpl')) {
-            return $this->load->view($this->config->get('config_template').'/template/common/order_summary_header.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/order_summary_header.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/common/order_summary_header.tpl', $data);
         } else {
             return $this->load->view('default/template/common/only_header_information.tpl', $data);
         }
     }
-    
-    public function orderSummaryHeaders()
-    {
+
+    public function orderSummaryHeaders() {
         $this->load->language('common/header');
         $this->load->model('tool/image');
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
@@ -1518,9 +1509,9 @@ class ControllerCommonHeader extends Controller
 
         if (!empty($this->request->get['path']) and ('common/home' != $this->request->get['path'])) {
             if ('pre' == $this->config->get('config_meta_title_add', 0)) {
-                $data['title'] = $this->config->get('config_meta_title', '').' - '.$data['title'];
+                $data['title'] = $this->config->get('config_meta_title', '') . ' - ' . $data['title'];
             } elseif ('post' == $this->config->get('config_meta_title_add', 0)) {
-                $data['title'] = $data['title'].' - '.$this->config->get('config_meta_title', '');
+                $data['title'] = $data['title'] . ' - ' . $this->config->get('config_meta_title', '');
             }
         }
 
@@ -1559,12 +1550,12 @@ class ControllerCommonHeader extends Controller
         }
 
         //echo "<pre>";print_r($data['success']);die;
-        /*if(!$server){
-            $server = HTTP_SERVER;
-        }*/
+        /* if(!$server){
+          $server = HTTP_SERVER;
+          } */
 
-        if (is_file(DIR_APPLICATION.'view/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css')) {
-            $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css');
+        if (is_file(DIR_APPLICATION . 'view/theme/' . $this->config->get('config_template') . '/stylesheet/customizer.css')) {
+            $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/customizer.css');
             $this->checkFont();
             $this->checkCustom();
         }
@@ -1583,7 +1574,7 @@ class ControllerCommonHeader extends Controller
             $data['text_profile_incomplete_msg1'] = $this->language->get('text_profile_incomplete_msg1');
             $data['text_profile_incomplete_msg2'] = $this->language->get('text_profile_incomplete_msg2');
 
-            $data['notices'][] = $data['text_profile_incomplete'].' <a href='.$account_link.' style="color: #fff;text-decoration: underline;"> '.$data['text_profile_incomplete_msg1'].' </a>'.$data['text_profile_incomplete_msg2'];
+            $data['notices'][] = $data['text_profile_incomplete'] . ' <a href=' . $account_link . ' style="color: #fff;text-decoration: underline;"> ' . $data['text_profile_incomplete_msg1'] . ' </a>' . $data['text_profile_incomplete_msg2'];
         }
 
         $this->document->setDescription($this->config->get('config_meta_description'));
@@ -1615,7 +1606,7 @@ class ControllerCommonHeader extends Controller
 
         $data['name'] = $this->config->get('config_name');
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
             //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
             //24x30
             $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 30, 30);
@@ -1623,16 +1614,16 @@ class ControllerCommonHeader extends Controller
             $data['icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_small_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_small_icon'))) {
             //$data['small_icon'] = $server . 'image/' . $this->config->get('config_small_icon');
             $data['small_icon'] = $this->model_tool_image->resize($this->config->get('config_small_icon'), 30, 30);
         } else {
             $data['small_icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
-            $data['logo'] = $server.'image/'.$this->config->get('config_logo');
-        //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),197,34);
         } else {
             $data['logo'] = '';
         }
@@ -1711,17 +1702,17 @@ class ControllerCommonHeader extends Controller
         $data['label_my_address'] = $this->language->get('label_my_address');
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
-        /***Sigup / register /contact modals **/
+        /*         * *Sigup / register /contact modals * */
         $data['contactus_modal'] = $this->load->controller('information/contact');
         $data['login_modal'] = $this->load->controller('common/login_modal');
         $data['signup_modal'] = $this->load->controller('common/signup_modal');
         $data['forget_modal'] = $this->load->controller('common/forget_modal');
         //$data['store'] = $this->url->link('product/store', '', 'SSL');
 
-        /* $data['store'] = $this->url->link('product/store','store_id='.$this->session->data['config_store_id'].'');*/
+        /* $data['store'] = $this->url->link('product/store','store_id='.$this->session->data['config_store_id'].''); */
 
         if (isset($this->session->data['config_store_id'])) {
-            $data['store'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+            $data['store'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
         } else {
             $data['store'] = $this->url->link('product/store');
         }
@@ -1744,39 +1735,38 @@ class ControllerCommonHeader extends Controller
         // For page specific css
         if (isset($this->request->get['path'])) {
             if (isset($this->request->get['product_id'])) {
-                $class = '-'.$this->request->get['product_id'];
+                $class = '-' . $this->request->get['product_id'];
             } elseif (isset($this->request->get['category'])) {
-                $class = '-'.$this->request->get['category'];
+                $class = '-' . $this->request->get['category'];
             } elseif (isset($this->request->get['manufacturer_id'])) {
-                $class = '-'.$this->request->get['manufacturer_id'];
+                $class = '-' . $this->request->get['manufacturer_id'];
             } else {
                 $class = '';
             }
 
-            $data['class'] = str_replace('/', '-', $this->request->get['path']).$class;
+            $data['class'] = str_replace('/', '-', $this->request->get['path']) . $class;
         } else {
             $data['class'] = 'common-home';
         }
-        
+
         $this->load->model('assets/category');
         $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
         $data['categories'] = $categories;
 
         $data['language'] = $this->load->controller('common/language/dropdown');
         if (isset($this->session->data['config_store_id'])) {
-            $data['go_to_store'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+            $data['go_to_store'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
         } else {
             $data['go_to_store'] = $this->url->link('product/store');
         }
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/order_summary_headers.tpl')) {
-            return $this->load->view($this->config->get('config_template').'/template/common/order_summary_headers.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/order_summary_headers.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/common/order_summary_headers.tpl', $data);
         } else {
             return $this->load->view('default/template/common/only_header_information.tpl', $data);
         }
     }
 
-    public function storeHeader()
-    {
+    public function storeHeader() {
         if (isset($this->session->data['language'])) {
             $data['config_language'] = $this->session->data['language'];
         } else {
@@ -1804,12 +1794,12 @@ class ControllerCommonHeader extends Controller
         $data['base'] = $server;
 
         //echo "<pre>";print_r($server);die;
-        /*if(!$server){
-            $server = HTTP_SERVER;
-        }*/
+        /* if(!$server){
+          $server = HTTP_SERVER;
+          } */
 
-        if (is_file(DIR_APPLICATION.'view/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css')) {
-            $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/customizer.css');
+        if (is_file(DIR_APPLICATION . 'view/theme/' . $this->config->get('config_template') . '/stylesheet/customizer.css')) {
+            $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/customizer.css');
             $this->checkFont();
             $this->checkCustom();
         }
@@ -1855,7 +1845,7 @@ class ControllerCommonHeader extends Controller
 
         $data['name'] = $this->config->get('config_name');
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
             //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
             //24x30
             $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 30, 30);
@@ -1863,16 +1853,16 @@ class ControllerCommonHeader extends Controller
             $data['icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_small_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_small_icon'))) {
             //$data['small_icon'] = $server . 'image/' . $this->config->get('config_small_icon');
             $data['small_icon'] = $this->model_tool_image->resize($this->config->get('config_small_icon'), 30, 30);
         } else {
             $data['small_icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
-            $data['logo'] = $server.'image/'.$this->config->get('config_logo');
-        //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),198,34);
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),198,34);
         } else {
             $data['logo'] = '';
         }
@@ -1972,9 +1962,9 @@ class ControllerCommonHeader extends Controller
             $link = $this->url->link('information/locations/stores');
 
             if (false !== strpos($link, '?')) {
-                $data['link'] = $link.'&zipcode='.$data['zipcode'];
+                $data['link'] = $link . '&zipcode=' . $data['zipcode'];
             } else {
-                $data['link'] = $link.'?zipcode='.$data['zipcode'];
+                $data['link'] = $link . '?zipcode=' . $data['zipcode'];
             }
 
             $rows = $this->model_assets_category->getNoticeData($data['zipcode']);
@@ -1984,22 +1974,22 @@ class ControllerCommonHeader extends Controller
         } elseif (count($_COOKIE) > 0 && isset($_COOKIE['location'])) {
             $data['zipcode'] = $this->getHeaderPlace($_COOKIE['location']);
 
-            /*if(isset($_COOKIE['location_name'])) {
-                $data['zipcode'] = $_COOKIE['location_name'];
-            }*/
+            /* if(isset($_COOKIE['location_name'])) {
+              $data['zipcode'] = $_COOKIE['location_name'];
+              } */
 
             $data['zipcode_full'] = $data['zipcode'];
-            $data['zipcode'] = strlen($data['zipcode']) > 20 ? substr($data['zipcode'], 0, 20).'...' : $data['zipcode'];
-            /*$addressTmp = $this->getZipcode($_COOKIE['location']);
+            $data['zipcode'] = strlen($data['zipcode']) > 20 ? substr($data['zipcode'], 0, 20) . '...' : $data['zipcode'];
+            /* $addressTmp = $this->getZipcode($_COOKIE['location']);
 
-            $data['zipcode'] = $addressTmp?$addressTmp:'';*/
+              $data['zipcode'] = $addressTmp?$addressTmp:''; */
 
             $link = $this->url->link('information/locations/stores');
 
             if (false !== strpos($link, '?')) {
-                $data['link'] = $link.'&location='.$_COOKIE['location'];
+                $data['link'] = $link . '&location=' . $_COOKIE['location'];
             } else {
-                $data['link'] = $link.'?location='.$_COOKIE['location'];
+                $data['link'] = $link . '?location=' . $_COOKIE['location'];
             }
 
             $rows = $this->model_assets_category->getFullNoticeData($_COOKIE['location']);
@@ -2010,16 +2000,16 @@ class ControllerCommonHeader extends Controller
             $data['zipcode'] = '';
         }
 
-        $data['title'] = 'Stores in '.$data['zipcode_full'].' '; //$this->document->getTitle();
+        $data['title'] = 'Stores in ' . $data['zipcode_full'] . ' '; //$this->document->getTitle();
         //$data['title'] = '';
 
         $this->load->model('tool/image');
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
         if (!empty($this->request->get['path']) and ('common/home' != $this->request->get['path'])) {
             if ('pre' == $this->config->get('config_meta_title_add', 0)) {
-                $data['title'] = $this->config->get('config_meta_title', '').' - '.$data['title'];
+                $data['title'] = $this->config->get('config_meta_title', '') . ' - ' . $data['title'];
             } elseif ('post' == $this->config->get('config_meta_title_add', 0)) {
-                $data['title'] = $data['title'].' - '.$this->config->get('config_meta_title', '');
+                $data['title'] = $data['title'] . ' - ' . $this->config->get('config_meta_title', '');
             }
         }
 
@@ -2042,27 +2032,26 @@ class ControllerCommonHeader extends Controller
         // For page specific css
         if (isset($this->request->get['path'])) {
             if (isset($this->request->get['product_id'])) {
-                $class = '-'.$this->request->get['product_id'];
+                $class = '-' . $this->request->get['product_id'];
             } elseif (isset($this->request->get['category'])) {
-                $class = '-'.$this->request->get['category'];
+                $class = '-' . $this->request->get['category'];
             } elseif (isset($this->request->get['manufacturer_id'])) {
-                $class = '-'.$this->request->get['manufacturer_id'];
+                $class = '-' . $this->request->get['manufacturer_id'];
             } else {
                 $class = '';
             }
 
-            $data['class'] = str_replace('/', '-', $this->request->get['path']).$class;
+            $data['class'] = str_replace('/', '-', $this->request->get['path']) . $class;
         } else {
             $data['class'] = 'common-home';
         }
 
         //$data['go_to_store'] = $this->url->link('product/store', '', 'SSL');
-
         //$data['go_to_store'] = $this->url->link('product/store','store_id='.$this->session->data['config_store_id'].'');
 
         if (isset($this->session->data['config_store_id'])) {
             //$data['go_to_store'] = $this->url->link('product/store','store_id='.$this->session->data['config_store_id'].'');
-            $data['go_to_store'] = $this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID.'');
+            $data['go_to_store'] = $this->url->link('product/store', 'store_id=' . ACTIVE_STORE_ID . '');
         } else {
             $data['go_to_store'] = $this->url->link('product/store');
         }
@@ -2081,70 +2070,68 @@ class ControllerCommonHeader extends Controller
             //echo "<pre>";print_r($children);die;
             foreach ($children as $child) {
                 $children_data[] = [
-                                'name' => $child['name'],
-                                'id' => $child['category_id'],
-                                'href' => $this->url->link('product/category', 'category='.$category['category_id'].'_'.$child['category_id']),
-                        ];
+                    'name' => $child['name'],
+                    'id' => $child['category_id'],
+                    'href' => $this->url->link('product/category', 'category=' . $category['category_id'] . '_' . $child['category_id']),
+                ];
             }
 
             // Level 1
             $data['categories'][] = [
-                        'name' => $category['name'],
-                        'id' => $category['category_id'],
-                        'thumb' => $this->model_tool_image->resize($category['image'], 300, 300),
-                        'children' => $children_data,
-                        'column' => $category['column'] ? $category['column'] : 1,
-                        'href' => $this->url->link('product/category', 'category='.$category['category_id']),
-                ];
+                'name' => $category['name'],
+                'id' => $category['category_id'],
+                'thumb' => $this->model_tool_image->resize($category['image'], 300, 300),
+                'children' => $children_data,
+                'column' => $category['column'] ? $category['column'] : 1,
+                'href' => $this->url->link('product/category', 'category=' . $category['category_id']),
+            ];
         }
 
         $products = $this->model_assets_product->getProductDataByStoreId(2);
         $data['latest_products'] = $products;
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/store_header.tpl')) {
-            return $this->load->view($this->config->get('config_template').'/template/common/store_header.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/store_header.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/common/store_header.tpl', $data);
         } else {
             return $this->load->view('default/template/common/store_header.tpl', $data);
         }
     }
 
-    public function formatTelephone($telephone)
-    {
-        /*if(strlen($telephone) == 11 ) {
-            //(21) 42353-5255
+    public function formatTelephone($telephone) {
+        /* if(strlen($telephone) == 11 ) {
+          //(21) 42353-5255
 
-            $str1 = '(';
-            $str3 = ')';
-            $str4 = ' ';
-            $str6 = '-';
+          $str1 = '(';
+          $str3 = ')';
+          $str4 = ' ';
+          $str6 = '-';
 
-            $str  = $telephone;
-            $str2 = substr($str,0,2);
-            $str5 = substr($str,2,5);
-            $str7 = substr($str,7,4);
+          $str  = $telephone;
+          $str2 = substr($str,0,2);
+          $str5 = substr($str,2,5);
+          $str7 = substr($str,7,4);
 
 
-            return  $str1.$str2.$str3.$str4.$str5.$str6.$str7;
-        } else {
-            return $telephone;
-        }*/
+          return  $str1.$str2.$str3.$str4.$str5.$str6.$str7;
+          } else {
+          return $telephone;
+          } */
         return $telephone;
     }
 
-    public function getZipcode($address)
-    {
+    public function getZipcode($address) {
         if (!empty($address)) {
             //Formatted address
             $formattedAddr = str_replace(' ', '+', $address);
             //Send request and receive json data by address
 
-            $url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
+            $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . $formattedAddr . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
 
             $headers = [
-                     'Cache-Control: no-cache',
-                    ];
+                'Cache-Control: no-cache',
+            ];
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -2160,13 +2147,13 @@ class ControllerCommonHeader extends Controller
             $latitude = $output1->results[0]->geometry->location->lat;
             $longitude = $output1->results[0]->geometry->location->lng;
 
-            $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$latitude.','.$longitude.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
+            $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' . $latitude . ',' . $longitude . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
 
             $headers = [
-                     'Cache-Control: no-cache',
-                    ];
+                'Cache-Control: no-cache',
+            ];
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -2196,8 +2183,7 @@ class ControllerCommonHeader extends Controller
         }
     }
 
-    public function getPlace($location)
-    {
+    public function getPlace($location) {
         $p = '';
 
         $userSearch = explode(',', $location);
@@ -2210,7 +2196,7 @@ class ControllerCommonHeader extends Controller
             $validateLat4 = strpos($userSearch[1], '.');
 
             if ($validateLat && $validateLat2 && $validateLat3 && $validateLat4) {
-                $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$location.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
+                $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' . $location . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
 
                 //echo "<pre>";print_r($url);die;
                 $ch = curl_init();
@@ -2218,8 +2204,8 @@ class ControllerCommonHeader extends Controller
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
                 $headers = [
-                             'Cache-Control: no-cache',
-                            ];
+                    'Cache-Control: no-cache',
+                ];
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                 curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -2245,8 +2231,7 @@ class ControllerCommonHeader extends Controller
         return $p;
     }
 
-    public function getHeaderPlace($location)
-    {
+    public function getHeaderPlace($location) {
         if (isset($_COOKIE['location_name']) && !empty($_COOKIE['location_name'])) {
             $p = $_COOKIE['location_name'];
         } else {
@@ -2264,14 +2249,14 @@ class ControllerCommonHeader extends Controller
                 if ($validateLat && $validateLat2 && $validateLat3 && $validateLat4) {
                     //echo "<pre>";print_r("er");die;
                     try {
-                        $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.urlencode($location).'&sensor=false&key='.$this->config->get('config_google_server_api_key');
+                        $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' . urlencode($location) . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
 
                         //echo "<pre>";print_r($url);
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_URL, $url);
                         $headers = [
-                                     'Cache-Control: no-cache',
-                                    ];
+                            'Cache-Control: no-cache',
+                        ];
                         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                         curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
 
@@ -2304,6 +2289,7 @@ class ControllerCommonHeader extends Controller
                             setcookie('location_name', $p, time() + (86400 * 30 * 30 * 30 * 3), '/');
                         }
                     } catch (Exception $e) {
+                        
                     }
                 }
             }
@@ -2311,4 +2297,15 @@ class ControllerCommonHeader extends Controller
 
         return $p;
     }
+
+    public function multi_store_checkoutitems_css() {
+        if ($this->request->server['HTTPS']) {
+            $server = $this->config->get('config_ssl');
+        } else {
+            $server = $this->config->get('config_url');
+        }
+        $data['base'] = $server;
+        return $this->load->view($this->config->get('config_template') . '/template/common/multi_store_checkoutitems_css.tpl', $data);
+    }
+
 }
