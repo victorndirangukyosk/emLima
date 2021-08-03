@@ -963,6 +963,8 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
 	    dataType: 'json',
 	    async: false, 
 	    beforeSend: function() {
+            $("#updatecar").attr("disabled",true);
+            $("span[id^='updatecart']").html("<i class='fa fa-spinner'> Updating Cart</i>");
 	    },
 	    complete: function() {				
 	    },			
@@ -973,6 +975,9 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
             $(".orgprice"+json.products_details.product_store_id).html(json.products_details.orginal_price);
             $('.cart-total-amount').html(json['total_amount']);
             loadTotals($('input#shipping_city_id').val());
+            
+            $("#updatecar").attr("disabled",false);
+            $("span[id^='updatecart']").html("<i class='fa fa-refresh'> <b>Update Cart</b></i>");
             }
         });
         
