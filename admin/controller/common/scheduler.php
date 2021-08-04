@@ -405,7 +405,7 @@ class ControllerCommonScheduler extends Controller {
                 //return;
             }
         }
-        
+
         // echo "<pre>";print_r($data);die;
         try {
             $pdf = new Pdf([
@@ -419,6 +419,11 @@ class ControllerCommonScheduler extends Controller {
             ]);
             $template = $this->load->view('report/customer_statement_pdf.tpl', $data);
             $pdf->addPage($template);
+            if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . "Customer_order_statement_" . $data['customers'][0]['order_id'] . ".pdf")) {
+                $errors = $pdf->getError();
+                echo $errors;
+                die;
+            }
             if (!$pdf->send("Customer_order_statement_" . $data['customers'][0]['order_id'] . ".pdf")) {
                 $error = $pdf->getError();
                 echo $error;
