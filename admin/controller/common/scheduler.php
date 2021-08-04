@@ -457,7 +457,7 @@ class ControllerCommonScheduler extends Controller
                     // echo "<pre>";print_r($data);die;
                     $data['token'] = $this->session->data['token'];
             // $this->response->redirect($this->url->link('report/customer_statement_pdf.tpl', $data));
-        $this->response->setOutput($this->load->view('report/customer_statement_pdf.tpl', $data));
+        // $this->response->setOutput($this->load->view('report/customer_statement_pdf.tpl', $data));
             // return;
 
 
@@ -468,14 +468,45 @@ class ControllerCommonScheduler extends Controller
             try {
                 require_once DIR_ROOT . '/vendor/autoload.php';
                  
-                    $pdf = new \mikehaertl\wkhtmlto\Pdf;
-                    $template = $this->load->view('sale/order_invoice_pdf.tpl', $data['customers'][0]);
+                $pdf = new \mikehaertl\wkhtmlto\Pdf(
+                    array(
+                        
+                        'ignoreWarnings' => true,                         
+                        'options' => [
+                            'enable-local-file-access' => true,
+                            'orientation'   => 'landscape',
+                            'encoding'      => 'UTF-8'
+                        ],
+                    ));
+                    $template = $this->load->view('report/customer_statement_pdf.tpl', $data['customers'][0]);
                     $pdf->addPage($template);
-                    if (!$pdf->send("KwikBasket Invoice #" . $data['customers'][0]['order_id'] . ".pdf")) {
+                    if (!$pdf->send("Customer_order_statement_" . $data['customers'][0]['order_id'] . ".pdf")) {
                         $error = $pdf->getError();
                         echo $error;
                         die;
                     }
+
+
+                    $filename = 'Customer_order_statement_' . $data['customers'][0]['customer'] . '.pdf';
+                    // echo "<pre>";print_r($filename);die;
+                       
+
+
+                        if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
+                            mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
+                        }
+                        // unlink($filename);
+                        $folder_path = DIR_UPLOAD . 'schedulertemp';
+                        $files = glob($folder_path . '/*');
+                        // Deleting all the files in the list 
+                        foreach ($files as $file) {
+                            if (is_file($file))
+                                unlink($file); // Delete the given file  
+                        }
+
+                        if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . $filename)) {
+                            echo $pdf->getError();
+                        }
                 
             } catch (Exception $e) {
                 echo $e->getMessage();

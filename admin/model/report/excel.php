@@ -5947,7 +5947,23 @@ class ModelReportExcel extends Model {
                     try {
                         require_once DIR_ROOT . '/vendor/autoload.php';
                         
-                            $pdf = new \mikehaertl\wkhtmlto\Pdf;
+                            $pdf = new \mikehaertl\wkhtmlto\Pdf(
+                            array(
+                                'binary' => 'C:\Program Files\wkhtmltopdf\bin',
+                                'ignoreWarnings' => true,
+                                'commandOptions' => array(
+                                    'useExec' => true,      // Can help on Windows systems
+                                    'procEnv' => array(
+                                        // Check the output of 'locale -a' on your system to find supported languages
+                                        'LANG' => 'en_US.utf-8',
+                                    ),
+                                ),
+                                'options' => [
+                                    'enable-local-file-access' => true,
+                                    'orientation'   => 'landscape',
+                                    'encoding'      => 'UTF-8'
+                                ],
+                            ));
                             $template = $this->load->view('report/customer_statement_pdf.tpl', $data['customers']);
                 //   $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/report/customer_statement_pdf.tpl', $data));
                             $pdf->addPage($template);
@@ -5957,9 +5973,9 @@ class ModelReportExcel extends Model {
                            
 
 
-                            if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
-                                mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
-                            }
+                            // if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
+                            //     mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
+                            // }
                             // unlink($filename);
                             $folder_path = DIR_UPLOAD . 'schedulertemp';
                             $files = glob($folder_path . '/*');
