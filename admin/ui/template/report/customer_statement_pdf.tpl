@@ -14,13 +14,7 @@
 
                 </div>
             </div>
-            <div class="container-fluid">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-
-
-                    </div>
-                    <div class="panel-body">
+            <div class="panel-body">
 
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover" style="table-layout:fixed;">
@@ -62,6 +56,13 @@
                             </table>
                         </div>
                     </div>
+            <div class="container-fluid">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+
+                    </div>
+                    
                 </div>
             </div>
     </body>
