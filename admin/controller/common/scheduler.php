@@ -513,5 +513,113 @@ class ControllerCommonScheduler extends Controller
             }
     
         }
+
+
+
+        public function consolidatedSaleOrders()
+        {
+            // $deliveryDate =   date("Y-m-d");// date("Y-m-d",strtotime("-1 days"));//$this->request->get['filter_delivery_date'];
+            $deliveryDate =   date("Y-m-d",strtotime("0 days"));// as eat at 11:30 means , next day orders need to be displayed
+    
+            if (isset($this->request->get['sort'])) {
+                $sort = 'status';
+            } else {
+                $sort = 'status';
+            }
+            if (isset($this->request->get['order'])) {
+                $order = $this->request->get['order'];
+            } else {
+                $order = 'DESC';
+            }
+            $filter_data = [
+                'filter_delivery_date' => $deliveryDate,
+                'sort' => $sort,
+                'order' => $order,
+            ];        
+            $this->load->model('sale/order');
+            $this->load->model('vendor/vendor');
+            // $results = $this->model_sale_order->getOrders($filter_data);
+            $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+            // echo "<pre>";print_r($results);die;      
+            
+    
+            
+            //   echo "<pre>";print_r($data);die;
+            if($results!=null)
+            {
+                foreach ($results as $result) {
+                    $sub_total = 0;
+                    $total = 0;
+        
+                    $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
+                    $store_details = $this->model_vendor_vendor->getVendorByStoreId($result['store_id']);
+                    $vendor_details = $this->model_vendor_vendor->getVendorDetails($store_details['vendor_id']);
+        
+                    //echo "<pre>";print_r($totals);die;
+                    foreach ($totals as $total) {
+                        if ('sub_total' == $total['code']) {
+                            $sub_total = $total['value'];
+                            // break;
+                        }
+                        if ('total' == $total['code']) {
+                            $total = $total['value'];
+                            // break;
+                        }
+                    }
+
+                    // if ($this->user->isVendor()) {
+                    //     $result['customer'] = strtok($result['firstname'], ' ');
+                    // }
+        
+                    if ($result['company_name']) {
+                        $result['company_name'] = ' (' . $result['company_name'] . ')';
+                    } else {
+                        // $result['company_name'] = "(NA)";
+                    }
+                    // $vendor_total = $this->currency->format(($result['total'] - ($result['total'] * $result['commission']) / 100), $this->config->get('config_currency'));
+                    $data['orders'][] = [
+                        'order_id' => $result['order_id'],
+                        'delivery_id' => $result['delivery_id'],
+                        'order_prefix' => $vendor_details['orderprefix'] != '' ? $vendor_details['orderprefix'].'-' : '',
+                        'vendor_name' => $vendor_details['lastname'],
+                        'customer' => $result['customer'],
+                        'company_name' => $result['company_name'],
+                        'status' => $result['status'],
+                        'payment_method' => $result['payment_method'],
+                        'shipping_method' => $result['shipping_method'],
+                        'shipping_address' => $result['shipping_address'],
+                        'delivery_date_value' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])),
+                        'delivery_date' => $result['delivery_date'],
+                        'delivery_timeslot' => $result['delivery_timeslot'],
+                        'store' => $result['store_name'],
+                        'order_status_id' => $result['order_status_id'],
+                        'order_status_color' => $result['color'],
+                        'city' => $result['city'],
+                        'vendor_total' => $vendor_total,
+                        'total' => $this->currency->format($total, $result['currency_code'], $result['currency_value']),
+                        'sub_total' => $this->currency->format($sub_total, $result['currency_code'], $result['currency_value']),
+                        'sub_total_custom' => $sub_total, $result['currency_code'],
+                        'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                        'date_modified' => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
+                        'shipping_code' => $result['shipping_code'],
+                        // 'view' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                        // 'invoice' => $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                        // 'order_spreadsheet' => $this->url->link('sale/order/orderCalculationSheet', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                        // 'shipping' => $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                        // 'edit' => $this->url->link('sale/order/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                        // 'delete' => $this->url->link('sale/order/delete', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                        'po_number' => $result['po_number'],
+                        'SAP_customer_no' => $result['SAP_customer_no'],
+                        'SAP_doc_no' => $result['SAP_doc_no'],
+                        // 'all_order_statuses' => $this->model_localisation_order_status->getOrderStatuses()
+                    ];
+                }
+
+             $this->load->model('report/excel');
+             $file= $this->model_report_excel->mail_consolidated_sale_order_excel($data['orders']);
+           
+            }
+         
+        }
     
 }
