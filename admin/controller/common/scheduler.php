@@ -405,7 +405,9 @@ class ControllerCommonScheduler extends Controller {
                 //return;
             }
         }
-
+        
+        $log = new Log('error.log');
+        $log->write($data);
         // echo "<pre>";print_r($data);die;
         try {
             $pdf = new Pdf([
