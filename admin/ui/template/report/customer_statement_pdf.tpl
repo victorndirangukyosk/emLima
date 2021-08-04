@@ -26,8 +26,8 @@
                             <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
-                                        <td class="text-right">Order Id</td> 
-                                        <td class="text-left">Customer</td>
+                                        <td style="width: 1px;" class="text-right">Order Id</td> 
+                                        <td style="width: 1px;" class="text-left">Customer</td>
                                         <td class="text-right">Order Date</td> 
                                         <td class="text-right">Delivery Date</td> 
                                         <td class="text-right">P.O. Number</td>
