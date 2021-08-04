@@ -409,7 +409,13 @@ class ControllerCommonScheduler extends Controller {
         // echo "<pre>";print_r($data);die;
         try {
             $pdf = new Pdf([
-                'commandOptions' => ['useExec' => true],
+                'commandOptions' => array(
+                    'useExec' => true, // Can help on Windows systems
+                    'procEnv' => array(
+                        // Check the output of 'locale -a' on your system to find supported languages
+                        'LANG' => 'en_US.utf-8',
+                    ),
+                ),
             ]);
             $template = $this->load->view('report/customer_statement_pdf.tpl', $data);
             $pdf->addPage($template);
