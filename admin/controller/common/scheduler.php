@@ -418,7 +418,11 @@ class ControllerCommonScheduler extends Controller {
                 ),
             ]);
             $template = $this->load->view('report/customer_statement_pdf.tpl', $data);
-            $pdf->addPage($template);
+            $pageOptions = array(
+                'javascript-delay' => 2000,
+                'encoding' => 'UTF-8',
+            );
+            $pdf->addPage($template, $pageOptions);
             if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . "Customer_order_statement_" . $data['customers'][0]['order_id'] . ".pdf")) {
                 $errors = $pdf->getError();
                 echo $errors;
