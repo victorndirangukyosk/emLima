@@ -26,8 +26,8 @@
                             <table class="table table-bordered table-hover" style="table-layout:fixed;">
                                 <thead>
                                     <tr>
-                                        <td style="width:10%;" class="text-right">Order Id</td> 
-                                        <td style="width:20%;" class="text-left">Customer</td>
+                                        <td style="width:7%;" class="text-right">Order Id</td> 
+                                        <td style="width:15%;" class="text-left">Customer</td>
                                         <td class="text-right">Order Date</td> 
                                         <td class="text-right">Delivery Date</td> 
                                         <td class="text-right">Order value</td>
@@ -43,8 +43,8 @@
                                     if ($customers) { ?>
                                     <?php foreach ($customers as $customer) { ?>
                                     <tr>
-                                        <td style="width:10%;" class="text-right"><?php echo $customer['order_id']; ?></td> 
-                                        <td style="width:20%;" class="text-left"><?php echo $customer['customer']; ?><br>(<?php echo $customer['company']; ?>)</td>
+                                        <td style="width:7%;" class="text-right"><?php echo $customer['order_id']; ?></td> 
+                                        <td style="width:15%;" class="text-left"><?php echo $customer['customer']; ?><br>(<?php echo $customer['company']; ?>)</td>
                                         <td class="text-right"><?php echo $customer['date_added']; ?></td> 
                                         <td class="text-right"><?php echo $customer['delivery_date']; ?></td> 
                                         <td class="text-right"><?php echo $customer['subtotal']; ?></td>
