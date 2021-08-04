@@ -468,22 +468,13 @@ class ControllerCommonScheduler extends Controller
             try {
                 require_once DIR_ROOT . '/vendor/autoload.php';
                  
-                $pdf = new \mikehaertl\wkhtmlto\Pdf(
-                    array(
-                        
-                        'ignoreWarnings' => true,                         
-                        'options' => [
-                            'enable-local-file-access' => true,
-                            'orientation'   => 'landscape',
-                            'encoding'      => 'UTF-8'
-                        ],
-                    ));
+                $pdf = new \mikehaertl\wkhtmlto\Pdf;
                     $template = $this->load->view('report/customer_statement_pdf.tpl', $data['customers'][0]);
                     $pdf->addPage($template);
                     if (!$pdf->send("Customer_order_statement_" . $data['customers'][0]['order_id'] . ".pdf")) {
                         $error = $pdf->getError();
                         echo $error;
-                        die;
+                        // die;
                     }
 
 
