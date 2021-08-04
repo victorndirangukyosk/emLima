@@ -45,7 +45,7 @@
                                     <?php foreach ($customers as $customer) { ?>
                                     <tr>
                                         <td style="width:5%;" class="text-right"><?php echo $customer['order_id']; ?></td> 
-                                        <td style="width:5%;" class="text-left"><?php echo $customer['customer']; ?>(<?php echo $customer['company']; ?>)</td>
+                                        <td style="width:10%;" class="text-left"><?php echo $customer['customer']; ?><br>(<?php echo $customer['company']; ?>)</td>
                                         <td class="text-right"><?php echo $customer['date_added']; ?></td> 
                                         <td class="text-right"><?php echo $customer['delivery_date']; ?></td> 
                                         <td class="text-right"><?php echo $customer['po_number']; ?></td>
