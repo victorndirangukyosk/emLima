@@ -335,6 +335,7 @@
                                                   
                                                     <div class="col-md-12 col-sm-12 pl0 pr0">
                                                     <div class="col-md-12 col-sm-12 pl0 pr0 listwidth">
+                                                    <span class="view-all-buttons"><?php echo $product['vendor_display_name']; ?></span>
                                                     <section class="_25Upe">
                                                     <section class="inner_sec _2imXI">
                                                    <!-- <span class="discountuihome" style="color:red; font-weight:bold">Get <?= $product['percent_off'];?>% OFF <i class="fas fa-shopping-basket"></i></span>-->
@@ -1224,6 +1225,13 @@
 		input.price_filter {
          margin-top: 0px;
        }
+   .view-all-buttons {
+    margin-top: 5px;
+    /*margin-bottom: 24px;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
     </style>
 </body>
 
