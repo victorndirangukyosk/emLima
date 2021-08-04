@@ -22,12 +22,12 @@
                                     <tr>
                                         <td style="width:7%;" class="text-right">Order Id</td> 
                                         <td style="width:15%;" class="text-left">Customer</td>
-                                        <td class="text-right">Order Date</td> 
-                                        <td class="text-right">Delivery Date</td> 
-                                        <td class="text-right">Order value</td>
-                                        <td class="text-right">Amount Paid</td>
-                                        <td class="text-right">Pending Amount</td>
-                                        <td class="text-right">Payment Status</td>
+                                        <td class="text-right">Order <br>Date</td> 
+                                        <td class="text-right">Delivery <br>Date</td> 
+                                        <td class="text-right">Order <br>value</td>
+                                        <td class="text-right">Amount <br>Paid</td>
+                                        <td class="text-right">Pending <br>Amount</td>
+                                        <td class="text-right">Payment <br>Status</td>
                                     </tr>
                                 </thead>
                                 <tbody>
