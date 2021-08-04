@@ -474,7 +474,7 @@ class ControllerCommonScheduler extends Controller
                     if (!$pdf->send("Customer_order_statement_" . $data['customers'][0]['order_id'] . ".pdf")) {
                         $error = $pdf->getError();
                         echo $error;
-                        // die;
+                         die;
                     }
 
 
