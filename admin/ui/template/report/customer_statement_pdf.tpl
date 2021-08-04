@@ -41,17 +41,10 @@
                 
                 <td class="text-left">Customer Name</td>
                 <td class="text-left">Company Name</td>
-                <!--<td class="text-left"><?php echo $column_email; ?></td>
-                <td class="text-left"><?php echo $column_customer_group; ?></td>
-                <td class="text-left"><?php echo $column_status; ?></td>-->
                 <td class="text-right">Order Id</td> 
                 <td class="text-right">Order Date</td> 
                 <td class="text-right">Delivery Date</td> 
-                <!--<td class="text-right"><?php echo $column_products; ?></td> 
-                <td class="text-right"><?php echo $column_products; ?></td>-->
-                <!--<td class="text-right"><?php echo $column_total; ?></td>-->
                 <td class="text-right">P.O. Number</td>
-                <!--<td class="text-right"><?php echo $column_total; ?></td>-->
                 <td class="text-right">Order value</td>
                 <td class="text-right">Amount Paid</td>
                 <td class="text-right">Pending Amount</td>
@@ -67,16 +60,9 @@
               <tr>
                 <td class="text-left"><?php echo $customer['customer']; ?></td>
                 <td class="text-left"><?php echo $customer['company']; ?></td>
-               <!-- <td class="text-left"><?php echo $customer['email']; ?></td>
-                <td class="text-left"><?php echo $customer['customer_group']; ?></td>
-                <td class="text-left"><?php echo $customer['status']; ?></td>-->
                 <td class="text-right"><?php echo $customer['order_id']; ?></td> 
                 <td class="text-right"><?php echo $customer['date_added']; ?></td> 
                 <td class="text-right"><?php echo $customer['delivery_date']; ?></td> 
-                <!--<td class="text-right"><?php echo $customer['products']; ?></td> 
-                <td class="text-right"><?php echo $customer['editedproducts']; ?></td>-->
-
-                <!--<td class="text-right"><?php echo $customer['total']; ?></td>-->
                 <td class="text-right"><?php echo $customer['po_number']; ?></td>
                 <td class="text-right"><?php echo $customer['subtotal']; ?></td>
                 <td class="text-right"><?php echo $customer['amountpaid']; ?></td>
@@ -91,10 +77,6 @@
               <?php } ?>
             </tbody>
           </table>
-        </div>
-        <div class="row">
-          <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
-          <div class="col-sm-6 text-right"><?php echo $results; ?></div>
         </div>
       </div>
     </div>
