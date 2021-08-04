@@ -3982,6 +3982,10 @@ class ControllerApiCustomerOrder extends Controller {
                 }
                 if ($store_id != 75) {
                     $other_vendor_delivery_time = $this->load->controller('api/delivery_time/getothervendordeliverytime', $store_id);
+                    $log = new Log('error.log');
+                    $log->write('other_vendor_delivery_time');
+                    $log->write($other_vendor_delivery_time);
+                    $log->write('other_vendor_delivery_time');
                     //$other_vendor_delivery_time = $this->getothervendordeliverytime($store_id);
                     $order_data[$store_id]['delivery_date'] = $other_vendor_delivery_time['selected_time_slot_date'];
                     $order_data[$store_id]['delivery_timeslot'] = $other_vendor_delivery_time['selected_time_slot_time'];
