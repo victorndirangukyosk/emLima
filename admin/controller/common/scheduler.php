@@ -399,10 +399,10 @@ class ControllerCommonScheduler extends Controller {
                     ];
                 }
                 // echo "<pre>";print_r($data);die;
-                $data['token'] = $this->session->data['token'];
+                //$data['token'] = $this->session->data['token'];
                 //$this->response->redirect($this->url->link('report/customer_statement_pdf.tpl', $data));
-                $this->response->setOutput($this->load->view('report/customer_statement_pdf.tpl', $data));
-                return;
+                //$this->response->setOutput($this->load->view('report/customer_statement_pdf.tpl', $data));
+                //return;
             }
         }
 
