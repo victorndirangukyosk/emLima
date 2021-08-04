@@ -261,7 +261,7 @@ class ModelAssetsProduct extends Model
             //$log->write('category_pricing_disabled_products');
             }
 
-        $query = 'SELECT * FROM '.DB_PREFIX."product_to_store pv WHERE product_store_id ='".(int) $product_store_id."'";
+        $query = 'SELECT * FROM '.DB_PREFIX."product_to_store pv WHERE product_store_id ='".(int) $product_store_id."' AND status = 1";
 
         $query = $this->db->query($query);
         
