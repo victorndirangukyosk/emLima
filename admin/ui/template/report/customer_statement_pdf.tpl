@@ -26,10 +26,8 @@
                             <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
-
-                                        <td class="text-left">Customer Name</td>
-                                        <td class="text-left">Company Name</td>
                                         <td class="text-right">Order Id</td> 
+                                        <td class="text-left">Customer</td>
                                         <td class="text-right">Order Date</td> 
                                         <td class="text-right">Delivery Date</td> 
                                         <td class="text-right">P.O. Number</td>
@@ -46,9 +44,8 @@
                                     if ($customers) { ?>
                                     <?php foreach ($customers as $customer) { ?>
                                     <tr>
-                                        <td class="text-left"><?php echo $customer['customer']; ?></td>
-                                        <td class="text-left"><?php echo $customer['company']; ?></td>
                                         <td class="text-right"><?php echo $customer['order_id']; ?></td> 
+                                        <td class="text-left"><?php echo $customer['customer']; ?>(<?php echo $customer['company']; ?>)</td>
                                         <td class="text-right"><?php echo $customer['date_added']; ?></td> 
                                         <td class="text-right"><?php echo $customer['delivery_date']; ?></td> 
                                         <td class="text-right"><?php echo $customer['po_number']; ?></td>
