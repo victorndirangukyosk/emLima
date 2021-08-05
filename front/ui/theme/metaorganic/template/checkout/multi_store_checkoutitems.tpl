@@ -964,6 +964,7 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
 	    async: false, 
 	    beforeSend: function() {
             $("#updatecar").attr("disabled",true);
+            $("span[id^='updatecart']").html('<i class="fa fa-refresh"></i> Updating Cart');
             $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-refresh').addClass('fa fa-spinner');
 	    },
 	    complete: function() {				
@@ -978,8 +979,9 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
             
             setTimeout(function(){ 
             $("#updatecar").attr("disabled",false);
+            $("span[id^='updatecart']").html('<i class="fa fa-spinner"></i> Update Cart');
             $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-spinner').addClass('fa fa-refresh');
-            },1500);
+            },2000);
             }
         });
         
