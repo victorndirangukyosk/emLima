@@ -5958,7 +5958,7 @@ class ModelReportExcel extends Model {
                     $data['customers'][0]['Amount_pending_grand']=$Amount_pending_grand;
 
                 }
-                echo "<pre>";print_r($data);die;
+                echo "<pre>";print_r($data);
 
                 $data['token'] = $this->session->data['token'];
                 //  $this->response->setOutput($this->load->view('report/customer_statement_pdf.tpl', $data));
