@@ -5976,7 +5976,7 @@ class ModelReportExcel extends Model {
                             $template = $this->load->view('report/customer_statement_pdf.tpl', $data['customers']);
                 //   $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/report/customer_statement_pdf.tpl', $data));
                           
-                
+                echo "<pre>";print_r("111111111111111111");
 
                 $pageOptions = array(
                     'javascript-delay' => 2000,
@@ -5995,22 +5995,28 @@ class ModelReportExcel extends Model {
                     if (is_file($file))
                         unlink($file); // Delete the given file  
                 }
+                echo "<pre>";print_r("222222222222222222");
 
-                if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . "Customer_order_statement_" . $data['customers'][0]['order_id'] . ".pdf")) {
+                if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . "Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
                     $errors = $pdf->getError();
                     echo $errors;
+                    //  die;
+                }
+
+                echo "<pre>";print_r("333333333333333333");
+
+                if (!$pdf->send("Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
+                    $error = $pdf->getError();
+                    echo $error;
                     // die;
                 }
-                // if (!$pdf->send("Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
-                //     $error = $pdf->getError();
-                //     echo $error;
-                //     die;
-                // }
 
                 
                      $filename = 'Customer_order_statement_' . $data['customers'][0]['customer'] . '.pdf';
                        
-                       
+                     echo "<pre>";print_r($filename);
+                     echo "<pre>";print_r('$filename');
+
                             #region mail sending 
                             $maildata['customer_name'] = $data['filter_customer'];
                             $maildata['start_date'] = $data['filter_date_start'];
@@ -6066,7 +6072,7 @@ class ModelReportExcel extends Model {
                             $this->log->write('Error in Automatic PDF Statement');
 
                         }
-                        exit;//for testing purpose one mail is enough, will uncomment later 
+                          exit;//for testing purpose one mail is enough, will uncomment later 
                 }
                 else
                 {
