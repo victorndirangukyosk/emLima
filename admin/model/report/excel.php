@@ -5804,15 +5804,15 @@ class ModelReportExcel extends Model {
        
         $log = new Log('error.log');
         echo "<pre>";print_r(date('l', $dt)); 
-        echo "<pre>";print_r(date(d, $dt)); 
-        if(date('l', $dt)!='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
+        echo "<pre>";print_r(date('d', $dt)); 
+        if(date('l', $dt)!='Sunday' && date('d', $dt)!='01' && date('d', $dt)!='16')//weekly
         {
           echo "<pre>";print_r('No execution today');
             return;
         }
         else
         {
-            if(date(d, $dt)=='01')
+            if(date('d', $dt)=='01')
             {
         echo "<pre>";print_r($dt); 
 
@@ -5821,12 +5821,12 @@ class ModelReportExcel extends Model {
         $data['filter_date_end'] =   date("Y-m-t", strtotime($dtp));
         $data['filter_date_start'] =   date("Y-m-01", strtotime($dtp));
             }
-            else if(date('l', $dt)=='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
+            else if(date('l', $dt)=='Sunday' && date('d', $dt)!='01' && date('d', $dt)!='16')//weekly
             {
                 $data['filter_date_start']=date("Y-m-d",strtotime("-1 days", $dt));
                 $data['filter_date_end']=date("Y-m-d",strtotime("-7 days", $dt));
             }
-            else if(date(d, $dt)=='16')//incase of 15 days or week
+            else if(date('d', $dt)=='16')//incase of 15 days or week
             {
                 $data['filter_date_end'] =   date("Y-m-t", strtotime($dt));
         $data['filter_date_start'] =   date("Y-m-01", strtotime($dt));
