@@ -871,7 +871,7 @@ __kdt.push({"post_on_load": false});
             })
  </script>
    <script type="text/javascript">
-      $(document).delegate('#clearcart', 'click', function(){
+      $(document).delegate('#clearcart, #empty_cart_button', 'click', function(){
         var choice = confirm($(this).attr('data-confirm'));
 
         if(choice) {
