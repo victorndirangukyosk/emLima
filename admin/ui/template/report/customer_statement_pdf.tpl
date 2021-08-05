@@ -9,7 +9,10 @@
 
    thead { display: table-header-group; }
 tfoot { display: table-row-group; }
-tr { page-break-inside: avoid; }
+tr { 
+  page-break-inside: avoid !important;
+}
+.table-responsive { overflow-x: visible !important; }
 
    </style>
    

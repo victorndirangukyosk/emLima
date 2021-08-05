@@ -6078,7 +6078,7 @@ class ModelReportExcel extends Model {
                             $this->log->write('Error in Automatic PDF Statement');
 
                         }
-                        //   exit;//for testing purpose one mail is enough, will uncomment later 
+                          exit;//for testing purpose one mail is enough, will uncomment later 
                 }
                 else
                 {
