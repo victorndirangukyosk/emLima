@@ -350,7 +350,6 @@ class ControllerCommonHome extends Controller {
 
         $this->load->model('information/careers');
 
-
         $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter_data);
         $data['job_categories'] = $this->model_information_careers->getJobCategories();
         $data['job_types'] = $this->model_information_careers->getJobTypes();
@@ -1012,12 +1011,12 @@ class ControllerCommonHome extends Controller {
         } else {
             $categories = $this->model_assets_category->getCategoryById(ACTIVE_STORE_ID, 0, $selected_categoory_id);
         }
-        
-        /*$log = new Log('error.log');
-        $log->write('categories');
-        $log->write($categories);
-        $log->write('categories');*/
-        
+
+        /* $log = new Log('error.log');
+          $log->write('categories');
+          $log->write($categories);
+          $log->write('categories'); */
+
         $selectedProducts = [];
         foreach ($categories as $category) {
             // Level 2
@@ -1041,6 +1040,7 @@ class ControllerCommonHome extends Controller {
                 'limit' => (1359 == $category['category_id']) ? 12 : 12,
                 'store_id' => ACTIVE_STORE_ID,
                 'selectedProducts' => $selectedProducts,
+                'filter_sort' => isset($this->request->get['filter_sort']) || $this->request->get['filter_sort'] != NULL ? $this->request->get['filter_sort'] : NULL
             ];
 
             // Level 1
@@ -1155,10 +1155,10 @@ class ControllerCommonHome extends Controller {
         $data['mostboughtproducts'] = array_slice($this->getMostBoughtProducts(), 0, 6);
         $data['mostboughtproducts_url'] = $this->url->link('product/store/featuredproducts', '', 'SSL');
         $data['cartproducts'] = $this->cart->getProducts();
-        /*$log->write('mostboughtproducts');
-        $log->write($this->cart->getProducts());
-        $log->write($this->getMostBoughtProducts());
-        $log->write('mostboughtproducts');*/
+        /* $log->write('mostboughtproducts');
+          $log->write($this->cart->getProducts());
+          $log->write($this->getMostBoughtProducts());
+          $log->write('mostboughtproducts'); */
         $data['category_url'] = $this->url->link('common/home', '', 'SSL');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl') && isset($this->session->data['customer_id'])) {
@@ -1611,10 +1611,10 @@ class ControllerCommonHome extends Controller {
         // echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $vendor_details = $this->model_user_user->getUser($result['merchant_id']);
-            /*$log = new Log('error.log');
-            $log->write('vendor_details');
-            $log->write($vendor_details);
-            $log->write('vendor_details*/
+            /* $log = new Log('error.log');
+              $log->write('vendor_details');
+              $log->write($vendor_details);
+              $log->write('vendor_details */
             // if qty less then 1 dont show product
             //REMOVED QUANTITY CHECK CONDITION
             /* if ($result['quantity'] <= 0) {
@@ -1746,13 +1746,47 @@ class ControllerCommonHome extends Controller {
                     'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                     'rating' => 0,
                     'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
-                    'vendor_display_name' => $vendor_details['display_name']
+                    'vendor_display_name' => $vendor_details['display_name'],
+                    'sort_price' => $s_price
                 ];
             }
         }
         // echo "<pre>";print_r($data['products']);die;
-
-        return $data['products'];
+        $log = new Log('error.log');
+        $log->write('filter_data');
+        $log->write($filter_data);
+        $log->write('filter_data');
+        if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'nasc') {
+            $new_arry = $this->multisort($data['products'], 'name', 'nasc');
+            $log = new Log('error.log');
+            $log->write('products');
+            $log->write($new_arry);
+            $log->write('products');
+            return $new_arry;
+        } else if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'ndesc') {
+            $new_arry = $this->multisort($data['products'], 'name', 'ndesc');
+            $log = new Log('error.log');
+            $log->write('products');
+            $log->write($new_arry);
+            $log->write('products');
+            return $new_arry;
+        } else if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'pasc') {
+            $new_arry = $this->multisort($data['products'], 'sort_price', 'pasc');
+            $log = new Log('error.log');
+            $log->write('products');
+            $log->write($new_arry);
+            $log->write('products');
+            return $new_arry;
+        } else if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'pdesc') {
+            $new_arry = $this->multisort($data['products'], 'sort_price', 'pdesc');
+            $log = new Log('error.log');
+            $log->write('products');
+            $log->write($new_arry);
+            $log->write('products');
+            return $new_arry;
+        } else {
+            return $data['products'];
+        }
     }
 
     public function getCartDetails() {
@@ -1789,7 +1823,6 @@ class ControllerCommonHome extends Controller {
             $json['url'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
             $json['store_note'] = "<center style='background-color:#43b02a;color:#fff'> Yay! Free Delivery </center>";
 
-
             $store_data[] = $store_info;
 
             if ((0 <= $store_info['min_order_cod']) && ($store_info['min_order_cod'] <= 10000)) {
@@ -1822,14 +1855,14 @@ class ControllerCommonHome extends Controller {
         //  echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $vendor_details = $this->model_user_user->getUser($result['merchant_id']);
-            /*$log = new Log('error.log');
-            $log->write('vendor_details');
-            $log->write($vendor_details);
-            $log->write('vendor_details');*/
+            /* $log = new Log('error.log');
+              $log->write('vendor_details');
+              $log->write($vendor_details);
+              $log->write('vendor_details'); */
             // if qty less then 1 dont show product
-            /*if ($result['quantity'] <= 0) {
-                continue;
-            }*/
+            /* if ($result['quantity'] <= 0) {
+              continue;
+              } */
 
             if ($result['image'] != NULL && file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
@@ -1960,6 +1993,29 @@ class ControllerCommonHome extends Controller {
         //echo "<pre>";print_r($data['products']);die;
 
         return $data['products'];
+    }
+
+    function multisort(&$array, $key, $sort) {
+        $valsort = array();
+        $ret = array();
+        reset($array);
+        foreach ($array as $ii => $va) {
+            $valsort[$ii] = $va[$key];
+        }
+        if ($sort == 'nasc') {
+            asort($valsort, 2);
+        } else if ($sort == 'ndesc') {
+            arsort($valsort, 2);
+        } else if ($sort == 'pasc') {
+            asort($valsort, 1);
+        } else if ($sort == 'pdesc') {
+            arsort($valsort, 1);
+        }
+        foreach ($valsort as $ii => $va) {
+            $ret[$ii] = $array[$ii];
+        }
+        $array = $ret;
+        return $array;
     }
 
 }

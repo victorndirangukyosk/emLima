@@ -372,7 +372,27 @@
       </div>
   </div>
   <?php } ?>
-
+  <div class="container--full-width featured-categories">
+      <div class="container" style="width:100%;">
+          <div class="_47ahp" data-test-selector="search-results">
+              <div class="row">
+                  <div class="col-md-4">
+                  </div>
+                  <div class="col-md-5">
+                  </div>
+                  <div class="col-md-3">
+                      <select class="form-control" id="sorting" name="sorting" style="height:34px !important;" data-url="<?= $category_url; ?>">
+                          <option value="">Default</option>
+                          <option value="nasc" <?php if(isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] == 'nasc') { echo "selected"; } ?> >Name (A-Z)</option>
+                          <option value="ndesc" <?php if(isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] == 'ndesc') { echo "selected"; } ?> >Name (Z-A)</option>
+                          <option value="pasc" <?php if(isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] == 'pasc') { echo "selected"; } ?> >Price (Low > High)</option>
+                          <option value="pdesc" <?php if(isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] == 'pdesc') { echo "selected"; } ?> >Price (High > Low)</option>
+                      </select>
+                  </div>
+              </div>
+          </div>  
+      </div>
+  </div>
   <?php
 					$i=0;
 					foreach($categories as $category){
@@ -416,61 +436,6 @@
               </div>
             </a>
           </li>
-          <!-- <li class="col-md-2 ">
-            <div class="_2sT86 _1fLGj">
-              <a class="product-detail-bnt open-popup" role="button" data-store="<?= $product['store_id'] ?>"
-                data-id="<?= $product['product_store_id'] ?>" target="_blank" aria-label="<?=$product['name']?>">
-
-                <div class="col-md-12 col-sm-12 pl0 pr0">
-                  <div class="col-md-12 col-sm-12 pl0 pr0">
-                    <section class="_25Upe">
-                      <section class="inner_sec">
-                        <div class="_3XNMI">
-                          <div class="_2_3rp">
-                            <div>
-                              <img class="_1xvs1" src="<?=$product['thumb']?>" title="<?=$product['name']?>"
-                                alt="<?=$product['name']?>" style="left: 0%;">
-                            </div>
-                          </div>
-                        </div>
-                      </section>
-                    </section>
-                  </div>
-                  <div class="col-md-12 col-sm-12" style="margin-bottom:15px;">
-                    <div class="vfsyA col-md-12 col-sm-12 pl0 pr0" style="margin-top:10px;">
-                      <div class="_25ygu">
-                        <div class="JHf2a">
-                         
-
-                        </div>
-                        <?=$product['name']?>
-                        <br />
-                        <div style="color:#6dbd46">
-                          <?= $product['variations'][0]['special'];?>
-                          <?php  echo '/ Per ' . $product['variations'][0]['unit']; ?>
-                        </div>
-                        <span
-                          id="flag-qty-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>"
-                          style="padding:5px;display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>"><?php echo $product['qty_in_cart']?>
-                          items in cart <i class="fas fa-flag"></i></span>
-
-                      </div>
-                    </div>
-                    <div>
-                      <div class="_2D2lC">
-                        <div class="-DeRq">
-                        </div>
-                      </div>
-                      <div>
-                        <div class="_2xqFO">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            </div>
-          </li> -->
           <!--- Product Details Modal Start --->
           <div id="product_<?=$product['product_id']?>" class="modal fade" role="dialog">
             <div class="modal-dialog">
@@ -812,8 +777,17 @@ $(document).delegate('#selectedCategory', 'change', function () {
 console.log($( this ).val());
 console.log($( this ).attr('data-url'));
 var url = $( this ).attr('data-url');
-window.location.replace(url+"index.php?path=common/home&filter_category="+$( this ).val());
-});      
+var sorting = $("#sorting").val();
+window.location.replace(url+"index.php?path=common/home&filter_category="+$( this ).val()+"&filter_sort="+sorting);
+});
+
+$(document).delegate('#sorting', 'change', function () {
+console.log($( this ).val());
+console.log($( this ).attr('data-url'));
+var url = $( this ).attr('data-url');
+var selectedCategory = $("#selectedCategory").val();
+window.location.replace(url+"index.php?path=common/home&filter_sort="+$( this ).val()+"&filter_category="+selectedCategory);
+});
 </script>
 
   <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
