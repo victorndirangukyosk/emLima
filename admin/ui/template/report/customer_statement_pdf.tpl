@@ -11,6 +11,11 @@
             <div class="page-header">
                 <div class="container-fluid" style="align:center">
                     <h1 >Customer Orders Statement</h1>
+                     <?php  if ($customers) { ?>
+                     <h3 >Company : <?php echo $customers[0]['company']; ?></h3>
+                    <h3 >Customer: <?php echo $customers[0]['customer']; ?> </h3>
+                     <?php } ?>
+
 
                 </div>
             </div>
@@ -47,6 +52,25 @@
                                         <td class="text-right"><?php echo $customer['paid']; ?></td>
                                     </tr>
                                     <?php } ?>
+
+                                      <?php  if ($customers) { ?>
+                      
+                      <tr>
+                                 <td  colspan="3" class="text-right">
+                                     <b>Grand Total</b>
+                                    </td>
+                                    
+                                    <td colspan="2" class="text-right"><?php echo $customers[0]['Amount_ordervalue_grand']; ?></td>
+                                    <td  class="text-right"><?php echo $customers[0]['Amount_paid_grand']; ?></td>
+                                    <td   class="text-right"><?php echo $customers[0]['Amount_pending_grand']; ?></td>
+                                    
+                                    
+                                </tr>
+
+                     <?php } ?>
+
+                                  
+
                                     <?php } else { ?>
                                     <tr>
                                         <td class="text-center" colspan="8"><?php echo $text_no_results; ?></td>
