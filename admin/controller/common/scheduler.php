@@ -439,6 +439,20 @@ class ControllerCommonScheduler extends Controller {
                 'encoding' => 'UTF-8',
             );
             $pdf->addPage($template, $pageOptions);
+
+            
+            if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
+                mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
+            }
+            // unlink($filename);
+            $folder_path = DIR_UPLOAD . 'schedulertemp';
+            $files = glob($folder_path . '/*');
+            // Deleting all the files in the list 
+            foreach ($files as $file) {
+                if (is_file($file))
+                    unlink($file); // Delete the given file  
+            }
+            
             if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . "Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
                 $errors = $pdf->getError();
                 echo $errors;
@@ -454,23 +468,7 @@ class ControllerCommonScheduler extends Controller {
             $filename = 'Customer_order_statement_' . $data['customers'][0]['customer'] . '.pdf';
             // echo "<pre>";print_r($filename);die;
 
-
-
-            if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
-                mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
-            }
-            // unlink($filename);
-            $folder_path = DIR_UPLOAD . 'schedulertemp';
-            $files = glob($folder_path . '/*');
-            // Deleting all the files in the list 
-            foreach ($files as $file) {
-                if (is_file($file))
-                    unlink($file); // Delete the given file  
-            }
-
-            // if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . $filename)) {
-            //     echo $pdf->getError();
-            // }
+ 
             echo '$pdf->getError()';
         } catch (Exception $e) {
             echo $e->getMessage();
