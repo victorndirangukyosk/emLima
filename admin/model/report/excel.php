@@ -6011,11 +6011,11 @@ class ModelReportExcel extends Model {
 
                 echo "<pre>";print_r("333333333333333333");
 
-                if (!$pdf->send("Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
-                    $error = $pdf->getError();
-                    echo $error;
-                    die;
-                }
+                // if (!$pdf->send("Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
+                //     $error = $pdf->getError();
+                //     echo $error;
+                //     die;
+                // }// download pdf commented , as it is coming as text
 
                 
                      $filename = 'Customer_order_statement_' . $data['customers'][0]['customer'] . '.pdf';
