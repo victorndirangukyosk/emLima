@@ -12,6 +12,17 @@ tfoot { display: table-row-group; }
 tr { 
   page-break-inside: avoid !important;
 }
+
+thead {
+display: table-row-group;
+}
+tfoot {
+display: table-row-group;
+}
+tr { 
+page-break-inside: avoid;
+}
+
 .table-responsive { overflow-x: visible !important; }
 
    </style>
@@ -47,7 +58,7 @@ tr {
                                         <td class="text-right">Payment <br>Status</td>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody style=" padding-bottom: 50px;">
                                     <?php 
 
 

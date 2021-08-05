@@ -5909,7 +5909,7 @@ class ModelReportExcel extends Model {
                     else if($result['paid']=='P')
                     {
                         // $result['paid']=$result['paid'].'(Amount Paid :'.$result['amount_partialy_paid'] .')';
-                         $result['paid']='Few Amount Paid';
+                         $result['paid']='Partially Paid';
                          $result['amountpaid']=$result['amount_partialy_paid'];
                          $result['pendingamount']=$sub_total-$result['amountpaid'];
                     }
@@ -5946,7 +5946,7 @@ class ModelReportExcel extends Model {
 
 
                     $Amount_ordervalue_grand=$Amount_ordervalue_grand+$sub_total;
-                    $Amount_paid_grand=$Amount_paid_grand+$result['paid'];
+                    $Amount_paid_grand=$Amount_paid_grand+$result['amountpaid'];
                     $Amount_pending_grand=$Amount_pending_grand+$result['pendingamount'];
     
                 }
@@ -5958,7 +5958,7 @@ class ModelReportExcel extends Model {
                     $data['customers'][0]['Amount_pending_grand']=$Amount_pending_grand;
 
                 }
-                echo "<pre>";print_r($data);
+                echo "<pre>";print_r($data);die;
 
                 $data['token'] = $this->session->data['token'];
                 //  $this->response->setOutput($this->load->view('report/customer_statement_pdf.tpl', $data));
