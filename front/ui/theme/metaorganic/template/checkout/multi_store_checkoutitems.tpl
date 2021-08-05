@@ -955,6 +955,9 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
         console.log($(this).attr("data-id"));
         console.log($(this).attr("data-encid"));
         console.log($(this).val());
+        $("#updatecar").attr("disabled",true);
+        $("span[id^='updatecart']").html('<i class="fa fa-refresh"></i> Updating Cart');
+        $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-refresh').addClass('fa fa-spinner');
         
         $.ajax({
 	    url: 'index.php?path=checkout/cart/update',
@@ -978,10 +981,16 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
             loadTotals($('input#shipping_city_id').val());
             
             setTimeout(function(){ 
+            $("#updatecar").attr("disabled",true);
+            $("span[id^='updatecart']").html('<i class="fa fa-spinner"></i> Cart Updated');
+            $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-spinner').addClass('fa fa-check-circle');
+            },2000);
+            
+            setTimeout(function(){ 
             $("#updatecar").attr("disabled",false);
             $("span[id^='updatecart']").html('<i class="fa fa-spinner"></i> Update Cart');
             $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-spinner').addClass('fa fa-refresh');
-            },2000);
+            },4000);
             }
         });
         
