@@ -12,7 +12,7 @@ tfoot { display: table-row-group; }
 tr { 
   page-break-inside: avoid !important;
 }
-/*
+
 thead {
 display: table-row-group;
 }
@@ -21,7 +21,7 @@ display: table-row-group;
 }
 tr { 
 page-break-inside: avoid;
-}*/
+}
 
 .table-responsive { overflow-x: visible !important; }
 
