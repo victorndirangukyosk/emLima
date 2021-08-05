@@ -1,5 +1,8 @@
 <?php
 
+require_once DIR_ROOT . '/vendor/autoload.php';
+
+
 class ModelReportExcel extends Model {
 
     public function download_income_excel($data) {
@@ -5962,7 +5965,6 @@ class ModelReportExcel extends Model {
 
 
                     try {
-                        require_once DIR_ROOT . '/vendor/autoload.php';
                         
                         $pdf = new Pdf([
                             'commandOptions' => array(
