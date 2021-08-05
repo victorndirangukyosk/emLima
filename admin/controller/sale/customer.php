@@ -1372,7 +1372,7 @@ class ControllerSaleCustomer extends Controller {
             $data['customer_category_disabled'] = '';
             $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
             $customer_account_manager_info = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
-            $customer_customer_experience_info = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
+            $customer_customer_experience_info = $this->model_sale_customer->getCustomerExperinceDetails($this->request->get['customer_id']);
 
             if ($customer_parent_info != NULL) {
                 $data['parent_user_name'] = $customer_parent_info['firstname'] . '' . $customer_parent_info['lastname'];
@@ -1614,6 +1614,14 @@ class ControllerSaleCustomer extends Controller {
             $data['account_manager'] = $customer_info['account_manager_id'];
         } else {
             $data['account_manager'] = '';
+        }
+
+        if (isset($this->request->post['customer_experience'])) {
+            $data['customer_experience'] = $this->request->post['customer_experience'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_experience'] = $customer_info['customer_experience_id'];
+        } else {
+            $data['customer_experience'] = '';
         }
 
         if (isset($this->request->post['payment_terms'])) {
