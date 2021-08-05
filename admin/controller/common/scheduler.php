@@ -251,10 +251,10 @@ class ControllerCommonScheduler extends Controller {
 
         // $filter_date_end =   date("Y-m-t", strtotime($dt));
         // $filter_date_start =   date("Y-m-01", strtotime($dt));
-        // $filter_data = [
-        //     'filter_date_start' => $filter_date_start,
-        //     'filter_date_end' => $filter_date_end,
-        // ];        
+        $filter_data = [
+            // 'filter_date_start' => $filter_date_start,
+            // 'filter_date_end' => $filter_date_end,
+        ];        
 
         $this->load->model('report/excel');
         $this->model_report_excel->mail_download_customer_statement_excel($filter_data, $dt, $pdf);
@@ -330,6 +330,9 @@ class ControllerCommonScheduler extends Controller {
             // $results = $this->model_report_customer->getValidCustomerOrders($data);
             $results = $this->model_report_customer->getValidCustomerOrdersByDates($data, $dt);
             if ($results != null) {
+                $Amount_ordervalue_grand=0;
+                $Amount_paid_grand=0;
+                $Amount_pending_grand=0;
                 $this->load->model('sale/order');
                 $data['customers'] = [];
 
@@ -397,12 +400,25 @@ class ControllerCommonScheduler extends Controller {
                         'pendingamount' => number_format($result['pendingamount'], 2),
                         'pendingamountvalue' => ($result['pendingamount']),
                     ];
+
+                    $Amount_ordervalue_grand=$Amount_ordervalue_grand+$sub_total;
+                    $Amount_paid_grand=$Amount_paid_grand+$result['paid'];
+                    $Amount_pending_grand=$Amount_pending_grand+$result['pendingamount'];
                 }
-                // echo "<pre>";print_r($data);die;
-                //$data['token'] = $this->session->data['token'];
+
+                if($data['customers']!=null)
+                {
+                    $data['customers'][0]['Amount_ordervalue_grand']=$Amount_ordervalue_grand;
+                    $data['customers'][0]['Amount_paid_grand']=$Amount_paid_grand;
+                    $data['customers'][0]['Amount_pending_grand']=$Amount_pending_grand;
+
+                }
+
+                //   echo "<pre>";print_r($data);die;
+                 $data['token'] = $this->session->data['token'];
                 //$this->response->redirect($this->url->link('report/customer_statement_pdf.tpl', $data));
-                //$this->response->setOutput($this->load->view('report/customer_statement_pdf.tpl', $data));
-                //return;
+                // $this->response->setOutput($this->load->view('report/customer_statement_pdf.tpl', $data));
+                //  return;
             }
         }
 
@@ -423,23 +439,8 @@ class ControllerCommonScheduler extends Controller {
                 'encoding' => 'UTF-8',
             );
             $pdf->addPage($template, $pageOptions);
-            if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . "Customer_order_statement_" . $data['customers'][0]['order_id'] . ".pdf")) {
-                $errors = $pdf->getError();
-                echo $errors;
-                die;
-            }
-            if (!$pdf->send("Customer_order_statement_" . $data['customers'][0]['order_id'] . ".pdf")) {
-                $error = $pdf->getError();
-                echo $error;
-                die;
-            }
 
-
-            $filename = 'Customer_order_statement_' . $data['customers'][0]['customer'] . '.pdf';
-            // echo "<pre>";print_r($filename);die;
-
-
-
+            
             if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
                 mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
             }
@@ -452,9 +453,23 @@ class ControllerCommonScheduler extends Controller {
                     unlink($file); // Delete the given file  
             }
 
-            if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . $filename)) {
-                echo $pdf->getError();
+            if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . "Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
+                $errors = $pdf->getError();
+                echo $errors;
+                die;
             }
+            if (!$pdf->send("Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
+                $error = $pdf->getError();
+                echo $error;
+                die;
+            }
+
+
+            $filename = 'Customer_order_statement_' . $data['customers'][0]['customer'] . '.pdf';
+            // echo "<pre>";print_r($filename);die;
+
+ 
+            echo '$pdf->getError()';
         } catch (Exception $e) {
             echo $e->getMessage();
         }

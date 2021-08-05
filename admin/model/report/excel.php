@@ -1,5 +1,8 @@
 <?php
 
+require_once DIR_ROOT . '/vendor/autoload.php';
+
+
 class ModelReportExcel extends Model {
 
     public function download_income_excel($data) {
@@ -5801,15 +5804,15 @@ class ModelReportExcel extends Model {
        
         $log = new Log('error.log');
         echo "<pre>";print_r(date('l', $dt)); 
-        echo "<pre>";print_r(date(d, $dt)); 
-        if(date('l', $dt)!='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
+        echo "<pre>";print_r(date('d', $dt)); 
+        if(date('l', $dt)!='Sunday' && date('d', $dt)!='01' && date('d', $dt)!='16')//weekly
         {
           echo "<pre>";print_r('No execution today');
             return;
         }
         else
         {
-            if(date(d, $dt)=='01')
+            if(date('d', $dt)=='01')
             {
         echo "<pre>";print_r($dt); 
 
@@ -5818,12 +5821,12 @@ class ModelReportExcel extends Model {
         $data['filter_date_end'] =   date("Y-m-t", strtotime($dtp));
         $data['filter_date_start'] =   date("Y-m-01", strtotime($dtp));
             }
-            else if(date('l', $dt)=='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
+            else if(date('l', $dt)=='Sunday' && date('d', $dt)!='01' && date('d', $dt)!='16')//weekly
             {
                 $data['filter_date_start']=date("Y-m-d",strtotime("-1 days", $dt));
                 $data['filter_date_end']=date("Y-m-d",strtotime("-7 days", $dt));
             }
-            else if(date(d, $dt)=='16')//incase of 15 days or week
+            else if(date('d', $dt)=='16')//incase of 15 days or week
             {
                 $data['filter_date_end'] =   date("Y-m-t", strtotime($dt));
         $data['filter_date_start'] =   date("Y-m-01", strtotime($dt));
@@ -5845,7 +5848,7 @@ class ModelReportExcel extends Model {
 
         //Firstly get all customers
         echo "<pre>";print_r($customerswithOrders);
-        echo "<pre>";print_r("$customerswithOrders");
+        // echo "<pre>";print_r("$customerswithOrders");
         // $log = new Log('error.log');
          foreach($customerswithOrders as $validcust)
         {
@@ -5862,6 +5865,10 @@ class ModelReportExcel extends Model {
             $results = $this->model_report_customer->getValidCustomerOrdersByDates($data,$dt);
             if($results!=null)
             {
+                $Amount_ordervalue_grand=0;
+                $Amount_paid_grand=0;
+                $Amount_pending_grand=0;
+
                 $this->load->model('sale/order');
                 $data['customers'] = [];
 
@@ -5936,69 +5943,82 @@ class ModelReportExcel extends Model {
                         'pendingamount'=> number_format($result['pendingamount'],2),
                         'pendingamountvalue'=> ($result['pendingamount']),
                     ];
+
+
+                    $Amount_ordervalue_grand=$Amount_ordervalue_grand+$sub_total;
+                    $Amount_paid_grand=$Amount_paid_grand+$result['paid'];
+                    $Amount_pending_grand=$Amount_pending_grand+$result['pendingamount'];
+    
+                }
+                // echo "<pre>";print_r($data['customers']);die;
+                if($data['customers']!=null)
+                {
+                    $data['customers'][0]['Amount_ordervalue_grand']=$Amount_ordervalue_grand;
+                    $data['customers'][0]['Amount_paid_grand']=$Amount_paid_grand;
+                    $data['customers'][0]['Amount_pending_grand']=$Amount_pending_grand;
+
                 }
                 echo "<pre>";print_r($data);
-                // echo "<pre>";print_r($data['customers']);die;
 
-                if($pdf==1)
+                if($pdf==1) 
                 {
 
 
                     try {
-                        require_once DIR_ROOT . '/vendor/autoload.php';
                         
-                            $pdf = new \mikehaertl\wkhtmlto\Pdf(
-                            array(
-                                'binary' => 'C:\Program Files\wkhtmltopdf\bin',
-                                'ignoreWarnings' => true,
-                                'commandOptions' => array(
-                                    'useExec' => true,      // Can help on Windows systems
-                                    'procEnv' => array(
-                                        // Check the output of 'locale -a' on your system to find supported languages
-                                        'LANG' => 'en_US.utf-8',
-                                    ),
+                        $pdf = new Pdf([
+                            'commandOptions' => array(
+                                'useExec' => true, // Can help on Windows systems
+                                'procEnv' => array(
+                                    // Check the output of 'locale -a' on your system to find supported languages
+                                    'LANG' => 'en_US.utf-8',
                                 ),
-                                'options' => [
-                                    'enable-local-file-access' => true,
-                                    'orientation'   => 'landscape',
-                                    'encoding'      => 'UTF-8'
-                                ],
-                            ));
+                            ),
+                        ]);
                             $template = $this->load->view('report/customer_statement_pdf.tpl', $data['customers']);
                 //   $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/report/customer_statement_pdf.tpl', $data));
-                            $pdf->addPage($template);
-                            // echo "<pre>";print_r($template);die;
+                          
+                echo "<pre>";print_r("111111111111111111");
+
+                $pageOptions = array(
+                    'javascript-delay' => 2000,
+                    'encoding' => 'UTF-8',
+                );
+                $pdf->addPage($template, $pageOptions);
+
+                // if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
+                //     mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
+                // }
+                // unlink($filename);
+                $folder_path = DIR_UPLOAD . 'schedulertemp';
+                $files = glob($folder_path . '/*');
+                // Deleting all the files in the list 
+                foreach ($files as $file) {
+                    if (is_file($file))
+                        unlink($file); // Delete the given file  
+                }
+                echo "<pre>";print_r("222222222222222222");
+
+                if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . "Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
+                    $errors = $pdf->getError();
+                    echo $errors;
+                    //  die;
+                }
+
+                echo "<pre>";print_r("333333333333333333");
+
+                if (!$pdf->send("Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
+                    $error = $pdf->getError();
+                    echo $error;
+                    // die;
+                }
+
+                
                      $filename = 'Customer_order_statement_' . $data['customers'][0]['customer'] . '.pdf';
-                        // echo "<pre>";print_r($filename);die;
-                           
+                       
+                     echo "<pre>";print_r($filename);
+                     echo "<pre>";print_r('$filename');
 
-
-                            // if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
-                            //     mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
-                            // }
-                            // unlink($filename);
-                            $folder_path = DIR_UPLOAD . 'schedulertemp';
-                            $files = glob($folder_path . '/*');
-                            // Deleting all the files in the list 
-                            foreach ($files as $file) {
-                                if (is_file($file))
-                                    unlink($file); // Delete the given file  
-                            }
-                            // echo "<pre>";print_r($file);;
-                             // if (!$pdf->send("Customer_Order_Statement #" . $data['customers'][0]['customer'] . ".pdf")) {
-                               
-                               
-                            //     // $mpdf->Output('my_filename.pdf','D'); 
-                            //      $error = $pdf->getError();
-                            //     echo $error;
-                            //     die;
-                            // }
-                            if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . $filename)) {
-                                echo $pdf->getError();
-                            }
-
-                            // $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
-        
                             #region mail sending 
                             $maildata['customer_name'] = $data['filter_customer'];
                             $maildata['start_date'] = $data['filter_date_start'];
@@ -6054,7 +6074,7 @@ class ModelReportExcel extends Model {
                             $this->log->write('Error in Automatic PDF Statement');
 
                         }
-                        exit;//for testing purpose one mail is enough, will uncomment later 
+                          exit;//for testing purpose one mail is enough, will uncomment later 
                 }
                 else
                 {
