@@ -118,10 +118,13 @@ $(function () {
     function scrollFunction() {
 
         console.log("success");
+        var goToTops =  document.getElementById("goToTop");
+        if(typeof(goToTops) != 'undefined' && goToTops != null) {
         if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
             document.getElementById("goToTop").style.display = "block";
         } else {
             document.getElementById("goToTop").style.display = "none";
+        }
         }
     }
 

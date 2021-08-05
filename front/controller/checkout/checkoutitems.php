@@ -402,7 +402,8 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $data['content_top'] = $this->load->controller('common/content_top');
         $data['content_bottom'] = $this->load->controller('common/content_bottom');
         $data['footer'] = $this->load->controller('common/footer');
-        $data['header'] = $this->load->controller('common/header/onlyHeader');
+        $data['multi_store_checkoutitems_css'] = $this->load->controller('common/header/multi_store_checkoutitems_css');
+        $data['header'] = $this->load->controller('common/header/onlyHeader', $data['multi_store_checkoutitems_css']);
 
         $data['config'] = $this->config;
 

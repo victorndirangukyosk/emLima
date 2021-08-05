@@ -5797,33 +5797,44 @@ class ModelReportExcel extends Model {
 
 
         //download_customer_statement_excel
-    public function mail_download_customer_statement_excel($data,$pdf=0) {
-
-
-        $dt = strtotime(date("Y-m-d"));
-        
-        
-        // echo "<pre>";print_r($pdf); die;
+    public function mail_download_customer_statement_excel($data,$dt,$pdf=0) {        
+       
+        $log = new Log('error.log');
         echo "<pre>";print_r(date('l', $dt)); 
         echo "<pre>";print_r(date(d, $dt)); 
         if(date('l', $dt)!='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
         {
           echo "<pre>";print_r('No execution today');
-
             return;
         }
         else
         {
             if(date(d, $dt)=='01')
             {
-                $dtp =  date("Y-m-d",strtotime("-1 days"));
+        echo "<pre>";print_r($dt); 
+
+                $dtp =  date("Y-m-d",strtotime("-1 days", $dt));
+                echo "<pre>";print_r($dtp); 
         $data['filter_date_end'] =   date("Y-m-t", strtotime($dtp));
         $data['filter_date_start'] =   date("Y-m-01", strtotime($dtp));
             }
-            else
+            else if(date('l', $dt)=='Sunday' && date(d, $dt)!='01' && date(d, $dt)!='16')//weekly
+            {
+                $data['filter_date_start']=date("Y-m-d",strtotime("-1 days", $dt));
+                $data['filter_date_end']=date("Y-m-d",strtotime("-7 days", $dt));
+            }
+            else if(date(d, $dt)=='16')//incase of 15 days or week
             {
                 $data['filter_date_end'] =   date("Y-m-t", strtotime($dt));
         $data['filter_date_start'] =   date("Y-m-01", strtotime($dt));
+            }
+            else
+            {
+                echo "<pre>";print_r('Date Varient missed');
+          $log->write("Date Varient missed- Automatic statement error");
+
+
+                return; 
             }
         }
         echo "<pre>";print_r($data);
@@ -5834,7 +5845,8 @@ class ModelReportExcel extends Model {
 
         //Firstly get all customers
         echo "<pre>";print_r($customerswithOrders);
-        $log = new Log('error.log');
+        echo "<pre>";print_r("$customerswithOrders");
+        // $log = new Log('error.log');
          foreach($customerswithOrders as $validcust)
         {
         $data['filter_customer']=$validcust['name'];
@@ -5847,7 +5859,7 @@ class ModelReportExcel extends Model {
                 
 
             // $results = $this->model_report_customer->getValidCustomerOrders($data);
-            $results = $this->model_report_customer->getValidCustomerOrdersByDates($data);
+            $results = $this->model_report_customer->getValidCustomerOrdersByDates($data,$dt);
             if($results!=null)
             {
                 $this->load->model('sale/order');
@@ -5935,14 +5947,102 @@ class ModelReportExcel extends Model {
                     try {
                         require_once DIR_ROOT . '/vendor/autoload.php';
                         
-                            $pdf = new \mikehaertl\wkhtmlto\Pdf;
+                            $pdf = new \mikehaertl\wkhtmlto\Pdf(
+                            array(
+                                'binary' => 'C:\Program Files\wkhtmltopdf\bin',
+                                'ignoreWarnings' => true,
+                                'commandOptions' => array(
+                                    'useExec' => true,      // Can help on Windows systems
+                                    'procEnv' => array(
+                                        // Check the output of 'locale -a' on your system to find supported languages
+                                        'LANG' => 'en_US.utf-8',
+                                    ),
+                                ),
+                                'options' => [
+                                    'enable-local-file-access' => true,
+                                    'orientation'   => 'landscape',
+                                    'encoding'      => 'UTF-8'
+                                ],
+                            ));
                             $template = $this->load->view('report/customer_statement_pdf.tpl', $data['customers']);
+                //   $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/report/customer_statement_pdf.tpl', $data));
                             $pdf->addPage($template);
-                            if (!$pdf->send("Customer_Order_Statement #" . $data['customers'][0]['customer'] . ".pdf")) {
-                                $error = $pdf->getError();
-                                echo $error;
-                                die;
+                            // echo "<pre>";print_r($template);die;
+                     $filename = 'Customer_order_statement_' . $data['customers'][0]['customer'] . '.pdf';
+                        // echo "<pre>";print_r($filename);die;
+                           
+
+
+                            // if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
+                            //     mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
+                            // }
+                            // unlink($filename);
+                            $folder_path = DIR_UPLOAD . 'schedulertemp';
+                            $files = glob($folder_path . '/*');
+                            // Deleting all the files in the list 
+                            foreach ($files as $file) {
+                                if (is_file($file))
+                                    unlink($file); // Delete the given file  
                             }
+                            // echo "<pre>";print_r($file);;
+                             // if (!$pdf->send("Customer_Order_Statement #" . $data['customers'][0]['customer'] . ".pdf")) {
+                               
+                               
+                            //     // $mpdf->Output('my_filename.pdf','D'); 
+                            //      $error = $pdf->getError();
+                            //     echo $error;
+                            //     die;
+                            // }
+                            if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . $filename)) {
+                                echo $pdf->getError();
+                            }
+
+                            // $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
+        
+                            #region mail sending 
+                            $maildata['customer_name'] = $data['filter_customer'];
+                            $maildata['start_date'] = $data['filter_date_start'];
+                            $maildata['end_date'] = $data['filter_date_end'];
+                            $maildata['email'] = $data['filter_customer_email'];
+                            // $maildata['end_date'] = $data['filter_date_end'];
+        
+                            $subject = $this->emailtemplate->getSubject('customerstatement', 'customerstatement_25', $maildata);
+                            $message = $this->emailtemplate->getMessage('customerstatement', 'customerstatement_25', $maildata);
+        
+                            // $subject = "Consolidated Order Sheet";                 
+                            // $message = "Please find the attachment.  <br>";
+                            // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
+                            $this->load->model('setting/setting');
+                              $bccemail = $this->model_setting_setting->getEmailSetting('financeteam');
+                            // $email =$data['filter_customer_email'];
+                            // $email_contacts = $this->model_report_customer->getcustomercontacts($data['filter_customer_id']);
+                            // foreach($email_contacts as $econtact)
+                            // {
+                            //     $email=$email.';'.$econtact['email'];
+                            // }
+                            $email ='stalluri@technobraingroup.com';
+                            $log->write('customer Statement Emails ' . $email . ' '  . 'CC mails'. $bccemail );
+                         
+                                echo "<pre>";print_r($email);
+                            // if (strpos($email, "@") == false) {//if mail Id not set in define.php
+                            //     $email = "sridivya.talluri@technobraingroup.com";
+                            // }
+                            // $bccemail = "sridivya.talluri@technobraingroup.com";
+                            //   echo "<pre>";print_r($email);die;
+                            $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
+                            $mail = new Mail($this->config->get('config_mail'));
+                            $mail->setTo($email);
+                            // $mail->setBcc($bccemail);
+                            $mail->setCc($bccemail);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setSubject($subject);
+                            $mail->setHTML($message);
+                            $mail->addAttachment($filepath);
+                             $mail->send();
+                            #endregion
+
+                            
                         }
                         catch(Exception $e)
                         {
@@ -5953,7 +6053,8 @@ class ModelReportExcel extends Model {
                             $log->write($errstr . ' ' . $errline . ' ' . $errfile . ' ' . $errno . ' ' . 'download_customer_statement_excel');
                             $this->log->write('Error in Automatic PDF Statement');
 
-                        } 
+                        }
+                        exit;//for testing purpose one mail is enough, will uncomment later 
                 }
                 else
                 {
@@ -8947,5 +9048,224 @@ class ModelReportExcel extends Model {
         }
     }
 
+    public function mail_consolidated_sale_order_excel($data) {
+        	    // echo "<pre>";print_r($data);die;
+
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        try {
+            set_time_limit(2500);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Delivery Sheet')->setDescription('none');
+
+            // Consolidated Product Orders
+            $objPHPExcel->setActiveSheetIndex(0);
+            $objPHPExcel->getActiveSheet()->setTitle('Sales Orders');
+
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '51AB66',
+                    ],
+                ],
+            ];
+
+            $sheet_title = 'Sales Orders';
+            $sheet_subtitle = 'To be delivered on: ' . $data[0]['delivery_date'];
+
+            // $objPHPExcel->getActiveSheet()->mergeCells('A1:C1');
+            // $objPHPExcel->getActiveSheet()->mergeCells('A2:C2');
+            // $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', $sheet_title);
+            $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
+            // $objPHPExcel->getActiveSheet()->getStyle('A1:C1')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            //         'rgb' => '51AB66',
+            // ]]);
+            // $objPHPExcel->getActiveSheet()->getStyle('A2:C2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            //         'rgb' => '51AB66',
+            // ]]);
+            // $objPHPExcel->getActiveSheet()->getStyle('A4:D4')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            //         'rgb' => '51AB66',
+            // ]]);
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:H3');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:H2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:H1');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:H4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $styleArray = array(
+                'borders' => array(
+                    'allborders' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN
+                    )
+                )
+            );
+
+            $styleOrderReceived = array(
+                'fill' => array(
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'color' => array('rgb' => 'FFFF00')
+                )
+            );
+
+            $styleOrderInTransit = array(
+                'fill' => array(
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'color' => array('rgb' => '00ff00')
+                )
+            );
+
+            $styleOrderProcessing = array(
+                'fill' => array(
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'color' => array('rgb' => 'FFA500')
+                )
+            );
+            $objPHPExcel->getActiveSheet()->getStyle('C')->getAlignment()->setWrapText(true);
+
+            // $objPHPExcel->getActiveSheet()->getStyle('A1:D')->applyFromArray($styleArray);
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+                // $objPHPExcel->getActiveSheet()->getStyle($columnID)->applyFromArray($styleArray);
+            }
+
+            // $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(20);
+            // $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(11);
+            // $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(20);
+            // $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(10);
+
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Order ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Vendor');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Customer ');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Status');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Total');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Date Added');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Delivery Date');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Delivery Timeslot');
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
+
+            $row = 5;
+            foreach ($data as $order) {
+                // echo "<pre>";print_r($order);die;
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $order['order_id']);               
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $order['vendor_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $order['customer']. PHP_EOL .$order['company_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $order['status']);
+                if($order['status']=="Order Recieved")
+                {
+                $objPHPExcel->getActiveSheet()->getStyle('D' . $row)->applyFromArray($styleOrderReceived);
+                }
+                else if($order['status']=="In Transit")
+                {
+                    $objPHPExcel->getActiveSheet()->getStyle('D' . $row)->applyFromArray($styleOrderInTransit);
+
+                }
+                else if($order['status']="Order Processing")
+                {
+                    $objPHPExcel->getActiveSheet()->getStyle('D' . $row)->applyFromArray($styleOrderProcessing);
+
+                }
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row,  $order['total']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row,  $order['date_added']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row,  $order['delivery_date_value']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row,  $order['delivery_timeslot']);
+                ++$row;
+            }
+            // $objPHPExcel->getActiveSheet()->getStyle('A1:H' . $row)->applyFromArray($styleArray);
+            // $objPHPExcel->getActiveSheet()->getStyle('A1:H' . $row)->getAlignment()->setWrapText(true);
+
+           
+
+            $objPHPExcel->setActiveSheetIndex(0);
+          
+            $deliveryDate = $data[0]['delivery_date'];
+            $filename = 'Sales_Orders_' . $deliveryDate . '.xlsx';
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            // header('Content-Disposition: attachment;filename="' . $filename . '"');
+            //header('Cache-Control: max-age=0');
+            // $objWriter->save('php://output');
+
+
+            if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
+                mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
+            }
+            // unlink($filename);
+            $folder_path = DIR_UPLOAD . 'schedulertemp';
+            $files = glob($folder_path . '/*');
+            // Deleting all the files in the list 
+            foreach ($files as $file) {
+                if (is_file($file))
+                    unlink($file); // Delete the given file  
+            }
+            // echo "<pre>";print_r($file);;
+            $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
+
+            #region mail sending 
+            $maildata['deliverydate'] = $deliveryDate;
+            $subject = $this->emailtemplate->getSubject('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+            $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+
+              $subject = "Sales Orders : ". $deliveryDate;  
+              $message=str_replace('consolidated order sheet','sales orders',$message);               
+              $message=str_replace('Consolidated Order Sheet','Sales Orders',$message);               
+            // $message = "Please find the attachment.  <br>";
+            // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
+            $this->load->model('setting/setting');
+            $email = $this->model_setting_setting->getEmailSetting('consolidatedorder');
+
+            if (strpos($email, "@") == false) {//if mail Id not set in define.php
+                $email = "sridivya.talluri@technobraingroup.com";
+            }
+            // $bccemail = "sridivya.talluri@technobraingroup.com";
+            //   echo "<pre>";print_r($email);die;
+            $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($email);
+            $mail->setBCC($bccemail);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->addAttachment($filepath);
+            $mail->send();
+            #endregion
+            exit;
+        } catch (Exception $e) {
+
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+            echo "<pre>";print_r($e);;
+
+            exit;
+            return;
+        }
+    }
 
 }

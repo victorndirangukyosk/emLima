@@ -785,14 +785,14 @@
     </script>
     <script type="text/javascript">
 
-    <? php if ($this -> config -> get('config_store_location') == 'zipcode') { ?>
+    <?php if ($this->config->get('config_store_location') == 'zipcode') { ?>
 
             jQuery(function ($) {
                 console.log("mask");
                 $("#searchTextField").mask("<?= $zipcode_mask_number ?>", { autoclear: false, placeholder: "<?= $zipcode_mask ?>" });
             });
 
-    <? php } ?>
+    <?php } ?>
     </script>
 </body>
 
