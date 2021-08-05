@@ -1,7 +1,7 @@
 <?php
 
 require_once DIR_ROOT . '/vendor/autoload.php';
-
+use mikehaertl\wkhtmlto\Pdf;
 
 class ModelReportExcel extends Model {
 
