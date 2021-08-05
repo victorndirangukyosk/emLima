@@ -251,10 +251,10 @@ class ControllerCommonScheduler extends Controller {
 
         // $filter_date_end =   date("Y-m-t", strtotime($dt));
         // $filter_date_start =   date("Y-m-01", strtotime($dt));
-        // $filter_data = [
-        //     'filter_date_start' => $filter_date_start,
-        //     'filter_date_end' => $filter_date_end,
-        // ];        
+        $filter_data = [
+            // 'filter_date_start' => $filter_date_start,
+            // 'filter_date_end' => $filter_date_end,
+        ];        
 
         $this->load->model('report/excel');
         $this->model_report_excel->mail_download_customer_statement_excel($filter_data, $dt, $pdf);
@@ -452,7 +452,7 @@ class ControllerCommonScheduler extends Controller {
                 if (is_file($file))
                     unlink($file); // Delete the given file  
             }
-            
+
             if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . "Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
                 $errors = $pdf->getError();
                 echo $errors;

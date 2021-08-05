@@ -5848,7 +5848,7 @@ class ModelReportExcel extends Model {
 
         //Firstly get all customers
         echo "<pre>";print_r($customerswithOrders);
-        echo "<pre>";print_r("$customerswithOrders");
+        // echo "<pre>";print_r("$customerswithOrders");
         // $log = new Log('error.log');
          foreach($customerswithOrders as $validcust)
         {
