@@ -382,6 +382,7 @@
                   </div>
                   <div class="col-md-3">
                       <select class="form-control" id="sorting" name="sorting" style="height:34px !important;" data-url="<?= $category_url; ?>">
+                          <option value="">Sort Products</option>
                           <option value="">Default</option>
                           <option value="nasc" <?php if(isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] == 'nasc') { echo "selected"; } ?> >Name (A-Z)</option>
                           <option value="ndesc" <?php if(isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] == 'ndesc') { echo "selected"; } ?> >Name (Z-A)</option>
