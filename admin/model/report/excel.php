@@ -5960,6 +5960,10 @@ class ModelReportExcel extends Model {
                 }
                 echo "<pre>";print_r($data);
 
+                $data['token'] = $this->session->data['token'];
+                //  $this->response->setOutput($this->load->view('report/customer_statement_pdf.tpl', $data));
+                //  return;
+
                 if($pdf==1) 
                 {
 
@@ -5975,7 +5979,7 @@ class ModelReportExcel extends Model {
                                 ),
                             ),
                         ]);
-                            $template = $this->load->view('report/customer_statement_pdf.tpl', $data['customers']);
+                            $template = $this->load->view('report/customer_statement_pdf.tpl', $data);
                 //   $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/report/customer_statement_pdf.tpl', $data));
                           
                 echo "<pre>";print_r("111111111111111111");
@@ -6002,7 +6006,7 @@ class ModelReportExcel extends Model {
                 if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . "Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
                     $errors = $pdf->getError();
                     echo $errors;
-                    //  die;
+                    die;
                 }
 
                 echo "<pre>";print_r("333333333333333333");
@@ -6010,7 +6014,7 @@ class ModelReportExcel extends Model {
                 if (!$pdf->send("Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
                     $error = $pdf->getError();
                     echo $error;
-                    // die;
+                    die;
                 }
 
                 
