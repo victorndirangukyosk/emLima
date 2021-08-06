@@ -98,83 +98,21 @@
 																		 <li class="_1SXRP"><a class="_1OYwR _1Y9yS" href="<?='?cat='.$page_link?>"> <?=$category['name']?></a><!--<span class="_1kd89">232</span>--></li>
 																		
 																	   <?php } ?>		
-                                                                <!--<li class="_1SXRP"><a class="_1OYwR _1HFue" href="#">Site Templates</a><span class="_1kd89">232</span></li>
-                                                                <li class="_1SXRP"><a class="_1OYwR _1Y9yS" href="#">Retail</a><span class="_1kd89">108</span></li>-->
+                                                                
                                                                 
                                                             </ul>
                                                         </nav>
                                                     </div>
                                                 </div>
-												<!--<div class="_1loc3" data-test-selector="filter-price">
-                                                  Price: KSh <span id="show-min">0</span>-<span id="show-max">4000</span> <input id="ex2" type="text"  class="span2" value="" data-slider-min="0" data-slider-max="4000" data-slider-step="10" data-slider-value="[0,4000]"/>
-                                                </div>-->	
-												<!--<div class="_1loc3">
-												   <h4>Filter By Price</h4>
-													<div class="checkbox">
-													  <label><input name="price_slabs" data-start="1" data-end="500" type="checkbox" class="price_filter" value="1-500">1 - 500 KSh</label>
-													</div>
-													<div class="checkbox price_filter">
-													  <label><input type="checkbox" name="price_slabs" data-start="500" data-end="1000" class="price_filter" value="500-1000">500 - 1000 KSh</label>
-													</div>
-													<div class="checkbox price_filter">
-													  <label><input type="checkbox" name="price_slabs" data-start="1000" data-end="2000" class="price_filter" value="1000-2000">1000 - 2000 KSh</label>
-													</div>
-													<div class="checkbox price_filter">
-													  <label><input type="checkbox" name="price_slabs" class="price_filter" data-start="2000" data-end="5000" value="2000-5000">2000 - 5000 KSh</label>
-													</div>
-                                                </div>-->
-
-                                                <!--<div class="_1loc3" data-test-selector="filter-tags">
-                                                    
-                                                 </div>
-                                                <div class="_1loc3" data-test-selector="filter-price">
-                                                   
-                                                </div>
-                                                <div class="_1loc3" data-test-selector="filter-sales">
-                                                 
-                                                </div>
-                                                <div class="_1loc3" data-test-selector="filter-rating">
-                                                    
-                                                </div>
-                                                <div class="_1loc3" data-test-selector="filter-date-added">
-                                                    
-                                                </div>
-                                                <div class="_1loc3" data-test-selector="filter-compatible-with">
-                                                   
-                                                </div>-->
+												
                                             </div>
                                         </div>
                                     </div>
                                     <div class="_1o7LM" style="margin-top: -50px;">
                                         <div class="_1bTly" style="visibility:hidden">
-                                            <!--<div id="selected-filters" class="_3rUJ8">
-                                                <p class="_1X0WU"><span class="_3HYTF">232 </span>items
-                                                    
-                                                <ol vocab="http://schema.org/" typeof="BreadcrumbList" class="_1cD1-">
-                                                    <li property="itemListElement" typeof="ListItem" class="_2OqIW"><a property="item" typeof="WebPage" class="_3LDhC" href="#"><span property="name">All Categories</span></a>
-                                                        <meta property="position" content="1">
-                                                    </li><span class="_2OYn5">/</span>
-                                                    <li property="itemListElement" typeof="ListItem" class="_2OqIW"><a property="item" typeof="WebPage" class="_2g9Ug" href="#"><span property="name" class="_3o55k">Site Templates</span></a>
-                                                        <meta property="position" content="2">
-                                                    </li>
-                                                </ol>
-                                                <div class="_2rHkX" data-test-selector="selectedFiltersWrapper">
-                                                    <ul class="_2FpDo">
-                                                        <li class="s8ScO">
-                                                            <a class="_3g6eY" aria-label="Remove Term 'list view'" href="#">
-                                                                <div class="_1x3ky"><span class="wcg2R">Term 'list view'</span></div><span class="deTU3"><svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="8" width="8" viewBox="0 0 10 10" style="vertical-align: middle;"><title>Close</title><g><path d="M9.888641,1.2053571 C9.962881,1.2797623 10,1.3690471 10,1.4732143 C10,1.5773815 9.962881,1.6666663 9.888641,1.7410714 L6.904232,4.7321429 C6.829992,4.806548 6.792873,4.8958328 6.792873,5 C6.792873,5.1041672 6.829992,5.193452 6.904232,5.2678571 L9.86637,8.2589286 C9.955457,8.3333337 10,8.4226185 10,8.5267857 C10,8.6309529 9.955457,8.7202377 9.86637,8.7946429 L8.797327,9.8883929 C8.723088,9.962798 8.63029,10 8.518931,10 C8.407572,10 8.314774,9.962798 8.240535,9.8883929 L5.278396,6.8973214 C5.204157,6.8229163 5.111359,6.7857143 5,6.7857143 C4.888641,6.7857143 4.795843,6.8229163 4.721604,6.8973214 L1.737194,9.8883929 C1.662954,9.962798 1.573868,10 1.469933,10 C1.365998,10 1.276912,9.962798 1.202673,9.8883929 L0.111359,8.7946429 C0.037119,8.7202377 0,8.6309529 0,8.5267857 C0,8.4226185 0.037119,8.3333337 0.111359,8.2589286 L3.095768,5.2678571 C3.170008,5.193452 3.207127,5.1041672 3.207127,5 C3.207127,4.8958328 3.170008,4.806548 3.095768,4.7321429 L0.111359,1.7410714 C0.037119,1.6666663 0,1.5736613 0,1.4620536 C0,1.3504459 0.037119,1.2574408 0.111359,1.1830357 L1.202673,0.1116071 C1.276912,0.037202 1.36971,0 1.481069,0 C1.592428,0 1.685226,0.037202 1.759465,0.1116071 L4.721604,3.1026786 C4.795843,3.1770837 4.888641,3.2142857 5,3.2142857 C5.111359,3.2142857 5.204157,3.1770837 5.278396,3.1026786 L8.262806,0.1116071 C8.337046,0.037202 8.426132,0 8.530067,0 C8.634002,0 8.723088,0.037202 8.797327,0.1116071 L9.888641,1.2053571 Z"></path></g></svg></span></a>
-                                                        </li>
-                                                    </ul><a class="GlMar" href="#">Clear all</a></div>
-                                            </div>-->
+                                            
 											            <div class="btn-group">
-                                                            <!--<a onclick="changelayout('list')" id="switch-list" class="btn-search-switch is-active" rel="nofollow" aria-label="list view" href="#">
-                                                                <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" title="List" style="vertical-align:middle">
-                                                                    <title>List</title>
-                                                                    <g>
-                                                                        <path d="M0,3 L0,1 L2,1 L2,3 L0,3 Z M0,7 L0,5 L2,5 L2,7 L0,7 Z M0,11 L0,9 L2,9 L2,11 L0,11 Z M0,15 L0,13 L2,13 L2,15 L0,15 Z M4,3 L4,1 L16,1 L16,3 L4,3 Z M4,7 L4,5 L16,5 L16,7 L4,7 Z M4,11 L4,9 L16,9 L16,11 L4,11 Z M4,15 L4,13 L16,13 L16,15 L4,15 Z"></path>
-                                                                    </g>
-                                                                </svg>
-                                                            </a>-->
+                                                            
                                                             <a  style="visibility:hidden" onclick="changelayout('grid')" id="switch-grid" class="btn-search-switch" rel="nofollow" aria-label="grid view" href="#">
                                                                 <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" title="Grid" style="vertical-align:middle">
                                                                     <title>Grid</title>
@@ -240,11 +178,7 @@
                                                     </div>
                                                  
                                                
-                                      <!--  <section class="_1SQpT">
-                                             <a role="button" data-store="<?= ACTIVE_STORE_ID;?>" data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer"
-										 class="KFSGT product-detail-bnt product-img product-description open-popup" role="toolbar" title="<?=$product['name']?>"></a>
-                                            
-                                        </section>-->
+                                      
                                        
                                        
                                         
@@ -274,19 +208,7 @@
                                                        
                                                     </div>
                                                 </div>
-                                                 <div class=""><!--col-md-12 col-sm-12 pl0 pr0 setproductimg-->
-                                                   <!-- <div class="variation-selector-container">
-                                                        <p class="variations-title">Variation</p>
-                                                        <select class="product-variation">
-                                                            <?php foreach($product['variations'] as $variation) { ?>
-                                                            <option value="<?php echo $variation[variation_id]; ?>"
-                                                                    data-price="<?php echo $variation[price]; ?>"
-                                                                    data-special="<?php echo $variation[special]; ?>">
-                                                                <?php  echo 'per ' . $variation[weight] . ' ' . $variation['unit']; ?>
-                                                            </option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </div>-->
+                                                 <div class="">
                                                 <div class="_2D2lC">
                                                             <div class="-DeRq">
                                                                <!-- <?= $product['variations'][0]['special']; ?></div>-->
@@ -323,78 +245,14 @@
                                             <section class="_9q1LS">
                                                 <section class="_3dJU8">
                                                     <div class="oKU4K">
-                                                        <!--<a role="button" href="#" class="" rel="nofollow">
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 11 9" class="_3lCzm -Vcje" style="vertical-align:middle">
-                                                                <title>Add to Collection</title>
-                                                                <g stroke="none" stroke-width="1" fill-rule="evenodd" transform="translate(-3.000000, -4.000000)">
-                                                                    <g transform="translate(3.000000, 4.500000)">
-                                                                        <polygon points="0 1.18461536 9.05384614 1.18461536 9.05384614 0 0 0"></polygon>
-                                                                        <polygon points="0 6.26153844 4.52692307 6.26153844 4.52692307 5.07692308 0 5.07692308"></polygon>
-                                                                        <polygon points="5.92307692 6.26153844 11 6.26153844 11 5.07692308 5.92307692 5.07692308"></polygon>
-                                                                        <polygon transform="translate(8.461538, 5.669231) rotate(-270.000000) translate(-8.461538, -5.669231) " points="5.92307692 6.26153844 11 6.26153844 11 5.07692308 5.92307692 5.07692308"></polygon>
-                                                                        <polygon points="0 3.7230769 6.76923077 3.7230769 6.76923077 2.53846154 0 2.53846154"></polygon>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                        </a>-->
-                                                        <!--<a role="button" href="#" class="" rel="nofollow">
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 512 512" class="_1UJnU _255P_" style="vertical-align:middle">
-                                                                <title>Add to Favorites</title>
-                                                                <g>
-                                                                    <path d="M256 475.8c-4.9 0-9.1-1.7-12.5-5.1l-176.7-170.5c-1.9-1.5-4.5-4-7.8-7.4-3.3-3.4-8.5-9.6-15.7-18.6-7.2-9-13.6-18.2-19.3-27.6-5.7-9.4-10.7-20.9-15.2-34.3-4.3-13.3-6.5-26.3-6.5-38.9 0-41.5 12-74 36-97.4 24-23.4 57.1-35.1 99.4-35.1 11.7 0 23.6 2 35.8 6.1 12.2 4.1 23.5 9.5 34 16.4 10.5 6.9 19.5 13.4 27 19.4 7.5 6 14.7 12.5 21.5 19.3 6.8-6.8 14-13.2 21.5-19.3 7.5-6 16.6-12.5 27-19.4 10.5-6.9 21.8-12.4 34-16.4 12.2-4.1 24.1-6.1 35.8-6.1 42.3 0 75.4 11.7 99.4 35.1 24 23.4 36 55.9 36 97.4 0 41.7-21.6 84.2-64.9 127.4l-176.3 169.9c-3.4 3.4-7.6 5.1-12.5 5.1z"></path>
-                                                                </g>
-                                                            </svg>
-                                                        </a>-->
+                                                        
                                                     </div>
                                                 </section>
                                                 <section class="_7H2LP">
                                                     <div class="-DeRq">
                                                         <?= $product['variations'][0]['special']; ?></div>
                                                     <div class="_1I1Wt">
-                                                        <!--<div class="_3yoIm" aria-label="Rated 3.83 out of 5">
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle;color:#fec42d">
-                                                                <title>Star-Full</title>
-                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <g fill="#F9BF00">
-                                                                        <path d="M15,6.42527246 C15,6.55455774 14.9269858,6.6960766 14.7809847,6.84853675 L11.7271493,9.97160064 L12.4504175,14.3824632 C12.4559497,14.4236438 12.459017,14.4828014 12.459017,14.5593617 C12.459017,14.6828748 12.4295758,14.7870899 12.370666,14.8719783 C12.3117835,14.9575271 12.2258973,15 12.1142398,15 C12.0074845,15 11.8952245,14.9646203 11.7774322,14.8944926 L7.99967135,12.8122586 L4.22254044,14.8944926 C4.09861343,14.9646203 3.98695588,15 3.88573284,15 C3.76794056,15 3.67961689,14.9575558 3.62070706,14.8719783 C3.56182461,14.7870612 3.532356,14.6828461 3.532356,14.5593617 C3.532356,14.523982 3.53788821,14.4647957 3.54892525,14.3824632 L4.27282331,9.97160064 L1.21041574,6.84853675 C1.06991948,6.68964393 1,6.54878557 1,6.42527246 C1,6.20785377 1.15703812,6.07210709 1.47114173,6.01938213 L5.69487547,5.37548281 L7.58743945,1.3615221 C7.6941947,1.12029677 7.8315962,1 7.99969874,1 C8.1684038,1 8.30520278,1.12029677 8.41195803,1.3615221 L10.3051245,5.37548281 L14.5288583,6.01938213 C14.8423594,6.07210709 15,6.20785377 15,6.42527246 L15,6.42527246 Z"></path>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle;color:#fec42d">
-                                                                <title>Star-Full</title>
-                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <g fill="#F9BF00">
-                                                                        <path d="M15,6.42527246 C15,6.55455774 14.9269858,6.6960766 14.7809847,6.84853675 L11.7271493,9.97160064 L12.4504175,14.3824632 C12.4559497,14.4236438 12.459017,14.4828014 12.459017,14.5593617 C12.459017,14.6828748 12.4295758,14.7870899 12.370666,14.8719783 C12.3117835,14.9575271 12.2258973,15 12.1142398,15 C12.0074845,15 11.8952245,14.9646203 11.7774322,14.8944926 L7.99967135,12.8122586 L4.22254044,14.8944926 C4.09861343,14.9646203 3.98695588,15 3.88573284,15 C3.76794056,15 3.67961689,14.9575558 3.62070706,14.8719783 C3.56182461,14.7870612 3.532356,14.6828461 3.532356,14.5593617 C3.532356,14.523982 3.53788821,14.4647957 3.54892525,14.3824632 L4.27282331,9.97160064 L1.21041574,6.84853675 C1.06991948,6.68964393 1,6.54878557 1,6.42527246 C1,6.20785377 1.15703812,6.07210709 1.47114173,6.01938213 L5.69487547,5.37548281 L7.58743945,1.3615221 C7.6941947,1.12029677 7.8315962,1 7.99969874,1 C8.1684038,1 8.30520278,1.12029677 8.41195803,1.3615221 L10.3051245,5.37548281 L14.5288583,6.01938213 C14.8423594,6.07210709 15,6.20785377 15,6.42527246 L15,6.42527246 Z"></path>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle;color:#fec42d">
-                                                                <title>Star-Full</title>
-                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <g fill="#F9BF00">
-                                                                        <path d="M15,6.42527246 C15,6.55455774 14.9269858,6.6960766 14.7809847,6.84853675 L11.7271493,9.97160064 L12.4504175,14.3824632 C12.4559497,14.4236438 12.459017,14.4828014 12.459017,14.5593617 C12.459017,14.6828748 12.4295758,14.7870899 12.370666,14.8719783 C12.3117835,14.9575271 12.2258973,15 12.1142398,15 C12.0074845,15 11.8952245,14.9646203 11.7774322,14.8944926 L7.99967135,12.8122586 L4.22254044,14.8944926 C4.09861343,14.9646203 3.98695588,15 3.88573284,15 C3.76794056,15 3.67961689,14.9575558 3.62070706,14.8719783 C3.56182461,14.7870612 3.532356,14.6828461 3.532356,14.5593617 C3.532356,14.523982 3.53788821,14.4647957 3.54892525,14.3824632 L4.27282331,9.97160064 L1.21041574,6.84853675 C1.06991948,6.68964393 1,6.54878557 1,6.42527246 C1,6.20785377 1.15703812,6.07210709 1.47114173,6.01938213 L5.69487547,5.37548281 L7.58743945,1.3615221 C7.6941947,1.12029677 7.8315962,1 7.99969874,1 C8.1684038,1 8.30520278,1.12029677 8.41195803,1.3615221 L10.3051245,5.37548281 L14.5288583,6.01938213 C14.8423594,6.07210709 15,6.20785377 15,6.42527246 L15,6.42527246 Z"></path>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle;color:#fec42d">
-                                                                <title>Star-Full</title>
-                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <g fill="#F9BF00">
-                                                                        <path d="M15,6.42527246 C15,6.55455774 14.9269858,6.6960766 14.7809847,6.84853675 L11.7271493,9.97160064 L12.4504175,14.3824632 C12.4559497,14.4236438 12.459017,14.4828014 12.459017,14.5593617 C12.459017,14.6828748 12.4295758,14.7870899 12.370666,14.8719783 C12.3117835,14.9575271 12.2258973,15 12.1142398,15 C12.0074845,15 11.8952245,14.9646203 11.7774322,14.8944926 L7.99967135,12.8122586 L4.22254044,14.8944926 C4.09861343,14.9646203 3.98695588,15 3.88573284,15 C3.76794056,15 3.67961689,14.9575558 3.62070706,14.8719783 C3.56182461,14.7870612 3.532356,14.6828461 3.532356,14.5593617 C3.532356,14.523982 3.53788821,14.4647957 3.54892525,14.3824632 L4.27282331,9.97160064 L1.21041574,6.84853675 C1.06991948,6.68964393 1,6.54878557 1,6.42527246 C1,6.20785377 1.15703812,6.07210709 1.47114173,6.01938213 L5.69487547,5.37548281 L7.58743945,1.3615221 C7.6941947,1.12029677 7.8315962,1 7.99969874,1 C8.1684038,1 8.30520278,1.12029677 8.41195803,1.3615221 L10.3051245,5.37548281 L14.5288583,6.01938213 C14.8423594,6.07210709 15,6.20785377 15,6.42527246 L15,6.42527246 Z"></path>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle;color:#fec42d">
-                                                                <title>Star-Empty</title>
-                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                                    <g stroke="#F9BF00">
-                                                                        <path d="M14.4149055,6.50778699 L9.96650226,5.82963728 L9.85289956,5.58877268 L7.99978321,1.65939651 L6.0335367,5.82963134 L5.77022882,5.86977207 L1.5776195,6.50886977 L4.8072668,9.80248587 L4.76622274,10.0525759 L4.04940067,14.4189972 L7.99965123,12.2413268 L8.24102803,12.3743694 L11.949704,14.4188336 L11.1928076,9.80288899 L11.3696559,9.62203171 L14.4149055,6.50778699 Z M4.03255885,14.588468 C4.03252835,14.5884236 4.03249783,14.5883793 4.03246729,14.5883351 Z M3.88714866,14.5000131 C3.88667315,14.5000044 3.88620118,14.5 3.88573284,14.5 C3.88671005,14.5 3.88860849,14.4996521 3.89145519,14.4988551 Z"></path>
-                                                                    </g>
-                                                                </g>
-                                                            </svg>
-                                                        </div>--><!--<span class="_2jw0T">(12)</span>--></div>
-                                                    <!--<div class="_3QV9M">356
-                                                        Sales</div>-->
+                                                        
                                                     <div class="GeySM"><span class="_2g_QW">Unit:</span> <span class="_3TIJT"><?= $product['unit']?></span></div>
                                                 </section>
                                                 <section data-id="<?= $product['product_store_id'] ?>" class="VRlLl">
@@ -407,14 +265,7 @@
 													  
 									
 													 </div>
-													<!--<a class="_3tfm8 wrc8W lpgPF" role="button" href="#" target="_blank" rel="noopener noreferrer">
-                                                        <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" style="vertical-align:middle">
-                                                            <title>Cart</title>
-                                                            <g>
-                                                                <path d="M 0.009 1.349 C 0.009 1.753 0.347 2.086 0.765 2.086 C 0.765 2.086 0.766 2.086 0.767 2.086 L 0.767 2.09 L 2.289 2.09 L 5.029 7.698 L 4.001 9.507 C 3.88 9.714 3.812 9.958 3.812 10.217 C 3.812 11.028 4.496 11.694 5.335 11.694 L 14.469 11.694 L 14.469 11.694 C 14.886 11.693 15.227 11.36 15.227 10.957 C 15.227 10.552 14.886 10.221 14.469 10.219 L 14.469 10.217 L 5.653 10.217 C 5.547 10.217 5.463 10.135 5.463 10.031 L 5.487 9.943 L 6.171 8.738 L 11.842 8.738 C 12.415 8.738 12.917 8.436 13.175 7.978 L 15.901 3.183 C 15.96 3.08 15.991 2.954 15.991 2.828 C 15.991 2.422 15.65 2.09 15.23 2.09 L 3.972 2.09 L 3.481 1.077 L 3.466 1.043 C 3.343 0.79 3.084 0.612 2.778 0.612 C 2.777 0.612 0.765 0.612 0.765 0.612 C 0.347 0.612 0.009 0.943 0.009 1.349 Z M 3.819 13.911 C 3.819 14.724 4.496 15.389 5.335 15.389 C 6.171 15.389 6.857 14.724 6.857 13.911 C 6.857 13.097 6.171 12.434 5.335 12.434 C 4.496 12.434 3.819 13.097 3.819 13.911 Z M 11.431 13.911 C 11.431 14.724 12.11 15.389 12.946 15.389 C 13.784 15.389 14.469 14.724 14.469 13.911 C 14.469 13.097 13.784 12.434 12.946 12.434 C 12.11 12.434 11.431 13.097 11.431 13.911 Z"></path>
-                                                            </g>
-                                                        </svg>
-                                                    </a>-->
+													
                                                 </section>
                                             </section>
                                         </section>
@@ -510,49 +361,14 @@
 											   <?php }else{ ?>
              <center> <h2> There are no products to list in this category. </h2></center>
             <?php }?>
-        <!--<nav class="rKk-w" role="navigation">
-            <ul class="_360un">
-                <li class="pIPk0"><span class="_24O42 _200rh">1</span></li>
-                <li class="pIPk0"><a class="_200rh" href="#">2</a></li>
-                <li class="pIPk0"><a class="_200rh" href="#">3</a></li>
-                <li class="pIPk0"><a class="_200rh" href="#">4</a></li>
-                <li class="pIPk0"><a class="_200rh" href="#">5</a></li>
-                <li class="pIPk0"><a class="_200rh" href="#">6</a></li>
-                <li class="pIPk0"><a class="_200rh" href="#">7</a></li>
-                <li class="pIPk0"><a class="_200rh" href="#">8</a></li>
-                <li class="pIPk0">
-                    <a class="riG7A k89zG" data-test-selector="paginationNext" href="#">
-                        <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="12" width="8" viewBox="0 0 8 13" style="vertical-align:middle">
-                            <title>Chevron Right</title>
-                            <g fill="none" stroke="none" stroke-width="1" fill-rule="evenodd">
-                                <g transform="translate(-2.000000, 4.000000)" stroke="currentColor" stroke-width="2">
-                                    <polyline transform="translate(5.500000, 2.500000) rotate(90.000000) translate(-5.500000, -2.500000)" points="10.5 5 5.5 6.66133815e-16 0.5 5"></polyline>
-                                </g>
-                            </g>
-                        </svg>
-                    </a>
-                </li>
-            </ul>
-        </nav>-->
+
         </div>
         </div>
 		       
                                         
                                         
         </div>							
-        <!--<div class="_2oKeI">
-            <p class="_2uwx2">Searches related to<span class="LSdVQ"> list view</span></p>
-            <ul class="_2D2KF">
-                <li class="qF50j"><a class="_37J6z _7JhbN" href="#">blog</a></li>
-                <li class="qF50j"><a class="_37J6z _7JhbN" href="#">blog clean</a></li>
-                <li class="qF50j"><a class="_37J6z _7JhbN" href="#">blog adsense</a></li>
-                <li class="qF50j"><a class="_37J6z _7JhbN" href="#">blog minimal</a></li>
-                <li class="qF50j"><a class="_37J6z _7JhbN" href="#">blog lifestyle</a></li>
-                <li class="qF50j"><a class="_37J6z _7JhbN" href="#">blog news</a></li>
-                <li class="qF50j"><a class="_37J6z _7JhbN" href="#">blog seo</a></li>
-                <li class="qF50j"><a class="_37J6z _7JhbN" href="#">blog marketing</a></li>
-            </ul>
-        </div>-->
+
     
         </div>
         </div>
@@ -584,43 +400,7 @@
 
 <!-- Organic Theme Code End --->
 
-<!--<div class="col-lg-10 col-md-9 col-sm-8 col-xs-12">
 
-    <?php if(isset($offer_show) && $offer_show && count($offer_products['products']) > 0 ) { ?>
-        <div class="row">
-            <div class="col-md-12 col-sm-12">
-                <div class="product-category-block">
-                    <h2><?= $text_offer ?><a href=""> <a style="color: #d60343;margin-left: 7px;font-size: 14px;letter-spacing: 0;text-decoration: underline;" href="<?= $offer_href ?>" id="view-all"><?= $text_view ?></a></h2>
-                </div>
-            </div>
-        </div>
-         <div class="row">
-             <div class="store-list-wrapper" style="display:block;">
-                <?php $products = $offer_products['products'] ?>
-                <?php /* require(DIR_BASE.'../../front/ui/theme/mvgv2/template/product/product_collection.php'); */ ?>
-            </div>
-        </div>
-    <?php } ?>
-
-    <?php foreach($categories as $category){ ?>
-
-            <?php if($category['products']){ ?>
-                <div class="row">
-                    <div class="col-md-12 col-sm-12">
-                        <div class="product-category-block">
-                            <h2><?= $category['name'] ?><a href=""> <a style="color: #d60343;margin-left: 7px;font-size: 14px;letter-spacing: 0;text-decoration: underline;" href="<?= $category['href'] ?>" id="view-all"><?= $text_view ?></a></h2>
-                        </div>
-                    </div>
-                </div>
-                 <div class="row">
-                     <div class="store-list-wrapper" style="display:block;">
-                        <?php $products = $category['products'] ?>
-                        <?php // require(DIR_BASE.'../../front/ui/theme/mvgv2/template/product/product_collection.php'); ?>
-                    </div>
-                </div>
-        <?php } ?>
-    <?php } ?>
-</div>-->
 
         
         </div>
@@ -755,20 +535,6 @@
 </div>
 
 <!-- Start store banner -->
-
-<!--<div class="bannerModal_popup">
-    <div class="modal fade" id="bannermodal"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <button type="button" class="close close-model" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <center><img src="<?php echo $banner_logo; ?>" alt="" class="img-responsive"></center>
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->
 
 <script type="text/javascript">
     
