@@ -1602,8 +1602,6 @@ class ControllerSaleCustomerExperience extends Controller {
         $name = $this->request->post['name'];
         $json = NULL;
         if ($name != NULL) {
-            $log = new Log('error.log');
-            $log->write('getUnassignedCustomers');
             $this->load->model('user/customerexperience');
             $results = $this->model_user_customerexperience->getUnassignedCompany($name);
             $json = $results;
@@ -1648,7 +1646,7 @@ class ControllerSaleCustomerExperience extends Controller {
     public function getassignedcustomers() {
         $this->load->language('sale/customer');
 
-        $this->load->model('user/customerexperince');
+        $this->load->model('user/customerexperience');
 
         $data['text_no_results'] = $this->language->get('text_no_results');
         $data['text_add_ban_ip'] = $this->language->get('text_add_ban_ip');
@@ -1668,7 +1666,7 @@ class ControllerSaleCustomerExperience extends Controller {
 
         $data['assignedcustomers'] = [];
 
-        $results = $this->model_user_accountmanager->getCustomerByAccountManagerIdPagination($this->request->get['account_manager_id'], ($page - 1) * 10, 10);
+        $results = $this->model_user_customerexperience->getCustomerByCustomerExperienceIdPagination($this->request->get['customer_experience_id'], ($page - 1) * 10, 10);
 
         foreach ($results as $result) {
 
@@ -1678,17 +1676,17 @@ class ControllerSaleCustomerExperience extends Controller {
                 'company_name' => $result['company_name'],
                 'email' => $result['email'],
                 'telephone' => $result['telephone'],
-                'account_manager_id' => $this->request->get['account_manager_id'],
+                'customer_experince_id' => $this->request->get['customer_experince_id'],
             ];
         }
 
-        $assigned_customers_total = $this->model_user_accountmanager->getTotalAssignedCustomers($this->request->get['account_manager_id']);
+        $assigned_customers_total = $this->model_user_customerexperience->getTotalAssignedCustomers($this->request->get['customer_experience_id']);
 
         $pagination = new Pagination();
         $pagination->total = $assigned_customers_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/accountmanager/getassignedcustomers', 'token=' . $this->session->data['token'] . '&account_manager_id=' . $this->request->get['account_manager_id'] . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/customerexperience/getassignedcustomers', 'token=' . $this->session->data['token'] . '&customer_experience_id=' . $this->request->get['customer_experience_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
