@@ -826,7 +826,8 @@ class ControllerSaleCustomerExperience extends Controller {
         }
 
         $data['cancel'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL');
-
+        
+        $data['user_id'] = NULL;
         if (isset($this->request->get['user_id'])) {
             $user_info = $this->model_user_accountmanager->getUser($this->request->get['user_id']);
             $data['user_id'] = $user_info['user_id'];
