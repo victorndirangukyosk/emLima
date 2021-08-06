@@ -21,6 +21,7 @@ $_['text_customer_ban_ip'] = 'Banned IP';
 $_['text_customer_feedback'] = 'Customer Feedback';
 $_['text_customer_issue'] = 'Customer Reported Issues';
 $_['text_account_managers'] = 'Account Managers';
+$_['text_customer_experience'] = 'Cust. Experience';
 $_['text_account_managers_customers'] = 'Customers';
 $_['text_custom_field'] = 'Custom Fields';
 $_['text_dashboard'] = 'Dashboard';
