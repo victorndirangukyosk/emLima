@@ -185,7 +185,7 @@ function save(type) {
     $('input[name=\'assign_customers\']').autocomplete({
         'source': function (request, response) {
             $.ajax({
-                url: 'index.php?path=sale/accountmanager/getUnassignedCustomers&token=<?php echo $token; ?>',
+                url: 'index.php?path=sale/customerexperience/getUnassignedCustomers&token=<?php echo $token; ?>',
                 type: 'post',
                 dataType: 'json',
                 data: {name: $("input[name=assign_customers]").val()},
@@ -240,7 +240,7 @@ function save(type) {
         }
         console.log(val);
         $.ajax({
-            url: 'index.php?path=sale/accountmanager/assigncustomer&token=<?php echo $token; ?>',
+            url: 'index.php?path=sale/customerexperince/assigncustomer&token=<?php echo $token; ?>',
             type: 'post',
             dataType: 'json',
             data: {assigncustomer: val, account_manager_id: <?php echo $user_id; ?> },
@@ -270,7 +270,7 @@ function save(type) {
         console.log(customer_id);
         console.log('UN ASSIGN');
         $.ajax({
-            url: 'index.php?path=sale/accountmanager/unassigncustomer&token=<?php echo $token; ?>',
+            url: 'index.php?path=sale/customerexperince/unassigncustomer&token=<?php echo $token; ?>',
             type: 'post',
             dataType: 'json',
             data: {unassigncustomer: customer_id, account_manager_id: accountmanager_id},

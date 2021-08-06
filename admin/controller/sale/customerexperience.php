@@ -826,7 +826,7 @@ class ControllerSaleCustomerExperience extends Controller {
         }
 
         $data['cancel'] = $this->url->link('sale/customerexperience', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        
+
         $data['user_id'] = NULL;
         if (isset($this->request->get['user_id'])) {
             $user_info = $this->model_user_customerexperience->getUser($this->request->get['user_id']);
@@ -1602,8 +1602,10 @@ class ControllerSaleCustomerExperience extends Controller {
         $name = $this->request->post['name'];
         $json = NULL;
         if ($name != NULL) {
+            $log = new Log('error.log');
+            $log->write('getUnassignedCustomers');
             $this->load->model('user/customerexperience');
-            $results = $this->model_user_accountmanager->getUnassignedCompany($name);
+            $results = $this->model_user_customerexperience->getUnassignedCompany($name);
             $json = $results;
         }
         $this->response->addHeader('Content-Type: application/json');
