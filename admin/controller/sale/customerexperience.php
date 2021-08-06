@@ -941,8 +941,8 @@ class ControllerSaleCustomerExperience extends Controller {
             $this->error['username'] = $this->language->get('error_username');
         }
 
-        $user_info = $this->model_user_accountmanager->getUserByUsername($this->request->post['username']);
-        $user_email_info = $this->model_user_accountmanager->getUserByEmail($this->request->post['email']);
+        $user_info = $this->model_user_customerexperience->getUserByUsername($this->request->post['username']);
+        $user_email_info = $this->model_user_customerexperience->getUserByEmail($this->request->post['email']);
 
         if (!isset($this->request->get['user_id'])) {
             if ($user_info) {
