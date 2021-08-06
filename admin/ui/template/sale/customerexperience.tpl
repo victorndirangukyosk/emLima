@@ -275,7 +275,7 @@
         $('input[name=\'filter_company\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/accountmanager/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/customerexperience/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -301,7 +301,7 @@
         $('input[name=\'filter_telephone\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/accountmanager/autocompleteaccountmanager&token=<?php echo $token; ?>&filter_telephone=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/customerexperience/autocompletecustomerexperience&token=<?php echo $token; ?>&filter_telephone=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -321,7 +321,7 @@
                 $('input[name=\'filter_email\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/accountmanager/autocompleteaccountmanager&token=<?php echo $token; ?>&filter_email=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/customerexperience/autocompletecustomerexperience&token=<?php echo $token; ?>&filter_email=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -346,7 +346,7 @@
 
         function excel() {
 
-            url = 'index.php?path=sale/accountmanager/export_excel&token=<?php echo $token; ?>';
+            url = 'index.php?path=sale/customerexperience/export_excel&token=<?php echo $token; ?>';
 
             location = url;
         }

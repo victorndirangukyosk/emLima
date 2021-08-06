@@ -23,7 +23,7 @@ class ControllerSaleCustomerExperience extends Controller {
     public function export_excel() {
         $data = [];
         $this->load->model('report/excel');
-        $this->model_report_excel->download_accountmanager_excel($data);
+        $this->model_report_excel->download_customer_experience_excel($data);
     }
 
     public function add() {
