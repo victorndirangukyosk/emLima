@@ -208,7 +208,7 @@
     </div>
     <script type="text/javascript"><!--
   $('#button-filter').on('click', function () {
-            url = 'index.php?path=sale/accountmanager&token=<?php echo $token; ?>';
+            url = 'index.php?path=sale/customerexperience&token=<?php echo $token; ?>';
 
             var filter_name = $('input[name=\'filter_name\']').val();
 
@@ -255,7 +255,7 @@
         $('input[name=\'filter_name\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/accountmanager/autocompleteaccountmanager&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) + '&filter_company=' + $companyName,
+                    url: 'index.php?path=sale/customerexperience/autocompletecustomerexperience&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) + '&filter_company=' + $companyName,
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {

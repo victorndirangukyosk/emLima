@@ -1694,7 +1694,7 @@ class ControllerSaleCustomerExperience extends Controller {
         $this->response->setOutput($this->load->view('sale/assigned_customers.tpl', $data));
     }
 
-    public function autocompleteaccountmanager() {
+    public function autocompletecustomerexperience() {
         $json = [];
 
         if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email']) || isset($this->request->get['filter_telephone'])) {
@@ -1726,7 +1726,7 @@ class ControllerSaleCustomerExperience extends Controller {
                 'limit' => 5,
             ];
 
-            $results = $this->model_user_user->getAccountManagerUsers($filter_data);
+            $results = $this->model_user_user->getCustomerExperienceUsers($filter_data);
 
             foreach ($results as $result) {
                 if ($this->user->isVendor()) {
