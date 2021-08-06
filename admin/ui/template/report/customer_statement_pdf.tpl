@@ -4,6 +4,29 @@
     <head>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+   
+   <style>
+
+   thead { display: table-header-group; }
+tfoot { display: table-row-group; }
+tr { 
+  page-break-inside: avoid !important;
+}
+
+thead {
+display: table-row-group;
+}
+tfoot {
+display: table-row-group;
+}
+tr { 
+page-break-inside: avoid;
+}
+
+.table-responsive { overflow-x: visible !important; }
+
+   </style>
+   
     </head>
 
     <body>
@@ -35,7 +58,7 @@
                                         <td class="text-right">Payment <br>Status</td>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody style="padding-bottom: 50px;padding-top:50px">
                                     <?php 
 
 

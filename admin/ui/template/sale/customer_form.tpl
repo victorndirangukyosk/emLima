@@ -324,6 +324,22 @@
                           </select>
                         </div>
                       </div>
+                       
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-account-manager">Customer Experience</label>
+                        <div class="col-sm-10">
+                            <select name="customer_experience" id="input-customer-experience" class="form-control">
+                            <option value="">Select Customer Experience</option>
+                            <?php foreach ($customer_experience_list as $customer_experience_lis) { ?>
+                             <?php if(isset($customer_experience) && ($customer_experience == $customer_experience_lis['user_id'])){ ?>
+                            <option selected="selected" value="<?php echo $customer_experience_lis['user_id']; ?>"><?php echo $customer_experience_lis['firstname'].''.$customer_experience_lis['lastname']; ?></option>
+                            <?php } else { ?>
+                             <option  value="<?php echo $customer_experience_lis['user_id']; ?>"><?php echo $customer_experience_lis['firstname'].''.$customer_experience_lis['lastname']; ?></option>
+                            <?php } ?>
+                            <?php } ?>
+                          </select>
+                        </div>
+                      </div>     
                             <!--<?php if($account_manager_name != NULL) { ?>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-account-manager">Account Manager Name</label>
