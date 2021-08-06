@@ -455,7 +455,6 @@ class ControllerProductStore extends Controller {
 
         $data['not_delivery'] = $not_delivery;
         $data['change_store'] = $this->url->link('common/home/show_home', '', 'SSL');
-        $data['category_url'] = BASE_URL;
         //echo "<pre>";print_r($data);die;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/' . $template)) {
             //mvgv2/template/product/top_category.tpl
@@ -815,7 +814,6 @@ class ControllerProductStore extends Controller {
                 // Add as new product
                 $data['products'][] = [
                     'key' => $key,
-                    'store_id' => $result['store_id'],
                     'qty_in_cart' => $qty_in_cart,
                     'variations' => $this->model_assets_product->getVariations($result['product_store_id']),
                     'store_product_variation_id' => 0,
@@ -840,46 +838,11 @@ class ControllerProductStore extends Controller {
                     'rating' => 0,
                     'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                     'vendor_display_name' => $vendor_details['display_name'],
-                    'sort_price' => $s_price
                 ];
             }
         }
 
-        $log = new Log('error.log');
-        $log->write('filter_data');
-        $log->write($filter_data);
-        $log->write('filter_data');
-        if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'nasc') {
-            $new_arry = $this->multisort($data['products'], 'name', 'nasc');
-            $log = new Log('error.log');
-            $log->write('products');
-            $log->write($new_arry);
-            $log->write('products');
-            return $new_arry;
-        } else if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'ndesc') {
-            $new_arry = $this->multisort($data['products'], 'name', 'ndesc');
-            $log = new Log('error.log');
-            $log->write('products');
-            $log->write($new_arry);
-            $log->write('products');
-            return $new_arry;
-        } else if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'pasc') {
-            $new_arry = $this->multisort($data['products'], 'sort_price', 'pasc');
-            $log = new Log('error.log');
-            $log->write('products');
-            $log->write($new_arry);
-            $log->write('products');
-            return $new_arry;
-        } else if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'pdesc') {
-            $new_arry = $this->multisort($data['products'], 'sort_price', 'pdesc');
-            $log = new Log('error.log');
-            $log->write('products');
-            $log->write($new_arry);
-            $log->write('products');
-            return $new_arry;
-        } else {
-            return $data['products'];
-        }
+        return $data['products'];
     }
 
     public function getOfferProductsBySpecialPrice($filter_data) {
@@ -1778,29 +1741,6 @@ class ControllerProductStore extends Controller {
         //echo "<pre>";print_r($data['products']);die;
 
         return $data['products'];
-    }
-
-    function multisort(&$array, $key, $sort) {
-        $valsort = array();
-        $ret = array();
-        reset($array);
-        foreach ($array as $ii => $va) {
-            $valsort[$ii] = $va[$key];
-        }
-        if ($sort == 'nasc') {
-            asort($valsort, 2);
-        } else if ($sort == 'ndesc') {
-            arsort($valsort, 2);
-        } else if ($sort == 'pasc') {
-            asort($valsort, 1);
-        } else if ($sort == 'pdesc') {
-            arsort($valsort, 1);
-        }
-        foreach ($valsort as $ii => $va) {
-            $ret[$ii] = $array[$ii];
-        }
-        $array = $ret;
-        return $array;
     }
 
 }
