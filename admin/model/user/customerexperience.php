@@ -399,7 +399,9 @@ class ModelUserCustomerexperience extends Model {
     }
 
     public function getUnassignedCompany($name) {
-        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE company_name LIKE '" . $this->db->escape($name) . "%' AND (account_manager_id IS NULL OR account_manager_id = 0)");
+        $log = new Log('error.log');
+        $log->write('getUnassignedCompany');
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE company_name LIKE '" . $this->db->escape($name) . "%' AND (customer_experience_id IS NULL OR customer_experience_id = 0)");
 
         return $query->rows;
     }
