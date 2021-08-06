@@ -229,7 +229,7 @@ class ModelUserCustomerexperience extends Model {
         return $query->row['total'];
     }
 
-    public function getTotalAccountManagers($data = []) {
+    public function getTotalCustomerExperience($data = []) {
         $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'user';
 
         $implode = [];
