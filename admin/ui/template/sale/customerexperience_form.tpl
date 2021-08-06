@@ -264,16 +264,16 @@ function save(type) {
 
     $(document).delegate('#unassigncustomer', 'click', function (e) {
         e.preventDefault();
-        var accountmanager_id = $(this).attr('data-accountmanager');
+        var customer_experience_id = $(this).attr('data-customerexperience');
         var customer_id = $(this).attr('data-customer');
-        console.log(accountmanager_id);
+        console.log(customer_experience_id);
         console.log(customer_id);
         console.log('UN ASSIGN');
         $.ajax({
             url: 'index.php?path=sale/customerexperience/unassigncustomer&token=<?php echo $token; ?>',
             type: 'post',
             dataType: 'json',
-            data: {unassigncustomer: customer_id, customer_experience_id: accountmanager_id},
+            data: {unassigncustomer: customer_id, customer_experience_id: customer_experience_id},
             beforeSend: function () {
             },
             complete: function () {
