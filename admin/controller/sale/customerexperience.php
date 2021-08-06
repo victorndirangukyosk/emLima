@@ -732,7 +732,7 @@ class ControllerSaleCustomerExperience extends Controller {
         $data['tab_assigned_customers'] = 'Assigned Company';
         $data['assigned_customers'] = NULL;
         if (isset($this->request->get['user_id'])) {
-            $data['assigned_customers'] = $this->model_user_accountmanager->getCustomerByAccountManagerId($this->request->get['user_id']);
+            $data['assigned_customers'] = $this->model_user_customerexperience->getCustomerByCustomerExperienceId($this->request->get['user_id']);
         }
 
         $data['token'] = $this->session->data['token'];
@@ -820,16 +820,16 @@ class ControllerSaleCustomerExperience extends Controller {
         ];
 
         if (!isset($this->request->get['user_id'])) {
-            $data['action'] = $this->url->link('sale/accountmanager/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = $this->url->link('sale/customerexperience/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('sale/customerexperience/edit', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('sale/customerexperience', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['user_id'] = NULL;
         if (isset($this->request->get['user_id'])) {
-            $user_info = $this->model_user_accountmanager->getUser($this->request->get['user_id']);
+            $user_info = $this->model_user_customerexperience->getUser($this->request->get['user_id']);
             $data['user_id'] = $user_info['user_id'];
         }
 

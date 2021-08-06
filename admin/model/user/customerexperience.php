@@ -412,13 +412,13 @@ class ModelUserCustomerexperience extends Model {
         $this->db->query('UPDATE `' . DB_PREFIX . "customer` SET account_manager_id = NULL WHERE customer_id = '" . (int) $customer_id . "' AND account_manager_id = '" . (int) $account_manager_id . "'");
     }
 
-    public function getCustomerByAccountManagerId($account_manager_id) {
-        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE account_manager_id = '" . (int) $account_manager_id . "'");
+    public function getCustomerByCustomerExperienceId($customer_experience_id) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE customer_experience_id = '" . (int) $customer_experience_id . "'");
         return $query->rows;
     }
 
-    public function getCustomerByAccountManagerIdPagination($account_manager_id, $start = 0, $limit = 10) {
-        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE account_manager_id = '" . (int) $account_manager_id . "' ORDER BY date_added DESC LIMIT " . (int) $start . ',' . (int) $limit);
+    public function getCustomerByCustomerExperienceIdPagination($customer_experience_id, $start = 0, $limit = 10) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "customer` WHERE customer_experience_id = '" . (int) $customer_experience_id . "' ORDER BY date_added DESC LIMIT " . (int) $start . ',' . (int) $limit);
         return $query->rows;
     }
 
