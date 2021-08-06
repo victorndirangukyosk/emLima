@@ -240,7 +240,7 @@ function save(type) {
         }
         console.log(val);
         $.ajax({
-            url: 'index.php?path=sale/customerexperince/assigncustomer&token=<?php echo $token; ?>',
+            url: 'index.php?path=sale/customerexperience/assigncustomer&token=<?php echo $token; ?>',
             type: 'post',
             dataType: 'json',
             data: {assigncustomer: val, account_manager_id: <?php echo $user_id; ?> },
@@ -270,7 +270,7 @@ function save(type) {
         console.log(customer_id);
         console.log('UN ASSIGN');
         $.ajax({
-            url: 'index.php?path=sale/customerexperince/unassigncustomer&token=<?php echo $token; ?>',
+            url: 'index.php?path=sale/customerexperience/unassigncustomer&token=<?php echo $token; ?>',
             type: 'post',
             dataType: 'json',
             data: {unassigncustomer: customer_id, account_manager_id: accountmanager_id},
@@ -296,7 +296,7 @@ e.preventDefault();
 $('#assignedcustomers').load(this.href);
 });
 
-$('#assignedcustomers').load('index.php?path=sale/accountmanager/getassignedcustomers&token=<?php echo $token; ?>&account_manager_id=<?php echo $user_id; ?>');
+$('#assignedcustomers').load('index.php?path=sale/customerexperience/getassignedcustomers&token=<?php echo $token; ?>&account_manager_id=<?php echo $user_id; ?>');
     function assign_customers() {
         var val = [];
         $('input[name=\'assign_customers_select[]\']').each(function (i) {
@@ -310,7 +310,7 @@ $('#assignedcustomers').load('index.php?path=sale/accountmanager/getassignedcust
         }
         console.log(val);
         $.ajax({
-            url: 'index.php?path=sale/accountmanager/assigncustomer&token=<?php echo $token; ?>',
+            url: 'index.php?path=sale/customerexperience/assigncustomer&token=<?php echo $token; ?>',
             type: 'post',
             dataType: 'json',
             data: {assigncustomer: val, account_manager_id: <?php echo $user_id; ?> },
