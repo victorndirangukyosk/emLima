@@ -1,41 +1,29 @@
 <?php echo $header; ?>
 <?php $categoryPath = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] 
      . explode('?', $_SERVER['REQUEST_URI'], 2)[0];?>
+<div class="container--full-width featured-categories">
+      <div class="container" style="width:100%;">
+          <div class="_47ahp" data-test-selector="search-results">
+              <div class="row">
+                  <div class="col-md-4">
+                  </div>
+                  <div class="col-md-5">
+                  </div>
+                  <div class="col-md-3">
+                      <select class="form-control" id="sorting" name="sorting" style="height:34px !important;" data-url="<?= $category_url; ?>">
+                          <option value="">Sort Products</option>
+                          <option value="">Default</option>
+                          <option value="nasc" <?php if(isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] == 'nasc') { echo "selected"; } ?> >Name (A-Z)</option>
+                          <option value="ndesc" <?php if(isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] == 'ndesc') { echo "selected"; } ?> >Name (Z-A)</option>
+                          <option value="pasc" <?php if(isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] == 'pasc') { echo "selected"; } ?> >Price (Low > High)</option>
+                          <option value="pdesc" <?php if(isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] == 'pdesc') { echo "selected"; } ?> >Price (High > Low)</option>
+                      </select>
+                  </div>
+              </div>
+          </div>  
+      </div>
+</div>     
 <div class="header-lower-deck">
-    <!--<div class="header-lower-deck__wrapper">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="col-md-3 col-sm-3 imgset">
-                <img src="<?= $thumb?>" />
-            </div>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-                <div class="col-md-12 col-sm-12 mainheadingname color-white margin25">
-                <?= isset($store_info['name']) ? $store_info['name'] : '' ?>
-                </div>
-				<?php 
-				$catArray = array();
-				foreach($categories as $cat){
-				     array_push($catArray,$cat['name']);
-				} 
-				$categoyText = implode(',',$catArray);
-				?>
-                <div class="col-md-12 col-sm-12 detailsheader"><i><?= $categoyText?></i></div>
-                <div class="col-md-12 col-sm-12 addressdetail"><?= isset($store_info['address']) ? $store_info['address'] : '' ?>
-                </div>
-                 <div class="col-md-12 col-sm-12 mt20">
-                    <div class="col-md-2 col-sm-2 col-xs-5 border-right pl0">
-                    <div class="fontset"><i class="fa fa-star" aria-hidden="true"></i> <?= (rand(3,5));?></div>
-                    <div class="smalltext"><?= (rand(100,500));?>+ Ratings</div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-7 pl30">
-                    <div class="fontset">Same Day Time</div>
-					<?php foreach($store_info['store_open_hours'] as $storeValue){?>
-                    <div class="smalltext">Open Hours : <?= $storeValue['timeslot'];?></div>
-					<?php } ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>-->
 </div>
 <div class="store-cart-panel">
         <div class="modal right fade" id="store-cart-side" tabindex="-1" role="dialog">
@@ -71,105 +59,6 @@
                         <div class="_3aKCG">
     
                             <div class="wZ5nK" id="content">
-                                <!--<div class="BNYKr">
-                                    <div class="_2YVIw">
-                                        <button class="ZLSF6 _3riWF" data-test-selector="toggle-filters-panel">
-                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="18" width="18" viewBox="0 0 18 18" class="_2CX5O" style="vertical-align:middle">
-                                                <g class="QDdL6" fill="#333333">
-                                                    <rect x="0" y="3" width="18" height="2"></rect>
-                                                </g>
-                                                <g class="_3Os_n" fill="#333333">
-                                                    <rect x="0" y="8" width="18" height="2"></rect>
-                                                </g>
-                                                <g class="_1xGcT" fill="#333333">
-                                                    <rect x="0" y="13" width="18" height="2"></rect>
-                                                </g>
-                                                <g class="_36iK0">
-                                                    <g>
-                                                        <circle fill="#333333" cx="4.5" cy="4" r="2.2"></circle>
-                                                        <circle fill="#FFFFFF" cx="4.5" cy="4" r="0.8"></circle>
-                                                    </g>
-                                                </g>
-                                                <g class="_1A3u9">
-                                                    <g>
-                                                        <circle fill="#333333" cx="13.5" cy="9" r="2.2"></circle>
-                                                        <circle fill="#FFFFFF" cx="13.5" cy="9" r="0.8"></circle>
-                                                    </g>
-                                                </g>
-                                                <g class="_3Fxu-">
-                                                    <g>
-                                                        <circle fill="#333333" cx="9" cy="14" r="2.2"></circle>
-                                                        <circle fill="#FFFFFF" cx="9" cy="14" r="0.8"></circle>
-                                                    </g>
-                                                </g>
-                                            </svg><span class="_3wJqg">Filter</span><span class="_3wJqg _3VkCv">(2)</span><span class="_3wJqg _2pUcL">&amp; Refine</span></button>
-                                    </div>
-                                    <div class="_32VAW">
-                                        <div class="_20J4V">
-                                            <div class="cUuZI">
-                                                <div class="_1UmTF _2d9NF">
-                                                    <div class="search-facet-layout-switcher">
-                                                        <div class="btn-group">
-                                                            <a class="btn-search-switch is-active" rel="nofollow" aria-label="list view" href="#">
-                                                                <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" title="List" style="vertical-align:middle">
-                                                                    <title>List</title>
-                                                                    <g>
-                                                                        <path d="M0,3 L0,1 L2,1 L2,3 L0,3 Z M0,7 L0,5 L2,5 L2,7 L0,7 Z M0,11 L0,9 L2,9 L2,11 L0,11 Z M0,15 L0,13 L2,13 L2,15 L0,15 Z M4,3 L4,1 L16,1 L16,3 L4,3 Z M4,7 L4,5 L16,5 L16,7 L4,7 Z M4,11 L4,9 L16,9 L16,11 L4,11 Z M4,15 L4,13 L16,13 L16,15 L4,15 Z"></path>
-                                                                    </g>
-                                                                </svg>
-                                                            </a>
-                                                            <a class="btn-search-switch" rel="nofollow" aria-label="grid view" href="#">
-                                                                <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" title="Grid" style="vertical-align:middle">
-                                                                    <title>Grid</title>
-                                                                    <g>
-                                                                        <path d="M1,3.80447821 L1,1 L3.80447821,1 L3.80447821,3.80447821 L1,3.80447821 Z M6.5977609,3.80447821 L6.5977609,1 L9.4022391,1 L9.4022391,3.80447821 L6.5977609,3.80447821 Z M12.1955218,3.80447821 L12.1955218,1 L15,1 L15,3.80447821 L12.1955218,3.80447821 Z M1,9.4022391 L1,6.59706118 L3.80447821,6.59706118 L3.80447821,9.4022391 L1,9.4022391 Z M6.5977609,9.4022391 L6.5977609,6.5977609 L9.4022391,6.5977609 L9.4022391,9.4022391 L6.5977609,9.4022391 Z M12.1955218,9.4022391 L12.1955218,6.59706118 L15,6.59706118 L15,9.4022391 L12.1955218,9.4022391 Z M1,14.9993003 L1,12.1948221 L3.80447821,12.1948221 L3.80447821,14.9993003 L1,14.9993003 Z M6.5977609,14.9993003 L6.5977609,12.1948221 L9.4022391,12.1948221 L9.4022391,14.9993003 L6.5977609,14.9993003 Z M12.1955218,14.9993003 L12.1955218,12.1948221 L15,12.1948221 L15,14.9993003 L12.1955218,14.9993003 Z"></path>
-                                                                    </g>
-                                                                </svg>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="_1mVg7">
-                                                    <div class="_3zS3G">
-                                                        <label for="sortby" class="_35LYV">Sort by:
-                                                            <!-- -->
-                                                        <!--</label>
-                                                        <select id="sortby" name="sortby" class="_2s17p">
-                                                            <option selected="" value="relevance">Best match</option>
-                                                            <option value="sales">Best sellers</option>
-                                                            <option value="date">Newest</option>
-                                                            <option value="rating">Best rated</option>
-                                                            <option value="trending">Trending</option>
-                                                            <option value="price-asc">Price: low to high</option>
-                                                            <option value="price-desc">Price: high to low</option>
-                                                        </select>
-                                                        <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="14" width="22" viewBox="-49 141 512 512" class="_2D6hF" style="vertical-align:middle">
-                                                            <title>Chevron-Down</title>
-                                                            <g>
-                                                                <path d="M442.9 233.7l-189.5 189.5c-3.2 3.2-8.7 3.2-11.9 0l-189.5-189.5c-3.2-3.2-3.2-8.7 0-11.9l57.8-57.8c3.2-3.2 8.7-3.2 11.9 0l125.8 125.8 125.8-125.8c3.2-3.2 8.7-3.2 11.9 0l57.8 57.8c1.2 2 2.4 3.6 2.4 5.9-.1 2.5-.9 4-2.5 6z"></path>
-                                                            </g>
-                                                        </svg>
-                                                    </div>
-                                                    <div class="_2VZec">
-                                                        <button class="_1WPp9 _3RfX3">Best match</button>
-                                                        <button class="_1WPp9">Best sellers</button>
-                                                        <button class="_1WPp9">Newest</button>
-                                                        <button class="_1WPp9">Best rated</button>
-                                                        <button class="_1WPp9">Trending</button>
-                                                        <button class="_1WPp9">Price
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 11 17" class="ogwO6 KJMn5" style="vertical-align:middle">
-                                                                <title>Sort order</title>
-                                                                <g>
-                                                                    <polygon fill="#FFFFFF" points="4.1,17.3 -0.7,12.5 0.7,11.1 2.1,12.5 2.1,0 4.1,0"></polygon>
-                                                                    <polygon fill="#B3B3B3" points="8.3,16.8 6.3,16.8 6.3,-0.6 11.2,4.3 9.7,5.7 8.3,4.3"></polygon>
-                                                                </g>
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div><span class="_2LyRT">All prices are in KSh</span></div>-->
                                 <div class="TTG-m">
                                     <div>
                                         <div data-test-selector="search-filters">
@@ -331,7 +220,7 @@
                                                     <div class="_2sT86 EurVi">
                                                     <article class="_3Oe1A">
 
- <a class="product-detail-bnt open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
+ <a class="product-detail-bnt open-popup" role="button" data-store="<?= $product['store_id'] ?>" data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
                                                   
                                                     <div class="col-md-12 col-sm-12 pl0 pr0">
                                                     <div class="col-md-12 col-sm-12 pl0 pr0 listwidth">
@@ -1208,6 +1097,12 @@
 	
 
         
+</script>
+<script type="text/javascript">
+$(document).delegate('#sorting', 'change', function () {
+var url = '<?= $category_url; ?>';
+window.location.replace(url+"&filter_sort="+sorting);
+});
 </script>
     <style>
 		.slider-handle.min-slider-handle.round {
