@@ -243,7 +243,7 @@ function save(type) {
             url: 'index.php?path=sale/customerexperience/assigncustomer&token=<?php echo $token; ?>',
             type: 'post',
             dataType: 'json',
-            data: {assigncustomer: val, account_manager_id: <?php echo $user_id; ?> },
+            data: {assigncustomer: val, customer_experience_id: <?php echo $user_id; ?> },
             beforeSend: function () {
                 $('#button-assign-customer').button('loading');
             },
@@ -273,7 +273,7 @@ function save(type) {
             url: 'index.php?path=sale/customerexperience/unassigncustomer&token=<?php echo $token; ?>',
             type: 'post',
             dataType: 'json',
-            data: {unassigncustomer: customer_id, account_manager_id: accountmanager_id},
+            data: {unassigncustomer: customer_id, customer_experience_id: accountmanager_id},
             beforeSend: function () {
             },
             complete: function () {
@@ -296,7 +296,7 @@ e.preventDefault();
 $('#assignedcustomers').load(this.href);
 });
 
-$('#assignedcustomers').load('index.php?path=sale/customerexperience/getassignedcustomers&token=<?php echo $token; ?>&account_manager_id=<?php echo $user_id; ?>');
+$('#assignedcustomers').load('index.php?path=sale/customerexperience/getassignedcustomers&token=<?php echo $token; ?>&customer_experience_id=<?php echo $user_id; ?>');
     function assign_customers() {
         var val = [];
         $('input[name=\'assign_customers_select[]\']').each(function (i) {
@@ -313,7 +313,7 @@ $('#assignedcustomers').load('index.php?path=sale/customerexperience/getassigned
             url: 'index.php?path=sale/customerexperience/assigncustomer&token=<?php echo $token; ?>',
             type: 'post',
             dataType: 'json',
-            data: {assigncustomer: val, account_manager_id: <?php echo $user_id; ?> },
+            data: {assigncustomer: val, customer_experience_id: <?php echo $user_id; ?> },
             beforeSend: function () {
                 $('#button-assign-customer').button('loading');
             },

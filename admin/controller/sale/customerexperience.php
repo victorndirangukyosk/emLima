@@ -1692,7 +1692,7 @@ class ControllerSaleCustomerExperience extends Controller {
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($assigned_customers_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($assigned_customers_total - 10)) ? $assigned_customers_total : ((($page - 1) * 10) + 10), $assigned_customers_total, ceil($assigned_customers_total / 10));
 
-        $this->response->setOutput($this->load->view('sale/assigned_customers.tpl', $data));
+        $this->response->setOutput($this->load->view('sale/assigned_customers_experience.tpl', $data));
     }
 
     public function autocompletecustomerexperience() {
