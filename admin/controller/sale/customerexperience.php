@@ -1631,7 +1631,7 @@ class ControllerSaleCustomerExperience extends Controller {
         $log->write($this->request->post['customer_experience_id']);
         $this->load->model('user/customerexperience');
 
-        $results = $this->model_user_accountmanager->UnAssignCustomersToAccountManager($this->request->post['unassigncustomer'], $this->request->post['customer_experience_id']);
+        $results = $this->model_user_customerexperience->UnAssignCustomersToCustomerExperience($this->request->post['unassigncustomer'], $this->request->post['customer_experience_id']);
 
         $json = true;
         $this->response->addHeader('Content-Type: application/json');
