@@ -405,11 +405,11 @@ class ModelUserCustomerexperience extends Model {
     }
 
     public function AssignCustomersToCustomerExperience($customer_id, $customer_experience_id) {
-        $this->db->query('UPDATE `' . DB_PREFIX . "customer` SET account_manager_id = '" . (int) $customer_experience_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
+        $this->db->query('UPDATE `' . DB_PREFIX . "customer` SET customer_experience_id = '" . (int) $customer_experience_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
     }
 
     public function UnAssignCustomersToCustomerExperience($customer_id, $customer_experience_id) {
-        $this->db->query('UPDATE `' . DB_PREFIX . "customer` SET account_manager_id = NULL WHERE customer_id = '" . (int) $customer_id . "' AND account_manager_id = '" . (int) $customer_experience_id . "'");
+        $this->db->query('UPDATE `' . DB_PREFIX . "customer` SET customer_experience_id = NULL WHERE customer_id = '" . (int) $customer_id . "' AND account_manager_id = '" . (int) $customer_experience_id . "'");
     }
 
     public function getCustomerByCustomerExperienceId($customer_experience_id) {
