@@ -1613,11 +1613,11 @@ class ControllerSaleCustomerExperience extends Controller {
     public function assigncustomer() {
         $log = new Log('error.log');
         $log->write($this->request->post['assigncustomer']);
-        $log->write($this->request->post['account_manager_id']);
+        $log->write($this->request->post['customer_experience_id']);
         $this->load->model('user/customerexperince');
         if (is_array($this->request->post['assigncustomer']) && count($this->request->post['assigncustomer']) > 0) {
             foreach ($this->request->post['assigncustomer'] as $customer_id) {
-                $results = $this->model_user_accountmanager->AssignCustomersToAccountManager($customer_id, $this->request->post['account_manager_id']);
+                $results = $this->model_user_customerexperince->AssignCustomersToCustomerExperience($customer_id, $this->request->post['customer_experience_id']);
             }
         }
         $json = true;
@@ -1628,10 +1628,10 @@ class ControllerSaleCustomerExperience extends Controller {
     public function unassigncustomer() {
         $log = new Log('error.log');
         $log->write($this->request->post['unassigncustomer']);
-        $log->write($this->request->post['account_manager_id']);
+        $log->write($this->request->post['customer_experience_id']);
         $this->load->model('user/customerexperince');
 
-        $results = $this->model_user_accountmanager->UnAssignCustomersToAccountManager($this->request->post['unassigncustomer'], $this->request->post['account_manager_id']);
+        $results = $this->model_user_accountmanager->UnAssignCustomersToAccountManager($this->request->post['unassigncustomer'], $this->request->post['customer_experience_id']);
 
         $json = true;
         $this->response->addHeader('Content-Type: application/json');
