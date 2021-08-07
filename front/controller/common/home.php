@@ -2231,6 +2231,7 @@ class ControllerCommonHome extends Controller {
         //echo "<pre>";print_r($results);die;
         $filter_data = [
             'filter_category_id' => isset($this->request->get['filter_category']) && $this->request->get['filter_category'] > 0 ? $this->request->get['filter_category'] : NULL,
+            'filter_sort' => isset($this->request->get['filter_sort']) || $this->request->get['filter_sort'] != NULL ? $this->request->get['filter_sort'] : NULL
         ];
         $data['categories_list'] = $results;
 
@@ -2431,11 +2432,47 @@ class ControllerCommonHome extends Controller {
                     'rating' => 0,
                     'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                     'vendor_display_name' => $vendor_details['display_name'],
+                    'sort_price' => $s_price
                 ];
             }
         }
 
-        return $data['products'];
+        //return $data['products'];
+        $log = new Log('error.log');
+        $log->write('filter_data');
+        $log->write($filter_data);
+        $log->write('filter_data');
+        if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'nasc') {
+            $new_arry = $this->multisort($data['products'], 'name', 'nasc');
+            $log = new Log('error.log');
+            $log->write('products');
+            $log->write($new_arry);
+            $log->write('products');
+            return $new_arry;
+        } else if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'ndesc') {
+            $new_arry = $this->multisort($data['products'], 'name', 'ndesc');
+            $log = new Log('error.log');
+            $log->write('products');
+            $log->write($new_arry);
+            $log->write('products');
+            return $new_arry;
+        } else if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'pasc') {
+            $new_arry = $this->multisort($data['products'], 'sort_price', 'pasc');
+            $log = new Log('error.log');
+            $log->write('products');
+            $log->write($new_arry);
+            $log->write('products');
+            return $new_arry;
+        } else if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'pdesc') {
+            $new_arry = $this->multisort($data['products'], 'sort_price', 'pdesc');
+            $log = new Log('error.log');
+            $log->write('products');
+            $log->write($new_arry);
+            $log->write('products');
+            return $new_arry;
+        } else {
+            return $data['products'];
+        }
     }
 
 }
