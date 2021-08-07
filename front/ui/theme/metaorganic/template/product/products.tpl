@@ -882,19 +882,15 @@
 </script>
 <script type="text/javascript">
 $(document).delegate('#selectedCategory', 'change', function () {
-console.log($( this ).val());
-console.log($( this ).attr('data-url'));
-var url = $( this ).attr('data-url');
+var url = '<?=$products_url;?>';
 var sorting = $("#sorting").val();
-window.location.replace(url+"index.php?path=common/home&filter_category="+$( this ).val()+"&filter_sort="+sorting);
+window.location.replace(url+"&filter_category="+$( this ).val()+"&filter_sort="+sorting);
 });
 
 $(document).delegate('#sorting', 'change', function () {
-console.log($( this ).val());
-console.log($( this ).attr('data-url'));
-var url = $( this ).attr('data-url');
+var url = '<?=$products_url;?>';
 var selectedCategory = $("#selectedCategory").val();
-window.location.replace(url+"index.php?path=common/home&filter_sort="+$( this ).val()+"&filter_category="+selectedCategory);
+window.location.replace(url+"&filter_sort="+$( this ).val()+"&filter_category="+selectedCategory);
 });
 </script>
     <style>
