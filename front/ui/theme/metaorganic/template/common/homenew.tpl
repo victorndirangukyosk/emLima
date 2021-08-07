@@ -565,7 +565,7 @@
       </style>
       <?php if(count($category['products'])>11){?>
       <span class="view-all-button"><a
-          href="<?=$this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link?>">View All
+          href="<?=$this->url->link('common/home/allproducts&filter_category='.$category['id'])?>">View All
           <?=$category['name']?>
         </a></span>
       <?php } ?>
