@@ -123,9 +123,9 @@ class Customer
     public function loginByPhone($customer_id, $override = true)
     {
         if ($override) {
-            $customer_query = $this->db->query('SELECT * FROM '.DB_PREFIX."customer WHERE customer_id = '".$this->db->escape($customer_id)."' AND status = '1'");
+            $customer_query = $this->db->query('SELECT * FROM '.DB_PREFIX."customer WHERE customer_id = '".$this->db->escape($customer_id)."' AND status = '1' AND approved='1'");
         } else {
-            $customer_query = $this->db->query('SELECT * FROM '.DB_PREFIX."customer WHERE customer_id = '".$this->db->escape($customer_id)."' AND status = '1'");
+            $customer_query = $this->db->query('SELECT * FROM '.DB_PREFIX."customer WHERE customer_id = '".$this->db->escape($customer_id)."' AND status = '1'  AND approved='1'");
         }
 
         if ($customer_query->num_rows) {
