@@ -4079,8 +4079,13 @@ class ControllerApiCustomerOrder extends Controller {
                     }
                 }
             } elseif ('interswitch' == $args['payment_method_code']) {
+                $log = new Log('error.log');
+                $log->write('args');
+                $log->write($args);
+                $log->write('args');
                 //save for refrence id correct order id
                 if (isset($args['interswitch_refrence_id'])) {
+                    $status = $args['payment_status'] == false ? 'FAILED' : 'COMPLETED';
                     $this->load->model('payment/interswitch');
                     $this->load->model('payment/interswitch_response');
                     $this->load->model('checkout/order');
@@ -4091,7 +4096,7 @@ class ControllerApiCustomerOrder extends Controller {
                         /* ALLOWING PAYMENT FOR KWIKBASKET ORDERS ONLY */
                         if ($order_details['store_id'] == 75) {
                             $this->model_payment_interswitch_response->Saveresponse($order_details['customer_id'], $order_id, json_encode($args['payment_response']));
-                            $this->model_payment_interswitch->updateOrderIdInterswitchOrderMobile($order_id, $order_details['customer_id'], $args['response_code'], $args['response_description'], $args['payment_status'], $args['transaction_reference'], $args['amount'], $args['payment_channel']);
+                            $this->model_payment_interswitch->updateOrderIdInterswitchOrderMobile($order_id, $order_details['customer_id'], $args['response_code'], $args['response_description'], $status, $args['transaction_reference'], $args['amount'], $args['payment_channel']);
 
                             $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('interswitch_order_status_id'));
                         }
