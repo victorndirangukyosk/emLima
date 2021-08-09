@@ -614,7 +614,7 @@ class ControllerApiCustomerAddress extends Controller
         } else {
             $json['status'] = 10013;
 
-            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_not_loggedin')];
+            $json['message'][] = ['type' => '', 'body' => 'Proper address id & data is not passed'];
 
             http_response_code(400);
         }
