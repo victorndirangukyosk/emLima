@@ -736,7 +736,7 @@ class ModelAccountApi extends Model
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->signup_validate()) {
             $this->load->model('account/customer');
 
-            if (isset($this->request->post['phone'])) {                  
+            if (false == strpos($this->request->post['phone'], '#') || isset($this->request->post['phone'])) {                  
                   {
                     if (isset($date)) {
                         $date = DateTime::createFromFormat('d/m/Y', $date);
@@ -745,6 +745,7 @@ class ModelAccountApi extends Model
                         $this->request->post['dob'] = null;
                     }
                     $this->request->post['source'] = 'MOBILE';
+                    $this->request->post['status'] = 0;
                     //$this->request->post['password'] = mt_rand(1000,9999);
                     // echo "<pre>";print_r($this->request->post);die;
                     // $accountmanagerid = NULL;
@@ -756,13 +757,44 @@ class ModelAccountApi extends Model
                     // Clear any previous login attempts for unregistered accounts.
                     $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
 
-                    $logged_in = $this->customer->loginByPhone($customer_id);
-
-                    unset($this->session->data['guest']);
-
+                        //Mail & SMS sending region
+                      #region SMS and mail sending
+                        
+                        $data['username'] = $this->request->post['firstname'];
+                        $data['otp'] = mt_rand(1000, 9999);
+        
+                        $sms_message = $this->emailtemplate->getSmsMessage('registerOTP', 'registerotp_2', $data);
+        
+                        //echo "<pre>";print_r($sms_message);die;
+                        if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
+                            $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
+        
+                            //save in otp table
+                            $data['status'] = true;
+        
+                            $this->model_account_customer->saveOTP($this->request->post['phone'], $data['otp'], 'register');
+                            $data['text_verify_otp'] = $this->language->get('text_verify_otp');
+        
+                            $data['success_message'] = $this->language->get('text_otp_sent').' '.$this->request->post['phone'];
+                        }
+        
+                        if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
+                            $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
+                            $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
+        
+                            $mail = new mail($this->config->get('config_mail'));
+                            $mail->setTo($this->request->post['email']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSubject($subject);
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setHtml($message);
+                            $mail->send();
+                        }
+                     #endregion  
+                    // $logged_in = $this->customer->loginByPhone($customer_id);
+                    // unset($this->session->data['guest']);
                     // Add to activity log
                     $this->load->model('account/activity');
-
                     $activity_data = [
                         'customer_id' => $customer_id,
                         'name' => $this->request->post['firstname'].' '.$this->request->post['lastname'],
@@ -774,9 +806,9 @@ class ModelAccountApi extends Model
                     /* If not able to login*/
                     $data['status'] = true;
 
-                    if (!$logged_in) {
-                        $data['status'] = false;
-                    }
+                    // if (!$logged_in) {
+                    //     $data['status'] = false;
+                    // }
 
                     $data['text_new_signup_reward'] = $this->language->get('text_new_signup_reward');
                     $data['text_new_signup_credit'] = $this->language->get('text_new_signup_credit');
@@ -854,8 +886,108 @@ class ModelAccountApi extends Model
                         }
                     }
 
-                    $data['success_message'] = $this->language->get('text_valid_otp');
+                    // $data['success_message'] = $this->language->get('text_valid_otp');
                     // $data['customer_id'] = $customer_id;
+                }
+            } else {
+                // enter valid number throw error
+                $data['status'] = false;
+                //$data['error_warning'] = $this->language->get('error_invalid_otp');
+                $data['warning'] = $this->language->get('error_telephone');
+            }
+        }
+
+        foreach ($this->error as $key => $value) {
+            $data['errors'][] = ['type' => $key, 'body' => $value];
+        }
+
+        return $data;
+    }
+
+    public function register_verify_user_otp()
+    {
+        $data['status'] = false;
+        $this->load->language('account/login');
+        $this->load->language('account/register');
+        $this->load->language('api/general');
+        $this->load->model('account/customer');
+        $log = new Log('error.log');
+        $this->request->post['telephone'] = preg_replace('/[^0-9]/', '', $this->request->post['telephone']);
+
+        $this->request->post['phone'] = $this->request->post['telephone'];
+        //echo "<pre>";print_r($this->request->post);die;
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->signup_validate()) {
+            $this->load->model('account/customer');
+
+            if (isset($this->request->post['signup_otp']) && isset($this->request->post['phone'])) {
+                //echo "<pre>";print_r("er");die;
+                $otp_data = $this->model_account_customer->getOTP($this->request->post['phone'], $this->request->post['signup_otp'], 'register');
+
+                //echo "<pre>";print_r($otp_data);die;
+                if (!$otp_data) {
+                    $data['status'] = false;
+                    $this->error['warning'] = $this->language->get('error_invalid_otp');
+                // user not found
+                } else {
+                    // add activity and all
+
+                    $log = new Log('error.log');
+                    $log->write('register');
+                    $referee_user_id = null;
+                    if (count($_COOKIE) > 0 && isset($_COOKIE['referral']) && ('expired' != $_COOKIE['referral'])) {
+                        //echo "Cookies are enabled.";
+                        $this->request->post['referee_user_id'] = $_COOKIE['referral'];
+                        $referee_user_id = $_COOKIE['referral'];
+
+                        setcookie('referral', null, time() - 3600, '/');
+                        //unset($_COOKIE['referral']);
+                    } 
+                    //$this->request->post['password'] = mt_rand(1000,9999);
+                    // echo "<pre>";print_r($this->request->post);die;
+                    // $accountmanagerid = NULL;
+                    // $accountmanagerid =$this->request->post['accountmanagerid'];
+                    // $log->write('accountmanagerid from API');
+                    // $log->write($accountmanagerid);
+                    // $customer_id = $this->model_account_customer->addCustomer($this->request->post,true);
+                    
+                    //update status and get customerid
+                    $customer_id = $this->model_account_customer->updateCustomerStatus($this->request->post['email']);
+
+                    // Clear any previous login attempts for unregistered accounts.
+                    $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
+
+                    $logged_in = $this->customer->loginByPhone($customer_id);
+
+                    unset($this->session->data['guest']);
+
+                    // Add to activity log
+                    $this->load->model('account/activity');
+
+                    $activity_data = [
+                        'customer_id' => $customer_id,
+                        'name' => $this->request->post['firstname'].' '.$this->request->post['lastname'],
+                    ];
+
+                    $log->write('in post signup 1');
+                    $this->model_account_activity->addActivity('register', $activity_data);
+
+                    /* If not able to login*/
+                    $data['status'] = true;
+
+                    // if (!$logged_in) {
+                    //     $data['status'] = false;
+                    // }
+
+                    $data['text_new_signup_reward'] = $this->language->get('text_new_signup_reward');
+                    $data['text_new_signup_credit'] = $this->language->get('text_new_signup_credit');
+
+                    $data['message'] = $this->language->get('verify_mail_sent');                   
+
+                    // delete otp
+                    $this->model_account_customer->deleteOTP($this->request->post['phone'], $this->request->post['signup_otp'], 'register');
+
+                    $data['success_message'] = $this->language->get('text_valid_otp');
+                    $data['customer_id'] = $customer_id;
                 }
             } else {
                 // enter valid number throw error
@@ -871,5 +1003,6 @@ class ModelAccountApi extends Model
 
         return $data;
     }
+
 
 }
