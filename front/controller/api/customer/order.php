@@ -514,6 +514,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $data['payment'] = $this->load->controller('payment/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
+                unset($this->session->data['accept_vendor_terms']);
             }
 
             foreach ($order_ids as $key => $value) {
