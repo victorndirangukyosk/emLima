@@ -736,35 +736,10 @@ class ModelAccountApi extends Model
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->signup_validate()) {
             $this->load->model('account/customer');
 
-            if (isset($this->request->post['signup_otp']) && isset($this->request->post['phone'])) {
-                //echo "<pre>";print_r("er");die;
-                $otp_data = $this->model_account_customer->getOTP($this->request->post['phone'], $this->request->post['signup_otp'], 'register');
-
-                //echo "<pre>";print_r($otp_data);die;
-                if (!$otp_data) {
-                    $data['status'] = false;
-                    $this->error['warning'] = $this->language->get('error_invalid_otp');
-                // user not found
-                } else {
-                    // add activity and all
-
-                    $log = new Log('error.log');
-                    $log->write('register');
-
-                    $referee_user_id = null;
-
-                    if (count($_COOKIE) > 0 && isset($_COOKIE['referral']) && ('expired' != $_COOKIE['referral'])) {
-                        //echo "Cookies are enabled.";
-                        $this->request->post['referee_user_id'] = $_COOKIE['referral'];
-                        $referee_user_id = $_COOKIE['referral'];
-
-                        setcookie('referral', null, time() - 3600, '/');
-                        //unset($_COOKIE['referral']);
-                    }
-
+            if (isset($this->request->post['phone'])) {                  
+                  {
                     if (isset($date)) {
                         $date = DateTime::createFromFormat('d/m/Y', $date);
-
                         $this->request->post['dob'] = $date->format('Y-m-d');
                     } else {
                         $this->request->post['dob'] = null;
@@ -793,7 +768,7 @@ class ModelAccountApi extends Model
                         'name' => $this->request->post['firstname'].' '.$this->request->post['lastname'],
                     ];
 
-                    $log->write('in post signup 1');
+                    // $log->write('Registered');
                     $this->model_account_activity->addActivity('register', $activity_data);
 
                     /* If not able to login*/
@@ -879,11 +854,8 @@ class ModelAccountApi extends Model
                         }
                     }
 
-                    // delete otp
-                    $this->model_account_customer->deleteOTP($this->request->post['phone'], $this->request->post['signup_otp'], 'register');
-
                     $data['success_message'] = $this->language->get('text_valid_otp');
-                    $data['customer_id'] = $customer_id;
+                    // $data['customer_id'] = $customer_id;
                 }
             } else {
                 // enter valid number throw error
