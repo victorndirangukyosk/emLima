@@ -497,6 +497,7 @@ class ControllerApiCustomerOrder extends Controller {
 
                     foreach ($order_ids as $order_id) {
                         $order_details = $this->model_account_order->getOrderDetailsById($order_id);
+                        /* ALLOWING PAYMENT FOR KWIKBASKET ORDERS ONLY */
                         if ($order_details['store_id'] == 75) {
                             $this->model_payment_interswitch_response->Saveresponse($order_details['customer_id'], $order_id, json_encode($args['payment_response']));
                             $this->model_payment_interswitch->updateOrderIdInterswitchOrderMobile($order_id, $order_details['customer_id'], $args['response_code'], $args['response_description'], $args['payment_status'], $args['transaction_reference'], $args['amount'], $args['payment_channel']);
