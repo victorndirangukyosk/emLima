@@ -226,6 +226,40 @@ class ControllerApiCustomerSignup extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function addSignupByOtpNew()
+    {
+        //echo "<pre>";print_r( "addLoginByOtp");die;
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('api/login');
+
+        $this->load->language('api/general');
+
+        $this->load->model('account/api');
+
+        // $api_info = $this->model_account_api->register_send_otp();
+        $api_info = $this->model_account_api->register_user();
+
+        //echo "<pre>";print_r($api_info);die;
+        if ($api_info['status']) {
+            $json['message'][] = ['type' => '', 'body' => $api_info['success_message']];
+        } else {
+            $json['status'] = 10032; //form invalid
+
+            $json['message'] = $api_info['errors'];
+
+            http_response_code(400);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function addSignupVerifyOtp()
     {
         //echo "<pre>";print_r( "addLoginByOtp");die;
@@ -242,6 +276,89 @@ class ControllerApiCustomerSignup extends Controller
         $this->load->model('account/api');
 
         $api_info = $this->model_account_api->register_verify_otp();
+
+        //echo "<pre>";print_r($api_info);die;
+        if ($api_info['status']) {
+            $customer_id = $api_info['customer_id'];
+            $tokenId = base64_encode(mcrypt_create_iv(32));
+            $issuedAt = time();
+            $notBefore = $issuedAt;  //Adding 10 seconds
+            $expire = $notBefore + 604800; // Adding 60 seconds
+            $serverName = 'serverName'; /// set your domain name
+
+            /*
+             * Create the token as an array
+             */
+            $data = [
+                'iat' => $issuedAt,         // Issued at: time when the token was generated
+                'jti' => $tokenId,          // Json Token Id: an unique identifier for the token
+                'iss' => $serverName,       // Issuer
+                'nbf' => $notBefore,        // Not before
+                'exp' => $expire,           // Expire
+                'data' => [                  // Data related to the logged user you can set your required data
+                            'id' => $customer_id, // id from the users table
+                             'name' => $customer_id, //  name
+                          ],
+            ];
+
+            $secretKey = base64_decode(SECRET_KEY);
+            /// Here we will transform this array into JWT:
+            $jwt = JWT::encode(
+                $data, //Data to be encoded in the JWT
+                $secretKey, // The signing key
+                 ALGORITHM
+            );
+
+            $unencodedArray = ['jwt' => $jwt];
+
+            $this->session->data['customer_id'] = $customer_id;
+
+            //echo  "{'status' : 'success','resp':".json_encode($unencodedArray)."}"
+            $this->load->model('account/customer');
+
+            $customer_info = $this->model_account_customer->getCustomer($customer_id);
+
+            if (!empty($customer_info['dob'])) {
+                $customer_info['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
+            } else {
+                $customer_info['dob'] = '01/01/1990';
+            }
+            //$json['success'] = $this->language->get('text_valid_otp');
+            $json['token'] = $jwt; //json_encode($unencodedArray);
+
+            $json['data'] = $customer_info;
+
+            $json['message'][] = ['type' => '', 'body' => $api_info['success_message']];
+        } else {
+            $json['status'] = 10032; //form invalid
+
+            $json['message'] = $api_info['errors'];
+
+            http_response_code(400);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+
+    public function addSignupVerifyOtpNew()
+    {
+        //echo "<pre>";print_r( "addLoginByOtp");die;
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('api/login');
+
+        $this->load->language('api/general');
+
+        $this->load->model('account/api');
+
+        // $api_info = $this->model_account_api->register_verify_otp();
+        $api_info = $this->model_account_api->register_verify_user_otp();
 
         //echo "<pre>";print_r($api_info);die;
         if ($api_info['status']) {
