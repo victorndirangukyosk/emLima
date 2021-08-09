@@ -1,6 +1,4 @@
 <?php echo $header; ?>
-<?php $categoryPath = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] 
-     . explode('?', $_SERVER['REQUEST_URI'], 2)[0];?>
 <div class="container--full-width featured-categories">
       <div class="container" style="width:100%;">
           <div class="_47ahp" data-test-selector="search-results">
@@ -10,7 +8,7 @@
                   <div class="col-md-5">
                   </div>
                   <div class="col-md-3">
-                      <select class="form-control" id="sorting" name="sorting" style="height:34px !important;" data-url="<?= $category_url; ?>">
+                      <select class="form-control" id="sorting" name="sorting" style="height:34px !important;" data-url="<?=$products_url;?>">
                           <option value="">Sort Products</option>
                           <option value="">Default</option>
                           <option value="nasc" <?php if(isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] == 'nasc') { echo "selected"; } ?> >Name (A-Z)</option>
@@ -23,65 +21,6 @@
           </div>  
       </div>
 </div>     
-<div class="header-lower-deck">
-    <!--<div class="header-lower-deck__wrapper">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="col-md-3 col-sm-3 imgset">
-                <img src="<?= $thumb?>" />
-            </div>
-            <div class="col-md-9 col-sm-9 col-xs-12">
-                <div class="col-md-12 col-sm-12 mainheadingname color-white margin25">
-                <?= isset($store_info['name']) ? $store_info['name'] : '' ?>
-                </div>
-				<?php 
-				$catArray = array();
-				foreach($categories as $cat){
-				     array_push($catArray,$cat['name']);
-				} 
-				$categoyText = implode(',',$catArray);
-				?>
-                <div class="col-md-12 col-sm-12 detailsheader"><i><?= $categoyText?></i></div>
-                <div class="col-md-12 col-sm-12 addressdetail"><?= isset($store_info['address']) ? $store_info['address'] : '' ?>
-                </div>
-                 <div class="col-md-12 col-sm-12 mt20">
-                    <div class="col-md-2 col-sm-2 col-xs-5 border-right pl0">
-                    <div class="fontset"><i class="fa fa-star" aria-hidden="true"></i> <?= (rand(3,5));?></div>
-                    <div class="smalltext"><?= (rand(100,500));?>+ Ratings</div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-7 pl30">
-                    <div class="fontset">Same Day Time</div>
-					<?php foreach($store_info['store_open_hours'] as $storeValue){?>
-                    <div class="smalltext">Open Hours : <?= $storeValue['timeslot'];?></div>
-					<?php } ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>-->
-</div>
-<div class="store-cart-panel">
-        <div class="modal right fade" id="store-cart-side" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="cart-panel-content">
-                    </div>
-                    <div class="modal-footer">
-                        <!-- <p><?= isset($text_verify_number) ? $text_verify_number : ''  ?></p> -->
-                        <a href="<?php echo isset($checkout) ? $checkout : ''; ?>" id="proceed_to_checkout">
-                        
-                            <button type="button" class="btn btn-primary btn-block btn-lg" id="proceed_to_checkout_button">
-                                <span class="checkout-modal-text"><?= isset($text_proceed_to_checkout) ? $text_proceed_to_checkout : '' ?> </span>
-                                <div class="checkout-loader" style="display: none;"></div>
-                                
-                            </button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-    </div>
-<?php // echo $current_store;exit;echo '<pre>';print_r($categories);exit;?>
 <!-- Organic Theme Code Start --->
 
  <div class="page" data-reactroot="">
@@ -93,125 +32,16 @@
                         <div class="_3aKCG">
     
                             <div class="wZ5nK" id="content">
-                                <!--<div class="BNYKr">
-                                    <div class="_2YVIw">
-                                        <button class="ZLSF6 _3riWF" data-test-selector="toggle-filters-panel">
-                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="18" width="18" viewBox="0 0 18 18" class="_2CX5O" style="vertical-align:middle">
-                                                <g class="QDdL6" fill="#333333">
-                                                    <rect x="0" y="3" width="18" height="2"></rect>
-                                                </g>
-                                                <g class="_3Os_n" fill="#333333">
-                                                    <rect x="0" y="8" width="18" height="2"></rect>
-                                                </g>
-                                                <g class="_1xGcT" fill="#333333">
-                                                    <rect x="0" y="13" width="18" height="2"></rect>
-                                                </g>
-                                                <g class="_36iK0">
-                                                    <g>
-                                                        <circle fill="#333333" cx="4.5" cy="4" r="2.2"></circle>
-                                                        <circle fill="#FFFFFF" cx="4.5" cy="4" r="0.8"></circle>
-                                                    </g>
-                                                </g>
-                                                <g class="_1A3u9">
-                                                    <g>
-                                                        <circle fill="#333333" cx="13.5" cy="9" r="2.2"></circle>
-                                                        <circle fill="#FFFFFF" cx="13.5" cy="9" r="0.8"></circle>
-                                                    </g>
-                                                </g>
-                                                <g class="_3Fxu-">
-                                                    <g>
-                                                        <circle fill="#333333" cx="9" cy="14" r="2.2"></circle>
-                                                        <circle fill="#FFFFFF" cx="9" cy="14" r="0.8"></circle>
-                                                    </g>
-                                                </g>
-                                            </svg><span class="_3wJqg">Filter</span><span class="_3wJqg _3VkCv">(2)</span><span class="_3wJqg _2pUcL">&amp; Refine</span></button>
-                                    </div>
-                                    <div class="_32VAW">
-                                        <div class="_20J4V">
-                                            <div class="cUuZI">
-                                                <div class="_1UmTF _2d9NF">
-                                                    <div class="search-facet-layout-switcher">
-                                                        <div class="btn-group">
-                                                            <a class="btn-search-switch is-active" rel="nofollow" aria-label="list view" href="#">
-                                                                <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" title="List" style="vertical-align:middle">
-                                                                    <title>List</title>
-                                                                    <g>
-                                                                        <path d="M0,3 L0,1 L2,1 L2,3 L0,3 Z M0,7 L0,5 L2,5 L2,7 L0,7 Z M0,11 L0,9 L2,9 L2,11 L0,11 Z M0,15 L0,13 L2,13 L2,15 L0,15 Z M4,3 L4,1 L16,1 L16,3 L4,3 Z M4,7 L4,5 L16,5 L16,7 L4,7 Z M4,11 L4,9 L16,9 L16,11 L4,11 Z M4,15 L4,13 L16,13 L16,15 L4,15 Z"></path>
-                                                                    </g>
-                                                                </svg>
-                                                            </a>
-                                                            <a class="btn-search-switch" rel="nofollow" aria-label="grid view" href="#">
-                                                                <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" title="Grid" style="vertical-align:middle">
-                                                                    <title>Grid</title>
-                                                                    <g>
-                                                                        <path d="M1,3.80447821 L1,1 L3.80447821,1 L3.80447821,3.80447821 L1,3.80447821 Z M6.5977609,3.80447821 L6.5977609,1 L9.4022391,1 L9.4022391,3.80447821 L6.5977609,3.80447821 Z M12.1955218,3.80447821 L12.1955218,1 L15,1 L15,3.80447821 L12.1955218,3.80447821 Z M1,9.4022391 L1,6.59706118 L3.80447821,6.59706118 L3.80447821,9.4022391 L1,9.4022391 Z M6.5977609,9.4022391 L6.5977609,6.5977609 L9.4022391,6.5977609 L9.4022391,9.4022391 L6.5977609,9.4022391 Z M12.1955218,9.4022391 L12.1955218,6.59706118 L15,6.59706118 L15,9.4022391 L12.1955218,9.4022391 Z M1,14.9993003 L1,12.1948221 L3.80447821,12.1948221 L3.80447821,14.9993003 L1,14.9993003 Z M6.5977609,14.9993003 L6.5977609,12.1948221 L9.4022391,12.1948221 L9.4022391,14.9993003 L6.5977609,14.9993003 Z M12.1955218,14.9993003 L12.1955218,12.1948221 L15,12.1948221 L15,14.9993003 L12.1955218,14.9993003 Z"></path>
-                                                                    </g>
-                                                                </svg>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="_1mVg7">
-                                                    <div class="_3zS3G">
-                                                        <label for="sortby" class="_35LYV">Sort by:
-                                                            <!-- -->
-                                                        <!--</label>
-                                                        <select id="sortby" name="sortby" class="_2s17p">
-                                                            <option selected="" value="relevance">Best match</option>
-                                                            <option value="sales">Best sellers</option>
-                                                            <option value="date">Newest</option>
-                                                            <option value="rating">Best rated</option>
-                                                            <option value="trending">Trending</option>
-                                                            <option value="price-asc">Price: low to high</option>
-                                                            <option value="price-desc">Price: high to low</option>
-                                                        </select>
-                                                        <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="14" width="22" viewBox="-49 141 512 512" class="_2D6hF" style="vertical-align:middle">
-                                                            <title>Chevron-Down</title>
-                                                            <g>
-                                                                <path d="M442.9 233.7l-189.5 189.5c-3.2 3.2-8.7 3.2-11.9 0l-189.5-189.5c-3.2-3.2-3.2-8.7 0-11.9l57.8-57.8c3.2-3.2 8.7-3.2 11.9 0l125.8 125.8 125.8-125.8c3.2-3.2 8.7-3.2 11.9 0l57.8 57.8c1.2 2 2.4 3.6 2.4 5.9-.1 2.5-.9 4-2.5 6z"></path>
-                                                            </g>
-                                                        </svg>
-                                                    </div>
-                                                    <div class="_2VZec">
-                                                        <button class="_1WPp9 _3RfX3">Best match</button>
-                                                        <button class="_1WPp9">Best sellers</button>
-                                                        <button class="_1WPp9">Newest</button>
-                                                        <button class="_1WPp9">Best rated</button>
-                                                        <button class="_1WPp9">Trending</button>
-                                                        <button class="_1WPp9">Price
-                                                            <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 11 17" class="ogwO6 KJMn5" style="vertical-align:middle">
-                                                                <title>Sort order</title>
-                                                                <g>
-                                                                    <polygon fill="#FFFFFF" points="4.1,17.3 -0.7,12.5 0.7,11.1 2.1,12.5 2.1,0 4.1,0"></polygon>
-                                                                    <polygon fill="#B3B3B3" points="8.3,16.8 6.3,16.8 6.3,-0.6 11.2,4.3 9.7,5.7 8.3,4.3"></polygon>
-                                                                </g>
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div><span class="_2LyRT">All prices are in KSh</span></div>-->
                                 <div class="TTG-m">
                                     <div>
                                         <div data-test-selector="search-filters">
                                             <div class="JMiTG _3Gfh4" aria-label="Collapse filter">
-                                                <div class="_1-BRi">
-                                                    <div class="_3KLon">
-                                                        <h3 class="_3SCbi">Filter &amp; Refine</h3><span class="_1tD-6"></span></div><a class="_3Xng6" href="#">Clear all</a>
-                                                    <button class="_2xFAY">Done</button>
-                                                </div>
                                                 <div class="_1loc3" data-test-selector="filter-category">
-                                                    <!--<button class="_61rqe XLw0c" type="button" aria-label="Click to collapse">
-                                                        <div class="_1HhXF">
-                                                            
-                                                        </div>
-                                                    </button>-->
                                                     <div class="_1y-cL">
                                                         <nav class="_31Giv">
                                                             <ul data-test-selector="category-filter">
                                                                 <li class="_1SXRP">
-                                                                    <a class="_1OYwR fXC7e _2tIrr" href="<?=$categoryPath?>">
+                                                                    <a class="_1OYwR fXC7e _2tIrr" href="<?=$products_url;?>">
                                                                         <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 8 12" class="lb8Bs" style="vertical-align:middle">
                                                                             <title>Chevron Left</title>
                                                                             <g fill="none" stroke="none" stroke-width="1" fill-rule="evenodd">
@@ -219,95 +49,28 @@
                                                                                     <polyline transform="translate(3.500000, 5.507797) rotate(90.000000) translate(-3.500000, -5.507797) " points="-1.5 3 3.5155939 8.0155939 8.5 3.0311879"></polyline>
                                                                                 </g>
                                                                             </g>
-                                                                        </svg>All categories</a><!--<span class="_1kd89"><?= count($categories)?></span>--></li>
+                                                                        </svg>All categories</a></li>
 																		<?php
-																		$products = array();
-																		 foreach($categories as $category){
-																		   $link_array = explode('/',$category['href']);
-																		   $page_link = end($link_array);
-																		   
-																		 
+																		 foreach($categories_list as $category){
 																		 ?>
-																		 <li class="_1SXRP"><a class="_1OYwR _1Y9yS" href="<?='?cat='.$page_link?>"> <?=$category['name']?></a><!--<span class="_1kd89">232</span>--></li>
+                                                                                                                                                 <li class="_1SXRP"><a class="_1OYwR _1Y9yS" href="<?=$products_url;?>&filter_category=<?=$category['category_id']?>"> <?=$category['name'];?></a></li>
 																		
 																	   <?php } ?>		
-                                                                <!--<li class="_1SXRP"><a class="_1OYwR _1HFue" href="#">Site Templates</a><span class="_1kd89">232</span></li>
-                                                                <li class="_1SXRP"><a class="_1OYwR _1Y9yS" href="#">Retail</a><span class="_1kd89">108</span></li>-->
+                                                                
                                                                 
                                                             </ul>
                                                         </nav>
                                                     </div>
                                                 </div>
-												<!--<div class="_1loc3" data-test-selector="filter-price">
-                                                  Price: KSh <span id="show-min">0</span>-<span id="show-max">4000</span> <input id="ex2" type="text"  class="span2" value="" data-slider-min="0" data-slider-max="4000" data-slider-step="10" data-slider-value="[0,4000]"/>
-                                                </div>-->	
-												<!--<div class="_1loc3">
-												   <h4>Filter By Price</h4>
-													<div class="checkbox">
-													  <label><input name="price_slabs" data-start="1" data-end="500" type="checkbox" class="price_filter" value="1-500">1 - 500 KSh</label>
-													</div>
-													<div class="checkbox price_filter">
-													  <label><input type="checkbox" name="price_slabs" data-start="500" data-end="1000" class="price_filter" value="500-1000">500 - 1000 KSh</label>
-													</div>
-													<div class="checkbox price_filter">
-													  <label><input type="checkbox" name="price_slabs" data-start="1000" data-end="2000" class="price_filter" value="1000-2000">1000 - 2000 KSh</label>
-													</div>
-													<div class="checkbox price_filter">
-													  <label><input type="checkbox" name="price_slabs" class="price_filter" data-start="2000" data-end="5000" value="2000-5000">2000 - 5000 KSh</label>
-													</div>
-                                                </div>-->
-
-                                                <!--<div class="_1loc3" data-test-selector="filter-tags">
-                                                    
-                                                 </div>
-                                                <div class="_1loc3" data-test-selector="filter-price">
-                                                   
-                                                </div>
-                                                <div class="_1loc3" data-test-selector="filter-sales">
-                                                 
-                                                </div>
-                                                <div class="_1loc3" data-test-selector="filter-rating">
-                                                    
-                                                </div>
-                                                <div class="_1loc3" data-test-selector="filter-date-added">
-                                                    
-                                                </div>
-                                                <div class="_1loc3" data-test-selector="filter-compatible-with">
-                                                   
-                                                </div>-->
+												
                                             </div>
                                         </div>
                                     </div>
                                     <div class="_1o7LM" style="margin-top: -50px;">
                                         <div class="_1bTly" style="visibility:hidden">
-                                            <!--<div id="selected-filters" class="_3rUJ8">
-                                                <p class="_1X0WU"><span class="_3HYTF">232 </span>items
-                                                    
-                                                <ol vocab="http://schema.org/" typeof="BreadcrumbList" class="_1cD1-">
-                                                    <li property="itemListElement" typeof="ListItem" class="_2OqIW"><a property="item" typeof="WebPage" class="_3LDhC" href="#"><span property="name">All Categories</span></a>
-                                                        <meta property="position" content="1">
-                                                    </li><span class="_2OYn5">/</span>
-                                                    <li property="itemListElement" typeof="ListItem" class="_2OqIW"><a property="item" typeof="WebPage" class="_2g9Ug" href="#"><span property="name" class="_3o55k">Site Templates</span></a>
-                                                        <meta property="position" content="2">
-                                                    </li>
-                                                </ol>
-                                                <div class="_2rHkX" data-test-selector="selectedFiltersWrapper">
-                                                    <ul class="_2FpDo">
-                                                        <li class="s8ScO">
-                                                            <a class="_3g6eY" aria-label="Remove Term 'list view'" href="#">
-                                                                <div class="_1x3ky"><span class="wcg2R">Term 'list view'</span></div><span class="deTU3"><svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="8" width="8" viewBox="0 0 10 10" style="vertical-align: middle;"><title>Close</title><g><path d="M9.888641,1.2053571 C9.962881,1.2797623 10,1.3690471 10,1.4732143 C10,1.5773815 9.962881,1.6666663 9.888641,1.7410714 L6.904232,4.7321429 C6.829992,4.806548 6.792873,4.8958328 6.792873,5 C6.792873,5.1041672 6.829992,5.193452 6.904232,5.2678571 L9.86637,8.2589286 C9.955457,8.3333337 10,8.4226185 10,8.5267857 C10,8.6309529 9.955457,8.7202377 9.86637,8.7946429 L8.797327,9.8883929 C8.723088,9.962798 8.63029,10 8.518931,10 C8.407572,10 8.314774,9.962798 8.240535,9.8883929 L5.278396,6.8973214 C5.204157,6.8229163 5.111359,6.7857143 5,6.7857143 C4.888641,6.7857143 4.795843,6.8229163 4.721604,6.8973214 L1.737194,9.8883929 C1.662954,9.962798 1.573868,10 1.469933,10 C1.365998,10 1.276912,9.962798 1.202673,9.8883929 L0.111359,8.7946429 C0.037119,8.7202377 0,8.6309529 0,8.5267857 C0,8.4226185 0.037119,8.3333337 0.111359,8.2589286 L3.095768,5.2678571 C3.170008,5.193452 3.207127,5.1041672 3.207127,5 C3.207127,4.8958328 3.170008,4.806548 3.095768,4.7321429 L0.111359,1.7410714 C0.037119,1.6666663 0,1.5736613 0,1.4620536 C0,1.3504459 0.037119,1.2574408 0.111359,1.1830357 L1.202673,0.1116071 C1.276912,0.037202 1.36971,0 1.481069,0 C1.592428,0 1.685226,0.037202 1.759465,0.1116071 L4.721604,3.1026786 C4.795843,3.1770837 4.888641,3.2142857 5,3.2142857 C5.111359,3.2142857 5.204157,3.1770837 5.278396,3.1026786 L8.262806,0.1116071 C8.337046,0.037202 8.426132,0 8.530067,0 C8.634002,0 8.723088,0.037202 8.797327,0.1116071 L9.888641,1.2053571 Z"></path></g></svg></span></a>
-                                                        </li>
-                                                    </ul><a class="GlMar" href="#">Clear all</a></div>
-                                            </div>-->
+                                            
 											            <div class="btn-group">
-                                                            <!--<a onclick="changelayout('list')" id="switch-list" class="btn-search-switch is-active" rel="nofollow" aria-label="list view" href="#">
-                                                                <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" title="List" style="vertical-align:middle">
-                                                                    <title>List</title>
-                                                                    <g>
-                                                                        <path d="M0,3 L0,1 L2,1 L2,3 L0,3 Z M0,7 L0,5 L2,5 L2,7 L0,7 Z M0,11 L0,9 L2,9 L2,11 L0,11 Z M0,15 L0,13 L2,13 L2,15 L0,15 Z M4,3 L4,1 L16,1 L16,3 L4,3 Z M4,7 L4,5 L16,5 L16,7 L4,7 Z M4,11 L4,9 L16,9 L16,11 L4,11 Z M4,15 L4,13 L16,13 L16,15 L4,15 Z"></path>
-                                                                    </g>
-                                                                </svg>
-                                                            </a>-->
+                                                            
                                                             <a  style="visibility:hidden" onclick="changelayout('grid')" id="switch-grid" class="btn-search-switch" rel="nofollow" aria-label="grid view" href="#">
                                                                 <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 16 16" title="Grid" style="vertical-align:middle">
                                                                     <title>Grid</title>
@@ -319,33 +82,13 @@
                                                         </div>
                                         </div>
                                         <div class="m0T0C">
-										  <?php
-											$products = array();
-											 foreach($categories as $category){
-											  $link_array = explode('/',$category['href']);
-											   $page_link = end($link_array);
-											   if(isset($_REQUEST['cat'])){
-												 if(isset($category['products']) && ($_REQUEST['cat'] == $page_link)){
-													$products  = array_merge( $products,$category['products']);
-												 }
-											   }else{
-												  $products  = array_merge( $products,$category['products']);
-											   }
-											 
-											 ?>
-										   <?php } ?>
+										  
                                             <div class="_47ahp" data-test-selector="search-results">
-											<?php if(count($products)>0){?>
+											<?php if(count($products)>0){ ?>
                                                 <ul id="items-ul" class="_2tY3C yOn4a" data-test-selector="item-cards-layout-grid">
 												
 												 <?php 
-												   if(isset($_REQUEST['product'])){
-													  $products = array_filter($products, function ($var) {
-															return ($var['name'] == $_REQUEST['product']);
-												      });
-												   }
-													foreach($products as $product) {
-													//echo '<pre>';print_r($product);
+											foreach($products as $product) {
 												  ?>
                                                    <li class="_1cn3x" data-price="<?=str_replace('KSh ','',$product['variations'][0]['special'])?>">
                                                    
@@ -353,7 +96,7 @@
                                                     <div class="_2sT86 EurVi">
                                                     <article class="_3Oe1A">
 
- <a class="product-detail-bnt open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
+ <a class="product-detail-bnt open-popup" role="button" data-store="<?= $product['store_id'] ?>" data-id="<?= $product['product_store_id'] ?>" target="_blank"  aria-label="<?=$product['name']?>">
                                                   
                                                     <div class="col-md-12 col-sm-12 pl0 pr0">
                                                     <div class="col-md-12 col-sm-12 pl0 pr0 listwidth">
@@ -388,7 +131,6 @@
                                         <div class="vfsyA col-md-12 col-sm-12 pl0">
                                                     <div class="_25ygu">
                                                      <div class="JHf2a">
-                                                        <!--<a class="R8zaM" href="#"><?= $heading_title;?></a>-->
                                                         
                                                         </div>
 
@@ -401,39 +143,22 @@
   <span id="flag-qty-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" style="padding:5px;display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>"><?php echo $product['qty_in_cart']?> items in cart <i class="fas fa-flag"></i></span>
 
 
-                                                   <!-- <a href="#" class="_2Pk9X" tabindex="0"><?=$product['name']?></a>
-													
-                                                    <a class="R8zaM">( per <?=$product['unit']?> )</a>-->
+                                                   
                                                        
                                                     </div>
                                                 </div>
-                                                 <div class=""><!--col-md-12 col-sm-12 pl0 pr0 setproductimg-->
-                                                   <!-- <div class="variation-selector-container">
-                                                        <p class="variations-title">Variation</p>
-                                                        <select class="product-variation">
-                                                            <?php foreach($product['variations'] as $variation) { ?>
-                                                            <option value="<?php echo $variation[variation_id]; ?>"
-                                                                    data-price="<?php echo $variation[price]; ?>"
-                                                                    data-special="<?php echo $variation[special]; ?>">
-                                                                <?php  echo 'per ' . $variation[weight] . ' ' . $variation['unit']; ?>
-                                                            </option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </div>-->
+                                                 <div class="">
                                                 <div class="_2D2lC">
                                                             <div class="-DeRq">
-                                                               <!-- <?= $product['variations'][0]['special']; ?></div>-->
                                                         </div>
                                                         <div>
                                                         <div class="_2xqFO">
-                                                               <!-- <div class="_3QV9M"><strike><?= $product['variations'][0]['price'];?></strike> </div>-->
                                                                     
                                                             </div>
                                                         </div>
                                                                           <div class="_2bSMY">
                                                         <div class="_31alT">
-                                                           <!-- <a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>-->
-                                                          <div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>"data-variation-id="<?= $product['product_variation_store_id'] ?>" id="action_<?= $product['product_variation_store_id'] ?>">
+                                                          <div class="pro-qty-addbtn" data-store-id="<?= $product['store_id'] ?>"data-variation-id="<?= $product['product_variation_store_id'] ?>" id="action_<?= $product['product_variation_store_id'] ?>">
 
 													      
 									
@@ -531,9 +256,9 @@
                                                     <div class="GeySM"><span class="_2g_QW">Unit:</span> <span class="_3TIJT"><?= $product['unit']?></span></div>
                                                 </section>
                                                 <section data-id="<?= $product['product_store_id'] ?>" class="VRlLl">
-                                                    <a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $current_store;?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
+                                                    <a class="_3tfm8 _3ePxY  product-detail-bnt product-img product-description open-popup" role="button" data-store=<?= $product['store_id'];?> data-id="<?= $product['product_store_id'] ?>" target="_blank" rel="noopener noreferrer">Preview</a>
 
-                                                    <div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>"
+                                                    <div class="pro-qty-addbtn" data-store-id="<?= $product['store_id'] ?>"
                                                          data-variation-id="<?= $product['product_variation_store_id'] ?>"
                                                          id="action_<?= $product['product_variation_store_id'] ?>">
 
@@ -620,7 +345,7 @@
 							<?php echo $product['variations'][0]['special']; ?>
 							</span>
 							<?php } ?>
-							<div class="pro-qty-addbtn" data-store-id="<?= $current_store ?>" data-variation-id="<?= $product['store_product_variation_id'] ?>" id="action_<?= $product['product_store_id'] ?>">
+							<div class="pro-qty-addbtn" data-store-id="<?= $product['store_id'] ?>" data-variation-id="<?= $product['store_product_variation_id'] ?>" id="action_<?= $product['product_store_id'] ?>">
 
 						 
 							</div>
@@ -717,44 +442,6 @@
 
 <!-- Organic Theme Code End --->
 
-<!--<div class="col-lg-10 col-md-9 col-sm-8 col-xs-12">
-
-    <?php if(isset($offer_show) && $offer_show && count($offer_products['products']) > 0 ) { ?>
-        <div class="row">
-            <div class="col-md-12 col-sm-12">
-                <div class="product-category-block">
-                    <h2><?= $text_offer ?><a href=""> <a style="color: #d60343;margin-left: 7px;font-size: 14px;letter-spacing: 0;text-decoration: underline;" href="<?= $offer_href ?>" id="view-all"><?= $text_view ?></a></h2>
-                </div>
-            </div>
-        </div>
-         <div class="row">
-             <div class="store-list-wrapper" style="display:block;">
-                <?php $products = $offer_products['products'] ?>
-                <?php /* require(DIR_BASE.'../../front/ui/theme/mvgv2/template/product/product_collection.php'); */ ?>
-            </div>
-        </div>
-    <?php } ?>
-
-    <?php foreach($categories as $category){ ?>
-
-            <?php if($category['products']){ ?>
-                <div class="row">
-                    <div class="col-md-12 col-sm-12">
-                        <div class="product-category-block">
-                            <h2><?= $category['name'] ?><a href=""> <a style="color: #d60343;margin-left: 7px;font-size: 14px;letter-spacing: 0;text-decoration: underline;" href="<?= $category['href'] ?>" id="view-all"><?= $text_view ?></a></h2>
-                        </div>
-                    </div>
-                </div>
-                 <div class="row">
-                     <div class="store-list-wrapper" style="display:block;">
-                        <?php $products = $category['products'] ?>
-                        <?php // require(DIR_BASE.'../../front/ui/theme/mvgv2/template/product/product_collection.php'); ?>
-                    </div>
-                </div>
-        <?php } ?>
-    <?php } ?>
-</div>-->
-
         
         </div>
     </div>
@@ -769,7 +456,6 @@
     <?= $login_modal ?>
     <?= $signup_modal ?>
     <?= $forget_modal ?>
-    <?= $contactus_modal ?>
 
 <div class="listModal-popup">
     <div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -946,19 +632,6 @@
         todayHighlight: true,
         autoclose: true,
     });
-    // jQuery(function($){
-    //     console.log("signup mask");
-    //    $("#phone_number").mask("(99) 99999-9999",{autoclear:false,placeholder:"(##) #####-####"});
-    // });
-    /*jQuery(function($){
-        console.log("mask");
-       $("#phone_number").mask("<?= $telephone_mask_number ?>",{autoclear:false,placeholder:"<?= $telephone_mask ?>"});
-    });*/
-    
-    jQuery(function($) {
-        console.log(" fax-number mask");
-       $("#fax-number").mask("<?= $taxnumber_mask_number ?>",{autoclear:false,placeholder:"<?= $taxnumber_mask ?>"});
-    });
 
     $(function() {
         console.log("lazy f");
@@ -1025,30 +698,6 @@
         }
     });
     </script>
-
-    <?php if ($not_delivery): ?>
-
-    <div id="notallowed-others" class="modal fade " aria-hidden="true">
-        <div class="modal-dialog  modal-sm">
-            <div class="modal-content" style="height:150px">
-                <div class="modal-header">
-                    <h4 class="modal-title"><?= $error_no_delivery ?></h4>
-                </div>
-                <div class="modal-body text-center">
-                    <a href="#" id="clearcart" class="btn btn-danger btn-lg"><?= $button_clear_cart ?></a>
-                    <a href="index.php?path=checkout/checkout" class="btn btn-success btn-lg"><?= $button_checkout ?></a>
-                </div><!-- END .modal-body -->
-            </div><!-- END .modal-content -->
-        </div><!-- END .modal-dialog -->
-    </div>
-    <script type="text/javascript">
-     $('#notallowed-others').modal({backdrop: 'static', keyboard: false}); 
-     
-    </script>
-    <?php endif ?>
-
-
-    
 
     <script type="text/javascript">
 	function getUrlParameter(sParam) {
@@ -1233,19 +882,15 @@
 </script>
 <script type="text/javascript">
 $(document).delegate('#selectedCategory', 'change', function () {
-console.log($( this ).val());
-console.log($( this ).attr('data-url'));
-var url = $( this ).attr('data-url');
+var url = '<?=$products_url;?>';
 var sorting = $("#sorting").val();
-window.location.replace(url+"index.php?path=common/home&filter_category="+$( this ).val()+"&filter_sort="+sorting);
+window.location.replace(url+"&filter_category="+$( this ).val()+"&filter_sort="+sorting);
 });
 
 $(document).delegate('#sorting', 'change', function () {
-console.log($( this ).val());
-console.log($( this ).attr('data-url'));
-var url = $( this ).attr('data-url');
+var url = '<?=$products_url;?>';
 var selectedCategory = $("#selectedCategory").val();
-window.location.replace(url+"index.php?path=common/home&filter_sort="+$( this ).val()+"&filter_category="+selectedCategory);
+window.location.replace(url+"&filter_sort="+$( this ).val()+"&filter_category="+selectedCategory);
 });
 </script>
     <style>
@@ -1275,3 +920,4 @@ window.location.replace(url+"index.php?path=common/home&filter_sort="+$( this ).
 </body>
 
 </html>
+
