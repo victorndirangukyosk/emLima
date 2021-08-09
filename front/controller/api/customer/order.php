@@ -4066,11 +4066,16 @@ class ControllerApiCustomerOrder extends Controller {
                 if (isset($args['mpesa_refrence_id'])) {
                     $this->load->model('payment/mpesa');
                     $this->load->model('checkout/order');
+                    $this->load->model('account/order');
 
                     foreach ($order_ids as $order_id) {
-                        $this->model_payment_mpesa->updateOrderIdMpesaOrder($order_id, $args['mpesa_refrence_id']);
+                        $order_details = $this->model_account_order->getOrderDetailsById($order_id);
+                        /* ALLOWING PAYMENT FOR KWIKBASKET ORDERS ONLY */
+                        if ($order_details['store_id'] == 75) {
+                            $this->model_payment_mpesa->updateOrderIdMpesaOrder($order_id, $args['mpesa_refrence_id']);
 
-                        $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mpesa_order_status_id'));
+                            $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mpesa_order_status_id'));
+                        }
                     }
                 }
             } elseif ('interswitch' == $args['payment_method_code']) {
