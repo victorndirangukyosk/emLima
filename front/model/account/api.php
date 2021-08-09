@@ -720,5 +720,184 @@ class ModelAccountApi extends Model
     }
 
    
+    public function register_user()
+    {
+        $data['status'] = false;
+        $this->load->language('account/login');
+        $this->load->language('account/register');
+        $this->load->language('api/general');
+        $this->load->model('account/customer');
+        $log = new Log('error.log');
+        $this->request->post['telephone'] = preg_replace('/[^0-9]/', '', $this->request->post['telephone']);
+
+        $this->request->post['phone'] = $this->request->post['telephone'];
+        //echo "<pre>";print_r($this->request->post);die;
+        $log->write('New User registration with phone number '.$this->request->post['phone']);
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->signup_validate()) {
+            $this->load->model('account/customer');
+
+            if (isset($this->request->post['signup_otp']) && isset($this->request->post['phone'])) {
+                //echo "<pre>";print_r("er");die;
+                $otp_data = $this->model_account_customer->getOTP($this->request->post['phone'], $this->request->post['signup_otp'], 'register');
+
+                //echo "<pre>";print_r($otp_data);die;
+                if (!$otp_data) {
+                    $data['status'] = false;
+                    $this->error['warning'] = $this->language->get('error_invalid_otp');
+                // user not found
+                } else {
+                    // add activity and all
+
+                    $log = new Log('error.log');
+                    $log->write('register');
+
+                    $referee_user_id = null;
+
+                    if (count($_COOKIE) > 0 && isset($_COOKIE['referral']) && ('expired' != $_COOKIE['referral'])) {
+                        //echo "Cookies are enabled.";
+                        $this->request->post['referee_user_id'] = $_COOKIE['referral'];
+                        $referee_user_id = $_COOKIE['referral'];
+
+                        setcookie('referral', null, time() - 3600, '/');
+                        //unset($_COOKIE['referral']);
+                    }
+
+                    if (isset($date)) {
+                        $date = DateTime::createFromFormat('d/m/Y', $date);
+
+                        $this->request->post['dob'] = $date->format('Y-m-d');
+                    } else {
+                        $this->request->post['dob'] = null;
+                    }
+                    $this->request->post['source'] = 'MOBILE';
+                    //$this->request->post['password'] = mt_rand(1000,9999);
+                    // echo "<pre>";print_r($this->request->post);die;
+                    // $accountmanagerid = NULL;
+                    // $accountmanagerid =$this->request->post['accountmanagerid'];
+                    // $log->write('accountmanagerid from API');
+                    // $log->write($accountmanagerid);
+                    $customer_id = $this->model_account_customer->addCustomer($this->request->post,true);
+
+                    // Clear any previous login attempts for unregistered accounts.
+                    $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
+
+                    $logged_in = $this->customer->loginByPhone($customer_id);
+
+                    unset($this->session->data['guest']);
+
+                    // Add to activity log
+                    $this->load->model('account/activity');
+
+                    $activity_data = [
+                        'customer_id' => $customer_id,
+                        'name' => $this->request->post['firstname'].' '.$this->request->post['lastname'],
+                    ];
+
+                    $log->write('in post signup 1');
+                    $this->model_account_activity->addActivity('register', $activity_data);
+
+                    /* If not able to login*/
+                    $data['status'] = true;
+
+                    if (!$logged_in) {
+                        $data['status'] = false;
+                    }
+
+                    $data['text_new_signup_reward'] = $this->language->get('text_new_signup_reward');
+                    $data['text_new_signup_credit'] = $this->language->get('text_new_signup_credit');
+
+                    $data['message'] = $this->language->get('verify_mail_sent');
+
+                    if (isset($referee_user_id)) {
+                        $config_reward_enabled = $this->config->get('config_reward_enabled');
+
+                        $config_credit_enabled = $this->config->get('config_credit_enabled');
+
+                        $config_refer_type = $this->config->get('config_refer_type');
+
+                        $config_refered_points = $this->config->get('config_refered_points');
+                        $config_referee_points = $this->config->get('config_referee_points');
+
+                        $log->write($customer_id);
+                        $log->write($config_refer_type);
+                        $log->write($referee_user_id.' referee_user_id');
+
+                        $log->write($config_referee_points);
+                        $log->write($config_refered_points);
+
+                        if ('reward' == $config_refer_type) {
+                            $log->write($config_reward_enabled);
+
+                            if ($config_reward_enabled && $config_refered_points && $config_referee_points) {
+                                $log->write('if');
+
+                                //referred points below
+                                $this->model_account_activity->addCustomerReward($customer_id, $config_refered_points, $data['referral_description']);
+
+                                //referee points below
+                                //$this->model_account_activity->addCustomerReward( $referee_user_id,$config_referee_points,$data['referral_description'] );
+                            }
+                        } elseif ('credit' == $config_refer_type) {
+                            $log->write('credit if');
+
+                            if ($config_credit_enabled && $config_refered_points && $config_referee_points) {
+                                //referred points below
+                                $this->model_account_activity->addCredit($customer_id, $data['referral_description'], $config_refered_points);
+
+                                //referee points below
+                                //$this->model_account_activity->addCredit($referee_user_id, $data['referral_description'] , $config_referee_points);
+                            }
+                        }
+                    } else {
+                        // add signup wallet for new registration. if is enabled
+
+                        //below was used for signup reward
+
+                        $config_reward_enabled = $this->config->get('config_reward_enabled');
+
+                        if ($config_reward_enabled) {
+                            $log->write('if');
+
+                            $points = $this->config->get('config_reward_onsignup');
+
+                            if ($points) {
+                                $this->model_account_activity->addCustomerReward($customer_id, $points, $data['text_new_signup_reward']);
+                            }
+                        }
+
+                        //below was used for signup credit
+
+                        $config_credit_enabled = $this->config->get('config_credit_enabled');
+
+                        if ($config_credit_enabled) {
+                            $log->write('credit enabled if');
+                            $points = $this->config->get('config_credit_onsignup');
+
+                            if ($points) {
+                                $this->model_account_activity->addCredit($customer_id, $data['text_new_signup_credit'], $points);
+                            }
+                        }
+                    }
+
+                    // delete otp
+                    $this->model_account_customer->deleteOTP($this->request->post['phone'], $this->request->post['signup_otp'], 'register');
+
+                    $data['success_message'] = $this->language->get('text_valid_otp');
+                    $data['customer_id'] = $customer_id;
+                }
+            } else {
+                // enter valid number throw error
+                $data['status'] = false;
+                //$data['error_warning'] = $this->language->get('error_invalid_otp');
+                $this->error['warning'] = $this->language->get('error_invalid_otp');
+            }
+        }
+
+        foreach ($this->error as $key => $value) {
+            $data['errors'][] = ['type' => $key, 'body' => $value];
+        }
+
+        return $data;
+    }
 
 }
