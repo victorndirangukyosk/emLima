@@ -4084,7 +4084,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write($args);
                 $log->write('args');
                 //save for refrence id correct order id
-                if (isset($args['interswitch_refrence_id'])) {
+                if (isset($args['transaction_reference'])) {
                     $status = $args['response_code'] == 00 ? 'COMPLETED' : 'FAILED';
                     $status_id = $args['response_code'] == 00 ? $this->config->get('interswitch_order_status_id') : $this->config->get('interswitch_failed_order_status_id');
                     $this->load->model('payment/interswitch');
