@@ -404,7 +404,7 @@
 					  ?>
 
   <?php if(count($category['products'])>0) { ?>
-  <div class="container--full-width featured-categories <?php echo ($i==1) ? " first-feature-cat": "" ?>">
+  <div class="container--full-width featured-categories <?php if($i == 1) { echo "first-feature-cat"; } ?> ">
     <div class="container" style="width:100%;">
       <div class="_47ahp" data-test-selector="search-results">
         <div style="margin-top: 16px" class="clearfix featured-categories__header">
