@@ -1597,7 +1597,7 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
         }
 
-        if (!empty($data['filter_customer'])) {
+        if (!empty($data['filter_customer']) && $data['filter_customer'] != 'undefined') {
             $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
