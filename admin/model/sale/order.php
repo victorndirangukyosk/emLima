@@ -1613,7 +1613,7 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
         }
 
-        if (!empty($data['filter_delivery_method'])) {
+        if (!empty($data['filter_delivery_method']) && $data['filter_delivery_method'] != 'undefined') {
             $sql .= " AND o.shipping_method LIKE '%" . $data['filter_delivery_method'] . "%'";
         }
 
@@ -1629,7 +1629,7 @@ class ModelSaleOrder extends Model {
             $sql .= " AND DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
         }
 
-        if (!empty($data['filter_total'])) {
+        if (!empty($data['filter_total']) && $data['filter_total'] != 'undefined') {
             $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
         }
 
