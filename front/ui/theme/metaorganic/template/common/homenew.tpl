@@ -403,7 +403,7 @@
 
 					  ?>
 
-  <?php if(count($category['products'])>0){?>
+  <?php if(count($category['products'])>0) { ?>
   <div class="container--full-width featured-categories <?php echo ($i==1) ? " first-feature-cat": "" ?>">
     <div class="container" style="width:100%;">
       <div class="_47ahp" data-test-selector="search-results">
@@ -424,7 +424,7 @@
                 alt="<?=$product['name']?>">
               <div class="_25ygu">
                 <?=$product['name']?>
-                <br />
+                <br/>
                 <div style="color:#6dbd46">
                   <?= $product['variations'][0]['special'];?>
                   <?php  echo '/ Per ' . $product['variations'][0]['unit']; ?>
@@ -446,7 +446,7 @@
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <div class="modal-body class=" col-lg-2 col-md-4 col-sm-6 col-xs-6 nopadding product-details"
+                <div class="modal-body class="col-lg-2 col-md-4 col-sm-6 col-xs-6 nopadding product-details"
                   style="border-right: 1px solid rgb(215, 220, 214);">
                   <div>
 
@@ -490,7 +490,7 @@
                         </a>
                       </h3>
 
-                      <?php if(trim(isset($product['unit']))){ ?>
+                      <?php if(trim(isset($product['unit']))) { ?>
                       <p class="product-info open-popup" data-id="<?= $product['product_store_id'] ?>"><span
                           class="small-info">
                           <?= $product['unit'] ?>
@@ -563,7 +563,7 @@
           border-radius: 4px;
         }
       </style>
-      <?php if(count($category['products'])>11){?>
+      <?php if(count($category['products'])>11) { ?>
       <span class="view-all-button"><a
           href="<?=$this->url->link('common/home/allproducts&filter_category='.$category['id'])?>">View All
           <?=$category['name']?>
@@ -573,142 +573,13 @@
 
 
   </div>
-  </div>
 
 
   <?php } ?>
-  <?php /* ?>
-  <div class="featured-categories__scroller">
-    <div class="clearfix featured-categories__items owl-carousel owl-theme">
-      <?php foreach($categories as $categoty){
-                           $link_array = explode('/',$categoty['href']);
-                           $page_link = end($link_array);
-                          ?>
-      <div class="featured-categories__item">
-        <!--<a href="<?=$this->url->link('product/store', 'store_id=2').'?cat='.$page_link?>"  class="featured-categories__item-link">-->
-        <a href="<?=$base?>?page=stores" class="featured-categories__item-link">
-          <div class="featured-categories__item-description featured-categories__item-description--cars">
-            <h4 class="featured-categories__item-description-title">
-              <?=$categoty['name']?>
-            </h4>
-            <!--<p class="featured-categories__item-description-total-ads">122,700&nbsp;ads</p>-->
-          </div>
-          <img src="<?=$categoty['thumb']?>" alt="<?=$categoty['name']?>">
-        </a>
-      </div>
-      <?php } ?>
-
-    </div>
-  </div>
-  <?php */?>
-  <!--</div>
-             </div>
-		<?php /* ?>
-         <div id="homepage-gallery" class="homepage-gallery c-clearfix items-per-page-11 can-fit-4-blocks">
-            <div class="tabbed js-tabbed-module c-clearfix">
-               <div class="tabbed__tabs-container" data-tabbed-role="controls">
-                  <h1 class="h1set">Stores</h1>
-                  <?php if(!$stores){?>
-                     <h2>No Stores Found, Try with other stores</h2>'
-                  <?php } ?>
-               </div>
-
-               <div class="tabbed__content-container">
-                  <div class="tabbed__tab-content homepage-gallery__tab-gallery tabbed__active-content" data-tabbed-role="tab" data-tab-content-name="Diamond Plaza" style="">
-
-                     <div class="tabbed__tab-items c-clearfix">
-
-                        <?php foreach($stores as $store){
-
-                        ?>
-                        <a href="<?= $base?>store/<?= $store['href'];?>">
-                        <div class="homepage-gallery__block gallery-listing js-click-block" data-analytics="{&quot;category&quot;:&quot;USER_ENGAGEMENT&quot;,&quot;action&quot;:&quot;goto_Mydhukha_gallery&quot;,&quot;label&quot;:&quot;NEW_HP&quot;}">
-                           <div class="gallery-listing__thumb-container">
-                              <a href="<?= $base?>store/<?= $store['href'];?>" class="gallery-listing__thumb-link">
-                              <img src="<?= $store['thumb'];?>" class="gallery-listing__thumb">
-                              </a>
-                           </div>
-                           <div class="gallery-listing__details">
-                              <h3 class="gallery-listing__title pr0 text-center">
-                                 <a href="<?= $base?>store/<?= $store['href'];?>"><span><?= $store['name'];?></span></a>
-                              </h3>
-
-                              <a href="<?= $base?>store/<?= $store['href'];?>" class="gallery-listing__extras-link">
-                                 <div class="col-md-12 col-sm-12 addressdetailset pr0 pl0 text-center mb10"><i><?= $store['address'];?></i></div>
-                                 <div class="gallery-listing__extras ">
-                                    <div class="gallery-listing__location col-md-12 pl0 pr0">
-                                      <div class="col-md-6 col-sm-6 fontset pl0">
-                                      <i class="fa fa-star" aria-hidden="true"></i>
-                                      <i class="fa fa-star" aria-hidden="true"></i>
-                                      <i class="fa fa-star" aria-hidden="true"></i>
-                                      <i class="fa fa-star" aria-hidden="true"></i>
-
-                                      </div>
-                                      <div class="col-md-6 col-sm-6 addressdetailset pr0 storelistdetail"><?= $store['storeTypes'] ?></div>
-
-                                    </div>
-                                 </div>
-                              </a>
-                              <a href="<?= $base?>store/<?= $store['href'];?>" class="gallery-listing__watchlist watchlist j-watchlist" title="Add to watchlist" data-action="add" data-adid="1243508174">
-
-                                 <span class="watchlist__text">Add to watchlist</span>
-                              </a>
-                           </div>
-                        </div>
-                        </a>
-                        <?php } ?>
-
-
-                     </div>
-                     <!--div id="see-all" class="tabbed__see-all">
-                        <a class="button button--primary-outline tabbed__button-see-all" href="#">See all</a>
-                     </div>-->
-  </div>
-  <div class="tabbed__tab-content homepage-gallery__tab-activitylist" data-tabbed-role="tab"
-    data-tab-content-name="activitylist" style="display:none;"></div>
-  <div class="tabbed__tab-content homepage-gallery__tab-watchlist" data-tabbed-role="tab"
-    data-tab-content-name="Lavington" style="display:none;"></div>
-  <div class="tabbed__tab-content homepage-gallery__tab-alerts" data-tabbed-role="tab" data-tab-content-name="Westlands"
-    style="display:none;"></div>
-  <div class="tabbed__tab-content homepage-gallery__tab-alerts" data-tabbed-role="tab" data-tab-content-name="store"
-    style="display:none;"></div>
-
-
-  </div>
-  </div>
-  </div>
-  </div>
-  <?php */ ?>
+  
   <!-- /.page-container -->
   <div class="below-the-fold">
     <!-- /.page-container -->
-
-    <!--<div class="container--full-width popular-searches">
-            <div class="container">
-               <div class="popular-searches__content">
-                  <div id="footer-dynamic" class="c-clear c-text-center">
-                     <div class="c-dark-green">
-                        <span class="c-bold">Popular Items: </span>
-                        <a href="#" title="" class="popular-searches__link">Item 1</a>
-						<a href="#" title="" class="popular-searches__link">Item 2</a>
-						<a href="#" title="" class="popular-searches__link">Item 3</a>
-						<a href="#" title="" class="popular-searches__link">Item 4</a>
-						<a href="#" title="" class="popular-searches__link">Item 5</a>
-						<a href="#" title="" class="popular-searches__link">Item 6</a>
-						<a href="#" title="" class="popular-searches__link">Item 7</a>
-						<a href="#" title="" class="popular-searches__link">Item 8</a>
-						<a href="#" title="" class="popular-searches__link">Item 9</a>
-						<a href="#" title="" class="popular-searches__link">Item 10</a>
-						<a href="#" title="" class="popular-searches__link">Item 11</a>
-						<a href="#" title="" class="popular-searches__link">Item 12</a>
-						<a href="#" title="" class="popular-searches__link">Item 13</a>
-						<a href="#" title="" class="popular-searches__link">Item 14</a>
-						<a href="#" title="" class="popular-searches__link">Item 15</a>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>-->
     <div class="container--full-width section section--alternate" id="homepage-leaderboard-bottom">
       <div id="div-gpt-ad-632115744089839813-leaderboard-footer" class="clearfix placement google-banner"
         data-track-action="homepage" data-track-label="bottom1" style="display: none;"></div>
