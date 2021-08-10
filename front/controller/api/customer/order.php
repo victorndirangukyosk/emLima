@@ -4086,6 +4086,7 @@ class ControllerApiCustomerOrder extends Controller {
                 //save for refrence id correct order id
                 if (isset($args['interswitch_refrence_id'])) {
                     $status = $args['payment_status'] == false ? 'FAILED' : 'COMPLETED';
+                    $status_id = $args['payment_status'] == false ? $this->config->get('interswitch_failed_order_status_id') : $this->config->get('interswitch_order_status_id');
                     $this->load->model('payment/interswitch');
                     $this->load->model('payment/interswitch_response');
                     $this->load->model('checkout/order');
@@ -4098,7 +4099,7 @@ class ControllerApiCustomerOrder extends Controller {
                             $this->model_payment_interswitch_response->Saveresponse($order_details['customer_id'], $order_id, json_encode($args['payment_response']));
                             $this->model_payment_interswitch->updateOrderIdInterswitchOrderMobile($order_id, $order_details['customer_id'], $args['response_code'], $args['response_description'], $status, $args['transaction_reference'], $args['amount'], $args['payment_channel']);
 
-                            $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('interswitch_order_status_id'));
+                            $this->model_checkout_order->addOrderHistory($order_id, $status_id);
                         }
                     }
                 }
