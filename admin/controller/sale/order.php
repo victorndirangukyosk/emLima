@@ -414,7 +414,7 @@ class ControllerSaleOrder extends Controller {
     }
 
     public function getProductVariantsInfo() {
-        
+
         $this->load->model('sale/order');
         $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
         $log = new Log('error.log');
@@ -1247,7 +1247,7 @@ class ControllerSaleOrder extends Controller {
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
                 'delivery_id' => $result['delivery_id'],
-                'order_prefix' => $vendor_details['orderprefix'] != '' ? $vendor_details['orderprefix'].'-' : '',
+                'order_prefix' => $vendor_details['orderprefix'] != '' ? $vendor_details['orderprefix'] . '-' : '',
                 'vendor_name' => $vendor_details['lastname'],
                 'customer' => $result['customer'],
                 'company_name' => $result['company_name'],
@@ -2000,7 +2000,7 @@ class ControllerSaleOrder extends Controller {
             $this->load->language('sale/order');
 
             $this->document->setTitle($this->language->get('heading_title'));
-            
+
             $data['delivery_latitude'] = $order_info['latitude'];
             $data['delivery_longitude'] = $order_info['longitude'];
             $data['text_yes'] = $this->language->get('text_yes');
@@ -4358,16 +4358,20 @@ class ControllerSaleOrder extends Controller {
                         'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
                     ];
                 }
-                
+
                 $this->load->model('sale/customer');
+                $this->load->model('user/accountmanager');
                 $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
                 $order_customer_first_last_name = NULL;
                 $company_name = NULL;
                 if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
                     $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
                     $company_name = $order_customer_detials['company_name'];
+                    $customer_account_manager_detials = $this->model_user_accountmanager->getUser($order_customer_detials['account_manager_id']);
+                    $customer_account_manager_first_last_name = $customer_account_manager_detials['firstname'] . ' ' . $customer_account_manager_detials['lastname'];
+                    $customer_account_manager_phone = $customer_account_manager_detials['mobile'] == NULL ? '+254 ' . $customer_account_manager_detials['telephone'] : '+254 ' . $customer_account_manager_detials['mobile'];
                 }
-                
+
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
@@ -4388,9 +4392,9 @@ class ControllerSaleOrder extends Controller {
                     'shipping_city' => $order_info['shipping_city'],
                     'shipping_flat_number' => $order_info['shipping_flat_number'],
                     'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
-                    /*'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'],*/
+                    /* 'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'], */
                     'shipping_name' => $order_customer_first_last_name == NULL ? $order_info['firstname'] . ' ' . $order_info['lastname'] : $order_customer_first_last_name,
-                    /*'customer_company_name' => $order_info['customer_company_name'],*/
+                    /* 'customer_company_name' => $order_info['customer_company_name'], */
                     'customer_company_name' => $company_name == NULL ? $order_info['customer_company_name'] : $company_name,
                     'shipping_method' => $order_info['shipping_method'],
                     'po_number' => $order_info['po_number'],
@@ -4400,6 +4404,8 @@ class ControllerSaleOrder extends Controller {
                     'comment' => nl2br($order_info['comment']),
                     'vendor_terms_cod' => $order_info['vendor_terms_cod'],
                     'payment_terms' => $order_customer_detials['payment_terms'],
+                    'account_manager_name' => $customer_account_manager_first_last_name,
+                    'account_manager_phone' => $customer_account_manager_phone
                 ];
             }
         }
@@ -4626,22 +4632,26 @@ class ControllerSaleOrder extends Controller {
                 }
 
                 foreach ($totals as $total) {
-                    if($total['value']>0)
-                    $total_data[] = [
-                        'title' => $total['title'],
-                        'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                        'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
-                    ];
+                    if ($total['value'] > 0)
+                        $total_data[] = [
+                            'title' => $total['title'],
+                            'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                            'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
+                        ];
                 }
                 // echo "<pre>";print_r($total_data);die;
 
                 $this->load->model('sale/customer');
+                $this->load->model('user/accountmanager');
                 $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
                 $order_customer_first_last_name = NULL;
                 $company_name = NULL;
                 if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
                     $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
                     $company_name = $order_customer_detials['company_name'];
+                    $customer_account_manager_detials = $this->model_user_accountmanager->getUser($order_customer_detials['account_manager_id']);
+                    $customer_account_manager_first_last_name = $customer_account_manager_detials['firstname'] . ' ' . $customer_account_manager_detials['lastname'];
+                    $customer_account_manager_phone = $customer_account_manager_detials['mobile'] == NULL ? '+254 ' . $customer_account_manager_detials['telephone'] : '+254 ' . $customer_account_manager_detials['mobile'];
                 }
                 $data['delivery_charge'] = $order_info['delivery_charge'];
 
@@ -4703,6 +4713,8 @@ class ControllerSaleOrder extends Controller {
                     'delivery_charge' => $order_info['delivery_charge'],
                     'vendor_terms_cod' => $order_info['vendor_terms_cod'],
                     'payment_terms' => $order_customer_detials['payment_terms'],
+                    'account_manager_name' => $customer_account_manager_first_last_name,
+                    'account_manager_phone' => $customer_account_manager_phone
                 ];
             }
         }
@@ -8718,8 +8730,8 @@ class ControllerSaleOrder extends Controller {
             $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
             $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
             $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id);
-             if($delivery_charge>0)
-            $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
+            if ($delivery_charge > 0)
+                $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
         }
 
         $this->SendMailToCustomerWithDriverDetails($order_id);
