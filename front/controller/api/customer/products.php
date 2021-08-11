@@ -2238,9 +2238,9 @@ class ControllerApiCustomerProducts extends Controller {
 
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
-        if (!empty($data['filter_store'])) {
+        /*if (!empty($data['filter_store'])) {
             $sql .= ' AND ps.store_id="' . $data['filter_store'] . '"';
-        }
+        }*/
 
         /* if ($this->user->isVendor()) {
           // $sql .= ' AND p.vendor_id="'.$this->user->getId().'"';
