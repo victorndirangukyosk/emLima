@@ -4364,12 +4364,16 @@ class ControllerSaleOrder extends Controller {
                 $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
                 $order_customer_first_last_name = NULL;
                 $company_name = NULL;
+                $customer_account_manager_first_last_name = NULL;
+                $customer_account_manager_phone = NULL;
                 if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
                     $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
                     $company_name = $order_customer_detials['company_name'];
                     $customer_account_manager_detials = $this->model_user_accountmanager->getUser($order_customer_detials['account_manager_id']);
-                    $customer_account_manager_first_last_name = $customer_account_manager_detials['firstname'] . ' ' . $customer_account_manager_detials['lastname'];
-                    $customer_account_manager_phone = $customer_account_manager_detials['mobile'] == NULL ? '+254 ' . $customer_account_manager_detials['telephone'] : '+254 ' . $customer_account_manager_detials['mobile'];
+                    if ($order_customer_detials['account_manager_id'] > 0 && $order_customer_detials['account_manager_id'] != NULL && $customer_account_manager_detials != NULL) {
+                        $customer_account_manager_first_last_name = $customer_account_manager_detials['firstname'] . ' ' . $customer_account_manager_detials['lastname'];
+                        $customer_account_manager_phone = $customer_account_manager_detials['mobile'] == NULL ? '+254 ' . $customer_account_manager_detials['telephone'] : '+254 ' . $customer_account_manager_detials['mobile'];
+                    }
                 }
 
                 $data['orders'][] = [
@@ -4646,12 +4650,16 @@ class ControllerSaleOrder extends Controller {
                 $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
                 $order_customer_first_last_name = NULL;
                 $company_name = NULL;
+                $customer_account_manager_first_last_name = NULL;
+                $customer_account_manager_phone = NULL;
                 if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
                     $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
                     $company_name = $order_customer_detials['company_name'];
                     $customer_account_manager_detials = $this->model_user_accountmanager->getUser($order_customer_detials['account_manager_id']);
-                    $customer_account_manager_first_last_name = $customer_account_manager_detials['firstname'] . ' ' . $customer_account_manager_detials['lastname'];
-                    $customer_account_manager_phone = $customer_account_manager_detials['mobile'] == NULL ? '+254 ' . $customer_account_manager_detials['telephone'] : '+254 ' . $customer_account_manager_detials['mobile'];
+                    if ($order_customer_detials['account_manager_id'] > 0 && $order_customer_detials['account_manager_id'] != NULL && $customer_account_manager_detials != NULL) {
+                        $customer_account_manager_first_last_name = $customer_account_manager_detials['firstname'] . ' ' . $customer_account_manager_detials['lastname'];
+                        $customer_account_manager_phone = $customer_account_manager_detials['mobile'] == NULL ? '+254 ' . $customer_account_manager_detials['telephone'] : '+254 ' . $customer_account_manager_detials['mobile'];
+                    }
                 }
                 $data['delivery_charge'] = $order_info['delivery_charge'];
 
