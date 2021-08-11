@@ -43,8 +43,9 @@
            <!-- <li><a href="#tab-reward" data-toggle="tab"><?php echo $tab_reward; ?></a></li>-->
             <li><a href="#tab-ip" data-toggle="tab"><?php echo $tab_ip; ?></a></li>
             <li><a href="#tab-referral" data-toggle="tab"><?php echo $tab_referral; ?></a></li>
-			<li><a href="#tab-sub-customer" data-toggle="tab"><?php echo $tab_sub_customer; ?></a></li>
+	    <li><a href="#tab-sub-customer" data-toggle="tab"><?php echo $tab_sub_customer; ?></a></li>
             <li><a href="#tab-contact" data-toggle="tab"><?php echo $tab_contact; ?></a></li>
+            <li><a href="#tab-configuration" data-toggle="tab">Configuration</a></li>
            
             <?php } ?>
           </ul>
@@ -679,6 +680,24 @@
               <div class="text-right">
                 <button type="button" id="button-contact" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i> <?php echo $button_contact_add; ?></button>
               </div>
+            </div>
+            
+            <div class="tab-pane" id="tab-configuration">
+                <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-price-category">Price Category</label>
+                        <div class="col-sm-10">
+                            <select name="customer_category" id="input-price-category" class="form-control" <?php echo $customer_category_disabled; ?> >
+                            <option value="">Select Category</option>
+                            <?php foreach ($price_categories as $category) { ?>
+                            <?php if(isset($customer_category) && ($customer_category== $category['price_category'])){?>
+                            <option selected="selected" value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
+                            <?php }else {?>
+                             <option  value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
+                             <?php } ?>
+                            <?php } ?>
+                          </select>
+                        </div> 
+                </div>    
             </div>
 
             <div class="tab-pane" id="tab-ip">
