@@ -1589,47 +1589,47 @@ class ModelSaleOrder extends Model {
             $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
         }
 
-        if (!empty($data['filter_city'])) {
+        if (!empty($data['filter_city']) && $data['filter_city'] != 'undefined') {
             $sql .= " AND c.name LIKE '" . $data['filter_city'] . "%'";
         }
 
-        if (!empty($data['filter_order_id'])) {
+        if (!empty($data['filter_order_id']) && $data['filter_order_id'] != 'undefined') {
             $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
         }
 
-        if (!empty($data['filter_customer'])) {
+        if (!empty($data['filter_customer']) && $data['filter_customer'] != 'undefined') {
             $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
-        if (!empty($data['filter_vendor'])) {
+        if (!empty($data['filter_vendor']) && $data['filter_vendor'] != 'undefined') {
             $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';
         }
         // echo "<pre>";print_r($sql);die;
-        if (!empty($data['filter_store_name'])) {
+        if (!empty($data['filter_store_name']) && $data['filter_store_name'] != 'undefined') {
             $sql .= " AND o.store_name = '" . $data['filter_store_name'] . "'";
         }
 
-        if (!empty($data['filter_payment'])) {
+        if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
             $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
         }
 
-        if (!empty($data['filter_delivery_method'])) {
+        if (!empty($data['filter_delivery_method']) && $data['filter_delivery_method'] != 'undefined') {
             $sql .= " AND o.shipping_method LIKE '%" . $data['filter_delivery_method'] . "%'";
         }
 
-        if (!empty($data['filter_delivery_date'])) {
+        if (!empty($data['filter_delivery_date']) && $data['filter_delivery_date'] != 'undefined') {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added']) && $data['filter_date_added'] != 'undefined') {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
-        if (!empty($data['filter_date_modified'])) {
+        if (!empty($data['filter_date_modified']) && $data['filter_date_modified'] != 'undefined') {
             $sql .= " AND DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
         }
 
-        if (!empty($data['filter_total'])) {
+        if (!empty($data['filter_total']) && $data['filter_total'] != 'undefined') {
             $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
         }
 
