@@ -78,8 +78,10 @@ class ControllerApiCategories extends Controller {
                     $cat['name'] = htmlspecialchars_decode($cat['name']);
                     $cat['thumb'] = $this->model_tool_image->resize($cat['image'], 300, 300);
                     $cat['description'] = htmlspecialchars_decode($cat['description']);
+                    $products = NULL;
                     $data['filter_category_id'] = $cat['category_id'];
-                    $cat['products_count'] = $this->model_assets_product->getProductsForGrid($data);
+                    $products = $this->model_assets_product->getProductsForGrid($data);
+                    $cat['products_count'] = count($products);
                     if (0 == $cat['parent_id']) {
                         array_push($newCat, $cat);
                     }
@@ -97,8 +99,10 @@ class ControllerApiCategories extends Controller {
                     $cat['name'] = htmlspecialchars_decode($cat['name']);
                     $cat['thumb'] = $this->model_tool_image->resize($cat['image'], 300, 300);
                     $cat['description'] = htmlspecialchars_decode($cat['description']);
+                    $products = NULL;
                     $data['filter_category_id'] = $cat['category_id'];
-                    $cat['products_count'] = $this->model_assets_product->getProductsForGrid($data);
+                    $products = $this->model_assets_product->getProductsForGrid($data);
+                    $cat['products_count'] = count($products);
                     array_push($newCat, $cat);
                 }
             }
