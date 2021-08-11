@@ -267,21 +267,7 @@
                         </div>
                       </div>
                       
-                       <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-price-category">Price Category</label>
-                        <div class="col-sm-10">
-                            <select name="customer_category" id="input-price-category" class="form-control" <?php echo $customer_category_disabled; ?> >
-                            <option value="">Select Category</option>
-                            <?php foreach ($price_categories as $category) { ?>
-                            <?php if(isset($customer_category) && ($customer_category== $category['price_category'])){?>
-                            <option selected="selected" value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
-                            <?php }else {?>
-                             <option  value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
-                             <?php } ?>
-                            <?php } ?>
-                          </select>
-                        </div>
-                      </div>
+
                             
                             <?php if($parent_user_name != NULL) { ?>
                             <div class="form-group">
@@ -309,38 +295,7 @@
                                 </div>
                             </div>
                             <?php } ?>
-                            
-                        <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-account-manager">Account Manager Name</label>
-                        <div class="col-sm-10">
-                            <select name="account_manager" id="input-account-manager" class="form-control" <?php echo $customer_category_disabled; ?> >
-                            <option value="">Select Account Manager</option>
-                            <?php foreach ($account_managers_list as $account_managers_lis) { ?>
-                             <?php if(isset($account_manager) && ($account_manager == $account_managers_lis['user_id'])){ ?>
-                            <option selected="selected" value="<?php echo $account_managers_lis['user_id']; ?>"><?php echo $account_managers_lis['firstname'].''.$account_managers_lis['lastname']; ?></option>
-                            <?php } else { ?>
-                             <option  value="<?php echo $account_managers_lis['user_id']; ?>"><?php echo $account_managers_lis['firstname'].''.$account_managers_lis['lastname']; ?></option>
-                            <?php } ?>
-                            <?php } ?>
-                          </select>
-                        </div>
-                      </div>
-                       
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="input-account-manager">Customer Experience</label>
-                        <div class="col-sm-10">
-                            <select name="customer_experience" id="input-customer-experience" class="form-control">
-                            <option value="">Select Customer Experience</option>
-                            <?php foreach ($customer_experience_list as $customer_experience_lis) { ?>
-                             <?php if(isset($customer_experience) && ($customer_experience == $customer_experience_lis['user_id'])){ ?>
-                            <option selected="selected" value="<?php echo $customer_experience_lis['user_id']; ?>"><?php echo $customer_experience_lis['firstname'].''.$customer_experience_lis['lastname']; ?></option>
-                            <?php } else { ?>
-                             <option  value="<?php echo $customer_experience_lis['user_id']; ?>"><?php echo $customer_experience_lis['firstname'].''.$customer_experience_lis['lastname']; ?></option>
-                            <?php } ?>
-                            <?php } ?>
-                          </select>
-                        </div>
-                      </div>     
+                               
                             <!--<?php if($account_manager_name != NULL) { ?>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-account-manager">Account Manager Name</label>
@@ -379,34 +334,6 @@
                                     <input type="text" maxlength=30  name="SAP_customer_no" value="<?php echo $SAP_customer_no; ?>"  placeholder="SAP Custumer Number"  id="input-SAP_customer_no" class="form-control" />
                                 </div>
                         </div>
-                        <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-payment-terms">Payment Terms</label>
-                        <div class="col-sm-10">
-                            <select name="payment_terms" id="input-payment-terms" class="form-control">
-                            <option value="">Payment Terms</option>
-                            <option <?php if($payment_terms == "Payment On Delivery") { ?> selected="selected" <?php } ?> value="Payment On Delivery">Payment On Delivery</option>
-                            <option <?php if($payment_terms == "7 Days Credit") { ?>  selected="selected" <?php } ?> value="7 Days Credit">7 Days Credit</option>
-                            <option <?php if($payment_terms == "15 Days Credit") { ?>  selected="selected" <?php } ?> value="15 Days Credit">15 Days Credit</option>
-                            <option <?php if($payment_terms == "30 Days Credit") { ?>  selected="selected" <?php } ?> value="30 Days Credit">30 Days Credit</option>
-                            </select>
-                        </div>
-                        </div>
-
-
-                         <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-statement_duration">Statement Duration</label>
-                        <div class="col-sm-10">
-                            <select name="statement_duration" id="input-statement_duration" class="form-control">
-                            
-                            <option <?php if($statement_duration == "7") { ?> selected="selected" <?php } ?> value="7">Weekly</option>
-                            <option <?php if($statement_duration == "15") { ?>  selected="selected" <?php } ?> value="15">Bi-Weekly</option>
-                            <option <?php if($statement_duration == "30") { ?>  selected="selected" <?php } ?> value="30">Monthly</option>
-                            </select>
-
-                                
-                        </div>
-                        </div>
-
 
                       <?php if(count($referee) > 0) { ?>
                           <div class="form-group">
@@ -697,7 +624,66 @@
                             <?php } ?>
                           </select>
                         </div> 
-                </div>    
+                </div>
+                
+                <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-account-manager">Account Manager Name</label>
+                        <div class="col-sm-10">
+                            <select name="account_manager" id="input-account-manager" class="form-control" <?php echo $customer_category_disabled; ?> >
+                            <option value="">Select Account Manager</option>
+                            <?php foreach ($account_managers_list as $account_managers_lis) { ?>
+                             <?php if(isset($account_manager) && ($account_manager == $account_managers_lis['user_id'])){ ?>
+                            <option selected="selected" value="<?php echo $account_managers_lis['user_id']; ?>"><?php echo $account_managers_lis['firstname'].''.$account_managers_lis['lastname']; ?></option>
+                            <?php } else { ?>
+                             <option  value="<?php echo $account_managers_lis['user_id']; ?>"><?php echo $account_managers_lis['firstname'].''.$account_managers_lis['lastname']; ?></option>
+                            <?php } ?>
+                            <?php } ?>
+                          </select>
+                        </div>
+                </div>
+                
+                <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-account-manager">Customer Experience</label>
+                        <div class="col-sm-10">
+                            <select name="customer_experience" id="input-customer-experience" class="form-control">
+                            <option value="">Select Customer Experience</option>
+                            <?php foreach ($customer_experience_list as $customer_experience_lis) { ?>
+                             <?php if(isset($customer_experience) && ($customer_experience == $customer_experience_lis['user_id'])){ ?>
+                            <option selected="selected" value="<?php echo $customer_experience_lis['user_id']; ?>"><?php echo $customer_experience_lis['firstname'].''.$customer_experience_lis['lastname']; ?></option>
+                            <?php } else { ?>
+                             <option  value="<?php echo $customer_experience_lis['user_id']; ?>"><?php echo $customer_experience_lis['firstname'].''.$customer_experience_lis['lastname']; ?></option>
+                            <?php } ?>
+                            <?php } ?>
+                          </select>
+                        </div>
+                </div>
+                
+                <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-payment-terms">Payment Terms</label>
+                        <div class="col-sm-10">
+                            <select name="payment_terms" id="input-payment-terms" class="form-control">
+                            <option value="">Payment Terms</option>
+                            <option <?php if($payment_terms == "Payment On Delivery") { ?> selected="selected" <?php } ?> value="Payment On Delivery">Payment On Delivery</option>
+                            <option <?php if($payment_terms == "7 Days Credit") { ?>  selected="selected" <?php } ?> value="7 Days Credit">7 Days Credit</option>
+                            <option <?php if($payment_terms == "15 Days Credit") { ?>  selected="selected" <?php } ?> value="15 Days Credit">15 Days Credit</option>
+                            <option <?php if($payment_terms == "30 Days Credit") { ?>  selected="selected" <?php } ?> value="30 Days Credit">30 Days Credit</option>
+                            </select>
+                        </div>
+                </div>
+                
+                <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-statement_duration">Statement Duration</label>
+                        <div class="col-sm-10">
+                            <select name="statement_duration" id="input-statement_duration" class="form-control">
+                            
+                            <option <?php if($statement_duration == "7") { ?> selected="selected" <?php } ?> value="7">Weekly</option>
+                            <option <?php if($statement_duration == "15") { ?>  selected="selected" <?php } ?> value="15">Bi-Weekly</option>
+                            <option <?php if($statement_duration == "30") { ?>  selected="selected" <?php } ?> value="30">Monthly</option>
+                            </select>
+
+                                
+                        </div>
+                </div>               
             </div>
 
             <div class="tab-pane" id="tab-ip">
