@@ -683,7 +683,10 @@
 
                                 
                         </div>
-                </div>               
+                </div>
+                <div class="text-right">
+                <button type="button" id="button-configuration" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-save"></i> Save Configuration </button>
+                </div>            
             </div>
 
             <div class="tab-pane" id="tab-ip">
@@ -1905,6 +1908,12 @@ $('#button-contact').on('click', function(e) {
 
     }
   });
+});
+
+$('#button-configuration').on('click', function(e) {
+  e.preventDefault();
+  console.log('Hi');
+  
 });
 
 
