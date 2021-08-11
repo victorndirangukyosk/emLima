@@ -2443,7 +2443,7 @@ class ModelAssetsProduct extends Model
             $this->db->group_by('product_to_store.product_store_id');
         }
 
-        $this->db->where('product_to_store.store_id', $store_id);
+        //$this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
          //REMOVED QUANTITY CHECK CONDITION
         //$this->db->where('product_to_store.quantity >=', 1);
