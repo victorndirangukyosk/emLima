@@ -1,9 +1,8 @@
 <?php
 
-class ControllerApiCategories extends Controller
-{
-    public function getCategory($args = [])
-    {
+class ControllerApiCategories extends Controller {
+
+    public function getCategory($args = []) {
         $this->load->language('api/categories');
         $json = [];
 
@@ -30,11 +29,10 @@ class ControllerApiCategories extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getCategories($args = [])
-    {
+    public function getCategories($args = []) {
         $this->load->model('tool/image');
         $this->load->language('api/categories');
-        unset($this->session->data['customer_category']);  
+        unset($this->session->data['customer_category']);
         $json = [];
 
         if (!isset($this->session->data['api_id'])) {
@@ -44,34 +42,33 @@ class ControllerApiCategories extends Controller
             $this->load->model('api/products');
             $this->load->model('assets/product');
 
-            /*$category_data = array();
+            /* $category_data = array();
 
-            $results = $this->model_api_categories->getCategories($args);
+              $results = $this->model_api_categories->getCategories($args);
 
-            if (!empty($results)) {
-                foreach ($results as $result) {
-                    $result['name'] = html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8');
-                    $result['description'] = html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8');
+              if (!empty($results)) {
+              foreach ($results as $result) {
+              $result['name'] = html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8');
+              $result['description'] = html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8');
 
-                    if ($this->request->server['HTTPS']) {
-                        $result['image'] = str_replace($this->config->get('config_ssl'), '', $result['image']);
-                    } else {
-                        $result['image'] = str_replace($this->config->get('config_url'), '', $result['image']);
-                    }
+              if ($this->request->server['HTTPS']) {
+              $result['image'] = str_replace($this->config->get('config_ssl'), '', $result['image']);
+              } else {
+              $result['image'] = str_replace($this->config->get('config_url'), '', $result['image']);
+              }
 
-                    $category_data[] = $result;
-                }
-            }
-            */
+              $category_data[] = $result;
+              }
+              }
+             */
 
-              
+
             // if ($args['parent'] != NULL && $args['parent']>0) {
             //     $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $args['parent'] . "' AND status = '1'");
             // } else {
             //     $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $args['customer_id']. "' AND status = '1'");
             // }
             // $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
-
             // echo "<pre>";print_r($_SESSION['customer_category']);die; 
             $newCat = [];
 
@@ -81,6 +78,8 @@ class ControllerApiCategories extends Controller
                     $cat['name'] = htmlspecialchars_decode($cat['name']);
                     $cat['thumb'] = $this->model_tool_image->resize($cat['image'], 300, 300);
                     $cat['description'] = htmlspecialchars_decode($cat['description']);
+                    $data['filter_category_id'] = $cat['category_id'];
+                    $cat['products_count'] = $this->model_assets_product->getProductsForGrid($data);
                     if (0 == $cat['parent_id']) {
                         array_push($newCat, $cat);
                     }
@@ -112,8 +111,7 @@ class ControllerApiCategories extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getTotals($args = [])
-    {
+    public function getTotals($args = []) {
         $this->load->language('api/categories');
 
         $json = [];
@@ -130,11 +128,11 @@ class ControllerApiCategories extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getProducts($args = [])
-    {
+    public function getProducts($args = []) {
         $vars = [];
         $vars['category'] = $args['id'];
 
         $this->load->controller('api/products/getproducts', $vars);
     }
+
 }
