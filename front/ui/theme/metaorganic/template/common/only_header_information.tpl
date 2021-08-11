@@ -871,8 +871,9 @@ __kdt.push({"post_on_load": false});
             })
  </script>
    <script type="text/javascript">
-      $(document).delegate('#clearcart', 'click', function(){
-        var choice = confirm($(this).attr('data-confirm'));
+      $(document).delegate('#clearcart, #empty_cart_button', 'click', function(){
+       var message = "This will empty your cart!!";
+        var choice = confirm(message);
 
         if(choice) {
 
@@ -966,3 +967,4 @@ width: 550px;
 
 
 </style>
+<?php if(isset($multi_store_checkoutitems_css) && $multi_store_checkoutitems_css != NULL) { echo $multi_store_checkoutitems_css; } ?>

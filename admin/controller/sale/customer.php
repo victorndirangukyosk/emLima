@@ -37,8 +37,6 @@ class ControllerSaleCustomer extends Controller {
             $this->request->post['source'] = 'WEB';
             $customer_id = $this->model_sale_customer->addCustomer($this->request->post);
 
-
-
             if (!empty($data['send_email'])) {
                 /* EMAIL SENDING WHEN CREATING USER FROM ADMIN PORTAL */
 
@@ -93,27 +91,27 @@ class ControllerSaleCustomer extends Controller {
             if (isset($this->request->get['filter_ip'])) {
                 $url .= '&filter_ip=' . $this->request->get['filter_ip'];
             }
-            
+
             if (isset($this->request->get['filter_parent_customer'])) {
                 $url .= '&filter_parent_customer=' . $this->request->get['filter_parent_customer'];
             }
-            
+
             if (isset($this->request->get['filter_parent_customer_id'])) {
                 $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
             }
-            
+
             if (isset($this->request->get['filter_account_manager_name'])) {
                 $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
             }
-            
+
             if (isset($this->request->get['filter_sub_customer_show'])) {
                 $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
             }
-            
+
             if (isset($this->request->get['filter_account_manager_id'])) {
                 $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
             }
-            
+
             if (isset($this->request->get['filter_sub_customer_show'])) {
                 $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
             }
@@ -174,11 +172,11 @@ class ControllerSaleCustomer extends Controller {
             $log->write('address');
             $this->model_sale_customer->editCustomer($this->request->get['customer_id'], $this->request->post);
             $customer_device_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
-            if(is_array($customer_device_info) && array_key_exists('customer_id', $customer_device_info) && array_key_exists('device_id', $customer_device_info) && $customer_device_info['customer_id'] > 0 && $customer_device_info['device_id'] != NULL) {
-            //$sen['customer_id'] = '';
-            //$ret = $this->emailtemplate->sendDynamicPushNotification($customer_device_info['customer_id'], $customer_device_info['device_id'], 'Customer Category Prices Updated', 'Customer Category Prices Updated', $sen);
-            $this->load->model('account/customer');
-            $this->model_account_customer->sendCustomerByCategoryPriceNotification($customer_device_info);
+            if (is_array($customer_device_info) && array_key_exists('customer_id', $customer_device_info) && array_key_exists('device_id', $customer_device_info) && $customer_device_info['customer_id'] > 0 && $customer_device_info['device_id'] != NULL) {
+                //$sen['customer_id'] = '';
+                //$ret = $this->emailtemplate->sendDynamicPushNotification($customer_device_info['customer_id'], $customer_device_info['device_id'], 'Customer Category Prices Updated', 'Customer Category Prices Updated', $sen);
+                $this->load->model('account/customer');
+                $this->model_account_customer->sendCustomerByCategoryPriceNotification($customer_device_info);
             }
             $this->session->data['success'] = $this->language->get('text_success');
             // Add to activity log
@@ -226,27 +224,27 @@ class ControllerSaleCustomer extends Controller {
             if (isset($this->request->get['filter_ip'])) {
                 $url .= '&filter_ip=' . $this->request->get['filter_ip'];
             }
-            
+
             if (isset($this->request->get['filter_parent_customer'])) {
                 $url .= '&filter_parent_customer=' . $this->request->get['filter_parent_customer'];
             }
-            
+
             if (isset($this->request->get['filter_parent_customer_id'])) {
                 $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
             }
-            
+
             if (isset($this->request->get['filter_account_manager_name'])) {
                 $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
             }
-            
+
             if (isset($this->request->get['filter_sub_customer_show'])) {
                 $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
             }
-            
+
             if (isset($this->request->get['filter_account_manager_id'])) {
                 $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
             }
-            
+
             if (isset($this->request->get['filter_sub_customer_show'])) {
                 $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
             }
@@ -341,23 +339,23 @@ class ControllerSaleCustomer extends Controller {
             if (isset($this->request->get['filter_ip'])) {
                 $url .= '&filter_ip=' . $this->request->get['filter_ip'];
             }
-            
+
             if (isset($this->request->get['filter_parent_customer'])) {
                 $url .= '&filter_parent_customer=' . $this->request->get['filter_parent_customer'];
             }
-            
+
             if (isset($this->request->get['filter_parent_customer_id'])) {
                 $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
             }
-            
+
             if (isset($this->request->get['filter_account_manager_name'])) {
                 $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
             }
-            
+
             if (isset($this->request->get['filter_account_manager_id'])) {
                 $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
             }
-            
+
             if (isset($this->request->get['filter_sub_customer_show'])) {
                 $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
             }
@@ -401,7 +399,7 @@ class ControllerSaleCustomer extends Controller {
 
         if ($customers && $this->validateApprove()) {
             $this->model_sale_customer->approve($this->request->get['customer_id']);
-            
+
             // Add to activity log
             $log = new Log('error.log');
             $this->load->model('user/user_activity');
@@ -449,23 +447,23 @@ class ControllerSaleCustomer extends Controller {
             if (isset($this->request->get['filter_ip'])) {
                 $url .= '&filter_ip=' . $this->request->get['filter_ip'];
             }
-            
+
             if (isset($this->request->get['filter_parent_customer'])) {
                 $url .= '&filter_parent_customer=' . $this->request->get['filter_parent_customer'];
             }
-            
+
             if (isset($this->request->get['filter_parent_customer_id'])) {
                 $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
             }
-            
+
             if (isset($this->request->get['filter_account_manager_name'])) {
                 $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
             }
-            
+
             if (isset($this->request->get['filter_account_manager_id'])) {
                 $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
             }
-            
+
             if (isset($this->request->get['filter_sub_customer_show'])) {
                 $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
             }
@@ -506,7 +504,6 @@ class ControllerSaleCustomer extends Controller {
 
             $url = '';
 
-
             if (isset($this->request->get['filter_company'])) {
                 $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
             }
@@ -534,23 +531,23 @@ class ControllerSaleCustomer extends Controller {
             if (isset($this->request->get['filter_ip'])) {
                 $url .= '&filter_ip=' . $this->request->get['filter_ip'];
             }
-            
+
             if (isset($this->request->get['filter_parent_customer'])) {
                 $url .= '&filter_parent_customer=' . $this->request->get['filter_parent_customer'];
             }
-            
+
             if (isset($this->request->get['filter_parent_customer_id'])) {
                 $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
             }
-            
+
             if (isset($this->request->get['filter_account_manager_name'])) {
                 $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
             }
-            
+
             if (isset($this->request->get['filter_sub_customer_show'])) {
                 $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
             }
-            
+
             if (isset($this->request->get['filter_account_manager_id'])) {
                 $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
             }
@@ -579,7 +576,6 @@ class ControllerSaleCustomer extends Controller {
 
     protected function getList() {
         $this->load->language('sale/customer');
-
 
         if (isset($this->request->get['filter_company'])) {
             $filter_company = $this->request->get['filter_company'];
@@ -628,37 +624,37 @@ class ControllerSaleCustomer extends Controller {
         } else {
             $filter_ip = null;
         }
-        
+
         if (isset($this->request->get['filter_parent_customer'])) {
             $filter_parent_customer = $this->request->get['filter_parent_customer'];
         } else {
             $filter_parent_customer = null;
         }
-        
+
         if (isset($this->request->get['filter_parent_customer_id'])) {
             $filter_parent_customer_id = $this->request->get['filter_parent_customer_id'];
         } else {
             $filter_parent_customer_id = null;
         }
-        
+
         if (isset($this->request->get['filter_account_manager_name'])) {
             $filter_account_manager_name = $this->request->get['filter_account_manager_name'];
         } else {
             $filter_account_manager_name = null;
         }
-        
+
         if (isset($this->request->get['filter_account_manager_id'])) {
             $filter_account_manager_id = $this->request->get['filter_account_manager_id'];
         } else {
             $filter_account_manager_id = null;
         }
-        
+
         if (isset($this->request->get['filter_sub_customer_show'])) {
             $filter_sub_customer_show = $this->request->get['filter_sub_customer_show'];
         } else {
             $filter_sub_customer_show = null;
         }
-        
+
         if (isset($this->request->get['filter_sub_customer_show'])) {
             $filter_sub_customer_show = $this->request->get['filter_sub_customer_show'];
         } else {
@@ -722,27 +718,27 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['filter_ip'])) {
             $url .= '&filter_ip=' . $this->request->get['filter_ip'];
         }
-        
+
         if (isset($this->request->get['filter_parent_customer'])) {
             $url .= '&filter_parent_customer=' . $this->request->get['filter_parent_customer'];
         }
-        
+
         if (isset($this->request->get['filter_parent_customer_id'])) {
             $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
         }
-        
+
         if (isset($this->request->get['filter_account_manager_name'])) {
             $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
         }
-        
+
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
         }
-        
+
         if (isset($this->request->get['filter_sub_customer_show'])) {
             $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
         }
-        
+
         if (isset($this->request->get['filter_sub_customer_show'])) {
             $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
         }
@@ -921,8 +917,6 @@ class ControllerSaleCustomer extends Controller {
 
         $url = '';
 
-
-
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
@@ -954,23 +948,23 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['filter_ip'])) {
             $url .= '&filter_ip=' . $this->request->get['filter_ip'];
         }
-        
+
         if (isset($this->request->get['filter_parent_customer'])) {
             $url .= '&filter_parent_customer=' . $this->request->get['filter_parent_customer'];
         }
-        
+
         if (isset($this->request->get['filter_parent_customer_id'])) {
             $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
         }
-        
+
         if (isset($this->request->get['filter_account_manager_name'])) {
             $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
         }
-        
+
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
         }
-        
+
         if (isset($this->request->get['filter_sub_customer_show'])) {
             $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
         }
@@ -1029,23 +1023,23 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['filter_ip'])) {
             $url .= '&filter_ip=' . $this->request->get['filter_ip'];
         }
-        
+
         if (isset($this->request->get['filter_parent_customer'])) {
             $url .= '&filter_parent_customer=' . $this->request->get['filter_parent_customer'];
         }
-        
+
         if (isset($this->request->get['filter_parent_customer_id'])) {
             $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
         }
-        
+
         if (isset($this->request->get['filter_account_manager_name'])) {
             $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
         }
-        
+
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
         }
-        
+
         if (isset($this->request->get['filter_sub_customer_show'])) {
             $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
         }
@@ -1311,23 +1305,23 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
-        
+
         if (isset($this->request->get['filter_parent_customer'])) {
             $url .= '&filter_parent_customer=' . $this->request->get['filter_parent_customer'];
         }
-        
+
         if (isset($this->request->get['filter_parent_customer_id'])) {
             $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
         }
-        
+
         if (isset($this->request->get['filter_account_manager_name'])) {
             $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
         }
-        
+
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
         }
-        
+
         if (isset($this->request->get['filter_sub_customer_show'])) {
             $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
         }
@@ -1378,6 +1372,8 @@ class ControllerSaleCustomer extends Controller {
             $data['customer_category_disabled'] = '';
             $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
             $customer_account_manager_info = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
+            $customer_customer_experience_info = $this->model_sale_customer->getCustomerExperinceDetails($this->request->get['customer_id']);
+
             if ($customer_parent_info != NULL) {
                 $data['parent_user_name'] = $customer_parent_info['firstname'] . '' . $customer_parent_info['lastname'];
                 $data['parent_user_email'] = $customer_parent_info['email'];
@@ -1385,11 +1381,17 @@ class ControllerSaleCustomer extends Controller {
                 $data['customer_category'] = $customer_parent_info['customer_category'];
                 $data['customer_category_disabled'] = 'disabled';
             }
-            
+
             if ($customer_account_manager_info != NULL) {
                 $data['account_manager_name'] = $customer_account_manager_info['firstname'] . '' . $customer_account_manager_info['lastname'];
                 $data['account_manager_email'] = $customer_account_manager_info['email'];
                 $data['account_manager_phone'] = $customer_account_manager_info['telephone'];
+            }
+
+            if ($customer_customer_experience_info != NULL) {
+                $data['customer_experince_name'] = $customer_customer_experience_info['firstname'] . '' . $customer_customer_experience_info['lastname'];
+                $data['customer_experince_email'] = $customer_customer_experience_info['email'];
+                $data['customer_experince_phone'] = $customer_customer_experience_info['telephone'];
             }
 
             //$log = new Log('error.log');
@@ -1399,6 +1401,7 @@ class ControllerSaleCustomer extends Controller {
         //echo "<pre>";print_r($customer_info);die;
         $this->load->model('sale/customer_group');
         $this->load->model('user/accountmanager');
+        $this->load->model('user/customerexperience');
         $filter_data = [
             'filter_parent' => $this->request->get['customer_id'],
             'order' => 'DESC',
@@ -1409,6 +1412,7 @@ class ControllerSaleCustomer extends Controller {
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
         $data['account_managers_list'] = $this->model_user_accountmanager->getAccountManagers();
+        $data['customer_experience_list'] = $this->model_user_customerexperience->getCustomerExperience();
 
         if (isset($this->request->post['company_name'])) {
             $data['company_name'] = $this->request->post['company_name'];
@@ -1596,7 +1600,6 @@ class ControllerSaleCustomer extends Controller {
         }
         $data['source'] = $customer_info['source'];
 
-
         if (isset($this->request->post['SAP_customer_no'])) {
             $data['SAP_customer_no'] = $this->request->post['SAP_customer_no'];
         } elseif (!empty($customer_info)) {
@@ -1604,7 +1607,7 @@ class ControllerSaleCustomer extends Controller {
         } else {
             $data['SAP_customer_no'] = '';
         }
-        
+
         if (isset($this->request->post['account_manager'])) {
             $data['account_manager'] = $this->request->post['account_manager'];
         } elseif (!empty($customer_info)) {
@@ -1612,7 +1615,15 @@ class ControllerSaleCustomer extends Controller {
         } else {
             $data['account_manager'] = '';
         }
-        
+
+        if (isset($this->request->post['customer_experience'])) {
+            $data['customer_experience'] = $this->request->post['customer_experience'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_experience'] = $customer_info['customer_experience_id'];
+        } else {
+            $data['customer_experience'] = '';
+        }
+
         if (isset($this->request->post['payment_terms'])) {
             $data['payment_terms'] = $this->request->post['payment_terms'];
         } elseif (!empty($customer_info)) {
@@ -1785,7 +1796,7 @@ class ControllerSaleCustomer extends Controller {
             $this->load->model('setting/store');
 
             $store_info = $this->model_setting_store->getStore($store_id);
-            
+
             // Add to activity log
             $this->load->model('account/activity');
 
@@ -1795,7 +1806,7 @@ class ControllerSaleCustomer extends Controller {
             ];
 
             $this->model_account_activity->addActivity('login', $activity_data);
-            
+
             $this->session->data['order_approval_access'] = $customer_info['order_approval_access'];
             $this->session->data['order_approval_access_role'] = $customer_info['order_approval_access_role'];
 
@@ -1950,17 +1961,16 @@ class ControllerSaleCustomer extends Controller {
         $this->response->setOutput($this->load->view('sale/customer_credit.tpl', $data));
     }
 
-
     public function contact() {
         $this->load->language('sale/customer');
 
         $this->load->model('sale/customer');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->user->hasPermission('modify', 'sale/customer')) {
-        // echo "<pre>";print_r($this->request->post);die;
-            
-            if(!isset($this->request->post['contact_id']))
-            $this->request->post['contact_id']=0;
+            // echo "<pre>";print_r($this->request->post);die;
+
+            if (!isset($this->request->post['contact_id']))
+                $this->request->post['contact_id'] = 0;
 
             $this->model_sale_customer->addEditContact($this->request->get['customer_id'], $this->request->post['firstname'], $this->request->post['lastname'], $this->request->post['email'], $this->request->post['phone'], $this->request->post['customer_contact_send'], $this->request->post['contact_id']);
 
@@ -1976,7 +1986,7 @@ class ControllerSaleCustomer extends Controller {
         }
 
         $data['text_no_results'] = $this->language->get('text_no_results');
-         
+
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
@@ -1989,15 +1999,14 @@ class ControllerSaleCustomer extends Controller {
         //  echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $data['contacts'][] = [
-                'contact_id' =>$result['contact_id'],
-                'customer_id' => $result['customer_id'],  
-                'firstname' => $result['firstname'],  
-                'lastname' => $result['lastname'],  
-                'email' => $result['email'],  
-                'telephone' => $result['telephone'],  
-                'send' => $result['send'],  
-                'customer_id' => $result['description'],  
-            
+                'contact_id' => $result['contact_id'],
+                'customer_id' => $result['customer_id'],
+                'firstname' => $result['firstname'],
+                'lastname' => $result['lastname'],
+                'email' => $result['email'],
+                'telephone' => $result['telephone'],
+                'send' => $result['send'],
+                'customer_id' => $result['description'],
             ];
         }
 
@@ -2129,7 +2138,7 @@ class ControllerSaleCustomer extends Controller {
 
         $this->response->setOutput($this->load->view('sale/customer_ip.tpl', $data));
     }
-    
+
     public function customerviewip() {
         $this->load->language('sale/customer');
 
@@ -2508,7 +2517,7 @@ class ControllerSaleCustomer extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
     public function autocompleteparentcustomer() {
         $json = [];
 
@@ -2526,7 +2535,7 @@ class ControllerSaleCustomer extends Controller {
                 'start' => 0,
                 'limit' => 5,
             ];
-            
+
             $log = new Log('error.log');
             $results = $this->model_sale_customer->getParentCustomers($filter_data);
             foreach ($results as $result) {
@@ -2548,6 +2557,7 @@ class ControllerSaleCustomer extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
     public function view_customer() {
         $this->load->language('sale/customer');
 
@@ -2683,23 +2693,23 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
-        
+
         if (isset($this->request->get['filter_parent_customer'])) {
             $url .= '&filter_parent_customer=' . $this->request->get['filter_parent_customer'];
         }
-        
+
         if (isset($this->request->get['filter_parent_customer_id'])) {
             $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
         }
-        
+
         if (isset($this->request->get['filter_account_manager_name'])) {
             $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
         }
-        
+
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
         }
-        
+
         if (isset($this->request->get['filter_sub_customer_show'])) {
             $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
         }
@@ -2776,20 +2786,20 @@ class ControllerSaleCustomer extends Controller {
         $data['sub_users'] = $this->model_sale_customer->getSubCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
-        
+
         $data['company_name'] = $customer_info['company_name'];
         $data['company_address'] = $customer_info['company_address'];
-        
+
         $this->load->model('sale/customer_group');
         $customer_group_info = $this->model_sale_customer_group->getCustomerGroup($customer_info['customer_group_id']);
         $data['customer_group_id'] = $customer_info['customer_group_id'];
         $data['customer_group_info'] = $customer_group_info;
         $data['firstname'] = $customer_info['firstname'];
         $data['lastname'] = $customer_info['lastname'];
-        $data['email'] = $customer_info['email'];        
+        $data['email'] = $customer_info['email'];
         $data['telephone'] = $customer_info['telephone'];
         $data['fax'] = $customer_info['fax'];
-        $data['gender'] = $customer_info['gender'];        
+        $data['gender'] = $customer_info['gender'];
         $data['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
         $data['send_email'] = $customer_info['email'];
         $data['show_send_email'] = true;
@@ -2802,7 +2812,7 @@ class ControllerSaleCustomer extends Controller {
         $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
         $data['latitude'] = $customer_info['latitude'];
         $data['longitude'] = $customer_info['longitude'];
-        
+
         $data['addresses'] = $this->model_sale_customer->getAddresses($this->request->get['customer_id']);
         $data['address_id'] = $customer_info['address_id'];
 
@@ -2816,7 +2826,7 @@ class ControllerSaleCustomer extends Controller {
 
         $this->response->setOutput($this->load->view('sale/customer_view.tpl', $data));
     }
-    
+
     public function autocompleteaccountmanager() {
         $json = [];
 
@@ -2832,7 +2842,7 @@ class ControllerSaleCustomer extends Controller {
             } else {
                 $filter_email = '';
             }
-            
+
             if (isset($this->request->get['filter_telephone'])) {
                 $filter_telephone = $this->request->get['filter_telephone'];
             } else {
@@ -2881,18 +2891,13 @@ class ControllerSaleCustomer extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-
-
-
- 
-
     public function DeleteCustomerContacts() {
-        
-        
+
+
         $contact_id = $this->request->post['contact_id'];
         $this->load->model('sale/customer');
         $this->model_sale_customer->deletecontact($contact_id);
-        
+
         // Add to activity log
         $this->load->model('account/activity');
 
@@ -2913,7 +2918,7 @@ class ControllerSaleCustomer extends Controller {
 
         // $this->load->model('sale/customer');
 
-        
+
         if (('POST' == $this->request->server['REQUEST_METHOD']) && !$this->user->hasPermission('modify', 'sale/customer')) {
             $data['error_warning'] = $this->language->get('error_permission');
         } else {
@@ -2921,7 +2926,7 @@ class ControllerSaleCustomer extends Controller {
         }
 
         $data['text_no_results'] = $this->language->get('text_no_results');
-         
+
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
@@ -2934,15 +2939,14 @@ class ControllerSaleCustomer extends Controller {
         //  echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $data['contacts'][] = [
-                'contact_id' =>$result['contact_id'],
-                'customer_id' => $result['customer_id'],  
-                'firstname' => $result['firstname'],  
-                'lastname' => $result['lastname'],  
-                'email' => $result['email'],  
-                'telephone' => $result['telephone'],  
-                'send' => $result['send'],  
-                'customer_id' => $result['description'],  
-            
+                'contact_id' => $result['contact_id'],
+                'customer_id' => $result['customer_id'],
+                'firstname' => $result['firstname'],
+                'lastname' => $result['lastname'],
+                'email' => $result['email'],
+                'telephone' => $result['telephone'],
+                'send' => $result['send'],
+                'customer_id' => $result['description'],
             ];
         }
 
@@ -2960,7 +2964,6 @@ class ControllerSaleCustomer extends Controller {
         $data['results'] = sprintf($this->language->get('text_pagination'), ($contact_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($contact_total - 10)) ? $contact_total : ((($page - 1) * 10) + 10), $contact_total, ceil($contact_total / 10));
 
         $this->response->setOutput($this->load->view('sale/customer_contact.tpl', $data));
-   
     }
 
     public function EmailUnique() {//not used
@@ -2974,26 +2977,20 @@ class ControllerSaleCustomer extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
- 
 
-    
     public function getCustomerContact() {
-                //  echo "<pre>";print_r($this->request->get);die;
-        
+        //  echo "<pre>";print_r($this->request->get);die;
+
         $contact_id = $this->request->get['contact_id'];
         $json['success'] = true;
-         
+
         $this->load->model('sale/customer');
         $cust_contacts = $this->model_sale_customer->getCustomerContact($contact_id);
         // $this->model_sale_customer->getCustomerContact($contact_id);
-        
+
         $json['data'] = $cust_contacts;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-     
-
-
-
 
 }

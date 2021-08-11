@@ -83,6 +83,7 @@ class ControllerCommonMenu extends Controller
         $data['accountmanager'] = $this->url->link('sale/accountmanager', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
         $data['accountmanager_customers'] = $this->url->link('sale/accountmanageruser', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
         $data['account_manager_customer_orders'] = $this->url->link('sale/accountmanageruserorders', 'token='.$this->session->data['token'], 'SSL');
+        $data['customerexperience'] = $this->url->link('sale/customerexperience', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
         
         $data['bulk_email'] = $this->url->link('email/bulk_email', 'token='.$this->session->data['token'], 'SSL');
         $data['email_groups'] = $this->url->link('email/groups', 'token='.$this->session->data['token'], 'SSL');
@@ -318,6 +319,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_customer_feedback'] = $this->user->hasPermission('access', 'sale/customer_feedback');
         $data['preturn_customer_issue'] = $this->user->hasPermission('access', 'sale/customer_issue');
         $data['preturn_account_manager'] = $this->user->hasPermission('access', 'sale/accountmanager');
+        $data['preturn_customer_experience'] = $this->user->hasPermission('access', 'sale/customerexperience');
         $data['preturn_account_manager_customers'] = $this->user->hasPermission('access', 'sale/accountmanageruser');
         $data['preturn_account_manager_customer_orders'] = $this->user->hasPermission('access', 'sale/accountmanageruserorders');
         $data['preturn_custom_field'] = $this->user->hasPermission('access', 'sale/custom_field');

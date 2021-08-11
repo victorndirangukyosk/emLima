@@ -57,6 +57,10 @@ class ModelPaymentInterswitch extends Model {
         $this->db->query('UPDATE `' . DB_PREFIX . 'interswitch_order` SET `order_id` = ' . $this->db->escape($order_id) . " where interswitch_receipt_number='" . $interswitch_receipt_number . "'");
     }
 
+    public function updateOrderIdInterswitchOrderMobile($order_id, $customer_id, $response_code, $response_description, $payment_status, $transaction_reference, $amount, $payment_channel) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "interswitch_transaction SET order_id = '" . $order_id . "', transaction_reference = '" . $transaction_reference . "', payment_reference = '" . $transaction_reference . "', banking_reference = '" . $transaction_reference . "', approved_amount = '" . $amount . "', amount = '" . $amount . "', card_number = '" . $payment_channel . "', mac = '" . $payment_channel . "', response_code = '" . $response_code . "', description = '" . $response_description . "', status = '" . $payment_status . "', customer_id = '" . $customer_id . "', created_at = NOW()");
+    }
+
     public function insertOrderTransactionIdInterswitch($order_id, $transaction_tracking_id, $merchant_reference, $customer_id) {
         $this->db->query('INSERT INTO ' . DB_PREFIX . "interswitch_transactions SET order_id = '" . $order_id . "', interswitch_transaction_tracking_id = '" . $transaction_tracking_id . "', interswitch_merchant_reference = '" . $merchant_reference . "', customer_id = '" . $customer_id . "', created_at = NOW()");
     }

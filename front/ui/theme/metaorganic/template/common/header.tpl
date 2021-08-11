@@ -99,10 +99,10 @@
                            <li class="header__search-bar-item header__search-bar-item--category search-category-container">
                            <div >
                               <select class="form-control" id="selectedCategory">
-                                 <option value="">- Select categories-</option>
+                                 <option value="">- Select Categories -</option>
                                   <?php foreach($categories as $categoty){
                                      //print_r($categoty);exit;?>
-                                 <option value="<?=$categoty['id']?>"><?=$categoty['name']?></option>
+                                 <option value="<?=$categoty['id']?>" <?php if(isset($this->request->get['filter_category']) && $this->request->get['filter_category'] > 0 && $this->request->get['filter_category'] == $categoty['id']) { echo "selected"; } ?> ><?=$categoty['name']?></option>
                                   <?php } ?>
 
                               </select>

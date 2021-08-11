@@ -480,17 +480,41 @@ class ControllerApiCustomerOrder extends Controller {
                 if (isset($args['mpesa_refrence_id'])) {
                     $this->load->model('payment/mpesa');
                     $this->load->model('checkout/order');
+                    $this->load->model('account/order');
 
                     foreach ($order_ids as $order_id) {
-                        $this->model_payment_mpesa->updateOrderIdMpesaOrder($order_id, $args['mpesa_refrence_id']);
+                        $order_details = $this->model_account_order->getOrderDetailsById($order_id);
+                        if ($order_details['store_id'] == 75) {
+                            $this->model_payment_mpesa->updateOrderIdMpesaOrder($order_id, $args['mpesa_refrence_id']);
 
-                        $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mpesa_order_status_id'));
+                            $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mpesa_order_status_id'));
+                        }
+                    }
+                }
+            } elseif ('interswitch' == $args['payment_method_code']) {
+                //save for refrence id correct order id
+                if (isset($args['interswitch_refrence_id'])) {
+                    $this->load->model('payment/interswitch');
+                    $this->load->model('payment/interswitch_response');
+                    $this->load->model('checkout/order');
+                    $this->load->model('account/order');
+
+                    foreach ($order_ids as $order_id) {
+                        $order_details = $this->model_account_order->getOrderDetailsById($order_id);
+                        /* ALLOWING PAYMENT FOR KWIKBASKET ORDERS ONLY */
+                        if ($order_details['store_id'] == 75) {
+                            $this->model_payment_interswitch_response->Saveresponse($order_details['customer_id'], $order_id, json_encode($args['payment_response']));
+                            $this->model_payment_interswitch->updateOrderIdInterswitchOrderMobile($order_id, $order_details['customer_id'], $args['response_code'], $args['response_description'], $args['payment_status'], $args['transaction_reference'], $args['amount'], $args['payment_channel']);
+
+                            $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('interswitch_order_status_id'));
+                        }
                     }
                 }
             } else {
                 $data['payment'] = $this->load->controller('payment/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
+                unset($this->session->data['accept_vendor_terms']);
             }
 
             foreach ($order_ids as $key => $value) {
@@ -3581,139 +3605,6 @@ class ControllerApiCustomerOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getothervendordeliverytime($store_id) {
-
-        $data = [];
-        $log = new Log('error.log');
-        $log->write('getothervendordeliverytime');
-        $new_time = NULL;
-        $this->load->model('user/user');
-        $store_details = $this->model_user_user->getVendor($store_id);
-        $vendor_details = $this->model_user_user->getUser($store_details['vendor_id']);
-        if ($vendor_details['delivery_time'] != NULL && $vendor_details['delivery_time'] > 0) {
-            $new_time = date("d-m-Y H:i:s", strtotime('+' . $vendor_details['delivery_time'] . ' hours'));
-            $new_time_array = explode(' ', $new_time);
-            $new_time_date = $new_time_array[0];
-            $new_time_datetime = $new_time_array[1];
-
-            $this->language->load('checkout/delivery_time');
-
-            $data['text_no_timeslot'] = $this->language->get('text_no_timeslot');
-
-            $parent_store_id = 75;
-            $shipping_method = 'Standard Delivery';
-
-            $getActiveDays = $this->getActiveDays($parent_store_id, $shipping_method);
-
-            $data['dates'] = $this->getDates($getActiveDays, $parent_store_id, $shipping_method);
-            $data['timeslots'] = [];
-
-            $data['formatted_dates'] = [];
-            foreach ($data['dates'] as $date) {
-                $amTimeslot = [];
-                $pmTimeslot = [];
-                $inPmfirstTimeslot = [];
-
-                $temp = $this->get_all_time_slot($parent_store_id, $shipping_method, $date);
-
-                foreach ($temp as $temp1) {
-                    $temp2 = explode('-', $temp1['timeslot']);
-
-                    if (false !== strpos($temp2[0], 'am')) {
-                        array_push($amTimeslot, $temp1);
-                    } else {
-                        if ('12' == substr($temp2[0], 0, 2)) {
-                            array_push($inPmfirstTimeslot, $temp1);
-                        } else {
-                            array_push($pmTimeslot, $temp1);
-                        }
-                    }
-                }
-
-                foreach ($inPmfirstTimeslot as $te) {
-                    array_push($amTimeslot, $te);
-                }
-
-                foreach ($pmTimeslot as $te) {
-                    array_push($amTimeslot, $te);
-                }
-
-                //echo "<pre>";print_r($temp);print_r($amTimeslot);
-
-                if (count($amTimeslot) > 0) {
-                    $data['timeslots'][$date] = $amTimeslot;
-                    $data['formatted_dates'][] = $date;
-                }
-
-                //$data['timeslots'][$date] = $temp;
-            }
-
-            $data['dates'] = $data['formatted_dates'];
-
-            $data['store'] = $this->getStoreDetail($parent_store_id);
-            $data['new_time'] = $new_time;
-            $data['new_time_date'] = $new_time_date;
-            $data['new_time_datetime'] = $new_time_datetime;
-            $data['new_time_slots'] = $data['timeslots'][$new_time_date];
-            $selected_time_slot = NULL;
-            foreach ($data['timeslots'] as $d_slot => $t_slot) {
-                $log->write('timeslots2');
-                $log->write($d_slot);
-                $log->write($t_slot);
-                $log->write('timeslots2');
-                foreach ($t_slot as $t_slo) {
-                    $log->write('timeslots3');
-                    $log->write($t_slo['timeslot']);
-                    $t_slo_array = explode(' - ', $t_slo['timeslot']);
-                    $new_time2 = strtotime($new_time);
-                    $new_slot_start2 = strtotime($d_slot . ' ' . $t_slo_array[0]);
-                    $new_slot_end2 = strtotime($d_slot . ' ' . $t_slo_array[1]);
-
-                    $log->write($new_time2);
-                    $log->write($new_time);
-                    $log->write(date('d-m-Y H:i', $new_time2));
-
-                    $log->write($new_slot_start2);
-                    $log->write($d_slot . ' ' . $t_slo_array[0]);
-                    $log->write(date('d-m-Y H:i', $new_slot_start2));
-
-                    $log->write($new_slot_end2);
-                    $log->write($d_slot . ' ' . $t_slo_array[1]);
-                    $log->write(date('d-m-Y H:i', $new_slot_end2));
-
-                    if ($new_time2 > $new_slot_start2 && $new_time2 < $new_slot_end2 && $selected_time_slot == NULL) {
-                        $log->write('selected2');
-                        $selected_time_slot = $d_slot . ' ' . $t_slo['timeslot'];
-                        $data['selected_time_slot'] = $selected_time_slot;
-                        $log->write($d_slot);
-                        $log->write($t_slo['timeslot']);
-                        $log->write('selected2');
-                    } elseif ($new_time2 < $new_slot_start2 && $new_time2 < $new_slot_end2 && $selected_time_slot == NULL) {
-                        $log->write('selected21');
-                        $selected_time_slot = $d_slot . ' ' . $t_slo['timeslot'];
-                        $data['selected_time_slot'] = $selected_time_slot;
-                        $log->write($d_slot);
-                        $log->write($t_slo['timeslot']);
-                        $log->write('selected21');
-                    }
-                    $log->write('timeslots3');
-                }
-            }
-        }
-        $log->write($data);
-        $log->write('getothervendordeliverytime');
-
-        if ($data['selected_time_slot'] != NULL) {
-            $selected_time_slot = explode(' ', $data['selected_time_slot']);
-            $this->session->data['timeslot'][$store_id] = $selected_time_slot[1] . ' - ' . $selected_time_slot[3];
-            $this->session->data['dates'][$store_id] = $selected_time_slot[0];
-            $data['selected_time_slot_time'] = $selected_time_slot[1] . ' - ' . $selected_time_slot[3];
-            $data['selected_time_slot_date'] = $selected_time_slot[0];
-        }
-
-        return $data;
-    }
-
     public function addTotalByStore() {
 
         $json = [];
@@ -4114,7 +4005,12 @@ class ControllerApiCustomerOrder extends Controller {
                     }
                 }
                 if ($store_id != 75) {
-                    $other_vendor_delivery_time = $this->getothervendordeliverytime($store_id);
+                    $other_vendor_delivery_time = $this->load->controller('api/delivery_time/getothervendordeliverytime', $store_id);
+                    $log = new Log('error.log');
+                    $log->write('other_vendor_delivery_time');
+                    $log->write($other_vendor_delivery_time);
+                    $log->write('other_vendor_delivery_time');
+                    //$other_vendor_delivery_time = $this->getothervendordeliverytime($store_id);
                     $order_data[$store_id]['delivery_date'] = $other_vendor_delivery_time['selected_time_slot_date'];
                     $order_data[$store_id]['delivery_timeslot'] = $other_vendor_delivery_time['selected_time_slot_time'];
                 }
@@ -4170,17 +4066,48 @@ class ControllerApiCustomerOrder extends Controller {
                 if (isset($args['mpesa_refrence_id'])) {
                     $this->load->model('payment/mpesa');
                     $this->load->model('checkout/order');
+                    $this->load->model('account/order');
 
                     foreach ($order_ids as $order_id) {
-                        $this->model_payment_mpesa->updateOrderIdMpesaOrder($order_id, $args['mpesa_refrence_id']);
+                        $order_details = $this->model_account_order->getOrderDetailsById($order_id);
+                        /* ALLOWING PAYMENT FOR KWIKBASKET ORDERS ONLY */
+                        if ($order_details['store_id'] == 75) {
+                            $this->model_payment_mpesa->updateOrderIdMpesaOrder($order_id, $args['mpesa_refrence_id']);
 
-                        $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mpesa_order_status_id'));
+                            $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mpesa_order_status_id'));
+                        }
+                    }
+                }
+            } elseif ('interswitch' == $args['payment_method_code']) {
+                $log = new Log('error.log');
+                $log->write('args');
+                $log->write($args);
+                $log->write('args');
+                //save for refrence id correct order id
+                if (isset($args['transaction_reference'])) {
+                    $status = $args['response_code'] == 00 ? 'COMPLETED' : 'FAILED';
+                    $status_id = $args['response_code'] == 00 ? $this->config->get('interswitch_order_status_id') : $this->config->get('interswitch_failed_order_status_id');
+                    $this->load->model('payment/interswitch');
+                    $this->load->model('payment/interswitch_response');
+                    $this->load->model('checkout/order');
+                    $this->load->model('account/order');
+
+                    foreach ($order_ids as $order_id) {
+                        $order_details = $this->model_account_order->getOrderDetailsById($order_id);
+                        /* ALLOWING PAYMENT FOR KWIKBASKET ORDERS ONLY */
+                        if ($order_details['store_id'] == 75) {
+                            $this->model_payment_interswitch_response->Saveresponse($order_details['customer_id'], $order_id, json_encode($args['payment_response']));
+                            $this->model_payment_interswitch->updateOrderIdInterswitchOrderMobile($order_id, $order_details['customer_id'], $args['response_code'], $args['response_description'], $status, $args['transaction_reference'], $args['amount'], $args['payment_channel']);
+
+                            $this->model_checkout_order->addOrderHistory($order_id, $status_id);
+                        }
                     }
                 }
             } else {
                 $data['payment'] = $this->load->controller('payment/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
+                unset($this->session->data['accept_vendor_terms']);
             }
 
             foreach ($order_ids as $key => $value) {

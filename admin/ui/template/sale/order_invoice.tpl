@@ -67,7 +67,7 @@
                                 <?php } ?>
                             </div>
                             <div class="col-md-4 text-right">
-                                <h5 class="bold">TAX INVOICE #<?= $order['invoice_no'] ?></h5>
+                                <h5 class="bold">TAX INVOICE # <?= $order['order_id'] ?><?= $order['invoice_no'] ?></h5>
                                 <?php if($order['po_number']) { ?>
                                     <h5 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h5>
                                 <?php } ?>
@@ -81,15 +81,15 @@
                                     <li>Delivered On <?= $order['delivery_date'] ?></li>
                                     <li><?= $order['shipping_method'] ?></li>
                                 </ul>
-                                <?php if($order['driver_name'] != NULL) { ?>
                                 <br>
+                                <!--<?php if($order['driver_name'] != NULL) { ?>
                                 <h6 class="bold mb-3">DRIVER DETAILS</h6>
                                 <ul class="list-block">
                                     <li>Name : <?= $order['driver_name'] ?></li>
                                     <li>Phone : <?= $order['driver_phone'] ?></li>
                                 </ul>
                                 <br>
-                                <?php } ?>
+                                <?php } ?>-->
 
                                 <?php if($order['delivery_executive_name'] != NULL) { ?>
  
@@ -97,6 +97,19 @@
                                 <ul class="list-block">
                                     <li>Name : <?= $order['delivery_executive_name'] ?></li>
                                     <li>Phone : <?= $order['delivery_executive_phone'] ?></li>
+                                <!--<?php if($order['delivery_charge'] != NULL && $order['delivery_charge'] >0) { ?>
+                                    <li>Delivery Charge : <?= $order['delivery_charge'] ?></li>
+                                 <?php } ?>-->
+                                </ul>
+                                <br>
+                                <?php } ?>
+                                
+                                <?php if($order['delivery_executive_name'] != NULL) { ?>
+ 
+                                <h6 class="bold mb-3">CUSTOMER ACCOUNT MANAGER DETAILS</h6>
+                                <ul class="list-block">
+                                    <li>Name : <?= $order['account_manager_name'] ?></li>
+                                    <li>Phone : <?= $order['account_manager_phone'] ?></li>
                                 <!--<?php if($order['delivery_charge'] != NULL && $order['delivery_charge'] >0) { ?>
                                     <li>Delivery Charge : <?= $order['delivery_charge'] ?></li>
                                  <?php } ?>-->

@@ -701,6 +701,7 @@ class ControllerProductStore extends Controller {
         $cachePrice_data = $this->cache->get('category_price_data');
         $this->load->model('assets/product');
         $this->load->model('tool/image');
+        $this->load->model('user/user');
 
         //$results = $this->model_assets_product->getProducts($filter_data);
         //$results = $this->model_assets_product->getProductsForHomePage($filter_data);
@@ -710,6 +711,7 @@ class ControllerProductStore extends Controller {
         $data['products'] = [];
 
         foreach ($results as $result) {
+            $vendor_details = $this->model_user_user->getUser($result['merchant_id']);
             // if qty less then 1 dont show product
             //REMOVED QUANTITY CHECK CONDITION
             /* if ($result['quantity'] <= 0) {
@@ -835,6 +837,7 @@ class ControllerProductStore extends Controller {
                     'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                     'rating' => 0,
                     'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
+                    'vendor_display_name' => $vendor_details['display_name'],
                 ];
             }
         }

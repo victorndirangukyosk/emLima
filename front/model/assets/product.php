@@ -261,7 +261,7 @@ class ModelAssetsProduct extends Model
             //$log->write('category_pricing_disabled_products');
             }
 
-        $query = 'SELECT * FROM '.DB_PREFIX."product_to_store pv WHERE product_store_id ='".(int) $product_store_id."'";
+        $query = 'SELECT * FROM '.DB_PREFIX."product_to_store pv WHERE product_store_id ='".(int) $product_store_id."' AND status = 1";
 
         $query = $this->db->query($query);
         
@@ -395,7 +395,7 @@ class ModelAssetsProduct extends Model
         }
 
 
-        $all_variations = 'SELECT * ,product_store_id as variation_id FROM '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX."product p ON (ps.product_id = p.product_id) WHERE name = '$product_name'";
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM '.DB_PREFIX.'product_to_store ps LEFT JOIN '.DB_PREFIX."product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' AND ps.status = 1 AND p.status = 1";
 
         //echo $all_variations;die;
         $result = $this->db->query($all_variations);

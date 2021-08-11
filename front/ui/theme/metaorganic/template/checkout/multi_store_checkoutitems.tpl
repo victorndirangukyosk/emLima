@@ -119,19 +119,19 @@
 
                     </td> 
                         <td class="a-right movewishlist">
-        <input  type="number" onkeypress="return validateFloatKeyPresswithVarient(this, event,'<?= $product['unit']?>');" name="cart[<?= $i ?>][qty]" id="cart[<?= $i ?>][qty]" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" min="1" maxlength="12" style="width:80px !important;disabled">
+                            <input  type="number" onkeypress="return validateFloatKeyPresswithVarient(this, event,'<?= $product['unit']?>');" name="cart[<?= $i ?>][qty]" id="cart[<?= $i ?>][qty]" value="<?= $product['quantity']?>" size="4" title="Qty" class="input-text qty" min="1" maxlength="12" style="width:80px !important;disabled" data-id="<?= $product['product_store_id']?>" data-encid="<?= $product['key']?>">
     </td>
         <td class="a-right hidden-table" >
                     <span class="cart-price">
         
-                                                <span class="price font-bold"> <?php echo $product['total_tax']; ?></span>                            
+                                                <span class="price font-bold tax<?= $product['product_store_id']?>"> <?php echo $product['total_tax']; ?></span>                            
         </span>
             </td>
         <td class="a-right hidden-table" >
                     <span class="cart-price">
         
                         <span class="price font-bold" id="spancart[<?= $i ?>][qty]" style="display:none;"><?php echo $product['total']; ?></span>    
-                        <span class="price font-bold"><?php echo $product['total_orginal_price']; ?></span>                            
+                        <span class="price font-bold orgprice<?= $product['product_store_id']?>"><?php echo $product['total_orginal_price']; ?></span>                            
         </span>
             </td>
               <td   class="a-center hidden-table"  >
@@ -186,10 +186,10 @@
 
 <tr class="first last">
 <td colspan="6" class="a-left last">
-    <button type="submit"  style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="empty_cart" title="Clear Cart" class="button" id="empty_cart_button"><span id="clearcart" class="cart-header_items-count clear-cart1" style="border-bottom:none;" data-confirm="This will empty your cart!!" >Clear Cart</span></button>
+    <button type="submit"  style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="empty_cart" title="Clear Cart" class="button" id="empty_cart_button"><span id="clearcart" class="cart-header_items-count clear-cart1" style="border-bottom:none;">Clear Cart</span></button>
 </td>
 <td colspan="6" class="a-right last">                                                       
-<button type="submit" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button"><span id="updatecart"><i class="fa fa-refresh"></i>
+<button type="button" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button" id="updatecar"><span id="updatecart"><i class="fa fa-refresh"></i>
  Update Cart</span></button>
 </td>
 </tr>
@@ -697,19 +697,19 @@
     </div>
     <!-- CSS Style -->
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
-<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
+<!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/revslider.css" >
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/owl.carousel.css">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/owl.theme.css">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/jquery.bxslider.css">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/jquery.mobile-menu.css">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/style.css" media="all">
-<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/responsive.css" media="all">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/responsive.css" media="all">-->
 
-<link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700" rel="stylesheet">
+<!--<link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Oswald:300,400,500,600,700" rel="stylesheet">
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:700,600,800,400' rel='stylesheet' type='text/css'>
-<link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i,900" rel="stylesheet">-->
 
    
     <script type="text/javascript" src="<?= $base;?>front/ui/theme/mvgv2/js/side-menu-script.js"></script>
@@ -722,13 +722,13 @@
     <!-- <script src="<?= $base;?>front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script> -->
     
     <!-- <link rel="stylesheet" href="<?= $base;?>front/ui/theme/mvgv2/css/bootstrap-iso.css" /> -->
-    <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
+    <!--<link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />-->
 
     <!-- <script type="text/javascript" src="<?= $base;?>front/ui/theme/mvgv2/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="<?= $base;?>front/ui/theme/mvgv2/css/bootstrap-datepicker3.css"/> -->
     
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>-->
 
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
@@ -949,8 +949,57 @@ $.ajax({
 
 });
 
-  $(document).delegate('#updatecart', 'click', function(){    
+$(document).delegate('#updatecart, #updatecar', 'click', function() {
+        
+        $( "input[name^='cart[']" ).each(function(){
+        console.log($(this).attr("data-id"));
+        console.log($(this).attr("data-encid"));
+        console.log($(this).val());
+        $("#updatecar").attr("disabled",true);
+        $("span[id^='updatecart']").html('<i class="fa fa-refresh"></i> Updating Cart');
+        $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-refresh').addClass('fa fa-spinner');
+        
+        $.ajax({
+	    url: 'index.php?path=checkout/cart/update',
+	    type: 'post',
+	    data: 'key=' + $(this).attr("data-encid") + '&quantity=' + (typeof($(this).val()) != 'undefined' ? $(this).val() : 1),
+	    dataType: 'json',
+	    async: false, 
+	    beforeSend: function() {
+            $("#updatecar").attr("disabled",true);
+            $("span[id^='updatecart']").html('<i class="fa fa-refresh"></i> Updating Cart');
+            $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-refresh').addClass('fa fa-spinner');
+	    },
+	    complete: function() {				
+	    },			
+	    success: function(json) {
+            console.log(json.products_details.tax); 
+            console.log(json.products_details.total); 
+            $(".tax"+json.products_details.product_store_id).html(json.products_details.tax);
+            $(".orgprice"+json.products_details.product_store_id).html(json.products_details.orginal_price);
+            $('.cart-total-amount').html(json['total_amount']);
+            loadTotals($('input#shipping_city_id').val());
+            
+            setTimeout(function(){ 
+            $("#updatecar").attr("disabled",true);
+            $("span[id^='updatecart']").html('<i class="fa fa-spinner"></i> Cart Updated');
+            $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-spinner').addClass('fa fa-check-circle');
+            },2000);
+            
+            setTimeout(function(){ 
+            $("#updatecar").attr("disabled",false);
+            $("span[id^='updatecart']").html('<i class="fa fa-spinner"></i> Update Cart');
+            $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-spinner').addClass('fa fa-refresh');
+            },4000);
+            }
+        });
+        
+        });
+        
+});
 
+  $(document).delegate('#updatecart,#updatecar', 'click', function(){    
+      return false;
       console.log("updating the cart");  
    
  var complex = <?php echo json_encode($products); ?>;
@@ -2612,8 +2661,8 @@ function saveInAddressBook() {
     <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/slider-carousel.js"></script>
    
   
-  <link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/mvgv2/css/custom.min.css?v=1.1.0">
-  <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/list.min.css">
+  <!--<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/mvgv2/css/custom.min.css?v=1.1.0">
+  <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/list.min.css">-->
 
 </body>
 

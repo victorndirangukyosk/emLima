@@ -1635,12 +1635,12 @@ $.ajax({
                     console.log(json.order_info.driver_id);
                     console.log(json.order_info.vehicle_number);
                     console.log(json.order_info.delivery_executive_id);
-                    if(/*order_status != 'Ready for delivery'*/ json.order_info.order_status != 'Order Processing' || order_status != 'Order Processing' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
+                    if(/*order_status != 'Ready for delivery'*/ json.order_info.order_status == 'Order Approval Pending' || order_status == 'Order Approval Pending' || json.order_info.order_status == 'Order Recieved' || order_status == 'Order Recieved' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
                     {
                     $('input[name="order_id"]').val(order_id);
                     $('input[name="invoice_custom"]').val(invoice);
                     $('#driverModal').modal('toggle');
-                    if(order_status != 'Order Processing' || json.order_info.order_status != 'Order Processing') {
+                    if(json.order_info.order_status == 'Order Approval Pending' || order_status == 'Order Approval Pending' || json.order_info.order_status == 'Order Recieved' || order_status == 'Order Recieved') {
                     //if(order_status != 'Ready for delivery') {
                     $('#driverModal-message').html("Please Update Order Status As Order Processing!");
                     //$('#driverModal-message').html("Please Select Order Status As Ready For Delivery!");
