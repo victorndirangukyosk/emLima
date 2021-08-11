@@ -631,7 +631,7 @@ class ControllerApiCustomerProducts extends Controller {
 
         if (isset($this->request->post['store_id'])) {
             if (isset($this->request->post['store_id'])) {
-                $store_id = 75;
+                $store_id = $this->request->post['store_id'];
             }
 
             $store_info = $this->model_tool_image->getStore($store_id);
