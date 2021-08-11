@@ -1338,6 +1338,7 @@ class ControllerApiCustomerProducts extends Controller {
                                 'qty_in_cart' => $qty_in_cart,
                                 'variations' => $this->model_assets_product->getApiVariationsNew($result['product_store_id']),
                                 'store_product_variation_id' => 0,
+                                'store_id' => $result['store_id'],
                                 'product_id' => $result['product_id'],
                                 'product_store_id' => $result['product_store_id'],
                                 'default_variation_name' => $result['default_variation_name'],
