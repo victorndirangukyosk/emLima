@@ -42,6 +42,7 @@ class ControllerApiCategories extends Controller
         } else {
             $this->load->model('api/categories');
             $this->load->model('api/products');
+            $this->load->model('assets/product');
 
             /*$category_data = array();
 
@@ -97,6 +98,8 @@ class ControllerApiCategories extends Controller
                     $cat['name'] = htmlspecialchars_decode($cat['name']);
                     $cat['thumb'] = $this->model_tool_image->resize($cat['image'], 300, 300);
                     $cat['description'] = htmlspecialchars_decode($cat['description']);
+                    $data['filter_category_id'] = $cat['category_id'];
+                    $cat['products_count'] = $this->model_assets_product->getProductsForGrid($data);
                     array_push($newCat, $cat);
                 }
             }
