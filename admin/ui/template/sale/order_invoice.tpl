@@ -104,8 +104,8 @@
                                 <br>
                                 <?php } ?>
                                 
-                                <?php if($order['delivery_executive_name'] != NULL) { ?>
- 
+                                <?php if($order['account_manager_name'] != NULL) { ?>
+                                 
                                 <h6 class="bold mb-3">CUSTOMER ACCOUNT MANAGER DETAILS</h6>
                                 <ul class="list-block">
                                     <li>Name : <?= $order['account_manager_name'] ?></li>
