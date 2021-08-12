@@ -4361,11 +4361,14 @@ class ControllerSaleOrder extends Controller {
 
                 $this->load->model('sale/customer');
                 $this->load->model('user/accountmanager');
+                $this->load->model('user/customerexperience');
                 $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
                 $order_customer_first_last_name = NULL;
                 $company_name = NULL;
                 $customer_account_manager_first_last_name = NULL;
                 $customer_account_manager_phone = NULL;
+                $customer_experience_first_last_name = NULL;
+                $customer_experince_phone = NULL;
                 if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
                     $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
                     $company_name = $order_customer_detials['company_name'];
@@ -4373,6 +4376,11 @@ class ControllerSaleOrder extends Controller {
                     if ($order_customer_detials['account_manager_id'] > 0 && $order_customer_detials['account_manager_id'] != NULL && $customer_account_manager_detials != NULL) {
                         $customer_account_manager_first_last_name = $customer_account_manager_detials['firstname'] . ' ' . $customer_account_manager_detials['lastname'];
                         $customer_account_manager_phone = $customer_account_manager_detials['mobile'] == NULL ? '+254 ' . $customer_account_manager_detials['telephone'] : '+254 ' . $customer_account_manager_detials['mobile'];
+                    }
+                    $customer_customer_experience_detials = $this->model_user_customerexperience->getUser($order_customer_detials['customer_experience_id']);
+                    if ($order_customer_detials['customer_experience_id'] > 0 && $order_customer_detials['customer_experience_id'] != NULL && $customer_customer_experience_detials != NULL) {
+                        $customer_experience_first_last_name = $customer_customer_experience_detials['firstname'] . ' ' . $customer_customer_experience_detials['lastname'];
+                        $customer_experince_phone = $customer_customer_experience_detials['mobile'] == NULL ? '+254 ' . $customer_customer_experience_detials['telephone'] : '+254 ' . $customer_customer_experience_detials['mobile'];
                     }
                 }
 
@@ -4409,7 +4417,9 @@ class ControllerSaleOrder extends Controller {
                     'vendor_terms_cod' => $order_info['vendor_terms_cod'],
                     'payment_terms' => $order_customer_detials['payment_terms'],
                     'account_manager_name' => $customer_account_manager_first_last_name,
-                    'account_manager_phone' => $customer_account_manager_phone
+                    'account_manager_phone' => $customer_account_manager_phone,
+                    'customer_experience_first_last_name' => $customer_experience_first_last_name,
+                    'customer_experince_phone' => $customer_experince_phone
                 ];
             }
         }
@@ -4647,11 +4657,14 @@ class ControllerSaleOrder extends Controller {
 
                 $this->load->model('sale/customer');
                 $this->load->model('user/accountmanager');
+                $this->load->model('user/customerexperience');
                 $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
                 $order_customer_first_last_name = NULL;
                 $company_name = NULL;
                 $customer_account_manager_first_last_name = NULL;
                 $customer_account_manager_phone = NULL;
+                $customer_experience_first_last_name = NULL;
+                $customer_experince_phone = NULL;
                 if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
                     $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
                     $company_name = $order_customer_detials['company_name'];
@@ -4659,6 +4672,11 @@ class ControllerSaleOrder extends Controller {
                     if ($order_customer_detials['account_manager_id'] > 0 && $order_customer_detials['account_manager_id'] != NULL && $customer_account_manager_detials != NULL) {
                         $customer_account_manager_first_last_name = $customer_account_manager_detials['firstname'] . ' ' . $customer_account_manager_detials['lastname'];
                         $customer_account_manager_phone = $customer_account_manager_detials['mobile'] == NULL ? '+254 ' . $customer_account_manager_detials['telephone'] : '+254 ' . $customer_account_manager_detials['mobile'];
+                    }
+                    $customer_customer_experience_detials = $this->model_user_customerexperience->getUser($order_customer_detials['customer_experience_id']);
+                    if ($order_customer_detials['customer_experience_id'] > 0 && $order_customer_detials['customer_experience_id'] != NULL && $customer_customer_experience_detials != NULL) {
+                        $customer_experience_first_last_name = $customer_customer_experience_detials['firstname'] . ' ' . $customer_customer_experience_detials['lastname'];
+                        $customer_experince_phone = $customer_customer_experience_detials['mobile'] == NULL ? '+254 ' . $customer_customer_experience_detials['telephone'] : '+254 ' . $customer_customer_experience_detials['mobile'];
                     }
                 }
                 $data['delivery_charge'] = $order_info['delivery_charge'];
@@ -4722,7 +4740,9 @@ class ControllerSaleOrder extends Controller {
                     'vendor_terms_cod' => $order_info['vendor_terms_cod'],
                     'payment_terms' => $order_customer_detials['payment_terms'],
                     'account_manager_name' => $customer_account_manager_first_last_name,
-                    'account_manager_phone' => $customer_account_manager_phone
+                    'account_manager_phone' => $customer_account_manager_phone,
+                    'customer_experience_first_last_name' => $customer_experience_first_last_name,
+                    'customer_experince_phone' => $customer_experince_phone
                 ];
             }
         }

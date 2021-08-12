@@ -1572,4 +1572,23 @@ class ModelSaleCustomer extends Model {
         $this->db->query('DELETE FROM `' . DB_PREFIX . "customer_contact` WHERE `contact_id` = '" . (int) $contact_id . "'");
     }
 
+    public function editCustomerConfiguration($customer_id, $data) {
+
+        if (isset($data['customer_category']) && $data['customer_category'] != NULL && $data['customer_category'] != 'undefined') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_category = '" . $data['customer_category'] . "', modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+        if (isset($data['account_manager']) && $data['account_manager'] != NULL && $data['customer_category'] != 'undefined') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET account_manager_id = '" . $data['account_manager'] . "', modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+        if (isset($data['customer_experience']) && $data['customer_experience'] != NULL && $data['customer_category'] != 'undefined') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_experience_id = '" . $data['customer_experience'] . "',  modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+        if (isset($data['payment_terms']) && $data['payment_terms'] != NULL && $data['customer_category'] != 'undefined') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', payment_terms = '" . $data['payment_terms'] . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+        if (isset($data['statement_duration']) && $data['statement_duration'] != NULL && $data['customer_category'] != 'undefined') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', statement_duration = '" . $data['statement_duration'] . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+    }
+
 }

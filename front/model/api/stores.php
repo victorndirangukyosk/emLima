@@ -171,7 +171,7 @@ class ModelApiStores extends Model
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY '.$this->db->escape($data['sort']);
         } else {
-            $sql .= ' ORDER BY s.name';
+            $sql .= ' ORDER BY s.store_id';
         }
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
@@ -191,7 +191,9 @@ class ModelApiStores extends Model
 
             $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
         }
-
+        
+        $log = new Log('error.log');
+        $log->write($sql);
         return $this->db->query($sql)->rows;
     }
 
