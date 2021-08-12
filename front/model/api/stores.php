@@ -164,20 +164,20 @@ class ModelApiStores extends Model
         }
 
         $sort_data = [
-            's.store_id',
+            's.name',
             's.status',
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY '.$this->db->escape($data['sort']);
         } else {
-            $sql .= ' ORDER BY s.name';
+            $sql .= ' ORDER BY s.store_id';
         }
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
-            $sql .= ' ASC';
-        } else {
             $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
         }
 
         if (isset($data['start']) || isset($data['limit'])) {
