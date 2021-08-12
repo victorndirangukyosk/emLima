@@ -191,7 +191,9 @@ class ModelApiStores extends Model
 
             $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
         }
-
+        
+        $log = new Log('error.log');
+        $log->write($sql);
         return $this->db->query($sql)->rows;
     }
 

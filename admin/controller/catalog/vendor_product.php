@@ -250,7 +250,7 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $filter_name = null;
         }
-        
+
         if (isset($this->request->get['filter_tax_class_id'])) {
             $filter_tax_class_id = $this->request->get['filter_tax_class_id'];
         } else {
@@ -375,7 +375,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_category_price'])) {
             $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
         }
-        
+
         if (isset($this->request->get['filter_tax_class_id'])) {
             $url .= '&filter_tax_class_id=' . $this->request->get['filter_tax_class_id'];
         }
@@ -642,7 +642,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_category_price'])) {
             $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
         }
-        
+
         if (isset($this->request->get['filter_tax_class_id'])) {
             $url .= '&filter_tax_class_id=' . $this->request->get['filter_tax_class_id'];
         }
@@ -749,7 +749,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_category_price'])) {
             $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
         }
-        
+
         if (isset($this->request->get['filter_tax_class_id'])) {
             $url .= '&filter_tax_class_id=' . $this->request->get['filter_tax_class_id'];
         }
@@ -1460,7 +1460,7 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $data['error_name'] = [];
         }
-        
+
         if (isset($this->error['merchant'])) {
             $data['error_merchant'] = $this->error['merchant'];
         } else {
@@ -1551,7 +1551,7 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->load->model('setting/store');
 
         $data['stores'] = $this->model_setting_store->getStores();
-        
+
         $this->load->model('vendor/vendor');
         $data['vendors'] = $this->model_vendor_vendor->getUsers();
 
@@ -1570,7 +1570,7 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $data['product_store'] = '';
         }
-        
+
         if (isset($this->request->post['merchant_id'])) {
             $data['merchant_id'] = $this->request->post['merchant_id'];
         } elseif (!empty($product_info)) {
@@ -1629,6 +1629,11 @@ class ControllerCatalogVendorProduct extends Controller {
             $data['product'] = $this->request->post['product'];
         } elseif (!empty($product_info)) {
             $data['product'] = $product_info['name'];
+        } elseif (isset($this->request->get['store_product_id']) && $this->request->get['store_product_id'] > 0) {
+            $product_info = $this->model_catalog_vendor_product->getProduct($this->request->get['store_product_id']);
+            if (!empty($product_info)) {
+                $data['product'] = $product_info['name'];
+            }
         } else {
             $data['product'] = '';
         }
@@ -1759,7 +1764,7 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $data['error_product_store'] = '';
         }
-        
+
         if (isset($this->error['merchant'])) {
             $data['error_merchant'] = $this->error['merchant'];
         } else {
@@ -2475,8 +2480,6 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $url = '';
 
-
-
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
@@ -2763,8 +2766,6 @@ class ControllerCatalogVendorProduct extends Controller {
         }
 
         $url = '';
-
-
 
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
