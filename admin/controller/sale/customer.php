@@ -2026,6 +2026,24 @@ class ControllerSaleCustomer extends Controller {
         $this->response->setOutput($this->load->view('sale/customer_contact.tpl', $data));
     }
 
+    public function configuration() {
+
+        $json = [];
+        $data = [];
+        $this->load->model('sale/customer');
+        $data['customer_category'] = $this->request->post['customer_category'];
+        $data['account_manager'] = $this->request->post['account_manager'];
+        $data['customer_experience'] = $this->request->post['customer_experience'];
+        $data['payment_terms'] = $this->request->post['payment_terms'];
+        $data['statement_duration'] = $this->request->post['statement_duration'];
+        $data['customer_id'] = $this->request->post['customer_id'];
+        $this->model_sale_customer->editCustomerConfiguration($this->request->post['customer_id'], $data);
+        $json['success'] = true;
+        $json['message'] = 'Customer Configuration Saved!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function reward() {
         $this->load->language('sale/customer');
 
