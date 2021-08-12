@@ -104,12 +104,12 @@
                                 <br>
                                 <?php } ?>
                                 
-                                <?php if($order['account_manager_name'] != NULL) { ?>
+                                <?php if($order['customer_experience_first_last_name'] != NULL) { ?>
                                  
                                 <h6 class="bold mb-3">CUSTOMER ACCOUNT MANAGER DETAILS</h6>
                                 <ul class="list-block">
-                                    <li>Name : <?= $order['account_manager_name'] ?></li>
-                                    <li>Phone : <?= $order['account_manager_phone'] ?></li>
+                                    <li>Name : <?= $order['customer_experience_first_last_name'] ?></li>
+                                    <li>Phone : <?= $order['customer_experince_phone'] ?></li>
                                 <!--<?php if($order['delivery_charge'] != NULL && $order['delivery_charge'] >0) { ?>
                                     <li>Delivery Charge : <?= $order['delivery_charge'] ?></li>
                                  <?php } ?>-->
