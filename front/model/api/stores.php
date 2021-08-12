@@ -164,7 +164,7 @@ class ModelApiStores extends Model
         }
 
         $sort_data = [
-            's.name',
+            's.store_id',
             's.status',
         ];
 
