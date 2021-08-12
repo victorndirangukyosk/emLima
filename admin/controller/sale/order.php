@@ -4740,7 +4740,9 @@ class ControllerSaleOrder extends Controller {
                     'vendor_terms_cod' => $order_info['vendor_terms_cod'],
                     'payment_terms' => $order_customer_detials['payment_terms'],
                     'account_manager_name' => $customer_account_manager_first_last_name,
-                    'account_manager_phone' => $customer_account_manager_phone
+                    'account_manager_phone' => $customer_account_manager_phone,
+                    'customer_experience_first_last_name' => $customer_experience_first_last_name,
+                    'customer_experince_phone' => $customer_experince_phone
                 ];
             }
         }
