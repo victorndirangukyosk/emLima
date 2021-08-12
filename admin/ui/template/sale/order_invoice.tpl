@@ -65,14 +65,6 @@
                                 </svg>-->
 
                                 <?php } ?>
-                            </div>
-                            <div class="col-md-4 text-right">
-                                <h5 class="bold">TAX INVOICE # <?= $order['order_id'] ?><?= $order['invoice_no'] ?></h5>
-                                <?php if($order['po_number']) { ?>
-                                    <h5 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h5>
-                                <?php } ?>
-                                <h5><?= $order['delivery_date'] ?></h5>
-
                                   <br>
                                  <h6 class="bold mb-3">ORDER INFO</h6>
                                 <ul class="list-block">
@@ -81,7 +73,24 @@
                                     <li>Delivered On <?= $order['delivery_date'] ?></li>
                                     <li><?= $order['shipping_method'] ?></li>
                                 </ul>
+                            </div>
+                            <div class="col-md-4 text-right">
+                                <h5 class="bold">TAX INVOICE # <?= $order['order_id'] ?><?= $order['invoice_no'] ?></h5>
+                                <?php if($order['po_number']) { ?>
+                                    <h5 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h5>
+                                <?php } ?>
+                                <h5><?= $order['delivery_date'] ?></h5>
+
+                                
                                 <br>
+                                <ul class="list-block" style="margin-bottom:130px;">
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
                                 <!--<?php if($order['driver_name'] != NULL) { ?>
                                 <h6 class="bold mb-3">DRIVER DETAILS</h6>
                                 <ul class="list-block">
