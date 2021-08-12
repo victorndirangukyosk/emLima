@@ -175,9 +175,9 @@ class ModelApiStores extends Model
         }
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
-            $sql .= ' DESC';
+            $sql .= 'ASC';
         } else {
-            $sql .= ' ASC';
+            $sql .= 'DESC';
         }
 
         if (isset($data['start']) || isset($data['limit'])) {
