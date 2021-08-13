@@ -1,12 +1,12 @@
 <?php
 
-require_once DIR_SYSTEM.'vendor/firebase/php-jwt/vendor/autoload.php';
+require_once DIR_SYSTEM . 'vendor/firebase/php-jwt/vendor/autoload.php';
+
 use Firebase\JWT\JWT;
 
-class ControllerApiCustomerLogin extends Controller
-{
-    public function index()
-    {
+class ControllerApiCustomerLogin extends Controller {
+
+    public function index() {
         $this->load->language('api/login');
 
         //echo "<pre>";print_r($this->request->post);die;
@@ -38,9 +38,9 @@ class ControllerApiCustomerLogin extends Controller
 
         //echo "<pre>";print_r($api_info);die;
         if ($api_info['status']) {
-            /*if(!isset($this->session->data['customer_id'])) {
-                $this->session->data['customer_id'] = $api_info['customer_id'];
-            }*/
+            /* if(!isset($this->session->data['customer_id'])) {
+              $this->session->data['customer_id'] = $api_info['customer_id'];
+              } */
             $tokenId = base64_encode(mcrypt_create_iv(32));
             $issuedAt = time();
             $notBefore = $issuedAt;  //Adding 10 seconds
@@ -51,34 +51,34 @@ class ControllerApiCustomerLogin extends Controller
              * Create the token as an array
              */
             $data = [
-                'iat' => $issuedAt,         // Issued at: time when the token was generated
-                'jti' => $tokenId,          // Json Token Id: an unique identifier for the token
-                'iss' => $serverName,       // Issuer
-                'nbf' => $notBefore,        // Not before
-                'exp' => $expire,           // Expire
-                'data' => [                  // Data related to the logged user you can set your required data
-                            'id' => $api_info['customer_id'], // id from the users table
-                             'name' => $api_info['customer_email'], //  name
-                          ],
+                'iat' => $issuedAt, // Issued at: time when the token was generated
+                'jti' => $tokenId, // Json Token Id: an unique identifier for the token
+                'iss' => $serverName, // Issuer
+                'nbf' => $notBefore, // Not before
+                'exp' => $expire, // Expire
+                'data' => [// Data related to the logged user you can set your required data
+                    'id' => $api_info['customer_id'], // id from the users table
+                    'name' => $api_info['customer_email'], //  name
+                ],
             ];
 
             $secretKey = base64_decode(SECRET_KEY);
             /// Here we will transform this array into JWT:
             $jwt = JWT::encode(
-                $data, //Data to be encoded in the JWT
-                $secretKey, // The signing key
-                 ALGORITHM
+                            $data, //Data to be encoded in the JWT
+                            $secretKey, // The signing key
+                            ALGORITHM
             );
 
             $unencodedArray = ['jwt' => $jwt];
 
             $this->session->data['customer_id'] = $api_info['customer_id'];
             // echo "<pre>";print_r($api_info);die; 
-            
-            if ($api_info['parent'] != NULL && $api_info['parent']>0) {
+
+            if ($api_info['parent'] != NULL && $api_info['parent'] > 0) {
                 $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['parent'] . "' AND status = '1'");
             } else {
-                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['customer_id']. "' AND status = '1'");
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['customer_id'] . "' AND status = '1'");
             }
             $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
             // echo "<pre>";print_r($customer_details);die; 
@@ -86,27 +86,25 @@ class ControllerApiCustomerLogin extends Controller
             $this->session->data['order_approval_access_role'] = $api_info['order_approval_access_role'];
             $this->session->data['parent'] = $api_info['parent'];
 
-
             //echo  "{'status' : 'success','resp':".json_encode($unencodedArray)."}"
             $this->load->model('account/customer');
             $this->model_account_customer->cacheProductPrices(75);
             $customer_info = $this->model_account_customer->getCustomer($api_info['customer_id']);
             $customer_info['devices'] = $this->model_account_customer->getCustomerDevices($api_info['customer_id']);
 
-               // Add to activity log
-               $this->load->model('account/activity');
+            // Add to activity log
+            $this->load->model('account/activity');
 
-               $activity_data = [
-                   'customer_id' => $customer_info['customer_id'],
-                   'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
-               ];
+            $activity_data = [
+                'customer_id' => $customer_info['customer_id'],
+                'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+            ];
 
-               $this->model_account_activity->addActivity('login', $activity_data);
+            $this->model_account_activity->addActivity('login', $activity_data);
 
-               
             #region login history
             $logindata['customer_id'] = $api_info['customer_id'];
-            if (isset($this->request->post['login_latitude']) ) {
+            if (isset($this->request->post['login_latitude'])) {
                 $logindata['login_latitude'] = $this->request->post['login_latitude'];
             } else {
                 $logindata['login_latitude'] = 0;
@@ -116,15 +114,15 @@ class ControllerApiCustomerLogin extends Controller
                 $logindata['login_longitude'] = $this->request->post['login_longitude'];
             } else {
                 $logindata['login_longitude'] = 0;
-            }        
-            
+            }
+
             if (isset($this->request->post['login_mode'])) {
                 $logindata['login_mode'] = $this->request->post['login_mode'];
             } else {
                 $logindata['login_mode'] = '';
-            }                 
+            }
             $this->model_account_customer->addLoginHistory($logindata);
-           #endregion login history
+            #endregion login history
             if (!empty($customer_info['dob'])) {
                 $customer_info['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
             } else {
@@ -133,6 +131,7 @@ class ControllerApiCustomerLogin extends Controller
             $json['success'] = $this->language->get('text_success');
             $json['token'] = $jwt; //json_encode($unencodedArray);
             $json['cookie'] = $this->session->getId();
+            $json['customer_category'] = $this->customer->getCustomerCategory();
             $json['status'] = true;
 
             $json['data'] = $customer_info;
@@ -151,8 +150,7 @@ class ControllerApiCustomerLogin extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addLogin()
-    {
+    public function addLogin() {
         //echo "<pre>";print_r( $this->request->post);die;
         $json = [];
 
@@ -165,7 +163,6 @@ class ControllerApiCustomerLogin extends Controller
         // Delete old login so not to cause any issues if there is an error
         unset($this->session->data['customer_id']);
         unset($this->session->data['customer_category']);
-
 
         $keys = [
             'username',
@@ -204,8 +201,7 @@ class ControllerApiCustomerLogin extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addLoginByOtp()
-    {
+    public function addLoginByOtp() {
         //echo "<pre>";print_r( "addLoginByOtp");die;
         $json = [];
 
@@ -247,8 +243,7 @@ class ControllerApiCustomerLogin extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addLoginVerifyOtp()
-    {
+    public function addLoginVerifyOtp() {
         //echo "<pre>";print_r( "addLoginVerifyOtp");die;
 
         $json = [];
@@ -279,23 +274,23 @@ class ControllerApiCustomerLogin extends Controller
                  * Create the token as an array
                  */
                 $data = [
-                    'iat' => $issuedAt,         // Issued at: time when the token was generated
-                    'jti' => $tokenId,          // Json Token Id: an unique identifier for the token
-                    'iss' => $serverName,       // Issuer
-                    'nbf' => $notBefore,        // Not before
-                    'exp' => $expire,           // Expire
-                    'data' => [                  // Data related to the logged user you can set your required data
-                                'id' => $this->request->post['customer_id'], // id from the users table
-                                 'name' => $this->request->post['customer_id'], //  name
-                              ],
+                    'iat' => $issuedAt, // Issued at: time when the token was generated
+                    'jti' => $tokenId, // Json Token Id: an unique identifier for the token
+                    'iss' => $serverName, // Issuer
+                    'nbf' => $notBefore, // Not before
+                    'exp' => $expire, // Expire
+                    'data' => [// Data related to the logged user you can set your required data
+                        'id' => $this->request->post['customer_id'], // id from the users table
+                        'name' => $this->request->post['customer_id'], //  name
+                    ],
                 ];
 
                 $secretKey = base64_decode(SECRET_KEY);
                 /// Here we will transform this array into JWT:
                 $jwt = JWT::encode(
-                    $data, //Data to be encoded in the JWT
-                    $secretKey, // The signing key
-                     ALGORITHM
+                                $data, //Data to be encoded in the JWT
+                                $secretKey, // The signing key
+                                ALGORITHM
                 );
 
                 $unencodedArray = ['jwt' => $jwt];
@@ -315,7 +310,7 @@ class ControllerApiCustomerLogin extends Controller
 
                 $customer_info['user_rewards_available'] = (int) $this->customer->getRewardPoints();
 
-                $referUnique = 'refer='.strtolower(str_replace(' ', '', $this->customer->getFirstName())).strtolower(str_replace(' ', '', $this->customer->getLastName())).'!@'.strtolower($this->customer->getId());
+                $referUnique = 'refer=' . strtolower(str_replace(' ', '', $this->customer->getFirstName())) . strtolower(str_replace(' ', '', $this->customer->getLastName())) . '!@' . strtolower($this->customer->getId());
 
                 if ($this->request->server['HTTPS']) {
                     $refer_link = $this->config->get('config_ssl');
@@ -324,7 +319,7 @@ class ControllerApiCustomerLogin extends Controller
                 }
 
                 $refer_link = rtrim($refer_link, '/');
-                $refer_link .= '?'.$referUnique;
+                $refer_link .= '?' . $referUnique;
 
                 $customer_info['refer_link'] = $referUnique;
 
@@ -355,8 +350,7 @@ class ControllerApiCustomerLogin extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addNewAccessToken()
-    {
+    public function addNewAccessToken() {
         //echo "<pre>";print_r( "addNewAccessToken");die;
         //echo "<pre>";print_r($this->customer->getId());die;
         $this->request->post['customer_id'] = $this->customer->getId();
@@ -382,23 +376,23 @@ class ControllerApiCustomerLogin extends Controller
              * Create the token as an array
              */
             $data = [
-                'iat' => $issuedAt,         // Issued at: time when the token was generated
-                'jti' => $tokenId,          // Json Token Id: an unique identifier for the token
-                'iss' => $serverName,       // Issuer
-                'nbf' => $notBefore,        // Not before
-                'exp' => $expire,           // Expire
-                'data' => [                  // Data related to the logged user you can set your required data
-                            'id' => $this->request->post['customer_id'], // id from the users table
-                             'name' => $this->request->post['customer_id'], //  name
-                          ],
+                'iat' => $issuedAt, // Issued at: time when the token was generated
+                'jti' => $tokenId, // Json Token Id: an unique identifier for the token
+                'iss' => $serverName, // Issuer
+                'nbf' => $notBefore, // Not before
+                'exp' => $expire, // Expire
+                'data' => [// Data related to the logged user you can set your required data
+                    'id' => $this->request->post['customer_id'], // id from the users table
+                    'name' => $this->request->post['customer_id'], //  name
+                ],
             ];
 
             $secretKey = base64_decode(SECRET_KEY);
             /// Here we will transform this array into JWT:
             $jwt = JWT::encode(
-                $data, //Data to be encoded in the JWT
-                $secretKey, // The signing key
-                 ALGORITHM
+                            $data, //Data to be encoded in the JWT
+                            $secretKey, // The signing key
+                            ALGORITHM
             );
 
             $unencodedArray = ['jwt' => $jwt];
@@ -418,7 +412,7 @@ class ControllerApiCustomerLogin extends Controller
 
             $customer_info['user_rewards_available'] = (int) $this->customer->getRewardPoints();
 
-            $referUnique = 'refer='.strtolower(str_replace(' ', '', $this->customer->getFirstName())).strtolower(str_replace(' ', '', $this->customer->getLastName())).'!@'.strtolower($this->customer->getId());
+            $referUnique = 'refer=' . strtolower(str_replace(' ', '', $this->customer->getFirstName())) . strtolower(str_replace(' ', '', $this->customer->getLastName())) . '!@' . strtolower($this->customer->getId());
 
             if ($this->request->server['HTTPS']) {
                 $refer_link = $this->config->get('config_ssl');
@@ -427,7 +421,7 @@ class ControllerApiCustomerLogin extends Controller
             }
 
             $refer_link = rtrim($refer_link, '/');
-            $refer_link .= '?'.$referUnique;
+            $refer_link .= '?' . $referUnique;
 
             $customer_info['refer_link'] = $referUnique;
 
@@ -436,8 +430,6 @@ class ControllerApiCustomerLogin extends Controller
             $json['status'] = true;
 
             $json['data'] = $customer_info;
-
-           
         } else {
             //$json['error'] = $this->language->get('error_login');
             $json['status'] = 10031; //user not found
@@ -449,20 +441,19 @@ class ControllerApiCustomerLogin extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addloginHistory()
-    {
+    public function addloginHistory() {
         $json = [];
 
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
 
-          #region login history
-          try{
+        #region login history
+        try {
             // $logindata['customer_id'] = $customer_info['customer_id'];
-              $logindata['customer_id'] = $this->request->post['customer_id']; 
+            $logindata['customer_id'] = $this->request->post['customer_id'];
 
-            if (isset($this->request->post['login_latitude']) ) {
+            if (isset($this->request->post['login_latitude'])) {
                 $logindata['login_latitude'] = $this->request->post['login_latitude'];
             } else {
                 $logindata['login_latitude'] = 0;
@@ -472,66 +463,57 @@ class ControllerApiCustomerLogin extends Controller
                 $logindata['login_longitude'] = $this->request->post['login_longitude'];
             } else {
                 $logindata['login_longitude'] = 0;
-            }        
-            
+            }
+
             if (isset($this->request->post['login_mode'])) {
                 $logindata['login_mode'] = $this->request->post['login_mode'];
             } else {
                 $logindata['login_mode'] = '';
-            } 
-            $this->load->model('account/customer');                
+            }
+            $this->load->model('account/customer');
             $this->model_account_customer->addLoginHistory($logindata);
             $json['message'][] = ['type' => '', 'body' => 'success'];
-            $json['success'] = 'success'; 
+            $json['success'] = 'success';
+        } catch (exception $ex) {
+            $log = new Log('error.log');
+            $log->write('Login History not saved');
+            $json['message'][] = ['type' => '', 'body' => 'failed'];
+            $json['success'] = 'failed';
+        } finally {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
         }
-           catch(exception $ex)
-           {
-               $log = new Log('error.log');              
-               $log->write('Login History not saved');
-               $json['message'][] = ['type' => '', 'body' => 'failed'];
-               $json['success'] = 'failed'; 
-           }
-           finally{
-               $this->response->addHeader('Content-Type: application/json');
-               $this->response->setOutput(json_encode($json));
-           }
-           #endregion login history
-          
-        }
+        #endregion login history
+    }
 
-     
-    public function addNewCustomerDevice()
-    {
+    public function addNewCustomerDevice() {
         //echo "<pre>";print_r( $this->request->post);die;
-        try{
-        $json = [];
-        $json['status'] = 200;
-        // $json['data'] = [];
-        // $json['message'] = []; 
+        try {
+            $json = [];
+            $json['status'] = 200;
+            // $json['data'] = [];
+            // $json['message'] = []; 
             if (isset($this->request->post['customer_id']) && isset($this->request->post['device_id'])) {
                 $this->load->model('account/api');
                 $this->model_account_api->addCustomerDevice($this->request->post['customer_id'], $this->request->post['device_id']);
-                $json['message']="Success";
+                $json['message'] = "Success";
             } else {
                 $json['status'] = 10010;
-                $json['message']="Error";
+                $json['message'] = "Error";
                 http_response_code(400);
             }
-        }
-        catch(exception $ex)
-        {
+        } catch (exception $ex) {
             $json['status'] = 500;
-            $json['message']="Device Mapping Failed";
+            $json['message'] = "Device Mapping Failed";
             http_response_code(400);
-        }
-        finally{
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+        } finally {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
         }
     }
 
     public function addSendpushnotificationtoallcustomer() {
-        
+
         $log = new Log('error.log');
         $log->write('addsendpushnotificationtoallcustomers');
         $this->load->model('account/customer');
@@ -539,11 +521,12 @@ class ControllerApiCustomerLogin extends Controller
         //$customers = $this->model_account_customer->getCustomerById($this->request->post['customer_id']);
         foreach ($customers as $customer) {
             $sen['customer_id'] = '';
-            $log->write($customer['customer_id'].' '.$customer['device_id']);
+            $log->write($customer['customer_id'] . ' ' . $customer['device_id']);
             $ret = $this->emailtemplate->sendDynamicPushNotification($customer['customer_id'], $customer['device_id'], $this->request->post['message'], $this->request->post['title'], $sen);
         }
         $json['response'] = $ret;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
 }
