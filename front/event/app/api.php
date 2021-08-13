@@ -43,7 +43,7 @@ class EventAppApi extends Event {
 
             $log = new Log('error.log');
             $log->write('route  api');
-            $log->write($this->getHeaders());
+            $log->write();
             $log->write($route);
 
             // route  api
