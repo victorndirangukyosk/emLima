@@ -1044,6 +1044,11 @@ class ControllerApiCustomerProducts extends Controller {
     }
 
     public function getProductSearch() {
+        $log = new Log('error.log');
+        $log->write('data');
+        $log->write($data);
+        $log->write($this->customer->getId());
+        $log->write('data');
         $json = [];
 
         if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
@@ -2220,10 +2225,6 @@ class ControllerApiCustomerProducts extends Controller {
     }
 
     public function getProductAutocomplete($data = []) {
-        $log = new Log('error.log');
-        $log->write('data');
-        $log->write($data);
-        $log->write('data');
         $conn = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 
         if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
