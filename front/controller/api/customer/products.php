@@ -1048,6 +1048,7 @@ class ControllerApiCustomerProducts extends Controller {
         $log->write('data');
         $log->write($this->request->get);
         $log->write($this->customer->getId());
+        $log->write($this->customer->getCustomerCategory());
         $log->write('data');
         $json = [];
 
@@ -1320,8 +1321,6 @@ class ControllerApiCustomerProducts extends Controller {
                         //$name .= str_repeat('&nbsp;',30 - strlen($result['name']));
 
                         $unit = $result['unit'] ? $result['unit'] : false;
-
-
 
                         $productNames = array_column($data['products'], 'name');
                         if (false !== array_search($result['name'], $productNames)) {
@@ -1803,7 +1802,7 @@ class ControllerApiCustomerProducts extends Controller {
             if (isset($filter_data['group_by']) && ('name' == $filter_data['group_by'])) {
                 $formatted = true;
             }
-            
+
             $tax_amount = 0;
             $tax_name = NULL;
             $tax_percentage = 0;
@@ -2234,8 +2233,6 @@ class ControllerApiCustomerProducts extends Controller {
         }
         $customercategory_new = $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
-
-
         $sql = 'SELECT p.*,pd.*,p2c.product_id product_id2 FROM ' . DB_PREFIX . 'product p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (p.product_id = p2c.product_id)';
 
         if (!empty($data['filter_store'])) {
@@ -2244,9 +2241,9 @@ class ControllerApiCustomerProducts extends Controller {
 
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
-        /*if (!empty($data['filter_store'])) {
-            $sql .= ' AND ps.store_id="' . $data['filter_store'] . '"';
-        }*/
+        /* if (!empty($data['filter_store'])) {
+          $sql .= ' AND ps.store_id="' . $data['filter_store'] . '"';
+          } */
 
         /* if ($this->user->isVendor()) {
           // $sql .= ' AND p.vendor_id="'.$this->user->getId().'"';
@@ -2278,7 +2275,6 @@ class ControllerApiCustomerProducts extends Controller {
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $sql .= " AND p.status = '" . (int) $data['filter_status'] . "'";
             $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
-
         }
         //$sql .= " GROUP BY p.product_id";
         //$sql .= " LIMIT 10";
@@ -2321,7 +2317,6 @@ class ControllerApiCustomerProducts extends Controller {
         }
 
         $results = $query = $conn->query($sql);
-
 
         $disabled_products_string = NULL;
         // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
@@ -2462,7 +2457,6 @@ class ControllerApiCustomerProducts extends Controller {
 
 
             $results = $query = $conn->query($sql);
-
 
             $disabled_products_string = NULL;
             // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
@@ -2609,7 +2603,6 @@ class ControllerApiCustomerProducts extends Controller {
 
 
             $results = $query = $conn->query($sql);
-
 
             $disabled_products_string = NULL;
             // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
