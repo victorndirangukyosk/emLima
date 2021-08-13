@@ -493,7 +493,6 @@ class EventAppApi extends Event {
                     if ($customer_query->num_rows) {
                         $log->write('in customer st');
                         $log->write($customer_query->row['customer_category']);
-                        $this->customer->setVariables($customer_query->row);
 
                         /* SET CUSTOMER CATEGORY */
                         $data['customer_category'] = NULL;
@@ -509,8 +508,12 @@ class EventAppApi extends Event {
                         if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] == NULL) {
                             $data['customer_category'] = $customer_query->row['customer_category'];
                         }
+
+                        $customer_query->row['customer_category'] = $data['customer_category'];
                         //$this->customer->setVariables($data['customer_category']);
                         /* SET CUSTOMER CATEGORY */
+
+                        $this->customer->setVariables($customer_query->row);
                     } else {
                         return $res;
                     }
