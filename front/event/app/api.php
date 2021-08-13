@@ -508,6 +508,9 @@ class EventAppApi extends Event {
                         if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] == NULL) {
                             $data['customer_category'] = $customer_query->row['customer_category'];
                         }
+                        $log->write('customer_category');
+                        $log->write($data['customer_category']);
+                        $log->write('customer_category');
                         $this->customer->setVariables($data['customer_category']);
                         /* SET CUSTOMER CATEGORY */
                     } else {
