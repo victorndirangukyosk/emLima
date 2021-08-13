@@ -1080,7 +1080,7 @@ class ControllerAccountLogin extends Controller {
                             }
                         }
 
-                        if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] == NULL) {
+                        if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
                             $data['customer_category'] = $customer_query->row['customer_category'];
                         }
                         //$this->customer->setVariables($data['customer_category']);
