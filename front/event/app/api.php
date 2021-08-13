@@ -492,6 +492,7 @@ class EventAppApi extends Event {
                     //echo "<pre>";print_r($customer_query->row);die;
                     if ($customer_query->num_rows) {
                         $log->write('in customer st');
+                        $log->write($customer_query->row);
                         $this->customer->setVariables($customer_query->row);
 
                         /* SET CUSTOMER CATEGORY */
