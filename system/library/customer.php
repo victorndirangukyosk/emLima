@@ -321,6 +321,10 @@ class Customer {
     }
 
     public function setVariables($data) {
+        $log = new Log('error.log');
+        $log->write('setVariables');
+        $log->write($data);
+        $log->write('setVariables');
         $this->customer_id = $data['customer_id'];
         $this->firstname = $data['firstname'];
         $this->lastname = $data['lastname'];
