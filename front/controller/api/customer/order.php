@@ -4098,7 +4098,7 @@ class ControllerApiCustomerOrder extends Controller {
                         if ($order_details['store_id'] == 75) {
                             $this->model_payment_interswitch_response->Saveresponse($order_details['customer_id'], $order_id, json_encode($args['payment_response']));
                             $this->model_payment_interswitch->updateOrderIdInterswitchOrderMobile($order_id, $order_details['customer_id'], $args['response_code'], $args['response_description'], $status, $args['transaction_reference'], $args['amount'], $args['payment_channel']);
-
+                            $this->model_payment_interswitch->OrderTransaction($order_id, $args['response_description']);
                             $this->model_checkout_order->addOrderHistory($order_id, $status_id);
                         }
                     }
