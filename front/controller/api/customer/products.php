@@ -1060,6 +1060,8 @@ class ControllerApiCustomerProducts extends Controller {
         }
         $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
+        $this->session->data['customer_category'] = !isset($this->session->data['customer_category']) || $this->session->data['customer_category'] == NULL ? $this->customer->getCustomerCategory() : $customer_details->row['customer_category'];
+
         $log = new Log('error.log');
         $log->write('api/getProductSearch');
 
