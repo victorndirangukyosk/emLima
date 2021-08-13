@@ -1068,7 +1068,6 @@ class ControllerAccountLogin extends Controller {
                     $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $DecodedDataArray->data->id . "' AND status = '1'");
 
                     if ($customer_query->num_rows) {
-                        $this->customer->setVariables($customer_query->row);
 
                         /* SET CUSTOMER CATEGORY */
                         $data['customer_category'] = NULL;
@@ -1084,8 +1083,11 @@ class ControllerAccountLogin extends Controller {
                         if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] == NULL) {
                             $data['customer_category'] = $customer_query->row['customer_category'];
                         }
-                        $this->customer->setVariables($data['customer_category']);
+                        //$this->customer->setVariables($data['customer_category']);
                         /* SET CUSTOMER CATEGORY */
+                        $customer_query->row['customer_category'] = $data['customer_category'];
+
+                        $this->customer->setVariables($customer_query->row);
 
                         $this->load->model('account/customer');
                         $this->load->model('setting/store');
