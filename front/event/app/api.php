@@ -517,7 +517,7 @@ class EventAppApi extends Event {
                     } else {
                         return $res;
                     }
-
+                    $log->write($this->customer->getCustomerCategory() . 'customer_category');
                     $log->write($this->customer->isLogged() . 'cerfxx');
                     $log->write($this->customer->getId() . 'cerfxx22');
                 } else {
