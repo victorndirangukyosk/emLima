@@ -39,7 +39,7 @@ class Customer {
                     }
                 }
 
-                if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] == NULL) {
+                if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
                     $this->customer_category = $customer_query->row['customer_category'];
                 }
                 /* SET CUSTOMER CATEGORY */
@@ -95,7 +95,7 @@ class Customer {
                 }
             }
 
-            if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] == NULL) {
+            if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
                 $this->customer_category = $customer_query->row['customer_category'];
             }
             /* SET CUSTOMER CATEGORY */
@@ -170,7 +170,7 @@ class Customer {
                 }
             }
 
-            if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] == NULL) {
+            if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
                 $this->customer_category = $customer_query->row['customer_category'];
             }
             /* SET CUSTOMER CATEGORY */
