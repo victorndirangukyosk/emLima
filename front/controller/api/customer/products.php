@@ -1046,7 +1046,7 @@ class ControllerApiCustomerProducts extends Controller {
     public function getProductSearch() {
         $log = new Log('error.log');
         $log->write('data');
-        $log->write($data);
+        $log->write($this->request->get);
         $log->write($this->customer->getId());
         $log->write('data');
         $json = [];
