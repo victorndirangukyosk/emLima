@@ -1049,6 +1049,7 @@ class ControllerApiCustomerProducts extends Controller {
         $log->write($this->request->get);
         $log->write($this->customer->getId());
         $log->write($this->customer->getCustomerCategory());
+        $log->write($this->customer->getPaymentTerms());
         $log->write('data');
         $json = [];
 
