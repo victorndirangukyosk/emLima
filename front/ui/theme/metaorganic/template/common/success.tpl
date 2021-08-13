@@ -54,7 +54,7 @@
                     
                 </div>
                 
-           
+                <?php if(isset($total_products)) { ?>
                 <!--ORDER SUMMARY-->
                 <div class="row">
             <div class="col-md-12">
@@ -273,6 +273,7 @@
                     </div>
                 </div>
                 <!--ORDER SUMMARY-->
+                <?php } ?>
             </div>
          <!--</div>-->
     </div>
