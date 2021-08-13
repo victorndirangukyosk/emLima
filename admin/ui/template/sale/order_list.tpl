@@ -342,7 +342,7 @@
                                     <?php if($this->user->isVendor()) { ?>
                                     <td class="text-right"><?php echo $order['vendor_total']; /*echo $order['total'];*/ ?></td>
                                     <?php } else { ?>
-                                    <td class="text-right"><?php echo $order['sub_total']; /*echo $order['total'];*/ ?></td>
+                                    <td class="text-right"><?php echo */$order['sub_total'];*/ echo $order['total']; ?></td>
                                     <?php } ?>
                                     <td class="text-left"><?php echo $order['date_added']; ?></td>
                                     <!-- <td class="text-left"><?php echo $order['date_modified']; ?></td> -->
