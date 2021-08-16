@@ -767,9 +767,8 @@ class ModelAccountApi extends Model
         
                         //echo "<pre>";print_r($sms_message);die;
                         // if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
-                            $phonenumber_send='+254'.$this->request->post['phone'];
-                            $ret = $this->emailtemplate->sendmessage($phonenumber_send, $sms_message);
-                            $log->write('OTP send to phone number '.$phonenumber_send);
+                            $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
+                            $log->write('OTP send to phone number '.$this->request->post['phone']);
                             $log->write('OTP send to phone number '.$sms_message);
                             $log->write('OTP send to phone number '.$ret);
         
@@ -779,7 +778,7 @@ class ModelAccountApi extends Model
                             $this->model_account_customer->saveOTP($this->request->post['phone'], $data['otp'], 'register');
                             $data['text_verify_otp'] = $this->language->get('text_verify_otp');
         
-                            $data['success_message'] = $this->language->get('text_otp_sent').' '.$phonenumber_send;
+                            $data['success_message'] = $this->language->get('text_otp_sent').' '.$this->request->post['phone'];
                         // }
         
                          if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
