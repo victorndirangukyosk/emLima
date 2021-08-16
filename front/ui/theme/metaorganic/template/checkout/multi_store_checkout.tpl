@@ -2355,6 +2355,14 @@ function loadUnpaidorders() {
         }
     });
 }
+
+$('#pay_pending_amount').on('click', function(){
+window.location.href = "<?= $continue.'/index.php?path=account/transactions'; ?>";
+});
+
+$('#pay_clear_cart').on('click', function(){
+window.location.href = "<?= $continue.'/index.php?path=common/home'; ?>";
+});  
 </script>
 <script src="https://api-test.equitybankgroup.com/js/eazzycheckout.js"></script>
 </body>
