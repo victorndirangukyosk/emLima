@@ -767,7 +767,7 @@
     float: left;
     margin-top: 10px;
     }
-    #remove_vendor_products #pay_clear_cart {
+    #remove_vendor_products, #pay_clear_cart {
     width: 49%;
     float: left;
     margin-top: 10px;
