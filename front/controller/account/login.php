@@ -1479,9 +1479,9 @@ class ControllerAccountLogin extends Controller {
 
     public function SendSNS() {
         $sdk = new Aws\Sns\SnsClient([
-            'region' => 'eu-west-1',
+            'region' => 'us-east-2',
             'version' => 'latest',
-            'credentials' => ['key' => 'xxx', 'secret' => 'xxx']
+            'credentials' => ['key' => 'AKIAUWRTJZVBPUAIMRKY', 'secret' => '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']
         ]);
 
         $result = $sdk->publish([
