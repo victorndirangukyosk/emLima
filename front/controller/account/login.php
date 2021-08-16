@@ -1485,11 +1485,11 @@ class ControllerAccountLogin extends Controller {
         ]);
 
         $result = $sdk->publish([
-            'Message' => 'This is a test message.',
+            'Message' => 'Hello sri, Your Kwik Basket signup verification code is 9831. Enter code to complete registration.',
             'PhoneNumber' => '+919963034024',
             'MessageAttributes' => ['AWS.SNS.SMS.SenderID' => [
                     'DataType' => 'String',
-                    'StringValue' => 'WebNiraj'
+                    'StringValue' => 'KwikBasket'
                 ]
         ]]);
 
