@@ -916,7 +916,7 @@ class ModelAccountApi extends Model
 
         $this->request->post['phone'] = $this->request->post['telephone'];
         //echo "<pre>";print_r($this->request->post);die;
-        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->signup_validate()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) ) {//&& $this->signup_validate()
             $this->load->model('account/customer');
 
             if (isset($this->request->post['signup_otp']) && isset($this->request->post['phone'])) {
