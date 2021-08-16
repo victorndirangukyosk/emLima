@@ -766,8 +766,11 @@ class ModelAccountApi extends Model
                         $sms_message = $this->emailtemplate->getSmsMessage('registerOTP', 'registerotp_2', $data);
         
                         //echo "<pre>";print_r($sms_message);die;
-                        if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
+                        // if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
                             $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
+                            $log->write('OTP send to phone number '.$this->request->post['phone']);
+                            $log->write('OTP send to phone number '.$sms_message);
+                            $log->write('OTP send to phone number '.$ret);
         
                             //save in otp table
                             $data['status'] = true;
@@ -776,9 +779,9 @@ class ModelAccountApi extends Model
                             $data['text_verify_otp'] = $this->language->get('text_verify_otp');
         
                             $data['success_message'] = $this->language->get('text_otp_sent').' '.$this->request->post['phone'];
-                        }
+                        // }
         
-                        if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
+                         if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
                             $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
                             $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
         
@@ -789,7 +792,7 @@ class ModelAccountApi extends Model
                             $mail->setSender($this->config->get('config_name'));
                             $mail->setHtml($message);
                             $mail->send();
-                        }
+                         }
                      #endregion  
                     // $logged_in = $this->customer->loginByPhone($customer_id);
                     // unset($this->session->data['guest']);
