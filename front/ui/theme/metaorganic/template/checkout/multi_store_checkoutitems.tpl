@@ -979,6 +979,7 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
             $(".orgprice"+json.products_details.product_store_id).html(json.products_details.orginal_price);
             $('.cart-total-amount').html(json['total_amount']);
             loadTotals($('input#shipping_city_id').val());
+            loadUnpaidorders();
             
             setTimeout(function(){ 
             $("#updatecar").attr("disabled",true);
@@ -1565,6 +1566,7 @@ __kdt.push({"post_on_load": false});
             }
 
              loadTotals($(this).attr('data-city_id'));
+             loadUnpaidorders();
         });
 
         $('.dropdown-toggle').dropdown();
@@ -1609,6 +1611,7 @@ __kdt.push({"post_on_load": false});
                 }else{
                     $('#reward-success').html('<p id="success">'+json['success']+'</p>').show();
                     loadTotals($('input#shipping_city_id').val());
+                    loadUnpaidorders();
                 }
             }
         });
@@ -1624,6 +1627,7 @@ __kdt.push({"post_on_load": false});
         $('input[name="landmark"]').val($(this).attr('data-landmark'));
 
         loadTotals($(this).attr('data-city_id'));
+        loadUnpaidorders();
     });
 </script>
 
@@ -1653,6 +1657,26 @@ function loadTotals($city_id) {
         }
     });
 }
+
+// Load unpaid orders
+function loadUnpaidorders() {
+
+    $.ajax({
+        url: 'index.php?path=checkout/checkoutitems/getunpaidorders',
+        type: 'get',
+        dataType: 'json',
+        cache: false,
+        async: true,
+        beforeSend: function() {
+        },
+        success: function(json) {
+            console.log(json);
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        }
+    });
+}
+
 //Load Delivery Time
 function loadDeliveryTime(store_id) {
 
@@ -1725,6 +1749,7 @@ $(document).ready(function() {
     console.log("logged in as ");
 
      loadTotals($(this).attr('data-city_id'));
+     loadUnpaidorders();
     <?php
 
         if($loggedin && $profile_complete) { ?>
@@ -1842,6 +1867,7 @@ if ($shipping_required) {
 
                     loadDeliveryTime(store_id);
                     loadTotals($('input[name="shipping_city_id"]').val());
+                    loadUnpaidorders();
                 }
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -2529,6 +2555,7 @@ function saveInAddressBook() {
                     $('.promo-code-message').html('');
                     $('.promo-code-success-message').html(json['message']);
                     loadTotals($('input#shipping_city_id').val());
+                    loadUnpaidorders();
                     //setTimeout(function(){ window.location.reload(false); }, 1000);
                     
                 } else {
