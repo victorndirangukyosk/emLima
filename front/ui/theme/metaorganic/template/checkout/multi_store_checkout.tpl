@@ -762,23 +762,26 @@
     </div>
 </div>
 
-<!-- Modal -->
+    <!-- Modal -->
 <div class="addressModal">
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h3>ACCEPT TERMS</h3>
-                        </div>
-
-                        <div class="addnews-address-form">
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <button id="agree_vendor_terms" name="agree_vendor_terms" type="button" class="btn btn-primary">I AGREE</button>
-                                    <button id="cancel_vendor_terms" name="cancel_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
+        <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <div class="row">
+                            <div class="col-md-12">
+                              <h2>PAYMENT PENDING</h2>
+                            </div>
+                            <div class="modal-body">
+                            <p style="font-weight: bold; font-size: 12px;">Your Order(s) Payment Is Pending, Please Clcik Pay Button To View The Pending Payments.</p>
+                            </div>
+                            <div class="addnews-address-form">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button id="pay_pending_amount" name="pay_pending_amount" type="button" class="btn btn-primary">PAY</button>
+                                        <button id="pay_clear_cart" name="pay_clear_cart" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -786,8 +789,7 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+</div>   
 
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
@@ -837,12 +839,13 @@
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     <style>
-    #agree_vendor_terms {
+    #agree_vendor_terms, #pay_pending_amount {
     width: 49%;
     float: left;
     margin-top: 10px;
+    margin-right: 5px;
     }
-    #remove_vendor_products {
+    #remove_vendor_products, #pay_clear_cart {
     width: 49%;
     float: left;
     margin-top: 10px;
