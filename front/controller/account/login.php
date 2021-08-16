@@ -1478,22 +1478,7 @@ class ControllerAccountLogin extends Controller {
     }
 
     public function SendSNS() {
-        $sdk = new Aws\Sns\SnsClient([
-            'region' => 'us-east-2',
-            'version' => 'latest',
-            'credentials' => ['key' => 'AKIAUWRTJZVBPUAIMRKY', 'secret' => 'Qu8Pc7Vj5X74VIdwR+OuQVphnt0MsO/hsyahftaO']
-        ]);
-
-        $result = $sdk->publish([
-            'Message' => 'Hello sri, Your Kwik Basket signup verification code is 9831. Enter code to complete registration.',
-            'PhoneNumber' => '+919963034024',
-            'MessageAttributes' => ['AWS.SNS.SMS.SenderID' => [
-                    'DataType' => 'String',
-                    'StringValue' => 'KwikBasket'
-                ]
-        ]]);
-
-        print_r($result);
+        $this->emailtemplate->SendSNS();
     }
 
 }

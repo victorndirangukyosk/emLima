@@ -2459,6 +2459,12 @@
                                         <option value="uwaziimobile"><?php echo $text_uwaziimobile; ?></option>
                                         <?php } ?>
 
+                                        <?php if ($config_sms_protocol == 'awssns') { ?>
+                                        <option value="awssns" selected="selected">AWS SNS</option>
+                                        <?php } else {?>
+                                        <option value="awssns">AWS SNS</option>
+                                        <?php } ?>
+
 
                                     </select>
                                 </div>
