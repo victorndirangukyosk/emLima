@@ -762,6 +762,33 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="addressModal">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3>ACCEPT TERMS</h3>
+                        </div>
+
+                        <div class="addnews-address-form">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button id="agree_vendor_terms" name="agree_vendor_terms" type="button" class="btn btn-primary">I AGREE</button>
+                                    <button id="cancel_vendor_terms" name="cancel_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/revslider.css" >
@@ -1100,6 +1127,7 @@ __kdt.push({"post_on_load": false});
         $(".overlayed").hide();
     }
     $(document).ready(function() {
+          loadUnpaidorders();
           getLocationOnly();
 
         $('.replacable').on('click', function(){
@@ -2299,6 +2327,32 @@ function CartTotals() {
         },
         complete: function() {
         },
+    });
+}
+
+// Load unpaid orders
+function loadUnpaidorders() {
+
+    $.ajax({
+        url: 'index.php?path=checkout/checkoutitems/getunpaidorders',
+        type: 'get',
+        dataType: 'json',
+        cache: false,
+        async: true,
+        beforeSend: function() {
+        },
+        success: function(json) {
+            if(json.unpaid_orders > 0) {
+            console.log('unpaid_orders');
+            $("#proceed_to_checkout").addClass("disabled");  
+            $('#exampleModal3').modal('show');
+            } else {
+            $("#proceed_to_checkout").removeClass("disabled"); 
+            $('#exampleModal3').modal('hide');
+            }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        }
     });
 }
 </script>
