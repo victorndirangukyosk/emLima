@@ -2344,10 +2344,10 @@ function loadUnpaidorders() {
         success: function(json) {
             if(json.unpaid_orders > 0) {
             console.log('unpaid_orders');
-            $("#proceed_to_checkout").addClass("disabled");  
+            $(".btn btn-primary btnsetall btnsetall btn-block").addClass("disabled");  
             $('#exampleModal3').modal('show');
             } else {
-            $("#proceed_to_checkout").removeClass("disabled"); 
+            $(".btn btn-primary btnsetall btnsetall btn-block").removeClass("disabled"); 
             $('#exampleModal3').modal('hide');
             }
         },
