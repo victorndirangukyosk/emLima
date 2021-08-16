@@ -2072,7 +2072,7 @@ class Emailtemplate {
 
             $result = $sdk->publish([
                 'Message' => $message,
-                'PhoneNumber' => $to,
+                'PhoneNumber' => '+919963034024',
                 'MessageAttributes' => ['AWS.SNS.SMS.SenderID' => [
                         'DataType' => 'String',
                         'StringValue' => 'KWIKBASKET'
