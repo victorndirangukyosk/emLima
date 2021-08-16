@@ -1,6 +1,7 @@
 <?php
 
 require_once DIR_SYSTEM . 'vendor/firebase/php-jwt/vendor/autoload.php';
+require_once DIR_ROOT . '/vendor/autoload.php';
 
 use Firebase\JWT\JWT;
 
@@ -1474,6 +1475,25 @@ class ControllerAccountLogin extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function SendSNS() {
+        $sdk = new Aws\Sns\SnsClient([
+            'region' => 'eu-west-1',
+            'version' => 'latest',
+            'credentials' => ['key' => 'xxx', 'secret' => 'xxx']
+        ]);
+
+        $result = $sdk->publish([
+            'Message' => 'This is a test message.',
+            'PhoneNumber' => '+4401234567890',
+            'MessageAttributes' => ['AWS.SNS.SMS.SenderID' => [
+                    'DataType' => 'String',
+                    'StringValue' => 'WebNiraj'
+                ]
+        ]]);
+
+        print_r($result);
     }
 
 }
