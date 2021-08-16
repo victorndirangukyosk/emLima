@@ -7,7 +7,6 @@ use AfricasTalking\SDK\AfricasTalking;
 use paragraph1\phpFCM\Client as FCMClient;
 
 require DIR_SYSTEM . '/vendor/zenvia/human_gateway_client_api/HumanClientMain.php';
-require_once DIR_ROOT . '/vendor/autoload.php';
 
 use paragraph1\phpFCM\Message;
 use paragraph1\phpFCM\Notification;
@@ -2757,6 +2756,25 @@ class Emailtemplate {
         ];
 
         return $result;
+    }
+
+    public function SendSNS() {
+        $sdk = new Aws\Sns\SnsClient([
+            'region' => 'us-east-2',
+            'version' => 'latest',
+            'credentials' => ['key' => 'AKIAUWRTJZVBPUAIMRKY', 'secret' => 'Qu8Pc7Vj5X74VIdwR+OuQVphnt0MsO/hsyahftaO']
+        ]);
+
+        $result = $sdk->publish([
+            'Message' => 'Hello sri, Your Kwik Basket signup verification code is 9831. Enter code to complete registration.',
+            'PhoneNumber' => '+919963034024',
+            'MessageAttributes' => ['AWS.SNS.SMS.SenderID' => [
+                    'DataType' => 'String',
+                    'StringValue' => 'KWIKBASKET'
+                ]
+        ]]);
+
+        print_r($result);
     }
 
 }
