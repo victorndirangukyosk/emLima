@@ -2123,6 +2123,8 @@ class Emailtemplate
         $log = new Log('error.log');
         $log->write('SMS SENDING');
         $log->write($to);
+        $log->write($message);
+        $log->write('checking message .................');
         $log->write('SMS SENDING');
         /*$number = '734000006';
         if (strpos($to, $number) !== false) {
