@@ -1126,6 +1126,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
         }
 
         $json['data'] = $data['pending_order_id'];
+        $json['unpaid_orders'] = count($data['pending_order_id']);
         $json['success'] = 'Customer Unpaid Orders';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
