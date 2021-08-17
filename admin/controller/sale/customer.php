@@ -1402,6 +1402,7 @@ class ControllerSaleCustomer extends Controller {
         $this->load->model('sale/customer_group');
         $this->load->model('user/accountmanager');
         $this->load->model('user/customerexperience');
+        $this->load->model('account/customer');
         $filter_data = [
             'filter_parent' => $this->request->get['customer_id'],
             'order' => 'DESC',
@@ -1413,6 +1414,7 @@ class ControllerSaleCustomer extends Controller {
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
         $data['account_managers_list'] = $this->model_user_accountmanager->getAccountManagers();
         $data['customer_experience_list'] = $this->model_user_customerexperience->getCustomerExperience();
+        $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);
 
         if (isset($this->request->post['company_name'])) {
             $data['company_name'] = $this->request->post['company_name'];
