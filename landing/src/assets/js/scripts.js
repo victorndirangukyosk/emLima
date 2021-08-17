@@ -162,6 +162,8 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
             
             var login_latitude = $('#lat').val();
             var login_longitude = $('#lng').val();
+            //var password_pattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+            var password_pattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
             const firstName = $('#register-first-name').val();
                     const lastName = $('#register-last-name').val();
                     const email = $('#register-email').val();
@@ -189,6 +191,12 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                         position: 'topRight',
                         message: 'Passwords do no match'
                     });
+                } else if(!password_pattern.test(password)) {
+                   console.log(password);
+                   iziToast.warning({
+                        position: 'topRight',
+                        message: 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)'
+                    }); 
                 } else {
                     if (grecaptcha.getResponse() == '') {
                         iziToast.warning({
