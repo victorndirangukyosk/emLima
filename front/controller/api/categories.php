@@ -96,6 +96,8 @@ class ControllerApiCategories extends Controller {
 
                     return false;
                 });
+            echo "<pre>";print_r($categories);die; 
+                
                 foreach ($categories as $cat) {
                     $cat['name'] = htmlspecialchars_decode($cat['name']);
                     $cat['thumb'] = $this->model_tool_image->resize($cat['image'], 300, 300);
@@ -104,7 +106,7 @@ class ControllerApiCategories extends Controller {
                     $data['filter_category_id'] = $cat['category_id'];
                     $products = $this->model_assets_product->getProductsForGrid($data);
                     $cat['products_count'] = count($products);
-                    if(count($products)>0)//if no products, dont display that category
+                    if($cat['products_count']>0)//if no products, dont display that category
                     {
                     array_push($newCat, $cat);
                     }
