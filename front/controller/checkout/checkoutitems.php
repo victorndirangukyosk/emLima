@@ -1130,7 +1130,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $json['success'] = 'Customer Unpaid Orders';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-        return $data;
+        //return $data;
     }
 
 }
