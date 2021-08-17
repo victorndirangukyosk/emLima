@@ -1,23 +1,22 @@
 <?php
 
-require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
+require_once DIR_SYSTEM . '/vendor/konduto/vendor/autoload.php';
 
 //require_once DIR_SYSTEM.'/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
 use paragraph1\phpFCM\Client;
 
-require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
+require_once DIR_SYSTEM . '/vendor/fcp-php/autoload.php';
 
-require DIR_SYSTEM.'vendor/Facebook/autoload.php';
+require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
 
-require_once DIR_APPLICATION.'/controller/api/settings.php';
+require_once DIR_APPLICATION . '/controller/api/settings.php';
 
-class ControllerAccountAccount extends Controller
-{
+class ControllerAccountAccount extends Controller {
+
     private $error = [];
 
-    public function createDSrequest()
-    {
+    public function createDSrequest() {
         $log = new Log('dserror.log');
         $log->write('in createDSrequest');
         $this->load->model('account/order');
@@ -56,7 +55,7 @@ class ControllerAccountAccount extends Controller
 
                 $deliverSystemStatusForShipping = false;
 
-                $log->write($deliverSystemStatus.'erf'.$checkoutDeliverSystemStatus);
+                $log->write($deliverSystemStatus . 'erf' . $checkoutDeliverSystemStatus);
 
                 if ($deliverSystemStatus && !$checkoutDeliverSystemStatus) {
                     $log->write('ReadyForPickupStatus elsex yes');
@@ -66,10 +65,10 @@ class ControllerAccountAccount extends Controller
 
                     if (is_array($allowedShippingMethods) && count($allowedShippingMethods) > 0) {
                         foreach ($allowedShippingMethods as $method) {
-                            /*if($order_info['shipping_code'] == $method.".".$method) {
-                                $deliverSystemStatus = true;
-                                $deliverSystemStatusForShipping = true;
-                            }   */
+                            /* if($order_info['shipping_code'] == $method.".".$method) {
+                              $deliverSystemStatus = true;
+                              $deliverSystemStatusForShipping = true;
+                              } */
 
                             $p = explode('.', $order_info['shipping_code']);
 
@@ -93,8 +92,7 @@ class ControllerAccountAccount extends Controller
         }
     }
 
-    public function updateGetAmount($order_id, $total)
-    {
+    public function updateGetAmount($order_id, $total) {
         $log = new Log('error.log');
 
         $log->write('inside updateGetAmount');
@@ -112,8 +110,8 @@ class ControllerAccountAccount extends Controller
                 'manifest_id' => $deliveryAlreadyCreated, //order_id,
                 //'total_price' => (int) round($new_total),
                 'get_amount' => (int) round($total),
-                //'total_type' => $total_type,
-                //'manifest_data' => json_encode($data['products'])
+                    //'total_type' => $total_type,
+                    //'manifest_data' => json_encode($data['products'])
             ];
 
             $log->write($data['body']);
@@ -135,36 +133,35 @@ class ControllerAccountAccount extends Controller
         return true;
     }
 
-    public function index()
-    {
-        /*if (date_default_timezone_get()) {
-            echo 'date_default_timezone_set: ' . date_default_timezone_get() . '<br />';
-        }
+    public function index() {
+        /* if (date_default_timezone_get()) {
+          echo 'date_default_timezone_set: ' . date_default_timezone_get() . '<br />';
+          }
 
-        if (ini_get('date.timezone')) {
-            echo 'date.timezone: ' . ini_get('date.timezone');
-        }
-        die;*/
-        /*$this->updateGetAmount(712,22);
-        die;*/
-        /*return $this->response->setOutput($this->load->view('default/template/account/testing.tpl'));
-        die;*/
-        /*$order_id = 712;
-        $query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "return WHERE order_id = '" . (int)$order_id . "' and return_status_id='".$this->config->get('config_complete_return_status_id')."'");
+          if (ini_get('date.timezone')) {
+          echo 'date.timezone: ' . ini_get('date.timezone');
+          }
+          die; */
+        /* $this->updateGetAmount(712,22);
+          die; */
+        /* return $this->response->setOutput($this->load->view('default/template/account/testing.tpl'));
+          die; */
+        /* $order_id = 712;
+          $query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "return WHERE order_id = '" . (int)$order_id . "' and return_status_id='".$this->config->get('config_complete_return_status_id')."'");
 
-        echo "<pre>";print_r($query->row['total']);die;*/
+          echo "<pre>";print_r($query->row['total']);die; */
 
-        /*$code = 'cod';
-        $c = $this->getPaymentName($code);
+        /* $code = 'cod';
+          $c = $this->getPaymentName($code);
 
-        echo "<pre>";print_r($c);die;*/
+          echo "<pre>";print_r($c);die; */
 
-        /*$code = 'normal.normal';
-        $store_id = 8;
-        $c = $this->getShippingName($code,$store_id);
+        /* $code = 'normal.normal';
+          $store_id = 8;
+          $c = $this->getShippingName($code,$store_id);
 
 
-        echo "<pre>";print_r($c);die;*/
+          echo "<pre>";print_r($c);die; */
 
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
@@ -178,7 +175,7 @@ class ControllerAccountAccount extends Controller
             //print_r($_GET['redirect']);
         }
 
-        $this->document->addStyle('/front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('/front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/account', '', 'SSL');
@@ -200,9 +197,7 @@ class ControllerAccountAccount extends Controller
             $log->write('account edit');
 
             // if(isset($date)) {
-
             //     $date = DateTime::createFromFormat('d/m/Y', $date);
-
             //     $this->request->post['dob'] = $date->format('Y-m-d');
             // } else {
             $this->request->post['dob'] = null;
@@ -227,7 +222,7 @@ class ControllerAccountAccount extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             ];
             $log->write('account edit1');
 
@@ -256,13 +251,13 @@ class ControllerAccountAccount extends Controller
             'href' => $this->url->link('account/account', '', 'SSL'),
         ];
 
-        /*if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        /* if (isset($this->session->data['success'])) {
+          $data['success'] = $this->session->data['success'];
 
-            unset($this->session->data['success']);
-        } else {
-            $data['success'] = '';
-        }*/
+          unset($this->session->data['success']);
+          } else {
+          $data['success'] = '';
+          } */
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -334,7 +329,7 @@ class ControllerAccountAccount extends Controller
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
-        
+
         if ('POST' != $this->request->server['REQUEST_METHOD']) {
             $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         }
@@ -553,15 +548,14 @@ class ControllerAccountAccount extends Controller
         $data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
 
         //echo "<pre>";print_r($data['telephone'] );die;
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/account.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/account.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/account.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/account.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/account.tpl', $data));
         }
     }
 
-    public function adduser()
-    {
+    public function adduser() {
         $log = new Log('error.log');
         $log->write('sub customer add');
         $this->load->model('account/customer');
@@ -570,46 +564,45 @@ class ControllerAccountAccount extends Controller
         $this->request->post['parent'] = $this->customer->getId();
         $this->request->post['source'] = 'WEB';
         $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
-        
+
         if ($this->request->post['assign_order_approval'] == 'head_chef') {
-        $log = new Log('error.log');
-        $log->write('sub customer head_chef');
-        $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $sub_customer_id, 1, 'head_chef');
+            $log = new Log('error.log');
+            $log->write('sub customer head_chef');
+            $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $sub_customer_id, 1, 'head_chef');
         }
-        
+
         if ($this->request->post['assign_order_approval'] == 'procurement_person') {
-        $log = new Log('error.log');
-        $log->write('sub customer procurement_person');
-        $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $sub_customer_id, 1, 'procurement_person');
+            $log = new Log('error.log');
+            $log->write('sub customer procurement_person');
+            $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $sub_customer_id, 1, 'procurement_person');
         }
-        
+
         $_SESSION['success_msg'] = 'User added successfully!';
 
         // Add to activity log
         $this->load->model('account/activity');
 
         $activity_data = [
-                'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
-                'sub_customers_id' => $sub_customer_id,
-            ];
+            'customer_id' => $this->customer->getId(),
+            'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+            'sub_customers_id' => $sub_customer_id,
+        ];
         $log->write('Add sub user account1');
 
         $this->model_account_activity->addActivity('sub_customer_created', $activity_data);
 
         $log->write('Add sub user account1');
 
-        /*if(isset($this->session->data['checkout_redirect']) ) {
-            $redirectTo = $this->session->data['checkout_redirect'];
-            unset($this->session->data['checkout_redirect']);
-            $this->response->redirect($redirectTo);
-        }*/
+        /* if(isset($this->session->data['checkout_redirect']) ) {
+          $redirectTo = $this->session->data['checkout_redirect'];
+          unset($this->session->data['checkout_redirect']);
+          $this->response->redirect($redirectTo);
+          } */
 
         $this->response->redirect($this->url->link('account/sub_users', '', 'SSL'));
     }
 
-    public function getShippingName($code, $store_id)
-    {
+    public function getShippingName($code, $store_id) {
         $mp = explode('.', $code);
 
         //echo "<pre>";print_r($mp);die;
@@ -646,10 +639,10 @@ class ControllerAccountAccount extends Controller
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
-            if ($this->config->get($result['code'].'_status')) {
+            if ($this->config->get($result['code'] . '_status')) {
                 if ('normal' == $result['code']) {
-                    $this->load->model('shipping/'.$result['code']);
-                    $quote = $this->{'model_shipping_'.$result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
+                    $this->load->model('shipping/' . $result['code']);
+                    $quote = $this->{'model_shipping_' . $result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
                     if ($quote) {
                         $method_data[$result['code']] = [
                             'title' => $quote['title'],
@@ -660,8 +653,8 @@ class ControllerAccountAccount extends Controller
                     }
                 } elseif ('express' == $result['code']) {
                     //echo "<pre>";print_r('express');die;
-                    $this->load->model('shipping/'.$result['code']);
-                    $quote = $this->{'model_shipping_'.$result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
+                    $this->load->model('shipping/' . $result['code']);
+                    $quote = $this->{'model_shipping_' . $result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
 
                     if ($quote) {
                         $method_data[$result['code']] = [
@@ -673,8 +666,8 @@ class ControllerAccountAccount extends Controller
                     }
                 } elseif ('store_delivery' == $result['code']) {
                     if ($delivery_by_owner) {
-                        $this->load->model('shipping/'.$result['code']);
-                        $quote = $this->{'model_shipping_'.$result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
+                        $this->load->model('shipping/' . $result['code']);
+                        $quote = $this->{'model_shipping_' . $result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
                         if ($quote) {
                             $method_data[$result['code']] = [
                                 'title' => 'Standard Delivery', //$quote['title'],
@@ -686,8 +679,8 @@ class ControllerAccountAccount extends Controller
                     }
                 } elseif ('pickup' == $result['code']) {
                     if ($pickup_delivery) {
-                        $this->load->model('shipping/'.$result['code']);
-                        $quote = $this->{'model_shipping_'.$result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
+                        $this->load->model('shipping/' . $result['code']);
+                        $quote = $this->{'model_shipping_' . $result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
                         if ($quote) {
                             $method_data[$result['code']] = [
                                 'title' => $quote['title'],
@@ -699,8 +692,8 @@ class ControllerAccountAccount extends Controller
                     }
                 } else {
                     //echo "<pre>";print_r('express');die;
-                    $this->load->model('shipping/'.$result['code']);
-                    $quote = $this->{'model_shipping_'.$result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
+                    $this->load->model('shipping/' . $result['code']);
+                    $quote = $this->{'model_shipping_' . $result['code']}->getApiQuote($cost, $store_info['name'], $subtotal, $subtotal);
                     if ($quote) {
                         $method_data[$result['code']] = [
                             'title' => $quote['title'],
@@ -721,8 +714,7 @@ class ControllerAccountAccount extends Controller
         }
     }
 
-    public function refundToCustomerWallet($order_id)
-    {
+    public function refundToCustomerWallet($order_id) {
         $this->load->model('account/activity');
         $log = new Log('error.log');
 
@@ -747,14 +739,13 @@ class ControllerAccountAccount extends Controller
             if ($refundToCustomerWallet) {
                 $log->write('refundToCustomerWallet');
                 //referee points below
-                $description = 'Refund of order#'.$order_id;
+                $description = 'Refund of order#' . $order_id;
                 $this->model_account_activity->addCredit($order_info['customer_id'], $description, $order_info['total'], $order_id);
             }
         }
     }
 
-    public function country()
-    {
+    public function country() {
         $json = [];
 
         $this->load->model('localisation/country');
@@ -780,8 +771,7 @@ class ControllerAccountAccount extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    protected function validate()
-    {
+    protected function validate() {
         $this->load->language('account/edit');
 
         if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
@@ -808,15 +798,19 @@ class ControllerAccountAccount extends Controller
             $this->error['telephone'] = $this->language->get('error_telephone');
         }
 
-        /*if (strpos($this->request->post['fax'], '#') !== false || empty($this->request->post['fax'])) {
-            $this->error['error_tax'] = $this->language->get( 'error_tax' );
-        }*/
+        /* if (strpos($this->request->post['fax'], '#') !== false || empty($this->request->post['fax'])) {
+          $this->error['error_tax'] = $this->language->get( 'error_tax' );
+          } */
 
-        if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
+        if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 6) || (utf8_strlen($this->request->post['password']) > 20)) {
             $this->error['password'] = $this->language->get('error_password');
         }
 
-        if ((utf8_strlen($this->request->post['confirmpassword']) >= 1) && (utf8_strlen($this->request->post['confirmpassword']) < 4) || (utf8_strlen($this->request->post['confirmpassword']) > 20)) {
+        if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
+            $this->error['password'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
+        }
+
+        if ((utf8_strlen($this->request->post['confirmpassword']) >= 1) && (utf8_strlen($this->request->post['confirmpassword']) < 6) || (utf8_strlen($this->request->post['confirmpassword']) > 20)) {
             $this->error['confirmpassword'] = $this->language->get('error_confirmpassword');
         }
 
@@ -825,7 +819,7 @@ class ControllerAccountAccount extends Controller
         }
 
         if ($this->config->get('config_google_captcha_status')) {
-            $json = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($this->config->get('config_google_captcha_secret')).'&response='.$this->request->post['g-recaptcha-response'].'&remoteip='.$this->request->server['REMOTE_ADDR']);
+            $json = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->config->get('config_google_captcha_secret')) . '&response=' . $this->request->post['g-recaptcha-response'] . '&remoteip=' . $this->request->server['REMOTE_ADDR']);
 
             $json = json_decode($json, true);
 
@@ -837,7 +831,6 @@ class ControllerAccountAccount extends Controller
         // if ( DateTime::createFromFormat('d/m/Y', $this->request->post['dob'] ) == FALSE ) {
         //     $this->error['dob'] = $this->language->get( 'error_dob' );
         // }
-
         //print_r("expression1");
         // Custom field validation
         $this->load->model('account/custom_field');
@@ -854,8 +847,7 @@ class ControllerAccountAccount extends Controller
         return !$this->error;
     }
 
-    public function resetOfferPrice()
-    {
+    public function resetOfferPrice() {
         $log = new Log('error.log');
         $log->write('in resetOfferPrice');
 
@@ -881,32 +873,30 @@ class ControllerAccountAccount extends Controller
         }
     }
 
-    public function formatTelephone($telephone)
-    {
-        /*if(strlen($telephone) == 11 ) {
-            //(21) 42353-5255
+    public function formatTelephone($telephone) {
+        /* if(strlen($telephone) == 11 ) {
+          //(21) 42353-5255
 
-            $str1 = '(';
-            $str3 = ')';
-            $str4 = ' ';
-            $str6 = '-';
+          $str1 = '(';
+          $str3 = ')';
+          $str4 = ' ';
+          $str6 = '-';
 
-            $str  = $telephone;
-            $str2 = substr($str,0,2);
-            $str5 = substr($str,2,5);
-            $str7 = substr($str,7,4);
+          $str  = $telephone;
+          $str2 = substr($str,0,2);
+          $str5 = substr($str,2,5);
+          $str7 = substr($str,7,4);
 
 
-            return  $str1.$str2.$str3.$str4.$str5.$str6.$str7;
-        } else {
-            return $telephone;
-        }*/
+          return  $str1.$str2.$str3.$str4.$str5.$str6.$str7;
+          } else {
+          return $telephone;
+          } */
         return $telephone;
     }
 
-    public function getOrder($order_id)
-    {
-        $order_query = $this->db->query('SELECT *, (SELECT os.name FROM `'.DB_PREFIX.'order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `'.DB_PREFIX."order` o WHERE o.order_id = '".(int) $order_id."'");
+    public function getOrder($order_id) {
+        $order_query = $this->db->query('SELECT *, (SELECT os.name FROM `' . DB_PREFIX . 'order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `' . DB_PREFIX . "order` o WHERE o.order_id = '" . (int) $order_id . "'");
 
         if ($order_query->num_rows) {
             $this->load->model('localisation/language');
@@ -947,14 +937,11 @@ class ControllerAccountAccount extends Controller
                 'shipping_method' => $order_query->row['shipping_method'],
                 'shipping_zipcode' => $order_query->row['shipping_zipcode'],
                 'shipping_code' => $order_query->row['shipping_code'],
-
                 'shipping_flat_number' => $order_query->row['shipping_flat_number'],
                 'shipping_building_name' => $order_query->row['shipping_building_name'],
                 'shipping_landmark' => $order_query->row['shipping_landmark'],
-
                 'latitude' => $order_query->row['latitude'],
                 'longitude' => $order_query->row['longitude'],
-
                 'payment_method' => $order_query->row['payment_method'],
                 'payment_code' => $order_query->row['payment_code'],
                 'comment' => $order_query->row['comment'],
@@ -976,19 +963,17 @@ class ControllerAccountAccount extends Controller
                 'accept_language' => $order_query->row['accept_language'],
                 'date_modified' => $order_query->row['date_modified'],
                 'date_added' => $order_query->row['date_added'],
-
                 'delivery_date' => $order_query->row['delivery_date'],
                 'delivery_timeslot' => $order_query->row['delivery_timeslot'],
-                /*'date_modified' => $order_query->row['date_modified'],
-                'date_added' => $order_query->row['date_added']*/
+                    /* 'date_modified' => $order_query->row['date_modified'],
+                      'date_added' => $order_query->row['date_added'] */
             ];
         } else {
             return false;
         }
     }
 
-    public function getTimeslotAverage($timeslot)
-    {
+    public function getTimeslotAverage($timeslot) {
         $str = $timeslot; //"06:26pm - 08:32pm";
         $arr = explode('-', $str);
         //print_r($arr);
@@ -1002,15 +987,14 @@ class ControllerAccountAccount extends Controller
                 $mid1 = ($time1[0] + $time2[0]) / 2;
                 $mid2 = ($time1[1] + $time2[1]) / 2;
 
-                return $mid1.':'.$mid2;
+                return $mid1 . ':' . $mid2;
             }
         }
 
         return false;
     }
 
-    public function send($to, $msg)
-    {
+    public function send($to, $msg) {
         // $sender_id = $this->config->get('config_sms_sender_id');
         // $username  = $this->config->get('config_sms_username');
         // $password  = $this->config->get('config_sms_password');
@@ -1019,7 +1003,7 @@ class ControllerAccountAccount extends Controller
         $password = 'krafty@123';
 
         $msg = 'Your OTP is not required. :) Regards, Abhishek ';
-        $url = 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user='.$username.'&pwd='.$password.'&to='.$to.'&sid='.$sender_id.'&msg='.urlencode($msg).'&fl=0&gwid=2';
+        $url = 'http://login.smsgatewayhub.com/smsapi/pushsms.aspx?user=' . $username . '&pwd=' . $password . '&to=' . $to . '&sid=' . $sender_id . '&msg=' . urlencode($msg) . '&fl=0&gwid=2';
 
         // Get cURL resource
         $curl = curl_init();
@@ -1038,8 +1022,7 @@ class ControllerAccountAccount extends Controller
         return $resp;
     }
 
-    public function stripe_return()
-    {
+    public function stripe_return() {
         $this->load->model('payment/stripe');
 
         if ('live' == $this->config->get('stripe_environment')) {
@@ -1049,7 +1032,6 @@ class ControllerAccountAccount extends Controller
         }
 
         //echo "<pre>";print_r($secret_key);die;
-
         //echo "<pre>";print_r($_GET);print_r($_POST);die;
         if (isset($_GET['code'])) { // Redirect w/ code
             $code = $_GET['code'];
@@ -1093,13 +1075,13 @@ class ControllerAccountAccount extends Controller
                     echo "<center><h3 style='color:red'>Stripe User Already present!!</h3> <a href='#' onclick='window.close();return false;'>close</a> </center>";
                 }
             } elseif (isset($resp['error'])) { // Error
-                echo "<center><h3 style='color:red'>".$resp['error_description'].' </h3>  </center>';
+                echo "<center><h3 style='color:red'>" . $resp['error_description'] . ' </h3>  </center>';
             } else {
                 //error access token not granted
                 echo "<center><h3 style='color:red'>Access token not granted. Try again </h3></center>";
             }
         } elseif (isset($_GET['error'])) { // Error
-            echo "<center><h3 style='color:red'>".$_GET['error_description'].'</h3></center>';
+            echo "<center><h3 style='color:red'>" . $_GET['error_description'] . '</h3></center>';
         } else {
             echo "<center><h3 style='color:red'>Something went wrong. Try again </h3></center>";
         }
@@ -1107,8 +1089,7 @@ class ControllerAccountAccount extends Controller
         die;
     }
 
-    public function getCategoryProducts($filter_data)
-    {
+    public function getCategoryProducts($filter_data) {
         $this->load->model('assets/product');
 
         $max_discount = 5;
@@ -1172,11 +1153,10 @@ class ControllerAccountAccount extends Controller
         return number_format($max_discount, 0);
     }
 
-    public function categoryPercentageSave()
-    {
+    public function categoryPercentageSave() {
         $this->load->model('assets/category');
 
-        $query = $this->db->query('SELECT * FROM '.DB_PREFIX.'store');
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . 'store');
 
         foreach ($query->rows as $row) {
             $results = $this->model_assets_category->getCategoryByStoreForCron(0, $row['store_id']);
@@ -1199,20 +1179,19 @@ class ControllerAccountAccount extends Controller
 
                     $max_discount = $this->getCategoryProducts($child_filter_data);
 
-                    $this->db->query('UPDATE '.DB_PREFIX."category_to_store SET max_discount ='".(int) $max_discount."' where store_id=".$row['store_id'].' and category_id='.$child['category_id']);
+                    $this->db->query('UPDATE ' . DB_PREFIX . "category_to_store SET max_discount ='" . (int) $max_discount . "' where store_id=" . $row['store_id'] . ' and category_id=' . $child['category_id']);
                 }
 
                 $max_discount = $this->getCategoryProducts($filter_data);
 
-                $this->db->query('UPDATE '.DB_PREFIX."category_to_store SET max_discount ='".(int) $max_discount."' where store_id=".$row['store_id'].' and category_id='.$result['category_id']);
+                $this->db->query('UPDATE ' . DB_PREFIX . "category_to_store SET max_discount ='" . (int) $max_discount . "' where store_id=" . $row['store_id'] . ' and category_id=' . $result['category_id']);
             }
         }
 
         die;
     }
 
-    public function getAddressFromLatLng($location)
-    {
+    public function getAddressFromLatLng($location) {
         $data['full_address'] = '';
         $data['street_number'] = '';
         $data['short_address'] = '';
@@ -1231,15 +1210,15 @@ class ControllerAccountAccount extends Controller
 
             if ($validateLat && $validateLat2 && $validateLat3 && $validateLat4) {
                 try {
-                    $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$location.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
+                    $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' . $location . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
 
                     //echo "<pre>";print_r($url);die;
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $url);
 
                     $headers = [
-                             'Cache-Control: no-cache',
-                            ];
+                        'Cache-Control: no-cache',
+                    ];
                     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                     curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1277,6 +1256,7 @@ class ControllerAccountAccount extends Controller
                         }
                     }
                 } catch (Exception $e) {
+                    
                 }
             }
         }
@@ -1284,4 +1264,5 @@ class ControllerAccountAccount extends Controller
         //echo "<pre>";print_r($data['street_number']."ss".$data['short_address']."fd".$data['full_address']);die;
         return $data;
     }
+
 }
