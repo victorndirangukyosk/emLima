@@ -2758,7 +2758,7 @@ class Emailtemplate {
         return $result;
     }
 
-    public function SendSNS() {
+    public function SendSNS($mobile) {
         $sdk = new Aws\Sns\SnsClient([
             'region' => 'us-east-2',
             'version' => 'latest',
@@ -2767,7 +2767,7 @@ class Emailtemplate {
 
         $result = $sdk->publish([
             'Message' => 'Hello sri, Your Kwik Basket signup verification code is 9831. Enter code to complete registration.',
-            'PhoneNumber' => '+919963034024',
+            'PhoneNumber' => $mobile,
             'MessageAttributes' => ['AWS.SNS.SMS.SenderID' => [
                     'DataType' => 'String',
                     'StringValue' => 'KWIKBASKET'
