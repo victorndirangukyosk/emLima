@@ -116,7 +116,7 @@ class ModelApiCategories extends Model
         }
 
         $categoryids = array_column($result, 'category_id');
-        //echo'<pre>';print_r($categoryids);exit;
+        // echo'<pre>';print_r($categoryids);exit;
         return $categoryids;
     }
 }
