@@ -334,6 +334,17 @@ class ModelAccountApi extends Model
             $this->error['telephone_exists'] = $this->language->get('error_telephone_exists');
         }
 
+ 
+
+        if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 6) || (utf8_strlen($this->request->post['password']) > 20)) {
+            $this->error['password'] = $this->language->get('error_password');
+        }
+
+        if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
+            $this->error['password'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
+        }
+
+
         //echo "<pre>";print_r($this->error);die;
         return !$this->error;
     }
