@@ -96,7 +96,7 @@ class ControllerApiCategories extends Controller {
 
                     return false;
                 });
-            echo "<pre>";print_r($categories);die; 
+            // echo "<pre>";print_r($categories);die; 
                 
                 foreach ($categories as $cat) {
                     $cat['name'] = htmlspecialchars_decode($cat['name']);
