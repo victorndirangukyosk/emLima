@@ -774,7 +774,7 @@
                               <h2>PAYMENT PENDING</h2>
                             </div>
                             <div class="modal-body">
-                            <p style="font-weight: bold; font-size: 12px;">Your Order(s) Payment Is Pending, Please Clcik Pay Button To View The Pending Payments.</p>
+                            <p style="font-weight: bold; font-size: 12px;">Your Order(s) Payment Is Pending, Please Click Pay Button To View The Pending Payments.</p>
                             </div>
                             <div class="addnews-address-form">
                                 <div class="form-group">

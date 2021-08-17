@@ -4163,12 +4163,78 @@ class ControllerApiCustomerOrder extends Controller {
             $this->error['vendor_terms'] = 'Please accept vendor terms!';
         }
 
+        $pending_orders_count = $this->getunpaidorderscount();
+        if ($pending_orders_count['unpaid_orders_count'] > 0) {
+            $this->error['unpaid_orders'] = 'Your Order(s) Payment Is Pending!';
+        }
+
         if ((!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
             $this->response->redirect($this->url->link('checkout/cart'));
         }
 
         //echo "<pre>";print_r($this->error);die;
         return !$this->error;
+    }
+
+    public function getunpaidorders() {
+        $json = [];
+        $log = new Log('error.log');
+        $log->write($this->customer->getPaymentTerms());
+        $log->write($this->customer->getId());
+
+        $data['pending_order_id'] = NULL;
+
+        if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
+            $this->load->model('account/order');
+            $page = 1;
+            $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
+            $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
+            if (count($results_orders) > 0) {
+                foreach ($results_orders as $order) {
+                    if (in_array($order['payment_method'], $PaymentFilter) && $order['order_status_id'] == 4) {
+                        if (empty($order['transcation_id'])) {
+                            $data['pending_order_id'][] = $order['order_id'];
+                        }
+                    }
+                }
+            }
+        }
+
+        $json['status'] = 200;
+        $json['data'] = $data['pending_order_id'];
+        $json['unpaid_orders'] = count($data['pending_order_id']);
+        $json['success'] = 'Customer Unpaid Orders';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        //return $data;
+    }
+
+    public function getunpaidorderscount() {
+        $json = [];
+        $log = new Log('error.log');
+        $log->write($this->customer->getPaymentTerms());
+        $log->write($this->customer->getId());
+
+        $data['pending_order_id'] = NULL;
+
+        if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
+            $this->load->model('account/order');
+            $page = 1;
+            $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
+            $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
+            if (count($results_orders) > 0) {
+                foreach ($results_orders as $order) {
+                    if (in_array($order['payment_method'], $PaymentFilter) && $order['order_status_id'] == 4) {
+                        if (empty($order['transcation_id'])) {
+                            $data['pending_order_id'][] = $order['order_id'];
+                        }
+                    }
+                }
+            }
+        }
+
+        $data['unpaid_orders_count'] = count($data['pending_order_id']);
+        return $data;
     }
 
 }
