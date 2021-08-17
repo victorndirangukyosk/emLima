@@ -2760,7 +2760,7 @@ class Emailtemplate {
 
     public function SendSNS($mobile) {
         $sdk = new Aws\Sns\SnsClient([
-            //'region' => 'af-south-1',
+            'region' => 'af-south-1',
             'version' => 'latest',
             'credentials' => ['key' => 'AKIAUWRTJZVBPUAIMRKY', 'secret' => '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']
         ]);
