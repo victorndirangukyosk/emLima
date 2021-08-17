@@ -1701,6 +1701,10 @@ class ControllerSaleCustomer extends Controller {
                 $this->error['password'] = $this->language->get('error_password');
             }
 
+            if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
+                $this->error['password'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
+            }
+
             if ($this->request->post['password'] != $this->request->post['confirm']) {
                 $this->error['confirm'] = $this->language->get('error_confirm');
             }
