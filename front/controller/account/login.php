@@ -1478,7 +1478,8 @@ class ControllerAccountLogin extends Controller {
     }
 
     public function SendSNS() {
-        $this->emailtemplate->SendSNS();
+        $mobile = $this->request->get['mobile'];
+        $this->emailtemplate->SendSNS($mobile);
     }
 
 }
