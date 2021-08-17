@@ -35,9 +35,10 @@ class ControllerApiCategories extends Controller {
         unset($this->session->data['customer_category']);
         $json = [];
 
-        if (!isset($this->session->data['api_id'])) {
-            $json['error'] = $this->language->get('error_permission');
-        } else {
+        // if (!isset($this->session->data['api_id'])) {
+        //     $json['error'] = $this->language->get('error_permission');
+        // } else 
+        {
             $this->load->model('api/categories');
             $this->load->model('api/products');
             $this->load->model('assets/product');
