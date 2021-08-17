@@ -83,6 +83,7 @@ class ControllerApiCategories extends Controller {
                     $products = $this->model_assets_product->getProductsForGrid($data);
                     $cat['products_count'] = count($products);
                     if (0 == $cat['parent_id']) {
+                        if($cat['products_count']>0)
                         array_push($newCat, $cat);
                     }
                 }
