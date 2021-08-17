@@ -4171,4 +4171,37 @@ class ControllerApiCustomerOrder extends Controller {
         return !$this->error;
     }
 
+    public function getunpaidorders() {
+        $json = [];
+        $log = new Log('error.log');
+        $log->write($this->customer->getPaymentTerms());
+        $log->write($this->customer->getId());
+
+        $data['pending_order_id'] = NULL;
+
+        if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
+            $this->load->model('account/order');
+            $page = 1;
+            $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
+            $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
+            if (count($results_orders) > 0) {
+                foreach ($results_orders as $order) {
+                    if (in_array($order['payment_method'], $PaymentFilter) && $order['order_status_id'] == 4) {
+                        if (empty($order['transcation_id'])) {
+                            $data['pending_order_id'][] = $order['order_id'];
+                        }
+                    }
+                }
+            }
+        }
+
+        $json['status'] = 200;
+        $json['data'] = $data['pending_order_id'];
+        $json['unpaid_orders'] = count($data['pending_order_id']);
+        $json['success'] = 'Customer Unpaid Orders';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        //return $data;
+    }
+
 }
