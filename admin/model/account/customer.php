@@ -237,9 +237,17 @@ class ModelAccountCustomer extends Model {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE parent = '" . (int) $customer_id . "' AND order_approval_access = 1 AND order_approval_access_role = 'procurement_person'");
         return $query->row;
     }
+
     public function getCustomerDevices($customer_id) {
         $query = $this->db->query('SELECT device_id,date_added FROM ' . DB_PREFIX . "customer_devices WHERE customer_id = '" . (int) $customer_id . "' order by date_added desc");
 
         return $query->rows;
     }
+
+    public function getCustomerOTP($customer_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "otp WHERE customer_id = '" . (int) $customer_id . "' order by id desc");
+
+        return $query->rows;
+    }
+
 }
