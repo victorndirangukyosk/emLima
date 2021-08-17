@@ -103,7 +103,7 @@ class ControllerApiCategories extends Controller {
                     $data['filter_category_id'] = $cat['category_id'];
                     $products = $this->model_assets_product->getProductsForGrid($data);
                     $cat['products_count'] = count($products);
-                    if($cat['products_count']>0)//if no products, dont display that category
+                    if(count($products)>0)//if no products, dont display that category
                     {
                     array_push($newCat, $cat);
                     }
