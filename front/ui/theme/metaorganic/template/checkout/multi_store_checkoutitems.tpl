@@ -979,7 +979,7 @@ $.ajax({
                 return false;
                 }else{
                 $('#exampleModal').modal('hide'); 
-                window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";     
+                window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";     
                 }
             }
 });
