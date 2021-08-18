@@ -763,7 +763,7 @@ class ModelAccountApi extends Model
                     // $accountmanagerid =$this->request->post['accountmanagerid'];
                     // $log->write('accountmanagerid from API');
                     // $log->write($accountmanagerid);
-                    $customer_id = $this->model_account_customer->addCustomer($this->request->post,true);
+                    $customer_id = $this->model_account_customer->addCustomer($this->request->post,true,true);
 
                     // Clear any previous login attempts for unregistered accounts.
                     $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
@@ -774,11 +774,12 @@ class ModelAccountApi extends Model
                         $data['username'] = $this->request->post['firstname'];
                         $data['otp'] = mt_rand(1000, 9999);
         
-                        $sms_message = $this->emailtemplate->getSmsMessage('registerOTP', 'registerotp_2', $data);
         
                         //echo "<pre>";print_r($sms_message);die;
                         // if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
                            try{
+                        $sms_message = $this->emailtemplate->getSmsMessage('registerOTP', 'registerotp_2', $data);
+
                             $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
                             $log->write('OTP send to phone number '.$this->request->post['phone']);
                             $log->write('OTP send to phone number '.$sms_message);
