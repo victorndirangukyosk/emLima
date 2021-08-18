@@ -778,22 +778,32 @@ class ModelAccountApi extends Model
         
                         //echo "<pre>";print_r($sms_message);die;
                         // if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
+                           try{
                             $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
                             $log->write('OTP send to phone number '.$this->request->post['phone']);
                             $log->write('OTP send to phone number '.$sms_message);
                             $log->write('OTP send to phone number '.$ret);
-        
-                            //save in otp table
-                            $data['status'] = true;
-        
-                            $this->model_account_customer->saveOTP($this->request->post['phone'], $data['otp'], 'register');
-                            $data['text_verify_otp'] = $this->language->get('text_verify_otp');
-        
-                            $data['success_message'] = $this->language->get('text_otp_sent').' '.$this->request->post['phone'];
+                           }
+                           catch(exception $ex)
+                           {
+                            $log->write('error sending OTP to phone number'.$ex); 
+                           }
+                           
+                           
                         // }
+
+                        $data['status'] = true;
+                        //save in otp table
+                        $this->model_account_customer->saveOTP($this->request->post['phone'], $data['otp'], 'register');
+                        $data['text_verify_otp'] = $this->language->get('text_verify_otp');
+    
+                        // $data['success_message'] = $this->language->get('text_otp_sent').' '.$this->request->post['phone'];
+                        $data['success_message'] = $this->language->get('text_otp_sent');
         
                          if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
-                            $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
+                           
+                           try{ 
+                               $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
                             $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
         
                             $mail = new mail($this->config->get('config_mail'));
@@ -803,6 +813,12 @@ class ModelAccountApi extends Model
                             $mail->setSender($this->config->get('config_name'));
                             $mail->setHtml($message);
                             $mail->send();
+                           }
+                           catch(exception $ex)
+                           {
+                            $log->write('OTP send to Email erroe'.$ex); 
+
+                           }
                          }
                      #endregion  
                     // $logged_in = $this->customer->loginByPhone($customer_id);
