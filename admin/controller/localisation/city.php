@@ -136,26 +136,10 @@ class ControllerLocalisationCity extends Controller {
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('localisation/city');
+        $this->load->model('localisation/citydelivery');
 
-        $this->load->model('tool/export_import');
-
-        //echo "<pre>";print_r($this->request->post);die;
-        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $this->model_localisation_city->editCity($this->request->get['city_id'], $this->request->post);
-
-            if ((isset($this->request->files['upload'])) && (is_uploaded_file($this->request->files['upload']['tmp_name']))) {
-                $file = $this->request->files['upload']['tmp_name'];
-
-                if (!$this->user->isVendor()) {
-                    if ($this->model_tool_export_import->uploadGeneralCityZipcode($file, $this->request->get['city_id'])) {
-                        $this->session->data['success'] = $this->language->get('text_success');
-                        /* $this->response->redirect($this->url->link('tool/export_import', 'token=' . $this->session->data['token'], 'SSL')); */
-                    } else {
-                        $this->error['warning'] = $this->language->get('error_upload');
-                        $this->error['warning'] .= "<br />\n" . $this->language->get('text_log_details');
-                    }
-                }
-            }
+        if (('POST' == $this->request->server['REQUEST_METHOD'])) {
+            $this->model_localisation_citydelivery->editCitydelivery($this->request->get['city_id'], $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -174,7 +158,7 @@ class ControllerLocalisationCity extends Controller {
             }
 
             if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
-                $this->response->redirect($this->url->link('localisation/city/edit', 'city_id=' . $this->request->get['city_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+                $this->response->redirect($this->url->link('localisation/city/editcitydelivery', 'city_id=' . $this->request->get['city_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
             }
 
             if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
@@ -679,7 +663,7 @@ class ControllerLocalisationCity extends Controller {
         if (!isset($this->request->get['city_id'])) {
             $data['action'] = $this->url->link('localisation/city/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('localisation/city/edit', 'token=' . $this->session->data['token'] . '&city_id=' . $this->request->get['city_id'] . $url, 'SSL');
+            $data['action'] = $this->url->link('localisation/city/editcitydelivery', 'token=' . $this->session->data['token'] . '&city_id=' . $this->request->get['city_id'] . $url, 'SSL');
         }
 
         $data['cancel'] = $this->url->link('localisation/city', 'token=' . $this->session->data['token'] . $url, 'SSL');
