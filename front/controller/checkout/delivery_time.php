@@ -1949,6 +1949,9 @@ class Controllercheckoutdeliverytime extends Controller {
                 }
             }
         }
+        $log->write('dates');
+        $log->write($data['dates']);
+        $log->write('dates');
         /* REMOVE DAYS BASED ON CITY OR REGION */
 
 
@@ -1960,7 +1963,8 @@ class Controllercheckoutdeliverytime extends Controller {
         $stores = $this->cart->getStores();
         foreach ($stores as $store_id) {
             $this->session->data['timeslot'][$store_id] = $data['selected_slot'];
-            $this->session->data['dates'][$store_id] = $data['dates'][0];
+            $this->session->data['dates'][$store_id] = current($data['dates']);
+            //$this->session->data['dates'][$store_id] = $data['dates'][0];
             $this->load->model('user/user');
             $store_details = $this->model_user_user->getVendor($store_id);
             $vendor_details = $this->model_user_user->getUser($store_details['vendor_id']);
