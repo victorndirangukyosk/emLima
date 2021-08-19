@@ -416,6 +416,12 @@ class ControllerLocalisationCity extends Controller {
         } else {
             $data['error_state'] = '';
         }
+        
+        if (isset($this->error['region'])) {
+            $data['error_region'] = $this->error['region'];
+        } else {
+            $data['error_region'] = '';
+        }
 
         $url = '';
 
@@ -472,6 +478,10 @@ class ControllerLocalisationCity extends Controller {
         $data['token'] = $this->session->data['token'];
 
         $this->load->model('setting/store');
+        $this->load->model('localisation/region');
+        $data['regions'] = NULL;
+        $regions = $this->model_localisation_region->getRegions($filter[] = NULL);
+        $data['regions'] = $regions;
 
         if (isset($this->request->post['state_id'])) {
             $data['city_state_id'] = $this->request->post['state_id'];
@@ -479,6 +489,14 @@ class ControllerLocalisationCity extends Controller {
             $data['city_state_id'] = $city_info['state_id'];
         } else {
             $data['city_state_id'] = '';
+        }
+        
+        if (isset($this->request->post['region_id'])) {
+            $data['region_id'] = $this->request->post['region_id'];
+        } elseif (!empty($city_info)) {
+            $data['region_id'] = $city_info['region_id'];
+        } else {
+            $data['region_id'] = '';
         }
 
         //echo "<pre>";print_r($data);die;
@@ -526,6 +544,10 @@ class ControllerLocalisationCity extends Controller {
 
         if ('' == $this->request->post['state_id']) {
             $this->error['state'] = $this->language->get('error_state');
+        }
+        
+        if ('' == $this->request->post['region_id']) {
+            $this->error['region'] = $this->language->get('error_region');
         }
 
         return !$this->error;
@@ -632,6 +654,12 @@ class ControllerLocalisationCity extends Controller {
             $data['error_state'] = $this->error['state'];
         } else {
             $data['error_state'] = '';
+        }
+        
+        if (isset($this->error['region'])) {
+            $data['error_region'] = $this->error['region'];
+        } else {
+            $data['error_region'] = '';
         }
 
         $url = '';
