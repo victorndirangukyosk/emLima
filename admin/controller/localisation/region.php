@@ -418,7 +418,7 @@ class ControllerLocalisationRegion extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('localisation/state_form.tpl', $data));
+        $this->response->setOutput($this->load->view('localisation/region_form.tpl', $data));
     }
 
     protected function validateForm() {
