@@ -131,7 +131,7 @@ class Controllercheckoutdeliverytime extends Controller {
         $log->write($data['timeslots']);
         $data['store'] = $this->getStoreDetail($store_id);
 
-        /* REMOVE DAYS BASED ON CITY */
+        /* REMOVE DAYS BASED ON CITY OR REGION */
         $order_delivery_days = NULL;
         $city_details = NULL;
         $selected_address_id = $this->session->data['shipping_address_id'];
@@ -167,7 +167,7 @@ class Controllercheckoutdeliverytime extends Controller {
                 }
             }
         }
-        /* REMOVE DAYS BASED ON CITY */
+        /* REMOVE DAYS BASED ON CITY OR REGION */
 
         //echo "<pre>";print_r($data);die;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/delivery_time.tpl')) {
