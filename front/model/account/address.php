@@ -383,4 +383,14 @@ class ModelAccountAddress extends Model {
         return $query->row;
     }
 
+    public function getCityDetails($city_id) {
+        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "city WHERE city_id = '" . (int) $city_id . "'");
+        return $query->row;
+    }
+
+    public function getRegion($region_id) {
+        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "regions WHERE region_id = '" . (int) $region_id . "'");
+        return $query->row;
+    }
+
 }
