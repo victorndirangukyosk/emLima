@@ -375,14 +375,16 @@ class ControllerLocalisationRegion extends Controller {
         $data['state_zipcodes'] = [];
 
         if (isset($this->request->get['region_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
-            $state_info = $this->model_localisation_state->getstate($this->request->get['region_id']);
+            $region_info = $this->model_localisation_region->getRegion($this->request->get['region_id']);
+            $data['monday'] = $region_info['monday'];
+            $data['tuesday'] = $region_info['tuesday'];
+            $data['wednesday'] = $region_info['wednesday'];
+            $data['thursday'] = $region_info['thursday'];
+            $data['friday'] = $region_info['friday'];
+            $data['saturday'] = $region_info['saturday'];
+            $data['sunday'] = $region_info['sunday'];
 
             $this->load->model('localisation/state');
-
-            //$stateZipcodes = $this->model_localisation_state->getAllZipcodeBystate($this->request->get['state_id']);
-            // if($stateZipcodes) {
-            //     $data['state_zipcodes'] = $stateZipcodes;
-            // }
         }
 
         $data['token'] = $this->session->data['token'];
@@ -391,24 +393,24 @@ class ControllerLocalisationRegion extends Controller {
 
         if (isset($this->request->post['name'])) {
             $data['name'] = $this->request->post['name'];
-        } elseif (!empty($state_info)) {
-            $data['name'] = $state_info['name'];
+        } elseif (!empty($region_info)) {
+            $data['name'] = $region_info['region_name'];
         } else {
             $data['name'] = '';
         }
 
         if (isset($this->request->post['status'])) {
             $data['status'] = $this->request->post['status'];
-        } elseif (!empty($state_info)) {
-            $data['status'] = $state_info['status'];
+        } elseif (!empty($region_info)) {
+            $data['status'] = $region_info['status'];
         } else {
             $data['status'] = '';
         }
 
         if (isset($this->request->post['sort_order'])) {
             $data['sort_order'] = $this->request->post['sort_order'];
-        } elseif (!empty($state_info)) {
-            $data['sort_order'] = $state_info['sort_order'];
+        } elseif (!empty($region_info)) {
+            $data['sort_order'] = $region_info['sort_order'];
         } else {
             $data['sort_order'] = '';
         }
