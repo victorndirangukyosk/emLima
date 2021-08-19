@@ -57,31 +57,31 @@
                        <div class="col-sm-10">
                            <div class="checkbox">
                                <label>
-                                   <input type="checkbox" name="city_delivery[]" value="monday" <?php if($city_delivery_info['monday'] == 1) { ?> checked="checked" <?php } ?> >Monday</label>
+                                   <input type="checkbox" name="city_delivery[]" value="monday" <?php if($monday == 1) { ?> checked="checked" <?php } ?> >Monday</label>
                            </div>
                            <div class="checkbox">
                                <label>
-                                   <input type="checkbox" name="city_delivery[]" value="tuesday" <?php if($city_delivery_info['tuesday'] == 1) { ?> checked="checked" <?php } ?> >Tuesday</label>
+                                   <input type="checkbox" name="city_delivery[]" value="tuesday" <?php if($tuesday == 1) { ?> checked="checked" <?php } ?> >Tuesday</label>
                            </div>
                            <div class="checkbox">
                                <label>
-                                   <input type="checkbox" name="city_delivery[]" value="wednesday" <?php if($city_delivery_info['wednesday'] == 1) { ?> checked="checked" <?php } ?> >Wednesday</label>
+                                   <input type="checkbox" name="city_delivery[]" value="wednesday" <?php if($wednesday == 1) { ?> checked="checked" <?php } ?> >Wednesday</label>
                            </div>
                            <div class="checkbox">
                                <label>
-                                   <input type="checkbox" name="city_delivery[]" value="thursday" <?php if($city_delivery_info['thursday'] == 1) { ?> checked="checked" <?php } ?> >Thursday</label>
+                                   <input type="checkbox" name="city_delivery[]" value="thursday" <?php if($thursday == 1) { ?> checked="checked" <?php } ?> >Thursday</label>
                            </div>
                            <div class="checkbox">
                                <label>
-                                   <input type="checkbox" name="city_delivery[]" value="friday" <?php if($city_delivery_info['friday'] == 1) { ?> checked="checked" <?php } ?> >Friday</label>
+                                   <input type="checkbox" name="city_delivery[]" value="friday" <?php if($friday == 1) { ?> checked="checked" <?php } ?> >Friday</label>
                            </div>
                            <div class="checkbox">
                                <label>
-                                   <input type="checkbox" name="city_delivery[]" value="saturday" <?php if($city_delivery_info['saturday'] == 1) { ?> checked="checked" <?php } ?> >Saturday</label>
+                                   <input type="checkbox" name="city_delivery[]" value="saturday" <?php if($saturday == 1) { ?> checked="checked" <?php } ?> >Saturday</label>
                            </div>
                            <div class="checkbox">
                                <label>
-                                   <input type="checkbox" name="city_delivery[]" value="sunday" <?php if($city_delivery_info['sunday'] == 1) { ?> checked="checked" <?php } ?> >Sunday</label>
+                                   <input type="checkbox" name="city_delivery[]" value="sunday" <?php if($sunday == 1) { ?> checked="checked" <?php } ?> >Sunday</label>
                            </div>
                        </div>
                     </div>

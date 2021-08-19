@@ -3,13 +3,31 @@
 class ModelLocalisationRegion extends Model {
 
     public function addRegion($data) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "regions SET region_name = '" . $this->db->escape($data['name']) . "', status = '" . $this->db->escape($data['status']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "'");
+
+        $monday = in_array("monday", $data['city_delivery']) ? 1 : 0;
+        $tuesday = in_array("tuesday", $data['city_delivery']) ? 1 : 0;
+        $wednesday = in_array("wednesday", $data['city_delivery']) ? 1 : 0;
+        $thursday = in_array("thursday", $data['city_delivery']) ? 1 : 0;
+        $friday = in_array("friday", $data['city_delivery']) ? 1 : 0;
+        $saturday = in_array("saturday", $data['city_delivery']) ? 1 : 0;
+        $sunday = in_array("sunday", $data['city_delivery']) ? 1 : 0;
+
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "regions SET region_name = '" . $this->db->escape($data['name']) . "', status = '" . $this->db->escape($data['status']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "', created_at = NOW()");
         $state_id = $this->db->getLastId();
         return $state_id;
     }
 
     public function editRegion($region_id, $data) {
-        $this->db->query('UPDATE ' . DB_PREFIX . "regions SET region_name = '" . $this->db->escape($data['name']) . "', status = '" . $this->db->escape($data['status']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "' WHERE region_id = '" . (int) $region_id . "'");
+
+        $monday = in_array("monday", $data['city_delivery']) ? 1 : 0;
+        $tuesday = in_array("tuesday", $data['city_delivery']) ? 1 : 0;
+        $wednesday = in_array("wednesday", $data['city_delivery']) ? 1 : 0;
+        $thursday = in_array("thursday", $data['city_delivery']) ? 1 : 0;
+        $friday = in_array("friday", $data['city_delivery']) ? 1 : 0;
+        $saturday = in_array("saturday", $data['city_delivery']) ? 1 : 0;
+        $sunday = in_array("sunday", $data['city_delivery']) ? 1 : 0;
+        
+        $this->db->query('UPDATE ' . DB_PREFIX . "regions SET region_name = '" . $this->db->escape($data['name']) . "', status = '" . $this->db->escape($data['status']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "', updated_at = NOW() WHERE region_id = '" . (int) $region_id . "'");
     }
 
     public function deleteRegion($region_id) {
