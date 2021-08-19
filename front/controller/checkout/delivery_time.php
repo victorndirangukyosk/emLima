@@ -1912,6 +1912,46 @@ class Controllercheckoutdeliverytime extends Controller {
         $log->write($data['dates']);
         $log->write($data['timeslots']);
         $data['store'] = $this->getStoreDetail($store_id);
+
+        /* REMOVE DAYS BASED ON CITY OR REGION */
+        $order_delivery_days = NULL;
+        $city_details = NULL;
+        $selected_address_id = $this->session->data['shipping_address_id'];
+        $this->load->model('account/address');
+        $customer_selected_address = $this->model_account_address->getAddress($selected_address_id);
+        $log->write($customer_selected_address);
+        if (isset($customer_selected_address) && is_array($customer_selected_address) && $customer_selected_address['city_id'] > 0) {
+            $city_details = $this->model_account_address->getCityDetails($customer_selected_address['city_id']);
+            $order_delivery_days = $this->model_account_address->getRegion($city_details['region_id']);
+        }
+
+        if ($order_delivery_days != NULL && is_array($order_delivery_days)) {
+            $log->write($city_details);
+            $log->write($order_delivery_days);
+            foreach ($data['timeslots'] as $key => $value) {
+                $order_delivery_days_timestamp = strtotime($key);
+                $day_name = date('l', $order_delivery_days_timestamp);
+                $day_name = strtolower($day_name);
+                if ($order_delivery_days[$day_name] == 0) {
+                    $log->write($key . ' ' . $day_name);
+                    unset($data['timeslots'][$key]);
+                }
+            }
+            foreach ($data['dates'] as $order_day_dates) {
+                $order_day_dates_timestamp = strtotime($order_day_dates);
+                $order_day_name = date('l', $order_day_dates_timestamp);
+                $order_day_name = strtolower($order_day_name);
+                if ($order_delivery_days[$order_day_name] == 0) {
+                    $log->write($order_day_name);
+                    if (($get_key = array_search($order_day_dates, $data['dates'])) !== false) {
+                        unset($data['dates'][$get_key]);
+                    }
+                }
+            }
+        }
+        /* REMOVE DAYS BASED ON CITY OR REGION */
+
+
         $json['dates'] = $data['dates'];
         $json['timeslots'] = $data['timeslots'];
         $json['selected_slot'] = $data['selected_slot'];
