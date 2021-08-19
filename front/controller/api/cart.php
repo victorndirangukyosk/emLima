@@ -446,6 +446,10 @@ class ControllerApiCart extends Controller {
             {
                 $image=BASE_URL . '/' . $image;
             }
+            else
+            {
+                $image=BASE_URL . '/' . 'image/cache/placeholder-300x300.png';
+            }
             if (is_array($product_info) && $product_info['status'] == 1) {
                 $this->data[$keys] = [
                     'key' => $keys,
