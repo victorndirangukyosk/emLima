@@ -42,44 +42,48 @@
                             <?php if ($error_name) { ?>
                             <div class="text-danger"><?php echo $error_name; ?></div>
                             <?php } ?>
-
-                            <!-- <?php if(isset($this->request->get['state_id'])) { ?>
-                                <a href="#" onclick="return export_state_zipcodes();"><?= $text_export_zipcode ?> </a>
-                            <?php } ?> -->
-                            
-
                         </div>
                     </div>   
-
-                    <!-- <div class="tab-pane" id="tab-variation">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-product"><span data-toggle="tooltip" title="<?php echo $help_geocode; ?>"><?php echo $entry_zipcode; ?></span></label>
-                            <div class="col-sm-10">
-                              <input type="text" name="zipcode" value="" placeholder="<?php echo $entry_zipcode; ?>" id="input-product" class="form-control" onKeyDown="if(event.keyCode==13) saveZipcode(this.value);"/>
-
-                              <input type="file" name="upload" id="upload" style="margin-top: 10px;margin-bottom: 10px" />
-
-                              <div id="state_zipcodes" class="well well-sm" style="height: 150px; overflow: auto;">
-                                <?if( isset($state_zipcodes) && is_array($state_zipcodes)) {?>
-
-                                    <?php foreach ($state_zipcodes as $state_zipcodes) { ?>
-                                    <div id="state_zipcodes<?php echo $state_zipcodes['state_id']; ?>"><i class="fa fa-minus-circle"></i> <?php echo $state_zipcodes['zipcode']; ?>
-                                      <input type="hidden" name="state_zipcodes[]" value="<?php echo $state_zipcodes['zipcode']; ?>" />
-
-                                    </div>
-                                    <?php } ?>
-
-                                <?} ?>
-                              </div>
-                            </div>
-                        </div>
-                    </div>       -->
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-open"><?= $entry_sort_order ?></label>
                         <div class="col-sm-10">
                             <input type="text" name="sort_order" value="<?php echo $sort_order; ?>" placeholder="Sort order" class="form-control" />
                         </div>
+                    </div>
+                    
+                    <div class="form-group">
+                       <label class="col-sm-2 control-label">Delivery Days</label> 
+                       <div class="col-sm-10">
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="city_delivery[]" value="monday" <?php if($city_delivery_info['monday'] == 1) { ?> checked="checked" <?php } ?> >Monday</label>
+                           </div>
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="city_delivery[]" value="tuesday" <?php if($city_delivery_info['tuesday'] == 1) { ?> checked="checked" <?php } ?> >Tuesday</label>
+                           </div>
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="city_delivery[]" value="wednesday" <?php if($city_delivery_info['wednesday'] == 1) { ?> checked="checked" <?php } ?> >Wednesday</label>
+                           </div>
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="city_delivery[]" value="thursday" <?php if($city_delivery_info['thursday'] == 1) { ?> checked="checked" <?php } ?> >Thursday</label>
+                           </div>
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="city_delivery[]" value="friday" <?php if($city_delivery_info['friday'] == 1) { ?> checked="checked" <?php } ?> >Friday</label>
+                           </div>
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="city_delivery[]" value="saturday" <?php if($city_delivery_info['saturday'] == 1) { ?> checked="checked" <?php } ?> >Saturday</label>
+                           </div>
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="city_delivery[]" value="sunday" <?php if($city_delivery_info['sunday'] == 1) { ?> checked="checked" <?php } ?> >Sunday</label>
+                           </div>
+                       </div>
                     </div>
                     
                     <input type="hidden" name="status" value="1" />
