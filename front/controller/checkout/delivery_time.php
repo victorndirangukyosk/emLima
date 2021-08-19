@@ -142,25 +142,28 @@ class Controllercheckoutdeliverytime extends Controller {
             $city_details = $this->model_account_address->getCityDetails($customer_selected_address['city_id']);
             $order_delivery_days = $this->model_account_address->getRegion($city_details['region_id']);
         }
-        $log->write($city_details);
-        $log->write($order_delivery_days);
-        foreach ($data['timeslots'] as $key => $value) {
-            $order_delivery_days_timestamp = strtotime($key);
-            $day_name = date('l', $order_delivery_days_timestamp);
-            $day_name = strtolower($day_name);
-            if ($order_delivery_days[$day_name] == 0) {
-                $log->write($key . ' ' . $day_name);
-                unset($data['timeslots'][$key]);
+
+        if ($order_delivery_days != NULL && is_array($order_delivery_days)) {
+            $log->write($city_details);
+            $log->write($order_delivery_days);
+            foreach ($data['timeslots'] as $key => $value) {
+                $order_delivery_days_timestamp = strtotime($key);
+                $day_name = date('l', $order_delivery_days_timestamp);
+                $day_name = strtolower($day_name);
+                if ($order_delivery_days[$day_name] == 0) {
+                    $log->write($key . ' ' . $day_name);
+                    unset($data['timeslots'][$key]);
+                }
             }
-        }
-        foreach ($data['dates'] as $order_day_dates) {
-            $order_day_dates_timestamp = strtotime($order_day_dates);
-            $order_day_name = date('l', $order_day_dates_timestamp);
-            $order_day_name = strtolower($order_day_name);
-            if ($order_delivery_days[$order_day_name] == 0) {
-                $log->write($order_day_name);
-                if (($get_key = array_search($order_day_dates, $data['dates'])) !== false) {
-                    unset($data['dates'][$get_key]);
+            foreach ($data['dates'] as $order_day_dates) {
+                $order_day_dates_timestamp = strtotime($order_day_dates);
+                $order_day_name = date('l', $order_day_dates_timestamp);
+                $order_day_name = strtolower($order_day_name);
+                if ($order_delivery_days[$order_day_name] == 0) {
+                    $log->write($order_day_name);
+                    if (($get_key = array_search($order_day_dates, $data['dates'])) !== false) {
+                        unset($data['dates'][$get_key]);
+                    }
                 }
             }
         }
