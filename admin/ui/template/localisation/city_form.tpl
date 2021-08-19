@@ -16,16 +16,16 @@
         </div>
     </div>
     <div class="container-fluid">
-        
+
         <?php if ($error_warning) { ?>
         <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
             <button type="button" class="close" data-dismiss="alert">&times;</button>
         </div>
         <?php } ?>
-        
+
         <?php if ($success) { ?>
         <div class="alert alert-success"><i class="fa fa-check-circle"></i> <?php echo $success; ?>
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
         </div>
         <?php } ?>
 
@@ -44,9 +44,9 @@
                             <?php } ?>
 
                             <?php if(isset($this->request->get['city_id'])) { ?>
-                                <a href="#" onclick="return export_city_zipcodes();"><?= $text_export_zipcode ?> </a>
+                            <a href="#" onclick="return export_city_zipcodes();"><?= $text_export_zipcode ?> </a>
                             <?php } ?>
-                            
+
 
                         </div>
                     </div>   
@@ -55,12 +55,13 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="input-product"><span data-toggle="tooltip" title="<?php echo $help_geocode; ?>"><?php echo $entry_zipcode; ?></span></label>
                             <div class="col-sm-10">
-                              <input type="text" name="zipcode" value="" placeholder="<?php echo $entry_zipcode; ?>" id="input-product" class="form-control" onKeyDown="if(event.keyCode==13) saveZipcode(this.value);"/>
+                                <input type="text" name="zipcode" value="" placeholder="<?php echo $entry_zipcode; ?>" id="input-product" class="form-control" onKeyDown="if (event.keyCode == 13)
+                                          saveZipcode(this.value);"/>
 
-                              <input type="file" name="upload" id="upload" style="margin-top: 10px;margin-bottom: 10px" />
+                                <input type="file" name="upload" id="upload" style="margin-top: 10px;margin-bottom: 10px" />
 
-                              <div id="city_zipcodes" class="well well-sm" style="height: 150px; overflow: auto;">
-                                <?if( isset($city_zipcodes) && is_array($city_zipcodes)) {?>
+                                <div id="city_zipcodes" class="well well-sm" style="height: 150px; overflow: auto;">
+                                    <?if( isset($city_zipcodes) && is_array($city_zipcodes)) {?>
 
                                     <?php foreach ($city_zipcodes as $city_zipcodes) { ?>
                                     <div id="city_zipcodes<?php echo $city_zipcodes['city_id']; ?>"><i class="fa fa-minus-circle"></i> <?php echo $city_zipcodes['zipcode']; ?>
@@ -69,8 +70,8 @@
                                     </div>
                                     <?php } ?>
 
-                                <?} ?>
-                              </div>
+                                    <?} ?>
+                                </div>
                             </div>
                         </div>
                     </div>      
@@ -79,31 +80,64 @@
                         <label class="col-sm-2 control-label" for="input-name"><?php echo $entry_state; ?></label>
                         <div class="col-sm-10">
 
-                            
+
 
                             <select class="selectpicker" name="state_id" data-selected-text-format="countSelectedText">
 
-                            <option value=""> 
-                                Select State
-                            </option>
+                                <option value=""> 
+                                    Select State
+                                </option>
 
-                            <?php foreach($states as $state){ ?>
+                                <?php foreach($states as $state){ ?>
 
                                 <?php if($state['state_id'] == $city_state_id) { ?>
-                                    <option value="<?php echo $state['state_id']; ?>" selected> 
-                                        <?php echo $state['name']; ?>
-                                    </option>
+                                <option value="<?php echo $state['state_id']; ?>" selected> 
+                                    <?php echo $state['name']; ?>
+                                </option>
                                 <?php } else {?>
                                     <option value="<?php echo $state['state_id']; ?>"> 
                                         <?php echo $state['name']; ?>
                                     </option>
                                 <?php }?>
-                                    
-                            <?php   } ?>
+
+                                <?php   } ?>
                             </select>
 
                             <?php if ($error_state) { ?>
                             <div class="text-danger"><?php echo $error_state; ?></div>
+                            <?php } ?>
+                        </div>
+                    </div>
+
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-name">Region</label>
+                        <div class="col-sm-10">
+
+
+
+                            <select class="selectpicker" name="region_id" data-selected-text-format="countSelectedText">
+
+                                <option value=""> 
+                                    Select Region
+                                </option>
+
+                                <?php foreach($regions as $region){ ?>
+
+                                <?php if($region['region_id'] == $region_id) { ?>
+                                <option value="<?php echo $region['region_id']; ?>" selected> 
+                                    <?php echo $region['region_name']; ?>
+                                </option>
+                                <?php } else {?>
+                                    <option value="<?php echo $region['region_id']; ?>"> 
+                                        <?php echo $region['region_name']; ?>
+                                    </option>
+                                <?php }?>
+
+                                <?php   } ?>
+                            </select>
+
+                            <?php if ($error_region) { ?>
+                            <div class="text-danger"><?php echo $error_region; ?></div>
                             <?php } ?>
                         </div>
                     </div>
@@ -114,16 +148,16 @@
                             <input type="text" name="sort_order" value="<?php echo $sort_order; ?>" placeholder="Sort order" class="form-control" />
                         </div>
                     </div>
-                    
+
                     <input type="hidden" name="status" value="1" />
-                    
+
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<script type="text/javascript"><!--
+        <script type="text/javascript"><!--
 function save(type) {
         var input = document.createElement('input');
         input.type = 'hidden';
@@ -132,34 +166,36 @@ function save(type) {
         form = $("form[id^='form-']").append(input);
         form.submit();
     }
-//--></script>
+       //--></script>
 
 <script type="text/javascript">
-function saveZipcode(zipcode) {
-    $('#city_zipcodes').append('<div id="city_zipcodes' + zipcode+ '"><i class="fa fa-minus-circle"></i> ' +zipcode+ '<input type="hidden" name="city_zipcodes[]" value="' + zipcode + '" /></div>'); 
-    $('input[name=\'zipcode\']').val('');
-}
-<!--
-// $('input[name=\'zipcode\']').({
-    
+    function saveZipcode(zipcode) {
+        $('#city_zipcodes').append('<div id="city_zipcodes' + zipcode + '"><i class="fa fa-minus-circle"></i> ' + zipcode + '<input type="hidden" name="city_zipcodes[]" value="' + zipcode + '" /></div>');
+        $('input[name=\'zipcode\']').val('');
+    }
+    <!--
+                // $('input[name=\'zipcode\']').(
+    {
+
 //          
 // });
 
-$('#city_zipcodes').delegate('.fa-minus-circle', 'click', function() {
+            $('#city_zipcodes').delegate('.fa-minus-circle', 'click', function()
+    {
     $(this).parent().remove();
-});
+    });
 
-function export_city_zipcodes() {
-    
+    function export_city_zipcodes() {
+
     var city_id = <?php echo  isset($this->request->get['city_id'])?$this->request->get['city_id']:''; ?>
-
-    url = 'index.php?path=localisation/city/export_city_zipcodes&token=<?php echo $token; ?>&city_id='+city_id;
+            
+                url = 'index.php?path=localisation/city/export_city_zipcodes&token=<?php echo $token; ?>&city_id='+city_id;
+                
+                location = url;
+                
+                return false;
+        }
     
-    location = url;
-
-    return false;
-}
-
 </script>
 
 <?php echo $footer; ?>
