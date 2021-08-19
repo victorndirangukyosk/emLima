@@ -197,9 +197,9 @@ class ControllerLocalisationRegion extends Controller {
         $results = $this->model_localisation_region->getRegions($filter_data);
 
         foreach ($results as $result) {
-            $data['cities'][] = [
+            $data['regions'][] = [
                 'region_id' => $result['region_id'],
-                'name' => $result['name'],
+                'name' => $result['region_name'],
                 'status' => $result['status'],
                 'sort_order' => $result['sort_order'],
                 'edit' => $this->url->link('localisation/region/edit', 'token=' . $this->session->data['token'] . '&region_id=' . $result['region_id'] . $url, 'SSL'),

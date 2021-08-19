@@ -51,17 +51,17 @@
                 </tr>
               </thead>
               <tbody>
-                <?php if ($cities) { ?>
-                <?php foreach ($cities as $state) { ?>
+                <?php if ($regions) { ?>
+                <?php foreach ($regions as $region) { ?>
                 <tr>
-                  <td class="text-center"><?php if (in_array($state['state_id'], $selected)) { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $state['state_id']; ?>" checked="checked" />
+                  <td class="text-center"><?php if (in_array($region['region_id'], $selected)) { ?>
+                    <input type="checkbox" name="selected[]" value="<?php echo $region['region_id']; ?>" checked="checked" />
                     <?php } else { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $state['state_id']; ?>" />
+                    <input type="checkbox" name="selected[]" value="<?php echo $region['region_id']; ?>" />
                     <?php } ?></td>
-                  <td class="text-left"><?php echo $state['name']; ?></td>
-                  <td class="text-left"><?php echo $state['sort_order']; ?></td>
-                  <td class="text-right"><a href="<?php echo $state['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                  <td class="text-left"><?php echo $region['name']; ?></td>
+                  <td class="text-left"><?php echo $region['sort_order']; ?></td>
+                  <td class="text-right"><a href="<?php echo $region['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>
