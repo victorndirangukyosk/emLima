@@ -133,13 +133,16 @@ class Controllercheckoutdeliverytime extends Controller {
 
         /* REMOVE DAYS BASED ON CITY */
         $order_delivery_days = NULL;
+        $city_details = NULL;
         $selected_address_id = $this->session->data['shipping_address_id'];
         $this->load->model('account/address');
         $customer_selected_address = $this->model_account_address->getAddress($selected_address_id);
         $log->write($customer_selected_address);
         if (isset($customer_selected_address) && is_array($customer_selected_address) && $customer_selected_address['city_id'] > 0) {
-            $order_delivery_days = $this->model_account_address->getCityDeliveryDays($customer_selected_address['city_id']);
+            $city_details = $this->model_account_address->getCityDetails($customer_selected_address['city_id']);
+            $order_delivery_days = $this->model_account_address->getRegion($city_details['region_id']);
         }
+        $log->write($city_details);
         $log->write($order_delivery_days);
         foreach ($data['timeslots'] as $key => $value) {
             $order_delivery_days_timestamp = strtotime($key);
