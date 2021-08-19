@@ -374,8 +374,8 @@ class ControllerLocalisationRegion extends Controller {
 
         $data['state_zipcodes'] = [];
 
-        if (isset($this->request->get['state_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
-            $state_info = $this->model_localisation_state->getstate($this->request->get['state_id']);
+        if (isset($this->request->get['region_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
+            $state_info = $this->model_localisation_state->getstate($this->request->get['region_id']);
 
             $this->load->model('localisation/state');
 
