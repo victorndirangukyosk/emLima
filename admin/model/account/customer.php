@@ -251,6 +251,10 @@ class ModelAccountCustomer extends Model {
     }
 
     public function getCustomerOTPByPhone($customer_phone) {
+        $log = new Log('error.log');
+        $log->write('customer_phone');
+        $log->write($customer_phone);
+        $log->write('customer_phone');
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "otp WHERE customer_id = '" . (int) $customer_phone . "' order by id desc");
 
         return $query->rows;
