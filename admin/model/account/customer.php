@@ -250,4 +250,10 @@ class ModelAccountCustomer extends Model {
         return $query->rows;
     }
 
+    public function getCustomerOTPByPhone($customer_phone) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "otp WHERE customer_id = '" . $customer_phone . "' order by id desc");
+
+        return $query->rows;
+    }
+
 }

@@ -3,10 +3,10 @@
 class ModelLocalisationCity extends Model {
 
     public function addCity($data) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "city SET name = '" . $this->db->escape($data['name']) . "', status = '" . $this->db->escape($data['status']) . "', state_id = '" . $this->db->escape($data['state_id']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "'");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "city SET name = '" . $this->db->escape($data['name']) . "', status = '" . $this->db->escape($data['status']) . "', state_id = '" . $this->db->escape($data['state_id']) . "', region_id = '" . $this->db->escape($data['region_id']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "'");
         $city_id = $this->db->getLastId();
 
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "city_delivery SET city_id = '" . $city_id . "', monday = 1, tuesday = 1, wednesday = 1, thursday = 1, friday = 1, saturday = 1, sunday = 1, created_at = NOW()");
+        //$this->db->query('INSERT INTO ' . DB_PREFIX . "city_delivery SET city_id = '" . $city_id . "', monday = 1, tuesday = 1, wednesday = 1, thursday = 1, friday = 1, saturday = 1, sunday = 1, created_at = NOW()");
 
         foreach ($data['city_zipcodes'] as $key => $value) {
             $this->db->query('INSERT INTO ' . DB_PREFIX . "city_zipcodes SET city_id = '" . (int) $city_id . "', zipcode = '" . $this->db->escape($value) . "'");
@@ -16,7 +16,7 @@ class ModelLocalisationCity extends Model {
     }
 
     public function editCity($city_id, $data) {
-        $this->db->query('UPDATE ' . DB_PREFIX . "city SET name = '" . $this->db->escape($data['name']) . "', status = '" . $this->db->escape($data['status']) . "', state_id = '" . $this->db->escape($data['state_id']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "' WHERE city_id = '" . (int) $city_id . "'");
+        $this->db->query('UPDATE ' . DB_PREFIX . "city SET name = '" . $this->db->escape($data['name']) . "', status = '" . $this->db->escape($data['status']) . "', state_id = '" . $this->db->escape($data['state_id']) . "', region_id = '" . $this->db->escape($data['region_id']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "' WHERE city_id = '" . (int) $city_id . "'");
 
         $this->db->query('DELETE FROM ' . DB_PREFIX . 'city_zipcodes WHERE city_id = ' . (int) $city_id);
 

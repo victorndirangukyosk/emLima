@@ -1,9 +1,8 @@
 <?php
 
-class ControllerCommonMenu extends Controller
-{
-    public function index()
-    {
+class ControllerCommonMenu extends Controller {
+
+    public function index() {
         if ($this->user->isVendor()) {
             return $this->vendor_menu();
         } else {
@@ -11,8 +10,7 @@ class ControllerCommonMenu extends Controller
         }
     }
 
-    private function admin_menu()
-    {
+    private function admin_menu() {
         $this->load->language('common/menu');
 
         $data = $this->language->all();
@@ -28,233 +26,234 @@ class ControllerCommonMenu extends Controller
         $data['text_simple_blog_general_setting'] = $this->language->get('text_simple_blog_general_setting');
         $data['text_simple_blog_category_setting'] = $this->language->get('text_simple_blog_category_setting');
 
-        $data['simple_blog_author'] = $this->url->link('simple_blog/author', 'token='.$this->session->data['token'], 'SSL');
-        $data['simple_blog_category'] = $this->url->link('simple_blog/category', 'token='.$this->session->data['token'], 'SSL');
-        $data['simple_blog_article'] = $this->url->link('simple_blog/article', 'token='.$this->session->data['token'], 'SSL');
-        $data['simple_blog_comment'] = $this->url->link('simple_blog/comment', 'token='.$this->session->data['token'], 'SSL');
-        $data['simple_blog_general_setting'] = $this->url->link('module/simple_blog', 'token='.$this->session->data['token'], 'SSL');
-        $data['simple_blog_category_setting'] = $this->url->link('module/simple_blog_category', 'token='.$this->session->data['token'], 'SSL');
-        $data['simple_blog_view_report'] = $this->url->link('simple_blog/report', 'token='.$this->session->data['token'], 'SSL');
+        $data['simple_blog_author'] = $this->url->link('simple_blog/author', 'token=' . $this->session->data['token'], 'SSL');
+        $data['simple_blog_category'] = $this->url->link('simple_blog/category', 'token=' . $this->session->data['token'], 'SSL');
+        $data['simple_blog_article'] = $this->url->link('simple_blog/article', 'token=' . $this->session->data['token'], 'SSL');
+        $data['simple_blog_comment'] = $this->url->link('simple_blog/comment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['simple_blog_general_setting'] = $this->url->link('module/simple_blog', 'token=' . $this->session->data['token'], 'SSL');
+        $data['simple_blog_category_setting'] = $this->url->link('module/simple_blog_category', 'token=' . $this->session->data['token'], 'SSL');
+        $data['simple_blog_view_report'] = $this->url->link('simple_blog/report', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['acc_profile'] = $this->url->link('account/profile', 'token='.$this->session->data['token'], 'SSL');
-        $data['acc_settings'] = $this->url->link('account/settings', 'token='.$this->session->data['token'], 'SSL');
-        $data['acc_password'] = $this->url->link('account/settings/password', 'token='.$this->session->data['token'], 'SSL');
-        $data['acc_packages'] = $this->url->link('account/packages', 'token='.$this->session->data['token'], 'SSL');
-        $data['cat_packages'] = $this->url->link('catalog/packages', 'token='.$this->session->data['token'], 'SSL');
+        $data['acc_profile'] = $this->url->link('account/profile', 'token=' . $this->session->data['token'], 'SSL');
+        $data['acc_settings'] = $this->url->link('account/settings', 'token=' . $this->session->data['token'], 'SSL');
+        $data['acc_password'] = $this->url->link('account/settings/password', 'token=' . $this->session->data['token'], 'SSL');
+        $data['acc_packages'] = $this->url->link('account/packages', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cat_packages'] = $this->url->link('catalog/packages', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['transactions_package'] = $this->url->link('transactions/package', 'token='.$this->session->data['token'], 'SSL');
+        $data['transactions_package'] = $this->url->link('transactions/package', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['approve_shopper'] = $this->url->link('approvals/shopper', 'token='.$this->session->data['token'], 'SSL');
-        $data['approve_vendors'] = $this->url->link('approvals/enquiries', 'token='.$this->session->data['token'], 'SSL');
-        $data['approve_products'] = $this->url->link('approvals/product', 'token='.$this->session->data['token'], 'SSL');
-        $data['general_products'] = $this->url->link('catalog/general', 'token='.$this->session->data['token'], 'SSL');
-        $data['dashboard'] = $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL');
-        $data['api'] = $this->url->link('user/api', 'token='.$this->session->data['token'], 'SSL');
-        $data['backup'] = $this->url->link('tool/backup', 'token='.$this->session->data['token'], 'SSL');
-        $data['design_offer'] = $this->url->link('design/offer', 'token='.$this->session->data['token'], 'SSL');
-        $data['design_slider'] = $this->url->link('design/slider', 'token='.$this->session->data['token'], 'SSL');
+        $data['approve_shopper'] = $this->url->link('approvals/shopper', 'token=' . $this->session->data['token'], 'SSL');
+        $data['approve_vendors'] = $this->url->link('approvals/enquiries', 'token=' . $this->session->data['token'], 'SSL');
+        $data['approve_products'] = $this->url->link('approvals/product', 'token=' . $this->session->data['token'], 'SSL');
+        $data['general_products'] = $this->url->link('catalog/general', 'token=' . $this->session->data['token'], 'SSL');
+        $data['dashboard'] = $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL');
+        $data['api'] = $this->url->link('user/api', 'token=' . $this->session->data['token'], 'SSL');
+        $data['backup'] = $this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL');
+        $data['design_offer'] = $this->url->link('design/offer', 'token=' . $this->session->data['token'], 'SSL');
+        $data['design_slider'] = $this->url->link('design/slider', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['offer'] = $this->url->link('marketing/offer', 'token='.$this->session->data['token'], 'SSL');
-        /*$data['design_offer'] = $this->url->link('design/offer', 'token=' . $this->session->data['token'], 'SSL');*/
-        $data['notice'] = $this->url->link('design/notice', 'token='.$this->session->data['token'], 'SSL');
-        $data['blocks'] = $this->url->link('design/blocks', 'token='.$this->session->data['token'], 'SSL');
+        $data['offer'] = $this->url->link('marketing/offer', 'token=' . $this->session->data['token'], 'SSL');
+        /* $data['design_offer'] = $this->url->link('design/offer', 'token=' . $this->session->data['token'], 'SSL'); */
+        $data['notice'] = $this->url->link('design/notice', 'token=' . $this->session->data['token'], 'SSL');
+        $data['blocks'] = $this->url->link('design/blocks', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['category'] = $this->url->link('catalog/category', 'token='.$this->session->data['token'], 'SSL');
+        $data['category'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['product_collection'] = $this->url->link('promotion/page', 'token='.$this->session->data['token'], 'SSL');
-        $data['checkout_question'] = $this->url->link('catalog/question', 'token='.$this->session->data['token'], 'SSL');
+        $data['product_collection'] = $this->url->link('promotion/page', 'token=' . $this->session->data['token'], 'SSL');
+        $data['checkout_question'] = $this->url->link('catalog/question', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['recipe_category'] = $this->url->link('catalog/recipe_category', 'token='.$this->session->data['token'], 'SSL');
-        $data['recipe'] = $this->url->link('catalog/recipe', 'token='.$this->session->data['token'], 'SSL');
+        $data['recipe_category'] = $this->url->link('catalog/recipe_category', 'token=' . $this->session->data['token'], 'SSL');
+        $data['recipe'] = $this->url->link('catalog/recipe', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['help_category'] = $this->url->link('catalog/help_category', 'token='.$this->session->data['token'], 'SSL');
-        $data['help'] = $this->url->link('catalog/help', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_income'] = $this->url->link('report/income', 'token='.$this->session->data['token'], 'SSL');
+        $data['help_category'] = $this->url->link('catalog/help_category', 'token=' . $this->session->data['token'], 'SSL');
+        $data['help'] = $this->url->link('catalog/help', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_income'] = $this->url->link('report/income', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['country'] = $this->url->link('localisation/country', 'token='.$this->session->data['token'], 'SSL');
-        $data['contact'] = $this->url->link('marketing/contact', 'token='.$this->session->data['token'], 'SSL');
-        $data['coupon'] = $this->url->link('marketing/coupon', 'token='.$this->session->data['token'], 'SSL');
-        $data['offer'] = $this->url->link('marketing/offer', 'token='.$this->session->data['token'], 'SSL');
-        $data['currency'] = $this->url->link('localisation/currency', 'token='.$this->session->data['token'], 'SSL');
-        $data['customer'] = $this->url->link('sale/customer', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
-        $data['farmer'] = $this->url->link('sale/farmer', 'token='.$this->session->data['token'].'&sort=c.created_at&order=DESC', 'SSL');
-        $data['farmertransactions'] = $this->url->link('sale/farmer_transactions', 'token='.$this->session->data['token'].'&sort=c.created_at&order=DESC', 'SSL');
-        
-        $data['accountmanager'] = $this->url->link('sale/accountmanager', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
-        $data['accountmanager_customers'] = $this->url->link('sale/accountmanageruser', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
-        $data['account_manager_customer_orders'] = $this->url->link('sale/accountmanageruserorders', 'token='.$this->session->data['token'], 'SSL');
-        $data['customerexperience'] = $this->url->link('sale/customerexperience', 'token='.$this->session->data['token'].'&sort=c.date_added&order=DESC', 'SSL');
-        
-        $data['bulk_email'] = $this->url->link('email/bulk_email', 'token='.$this->session->data['token'], 'SSL');
-        $data['email_groups'] = $this->url->link('email/groups', 'token='.$this->session->data['token'], 'SSL');
+        $data['country'] = $this->url->link('localisation/country', 'token=' . $this->session->data['token'], 'SSL');
+        $data['contact'] = $this->url->link('marketing/contact', 'token=' . $this->session->data['token'], 'SSL');
+        $data['coupon'] = $this->url->link('marketing/coupon', 'token=' . $this->session->data['token'], 'SSL');
+        $data['offer'] = $this->url->link('marketing/offer', 'token=' . $this->session->data['token'], 'SSL');
+        $data['currency'] = $this->url->link('localisation/currency', 'token=' . $this->session->data['token'], 'SSL');
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
+        $data['farmer'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.created_at&order=DESC', 'SSL');
+        $data['farmertransactions'] = $this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . '&sort=c.created_at&order=DESC', 'SSL');
 
-        $data['customer_fields'] = $this->url->link('sale/customer_field', 'token='.$this->session->data['token'], 'SSL');
-        $data['customer_group'] = $this->url->link('sale/customer_group', 'token='.$this->session->data['token'], 'SSL');
-        $data['customer_ban_ip'] = $this->url->link('sale/customer_ban_ip', 'token='.$this->session->data['token'], 'SSL');
-        $data['customer_feedback'] = $this->url->link('sale/customer_feedback', 'token='.$this->session->data['token'], 'SSL');
-        $data['customer_issue'] = $this->url->link('sale/customer_issue', 'token='.$this->session->data['token'], 'SSL');
-        $data['custom_field'] = $this->url->link('sale/custom_field', 'token='.$this->session->data['token'], 'SSL');
-        $data['email_template'] = $this->url->link('system/email_template', 'token='.$this->session->data['token'], 'SSL');
-        $data['language_override'] = $this->url->link('system/language_override', 'token='.$this->session->data['token'], 'SSL');
-        $data['error_log'] = $this->url->link('tool/error_log', 'token='.$this->session->data['token'], 'SSL');
-        $data['export_import'] = $this->url->link('tool/export_import', 'token='.$this->session->data['token'], 'SSL');
+        $data['accountmanager'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
+        $data['accountmanager_customers'] = $this->url->link('sale/accountmanageruser', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
+        $data['account_manager_customer_orders'] = $this->url->link('sale/accountmanageruserorders', 'token=' . $this->session->data['token'], 'SSL');
+        $data['customerexperience'] = $this->url->link('sale/customerexperience', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
 
-        $data['clear_data'] = $this->url->link('tool/clear_data', 'token='.$this->session->data['token'], 'SSL');
-        $data['file_manager'] = $this->url->link('tool/file_manager', 'token='.$this->session->data['token'], 'SSL');
-        $data['feed'] = $this->url->link('extension/feed', 'token='.$this->session->data['token'], 'SSL');
-        $data['filter'] = $this->url->link('catalog/filter', 'token='.$this->session->data['token'], 'SSL');
-        $data['geo_zone'] = $this->url->link('localisation/geo_zone', 'token='.$this->session->data['token'], 'SSL');
-        $data['information'] = $this->url->link('catalog/information', 'token='.$this->session->data['token'], 'SSL');
-        $data['installer'] = $this->url->link('extension/installer', 'token='.$this->session->data['token'], 'SSL');
-        $data['language'] = $this->url->link('localisation/language', 'token='.$this->session->data['token'], 'SSL');
-        $data['location'] = $this->url->link('localisation/location', 'token='.$this->session->data['token'], 'SSL');
-        $data['modification'] = $this->url->link('extension/modification', 'token='.$this->session->data['token'], 'SSL');
-        $data['marketing'] = $this->url->link('marketing/marketing', 'token='.$this->session->data['token'], 'SSL');
-        $data['marketplace'] = $this->url->link('extension/marketplace', 'token='.$this->session->data['token'], 'SSL');
-        $data['module'] = $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL');
-        $data['order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
-        $data['order_delivaries'] = $this->url->link('sale/amitruckdelivaries', 'token='.$this->session->data['token'], 'SSL');
-        $data['order_product_missing'] = $this->url->link('sale/order_product_missing', 'token='.$this->session->data['token'], 'SSL');
-        $data['order_product_missing_products'] = $this->url->link('sale/order_product_missing_products', 'token='.$this->session->data['token'], 'SSL');
-        $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token='.$this->session->data['token'], 'SSL');
-        $data['vendor_order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
+        $data['bulk_email'] = $this->url->link('email/bulk_email', 'token=' . $this->session->data['token'], 'SSL');
+        $data['email_groups'] = $this->url->link('email/groups', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['vendor_fast_order'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].'&filter_order_status=14,1&filter_order_day=today', 'SSL');
+        $data['customer_fields'] = $this->url->link('sale/customer_field', 'token=' . $this->session->data['token'], 'SSL');
+        $data['customer_group'] = $this->url->link('sale/customer_group', 'token=' . $this->session->data['token'], 'SSL');
+        $data['customer_ban_ip'] = $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'], 'SSL');
+        $data['customer_feedback'] = $this->url->link('sale/customer_feedback', 'token=' . $this->session->data['token'], 'SSL');
+        $data['customer_issue'] = $this->url->link('sale/customer_issue', 'token=' . $this->session->data['token'], 'SSL');
+        $data['custom_field'] = $this->url->link('sale/custom_field', 'token=' . $this->session->data['token'], 'SSL');
+        $data['email_template'] = $this->url->link('system/email_template', 'token=' . $this->session->data['token'], 'SSL');
+        $data['language_override'] = $this->url->link('system/language_override', 'token=' . $this->session->data['token'], 'SSL');
+        $data['error_log'] = $this->url->link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL');
+        $data['export_import'] = $this->url->link('tool/export_import', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['fast_order'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].'&filter_order_status=14,1&filter_order_day=today', 'SSL');
+        $data['clear_data'] = $this->url->link('tool/clear_data', 'token=' . $this->session->data['token'], 'SSL');
+        $data['file_manager'] = $this->url->link('tool/file_manager', 'token=' . $this->session->data['token'], 'SSL');
+        $data['feed'] = $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL');
+        $data['filter'] = $this->url->link('catalog/filter', 'token=' . $this->session->data['token'], 'SSL');
+        $data['geo_zone'] = $this->url->link('localisation/geo_zone', 'token=' . $this->session->data['token'], 'SSL');
+        $data['information'] = $this->url->link('catalog/information', 'token=' . $this->session->data['token'], 'SSL');
+        $data['installer'] = $this->url->link('extension/installer', 'token=' . $this->session->data['token'], 'SSL');
+        $data['language'] = $this->url->link('localisation/language', 'token=' . $this->session->data['token'], 'SSL');
+        $data['location'] = $this->url->link('localisation/location', 'token=' . $this->session->data['token'], 'SSL');
+        $data['modification'] = $this->url->link('extension/modification', 'token=' . $this->session->data['token'], 'SSL');
+        $data['marketing'] = $this->url->link('marketing/marketing', 'token=' . $this->session->data['token'], 'SSL');
+        $data['marketplace'] = $this->url->link('extension/marketplace', 'token=' . $this->session->data['token'], 'SSL');
+        $data['module'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_delivaries'] = $this->url->link('sale/amitruckdelivaries', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_product_missing'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_product_missing_products'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token=' . $this->session->data['token'], 'SSL');
+        $data['vendor_order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['order_status'] = $this->url->link('localisation/order_status', 'token='.$this->session->data['token'], 'SSL');
-        $data['app_order_status'] = $this->url->link('localisation/app_order_status', 'token='.$this->session->data['token'], 'SSL');
+        $data['vendor_fast_order'] = $this->url->link('sale/fast_order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1&filter_order_day=today', 'SSL');
 
-        $data['app_order_status_mapping'] = $this->url->link('localisation/app_order_status_mapping', 'token='.$this->session->data['token'], 'SSL');
+        $data['fast_order'] = $this->url->link('sale/fast_order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1&filter_order_day=today', 'SSL');
 
-        $data['delivery_statuses'] = $this->url->link('localisation/delivery_statuses', 'token='.$this->session->data['token'], 'SSL');
+        $data['order_status'] = $this->url->link('localisation/order_status', 'token=' . $this->session->data['token'], 'SSL');
+        $data['app_order_status'] = $this->url->link('localisation/app_order_status', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['payment'] = $this->url->link('extension/payment', 'token='.$this->session->data['token'], 'SSL');
-        $data['paypal_search'] = $this->url->link('payment/pp_express/search', 'token='.$this->session->data['token'], 'SSL');
-        $data['product'] = $this->url->link('catalog/product', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_shopper_order'] = $this->url->link('report/shopper_order', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_sale_order'] = $this->url->link('report/sale_order', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_account_manager_sale_order'] = $this->url->link('report/account_manager_sale_order', 'token='.$this->session->data['token'], 'SSL');
-        
-        $data['report_sale_advanced'] = $this->url->link('report/sale_advanced', 'token='.$this->session->data['token'].'&filter_order_status_id=5', 'SSL');
+        $data['app_order_status_mapping'] = $this->url->link('localisation/app_order_status_mapping', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_sale_productmissing'] = $this->url->link('report/sale_productmissing', 'token='.$this->session->data['token'].'&filter_order_status_id=5', 'SSL');
+        $data['delivery_statuses'] = $this->url->link('localisation/delivery_statuses', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_sale_tax'] = $this->url->link('report/sale_tax', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_sale_shipping'] = $this->url->link('report/sale_shipping', 'token='.$this->session->data['token'], 'SSL');
+        $data['payment'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['paypal_search'] = $this->url->link('payment/pp_express/search', 'token=' . $this->session->data['token'], 'SSL');
+        $data['product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_shopper_order'] = $this->url->link('report/shopper_order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_sale_order'] = $this->url->link('report/sale_order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_account_manager_sale_order'] = $this->url->link('report/account_manager_sale_order', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_sale_payment'] = $this->url->link('report/sale_payment', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_sale_advanced'] = $this->url->link('report/sale_advanced', 'token=' . $this->session->data['token'] . '&filter_order_status_id=5', 'SSL');
 
-        $data['report_sale_transaction'] = $this->url->link('report/sale_transaction', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_sale_productmissing'] = $this->url->link('report/sale_productmissing', 'token=' . $this->session->data['token'] . '&filter_order_status_id=5', 'SSL');
 
-        $data['report_sale_return'] = $this->url->link('report/sale_return', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_sale_coupon'] = $this->url->link('report/sale_coupon', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_product_viewed'] = $this->url->link('report/product_viewed', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_product_purchased'] = $this->url->link('report/product_purchased', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_activity'] = $this->url->link('report/customer_activity', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_farmer_activity'] = $this->url->link('report/farmer_activity', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_account_manager_customer_activity'] = $this->url->link('report/account_manager_customer_activity', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_account_manager_customer_online'] = $this->url->link('report/account_manager_customer_online', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_user_activity'] = $this->url->link('report/user_activity', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_online'] = $this->url->link('report/customer_online', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_order'] = $this->url->link('report/customer_order', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_orderplaced'] = $this->url->link('report/customer_orderplaced', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_onboarded'] = $this->url->link('report/customer_onboarded', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_unordered'] = $this->url->link('report/customer_unordered', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_account_manager_customer_order'] = $this->url->link('report/account_manager_customer_order', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_shopper'] = $this->url->link('report/shopper', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_reward'] = $this->url->link('report/customer_reward', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_credit'] = $this->url->link('report/customer_credit', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_statement'] = $this->url->link('report/customer_order/statement', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_boughtproducts'] = $this->url->link('report/customer_boughtproducts', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_order_count'] = $this->url->link('report/customer_order_count', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_inventory_daily_prices'] = $this->url->link('report/inventory_daily_prices', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_sale_tax'] = $this->url->link('report/sale_tax', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_sale_shipping'] = $this->url->link('report/sale_shipping', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_marketing'] = $this->url->link('report/marketing', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_sale_payment'] = $this->url->link('report/sale_payment', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_vendor_commission'] = $this->url->link('report/commission', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_sale_transaction'] = $this->url->link('report/sale_transaction', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['review'] = $this->url->link('catalog/review', 'token='.$this->session->data['token'], 'SSL');
-        $data['return'] = $this->url->link('sale/return', 'token='.$this->session->data['token'], 'SSL');
-        $data['return_action'] = $this->url->link('localisation/return_action', 'token='.$this->session->data['token'], 'SSL');
-        $data['return_reason'] = $this->url->link('localisation/return_reason', 'token='.$this->session->data['token'], 'SSL');
-        $data['return_status'] = $this->url->link('localisation/return_status', 'token='.$this->session->data['token'], 'SSL');
-        $data['shipping'] = $this->url->link('extension/shipping', 'token='.$this->session->data['token'], 'SSL');
-        $data['setting'] = $this->url->link('setting/setting', 'token='.$this->session->data['token'], 'SSL');
-        $data['setting_email'] = $this->url->link('setting/setting/setting_email', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_sale_return'] = $this->url->link('report/sale_return', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_sale_coupon'] = $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_product_viewed'] = $this->url->link('report/product_viewed', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_product_purchased'] = $this->url->link('report/product_purchased', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_activity'] = $this->url->link('report/customer_activity', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_farmer_activity'] = $this->url->link('report/farmer_activity', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_account_manager_customer_activity'] = $this->url->link('report/account_manager_customer_activity', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_account_manager_customer_online'] = $this->url->link('report/account_manager_customer_online', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_user_activity'] = $this->url->link('report/user_activity', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_online'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_order'] = $this->url->link('report/customer_order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_orderplaced'] = $this->url->link('report/customer_orderplaced', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_onboarded'] = $this->url->link('report/customer_onboarded', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_unordered'] = $this->url->link('report/customer_unordered', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_account_manager_customer_order'] = $this->url->link('report/account_manager_customer_order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_shopper'] = $this->url->link('report/shopper', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_reward'] = $this->url->link('report/customer_reward', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_credit'] = $this->url->link('report/customer_credit', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_statement'] = $this->url->link('report/customer_order/statement', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_boughtproducts'] = $this->url->link('report/customer_boughtproducts', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_order_count'] = $this->url->link('report/customer_order_count', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_inventory_daily_prices'] = $this->url->link('report/inventory_daily_prices', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['setting_seo'] = $this->url->link('setting/seo', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_marketing'] = $this->url->link('report/marketing', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['store'] = $this->url->link('setting/store', 'token='.$this->session->data['token'], 'SSL');
-        $data['store_group'] = $this->url->link('setting/store_group', 'token='.$this->session->data['token'], 'SSL');
-        $data['store_type'] = $this->url->link('setting/store_type', 'token='.$this->session->data['token'], 'SSL');
-        $data['testimonial'] = $this->url->link('setting/testimonial', 'token='.$this->session->data['token'], 'SSL');
-        $data['newfeature'] = $this->url->link('setting/newfeature', 'token='.$this->session->data['token'], 'SSL');
-        $data['jobposition'] = $this->url->link('setting/jobposition', 'token='.$this->session->data['token'], 'SSL');
-        $data['stock_status'] = $this->url->link('localisation/stock_status', 'token='.$this->session->data['token'], 'SSL');
-        $data['tax_class'] = $this->url->link('localisation/tax_class', 'token='.$this->session->data['token'], 'SSL');
-        $data['tax_rate'] = $this->url->link('localisation/tax_rate', 'token='.$this->session->data['token'], 'SSL');
-        $data['total'] = $this->url->link('extension/total', 'token='.$this->session->data['token'], 'SSL');
-        $data['upload'] = $this->url->link('tool/upload', 'token='.$this->session->data['token'], 'SSL');
-        $data['vendor'] = $this->url->link('vendor/vendor', 'token='.$this->session->data['token'], 'SSL');
-        $data['vendor_group'] = $this->url->link('vendor/vendor_permission', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_vendor_commission'] = $this->url->link('report/commission', 'token=' . $this->session->data['token'], 'SSL');
+
+        $data['review'] = $this->url->link('catalog/review', 'token=' . $this->session->data['token'], 'SSL');
+        $data['return'] = $this->url->link('sale/return', 'token=' . $this->session->data['token'], 'SSL');
+        $data['return_action'] = $this->url->link('localisation/return_action', 'token=' . $this->session->data['token'], 'SSL');
+        $data['return_reason'] = $this->url->link('localisation/return_reason', 'token=' . $this->session->data['token'], 'SSL');
+        $data['return_status'] = $this->url->link('localisation/return_status', 'token=' . $this->session->data['token'], 'SSL');
+        $data['shipping'] = $this->url->link('extension/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['setting'] = $this->url->link('setting/setting', 'token=' . $this->session->data['token'], 'SSL');
+        $data['setting_email'] = $this->url->link('setting/setting/setting_email', 'token=' . $this->session->data['token'], 'SSL');
+
+        $data['setting_seo'] = $this->url->link('setting/seo', 'token=' . $this->session->data['token'], 'SSL');
+
+        $data['store'] = $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL');
+        $data['store_group'] = $this->url->link('setting/store_group', 'token=' . $this->session->data['token'], 'SSL');
+        $data['store_type'] = $this->url->link('setting/store_type', 'token=' . $this->session->data['token'], 'SSL');
+        $data['testimonial'] = $this->url->link('setting/testimonial', 'token=' . $this->session->data['token'], 'SSL');
+        $data['newfeature'] = $this->url->link('setting/newfeature', 'token=' . $this->session->data['token'], 'SSL');
+        $data['jobposition'] = $this->url->link('setting/jobposition', 'token=' . $this->session->data['token'], 'SSL');
+        $data['stock_status'] = $this->url->link('localisation/stock_status', 'token=' . $this->session->data['token'], 'SSL');
+        $data['tax_class'] = $this->url->link('localisation/tax_class', 'token=' . $this->session->data['token'], 'SSL');
+        $data['tax_rate'] = $this->url->link('localisation/tax_rate', 'token=' . $this->session->data['token'], 'SSL');
+        $data['total'] = $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['upload'] = $this->url->link('tool/upload', 'token=' . $this->session->data['token'], 'SSL');
+        $data['vendor'] = $this->url->link('vendor/vendor', 'token=' . $this->session->data['token'], 'SSL');
+        $data['vendor_group'] = $this->url->link('vendor/vendor_permission', 'token=' . $this->session->data['token'], 'SSL');
 
         //$data['vendor_subaccount_form'] = $this->url->link('vendor/subaccount_form', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['user'] = $this->url->link('user/user', 'token='.$this->session->data['token'], 'SSL');
-        $data['user_group'] = $this->url->link('user/user_permission', 'token='.$this->session->data['token'], 'SSL');
+        $data['user'] = $this->url->link('user/user', 'token=' . $this->session->data['token'], 'SSL');
+        $data['user_group'] = $this->url->link('user/user_permission', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['shopper'] = $this->url->link('shopper/shopper', 'token='.$this->session->data['token'], 'SSL');
-        $data['shopper_group'] = $this->url->link('shopper/shopper_permission', 'token='.$this->session->data['token'], 'SSL');
+        $data['shopper'] = $this->url->link('shopper/shopper', 'token=' . $this->session->data['token'], 'SSL');
+        $data['shopper_group'] = $this->url->link('shopper/shopper_permission', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['voucher'] = $this->url->link('sale/voucher', 'token='.$this->session->data['token'], 'SSL');
-        $data['voucher_theme'] = $this->url->link('sale/voucher_theme', 'token='.$this->session->data['token'], 'SSL');
-        $data['weight_class'] = $this->url->link('localisation/weight_class', 'token='.$this->session->data['token'], 'SSL');
-        $data['length_class'] = $this->url->link('localisation/length_class', 'token='.$this->session->data['token'], 'SSL');
-        $data['city'] = $this->url->link('localisation/city', 'token='.$this->session->data['token'], 'SSL');
-        $data['state'] = $this->url->link('localisation/state', 'token='.$this->session->data['token'], 'SSL');
-        $data['recurring'] = $this->url->link('catalog/recurring', 'token='.$this->session->data['token'], 'SSL');
-        $data['order_recurring'] = $this->url->link('sale/recurring', 'token='.$this->session->data['token'], 'SSL');
+        $data['voucher'] = $this->url->link('sale/voucher', 'token=' . $this->session->data['token'], 'SSL');
+        $data['voucher_theme'] = $this->url->link('sale/voucher_theme', 'token=' . $this->session->data['token'], 'SSL');
+        $data['weight_class'] = $this->url->link('localisation/weight_class', 'token=' . $this->session->data['token'], 'SSL');
+        $data['length_class'] = $this->url->link('localisation/length_class', 'token=' . $this->session->data['token'], 'SSL');
+        $data['city'] = $this->url->link('localisation/city', 'token=' . $this->session->data['token'], 'SSL');
+        $data['state'] = $this->url->link('localisation/state', 'token=' . $this->session->data['token'], 'SSL');
+        $data['region'] = $this->url->link('localisation/region', 'token=' . $this->session->data['token'], 'SSL');
+        $data['recurring'] = $this->url->link('catalog/recurring', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_recurring'] = $this->url->link('sale/recurring', 'token=' . $this->session->data['token'], 'SSL');
 
         //Appearance
-        $data['customizer'] = $this->url->link('appearance/customizer', 'token='.$this->session->data['token'], 'SSL');
-        $data['layout'] = $this->url->link('appearance/layout', 'token='.$this->session->data['token'], 'SSL');
-        $data['menu'] = $this->url->link('appearance/menu', 'token='.$this->session->data['token'], 'SSL');
+        $data['customizer'] = $this->url->link('appearance/customizer', 'token=' . $this->session->data['token'], 'SSL');
+        $data['layout'] = $this->url->link('appearance/layout', 'token=' . $this->session->data['token'], 'SSL');
+        $data['menu'] = $this->url->link('appearance/menu', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_vendor_order'] = $this->url->link('report/vendor_order', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_vendor_order'] = $this->url->link('report/vendor_order', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_vendor_orders'] = $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_vendor_orders'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_vendor_returns'] = $this->url->link('report/vendor_returns', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_vendor_returns'] = $this->url->link('report/vendor_returns', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_combined_report'] = $this->url->link('report/combined_report', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_combined_report'] = $this->url->link('report/combined_report', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_store_sales'] = $this->url->link('report/store_sales', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_vendor'] = $this->url->link('report/vendor', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_store_sales'] = $this->url->link('report/store_sales', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_vendor'] = $this->url->link('report/vendor', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['vendor_product'] = $this->url->link('catalog/vendor_product', 'token='.$this->session->data['token'], 'SSL');
+        $data['vendor_product'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['inventory_management'] = $this->url->link('catalog/vendor_product/inventory', 'token='.$this->session->data['token'], 'SSL');
-        $data['inventory_management_update'] = $this->url->link('catalog/vendor_product/Manageinventory', 'token='.$this->session->data['token'], 'SSL');
-        $data['inventory_management_update_history'] = $this->url->link('catalog/vendor_product/InventoryHistory', 'token='.$this->session->data['token'], 'SSL');
-        $data['inventory_management_price'] = $this->url->link('catalog/vendor_product/InventoryPriceHistory', 'token='.$this->session->data['token'], 'SSL');
-        
-        $data['category_prices'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token='.$this->session->data['token'], 'SSL');
+        $data['inventory_management'] = $this->url->link('catalog/vendor_product/inventory', 'token=' . $this->session->data['token'], 'SSL');
+        $data['inventory_management_update'] = $this->url->link('catalog/vendor_product/Manageinventory', 'token=' . $this->session->data['token'], 'SSL');
+        $data['inventory_management_update_history'] = $this->url->link('catalog/vendor_product/InventoryHistory', 'token=' . $this->session->data['token'], 'SSL');
+        $data['inventory_management_price'] = $this->url->link('catalog/vendor_product/InventoryPriceHistory', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['transaction'] = $this->url->link('sale/transactions', 'token='.$this->session->data['token'], 'SSL');
-        $data['order_receivables'] = $this->url->link('sale/order_receivables', 'token='.$this->session->data['token'], 'SSL');
+        $data['category_prices'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['customer_wallet'] = $this->url->link('wallets/customer_wallet', 'token='.$this->session->data['token'], 'SSL');
-        $data['vendor_wallet'] = $this->url->link('wallets/vendor_wallet', 'token='.$this->session->data['token'], 'SSL');
-        $data['admin_wallet'] = $this->url->link('wallets/admin_wallet', 'token='.$this->session->data['token'], 'SSL');
-        $data['drivers_list'] = $this->url->link('drivers/drivers_list', 'token='.$this->session->data['token'], 'SSL');
-        $data['vehicles_list'] = $this->url->link('vehicles/vehicles_list', 'token='.$this->session->data['token'], 'SSL');
-        $data['executives_list'] = $this->url->link('executives/executives_list', 'token='.$this->session->data['token'], 'SSL');
-        $data['orderprocessinggroup_list'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token='.$this->session->data['token'], 'SSL');
-        $data['orderprocessor_list'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token='.$this->session->data['token'], 'SSL');
-        
+        $data['transaction'] = $this->url->link('sale/transactions', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_receivables'] = $this->url->link('sale/order_receivables', 'token=' . $this->session->data['token'], 'SSL');
+
+        $data['customer_wallet'] = $this->url->link('wallets/customer_wallet', 'token=' . $this->session->data['token'], 'SSL');
+        $data['vendor_wallet'] = $this->url->link('wallets/vendor_wallet', 'token=' . $this->session->data['token'], 'SSL');
+        $data['admin_wallet'] = $this->url->link('wallets/admin_wallet', 'token=' . $this->session->data['token'], 'SSL');
+        $data['drivers_list'] = $this->url->link('drivers/drivers_list', 'token=' . $this->session->data['token'], 'SSL');
+        $data['vehicles_list'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'], 'SSL');
+        $data['executives_list'] = $this->url->link('executives/executives_list', 'token=' . $this->session->data['token'], 'SSL');
+        $data['orderprocessinggroup_list'] = $this->url->link('orderprocessinggroup/orderprocessinggroup_list', 'token=' . $this->session->data['token'], 'SSL');
+        $data['orderprocessor_list'] = $this->url->link('orderprocessinggroup/orderprocessor', 'token=' . $this->session->data['token'], 'SSL');
+
         //blog
         $data['preturn_simple_blog_author'] = $this->user->hasPermission('access', 'simple_blog/author');
         $data['preturn_simple_blog_category'] = $this->user->hasPermission('access', 'simple_blog/category');
@@ -389,6 +388,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_return_reason'] = $this->user->hasPermission('access', 'localisation/return_reason');
         $data['preturn_city'] = $this->user->hasPermission('access', 'localisation/city');
         $data['preturn_state'] = $this->user->hasPermission('access', 'localisation/state');
+        $data['preturn_region'] = $this->user->hasPermission('access', 'localisation/region');
         $data['preturn_tax_class'] = $this->user->hasPermission('access', 'localisation/tax_class');
 
         //$data['preturn_tax_class'] = $this->user->hasPermission('access', 'localisation/tax_class');
@@ -450,7 +450,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_customer_order_pattern'] = $this->user->hasPermission('access', 'report/customer_order_pattern');
         $data['preturn_customer_order_count'] = $this->user->hasPermission('access', 'report/customer_order_count');
         $data['preturn_inventory_daily_prices'] = $this->user->hasPermission('access', 'report/inventory_daily_prices');
-        
+
         $data['preturn_customer_reward'] = $this->user->hasPermission('access', 'report/customer_reward');
         $data['preturn_customer_credit'] = $this->user->hasPermission('access', 'report/customer_credit');
         $data['preturn_marketing'] = $this->user->hasPermission('access', 'report/marketing');
@@ -461,7 +461,7 @@ class ControllerCommonMenu extends Controller
         $data['preturn_customer_wallet'] = $this->user->hasPermission('access', 'wallets/customer_wallet');
         $data['preturn_vendor_wallet'] = $this->user->hasPermission('access', 'wallets/vendor_wallet');
         $data['preturn_admin_wallet'] = $this->user->hasPermission('access', 'wallets/admin_wallet');
-        
+
         $data['preturn_drivers'] = $this->user->hasPermission('access', 'drivers/drivers_list');
         $data['preturn_vehicles'] = $this->user->hasPermission('access', 'vehicles/vehicles_list');
         $data['preturn_executives'] = $this->user->hasPermission('access', 'executives/executives_list');
@@ -470,8 +470,7 @@ class ControllerCommonMenu extends Controller
         return $this->load->view('common/menu.tpl', $data);
     }
 
-    private function vendor_menu()
-    {
+    private function vendor_menu() {
         $this->load->model('account/settings');
         $vendor_info = $this->model_account_settings->getUser($this->user->getId());
 
@@ -485,93 +484,93 @@ class ControllerCommonMenu extends Controller
 
         $data = $this->language->all();
 
-        $data['link_vendor_info'] = $this->url->link('vendor/vendor/info', 'token='.$this->session->data['token'].'&vendor_id='.$vendor_id, 'SSL');
+        $data['link_vendor_info'] = $this->url->link('vendor/vendor/info', 'token=' . $this->session->data['token'] . '&vendor_id=' . $vendor_id, 'SSL');
 
-        $data['acc_profile'] = $this->url->link('account/profile', 'token='.$this->session->data['token'], 'SSL');
-        $data['acc_settings'] = $this->url->link('account/settings', 'token='.$this->session->data['token'], 'SSL');
-        $data['acc_password'] = $this->url->link('account/settings/password', 'token='.$this->session->data['token'], 'SSL');
-        $data['acc_packages'] = $this->url->link('account/packages', 'token='.$this->session->data['token'], 'SSL');
+        $data['acc_profile'] = $this->url->link('account/profile', 'token=' . $this->session->data['token'], 'SSL');
+        $data['acc_settings'] = $this->url->link('account/settings', 'token=' . $this->session->data['token'], 'SSL');
+        $data['acc_password'] = $this->url->link('account/settings/password', 'token=' . $this->session->data['token'], 'SSL');
+        $data['acc_packages'] = $this->url->link('account/packages', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['general_products'] = $this->url->link('catalog/general', 'token='.$this->session->data['token'], 'SSL');
-        $data['dashboard'] = $this->url->link('common/dashboard', 'token='.$this->session->data['token'], 'SSL');
+        $data['general_products'] = $this->url->link('catalog/general', 'token=' . $this->session->data['token'], 'SSL');
+        $data['dashboard'] = $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_income'] = $this->url->link('report/income', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_income'] = $this->url->link('report/income', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['error_log'] = $this->url->link('tool/error_log', 'token='.$this->session->data['token'], 'SSL');
-        $data['export_import'] = $this->url->link('tool/export_import', 'token='.$this->session->data['token'], 'SSL');
+        $data['error_log'] = $this->url->link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL');
+        $data['export_import'] = $this->url->link('tool/export_import', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['clear_data'] = $this->url->link('tool/clear_data', 'token='.$this->session->data['token'], 'SSL');
+        $data['clear_data'] = $this->url->link('tool/clear_data', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['file_manager'] = $this->url->link('tool/file_manager', 'token='.$this->session->data['token'], 'SSL');
-        $data['order'] = $this->url->link('sale/order', 'token='.$this->session->data['token'], 'SSL');
-        $data['order_delivaries'] = $this->url->link('sale/amitruckdelivaries', 'token='.$this->session->data['token'], 'SSL');
-        $data['order_product_missing'] = $this->url->link('sale/order_product_missing', 'token='.$this->session->data['token'], 'SSL');
-        $data['order_product_missing_products'] = $this->url->link('sale/order_product_missing_products', 'token='.$this->session->data['token'], 'SSL');
-        $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token='.$this->session->data['token'], 'SSL');
+        $data['file_manager'] = $this->url->link('tool/file_manager', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_delivaries'] = $this->url->link('sale/amitruckdelivaries', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_product_missing'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_product_missing_products'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['product'] = $this->url->link('catalog/vendor_product', 'token='.$this->session->data['token'], 'SSL');
-        $data['fast_order'] = $this->url->link('sale/fast_order', 'token='.$this->session->data['token'].'&filter_order_status=2,15,18,3,5&filter_order_day=today', 'SSL');
+        $data['product'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'], 'SSL');
+        $data['fast_order'] = $this->url->link('sale/fast_order', 'token=' . $this->session->data['token'] . '&filter_order_status=2,15,18,3,5&filter_order_day=today', 'SSL');
 
-        $data['report_sale_order'] = $this->url->link('report/sale_order', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_account_manager_sale_order'] = $this->url->link('report/account_manager_sale_order', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_sale_order'] = $this->url->link('report/sale_order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_account_manager_sale_order'] = $this->url->link('report/account_manager_sale_order', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_sale_advanced'] = $this->url->link('report/sale_advanced', 'token='.$this->session->data['token'].'&filter_order_status_id=5', 'SSL');
+        $data['report_sale_advanced'] = $this->url->link('report/sale_advanced', 'token=' . $this->session->data['token'] . '&filter_order_status_id=5', 'SSL');
 
-        $data['report_sale_productmissing'] = $this->url->link('report/sale_productmissing', 'token='.$this->session->data['token'].'&filter_order_status_id=5', 'SSL');
+        $data['report_sale_productmissing'] = $this->url->link('report/sale_productmissing', 'token=' . $this->session->data['token'] . '&filter_order_status_id=5', 'SSL');
 
-        $data['report_sale_tax'] = $this->url->link('report/sale_tax', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_sale_shipping'] = $this->url->link('report/sale_shipping', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_sale_tax'] = $this->url->link('report/sale_tax', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_sale_shipping'] = $this->url->link('report/sale_shipping', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_sale_payment'] = $this->url->link('report/sale_payment', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_sale_payment'] = $this->url->link('report/sale_payment', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_sale_transaction'] = $this->url->link('report/sale_transaction', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_sale_transaction'] = $this->url->link('report/sale_transaction', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_sale_return'] = $this->url->link('report/sale_return', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_sale_coupon'] = $this->url->link('report/sale_coupon', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_product_viewed'] = $this->url->link('report/product_viewed', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_product_purchased'] = $this->url->link('report/product_purchased', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_activity'] = $this->url->link('report/customer_activity', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_farmer_activity'] = $this->url->link('report/farmer_activity', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_account_manager_customer_activity'] = $this->url->link('report/account_manager_customer_activity', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_account_manager_customer_online'] = $this->url->link('report/account_manager_customer_online', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_user_activity'] = $this->url->link('report/user_activity', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_online'] = $this->url->link('report/customer_online', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_order'] = $this->url->link('report/customer_order', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_orderplaced'] = $this->url->link('report/customer_orderplaced', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_onboarded'] = $this->url->link('report/customer_onboarded', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_unordered'] = $this->url->link('report/customer_unordered', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_account_manager_customer_order'] = $this->url->link('report/account_manager_customer_order', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_reward'] = $this->url->link('report/customer_reward', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_credit'] = $this->url->link('report/customer_credit', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_statement'] = $this->url->link('report/customer_order/statement', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_boughtproducts'] = $this->url->link('report/customer_boughtproducts', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_order_count'] = $this->url->link('report/customer_order_count', 'token='.$this->session->data['token'], 'SSL');
-        $data['report_customer_inventory_daily_prices'] = $this->url->link('report/inventory_daily_prices', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_sale_return'] = $this->url->link('report/sale_return', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_sale_coupon'] = $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_product_viewed'] = $this->url->link('report/product_viewed', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_product_purchased'] = $this->url->link('report/product_purchased', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_activity'] = $this->url->link('report/customer_activity', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_farmer_activity'] = $this->url->link('report/farmer_activity', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_account_manager_customer_activity'] = $this->url->link('report/account_manager_customer_activity', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_account_manager_customer_online'] = $this->url->link('report/account_manager_customer_online', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_user_activity'] = $this->url->link('report/user_activity', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_online'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_order'] = $this->url->link('report/customer_order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_orderplaced'] = $this->url->link('report/customer_orderplaced', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_onboarded'] = $this->url->link('report/customer_onboarded', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_unordered'] = $this->url->link('report/customer_unordered', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_account_manager_customer_order'] = $this->url->link('report/account_manager_customer_order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_reward'] = $this->url->link('report/customer_reward', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_credit'] = $this->url->link('report/customer_credit', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_statement'] = $this->url->link('report/customer_order/statement', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_boughtproducts'] = $this->url->link('report/customer_boughtproducts', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_order_count'] = $this->url->link('report/customer_order_count', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_inventory_daily_prices'] = $this->url->link('report/inventory_daily_prices', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_marketing'] = $this->url->link('report/marketing', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_marketing'] = $this->url->link('report/marketing', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_commission'] = $this->url->link('report/vendor_commission', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_commission'] = $this->url->link('report/vendor_commission', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['return'] = $this->url->link('sale/return', 'token='.$this->session->data['token'], 'SSL');
+        $data['return'] = $this->url->link('sale/return', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['setting'] = $this->url->link('setting/setting', 'token='.$this->session->data['token'], 'SSL');
-        $data['store'] = $this->url->link('setting/store', 'token='.$this->session->data['token'], 'SSL');
-        $data['store_group'] = $this->url->link('setting/store_group', 'token='.$this->session->data['token'], 'SSL');
-        $data['store_type'] = $this->url->link('setting/store_type', 'token='.$this->session->data['token'], 'SSL');
-        $data['upload'] = $this->url->link('tool/upload', 'token='.$this->session->data['token'], 'SSL');
+        $data['setting'] = $this->url->link('setting/setting', 'token=' . $this->session->data['token'], 'SSL');
+        $data['store'] = $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL');
+        $data['store_group'] = $this->url->link('setting/store_group', 'token=' . $this->session->data['token'], 'SSL');
+        $data['store_type'] = $this->url->link('setting/store_type', 'token=' . $this->session->data['token'], 'SSL');
+        $data['upload'] = $this->url->link('tool/upload', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_vendor_order'] = $this->url->link('report/vendor_order', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_vendor_order'] = $this->url->link('report/vendor_order', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_vendor_orders'] = $this->url->link('report/vendor_orders', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_vendor_orders'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_vendor_returns'] = $this->url->link('report/vendor_returns', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_vendor_returns'] = $this->url->link('report/vendor_returns', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_combined_report'] = $this->url->link('report/combined_report', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_combined_report'] = $this->url->link('report/combined_report', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_store_sales'] = $this->url->link('report/store_sales', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_store_sales'] = $this->url->link('report/store_sales', 'token=' . $this->session->data['token'], 'SSL');
 
-        $data['report_vendor'] = $this->url->link('report/vendor', 'token='.$this->session->data['token'], 'SSL');
+        $data['report_vendor'] = $this->url->link('report/vendor', 'token=' . $this->session->data['token'], 'SSL');
 
         //account
         $data['preturn_acc_profile'] = $this->user->hasPermission('access', 'account/profile');
@@ -654,4 +653,5 @@ class ControllerCommonMenu extends Controller
 
         return $this->load->view('common/vendor_menu.tpl', $data);
     }
+
 }

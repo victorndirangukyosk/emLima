@@ -698,6 +698,10 @@
             <?php if($preturn_state) { ?>
             <li><a href="<?php echo $state; ?>"><?php echo $text_state; ?></a></li>
             <?php } ?>
+            
+            <?php if($preturn_region) { ?>
+            <li><a href="<?php echo $region; ?>">Region</a></li>
+            <?php } ?>
 
             <?php if( $preturn_tax_rate != false || $preturn_tax_class != false ) { ?>
             <li><a class="parent"><?php echo $text_tax; ?></a>
