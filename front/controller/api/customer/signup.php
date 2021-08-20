@@ -424,7 +424,7 @@ class ControllerApiCustomerSignup extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getSignupOtp()
+    public function addResendSignupOtp()
     {
         //echo "<pre>";print_r( "addLoginByOtp");die;
         $json = [];
@@ -432,6 +432,7 @@ class ControllerApiCustomerSignup extends Controller
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
+        $json['error'] = "";
 
         $this->load->language('api/login');
 
@@ -442,13 +443,14 @@ class ControllerApiCustomerSignup extends Controller
         // $api_info = $this->model_account_api->register_send_otp();
         $api_info = $this->model_account_api->resend_register_otp();
 
-        //echo "<pre>";print_r($api_info);die;
+        // echo "<pre>";print_r($api_info);die;
         if ($api_info['status']) {
             $json['message'][] = ['type' => '', 'body' => $api_info['success_message']];
         } else {
-            $json['status'] = 10032; //form invalid
+            $json['status'] = 400; //form invalid
 
-            $json['message'] = $api_info['errors'];
+            $json['error'] =  $api_info['warning'];
+
 
             http_response_code(400);
         }
