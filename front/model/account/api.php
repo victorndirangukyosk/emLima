@@ -129,7 +129,7 @@ class ModelAccountApi extends Model
                         $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
                     }
                 }
-                
+
                 if ($this->emailtemplate->getEmailEnabled('LoginOTP', 'loginotp_2')) {
                 //if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('LoginOTP', 'loginotp_2')) {
                     $subject = $this->emailtemplate->getSubject('LoginOTP', 'loginotp_2', $data);
@@ -334,7 +334,7 @@ class ModelAccountApi extends Model
             $this->error['telephone_exists'] = $this->language->get('error_telephone_exists');
         }
 
- 
+
 
         if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 6) || (utf8_strlen($this->request->post['password']) > 20)) {
             $this->error['password'] = $this->language->get('error_password');
@@ -637,17 +637,17 @@ class ModelAccountApi extends Model
                 $data['customer_id'] = $customer_info['customer_id'];
                 //save in otp table
                 $this->model_account_customer->saveOTP($customer_info['customer_id'], $data['otp'], 'newdevicelogin');
-                try{      
-                   
+                try{
+
                         //the Same login verify OTP mail is being used.
                         $log = new Log('error.log');
                     if ($this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
                     //if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
-                        
+
                         $subject = $this->emailtemplate->getSubject('NewDeviceLogin', 'NewDeviceLogin_1', $data);
-                        
+
                         $message = $this->emailtemplate->getMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
-                        
+
                         $mail = new mail($this->config->get('config_mail'));
                         $mail->setTo($customer_info['email']);
                         $mail->setFrom($this->config->get('config_from_email'));
@@ -726,11 +726,11 @@ class ModelAccountApi extends Model
         return $data;
     }
     public function addCustomerDevice($customer_id, $device_id)
-    {        
+    {
         $this->db->query('INSERT INTO '.DB_PREFIX."customer_devices SET customer_id = '".(int) $customer_id."', device_id = '".$this->db->escape($device_id)."', date_added = NOW()");
     }
 
-   
+
     public function register_user()
     {
         $data['status'] = false;
@@ -747,7 +747,7 @@ class ModelAccountApi extends Model
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->signup_validate()) {
             $this->load->model('account/customer');
 
-            if (false == strpos($this->request->post['phone'], '#') || isset($this->request->post['phone'])) {                  
+            if (false == strpos($this->request->post['phone'], '#') || isset($this->request->post['phone'])) {
                   {
                     if (isset($date)) {
                         $date = DateTime::createFromFormat('d/m/Y', $date);
@@ -770,11 +770,11 @@ class ModelAccountApi extends Model
 
                         //Mail & SMS sending region
                       #region SMS and mail sending
-                        
+
                         $data['username'] = $this->request->post['firstname'];
                         $data['otp'] = mt_rand(1000, 9999);
-        
-        
+
+
                         //echo "<pre>";print_r($sms_message);die;
                         // if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
                            try{
@@ -787,26 +787,26 @@ class ModelAccountApi extends Model
                            }
                            catch(exception $ex)
                            {
-                            $log->write('error sending OTP to phone number'.$ex); 
+                            $log->write('error sending OTP to phone number'.$ex);
                            }
-                           
-                           
+
+
                         // }
 
                         $data['status'] = true;
                         //save in otp table
                         $this->model_account_customer->saveOTP($this->request->post['phone'], $data['otp'], 'register');
                         $data['text_verify_otp'] = $this->language->get('text_verify_otp');
-    
+
                         // $data['success_message'] = $this->language->get('text_otp_sent').' '.$this->request->post['phone'];
                         $data['success_message'] = $this->language->get('text_otp_sent');
-        
+
                          if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
-                           
-                           try{ 
+
+                           try{
                                $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
                             $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
-        
+
                             $mail = new mail($this->config->get('config_mail'));
                             $mail->setTo($this->request->post['email']);
                             $mail->setFrom($this->config->get('config_from_email'));
@@ -817,11 +817,11 @@ class ModelAccountApi extends Model
                            }
                            catch(exception $ex)
                            {
-                            $log->write('OTP send to Email erroe'.$ex); 
+                            $log->write('OTP send to Email erroe'.$ex);
 
                            }
                          }
-                     #endregion  
+                     #endregion
                     // $logged_in = $this->customer->loginByPhone($customer_id);
                     // unset($this->session->data['guest']);
                     // Add to activity log
@@ -939,31 +939,41 @@ class ModelAccountApi extends Model
       public function resend_register_otp()
     {
         $data['status'] = false;
+        $data['warning'] = "";
         $this->load->language('account/login');
         $this->load->language('account/register');
         $this->load->language('api/general');
         $this->load->model('account/customer');
         $log = new Log('error.log');
-        $this->request->get['telephone'] = preg_replace('/[^0-9]/', '', $this->request->post['telephone']);
- 
-        //echo "<pre>";print_r($this->request->get);die;
-        if (('GET' == $this->request->server['REQUEST_METHOD']) ) {
-            $this->load->model('account/customer');
+        $this->request->post['telephone'] = preg_replace('/[^0-9]/', '', $this->request->post['telephone']);
 
-            if (false == strpos($this->request->get['telephone'], '#') || isset($this->request->get['telephone'])) {                  
-                  {
-                       
+        if (('POST' == $this->request->server['REQUEST_METHOD']) ) {
+            $this->load->model('account/customer');
+            if(!isset($this->request->post['telephone']) ||  !isset($this->request->post['firstname'])   || !isset($this->request->post['email']))
+            {
+                //  echo "<pre>";print_r("fsd");die;
+                $data['status'] = false;
+                $data['warning'] = "Required params missing";
+                
+            }
+
+    else{
+
+            if (false == strpos($this->request->post['telephone'], '#') || isset($this->request->post['telephone'])) {
+
+                 
                         //Mail & SMS sending region
                       #region SMS and mail sending
-                        
-                        $data['username'] = $this->request->get['firstname'];
+
+                        $data['username'] = $this->request->post['firstname'];
                         // $data['otp'] = mt_rand(1000, 9999);
                         $data['otp'] = $this->model_account_customer->getRegisterOTP($this->request->get['telephone'], 'register');
-        
-                        if(isset($data['otp']))
+                        //  echo "<pre>";print_r($data['otp']);die;
+
+                        if($data['otp']!=null)
                         {
 
-                      
+
                         //echo "<pre>";print_r($sms_message);die;
                         // if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
                            try{
@@ -976,26 +986,26 @@ class ModelAccountApi extends Model
                            }
                            catch(exception $ex)
                            {
-                            $log->write('error sending OTP to phone number'.$ex); 
+                            $log->write('error sending OTP to phone number'.$ex);
                            }
-                           
-                           
+
+
                         // }
 
                         $data['status'] = true;
                           $data['text_verify_otp'] = $this->language->get('text_verify_otp');
-    
+
                         // $data['success_message'] = $this->language->get('text_otp_sent').' '.$this->request->post['phone'];
                         $data['success_message'] = $this->language->get('text_otp_sent');
-        
+
                          if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
-                           
-                           try{ 
+
+                           try{
                                $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
                             $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
-        
+
                             $mail = new mail($this->config->get('config_mail'));
-                            $mail->setTo($this->request->post['email']);
+                            $mail->setTo($this->request->get['email']);
                             $mail->setFrom($this->config->get('config_from_email'));
                             $mail->setSubject($subject);
                             $mail->setSender($this->config->get('config_name'));
@@ -1004,28 +1014,35 @@ class ModelAccountApi extends Model
                            }
                            catch(exception $ex)
                            {
-                            $log->write('OTP send to Email erroe'.$ex); 
+                            $log->write('OTP send to Email erroe'.$ex);
 
                            }
                          }
-                     #endregion  
+                     #endregion
                      $data['status'] = true;
                         }
                         else{
+
+                        // echo "<pre>";print_r("sdasd");die;
+
                             $data['status'] = false;
-                            $data['warning'] = "Please register again";
+                            $data['warning'] = "Please register again.OTP not available";
                         }
-                     
-                   
- 
+
+
+
                 }
-            } else {
-                // enter valid number throw error
-                $data['status'] = false;
-                //$data['error_warning'] = $this->language->get('error_invalid_otp');
-                $data['warning'] = $this->language->get('error_telephone');
-            }
+                else {
+                    // enter valid number throw error
+                    $data['status'] = false;
+                    //$data['error_warning'] = $this->language->get('error_invalid_otp');
+                    $data['warning'] = $this->language->get('error_telephone');
+                    // $data['warning'] = "sda";
+                }
+
+
         }
+    }
 
         foreach ($this->error as $key => $value) {
             $data['errors'][] = ['type' => $key, 'body' => $value];
@@ -1071,7 +1088,7 @@ class ModelAccountApi extends Model
 
                         setcookie('referral', null, time() - 3600, '/');
                         //unset($_COOKIE['referral']);
-                    } 
+                    }
                     //$this->request->post['password'] = mt_rand(1000,9999);
                     // echo "<pre>";print_r($this->request->post);die;
                     // $accountmanagerid = NULL;
@@ -1079,7 +1096,7 @@ class ModelAccountApi extends Model
                     // $log->write('accountmanagerid from API');
                     // $log->write($accountmanagerid);
                     // $customer_id = $this->model_account_customer->addCustomer($this->request->post,true);
-                    
+
                     //update status and get customerid
                     $customer_id = $this->model_account_customer->updateCustomerStatus($this->request->post['email']);
 
@@ -1111,7 +1128,7 @@ class ModelAccountApi extends Model
                     $data['text_new_signup_reward'] = $this->language->get('text_new_signup_reward');
                     $data['text_new_signup_credit'] = $this->language->get('text_new_signup_credit');
 
-                    $data['message'] = $this->language->get('verify_mail_sent');                   
+                    $data['message'] = $this->language->get('verify_mail_sent');
 
                     // delete otp
                     $this->model_account_customer->deleteOTP($this->request->post['phone'], $this->request->post['signup_otp'], 'register');
