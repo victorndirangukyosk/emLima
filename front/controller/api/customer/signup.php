@@ -360,7 +360,7 @@ class ControllerApiCustomerSignup extends Controller
         // $api_info = $this->model_account_api->register_verify_otp();
         $api_info = $this->model_account_api->register_verify_user_otp();
 
-        //echo "<pre>";print_r($api_info);die;
+        // echo "<pre>";print_r($api_info);die;
         if ($api_info['status']) {
             $customer_id = $api_info['customer_id'];
             $tokenId = base64_encode(mcrypt_create_iv(32));
@@ -413,7 +413,7 @@ class ControllerApiCustomerSignup extends Controller
 
             $json['message'][] = ['type' => '', 'body' => $api_info['success_message']];
         } else {
-            $json['status'] = 10032; //form invalid
+            $json['status'] = 401; //form invalid
 
             $json['message'] = $api_info['errors'];
 
