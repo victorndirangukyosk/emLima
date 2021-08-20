@@ -786,8 +786,8 @@ class ControllerProductProduct extends Controller
         $this->load->model('assets/product');
 
         $product_info = $this->model_assets_product->getProductForPopup($product_store_id, false, $store_id);
-        $log = new Log('error.log');
-        $log->write($product_info);
+        /*$log = new Log('error.log');
+        $log->write($product_info);*/
 
         //echo "<pre>";print_r($product_info);die;
         $data['text_unit'] = $this->language->get('text_unit');
@@ -955,9 +955,9 @@ class ControllerProductProduct extends Controller
             ];
             
             $log = new Log('error.log');
-            /*$log->write('product popup');
+            $log->write('product popup');
             $log->write($data['product']);
-            $log->write('product popup');*/
+            $log->write('product popup');
             //echo '<pre>';print_r( $data['product']);exit;
             if (isset($this->session->data['cart'][$key])) {
                 $data['product']['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
