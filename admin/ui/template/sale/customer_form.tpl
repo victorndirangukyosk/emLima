@@ -700,8 +700,8 @@
             </tr>
             </thead>
             <tbody>
-            <?php if(count($customer_otp_list)){?>
-            <?php foreach($customer_otp_list as $otp){?>
+            <?php if(count($customer_otp_list)) { ?>
+            <?php foreach($customer_otp_list as $otp) { ?>
             <tr>
             <td><?php echo $firstname.' '.$lastname; ?></td>
             <td><?php echo $otp['otp'];?></td>
@@ -710,7 +710,19 @@
             <td><?php echo $otp['updated_at']; ?></td>
             </tr>
             <?php } ?>
-            <?php }else{ ?>
+            <?php } ?>
+            <?php if(count($customer_otp_list_phone)) { ?>
+            <?php foreach($customer_otp_list_phone as $otp_phone) { ?>
+            <tr>
+            <td><?php echo $firstname.' '.$lastname; ?></td>
+            <td><?php echo $otp_phone['otp'];?></td>
+            <td><?php echo $otp_phone['type'];?></td>
+            <td><?php echo $otp_phone['created_at'];?></td>
+            <td><?php echo $otp_phone['updated_at']; ?></td>
+            </tr>
+            <?php } ?>
+            <?php } ?>
+            <?php if(count($customer_otp_list) == 0 && count($customer_otp_list_phone) == 0) { ?>
             <tr style="text-align:center">
               <td colspan="5">No OTP Found</td>
             </tr>
