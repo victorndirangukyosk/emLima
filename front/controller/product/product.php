@@ -786,6 +786,8 @@ class ControllerProductProduct extends Controller
         $this->load->model('assets/product');
 
         $product_info = $this->model_assets_product->getProductForPopup($product_store_id, false, $store_id);
+        $log = new Log('error.log');
+        $log->write($product_info);
 
         //echo "<pre>";print_r($product_info);die;
         $data['text_unit'] = $this->language->get('text_unit');
