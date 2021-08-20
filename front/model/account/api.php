@@ -935,6 +935,105 @@ class ModelAccountApi extends Model
         return $data;
     }
 
+
+      public function resend_register_otp()
+    {
+        $data['status'] = false;
+        $this->load->language('account/login');
+        $this->load->language('account/register');
+        $this->load->language('api/general');
+        $this->load->model('account/customer');
+        $log = new Log('error.log');
+        $this->request->get['telephone'] = preg_replace('/[^0-9]/', '', $this->request->post['telephone']);
+ 
+        //echo "<pre>";print_r($this->request->get);die;
+        if (('GET' == $this->request->server['REQUEST_METHOD']) ) {
+            $this->load->model('account/customer');
+
+            if (false == strpos($this->request->get['telephone'], '#') || isset($this->request->get['telephone'])) {                  
+                  {
+                       
+                        //Mail & SMS sending region
+                      #region SMS and mail sending
+                        
+                        $data['username'] = $this->request->get['firstname'];
+                        // $data['otp'] = mt_rand(1000, 9999);
+                        $data['otp'] = $this->model_account_customer->getRegisterOTP($this->request->get['telephone'], 'register');
+        
+                        if(isset($data['otp']))
+                        {
+
+                      
+                        //echo "<pre>";print_r($sms_message);die;
+                        // if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
+                           try{
+                        $sms_message = $this->emailtemplate->getSmsMessage('registerOTP', 'registerotp_2', $data);
+
+                            $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
+                            $log->write('OTP send to phone number '.$this->request->post['phone']);
+                            $log->write('OTP send to phone number '.$sms_message);
+                            $log->write('OTP send to phone number '.$ret);
+                           }
+                           catch(exception $ex)
+                           {
+                            $log->write('error sending OTP to phone number'.$ex); 
+                           }
+                           
+                           
+                        // }
+
+                        $data['status'] = true;
+                          $data['text_verify_otp'] = $this->language->get('text_verify_otp');
+    
+                        // $data['success_message'] = $this->language->get('text_otp_sent').' '.$this->request->post['phone'];
+                        $data['success_message'] = $this->language->get('text_otp_sent');
+        
+                         if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
+                           
+                           try{ 
+                               $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
+                            $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
+        
+                            $mail = new mail($this->config->get('config_mail'));
+                            $mail->setTo($this->request->post['email']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSubject($subject);
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setHtml($message);
+                            $mail->send();
+                           }
+                           catch(exception $ex)
+                           {
+                            $log->write('OTP send to Email erroe'.$ex); 
+
+                           }
+                         }
+                     #endregion  
+                     $data['status'] = true;
+                        }
+                        else{
+                            $data['status'] = false;
+                            $data['warning'] = "Please register again";
+                        }
+                     
+                   
+ 
+                }
+            } else {
+                // enter valid number throw error
+                $data['status'] = false;
+                //$data['error_warning'] = $this->language->get('error_invalid_otp');
+                $data['warning'] = $this->language->get('error_telephone');
+            }
+        }
+
+        foreach ($this->error as $key => $value) {
+            $data['errors'][] = ['type' => $key, 'body' => $value];
+        }
+
+        return $data;
+    }
+
     public function register_verify_user_otp()
     {
         $data['status'] = false;
