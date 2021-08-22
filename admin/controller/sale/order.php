@@ -8758,11 +8758,17 @@ class ControllerSaleOrder extends Controller {
             $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
             $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
             $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id);
-            if ($delivery_charge > 0)
+            if ($delivery_charge > 0) {
                 $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
+            }
         }
-
+        try {
         $this->SendMailToCustomerWithDriverDetails($order_id);
+        } catch(exception $ex) {
+        $log = new Log('error.log');
+        $log->write('Order History Mail Error');
+        $log->write($ex);    
+        }
         // Add to activity log
         $log = new Log('error.log');
         $this->load->model('user/user_activity');
