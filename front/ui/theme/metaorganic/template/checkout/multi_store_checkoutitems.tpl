@@ -987,7 +987,7 @@ $.ajax({
 });
 
 $(document).delegate('#updatecart, #updatecar', 'click', function() {
-        
+        return false;
         $( "input[name^='cart[']" ).each(function(){
         console.log($(this).attr("data-id"));
         console.log($(this).attr("data-encid"));
@@ -1036,7 +1036,68 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
         
 });
 
-  $(document).delegate('#updatecart,#updatecar', 'click', function(){    
+$(document).delegate('#updatecart, #updatecar', 'click', function() {
+        
+        var update_products = [];
+        $( "input[name^='cart[']" ).each(function(){
+        console.log($(this).attr("data-id"));
+        console.log($(this).attr("data-encid"));
+        console.log($(this).val());
+        $("#updatecar").attr("disabled",true);
+        $("span[id^='updatecart']").html('<i class="fa fa-refresh"></i> Updating Cart');
+        $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-refresh').addClass('fa fa-spinner');
+        update_products.push({ key: $(this).attr("data-encid"), quantity: typeof($(this).val()) != 'undefined' ? $(this).val() : 1 });
+        });
+        console.log(update_products);
+
+        $.ajax({
+	    url: 'index.php?path=checkout/cart/multiupdate',
+	    type: 'post',
+	    data: { products : update_products },
+	    dataType: 'json',
+	    async: false, 
+	    beforeSend: function() {
+            $("#updatecar").attr("disabled",true);
+            $("span[id^='updatecart']").html('<i class="fa fa-refresh"></i> Updating Cart');
+            $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-refresh').addClass('fa fa-spinner');
+	    },
+            
+	    complete: function() {				
+	    },
+            
+	    success: function(json) {
+            console.log('Hi');
+            console.log(json.products_details); 
+            console.log('Hi');
+            $.each(json.products_details, function(key,value) {
+            console.log(value.tax); 
+            console.log(value.total); 
+            $(".tax"+value.product_store_id).html(value.tax);
+            $(".orgprice"+value.product_store_id).html(value.orginal_price);
+            $('.cart-total-amount').html(json['total_amount']);    
+            });
+            
+            loadTotals($('input#shipping_city_id').val());
+            loadUnpaidorders();
+            
+            setTimeout(function(){ 
+            $("#updatecar").attr("disabled",true);
+            $("span[id^='updatecart']").html('<i class="fa fa-spinner"></i> Cart Updated');
+            $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-spinner').addClass('fa fa-check-circle');
+            },2000);
+            
+            setTimeout(function(){ 
+            $("#updatecar").attr("disabled",false);
+            $("span[id^='updatecart']").html('<i class="fa fa-spinner"></i> Update Cart');
+            $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-spinner').addClass('fa fa-refresh');
+            },4000);
+            }
+        });
+        
+        
+});
+
+$(document).delegate('#updatecart,#updatecar', 'click', function(){    
       return false;
       console.log("updating the cart");  
    
