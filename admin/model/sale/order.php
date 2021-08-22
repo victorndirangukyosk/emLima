@@ -3128,7 +3128,8 @@ class ModelSaleOrder extends Model {
         //  echo "<pre>";print_r('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+ '.$delivery_charge.'  WHERE order_id="' . $order_id . '" and code="shipping"');die;
         if($exists!=null)
             {
-             $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="shipping"');
+             //$this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="shipping"');
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=' . $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="shipping"');
             }
             else
             {                  
