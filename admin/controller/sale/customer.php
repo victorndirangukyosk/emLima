@@ -1402,6 +1402,7 @@ class ControllerSaleCustomer extends Controller {
         $this->load->model('sale/customer_group');
         $this->load->model('user/accountmanager');
         $this->load->model('user/customerexperience');
+        $this->load->model('account/customer');
         $filter_data = [
             'filter_parent' => $this->request->get['customer_id'],
             'order' => 'DESC',
@@ -1413,6 +1414,8 @@ class ControllerSaleCustomer extends Controller {
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
         $data['account_managers_list'] = $this->model_user_accountmanager->getAccountManagers();
         $data['customer_experience_list'] = $this->model_user_customerexperience->getCustomerExperience();
+        $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);
+        $data['customer_otp_list_phone'] = $this->model_account_customer->getCustomerOTPByPhone($customer_info['telephone']);
 
         if (isset($this->request->post['company_name'])) {
             $data['company_name'] = $this->request->post['company_name'];
@@ -1697,6 +1700,10 @@ class ControllerSaleCustomer extends Controller {
         if ($this->request->post['password'] || (!isset($this->request->get['customer_id']))) {
             if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
                 $this->error['password'] = $this->language->get('error_password');
+            }
+
+            if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
+                $this->error['password'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
             }
 
             if ($this->request->post['password'] != $this->request->post['confirm']) {
@@ -2795,6 +2802,7 @@ class ControllerSaleCustomer extends Controller {
         }
 
         $this->load->model('sale/customer_group');
+        $this->load->model('account/customer');
         $filter_data = [
             'filter_parent' => $this->request->get['customer_id'],
             'order' => 'DESC',
@@ -2804,6 +2812,8 @@ class ControllerSaleCustomer extends Controller {
         $data['sub_users'] = $this->model_sale_customer->getSubCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);
+        $data['customer_otp_list_phone'] = $this->model_account_customer->getCustomerOTPByPhone($customer_info['telephone']);
 
         $data['company_name'] = $customer_info['company_name'];
         $data['company_address'] = $customer_info['company_address'];

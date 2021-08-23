@@ -358,7 +358,7 @@
                                                         <div class="checout-invoice-title"><?php echo $total['title']; ?></div>
                                                         <div class="checout-invoice-price" id="subtotal<?php echo $order_id; ?>"><?php echo $total['text']; ?></div>
                                                     </div>
-                                                    <?php } elseif($total['title'] == 'VAT14') { ?>
+                                                    <?php } elseif($total['title'] == 'VAT16') { ?>
                                                     <div class="checkout-invoice">
                                                         <div class="checout-invoice-title"><?php echo $total['title']; ?></div>
                                                         <div class="checout-invoice-price" id="vat<?php echo $order_id; ?>"><?php echo $total['text']; ?></div>

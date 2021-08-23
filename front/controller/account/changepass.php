@@ -1,16 +1,15 @@
 <?php
 
-class ControllerAccountChangepass extends Controller
-{
+class ControllerAccountChangepass extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
+    public function index() {
         if (!$this->customer->isLogged()) {
             $this->response->redirect($this->url->link('common/home'));
         }
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         $this->load->language('account/changepass');
 
@@ -32,8 +31,8 @@ class ControllerAccountChangepass extends Controller
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/information');
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/changepass.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/changepass.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/changepass.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/changepass.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/changepass.tpl', $data));
         }
@@ -78,21 +77,24 @@ class ControllerAccountChangepass extends Controller
             $data['error_retype'] = '';
         }
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/changepass.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/changepass.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/changepass.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/changepass.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/changepass.tpl', $data));
         }
     }
 
-    public function validate()
-    {
+    public function validate() {
         // if ((utf8_strlen(trim($this->request->post['currentpassword'])) < 1) || (utf8_strlen(trim($this->request->post['currentpassword'])) > 32)) {
         //     $this->error['current'] = $this->language->get('error_current');
         // }
 
-        if ((utf8_strlen(trim($this->request->post['newpassword'])) < 1) || (utf8_strlen(trim($this->request->post['newpassword'])) > 32)) {
+        if ((utf8_strlen(trim($this->request->post['newpassword'])) < 6) || (utf8_strlen(trim($this->request->post['newpassword'])) > 32)) {
             $this->error['new'] = $this->language->get('error_new');
+        }
+
+        if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['newpassword'])) {
+            $this->error['new'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
         }
 
         if ((utf8_strlen($this->request->post['retypepassword']) > 96) || ($this->request->post['newpassword'] !== $this->request->post['retypepassword'])) {
@@ -102,14 +104,13 @@ class ControllerAccountChangepass extends Controller
         // if (empty($this->request->post['currentpassword'])) {
         //     $this->error['current'] = $this->language->get('error_check');
         // }
-
         // if (empty($this->request->post['newpassword'])) {
         //     $this->error['new'] = $this->language->get('error_new');
         // }
-
         // if (empty($this->request->post['retypepassword'])) {
         //     $this->error['retype'] = $this->language->get('error_retype');
         // }
         return !$this->error;
     }
+
 }

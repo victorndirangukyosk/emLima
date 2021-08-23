@@ -1,6 +1,7 @@
 <?php
 
 require_once DIR_SYSTEM . 'vendor/firebase/php-jwt/vendor/autoload.php';
+require_once DIR_ROOT . '/vendor/autoload.php';
 
 use Firebase\JWT\JWT;
 
@@ -513,7 +514,7 @@ class ControllerAccountLogin extends Controller {
 
         $this->load->model('assets/information');
         $data['customer_groups'] = $this->model_assets_information->getCustomerGroups();
-        
+
         $filter_data = [];
         $this->load->model('user/user');
         $data['account_managers'] = $this->model_user_user->getAccountManagerUsers($filter_data);
@@ -601,15 +602,12 @@ class ControllerAccountLogin extends Controller {
                     $data['customer_email'] = $user_query->row['email'];
                     $data['temppassword'] = $user_query->row['tempPassword'];
 
-
                     //echo '<pre>';print_r($isIPexist);
                     //echo '<pre>';var_dump($data['isnewIP']);exit;
 
                     $logged_in = $this->customer->loginByPhone($data['customer_id']);
                     if ($logged_in) {
                         $this->model_account_customer->addLoginAttempt($this->customer->getEmail());
-
-
 
                         $logindata['customer_id'] = $user_query->row['customer_id'];
                         if (isset($this->request->post['login_latitude'])) {
@@ -901,18 +899,17 @@ class ControllerAccountLogin extends Controller {
     }
 
     public function adminRedirectLoginAPI($token) {
-       
-        
+
+
         if (isset($this->request->get['token'])) {//isset($args['customer_id'])
             $token = $this->request->get['token'];
         } else {
             $token = 0;
         }
 
-            // echo "<pre>";print_r($token);die; 
-        
+        // echo "<pre>";print_r($token);die; 
         // $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
-            
+
         $this->load->model('account/customer');
 
         // Login override for admin users
@@ -938,22 +935,17 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['vouchers']);
             unset($this->session->data['adminlogin']);
 
-            $api_info= $customer_info = $this->model_account_customer->getCustomerByToken($token);
-
+            $api_info = $customer_info = $this->model_account_customer->getCustomerByToken($token);
 
             // echo "<pre>";print_r($api_info);die; 
-
             // if ($customer_info && $this->customer->login($customer_info['email'], '', true)) {
             //     // Default Addresses
             //     $this->load->model('account/address');
-
             //     if ('shipping' == $this->config->get('config_tax_customer')) {
             //         $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
             //     }
-
             //     $this->model_account_customer->cacheProductPrices(75);
             //     $this->trigger->fire('post.customer.login');
-
             //     // maintain session to identify as admin login
             //     $this->session->data['adminlogin'] = 1;
             //     //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
@@ -962,60 +954,58 @@ class ControllerAccountLogin extends Controller {
             // }
 
 
-            if ($customer_info){
-            $tokenId = base64_encode(mcrypt_create_iv(32));
-            $issuedAt = time();
-            $notBefore = $issuedAt;  //Adding 10 seconds
-            $expire = $notBefore + 604800; // Adding 60 seconds
-            $serverName = 'serverName'; /// set your domain name
+            if ($customer_info) {
+                $tokenId = base64_encode(mcrypt_create_iv(32));
+                $issuedAt = time();
+                $notBefore = $issuedAt;  //Adding 10 seconds
+                $expire = $notBefore + 604800; // Adding 60 seconds
+                $serverName = 'serverName'; /// set your domain name
 
-            /*
-             * Create the token as an array
-             */
-            $data = [
-                'iat' => $issuedAt,         // Issued at: time when the token was generated
-                'jti' => $tokenId,          // Json Token Id: an unique identifier for the token
-                'iss' => $serverName,       // Issuer
-                'nbf' => $notBefore,        // Not before
-                'exp' => $expire,           // Expire
-                'data' => [                  // Data related to the logged user you can set your required data
-                            'id' => $api_info['customer_id'], // id from the users table
-                             'name' => $api_info['customer_email'], //  name
-                          ],
-            ];
+                /*
+                 * Create the token as an array
+                 */
+                $data = [
+                    'iat' => $issuedAt, // Issued at: time when the token was generated
+                    'jti' => $tokenId, // Json Token Id: an unique identifier for the token
+                    'iss' => $serverName, // Issuer
+                    'nbf' => $notBefore, // Not before
+                    'exp' => $expire, // Expire
+                    'data' => [// Data related to the logged user you can set your required data
+                        'id' => $api_info['customer_id'], // id from the users table
+                        'name' => $api_info['customer_email'], //  name
+                    ],
+                ];
 
-            $secretKey = base64_decode(SECRET_KEY);
-            /// Here we will transform this array into JWT:
-            $jwt = JWT::encode(
-                $data, //Data to be encoded in the JWT
-                $secretKey, // The signing key
-                 ALGORITHM
-            );
+                $secretKey = base64_decode(SECRET_KEY);
+                /// Here we will transform this array into JWT:
+                $jwt = JWT::encode(
+                                $data, //Data to be encoded in the JWT
+                                $secretKey, // The signing key
+                                ALGORITHM
+                );
 
-            $unencodedArray = ['jwt' => $jwt];
+                $unencodedArray = ['jwt' => $jwt];
 
-            $this->session->data['customer_id'] = $api_info['customer_id'];
+                $this->session->data['customer_id'] = $api_info['customer_id'];
 
-            // echo "<pre>";print_r($jwt);die; 
-        }
+                // echo "<pre>";print_r($jwt);die; 
+            }
 
-         // echo "<pre>";print_r($api_info);die; 
-            
-         if ($api_info['parent'] != NULL && $api_info['parent']>0) {
-            $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['parent'] . "' AND status = '1'");
-        } else {
-            $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['customer_id']. "' AND status = '1'");
-        }
-        $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
-        // echo "<pre>";print_r($customer_details);die; 
-        $this->session->data['order_approval_access'] = $customer_info['order_approval_access'];
-        $this->session->data['order_approval_access_role'] = $customer_info['order_approval_access_role'];
+            // echo "<pre>";print_r($api_info);die; 
 
-        //echo  "{'status' : 'success','resp':".json_encode($unencodedArray)."}"
-        $this->load->model('account/customer');
-        $this->model_account_customer->cacheProductPrices(75);
+            if ($api_info['parent'] != NULL && $api_info['parent'] > 0) {
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['parent'] . "' AND status = '1'");
+            } else {
+                $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['customer_id'] . "' AND status = '1'");
+            }
+            $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+            // echo "<pre>";print_r($customer_details);die; 
+            $this->session->data['order_approval_access'] = $customer_info['order_approval_access'];
+            $this->session->data['order_approval_access_role'] = $customer_info['order_approval_access_role'];
 
-
+            //echo  "{'status' : 'success','resp':".json_encode($unencodedArray)."}"
+            $this->load->model('account/customer');
+            $this->model_account_customer->cacheProductPrices(75);
         }
 
         if ($this->customer->isLogged()) {
@@ -1028,30 +1018,22 @@ class ControllerAccountLogin extends Controller {
         $this->load->language('account/login');
 
         // $this->document->setTitle($this->language->get('heading_title'));
-
         // if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
         //     unset($this->session->data['guest']);
-
         //     // Default Shipping Address
         //     $this->load->model('account/address');
-
         //     if ('shipping' == $this->config->get('config_tax_customer')) {
         //         $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
         //     }
-
         //     // Add to activity log
         //     $this->load->model('account/activity');
-
         //     $activity_data = [
         //         'customer_id' => $this->customer->getId(),
         //         'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
         //     ];
-
         //     $this->model_account_activity->addActivity('login', $activity_data);
-
         //     $data['status'] = true;
         //     //$data['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
-
         //     $this->session->data['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
         //     $this->response->addHeader('Content-Type: application/json');
         //     $this->response->setOutput(json_encode($data));
@@ -1061,16 +1043,10 @@ class ControllerAccountLogin extends Controller {
         //       $this->response->redirect($this->url->link('account/account', '', 'SSL'));
         //       } */
         // }
-   
-
         // $this->response->addHeader('Content-Type: application/json');
         // $this->response->setOutput(json_encode($data));
         return $jwt;
-        
-
-         
     }
-
 
     public function autologin() {
         $res['status'] = 10022;
@@ -1093,7 +1069,27 @@ class ControllerAccountLogin extends Controller {
                     $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $DecodedDataArray->data->id . "' AND status = '1'");
 
                     if ($customer_query->num_rows) {
+
+                        /* SET CUSTOMER CATEGORY */
+                        $data['customer_category'] = NULL;
+                        if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                            $parent_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($customer_query->row['parent']) . "' AND status = '1' AND approved='1'");
+                            if ($customer_query->num_rows > 0 && $parent_customer_query->row['customer_id'] > 0) {
+                                $data['customer_category'] = $parent_customer_query->row['customer_category'];
+                            } else {
+                                $data['customer_category'] = NULL;
+                            }
+                        }
+
+                        if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
+                            $data['customer_category'] = $customer_query->row['customer_category'];
+                        }
+                        //$this->customer->setVariables($data['customer_category']);
+                        /* SET CUSTOMER CATEGORY */
+                        $customer_query->row['customer_category'] = $data['customer_category'];
+
                         $this->customer->setVariables($customer_query->row);
+
                         $this->load->model('account/customer');
                         $this->load->model('setting/store');
                         $redirect = BASE_URL;
@@ -1275,7 +1271,6 @@ class ControllerAccountLogin extends Controller {
         $data['status'] = false;
         $this->load->language('api/login');
         $this->load->language('api/general');
-
 
         $this->document->addScript('front/ui/javascript/jquery/datetimepicker/moment.js');
         $this->document->addScript('front/ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js');
@@ -1480,6 +1475,11 @@ class ControllerAccountLogin extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function SendSNS() {
+        $mobile = $this->request->get['mobile'];
+        $this->emailtemplate->SendSNS($mobile);
     }
 
 }

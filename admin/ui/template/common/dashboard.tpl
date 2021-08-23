@@ -431,7 +431,8 @@
         });
     });
     
-    $( document ).ready(function() {
+    $(window).load(function() {
+    //$( document ).ready(function() {
         console.log($('#input-monthyear-filter').val());
         var monthyear = $('#input-monthyear-filter').val();
                 $.ajax({

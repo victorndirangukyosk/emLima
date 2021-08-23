@@ -442,7 +442,14 @@ class ControllerApiCart extends Controller {
             $tax_name = is_array($tax_info) && $tax_info != NULL && count($tax_info) > 0 ? $tax_info['name'] : NULL;
             $tax_percentage = is_array($tax_info) && $tax_info != NULL && count($tax_info) > 0 ? $tax_info['rate'] : NULL;
             $image = $this->load->controller('api/customer/imagepath', $product_info['image']);
-
+            if($image!=null && $image!="")
+            {
+                $image=BASE_URL . '/' . $image;
+            }
+            else
+            {
+                $image=BASE_URL . '/' . 'image/cache/placeholder-300x300.png';
+            }
             if (is_array($product_info) && $product_info['status'] == 1) {
                 $this->data[$keys] = [
                     'key' => $keys,
@@ -458,7 +465,8 @@ class ControllerApiCart extends Controller {
                     'name' => $product_info['name'],
                     'model' => $product_info['model'],
                     'shipping' => 0,
-                    'image' => BASE_URL . '/' . $image,
+                    // 'image' => BASE_URL . '/' . $image,
+                     'image' => $image,
                     'orginal_image' => $product_info['image'],
                     'option' => [],
                     'download' => [],

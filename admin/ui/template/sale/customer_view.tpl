@@ -27,6 +27,7 @@
             <li><a href="#tab-ip" data-toggle="tab"><?php echo $tab_ip; ?></a></li>
             <li><a href="#tab-referral" data-toggle="tab"><?php echo $tab_referral; ?></a></li>
 	    <li><a href="#tab-sub-customer" data-toggle="tab"><?php echo $tab_sub_customer; ?></a></li>
+            <li><a href="#tab-otp" data-toggle="tab">OTP</a></li>
             <?php } ?>
           </ul>
           <div class="tab-content">
@@ -262,6 +263,50 @@
             </tbody>
           </table>
             </div>
+            
+            <div class="tab-pane" id="tab-otp">
+              <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Customer Name </th>
+              <th>OTP</th>
+              <th>Type</th>
+              <th>Created At</th>
+              <th>Updated At</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if(count($customer_otp_list)) { ?>
+            <?php foreach($customer_otp_list as $otp) { ?>
+            <tr>
+            <td><?php echo $firstname.' '.$lastname; ?></td>
+            <td><?php echo $otp['otp'];?></td>
+            <td><?php echo $otp['type'];?></td>
+            <td><?php echo $otp['created_at'];?></td>
+            <td><?php echo $otp['updated_at']; ?></td>
+            </tr>
+            <?php } ?>
+            <?php } ?>
+            <?php if(count($customer_otp_list_phone)) { ?>
+            <?php foreach($customer_otp_list_phone as $otp_phone) { ?>
+            <tr>
+            <td><?php echo $firstname.' '.$lastname; ?></td>
+            <td><?php echo $otp_phone['otp'];?></td>
+            <td><?php echo $otp_phone['type'];?></td>
+            <td><?php echo $otp_phone['created_at'];?></td>
+            <td><?php echo $otp_phone['updated_at']; ?></td>
+            </tr>
+            <?php } ?>
+            <?php } ?>
+            <?php if(count($customer_otp_list) == 0 && count($customer_otp_list_phone) == 0) { ?>
+            <tr style="text-align:center">
+              <td colspan="5">No OTP Found</td>
+            </tr>
+            <?php } ?>
+            </tbody>
+          </table>
+            </div> 
+            
           </div>
         </div>
       </div>

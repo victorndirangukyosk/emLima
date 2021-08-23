@@ -1044,6 +1044,13 @@ class ControllerApiCustomerProducts extends Controller {
     }
 
     public function getProductSearch() {
+        $log = new Log('error.log');
+        $log->write('data');
+        $log->write($this->request->get);
+        $log->write($this->customer->getId());
+        $log->write($this->customer->getCustomerCategory());
+        $log->write($this->customer->getPaymentTerms());
+        $log->write('data');
         $json = [];
 
         if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
@@ -1053,6 +1060,8 @@ class ControllerApiCustomerProducts extends Controller {
         }
         $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
+        $this->session->data['customer_category'] = !isset($this->session->data['customer_category']) || $this->session->data['customer_category'] == NULL ? $this->customer->getCustomerCategory() : $customer_details->row['customer_category'];
+        $log->write($this->session->data['customer_category']);
         $log = new Log('error.log');
         $log->write('api/getProductSearch');
 
@@ -1292,10 +1301,10 @@ class ControllerApiCustomerProducts extends Controller {
 
                         $cachePrice_data = $this->cache->get('category_price_data');
                         // echo "<pre>";print_r($_SESSION['customer_category']);die;
-                        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) {
+                        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']])) {
                             //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
-                            $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
-                            $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
+                            $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']];
+                            $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']];
                             $special_price = $s_price;
                             $price = $o_price;
                             // echo "<pre>";print_r($special_price);die;
@@ -1315,8 +1324,6 @@ class ControllerApiCustomerProducts extends Controller {
                         //$name .= str_repeat('&nbsp;',30 - strlen($result['name']));
 
                         $unit = $result['unit'] ? $result['unit'] : false;
-
-
 
                         $productNames = array_column($data['products'], 'name');
                         if (false !== array_search($result['name'], $productNames)) {
@@ -1798,7 +1805,7 @@ class ControllerApiCustomerProducts extends Controller {
             if (isset($filter_data['group_by']) && ('name' == $filter_data['group_by'])) {
                 $formatted = true;
             }
-            
+
             $tax_amount = 0;
             $tax_name = NULL;
             $tax_percentage = 0;
@@ -2229,8 +2236,6 @@ class ControllerApiCustomerProducts extends Controller {
         }
         $customercategory_new = $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
 
-
-
         $sql = 'SELECT p.*,pd.*,p2c.product_id product_id2 FROM ' . DB_PREFIX . 'product p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (p.product_id = p2c.product_id)';
 
         if (!empty($data['filter_store'])) {
@@ -2239,9 +2244,9 @@ class ControllerApiCustomerProducts extends Controller {
 
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
-        /*if (!empty($data['filter_store'])) {
-            $sql .= ' AND ps.store_id="' . $data['filter_store'] . '"';
-        }*/
+        /* if (!empty($data['filter_store'])) {
+          $sql .= ' AND ps.store_id="' . $data['filter_store'] . '"';
+          } */
 
         /* if ($this->user->isVendor()) {
           // $sql .= ' AND p.vendor_id="'.$this->user->getId().'"';
@@ -2273,7 +2278,6 @@ class ControllerApiCustomerProducts extends Controller {
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $sql .= " AND p.status = '" . (int) $data['filter_status'] . "'";
             $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
-
         }
         //$sql .= " GROUP BY p.product_id";
         //$sql .= " LIMIT 10";
@@ -2316,7 +2320,6 @@ class ControllerApiCustomerProducts extends Controller {
         }
 
         $results = $query = $conn->query($sql);
-
 
         $disabled_products_string = NULL;
         // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
@@ -2457,7 +2460,6 @@ class ControllerApiCustomerProducts extends Controller {
 
 
             $results = $query = $conn->query($sql);
-
 
             $disabled_products_string = NULL;
             // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 
@@ -2604,7 +2606,6 @@ class ControllerApiCustomerProducts extends Controller {
 
 
             $results = $query = $conn->query($sql);
-
 
             $disabled_products_string = NULL;
             // if(isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) 

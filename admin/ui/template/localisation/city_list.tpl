@@ -61,7 +61,9 @@
                     <?php } ?></td>
                   <td class="text-left"><?php echo $city['name']; ?></td>
                   <td class="text-left"><?php echo $city['sort_order']; ?></td>
-                  <td class="text-right"><a href="<?php echo $city['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                  <td class="text-right"><a href="<?php echo $city['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+                  <!--<a href="<?php echo $city['editcitydelivery']; ?>" data-toggle="tooltip" title="Delivery" class="btn btn-primary"><i class="fa fa-truck"></i></a>-->
+                  </td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>
