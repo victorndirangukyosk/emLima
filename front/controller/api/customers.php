@@ -242,6 +242,16 @@ class ControllerApiCustomers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getCustomerCities()
+    {
+        $this->load->model('account/city');
+        $json['status'] = 200;
+        $json['data'] = $this->model_account_city->getCities();
+        $json['msg'] = 'Cities fetched successfully';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 
     public function getAccountManagers($args=[])
     {
