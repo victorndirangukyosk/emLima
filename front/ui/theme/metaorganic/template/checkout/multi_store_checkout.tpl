@@ -1331,11 +1331,11 @@ function setDeliveryTime() {
             console.log(json['dates'][Object.keys(json['dates'])[0]]);
             
             $.each(json['disabled_slot'], function( index, value ) {
-            $('.timeslot-selected[data-value="' + value + '"][data-date="'+json['dates'][Object.keys(json['dates'])[0]]+'"]').addClass( "disabled" );
+            $('.timeslot-selected[data-value="' + value + '"][data-date="'+json['selected_date_slot']+'"]').addClass( "disabled" );
             });
             
-            $('#select-timeslot').html("Selected : "+ json['dates'][Object.keys(json['dates'])[0]]+ ', ' + json['selected_slot']);
-            $('.timeslot-selected[data-value="' + json['selected_slot'] + '"][data-date="'+json['dates'][Object.keys(json['dates'])[0]]+'"]').children().children().prop("checked", true);
+            $('#select-timeslot').html("Selected : "+ json['selected_date_slot'] + ', ' + json['selected_slot']);
+            $('.timeslot-selected[data-value="' + json['selected_slot'] + '"][data-date="'+json['selected_date_slot']+'"]').children().children().prop("checked", true);
             $('#payment-next').removeAttr('disabled');
             $('#payment-next').removeClass('btn-grey');
             $('#payment-next').addClass('btn-default');
