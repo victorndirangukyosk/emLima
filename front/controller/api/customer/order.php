@@ -3419,18 +3419,18 @@ class ControllerApiCustomerOrder extends Controller {
         $json['data'] = [];
         $json['message'] = [];
 
-        $data['kondutoStatus'] = $this->config->get('config_konduto_status');
-        $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
+        // $data['kondutoStatus'] = $this->config->get('config_konduto_status');
+        // $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
-        /* if (!$this->customer->isLogged()) {
+         if (!$this->customer->isLogged()) {
           $json['status'] = 10014;
 
           $json['message'] = 'Unauthorized Session Expired!';
 
           http_response_code(401);
-          } */
+          }
 
-        if ($this->validates($args) /* && $this->customer->isLogged() */) {
+        if ($this->validates($args)  && $this->customer->isLogged() ) {
 
             $this->load->model('account/order');
             $this->load->model('account/wishlist');
@@ -3441,6 +3441,7 @@ class ControllerApiCustomerOrder extends Controller {
             $log->write('Order List Products');
 
             $order_details = $this->model_account_order->getOrderDetailsById($order_id);
+
             $Orderlist_products = $this->model_account_wishlist->getAvailableOrderedProducts($order_id);
             $log->write($Orderlist_products);
             $log->write('Order List Products obtained');
