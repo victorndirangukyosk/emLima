@@ -13,6 +13,9 @@ class ModelAccountCity extends Model
     {
         $query = $this->db->query('SELECT * FROM '.DB_PREFIX."city c  ORDER BY c.city_id ASC");
 
+        echo "<pre>";print_r('SELECT * FROM '.DB_PREFIX."city c  ORDER BY c.city_id ASC"); die;
+
+        // echo
         return $query->rows;
     }
 }
