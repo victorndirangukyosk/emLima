@@ -884,7 +884,7 @@ class ControllerAccountRegister extends Controller
         } else {
             $data['status'] = false;
 
-            $data['warning'] = "Please try again,after sometime.";
+            $data['warning'] = "Validation failed.";
   
         }
 
