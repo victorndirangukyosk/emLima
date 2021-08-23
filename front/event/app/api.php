@@ -110,6 +110,7 @@ class EventAppApi extends Event {
             die;
         } else {
             $route = $this->getRoute($path, $method);
+            // echo "<pre>";print_r($route);die;   
 
             $log = new Log('error.log');
             $log->write('other api call other than customet api');
@@ -133,14 +134,17 @@ class EventAppApi extends Event {
             $this->load->controller('api/categories/getCategories', $args);
             } 
             
-            elseif ('api/customers/getcustomergroups' == $route) {
+            elseif ('api/customers/getCustomergroups' == $route) {
                 // Authorize
-                $this->load->controller('api/customers/getcustomergroups', $args);
-                } 
+                 $this->load->controller('api/customers/getcustomergroups', $args);
+            // echo "<pre>";print_r($route);die;   
+            } 
 
-                 elseif ('api/customers/getcustomercities' == $route) {
+                 elseif ('api/customers/getCustomercities' == $route) {
+            // echo "<pre>";print_r($route);die;   
+
                 // Authorize
-                $this->load->controller('api/customers/getcustomercities', $args);
+                $this->load->controller('api/customers/getCustomercities', $args);
                 } 
                 else {
                 $groups = ['Administrator', 'API User', 'vendor'];
