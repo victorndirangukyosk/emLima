@@ -1803,10 +1803,14 @@ class Controllercheckoutdeliverytime extends Controller {
         $log->write(time());
         $log->write('RANGE');
 
+        $same_day = date('Y-m-d');
+        $next_day = date('d-m-Y', strtotime($same_day . "+1 days"));
+
         if (time() >= strtotime($rangeonestart) && time() <= strtotime($rangeoneend)) {
             $pre_defined_slots = array('06:00am - 08:00am');
             $selected_slot = $pre_defined_slots[0];
             $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = $next_day;
             $data['disabled_slot'] = array();
             $log->write($selected_slot);
             $log->write('RANGE ONE');
@@ -1817,6 +1821,7 @@ class Controllercheckoutdeliverytime extends Controller {
             //$selected_slot = $pre_defined_slots[0];
             $selected_slot = $pre_defined_slots[array_rand($pre_defined_slots)];
             $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = $next_day;
             $data['disabled_slot'] = array('06:00am - 08:00am');
             $log->write('RANGE TWO');
         }
@@ -1825,6 +1830,7 @@ class Controllercheckoutdeliverytime extends Controller {
             $pre_defined_slots = array('12:00pm - 02:00pm');
             $selected_slot = $pre_defined_slots[0];
             $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = $next_day;
             $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm');
             $log->write('RANGE THREE');
         }
@@ -1833,6 +1839,7 @@ class Controllercheckoutdeliverytime extends Controller {
             $pre_defined_slots = array('12:00pm - 02:00pm');
             $selected_slot = $pre_defined_slots[0];
             $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = $next_day;
             $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm');
             $log->write('RANGE FOUR');
         }
@@ -1841,6 +1848,7 @@ class Controllercheckoutdeliverytime extends Controller {
             $pre_defined_slots = array('02:00pm - 04:00pm');
             $selected_slot = $pre_defined_slots[0];
             $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = date('d-m-Y');
             $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm', '12:00pm - 02:00pm');
             $log->write('RANGE FIVE');
         }
@@ -1958,6 +1966,7 @@ class Controllercheckoutdeliverytime extends Controller {
         $json['dates'] = $data['dates'];
         $json['timeslots'] = $data['timeslots'];
         $json['selected_slot'] = $data['selected_slot'];
+        $json['selected_date_slot'] = $data['selected_date_slot'];
         $json['disabled_slot'] = $data['disabled_slot'];
 
         $stores = $this->cart->getStores();
