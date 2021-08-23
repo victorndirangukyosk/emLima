@@ -131,7 +131,18 @@ class EventAppApi extends Event {
          elseif ('api/categories/getCategories' == $route) {
             // Authorize
             $this->load->controller('api/categories/getCategories', $args);
-            } else {
+            } 
+            
+            elseif ('api/customers/getcustomergroups' == $route) {
+                // Authorize
+                $this->load->controller('api/customers/getcustomergroups', $args);
+                } 
+
+                 elseif ('api/customers/getcustomercities' == $route) {
+                // Authorize
+                $this->load->controller('api/customers/getcustomercities', $args);
+                } 
+                else {
                 $groups = ['Administrator', 'API User', 'vendor'];
                 if (!$this->authenticateByGroup($groups)) {
                     return;
