@@ -670,6 +670,35 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+<div class="addressModal">
+        <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <div class="row">
+                            <div class="col-md-12">
+                              <h2>PAYMENT PENDING</h2>
+                            </div>
+                            <div class="modal-body">
+                            <p style="font-weight: bold; font-size: 12px;">Your Order(s) Payment Is Pending, Please Click Pay Button To View The Pending Payments.</p>
+                            </div>
+                            <div class="addnews-address-form">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button id="pay_pending_amount" name="pay_pending_amount" type="button" class="btn btn-primary">PAY</button>
+                                        <button id="pay_clear_cart" name="pay_clear_cart" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>    
     
 <div class="addressModal">
         <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
@@ -733,12 +762,13 @@
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     <style>
-    #agree_vendor_terms {
+    #agree_vendor_terms, #pay_pending_amount {
     width: 49%;
     float: left;
     margin-top: 10px;
+    margin-right: 5px;
     }
-    #remove_vendor_products {
+    #remove_vendor_products, #pay_clear_cart {
     width: 49%;
     float: left;
     margin-top: 10px;
@@ -763,6 +793,13 @@
             }
         });
 });*/
+$('#pay_pending_amount').on('click', function(){
+window.location.href = "<?= $continue.'/index.php?path=account/transactions'; ?>";
+});
+
+$('#pay_clear_cart').on('click', function(){
+window.location.href = "<?= $continue.'/index.php?path=common/home'; ?>";
+});   
         
         $('#agree_vendor_terms').on('click', function(){
         $.ajax({
@@ -942,7 +979,7 @@ $.ajax({
                 return false;
                 }else{
                 $('#exampleModal').modal('hide'); 
-                window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";     
+                window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";     
                 }
             }
 });
@@ -950,7 +987,7 @@ $.ajax({
 });
 
 $(document).delegate('#updatecart, #updatecar', 'click', function() {
-        
+        return false;
         $( "input[name^='cart[']" ).each(function(){
         console.log($(this).attr("data-id"));
         console.log($(this).attr("data-encid"));
@@ -979,6 +1016,7 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
             $(".orgprice"+json.products_details.product_store_id).html(json.products_details.orginal_price);
             $('.cart-total-amount').html(json['total_amount']);
             loadTotals($('input#shipping_city_id').val());
+            loadUnpaidorders();
             
             setTimeout(function(){ 
             $("#updatecar").attr("disabled",true);
@@ -998,7 +1036,68 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
         
 });
 
-  $(document).delegate('#updatecart,#updatecar', 'click', function(){    
+$(document).delegate('#updatecart, #updatecar', 'click', function() {
+        
+        var update_products = [];
+        $( "input[name^='cart[']" ).each(function(){
+        console.log($(this).attr("data-id"));
+        console.log($(this).attr("data-encid"));
+        console.log($(this).val());
+        $("#updatecar").attr("disabled",true);
+        $("span[id^='updatecart']").html('<i class="fa fa-refresh"></i> Updating Cart');
+        $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-refresh').addClass('fa fa-spinner');
+        update_products.push({ key: $(this).attr("data-encid"), quantity: typeof($(this).val()) != 'undefined' ? $(this).val() : 1 });
+        });
+        console.log(update_products);
+
+        $.ajax({
+	    url: 'index.php?path=checkout/cart/multiupdate',
+	    type: 'post',
+	    data: { products : update_products },
+	    dataType: 'json',
+	    async: false, 
+	    beforeSend: function() {
+            $("#updatecar").attr("disabled",true);
+            $("span[id^='updatecart']").html('<i class="fa fa-refresh"></i> Updating Cart');
+            $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-refresh').addClass('fa fa-spinner');
+	    },
+            
+	    complete: function() {				
+	    },
+            
+	    success: function(json) {
+            console.log('Hi');
+            console.log(json.products_details); 
+            console.log('Hi');
+            $.each(json.products_details, function(key,value) {
+            console.log(value.tax); 
+            console.log(value.total); 
+            $(".tax"+value.product_store_id).html(value.tax);
+            $(".orgprice"+value.product_store_id).html(value.orginal_price);
+            $('.cart-total-amount').html(json['total_amount']);    
+            });
+            
+            loadTotals($('input#shipping_city_id').val());
+            loadUnpaidorders();
+            
+            setTimeout(function(){ 
+            $("#updatecar").attr("disabled",true);
+            $("span[id^='updatecart']").html('<i class="fa fa-spinner"></i> Cart Updated');
+            $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-spinner').addClass('fa fa-check-circle');
+            },2000);
+            
+            setTimeout(function(){ 
+            $("#updatecar").attr("disabled",false);
+            $("span[id^='updatecart']").html('<i class="fa fa-spinner"></i> Update Cart');
+            $("span[id^='updatecart']").find($(".fa")).removeClass('fa fa-spinner').addClass('fa fa-refresh');
+            },4000);
+            }
+        });
+        
+        
+});
+
+$(document).delegate('#updatecart,#updatecar', 'click', function(){    
       return false;
       console.log("updating the cart");  
    
@@ -1565,6 +1664,7 @@ __kdt.push({"post_on_load": false});
             }
 
              loadTotals($(this).attr('data-city_id'));
+             loadUnpaidorders();
         });
 
         $('.dropdown-toggle').dropdown();
@@ -1609,6 +1709,7 @@ __kdt.push({"post_on_load": false});
                 }else{
                     $('#reward-success').html('<p id="success">'+json['success']+'</p>').show();
                     loadTotals($('input#shipping_city_id').val());
+                    loadUnpaidorders();
                 }
             }
         });
@@ -1624,6 +1725,7 @@ __kdt.push({"post_on_load": false});
         $('input[name="landmark"]').val($(this).attr('data-landmark'));
 
         loadTotals($(this).attr('data-city_id'));
+        loadUnpaidorders();
     });
 </script>
 
@@ -1653,6 +1755,33 @@ function loadTotals($city_id) {
         }
     });
 }
+
+// Load unpaid orders
+function loadUnpaidorders() {
+
+    $.ajax({
+        url: 'index.php?path=checkout/checkoutitems/getunpaidorders',
+        type: 'get',
+        dataType: 'json',
+        cache: false,
+        async: true,
+        beforeSend: function() {
+        },
+        success: function(json) {
+            if(json.unpaid_orders > 0) {
+            console.log('unpaid_orders');
+            $("#proceed_to_checkout").addClass("disabled");  
+            $('#exampleModal3').modal('show');
+            } else {
+            $("#proceed_to_checkout").removeClass("disabled"); 
+            $('#exampleModal3').modal('hide');
+            }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        }
+    });
+}
+
 //Load Delivery Time
 function loadDeliveryTime(store_id) {
 
@@ -1725,6 +1854,7 @@ $(document).ready(function() {
     console.log("logged in as ");
 
      loadTotals($(this).attr('data-city_id'));
+     loadUnpaidorders();
     <?php
 
         if($loggedin && $profile_complete) { ?>
@@ -1842,6 +1972,7 @@ if ($shipping_required) {
 
                     loadDeliveryTime(store_id);
                     loadTotals($('input[name="shipping_city_id"]').val());
+                    loadUnpaidorders();
                 }
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -2529,6 +2660,7 @@ function saveInAddressBook() {
                     $('.promo-code-message').html('');
                     $('.promo-code-success-message').html(json['message']);
                     loadTotals($('input#shipping_city_id').val());
+                    loadUnpaidorders();
                     //setTimeout(function(){ window.location.reload(false); }, 1000);
                     
                 } else {

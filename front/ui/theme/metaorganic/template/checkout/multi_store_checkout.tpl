@@ -762,6 +762,35 @@
     </div>
 </div>
 
+    <!-- Modal -->
+<div class="addressModal">
+        <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <div class="row">
+                            <div class="col-md-12">
+                              <h2>PAYMENT PENDING</h2>
+                            </div>
+                            <div class="modal-body">
+                            <p style="font-weight: bold; font-size: 12px;">Your Order(s) Payment Is Pending, Please Click Pay Button To View The Pending Payments.</p>
+                            </div>
+                            <div class="addnews-address-form">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button id="pay_pending_amount" name="pay_pending_amount" type="button" class="btn btn-primary">PAY</button>
+                                        <button id="pay_clear_cart" name="pay_clear_cart" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>   
+
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
 <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/revslider.css" >
@@ -810,12 +839,13 @@
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     <style>
-    #agree_vendor_terms {
+    #agree_vendor_terms, #pay_pending_amount {
     width: 49%;
     float: left;
     margin-top: 10px;
+    margin-right: 5px;
     }
-    #remove_vendor_products {
+    #remove_vendor_products, #pay_clear_cart {
     width: 49%;
     float: left;
     margin-top: 10px;
@@ -1100,6 +1130,7 @@ __kdt.push({"post_on_load": false});
         $(".overlayed").hide();
     }
     $(document).ready(function() {
+          loadUnpaidorders();
           getLocationOnly();
 
         $('.replacable').on('click', function(){
@@ -1296,13 +1327,15 @@ function setDeliveryTime() {
         },
         success: function(json) {
             console.log(json['disabled_slot']);
+            console.log(Object.keys(json['dates'])[0]);
+            console.log(json['dates'][Object.keys(json['dates'])[0]]);
             
             $.each(json['disabled_slot'], function( index, value ) {
-            $('.timeslot-selected[data-value="' + value + '"][data-date="'+json['dates'][0]+'"]').addClass( "disabled" );
+            $('.timeslot-selected[data-value="' + value + '"][data-date="'+json['dates'][Object.keys(json['dates'])[0]]+'"]').addClass( "disabled" );
             });
             
-            $('#select-timeslot').html("Selected : "+ json['dates'][0]+ ', ' + json['selected_slot']);
-            $('.timeslot-selected[data-value="' + json['selected_slot'] + '"][data-date="'+json['dates'][0]+'"]').children().children().prop("checked", true);
+            $('#select-timeslot').html("Selected : "+ json['dates'][Object.keys(json['dates'])[0]]+ ', ' + json['selected_slot']);
+            $('.timeslot-selected[data-value="' + json['selected_slot'] + '"][data-date="'+json['dates'][Object.keys(json['dates'])[0]]+'"]').children().children().prop("checked", true);
             $('#payment-next').removeAttr('disabled');
             $('#payment-next').removeClass('btn-grey');
             $('#payment-next').addClass('btn-default');
@@ -2301,6 +2334,40 @@ function CartTotals() {
         },
     });
 }
+
+// Load unpaid orders
+function loadUnpaidorders() {
+
+    $.ajax({
+        url: 'index.php?path=checkout/checkoutitems/getunpaidorders',
+        type: 'get',
+        dataType: 'json',
+        cache: false,
+        async: true,
+        beforeSend: function() {
+        },
+        success: function(json) {
+            if(json.unpaid_orders > 0) {
+            console.log('unpaid_orders');
+            $(".btn btn-primary btnsetall btnsetall btn-block").addClass("disabled");  
+            $('#exampleModal3').modal('show');
+            } else {
+            $(".btn btn-primary btnsetall btnsetall btn-block").removeClass("disabled"); 
+            $('#exampleModal3').modal('hide');
+            }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        }
+    });
+}
+
+$('#pay_pending_amount').on('click', function(){
+window.location.href = "<?= $continue.'/index.php?path=account/transactions'; ?>";
+});
+
+$('#pay_clear_cart').on('click', function(){
+window.location.href = "<?= $continue.'/index.php?path=common/home'; ?>";
+});  
 </script>
 <script src="https://api-test.equitybankgroup.com/js/eazzycheckout.js"></script>
 </body>

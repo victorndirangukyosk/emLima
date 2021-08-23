@@ -32,7 +32,7 @@ $_['text_wishlist_detail_not_found'] = 'Wishlist detail not found';
 
 $_['error_phone_login'] = 'Your phone no. is not registered with us';
 $_['error_phone_already_used'] = 'Warning: User with phone number already exists.';
-$_['text_otp_sent'] = 'An otp has been sent to number :';
+$_['text_otp_sent'] = 'An otp has been sent to registered phone number & Email';
 $_['text_otp_sent_to'] = 'An otp has been sent.';
 $_['error_invalid_otp'] = 'Invalid OTP!';
 $_['text_valid_otp'] = 'Successfully verified otp.';

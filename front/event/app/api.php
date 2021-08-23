@@ -1,8 +1,8 @@
 <?php
 
-require_once DIR_SYSTEM.'/vendor/icanboogie/inflector/vendor/autoload.php';
+require_once DIR_SYSTEM . '/vendor/icanboogie/inflector/vendor/autoload.php';
 
-require_once DIR_SYSTEM.'vendor/firebase/php-jwt/vendor/autoload.php';
+require_once DIR_SYSTEM . 'vendor/firebase/php-jwt/vendor/autoload.php';
 
 use Firebase\JWT\JWT;
 use ICanBoogie\Inflector;
@@ -10,10 +10,9 @@ use ICanBoogie\Inflector;
 define('SECRET_KEY', 'customer-app-apiss');
 define('ALGORITHM', 'HS512');
 
-class EventAppApi extends Event
-{
-    public function postAppEcommerce()
-    {
+class EventAppApi extends Event {
+
+    public function postAppEcommerce() {
         // api/categories or api/categories/1
         $path = $this->getPath();
         // echo "<pre>";print_r($path);die;
@@ -25,7 +24,6 @@ class EventAppApi extends Event
         // if (Inflector::get()->singularize($path[1]) == $path[1]) {
         //     return;
         // }
-
         // Get request method
         $method = $this->getMethod();
 
@@ -33,8 +31,8 @@ class EventAppApi extends Event
         $args = $this->getArguments($path, $method);
 
         //echo "<pre>";print_r($args);die;
-        /*echo "postAppEcommerce";
-        print_r($args);*/
+        /* echo "postAppEcommerce";
+          print_r($args); */
         // api/orders
         //$route = $this->getRoute($path, $method);
 
@@ -45,15 +43,16 @@ class EventAppApi extends Event
 
             $log = new Log('error.log');
             $log->write('route  api');
+            $log->write($this->session->getId());
             $log->write($route);
 
             // route  api
             // 2018-02-22 2:33:23 - api/customer/login/addNewAccessToken
             //  echo "<pre>";print_r($route);die;
             //echo "<pre>";print_r($args);die;
-
             //unset($this->session->data['customer_id']);die;
-            if ('api/customer/address/getAlladdress' == $route || 'api/customer/address/deleteaddress' == $route || 'api/customer/address/deleteAddress' == $route || 'api/customer/address/addAddress' == $route || 'api/customer/address/getAddress' == $route || 'api/customer/address/editAddress' == $route || 'api/customer/account/getUserdetails' == $route || 'api/customer/account/editUserdetail' == $route || 'api/customer/account/editUserDetail' == $route || 'api/customer/order/addMissingOrder' == $route || 'api/customer/order/addOrder' == $route || 'api/customer/order/getOrders' == $route || 'api/customer/checkout/addApplycoupon' == $route || 'api/customer/checkout/addApplyreward' == $route || 'api/customer/address/addMakedefaultaddress' == $route || 'api/customer/order/getOrder' == $route || 'api/customer/account/getUserRewards' == $route || 'api/customer/return/getUserReturns' == $route || 'api/customer/wishlist/getUserList' == $route || 'api/customer/refer/getUserRefers' == $route || 'api/customer/account/getUserCash' == $route || 'api/customer/wishlist/addCreateWishlist' == $route || 'api/customer/wishlist/addProductToWishlist' == $route || 'api/customer/wishlist/editWishlistProduct' == $route || 'api/customer/wishlist/editDeleteWishlist' == $route || 'api/customer/wishlist/editDeleteWishlistProduct' == $route || 'api/customer/wishlist/addCreateWishlistWithProduct' == $route || 'api/customer/return/getReturnDetail' == $route || 'api/customer/return/addReturnProduct' == $route || 'api/customer/wishlist/getUserListProduct' == $route || 'api/customer/payment/getStripeCustomerId' == $route || 'api/customer/order/addOrdercancel' == $route || 'api/customer/payment/addStripeEphemeralKey' == $route || 'api/customer/account/addStripeUser' == $route || 'api/customer/settings/addDeviceIdToCustomer' == $route || 'api/customer/stores/getStoreShippingMethods' == $route || 'api/customer/stores/getStoreshippingmethods' == $route || 'api/customer/login/addNewAccessToken' == $route || 'api/customer/payment/addMpesaConfirm' == $route || 'api/customer/payment/addMpesaComplete' == $route || 'api/customer/products/getProducts' == $route || 'api/customer/products/getProductSearch' == $route || 'api/customer/account/addSendNewDeviceotp' == $route || 'api/customer/account/addVerifyNewDeviceotp' == $route  || 'api/customer/products/getProductAutocomplete' == $route || 'api/customer/user_notification_settings/addCustomerNotificationSetting' == $route | 'api/customer/user_notification_settings/getCustomerNotificationSettings' == $route || 'api/customer/order/addEditOrderWithNewitemAndQuantity' == $route|| 'api/customer/order/addMaxOfProduct' == $route|| 'api/customer/wishlist/getAvailableOrderProducts' == $route || 'api/customer/dashboard/getDashboardDetails' == $route || 'api/customer/dashboard/getDashboardData' == $route || 'api/customer/dashboard/getValueofbasket' == $route|| 'api/customer/dashboard/addCustomerstatement' == $route|| 'api/customer/dashboard/addPurchaseHistory' == $route || 'api/customer/dashboard/addStatementexcel' == $route || 'api/customer/dashboard/addConsolidatedOrderProduct' == $route || 'api/customer/dashboard/getCustomerMostBoughtProducts' == $route || 'api/customer/dashboard/getRecentActivities' == $route || 'api/customer/dashboard/getRecentOrders' == $route || 'api/customer/dashboard/getRecentOrdersList' == $route|| 'api/customer/dashboard/getRecentOrdersProductsList' == $route|| 'api/customer/dashboard/getMostPurchasedProductsExcel' == $route|| 'api/customer/dashboard/getPurchaseHistoryByProductID' == $route || 'api/customer/dashboard/getProductPurchaseHistory' == $route || 'api/customer/subusers/getSubUsers' == $route || 'api/customer/subusers/addNewSubUser' == $route || 'api/customer/order/getPendingorders' == $route || 'api/customer/Feedback/addFeedback' == $route || 'api/customer/Feedback/getFeedback' == $route  || 'api/orders/export_products_excel/getExport_products_excel' == $route) {
+            //$this->response->addHeader('Cookie:' . 'PHPSESSID=' . $this->session->getId() . ';currency=KES; language=en');
+            if ('api/customer/address/getAlladdress' == $route || 'api/customer/address/deleteaddress' == $route || 'api/customer/address/deleteAddress' == $route || 'api/customer/address/addAddress' == $route || 'api/customer/address/getAddress' == $route || 'api/customer/address/editAddress' == $route || 'api/customer/account/getUserdetails' == $route || 'api/customer/account/editUserdetail' == $route || 'api/customer/account/editUserDetail' == $route || 'api/customer/order/addMissingOrder' == $route || 'api/customer/order/addOrder' == $route || 'api/customer/order/getOrders' == $route || 'api/customer/checkout/addApplycoupon' == $route || 'api/customer/checkout/addApplyreward' == $route || 'api/customer/address/addMakedefaultaddress' == $route || 'api/customer/order/getOrder' == $route || 'api/customer/account/getUserRewards' == $route || 'api/customer/return/getUserReturns' == $route || 'api/customer/wishlist/getUserList' == $route || 'api/customer/refer/getUserRefers' == $route || 'api/customer/account/getUserCash' == $route || 'api/customer/wishlist/addCreateWishlist' == $route || 'api/customer/wishlist/addProductToWishlist' == $route || 'api/customer/wishlist/editWishlistProduct' == $route || 'api/customer/wishlist/editDeleteWishlist' == $route || 'api/customer/wishlist/editDeleteWishlistProduct' == $route || 'api/customer/wishlist/addCreateWishlistWithProduct' == $route || 'api/customer/return/getReturnDetail' == $route || 'api/customer/return/addReturnProduct' == $route || 'api/customer/wishlist/getUserListProduct' == $route || 'api/customer/payment/getStripeCustomerId' == $route || 'api/customer/order/addOrdercancel' == $route || 'api/customer/payment/addStripeEphemeralKey' == $route || 'api/customer/account/addStripeUser' == $route || 'api/customer/settings/addDeviceIdToCustomer' == $route || 'api/customer/stores/getStoreShippingMethods' == $route || 'api/customer/stores/getStoreshippingmethods' == $route || 'api/customer/login/addNewAccessToken' == $route || 'api/customer/payment/addMpesaConfirm' == $route || 'api/customer/payment/addMpesaComplete' == $route || 'api/customer/products/getProducts' == $route || 'api/customer/products/getProductSearch' == $route || 'api/customer/account/addSendNewDeviceotp' == $route || 'api/customer/account/addVerifyNewDeviceotp' == $route || 'api/customer/products/getProductAutocomplete' == $route || 'api/customer/user_notification_settings/addCustomerNotificationSetting' == $route | 'api/customer/user_notification_settings/getCustomerNotificationSettings' == $route || 'api/customer/order/addEditOrderWithNewitemAndQuantity' == $route || 'api/customer/order/addMaxOfProduct' == $route || 'api/customer/wishlist/getAvailableOrderProducts' == $route || 'api/customer/dashboard/getDashboardDetails' == $route || 'api/customer/dashboard/getDashboardData' == $route || 'api/customer/dashboard/getValueofbasket' == $route || 'api/customer/dashboard/addCustomerstatement' == $route || 'api/customer/dashboard/addPurchaseHistory' == $route || 'api/customer/dashboard/addStatementexcel' == $route || 'api/customer/dashboard/addConsolidatedOrderProduct' == $route || 'api/customer/dashboard/getCustomerMostBoughtProducts' == $route || 'api/customer/dashboard/getRecentActivities' == $route || 'api/customer/dashboard/getRecentOrders' == $route || 'api/customer/dashboard/getRecentOrdersList' == $route || 'api/customer/dashboard/getRecentOrdersProductsList' == $route || 'api/customer/dashboard/getMostPurchasedProductsExcel' == $route || 'api/customer/dashboard/getPurchaseHistoryByProductID' == $route || 'api/customer/dashboard/getProductPurchaseHistory' == $route || 'api/customer/subusers/getSubUsers' == $route || 'api/customer/subusers/addNewSubUser' == $route || 'api/customer/order/getPendingorders' == $route || 'api/customer/Feedback/addFeedback' == $route || 'api/customer/Feedback/getFeedback' == $route || 'api/orders/export_products_excel/getExport_products_excel' == $route) {
                 //  echo "<pre>";print_r("ER");die;
                 // loogin required for above routes
                 $resp = $this->customer_token_authenticate();
@@ -61,18 +60,14 @@ class EventAppApi extends Event
                 //echo "<pre>";print_r($resp);die;
                 if (1 == $resp['status']) {
 
-                     // check customer ID
-                $cust_id =$this->customer->getId();
-                if(isset($cust_id) && $cust_id>0)
-                {
-                    $this->load->controller($route, $args);
-
-                }
-
-                    else {
-                        $resp['message']="Please Login again.";
-                        $resp['data']="";
-                        $resp['status']="10022";
+                    // check customer ID
+                    $cust_id = $this->customer->getId();
+                    if (isset($cust_id) && $cust_id > 0) {
+                        $this->load->controller($route, $args);
+                    } else {
+                        $resp['message'] = "Please Login again.";
+                        $resp['data'] = "";
+                        $resp['status'] = "10022";
                         $this->response->addHeader('Content-Type: application/json');
                         $this->response->setOutput(json_encode($resp));
                     }
@@ -80,10 +75,6 @@ class EventAppApi extends Event
                     $this->response->addHeader('Content-Type: application/json');
                     $this->response->setOutput(json_encode($resp));
                 }
-
-               
-
-
             } elseif ('api/customer/login/addLogin' == $route) {
                 // Authorize
                 $this->load->controller('api/customer/login');
@@ -105,10 +96,9 @@ class EventAppApi extends Event
             $this->response->output();
 
             die;
-        } 
+        }
         //added else if condition to skip authentication for landing pages
-        else if('landingpage' == $path[1])
-        {
+        else if ('landingpage' == $path[1]) {
             $route = $this->getCustomerRoute($path, $method);
 
             $log = new Log('error.log');
@@ -118,9 +108,7 @@ class EventAppApi extends Event
             $this->load->controller($route, $args);
             $this->response->output();
             die;
-        }
-        
-        else {
+        } else {
             $route = $this->getRoute($path, $method);
 
             $log = new Log('error.log');
@@ -129,17 +117,21 @@ class EventAppApi extends Event
             // $log->write($args);
 
             if ('api/forgetpassword/addForgetpassword' == $route) {
+                
             } elseif ('api/orders/getOrdersForDelivery' == $route) {
                 $groups = ['Delivery Team', 'Administrator', 'API User', 'vendor'];
                 if (!$this->authenticateByGroup($groups)) {
                     return;
                 }
-            }
-            elseif ('api/customer/login/getloginbyadmin' == $route) {
+            } elseif ('api/customer/login/getloginbyadmin' == $route) {
                 // Authorize
                 $this->load->controller('api/customer/login/getloginbyadmin', $args);
-            } 
-             else {
+            }
+            
+         elseif ('api/categories/getCategories' == $route) {
+            // Authorize
+            $this->load->controller('api/categories/getCategories', $args);
+            } else {
                 $groups = ['Administrator', 'API User', 'vendor'];
                 if (!$this->authenticateByGroup($groups)) {
                     return;
@@ -153,32 +145,31 @@ class EventAppApi extends Event
             $this->response->output();
         }
 
-        /*if($route == 'api/forgetpassword/addForgetpassword') {
+        /* if($route == 'api/forgetpassword/addForgetpassword') {
 
-        } else {
-            if (!$this->authenticate()) {
-                return;
-            }
-        }
+          } else {
+          if (!$this->authenticate()) {
+          return;
+          }
+          }
 
 
-        // Action
-        $this->load->controller($route, $args);
+          // Action
+          $this->load->controller($route, $args);
 
-        // Echo
-        $this->response->output();*/
+          // Echo
+          $this->response->output(); */
 
         die();
     }
 
-    private function getPath()
-    {
+    private function getPath() {
         $parts = [];
 
         $query_string = $this->uri->getQuery();
 
         $path = str_replace($this->url->getFullUrl(), '', rawurldecode($this->uri->toString()));
-        $path = str_replace('?'.$query_string, '', $path);
+        $path = str_replace('?' . $query_string, '', $path);
 
         if (empty($path)) {
             return $parts;
@@ -193,8 +184,7 @@ class EventAppApi extends Event
         return $parts;
     }
 
-    private function authenticate()
-    {
+    private function authenticate() {
         $username = $password = '';
 
         if (!empty($this->request->server['PHP_AUTH_USER']) && !empty($this->request->server['PHP_AUTH_PW'])) {
@@ -239,8 +229,7 @@ class EventAppApi extends Event
         return true;
     }
 
-    private function authenticateByGroup($groups = [])
-    {
+    private function authenticateByGroup($groups = []) {
         $username = $password = '';
 
         if (!empty($this->request->server['PHP_AUTH_USER']) && !empty($this->request->server['PHP_AUTH_PW'])) {
@@ -287,8 +276,7 @@ class EventAppApi extends Event
         return true;
     }
 
-    private function customer_authenticate()
-    {
+    private function customer_authenticate() {
         $username = $password = '';
         //unset($this->session->data['customer_id']);die;
         if ($this->customer->isLogged()) {
@@ -299,8 +287,8 @@ class EventAppApi extends Event
             // mod_php servers
             //echo "here php";
 
-            /*echo "<pre>";print_r($this->request->server);die;
-        echo "<pre>";print_r($password."hh".$username);die;*/
+            /* echo "<pre>";print_r($this->request->server);die;
+              echo "<pre>";print_r($password."hh".$username);die; */
 
             $username = $this->request->server['PHP_AUTH_USER'];
             $password = $this->request->server['PHP_AUTH_PW'];
@@ -342,15 +330,13 @@ class EventAppApi extends Event
         return true;
     }
 
-    private function getMethod()
-    {
+    private function getMethod() {
         $method = isset($this->request->server['REQUEST_METHOD']) ? $this->request->server['REQUEST_METHOD'] : 'GET';
 
         return strtolower($method);
     }
 
-    private function getArguments($path, $method)
-    {
+    private function getArguments($path, $method) {
         $args = [];
 
         switch ($method) {
@@ -390,31 +376,28 @@ class EventAppApi extends Event
         return $args;
     }
 
-    private function getRoute($path, $method)
-    {
+    private function getRoute($path, $method) {
         $folder = $path[0];
         $file = $path[1];
         $function = $this->getFunction($path, $method);
 
-        $route = $folder.'/'.$file.'/'.$function; //exit;
+        $route = $folder . '/' . $file . '/' . $function; //exit;
 
         return $route;
     }
 
-    private function getCustomerRoute($path, $method)
-    {
+    private function getCustomerRoute($path, $method) {
         $folder = $path[0];
         $file = $path[1];
         $file1 = $path[2];
         $function = $this->getFunction($path, $method);
 
-        $route = $folder.'/'.$file.'/'.$file1.'/'.$function;
+        $route = $folder . '/' . $file . '/' . $file1 . '/' . $function;
 
         return $route;
     }
 
-    private function getFunction($path, $method)
-    {
+    private function getFunction($path, $method) {
         $methods = ['get' => 'get', 'post' => 'add', 'put' => 'edit', 'delete' => 'delete'];
 
         $log = new Log('error.log');
@@ -448,11 +431,11 @@ class EventAppApi extends Event
         $log->write($name);
 
         if (!$all_singular && ('get' == $method)) {
-            $function = $methods[$method].ucfirst($name);
+            $function = $methods[$method] . ucfirst($name);
         } else {
             $singular = Inflector::get()->singularize($name);
 
-            $function = $methods[$method].ucfirst($singular);
+            $function = $methods[$method] . ucfirst($singular);
         }
 
         $log->write($function);
@@ -460,8 +443,7 @@ class EventAppApi extends Event
         return $function;
     }
 
-    public function getAuthorizationHeader()
-    {
+    public function getAuthorizationHeader() {
         $headers = null;
         if (isset($_SERVER['Authorization'])) {
             $headers = trim($_SERVER['Authorization']);
@@ -480,8 +462,7 @@ class EventAppApi extends Event
         return $headers;
     }
 
-    private function customer_token_authenticate()
-    {
+    private function customer_token_authenticate() {
         $res['status'] = 10022;
         $res['message'] = 'Unauthorized';
 
@@ -490,14 +471,14 @@ class EventAppApi extends Event
         // HEADER: Get the access token from the header
         if (!empty($headers)) {
             if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
-                /*echo "<pre>";print_r($matches);die;
-                return $matches[1];*/
+                /* echo "<pre>";print_r($matches);die;
+                  return $matches[1]; */
             }
         }
 
         $log = new Log('error.log');
         $log->write('customer_token_authenticate');
-        $log->write($this->customer->isLogged().'cerf');
+        $log->write($this->customer->isLogged() . 'cerf');
         $log->write($matches);
         //echo "<pre>";print_r($this->customer->isLogged());die;
 
@@ -513,18 +494,39 @@ class EventAppApi extends Event
                 if (isset($DecodedDataArray) && isset($DecodedDataArray->data)) {
                     $this->session->data['customer_id'] = $DecodedDataArray->data->id;
 
-                    $customer_query = $this->db->query('SELECT * FROM '.DB_PREFIX."customer WHERE customer_id = '".(int) $DecodedDataArray->data->id."' AND status = '1'");
+                    $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $DecodedDataArray->data->id . "' AND status = '1'");
 
                     //echo "<pre>";print_r($customer_query->row);die;
                     if ($customer_query->num_rows) {
                         $log->write('in customer st');
+                        $log->write($customer_query->row['customer_category']);
+
+                        /* SET CUSTOMER CATEGORY */
+                        $data['customer_category'] = NULL;
+                        if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                            $parent_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($customer_query->row['parent']) . "' AND status = '1' AND approved='1'");
+                            if ($customer_query->num_rows > 0 && $parent_customer_query->row['customer_id'] > 0) {
+                                $data['customer_category'] = $parent_customer_query->row['customer_category'];
+                            } else {
+                                $data['customer_category'] = NULL;
+                            }
+                        }
+
+                        if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
+                            $data['customer_category'] = $customer_query->row['customer_category'];
+                        }
+
+                        $customer_query->row['customer_category'] = $data['customer_category'];
+                        //$this->customer->setVariables($data['customer_category']);
+                        /* SET CUSTOMER CATEGORY */
+
                         $this->customer->setVariables($customer_query->row);
                     } else {
                         return $res;
                     }
-
-                    $log->write($this->customer->isLogged().'cerfxx');
-                    $log->write($this->customer->getId().'cerfxx22');
+                    $log->write($this->customer->getCustomerCategory() . 'customer_category');
+                    $log->write($this->customer->isLogged() . 'cerfxx');
+                    $log->write($this->customer->getId() . 'cerfxx22');
                 } else {
                     return $res;
                 }
@@ -540,4 +542,5 @@ class EventAppApi extends Event
         //echo "<pre>";print_r($res);die;
         return $res;
     }
+
 }

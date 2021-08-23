@@ -46,7 +46,7 @@ $_['error_fax'] = 'Tax number is required and should only have alpha numeric val
 $_['error_custom_field'] = '%s required!';
 $_['error_companyname'] = 'Company Name must be between 1 and 255 characters!';
 $_['error_companyaddress'] = 'Company Address must be between 1 and 255 characters!';
-
+$_['error_password'] = 'Password must be between 6 and 20 characters!';
 $_['error_gender'] = 'Please select gender';
 $_['error_dob'] = 'Please select date of birth';
 

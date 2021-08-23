@@ -171,6 +171,22 @@ class ControllerApiCustomerAccount extends Controller
             }
         }
 
+
+        if (!isset($args['password'])) {
+            // $this->error['password'] = $this->language->get('error_password');//required field will be validated from ui
+        } else {
+
+
+
+        if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 6) || (utf8_strlen($this->request->post['password']) > 20)) {
+            $this->error['password'] = $this->language->get('error_password');
+        }
+
+        if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
+            $this->error['password'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
+        }
+        
+        }
         /*if ( ( utf8_strlen( $args['password'] ) >= 1 ) && ( utf8_strlen( $args['password'] ) < 4 ) || ( utf8_strlen( $args['password'] ) > 20 ) ) {
             $this->error['password'] = $this->language->get( 'error_password' );
         }

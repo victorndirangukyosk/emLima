@@ -700,6 +700,103 @@ class ControllerCheckoutCart extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    
+    //update for single product
+    public function multiupdate() {
+        $log = new Log('error.log');
+        $log->write('products_multiupdate');
+        $log->write($this->request->post['products']);
+        $log->write('products_multiupdate');
+        $this->load->language('checkout/cart');
+
+        $json = [];
+
+        $json['location'] = 'module';
+
+        /// Update
+        foreach ($this->request->post['products'] as $update_prod) {
+            $ripe = isset($update_prod['ripe']) && $update_prod['ripe'] != NULL ? $update_prod['ripe'] : NULL;
+            $product_note = isset($update_prod['product_note']) && $update_prod['product_note'] != NULL ? $update_prod['product_note'] : NULL;
+            $produce_type = isset($update_prod['produce_type']) && $update_prod['produce_type'] != NULL ? $update_prod['produce_type'] : NULL;
+            $product_key = isset($update_prod['key']) && $update_prod['key'] != NULL ? $update_prod['key'] : NULL;
+            $product_quantity = isset($update_prod['quantity']) && $update_prod['quantity'] != NULL ? $update_prod['quantity'] : NULL;
+            /* console.log('ripe');
+              console.log($ripe); */
+
+            //echo $this->request->post['ripe'];
+            $this->cart->update($product_key, $product_quantity, $product_note, $produce_type);
+            unset($this->session->data['shipping_method']);
+            unset($this->session->data['shipping_methods']);
+            unset($this->session->data['payment_method']);
+            unset($this->session->data['payment_methods']);
+            unset($this->session->data['reward']);
+        }
+
+        $json['count_products'] = $this->cart->countProducts();
+        $json['total_amount'] = $this->currency->format($this->cart->getTotal());
+
+        // Validate minimum quantity requirements.
+        $products_cart = $this->cart->getProducts();
+
+        $product_total_count = 0;
+        $product_total_amount = 0;
+
+        $data['products_details'] = [];
+        $this->load->model('tool/image');
+        foreach ($products_cart as $product_cart) {
+            $product_total = 0;
+
+            foreach ($products_cart as $product_2) {
+                if ($product_2['product_store_id'] == $product_cart['product_store_id']) {
+                    $product_total += $product_2['quantity'];
+                }
+            }
+
+            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                $price = $this->currency->format($this->tax->calculate($product_cart['price'], $product_cart['tax_class_id'], $this->config->get('config_tax')));
+                $price_without_currency_code = $this->tax->calculate($product_cart['price'], $product_cart['tax_class_id'], $this->config->get('config_tax'));
+            } else {
+                $price = false;
+            }
+
+            // Display prices
+            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                $total = $this->currency->format($this->tax->calculate($product_cart['price'], $product_cart['tax_class_id'], $this->config->get('config_tax')) * $product_cart['quantity']);
+            } else {
+                $total = false;
+            }
+            $product_total_count += $product_cart['quantity'];
+            $product_total_amount += $product_cart['total'];
+
+            $data['products_details'][] = [
+                'key' => $product_cart['key'],
+                'product_store_id' => $product_cart['product_store_id'],
+                'name' => $product_cart['name'],
+                'product_type' => $product_cart['product_type'],
+                'produce_type' => $product_cart['produce_type'],
+                'product_note' => $product_cart['product_note'],
+                'unit' => $product_cart['unit'],
+                'model' => $product_cart['model'],
+                'quantity' => $product_cart['quantity'],
+                'stock' => $product_cart['stock'] ? true : !(!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning')),
+                'reward' => ($product_cart['reward'] ? sprintf($this->language->get('text_points'), $product_cart['reward']) : ''),
+                'price' => $price,
+                'orginal_price' => $this->currency->format(($price_without_currency_code * $product_cart['quantity']) - (($price_without_currency_code - $product_cart['price']) * $product_cart['quantity'])),
+                'tax' => $this->currency->format(($price_without_currency_code - $product_cart['price']) * $product_cart['quantity']),
+                'total' => $total,
+                'store_id' => $product_cart['store_id'],
+            ];
+        }
+
+        $json['products_details'] = $data['products_details'];
+        $log = new Log('error.log');
+        $log->write('products_details');
+        $log->write($data['products_details']);
+        $log->write('products_details');
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 
     //add new , to add variation and ripe/un ripe
     public function addnew() {

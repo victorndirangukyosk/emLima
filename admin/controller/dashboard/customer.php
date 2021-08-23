@@ -57,7 +57,7 @@ class ControllerDashboardCustomer extends Controller {
 
         // Total Orders
         $this->load->model('sale/customer');
-
+        $this->request->get['filter_monthyear_added'] = isset($this->request->get['filter_monthyear_added']) ? $this->request->get['filter_monthyear_added'] : date('Y-m');
         $customer_total = $this->model_sale_customer->getTotalCustomersOnBoarded(['filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
 
         $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));

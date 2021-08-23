@@ -35,9 +35,10 @@ class ControllerApiCategories extends Controller {
         unset($this->session->data['customer_category']);
         $json = [];
 
-        if (!isset($this->session->data['api_id'])) {
-            $json['error'] = $this->language->get('error_permission');
-        } else {
+        // if (!isset($this->session->data['api_id'])) {
+        //     $json['error'] = $this->language->get('error_permission');
+        // } else 
+        {
             $this->load->model('api/categories');
             $this->load->model('api/products');
             $this->load->model('assets/product');
@@ -83,6 +84,7 @@ class ControllerApiCategories extends Controller {
                     $products = $this->model_assets_product->getProductsForGrid($data);
                     $cat['products_count'] = count($products);
                     if (0 == $cat['parent_id']) {
+                          if($cat['products_count']>0)
                         array_push($newCat, $cat);
                     }
                 }
@@ -95,6 +97,8 @@ class ControllerApiCategories extends Controller {
 
                     return false;
                 });
+            // echo "<pre>";print_r($categories);die; 
+                
                 foreach ($categories as $cat) {
                     $cat['name'] = htmlspecialchars_decode($cat['name']);
                     $cat['thumb'] = $this->model_tool_image->resize($cat['image'], 300, 300);
@@ -103,7 +107,10 @@ class ControllerApiCategories extends Controller {
                     $data['filter_category_id'] = $cat['category_id'];
                     $products = $this->model_assets_product->getProductsForGrid($data);
                     $cat['products_count'] = count($products);
+                    if($cat['products_count']>0)//if no products, dont display that category
+                    {
                     array_push($newCat, $cat);
+                    }
                 }
             }
 
