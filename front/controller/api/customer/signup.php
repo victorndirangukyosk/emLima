@@ -443,7 +443,7 @@ class ControllerApiCustomerSignup extends Controller
         // $api_info = $this->model_account_api->register_send_otp();
         $api_info = $this->model_account_api->resend_register_otp();
 
-        // echo "<pre>";print_r($api_info);die;
+        //   echo "<pre>";print_r($api_info);die;
         if ($api_info['status']) {
             $json['message'][] = ['type' => '', 'body' => $api_info['success_message']];
         } else {
