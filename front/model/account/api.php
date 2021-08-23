@@ -967,17 +967,36 @@ class ModelAccountApi extends Model
 
                         $data['username'] = $this->request->post['firstname'];
                         // $data['otp'] = mt_rand(1000, 9999);
-                        $data['otp'] = $this->model_account_customer->getRegisterOTP($this->request->get['telephone'], 'register');
-                        //  echo "<pre>";print_r($data['otp']);die;
+                        $data['otp'] = $this->model_account_customer->getRegisterOTP($this->request->post['telephone'], 'register');
+                        //    echo "<pre>";print_r($data['otp']);die;
 
                         if($data['otp']!=null)
                         {
+                            
+                            if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
 
-
-                        //echo "<pre>";print_r($sms_message);die;
+                                try{
+                                    $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
+                                 $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
+     
+                                 $mail = new mail($this->config->get('config_mail'));
+                                 $mail->setTo($this->request->post['email']);
+                                 $mail->setFrom($this->config->get('config_from_email'));
+                                 $mail->setSubject($subject);
+                                 $mail->setSender($this->config->get('config_name'));
+                                 $mail->setHtml($message);
+                                 $mail->send();
+                                }
+                                catch(exception $ex)
+                                {
+                                 $log->write('OTP send to Email erroe'.$ex);
+     
+                                }
+                              }
                         // if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
                            try{
-                        $sms_message = $this->emailtemplate->getSmsMessage('registerOTP', 'registerotp_2', $data);
+                        // $sms_message = $this->emailtemplate->getSmsMessage('registerOTP', 'registerotp_2', $data);
+                        //  echo "<pre>";print_r($sms_message);die;
 
                             $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
                             $log->write('OTP send to phone number '.$this->request->post['phone']);
@@ -987,6 +1006,8 @@ class ModelAccountApi extends Model
                            catch(exception $ex)
                            {
                             $log->write('error sending OTP to phone number'.$ex);
+                            // echo "<pre>";print_r($sms_message);die;
+
                            }
 
 
@@ -998,28 +1019,9 @@ class ModelAccountApi extends Model
                         // $data['success_message'] = $this->language->get('text_otp_sent').' '.$this->request->post['phone'];
                         $data['success_message'] = $this->language->get('text_otp_sent');
 
-                         if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
-
-                           try{
-                               $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
-                            $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
-
-                            $mail = new mail($this->config->get('config_mail'));
-                            $mail->setTo($this->request->get['email']);
-                            $mail->setFrom($this->config->get('config_from_email'));
-                            $mail->setSubject($subject);
-                            $mail->setSender($this->config->get('config_name'));
-                            $mail->setHtml($message);
-                            $mail->send();
-                           }
-                           catch(exception $ex)
-                           {
-                            $log->write('OTP send to Email erroe'.$ex);
-
-                           }
-                         }
+                      
                      #endregion
-                     $data['status'] = true;
+                        $data['status'] = true;
                         }
                         else{
 
