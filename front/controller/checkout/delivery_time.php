@@ -1980,7 +1980,8 @@ class Controllercheckoutdeliverytime extends Controller {
         $stores = $this->cart->getStores();
         foreach ($stores as $store_id) {
             $this->session->data['timeslot'][$store_id] = $data['selected_slot'];
-            $this->session->data['dates'][$store_id] = current($data['dates']);
+            $this->session->data['dates'][$store_id] = $data['selected_date_slot'];
+            //$this->session->data['dates'][$store_id] = current($data['dates']);
             //$this->session->data['dates'][$store_id] = $data['dates'][0];
             $this->load->model('user/user');
             $store_details = $this->model_user_user->getVendor($store_id);
