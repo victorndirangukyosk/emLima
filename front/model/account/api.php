@@ -1028,7 +1028,7 @@ class ModelAccountApi extends Model
                         // echo "<pre>";print_r("sdasd");die;
 
                             $data['status'] = false;
-                            $data['warning'] = "Please register again.OTP not available";
+                            $data['warning'] = "Data not available.Please contact kwikbasket team";
                         }
 
 
