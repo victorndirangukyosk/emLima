@@ -1118,7 +1118,7 @@ class ControllerSaleCustomer extends Controller {
     }
 
     protected function getotpList() {
-        $this->load->language('sale/customer');
+        $this->load->language('sale/customerotp');
 
         if (isset($this->request->get['filter_company'])) {
             $filter_company = $this->request->get['filter_company'];
@@ -1503,12 +1503,12 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_email'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
-        $data['sort_customer_group'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=customer_group' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
-        $data['sort_ip'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('sale/customer/customer_otp', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_email'] = $this->url->link('sale/customer/customer_otp', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
+        $data['sort_customer_group'] = $this->url->link('sale/customer/customer_otp', 'token=' . $this->session->data['token'] . '&sort=customer_group' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('sale/customer/customer_otp', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
+        $data['sort_ip'] = $this->url->link('sale/customer/customer_otp', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/customer/customer_otp', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
 
         $url = '';
 
@@ -1580,7 +1580,7 @@ class ControllerSaleCustomer extends Controller {
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/customer/customer_otp', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -1601,10 +1601,6 @@ class ControllerSaleCustomer extends Controller {
         $data['filter_sub_customer_show'] = $filter_sub_customer_show;
         $data['filter_date_added'] = $filter_date_added;
 
-        $this->load->model('sale/customer_group');
-
-        $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
-
         $this->load->model('setting/store');
 
         $data['stores'] = $this->model_setting_store->getStores();
@@ -1615,8 +1611,6 @@ class ControllerSaleCustomer extends Controller {
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
-        $this->load->model('user/accountmanager');
-        $data['accountmanagers'] = $this->model_sale_customer_group->getCustomerGroups();
 
         $this->response->setOutput($this->load->view('sale/customer_otp_list.tpl', $data));
     }
