@@ -149,6 +149,8 @@
                     <a href="<?php echo $sort_email; ?>"><?php echo $column_email; ?></a>
                     <?php } ?></td>
                   <td class="text-left"><?php echo $column_telephone; ?></td>
+                  <td class="text-left">OTP</td>
+                  <td class="text-left">TYPE</td>
                   <td class="text-left">Source</td>
                 </tr>
               </thead>
@@ -165,6 +167,8 @@
                    <br/> <?php echo $customer['company_name']; ?></td>
                   <td class="text-left"><?php echo $customer['email']; ?></td>
                   <td class="text-left"><?php echo $customer['telephone']; ?></td>
+                  <td class="text-left"><?php echo $customer['otp']; ?></td>
+                  <td class="text-left"><?php echo $customer['type']; ?></td>
                   <td class="text-left"><?php echo $customer['source']; ?></td>
                 </tr>
                 <?php } ?>

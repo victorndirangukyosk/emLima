@@ -1314,7 +1314,6 @@ class ControllerSaleCustomer extends Controller {
             'href' => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-
         $data['customers'] = [];
 
         $filter_data = [
@@ -1362,6 +1361,8 @@ class ControllerSaleCustomer extends Controller {
                 'email' => $result['email'],
                 'telephone' => $customer_phone,
                 'source' => $result['source'],
+                'otp' => $result['otp'],
+                'type' => $result['type'],
             ];
         }
 
@@ -1611,6 +1612,8 @@ class ControllerSaleCustomer extends Controller {
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+        $this->load->model('sale/customer_group');
+        $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
 
         $this->response->setOutput($this->load->view('sale/customer_otp_list.tpl', $data));
     }
