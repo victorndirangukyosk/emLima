@@ -95,7 +95,7 @@
                                         <select class="form-control" id="city-id" name="city-id">
                                             <option value="">City</option>
                                             <?php foreach($cities as $city){?>
-                                            <option value="<?=city['city_id']?>">
+                                            <option value="<?=$city['city_id'];?>">
                                                 <?=$city['name'];?>
                                             </option>
                                         <?php } ?>
