@@ -59,7 +59,7 @@ class Controllercheckoutdeliverytime extends Controller {
             $pre_defined_slots = array('12:00pm - 02:00pm');
             $selected_slot = $pre_defined_slots[0];
             $data['selected_slot'] = $selected_slot;
-            $data['selected_date_slot'] = $next_day;
+            $data['selected_date_slot'] = date('d-m-Y');
             $log->write('RANGE FOUR');
         }
 
