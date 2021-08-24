@@ -518,6 +518,10 @@ class ControllerAccountLogin extends Controller {
         $filter_data = [];
         $this->load->model('user/user');
         $data['account_managers'] = $this->model_user_user->getAccountManagerUsers($filter_data);
+        
+        $filter_city_data = [];
+        $this->load->model('account/customer');
+        $data['cities'] = $this->model_account_customer->getAllCities($filter_city_data);
 
         if (isset($this->error['captcha'])) {
             $data['error_captcha'] = $this->error['captcha'];

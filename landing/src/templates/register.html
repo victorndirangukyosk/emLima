@@ -91,6 +91,19 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
+                                        <label for="city-id">City</label>
+                                        <select class="form-control" id="city-id" name="city-id">
+                                            <option value="">City</option>
+                                            <?php foreach($cities as $city){?>
+                                            <option value="<?=city['city_id']?>">
+                                                <?=$city['name'];?>
+                                            </option>
+                                        <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
                                         <label for="register-accountmanager-id">Account Manager Name</label>
                                         <select class="form-control" id="register-accountmanager-id" name="register-accountmanager-id">
                                             <option value="">Account Manager</option>
