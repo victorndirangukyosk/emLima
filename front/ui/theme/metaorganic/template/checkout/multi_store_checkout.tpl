@@ -1285,6 +1285,7 @@ function loadDeliveryTime(store_id) {
         success: function(html) {
             console.log(html);
             $('#delivery-time-wrapper-'+store_id+'').html(html);
+            setDeliveryTime();
         },
         error: function(xhr, ajaxOptions, thrownError) {
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
@@ -1297,7 +1298,7 @@ function loadDeliveryTime(store_id) {
 function setDeliveryTime() {
     var store_id = 75;
 
-    $('#delivery-time-wrapper-'+store_id+'').html('<center><div class="login-loader" style=""></div></center>');
+    /*$('#delivery-time-wrapper-'+store_id+'').html('<center><div class="login-loader" style=""></div></center>');*/
 
     console.log("loadDeliveryTime");
     var shipping_method = $('input[name=\'shipping_method-'+store_id+'\']:checked').attr('value')
@@ -1331,11 +1332,14 @@ function setDeliveryTime() {
             console.log(json['dates'][Object.keys(json['dates'])[0]]);
             
             $.each(json['disabled_slot'], function( index, value ) {
-            $('.timeslot-selected[data-value="' + value + '"][data-date="'+json['dates'][Object.keys(json['dates'])[0]]+'"]').addClass( "disabled" );
+            console.log('disabled_slot');
+            console.log(value);
+            console.log('disabled_slot');
+            $('.timeslot-selected[data-value="' + value + '"][data-date="'+json['selected_date_slot']+'"]').addClass( "disabled" );
             });
             
-            $('#select-timeslot').html("Selected : "+ json['dates'][Object.keys(json['dates'])[0]]+ ', ' + json['selected_slot']);
-            $('.timeslot-selected[data-value="' + json['selected_slot'] + '"][data-date="'+json['dates'][Object.keys(json['dates'])[0]]+'"]').children().children().prop("checked", true);
+            $('#select-timeslot').html("Selected : "+ json['selected_date_slot'] + ', ' + json['selected_slot']);
+            $('.timeslot-selected[data-value="' + json['selected_slot'] + '"][data-date="'+json['selected_date_slot']+'"]').children().children().prop("checked", true);
             $('#payment-next').removeAttr('disabled');
             $('#payment-next').removeClass('btn-grey');
             $('#payment-next').addClass('btn-default');
