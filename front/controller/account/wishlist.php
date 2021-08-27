@@ -309,7 +309,7 @@ class ControllerAccountWishList extends Controller {
 
                 // product_store_id 11
                 if ($data['store_id']) {
-                    $productStoreData = $this->model_assets_product->getProductStoreId($product['product_id'], $data['store_id']);
+                    $productStoreData = $this->model_assets_product->getProductStoreId($product['product_id'], $product['store_id']);
 
                     //echo "<pre>";print_r($productStoreData);die;
 
