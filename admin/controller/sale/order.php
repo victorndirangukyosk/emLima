@@ -8763,6 +8763,7 @@ class ControllerSaleOrder extends Controller {
             }
         }
         try {
+        sleep(5);    
         $this->SendMailToCustomerWithDriverDetails($order_id);
         } catch(exception $ex) {
         $log = new Log('error.log');
