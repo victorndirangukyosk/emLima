@@ -544,6 +544,9 @@ class ModelAssetsProduct extends Model {
                   $r['price'] = $o_price;
                   } */
 
+                $r['price'] = strval($r['price']);
+                $r['special_price'] = strval($r['special_price']);
+
                 $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
                 $r['category_pricing_variant_status'] = is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1;
                 $res = [
