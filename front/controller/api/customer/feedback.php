@@ -13,6 +13,10 @@ class ControllerApiCustomerFeedback extends Controller
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
+        $log = new Log('error.log');
+        $log->write('addFeedback');
+        $log->write($this->request->post);
+        $log->write('addFeedback');
         //params selectedorderid,feedback_type,comments,selectissuetype,rating_id
         try{       
 
