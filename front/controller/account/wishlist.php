@@ -143,6 +143,7 @@ class ControllerAccountWishList extends Controller {
     }
 
     public function info() {
+        $cachePrice_data = $this->cache->get('category_price_data');
         $this->load->language('account/wishlist');
 
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
@@ -326,6 +327,66 @@ class ControllerAccountWishList extends Controller {
 
                 if (count($product_info) > 0) {
                     //echo "<pre>";print_r($product_info);die;
+
+                    if (!$this->config->get('config_inclusiv_tax')) {
+                        //FOR CATEGORY PRICING
+                        $category_s_price = 0;
+                        $category_o_price = 0;
+                        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product_info['store_id']])) {
+                            $category_s_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product_info['store_id']];
+                            $category_o_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product_info['store_id']];
+                            if ($category_s_price != NULL && $category_s_price > 0) {
+                                $product_info['price'] = $category_s_price;
+                                $product_info['special_price'] = $category_s_price;
+                            }
+                        }
+                        //FOR CATEGORY PRICING
+                        //get price html
+                        if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                            $price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+
+                            $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                        } else {
+                            $price = false;
+                        }
+                        if ((float) $product_info['special_price']) {
+                            $special_price = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+
+                            $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                        } else {
+                            $special_price = false;
+                        }
+
+                        $product_info['price'] = $price;
+                        $product_info['special_price'] = $special_price;
+                    } else {
+                        if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                            $price = $this->currency->format($product_info['price']);
+                        } else {
+                            $price = $product_info['price'];
+                        }
+
+                        if ((float) $product_info['special_price']) {
+                            $special_price = $this->currency->format($product_info['special_price']);
+                        } else {
+                            $special_price = $product_info['special_price'];
+                        }
+
+                        $s_price = $product_info['special_price'];
+                        $o_price = $product_info['price'];
+
+                        // echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price.'</br>';//exit;
+
+                        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product_info['store_id']])) {
+                            $s_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product_info['store_id']];
+                            $o_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product_info['store_id']];
+                            $special_price = $this->currency->format($s_price);
+                            $price = $this->currency->format($o_price);
+                        }
+
+                        $product_info['price'] = $price;
+                        $product_info['special_price'] = $special_price;
+                    }
 
                     if ((float) $product_info['special_price']) {
                         $special_price = $this->currency->format($product_info['special_price']);
@@ -861,7 +922,6 @@ class ControllerAccountWishList extends Controller {
 
         if (is_array($Orderlist_products) && count($Orderlist_products) > 0) {
             $log->write('Order List Products inner');
-
 
             foreach ($Orderlist_products as $Orderlist_product) {
                 $log->write('Order List Products 2');
