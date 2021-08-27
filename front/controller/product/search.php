@@ -1,9 +1,8 @@
 <?php
 
-class ControllerProductSearch extends Controller
-{
-    public function index()
-    {
+class ControllerProductSearch extends Controller {
+
+    public function index() {
         $this->load->language('product/category');
 
         $this->load->language('product/search');
@@ -96,9 +95,9 @@ class ControllerProductSearch extends Controller
         }
 
         if (isset($this->request->get['search'])) {
-            $this->document->setTitle($this->language->get('heading_title').' - '.$this->request->get['search']);
+            $this->document->setTitle($this->language->get('heading_title') . ' - ' . $this->request->get['search']);
         } elseif (isset($this->request->get['tag'])) {
-            $this->document->setTitle($this->language->get('heading_title').' - '.$this->language->get('heading_tag').$this->request->get['tag']);
+            $this->document->setTitle($this->language->get('heading_title') . ' - ' . $this->language->get('heading_tag') . $this->request->get['tag']);
         } else {
             $this->document->setTitle($this->language->get('heading_title'));
         }
@@ -113,39 +112,39 @@ class ControllerProductSearch extends Controller
         $url = '';
 
         if (isset($this->request->get['search'])) {
-            $url .= '&search='.urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['tag'])) {
-            $url .= '&tag='.urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
+            $url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['description'])) {
-            $url .= '&description='.$this->request->get['description'];
+            $url .= '&description=' . $this->request->get['description'];
         }
 
         if (isset($this->request->get['category_id'])) {
-            $url .= '&category_id='.$this->request->get['category_id'];
+            $url .= '&category_id=' . $this->request->get['category_id'];
         }
 
         if (isset($this->request->get['sub_category'])) {
-            $url .= '&sub_category='.$this->request->get['sub_category'];
+            $url .= '&sub_category=' . $this->request->get['sub_category'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort='.$this->request->get['sort'];
+            $url .= '&sort=' . $this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order='.$this->request->get['order'];
+            $url .= '&order=' . $this->request->get['order'];
         }
 
         if (isset($this->request->get['page'])) {
-            $url .= '&page='.$this->request->get['page'];
+            $url .= '&page=' . $this->request->get['page'];
         }
 
         if (isset($this->request->get['limit'])) {
-            $url .= '&limit='.$this->request->get['limit'];
+            $url .= '&limit=' . $this->request->get['limit'];
         }
 
         $data['breadcrumbs'][] = [
@@ -154,7 +153,7 @@ class ControllerProductSearch extends Controller
         ];
 
         if (isset($this->request->get['search'])) {
-            $data['heading_title'] = $this->language->get('heading_title').' - '.$this->request->get['search'];
+            $data['heading_title'] = $this->language->get('heading_title') . ' - ' . $this->request->get['search'];
         } else {
             $data['heading_title'] = $this->language->get('heading_title');
         }
@@ -167,10 +166,10 @@ class ControllerProductSearch extends Controller
             $data['location_name'] = $this->getHeaderPlace($_COOKIE['location']);
             $data['location_name_full'] = $data['location_name'];
 
-            /*if(isset($_COOKIE['location_name'])) {
-                $data['location_name'] = $_COOKIE['location_name'];
-                $data['location_name_full'] = $_COOKIE['location_name'];
-            }*/
+            /* if(isset($_COOKIE['location_name'])) {
+              $data['location_name'] = $_COOKIE['location_name'];
+              $data['location_name_full'] = $_COOKIE['location_name'];
+              } */
         }
 
         $data['text_change_locality_warning'] = $this->language->get('text_change_locality_warning');
@@ -180,7 +179,7 @@ class ControllerProductSearch extends Controller
         $data['button_change_store'] = $this->language->get('button_change_store');
         $data['text_change_locality'] = $this->language->get('text_change_locality');
         $data['text_empty'] = $this->language->get('text_empty');
-        $data['text_search'] = 'Search results for <b>"'.$search.'"</b>';
+        $data['text_search'] = 'Search results for <b>"' . $search . '"</b>';
         $data['text_keyword'] = $this->language->get('text_keyword');
         $data['text_category'] = $this->language->get('text_category');
         $data['text_sub_category'] = $this->language->get('text_sub_category');
@@ -270,7 +269,7 @@ class ControllerProductSearch extends Controller
 
             //echo "<pre>";print_r($results);die;
             foreach ($results as $result) {
-                if (file_exists(DIR_IMAGE.$result['image'])) {
+                if (file_exists(DIR_IMAGE . $result['image'])) {
                     $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
                 } else {
                     $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
@@ -343,41 +342,41 @@ class ControllerProductSearch extends Controller
                     'thumb' => $image,
                     'name' => $name,
                     'unit' => $unit,
-                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
+                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
                     'price' => $price,
                     'special' => $special_price,
                     'percent_off' => number_format($percent_off, 0),
                     'tax' => $result['tax_percentage'],
                     'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                     'rating' => 0,
-                    'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                    'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                 ];
             }
 
             $url = '';
 
             if (isset($this->request->get['search'])) {
-                $url .= '&search='.urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['tag'])) {
-                $url .= '&tag='.urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['description'])) {
-                $url .= '&description='.$this->request->get['description'];
+                $url .= '&description=' . $this->request->get['description'];
             }
 
             if (isset($this->request->get['category_id'])) {
-                $url .= '&category_id='.$this->request->get['category_id'];
+                $url .= '&category_id=' . $this->request->get['category_id'];
             }
 
             if (isset($this->request->get['sub_category'])) {
-                $url .= '&sub_category='.$this->request->get['sub_category'];
+                $url .= '&sub_category=' . $this->request->get['sub_category'];
             }
 
             if (isset($this->request->get['limit'])) {
-                $url .= '&limit='.$this->request->get['limit'];
+                $url .= '&limit=' . $this->request->get['limit'];
             }
 
             $data['sorts'] = [];
@@ -385,87 +384,87 @@ class ControllerProductSearch extends Controller
             $data['sorts'][] = [
                 'text' => $this->language->get('text_default'),
                 'value' => 'p.sort_order-ASC',
-                'href' => $this->url->link('product/search', 'sort=p.sort_order&order=ASC'.$url),
+                'href' => $this->url->link('product/search', 'sort=p.sort_order&order=ASC' . $url),
             ];
 
             $data['sorts'][] = [
                 'text' => $this->language->get('text_name_asc'),
                 'value' => 'pd.name-ASC',
-                'href' => $this->url->link('product/search', 'sort=pd.name&order=ASC'.$url),
+                'href' => $this->url->link('product/search', 'sort=pd.name&order=ASC' . $url),
             ];
 
             $data['sorts'][] = [
                 'text' => $this->language->get('text_name_desc'),
                 'value' => 'pd.name-DESC',
-                'href' => $this->url->link('product/search', 'sort=pd.name&order=DESC'.$url),
+                'href' => $this->url->link('product/search', 'sort=pd.name&order=DESC' . $url),
             ];
 
             $data['sorts'][] = [
                 'text' => $this->language->get('text_price_asc'),
                 'value' => 'p.price-ASC',
-                'href' => $this->url->link('product/search', 'sort=p.price&order=ASC'.$url),
+                'href' => $this->url->link('product/search', 'sort=p.price&order=ASC' . $url),
             ];
 
             $data['sorts'][] = [
                 'text' => $this->language->get('text_price_desc'),
                 'value' => 'p.price-DESC',
-                'href' => $this->url->link('product/search', 'sort=p.price&order=DESC'.$url),
+                'href' => $this->url->link('product/search', 'sort=p.price&order=DESC' . $url),
             ];
 
             if ($this->config->get('config_review_status')) {
                 $data['sorts'][] = [
                     'text' => $this->language->get('text_rating_desc'),
                     'value' => 'rating-DESC',
-                    'href' => $this->url->link('product/search', 'sort=rating&order=DESC'.$url),
+                    'href' => $this->url->link('product/search', 'sort=rating&order=DESC' . $url),
                 ];
 
                 $data['sorts'][] = [
                     'text' => $this->language->get('text_rating_asc'),
                     'value' => 'rating-ASC',
-                    'href' => $this->url->link('product/search', 'sort=rating&order=ASC'.$url),
+                    'href' => $this->url->link('product/search', 'sort=rating&order=ASC' . $url),
                 ];
             }
 
             $data['sorts'][] = [
                 'text' => $this->language->get('text_model_asc'),
                 'value' => 'p.model-ASC',
-                'href' => $this->url->link('product/search', 'sort=p.model&order=ASC'.$url),
+                'href' => $this->url->link('product/search', 'sort=p.model&order=ASC' . $url),
             ];
 
             $data['sorts'][] = [
                 'text' => $this->language->get('text_model_desc'),
                 'value' => 'p.model-DESC',
-                'href' => $this->url->link('product/search', 'sort=p.model&order=DESC'.$url),
+                'href' => $this->url->link('product/search', 'sort=p.model&order=DESC' . $url),
             ];
 
             $url = '';
 
             if (isset($this->request->get['search'])) {
-                $url .= '&search='.urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['tag'])) {
-                $url .= '&tag='.urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['description'])) {
-                $url .= '&description='.$this->request->get['description'];
+                $url .= '&description=' . $this->request->get['description'];
             }
 
             if (isset($this->request->get['category_id'])) {
-                $url .= '&category_id='.$this->request->get['category_id'];
+                $url .= '&category_id=' . $this->request->get['category_id'];
             }
 
             if (isset($this->request->get['sub_category'])) {
-                $url .= '&sub_category='.$this->request->get['sub_category'];
+                $url .= '&sub_category=' . $this->request->get['sub_category'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort='.$this->request->get['sort'];
+                $url .= '&sort=' . $this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order='.$this->request->get['order'];
+                $url .= '&order=' . $this->request->get['order'];
             }
 
             $data['limits'] = [];
@@ -478,56 +477,56 @@ class ControllerProductSearch extends Controller
                 $data['limits'][] = [
                     'text' => $value,
                     'value' => $value,
-                    'href' => $this->url->link('product/search', $url.'&limit='.$value),
+                    'href' => $this->url->link('product/search', $url . '&limit=' . $value),
                 ];
             }
 
             $url = '';
 
             if (isset($this->request->get['search'])) {
-                $url .= '&search='.urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['tag'])) {
-                $url .= '&tag='.urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
+                $url .= '&tag=' . urlencode(html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['description'])) {
-                $url .= '&description='.$this->request->get['description'];
+                $url .= '&description=' . $this->request->get['description'];
             }
 
             if (isset($this->request->get['category_id'])) {
-                $url .= '&category_id='.$this->request->get['category_id'];
+                $url .= '&category_id=' . $this->request->get['category_id'];
             }
 
             if (isset($this->request->get['sub_category'])) {
-                $url .= '&sub_category='.$this->request->get['sub_category'];
+                $url .= '&sub_category=' . $this->request->get['sub_category'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort='.$this->request->get['sort'];
+                $url .= '&sort=' . $this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order='.$this->request->get['order'];
+                $url .= '&order=' . $this->request->get['order'];
             }
 
             if (isset($this->request->get['limit'])) {
-                $url .= '&limit='.$this->request->get['limit'];
+                $url .= '&limit=' . $this->request->get['limit'];
             }
 
             $pagination = new Pagination();
             $pagination->total = $product_total;
             $pagination->page = $page;
             $pagination->limit = $limit;
-            $pagination->url = $this->url->link('product/search', $url.'&page={page}');
+            $pagination->url = $this->url->link('product/search', $url . '&page={page}');
 
             $data['pagination'] = $pagination->render();
 
             $data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
         }
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_categories.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_categories.css');
 
         $data['search'] = $search;
         $data['description'] = $description;
@@ -571,15 +570,14 @@ class ControllerProductSearch extends Controller
         }
 
         //echo "<pre>";print_r($data);die;
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/product/search.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/product/search.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/search.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/search.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/product/search.tpl', $data));
         }
     }
 
-    public function product_autocomplete()
-    {
+    public function product_autocomplete() {
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
         } else {
@@ -602,8 +600,7 @@ class ControllerProductSearch extends Controller
         echo json_encode($json);
     }
 
-    public function product_search()
-    {
+    public function product_search() {
         $cachePrice_data = $this->cache->get('category_price_data');
 
         if (isset($this->request->get['filter_name'])) {
@@ -631,7 +628,7 @@ class ControllerProductSearch extends Controller
             'filter_name' => $filter_name,
             'filter_category_id' => $filter_category,
         ];
-        
+
         //$json = $this->model_assets_product->getProducts($filter_data_product);
         $json = $this->model_assets_product->getProductsForHeaderSearch($filter_data_product);
         //echo "<pre>";print_r($json);die;
@@ -639,11 +636,11 @@ class ControllerProductSearch extends Controller
         $products = [];
         foreach ($json as $key => $value) {
             if (in_array($value['category_id'], $categories)) {
-                $link = $this->url->link('product/category', 'category='.$value['category_id']);
+                $link = $this->url->link('product/category', 'category=' . $value['category_id']);
                 $link_array = explode('/', $link);
                 $page_link = end($link_array);
-                $value['href_cat'] = $this->url->link('product/store', 'store_id='.ACTIVE_STORE_ID).'?cat='.$page_link.'&product='.$value['pd_name'];
-                if (file_exists(DIR_IMAGE.$value['image'])) {
+                $value['href_cat'] = $this->url->link('product/store', 'store_id=' . $value['store_id']) . '?cat=' . $page_link . '&product=' . $value['pd_name'];
+                if (file_exists(DIR_IMAGE . $value['image'])) {
                     $value['image'] = $this->model_tool_image->resize($value['image'], 100, 100);
                 } else {
                     $value['image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
@@ -662,25 +659,85 @@ class ControllerProductSearch extends Controller
                     $value['quantityadded'] = 0;
                 }
 
-                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID])) {
-                    //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
-                    $s_price = $cachePrice_data[$value['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
-                    $o_price = $cachePrice_data[$value['product_store_id'].'_'.$_SESSION['customer_category'].'_'.ACTIVE_STORE_ID];
-                    /*$value['special_price'] = $this->currency->format($s_price);
-                    $value['price'] = $this->currency->format($o_price);*/
-                    $value['special_price'] = $s_price;
-                    $value['price'] = $o_price;
+                $s_price = 0;
+                $o_price = 0;
+
+                if (!$this->config->get('config_inclusiv_tax')) {
+                    //FOR CATEGORY PRICING
+                    $category_s_price = 0;
+                    $category_o_price = 0;
+                    if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']])) {
+                        $category_s_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
+                        $category_o_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
+                        if ($category_s_price != NULL && $category_s_price > 0) {
+                            $value['price'] = $category_s_price;
+                            $value['special_price'] = $category_s_price;
+                        }
+                    }
+                    //FOR CATEGORY PRICING
+                    //get price html
+                    if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                        $price = $this->currency->format($this->tax->calculate($value['price'], $value['tax_class_id'], $this->config->get('config_tax')));
+
+                        $o_price = $this->tax->calculate($value['price'], $value['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $price = false;
+                    }
+                    if ((float) $value['special_price']) {
+                        $special_price = $this->currency->format($this->tax->calculate($value['special_price'], $value['tax_class_id'], $this->config->get('config_tax')));
+
+                        $s_price = $this->tax->calculate($value['special_price'], $value['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $special_price = false;
+                    }
+
+                    $value['price'] = $this->currency->formatWithoutCurrency($o_price);
+                    $value['special_price'] = $this->currency->formatWithoutCurrency($s_price);
+                } else {
+                    if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                        $price = $this->currency->format($value['price']);
+                    } else {
+                        $price = $value['price'];
+                    }
+
+                    if ((float) $value['special_price']) {
+                        $special_price = $this->currency->format($value['special_price']);
+                    } else {
+                        $special_price = $value['special_price'];
+                    }
+
+                    $s_price = $value['special_price'];
+                    $o_price = $value['price'];
+
+                    // echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price.'</br>';//exit;
+
+                    if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']])) {
+                        $s_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
+                        $o_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
+                    }
+                    $value['price'] = $this->currency->formatWithoutCurrency($o_price);
+                    $value['special_price'] = $this->currency->formatWithoutCurrency($s_price);
                 }
+
+                /* if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) { */
+                //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+                /* $s_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
+                  $o_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID]; */
+                /* $value['special_price'] = $this->currency->format($s_price);
+                  $value['price'] = $this->currency->format($o_price); */
+                /* $value['special_price'] = $s_price;
+                  $value['price'] = $o_price;
+                  } */
                 $products[] = $value;
             }
         }
 
         //echo "<pre>";print_r($products);die;
 
-        /*$p['product_id'] = 'getall';
-        $p['language_id'] = 'getall';
-        $p['name'] = $this->language->get( 'text_show_all_results' );
-        $p['unit'] = '';*/
+        /* $p['product_id'] = 'getall';
+          $p['language_id'] = 'getall';
+          $p['name'] = $this->language->get( 'text_show_all_results' );
+          $p['unit'] = ''; */
 
         //array_push($json, $p);
         //echo "<pre>";print_r($json);die;
@@ -688,8 +745,7 @@ class ControllerProductSearch extends Controller
         echo json_encode($products);
     }
 
-    public function getHeaderPlace($location)
-    {
+    public function getHeaderPlace($location) {
         if (isset($_COOKIE['location_name']) && !empty($_COOKIE['location_name'])) {
             $p = $_COOKIE['location_name'];
         } else {
@@ -707,14 +763,14 @@ class ControllerProductSearch extends Controller
                 if ($validateLat && $validateLat2 && $validateLat3 && $validateLat4) {
                     //echo "<pre>";print_r("er");die;
                     try {
-                        $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.urlencode($location).'&sensor=false&key='.$this->config->get('config_google_server_api_key');
+                        $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' . urlencode($location) . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
 
                         //echo "<pre>";print_r($url);
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_URL, $url);
                         $headers = [
-                                     'Cache-Control: no-cache',
-                                    ];
+                            'Cache-Control: no-cache',
+                        ];
                         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                         curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
 
@@ -747,6 +803,7 @@ class ControllerProductSearch extends Controller
                             setcookie('location_name', $p, time() + (86400 * 30 * 30 * 30 * 3), '/');
                         }
                     } catch (Exception $e) {
+                        
                     }
                 }
             }
@@ -754,4 +811,5 @@ class ControllerProductSearch extends Controller
 
         return $p;
     }
+
 }

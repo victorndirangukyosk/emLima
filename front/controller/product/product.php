@@ -1,11 +1,10 @@
 <?php
 
-class ControllerProductProduct extends Controller
-{
+class ControllerProductProduct extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
+    public function index() {
         $this->load->language('product/product');
 
         $data['breadcrumbs'] = [];
@@ -41,7 +40,7 @@ class ControllerProductProduct extends Controller
                 if (!$path) {
                     $path = $path_id;
                 } else {
-                    $path .= '_'.$path_id;
+                    $path .= '_' . $path_id;
                 }
 
                 $category_info = $this->model_assets_category->getCategory($path_id);
@@ -49,7 +48,7 @@ class ControllerProductProduct extends Controller
                 if ($category_info) {
                     $data['breadcrumbs'][] = [
                         'text' => $category_info['name'],
-                        'href' => $this->url->link('product/category', 'category='.$path),
+                        'href' => $this->url->link('product/category', 'category=' . $path),
                     ];
                 }
             }
@@ -61,24 +60,24 @@ class ControllerProductProduct extends Controller
                 $url = '';
 
                 if (isset($this->request->get['sort'])) {
-                    $url .= '&sort='.$this->request->get['sort'];
+                    $url .= '&sort=' . $this->request->get['sort'];
                 }
 
                 if (isset($this->request->get['order'])) {
-                    $url .= '&order='.$this->request->get['order'];
+                    $url .= '&order=' . $this->request->get['order'];
                 }
 
                 if (isset($this->request->get['page'])) {
-                    $url .= '&page='.$this->request->get['page'];
+                    $url .= '&page=' . $this->request->get['page'];
                 }
 
                 if (isset($this->request->get['limit'])) {
-                    $url .= '&limit='.$this->request->get['limit'];
+                    $url .= '&limit=' . $this->request->get['limit'];
                 }
 
                 $data['breadcrumbs'][] = [
                     'text' => $category_info['name'],
-                    'href' => $this->url->link('product/category', 'category='.$this->request->get['category'].$url),
+                    'href' => $this->url->link('product/category', 'category=' . $this->request->get['category'] . $url),
                 ];
             }
         }
@@ -94,19 +93,19 @@ class ControllerProductProduct extends Controller
             $url = '';
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort='.$this->request->get['sort'];
+                $url .= '&sort=' . $this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order='.$this->request->get['order'];
+                $url .= '&order=' . $this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
             if (isset($this->request->get['limit'])) {
-                $url .= '&limit='.$this->request->get['limit'];
+                $url .= '&limit=' . $this->request->get['limit'];
             }
 
             $manufacturer_info = $this->model_assets_manufacturer->getManufacturer($this->request->get['manufacturer_id']);
@@ -114,7 +113,7 @@ class ControllerProductProduct extends Controller
             if ($manufacturer_info) {
                 $data['breadcrumbs'][] = [
                     'text' => $manufacturer_info['name'],
-                    'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id='.$this->request->get['manufacturer_id'].$url),
+                    'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url),
                 ];
             }
         }
@@ -123,39 +122,39 @@ class ControllerProductProduct extends Controller
             $url = '';
 
             if (isset($this->request->get['search'])) {
-                $url .= '&search='.$this->request->get['search'];
+                $url .= '&search=' . $this->request->get['search'];
             }
 
             if (isset($this->request->get['tag'])) {
-                $url .= '&tag='.$this->request->get['tag'];
+                $url .= '&tag=' . $this->request->get['tag'];
             }
 
             if (isset($this->request->get['description'])) {
-                $url .= '&description='.$this->request->get['description'];
+                $url .= '&description=' . $this->request->get['description'];
             }
 
             if (isset($this->request->get['category_id'])) {
-                $url .= '&category_id='.$this->request->get['category_id'];
+                $url .= '&category_id=' . $this->request->get['category_id'];
             }
 
             if (isset($this->request->get['sub_category'])) {
-                $url .= '&sub_category='.$this->request->get['sub_category'];
+                $url .= '&sub_category=' . $this->request->get['sub_category'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort='.$this->request->get['sort'];
+                $url .= '&sort=' . $this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order='.$this->request->get['order'];
+                $url .= '&order=' . $this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
             if (isset($this->request->get['limit'])) {
-                $url .= '&limit='.$this->request->get['limit'];
+                $url .= '&limit=' . $this->request->get['limit'];
             }
 
             $data['breadcrumbs'][] = [
@@ -178,56 +177,56 @@ class ControllerProductProduct extends Controller
             $url = '';
 
             if (isset($this->request->get['category'])) {
-                $url .= '&category='.$this->request->get['category'];
+                $url .= '&category=' . $this->request->get['category'];
             }
 
             if (isset($this->request->get['filter'])) {
-                $url .= '&filter='.$this->request->get['filter'];
+                $url .= '&filter=' . $this->request->get['filter'];
             }
 
             if (isset($this->request->get['manufacturer_id'])) {
-                $url .= '&manufacturer_id='.$this->request->get['manufacturer_id'];
+                $url .= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
             }
 
             if (isset($this->request->get['search'])) {
-                $url .= '&search='.$this->request->get['search'];
+                $url .= '&search=' . $this->request->get['search'];
             }
 
             if (isset($this->request->get['tag'])) {
-                $url .= '&tag='.$this->request->get['tag'];
+                $url .= '&tag=' . $this->request->get['tag'];
             }
 
             if (isset($this->request->get['description'])) {
-                $url .= '&description='.$this->request->get['description'];
+                $url .= '&description=' . $this->request->get['description'];
             }
 
             if (isset($this->request->get['category_id'])) {
-                $url .= '&category_id='.$this->request->get['category_id'];
+                $url .= '&category_id=' . $this->request->get['category_id'];
             }
 
             if (isset($this->request->get['sub_category'])) {
-                $url .= '&sub_category='.$this->request->get['sub_category'];
+                $url .= '&sub_category=' . $this->request->get['sub_category'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort='.$this->request->get['sort'];
+                $url .= '&sort=' . $this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order='.$this->request->get['order'];
+                $url .= '&order=' . $this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
             if (isset($this->request->get['limit'])) {
-                $url .= '&limit='.$this->request->get['limit'];
+                $url .= '&limit=' . $this->request->get['limit'];
             }
 
             $data['breadcrumbs'][] = [
                 'text' => $product_info['name'],
-                'href' => $this->url->link('product/product', $url.'&product_id='.$this->request->get['product_id']),
+                'href' => $this->url->link('product/product', $url . '&product_id=' . $this->request->get['product_id']),
             ];
 
             $title = empty($product_info['meta_title']) ? $product_info['name'] : $product_info['meta_title'];
@@ -236,7 +235,7 @@ class ControllerProductProduct extends Controller
             $this->document->setDescription($product_info['meta_description']);
             $this->document->setKeywords($product_info['meta_keyword']);
             if (!$this->config->get('config_seo_url')) {
-                $this->document->addLink($this->url->link('product/product', 'product_id='.$this->request->get['product_id']), 'canonical');
+                $this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');
             }
             $this->document->addScript('front/ui/javascript/jquery/magnific/jquery.magnific-popup.min.js');
             $this->document->addStyle('front/ui/javascript/jquery/magnific/magnific-popup.css');
@@ -286,7 +285,7 @@ class ControllerProductProduct extends Controller
 
             $data['product_id'] = (int) $this->request->get['product_id'];
             $data['manufacturer'] = $product_info['manufacturer'];
-            $data['manufacturers'] = $this->url->link('product/manufacturer/info', 'manufacturer_id='.$product_info['manufacturer_id']);
+            $data['manufacturers'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id']);
             $data['model'] = $product_info['model'];
             $data['reward'] = $product_info['reward'];
             $data['points'] = $product_info['points'];
@@ -403,7 +402,7 @@ class ControllerProductProduct extends Controller
             }
 
             if ($this->customer->isLogged()) {
-                $data['customer_name'] = $this->customer->getFirstName().'&nbsp;'.$this->customer->getLastName();
+                $data['customer_name'] = $this->customer->getFirstName() . '&nbsp;' . $this->customer->getLastName();
             } else {
                 $data['customer_name'] = '';
             }
@@ -464,13 +463,13 @@ class ControllerProductProduct extends Controller
                     'variations' => $this->model_assets_product->getVariations($result['product_id']),
                     'thumb' => $image,
                     'name' => $result['name'],
-                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
+                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
                     'price' => $price,
                     'special' => $special,
                     'tax' => $tax,
                     'minimum' => $result['minimum'] > 0 ? $result['minimum'] : 1,
                     'rating' => $rating,
-                    'href' => $this->url->link('product/product', 'product_id='.$result['product_id']),
+                    'href' => $this->url->link('product/product', 'product_id=' . $result['product_id']),
                 ];
             }
 
@@ -482,7 +481,7 @@ class ControllerProductProduct extends Controller
                 foreach ($tags as $tag) {
                     $data['tags'][] = [
                         'tag' => trim($tag),
-                        'href' => $this->url->link('product/search', 'tag='.trim($tag)),
+                        'href' => $this->url->link('product/search', 'tag=' . trim($tag)),
                     ];
                 }
             }
@@ -519,8 +518,8 @@ class ControllerProductProduct extends Controller
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header');
 
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/product/product.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/product/product.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/product.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/product.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/product/product.tpl', $data));
             }
@@ -528,56 +527,56 @@ class ControllerProductProduct extends Controller
             $url = '';
 
             if (isset($this->request->get['category'])) {
-                $url .= '&category='.$this->request->get['category'];
+                $url .= '&category=' . $this->request->get['category'];
             }
 
             if (isset($this->request->get['filter'])) {
-                $url .= '&filter='.$this->request->get['filter'];
+                $url .= '&filter=' . $this->request->get['filter'];
             }
 
             if (isset($this->request->get['manufacturer_id'])) {
-                $url .= '&manufacturer_id='.$this->request->get['manufacturer_id'];
+                $url .= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
             }
 
             if (isset($this->request->get['search'])) {
-                $url .= '&search='.$this->request->get['search'];
+                $url .= '&search=' . $this->request->get['search'];
             }
 
             if (isset($this->request->get['tag'])) {
-                $url .= '&tag='.$this->request->get['tag'];
+                $url .= '&tag=' . $this->request->get['tag'];
             }
 
             if (isset($this->request->get['description'])) {
-                $url .= '&description='.$this->request->get['description'];
+                $url .= '&description=' . $this->request->get['description'];
             }
 
             if (isset($this->request->get['category_id'])) {
-                $url .= '&category_id='.$this->request->get['category_id'];
+                $url .= '&category_id=' . $this->request->get['category_id'];
             }
 
             if (isset($this->request->get['sub_category'])) {
-                $url .= '&sub_category='.$this->request->get['sub_category'];
+                $url .= '&sub_category=' . $this->request->get['sub_category'];
             }
 
             if (isset($this->request->get['sort'])) {
-                $url .= '&sort='.$this->request->get['sort'];
+                $url .= '&sort=' . $this->request->get['sort'];
             }
 
             if (isset($this->request->get['order'])) {
-                $url .= '&order='.$this->request->get['order'];
+                $url .= '&order=' . $this->request->get['order'];
             }
 
             if (isset($this->request->get['page'])) {
-                $url .= '&page='.$this->request->get['page'];
+                $url .= '&page=' . $this->request->get['page'];
             }
 
             if (isset($this->request->get['limit'])) {
-                $url .= '&limit='.$this->request->get['limit'];
+                $url .= '&limit=' . $this->request->get['limit'];
             }
 
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_error'),
-                'href' => $this->url->link('product/product', $url.'&product_id='.$product_id),
+                'href' => $this->url->link('product/product', $url . '&product_id=' . $product_id),
             ];
 
             $this->document->setTitle($this->language->get('text_error'));
@@ -590,7 +589,7 @@ class ControllerProductProduct extends Controller
 
             $data['continue'] = $this->url->link('common/home');
 
-            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'].' 404 Not Found');
+            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
 
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['column_right'] = $this->load->controller('common/column_right');
@@ -599,16 +598,15 @@ class ControllerProductProduct extends Controller
             $data['footer'] = $this->load->controller('common/footer');
             $data['header'] = $this->load->controller('common/header');
 
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/error/not_found.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/error/not_found.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/error/not_found.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/error/not_found.tpl', $data));
             }
         }
     }
 
-    public function review()
-    {
+    public function review() {
         $this->load->language('product/product');
 
         $this->load->model('assets/review');
@@ -640,21 +638,20 @@ class ControllerProductProduct extends Controller
         $pagination->total = $review_total;
         $pagination->page = $page;
         $pagination->limit = 5;
-        $pagination->url = $this->url->link('product/product/review', 'product_id='.$this->request->get['product_id'].'&page={page}');
+        $pagination->url = $this->url->link('product/product/review', 'product_id=' . $this->request->get['product_id'] . '&page={page}');
 
         $data['pagination'] = $pagination->render();
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($review_total) ? (($page - 1) * 5) + 1 : 0, ((($page - 1) * 5) > ($review_total - 5)) ? $review_total : ((($page - 1) * 5) + 5), $review_total, ceil($review_total / 5));
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/product/review.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/product/review.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/review.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/review.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/product/review.tpl', $data));
         }
     }
 
-    public function write()
-    {
+    public function write() {
         $this->load->language('product/product');
 
         $json = [];
@@ -674,7 +671,7 @@ class ControllerProductProduct extends Controller
 
             if ($this->config->get('config_google_captcha_status') && empty($json['error'])) {
                 if (isset($this->request->post['g-recaptcha-response'])) {
-                    $recaptcha = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($this->config->get('config_google_captcha_secret')).'&response='.$this->request->post['g-recaptcha-response'].'&remoteip='.$this->request->server['REMOTE_ADDR']);
+                    $recaptcha = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->config->get('config_google_captcha_secret')) . '&response=' . $this->request->post['g-recaptcha-response'] . '&remoteip=' . $this->request->server['REMOTE_ADDR']);
                     $recaptcha = json_decode($recaptcha, true);
 
                     if (!$recaptcha['success']) {
@@ -698,8 +695,7 @@ class ControllerProductProduct extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getRecurringDescription()
-    {
+    public function getRecurringDescription() {
         $this->language->load('product/product');
         $this->load->model('assets/product');
 
@@ -738,7 +734,7 @@ class ControllerProductProduct extends Controller
 
                 if (1 == $recurring_info['trial_status']) {
                     $price = $this->currency->format($this->tax->calculate($recurring_info['trial_price'] * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax')));
-                    $trial_text = sprintf($this->language->get('text_trial_description'), $price, $recurring_info['trial_cycle'], $frequencies[$recurring_info['trial_frequency']], $recurring_info['trial_duration']).' ';
+                    $trial_text = sprintf($this->language->get('text_trial_description'), $price, $recurring_info['trial_cycle'], $frequencies[$recurring_info['trial_frequency']], $recurring_info['trial_duration']) . ' ';
                 } else {
                     $trial_text = '';
                 }
@@ -746,9 +742,9 @@ class ControllerProductProduct extends Controller
                 $price = $this->currency->format($this->tax->calculate($recurring_info['price'] * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax')));
 
                 if ($recurring_info['duration']) {
-                    $text = $trial_text.sprintf($this->language->get('text_payment_description'), $price, $recurring_info['cycle'], $frequencies[$recurring_info['frequency']], $recurring_info['duration']);
+                    $text = $trial_text . sprintf($this->language->get('text_payment_description'), $price, $recurring_info['cycle'], $frequencies[$recurring_info['frequency']], $recurring_info['duration']);
                 } else {
-                    $text = $trial_text.sprintf($this->language->get('text_payment_cancel'), $price, $recurring_info['cycle'], $frequencies[$recurring_info['frequency']], $recurring_info['duration']);
+                    $text = $trial_text . sprintf($this->language->get('text_payment_cancel'), $price, $recurring_info['cycle'], $frequencies[$recurring_info['frequency']], $recurring_info['duration']);
                 }
 
                 $json['success'] = $text;
@@ -759,12 +755,12 @@ class ControllerProductProduct extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function view()
-    {
+    public function view() {
         //echo "<pre>";print_r("erv");die;
         // unset($this->session->data['temp_cart']);
         // echo "<pre>";print_r("ss");die;
         //$data['product']['store_product_variation_id'] = 0;
+        $cachePrice_data = $this->cache->get('category_price_data');
         $this->load->language('product/product');
 
         $this->load->model('tool/image');
@@ -813,15 +809,15 @@ class ControllerProductProduct extends Controller
         //echo "<pre>";print_r($product_info);die;
 
         if ($product_info) {
-            if ($product_info['image'] != NULL && file_exists(DIR_IMAGE.$product_info['image'])) {
+            if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
                 $thumb = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
-            } else if($product_info['image'] == NULL || !file_exists(DIR_IMAGE.$product_info['image'])) {
+            } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
                 $thumb = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
             }
 
-            if ($product_info['image'] != NULL && file_exists(DIR_IMAGE.$product_info['image'])) {
+            if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
                 $zoom_thumb = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height'));
-            } else if($product_info['image'] == NULL || !file_exists(DIR_IMAGE.$product_info['image'])) {
+            } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
                 $zoom_thumb = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height'));
             }
 
@@ -848,6 +844,20 @@ class ControllerProductProduct extends Controller
             $o_price = 0;
 
             if (!$this->config->get('config_inclusiv_tax')) {
+                $log = new Log('error.log');
+                //FOR CATEGORY PRICING
+                $category_s_price = 0;
+                $category_o_price = 0;
+
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product_info['store_id']])) {
+                    $category_s_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product_info['store_id']];
+                    $category_o_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product_info['store_id']];
+                    if ($category_s_price != NULL && $category_s_price > 0) {
+                        $product_info['price'] = $category_s_price;
+                        $product_info['special_price'] = $category_s_price;
+                    }
+                }
+                //FOR CATEGORY PRICING
                 //get price html
                 if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
@@ -878,28 +888,23 @@ class ControllerProductProduct extends Controller
                 } else {
                     $product_info['special_price'] = $product_info['special_price'];
                 }
-            }
 
-            $cachePrice_data = $this->cache->get('category_price_data');
-            //echo $product_info['product_store_id'].'====>'.$_SESSION['customer_category'].'===>'.$store_id;
-            //echo '<pre>';print_r($cachePrice_data);
-            //exit;
-            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id])) {
-                //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
-                $s_price = $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];
-                $o_price = $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];
-                $product_info['special_price'] = $this->currency->format($s_price);
-                $product_info['price'] = $this->currency->format($o_price);
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $store_id])) {
+                    //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+                    $s_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $store_id];
+                    $o_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $store_id];
+                    $product_info['special_price'] = $this->currency->format($s_price);
+                    $product_info['price'] = $this->currency->format($o_price);
+                }
             }
-            //echo '<pre>';print_r($product_info);exit;
 
             if (isset($product_info['pd_name'])) {
                 $product_info['name'] = $product_info['pd_name'];
             }
 
-            /*echo $o_price;
-            echo "ce";
-            echo $s_price;*/
+            /* echo $o_price;
+              echo "ce";
+              echo $s_price; */
             $percent_off = null;
             if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
                 $percent_off = (($o_price - $s_price) / $o_price) * 100;
@@ -937,7 +942,6 @@ class ControllerProductProduct extends Controller
                 'default_variation_name' => $product_info['default_variation_name'],
                 'variations' => $this->model_assets_product->getVariations($product_info['product_store_id']),
                 'produce_type' => (isset($product_info['produce_type']) && ('' != $product_info['produce_type'])) ? $producetypesupdated : null,
-
                 'minimum' => $product_info['min_quantity'] > 0 ? $product_info['min_quantity'] : $product_info['quantity'],
                 // 'variations' => array(
                 // 	array(
@@ -951,11 +955,11 @@ class ControllerProductProduct extends Controller
                 'variations' => $this->model_assets_product->getProductVariationsNew($product_info['name'], $store_id),
                 'isWishListID' => $isWishListID,
             ];
-            
+
             $log = new Log('error.log');
-            /*$log->write('product popup');
-            $log->write($data['product']);
-            $log->write('product popup');*/
+            /* $log->write('product popup');
+              $log->write($data['product']);
+              $log->write('product popup'); */
             //echo '<pre>';print_r( $data['product']);exit;
             if (isset($this->session->data['cart'][$key])) {
                 $data['product']['qty_in_cart'] = $this->session->data['cart'][$key]['quantity'];
@@ -968,8 +972,8 @@ class ControllerProductProduct extends Controller
                     $data['product']['product_note'] = $this->session->data['temp_cart'][$key]['product_note'];
                 }
             }
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/product/product_popup.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/product/product_popup.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/product_popup.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/product_popup.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/product/product_popup.tpl', $data));
             }
@@ -977,9 +981,8 @@ class ControllerProductProduct extends Controller
             return false;
         }
     }
-    
-    public function order_edit_view()
-    {
+
+    public function order_edit_view() {
         //echo "<pre>";print_r("erv");die;
         // unset($this->session->data['temp_cart']);
         // echo "<pre>";print_r("ss");die;
@@ -993,7 +996,7 @@ class ControllerProductProduct extends Controller
         } else {
             $product_store_id = 0;
         }
-        
+
         if (isset($this->request->get['edit_order_id'])) {
             $edit_order_id = $this->request->get['edit_order_id'];
         } else {
@@ -1040,15 +1043,15 @@ class ControllerProductProduct extends Controller
         //echo "<pre>";print_r($product_info);die;
 
         if ($product_info) {
-            if ($product_info['image'] != NULL && file_exists(DIR_IMAGE.$product_info['image'])) {
+            if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
                 $thumb = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
-            } else if($product_info['image'] == NULL || !file_exists(DIR_IMAGE.$product_info['image'])) {
+            } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
                 $thumb = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
             }
 
-            if ($product_info['image'] != NULL && file_exists(DIR_IMAGE.$product_info['image'])) {
+            if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
                 $zoom_thumb = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height'));
-            } else if($product_info['image'] == NULL || !file_exists(DIR_IMAGE.$product_info['image'])) {
+            } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
                 $zoom_thumb = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_zoomimage_thumb_width'), $this->config->get('config_zoomimage_thumb_height'));
             }
 
@@ -1111,10 +1114,10 @@ class ControllerProductProduct extends Controller
             //echo $product_info['product_store_id'].'====>'.$_SESSION['customer_category'].'===>'.$store_id;
             //echo '<pre>';print_r($cachePrice_data);
             //exit;
-            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id])) {
+            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $store_id])) {
                 //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
-                $s_price = $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];
-                $o_price = $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];
+                $s_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $store_id];
+                $o_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $store_id];
                 $product_info['special_price'] = $this->currency->format($s_price);
                 $product_info['price'] = $this->currency->format($o_price);
             }
@@ -1124,9 +1127,9 @@ class ControllerProductProduct extends Controller
                 $product_info['name'] = $product_info['pd_name'];
             }
 
-            /*echo $o_price;
-            echo "ce";
-            echo $s_price;*/
+            /* echo $o_price;
+              echo "ce";
+              echo $s_price; */
             $percent_off = null;
             if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
                 $percent_off = (($o_price - $s_price) / $o_price) * 100;
@@ -1140,11 +1143,11 @@ class ControllerProductProduct extends Controller
                     $producetypesupdated[$i]['type'] = $pt;
                     $producetypesupdated[$i]['value'] = 0;
 
-                    /*foreach ($this->session->data['cart'][$key]['produce_type'] as $type) {
-                        if ($type['type'] == $pt) {
-                            $producetypesupdated[$i]['value'] = $type['value'];
-                        }
-                    }*/
+                    /* foreach ($this->session->data['cart'][$key]['produce_type'] as $type) {
+                      if ($type['type'] == $pt) {
+                      $producetypesupdated[$i]['value'] = $type['value'];
+                      }
+                      } */
                     ++$i;
                 }
             }
@@ -1164,7 +1167,6 @@ class ControllerProductProduct extends Controller
                 'default_variation_name' => $product_info['default_variation_name'],
                 'variations' => $this->model_assets_product->getVariations($product_info['product_store_id']),
                 'produce_type' => (isset($product_info['produce_type']) && ('' != $product_info['produce_type'])) ? $producetypesupdated : null,
-
                 'minimum' => $product_info['min_quantity'] > 0 ? $product_info['min_quantity'] : $product_info['quantity'],
                 // 'variations' => array(
                 // 	array(
@@ -1178,11 +1180,11 @@ class ControllerProductProduct extends Controller
                 'variations' => $this->model_assets_product->getEditOrderProductVariationsNew($product_info['name'], $store_id, '', $edit_order_id),
                 'isWishListID' => $isWishListID,
             ];
-            
+
             $log = new Log('error.log');
-            /*$log->write('product popup');
-            $log->write($data['product']);
-            $log->write('product popup');*/
+            /* $log->write('product popup');
+              $log->write($data['product']);
+              $log->write('product popup'); */
             // echo '<pre>';print_r( $data);exit;
             if (isset($order_product) && array_key_exists('quantity', $order_product) && $order_product['quantity'] > 0) {
                 $data['product']['qty_in_cart'] = $order_product['quantity'];
@@ -1192,13 +1194,13 @@ class ControllerProductProduct extends Controller
             } else {
                 $data['product']['qty_in_cart'] = 0;
                 $data['product']['product_note'] = '';
-                /*if (isset($this->session->data['temp_cart'][$key])) {
-                    $data['product']['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
-                    $data['product']['product_note'] = $this->session->data['temp_cart'][$key]['product_note'];
-                }*/
+                /* if (isset($this->session->data['temp_cart'][$key])) {
+                  $data['product']['qty_in_cart'] = $this->session->data['temp_cart'][$key]['quantity'];
+                  $data['product']['product_note'] = $this->session->data['temp_cart'][$key]['product_note'];
+                  } */
             }
-            if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/product/order_edit_product_popup.tpl')) {
-                $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/product/order_edit_product_popup.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/order_edit_product_popup.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/order_edit_product_popup.tpl', $data));
             } else {
                 $this->response->setOutput($this->load->view('default/template/product/order_edit_product_popup.tpl', $data));
             }
@@ -1206,4 +1208,5 @@ class ControllerProductProduct extends Controller
             return false;
         }
     }
+
 }

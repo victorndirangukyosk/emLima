@@ -177,6 +177,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     const password = $('#register-password').val();
                     const passwordConfirmation = $('#register-password-confirm').val();
                     const accountmanagerid = $('#register-accountmanager-id').val();
+                    const cityid = $('#city-id').val();
                     //const accountmanagerid = $('#register-accountmanager-id').attr('register_accountmanager_id');
                     const registrationView = $('#registration-view');
                     const otpView = $('#otp-view');
@@ -186,7 +187,12 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     const registerForm = $('#register-form')[0];
                     const formIsValid = registerForm.reportValidity();
                     if (formIsValid) {
-                if (passwordConfirmation !== password) {
+               if (cityid <= 0) {
+                    iziToast.warning({
+                        position: 'topRight',
+                        message: 'Please select city'
+                    });
+                } else if (passwordConfirmation !== password) {
                     iziToast.warning({
                         position: 'topRight',
                         message: 'Passwords do no match'
@@ -229,6 +235,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                 accountmanagerid:accountmanagerid,
                                 address_lat:address_lat,
                                 address_lng:address_lng,
+                                cityid:cityid,
                                 //accountmanagername:accountmanagername
                             },
                             success: function (json) {
@@ -280,6 +287,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     const address_lat = $('#address_lat').val();
                     const address_lng = $('#address_lng').val();
                     //const accountmanagerid = $('#register-accountmanager-id').attr('register_accountmanager_id');
+                    const cityid = $('#city-id').val();
                     const otp = $('#otp-value').val();
                     const verifyButton = $('#otp-verify-button');
                     if (otp.length > 3) {
@@ -309,6 +317,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                         address_lat:address_lat,
                         address_lng:address_lng,
                         signup_otp: otp,
+                        cityid:cityid,
                         //accountmanagername:accountmanagername
                     },
                     success: function (json) {
