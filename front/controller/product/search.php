@@ -639,7 +639,7 @@ class ControllerProductSearch extends Controller {
                 $link = $this->url->link('product/category', 'category=' . $value['category_id']);
                 $link_array = explode('/', $link);
                 $page_link = end($link_array);
-                $value['href_cat'] = $this->url->link('product/store', 'store_id=' . ACTIVE_STORE_ID) . '?cat=' . $page_link . '&product=' . $value['pd_name'];
+                $value['href_cat'] = $this->url->link('product/store', 'store_id=' . $value['store_id']) . '?cat=' . $page_link . '&product=' . $value['pd_name'];
                 if (file_exists(DIR_IMAGE . $value['image'])) {
                     $value['image'] = $this->model_tool_image->resize($value['image'], 100, 100);
                 } else {
