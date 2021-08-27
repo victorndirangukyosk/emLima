@@ -869,7 +869,8 @@ class ControllerApiCustomerProducts extends Controller {
                           $temp['only_name'] = htmlspecialchars_decode($tempProduct['name']);
                           $temp['product_id'] = $tempProduct['product_id'];
                           $temp['product_store_id'] = $tempProduct['product_store_id']; */
-
+                        $price = strval($price);
+                        $special_price = strval($special_price);
                         $data['products'][] = [
                             'key' => $key,
                             'qty_in_cart' => $qty_in_cart,
@@ -1326,6 +1327,8 @@ class ControllerApiCustomerProducts extends Controller {
                         $unit = $result['unit'] ? $result['unit'] : false;
 
                         $productNames = array_column($data['products'], 'name');
+                        $price = strval($price);
+                        $special_price = strval($special_price);
                         if (false !== array_search($result['name'], $productNames)) {
                             // Add variation to existing product
                             $productIndex = array_search($result['name'], $productNames);
