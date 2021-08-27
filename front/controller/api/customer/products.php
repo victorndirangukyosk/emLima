@@ -1829,8 +1829,8 @@ class ControllerApiCustomerProducts extends Controller {
                 }
             }
 
-            $price = gettype($price) == 'integer' ? strval($price) : $price;
-            $special_price = gettype($special_price) == 'integer' ? strval($special_price) : $special_price;
+            $price = strval($price);
+            $special_price = strval($special_price);
             $data['products'][] = [
                 'key' => $key,
                 'qty_in_cart' => $qty_in_cart,
