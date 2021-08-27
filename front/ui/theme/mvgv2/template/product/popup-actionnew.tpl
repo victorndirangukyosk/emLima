@@ -4,7 +4,7 @@
   
   <div class="_2D2lC">
                                                             <div class="price-popup" id="content-container">
-                                                                 <?= $this->session->data['currency']." " . $product['variations'][0]['special_price'];?></div>
+                                                                 <?=$product['variations'][0]['special_price'];?></div>
                                                         </div>
 
 
@@ -245,8 +245,9 @@ $(document).delegate('.product-variation', 'change', function() {
     // TODO: Change trailing -0 to variations_id?
     const newQuantityInputId = 'cart-qty-' + newProductId + '-0';
    //const newcartId = 'AtcButton-id-' + newProductId + '-0';
-     $('#content-container').html('KES ' +newSpecial);
+     //$('#content-container').html('KES ' +newSpecial);
      //$('#content-container').html('KES '  +qty_in_cart1);
+     $('#content-container').html(newSpecial);
  
     let dataHolder = $('#add-cart-btnnew');
     let wishlistHolder = $('#add-wishlist');
