@@ -691,8 +691,8 @@ class ControllerProductSearch extends Controller {
                         $special_price = false;
                     }
 
-                    $value['price'] = $o_price;
-                    $value['special_price'] = $s_price;
+                    $value['price'] = $this->currency->formatWithoutCurrency($o_price);
+                    $value['special_price'] = $this->currency->formatWithoutCurrency($s_price);
                 } else {
                     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                         $price = $this->currency->format($value['price']);
@@ -715,8 +715,8 @@ class ControllerProductSearch extends Controller {
                         $s_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
                         $o_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
                     }
-                    $value['price'] = $o_price;
-                    $value['special_price'] = $s_price;
+                    $value['price'] = $this->currency->formatWithoutCurrency($o_price);
+                    $value['special_price'] = $this->currency->formatWithoutCurrency($s_price);
                 }
 
                 /* if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) { */
