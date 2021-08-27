@@ -147,6 +147,7 @@ class ModelAssetsProduct extends Model {
     }
 
     public function getApiVariations($product_store_id) {
+        $cachePrice_data = $this->cache->get('category_price_data');
         $this->load->model('tool/image');
 
         $query = 'SELECT * FROM ' . DB_PREFIX . "product_to_store pv WHERE product_store_id ='" . (int) $product_store_id . "'";
@@ -177,6 +178,17 @@ class ModelAssetsProduct extends Model {
                 $o_price = 0;
 
                 if (!$this->config->get('config_inclusiv_tax')) {
+
+                    $category_s_price = 0;
+                    $category_o_price = 0;
+                    if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$res['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $res['store_id']])) {
+                        $category_s_price = $cachePrice_data[$res['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $res['store_id']];
+                        $category_o_price = $cachePrice_data[$res['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $res['store_id']];
+                        if ($category_s_price != NULL && $category_s_price > 0) {
+                            $res['price'] = $category_s_price;
+                            $res['special_price'] = $category_s_price;
+                        }
+                    }
                     //get price html
                     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                         $res['price'] = $this->tax->calculate($res['price'], $res['tax_class_id'], $this->config->get('config_tax'));
@@ -208,6 +220,15 @@ class ModelAssetsProduct extends Model {
                         $res['special_price'] = $this->currency->formatWithoutCurrency($res['special_price']);
                     } else {
                         $res['special_price'] = $res['special_price'];
+                    }
+
+                    if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$res['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $res['store_id']])) {
+                        $category_s_price = $cachePrice_data[$res['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $res['store_id']];
+                        $category_o_price = $cachePrice_data[$res['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $res['store_id']];
+                        if ($category_s_price != NULL && $category_s_price > 0) {
+                            $res['price'] = $category_s_price;
+                            $res['special_price'] = $category_s_price;
+                        }
                     }
                 }
 
