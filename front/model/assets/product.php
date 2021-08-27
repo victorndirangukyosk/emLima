@@ -2657,7 +2657,7 @@ class ModelAssetsProduct extends Model {
         $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
         $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
         $this->db->group_by('product_to_store.product_store_id');
-        $this->db->where('product_to_store.store_id', $store_id);
+        //$this->db->where('product_to_store.store_id', $store_id);
         if (count($categories) > 0) {
             $cat_array = array_column($categories, 'category_id');
             $this->db->where_in('product_to_category.category_id', $cat_array);
