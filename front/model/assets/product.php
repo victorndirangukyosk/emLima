@@ -2651,18 +2651,17 @@ class ModelAssetsProduct extends Model {
             //$log->write($disabled_products_string);
             //$log->write('category_pricing_disabled_products');
         }
-        //$categories = $this->model_assets_category->getCategoriesByStoreId($store_id);
-        $categories = $this->model_assets_category->getCategoriesByStoreId(75);
+        $categories = $this->model_assets_category->getCategoriesByStoreId($store_id);
         $this->db->select('product_to_store.*,product.*,product_description.*', false);
         $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
         $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
         $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
         $this->db->group_by('product_to_store.product_store_id');
         //$this->db->where('product_to_store.store_id', $store_id);
-        if (count($categories) > 0) {
+        /*if (count($categories) > 0) {
             $cat_array = array_column($categories, 'category_id');
             $this->db->where_in('product_to_category.category_id', $cat_array);
-        }
+        }*/
 
 
         if ($disabled_products_string != NULL && isset($_SESSION['customer_category']) && $_SESSION['customer_category'] != NULL) {
