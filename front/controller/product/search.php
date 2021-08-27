@@ -714,8 +714,6 @@ class ControllerProductSearch extends Controller {
                     if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']])) {
                         $s_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
                         $o_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
-                        $special_price = $this->currency->format($s_price);
-                        $price = $this->currency->format($o_price);
                     }
                     $value['price'] = $o_price;
                     $value['special_price'] = $s_price;
