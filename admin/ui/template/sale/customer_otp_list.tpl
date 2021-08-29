@@ -38,98 +38,49 @@
           <div class="row">
 
            <div class="col-sm-3">
- <div class="form-group">
-                                <label class="control-label" for="input-company">Company Name</label>
-                                <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
-                            </div>
-
-                             <div class="form-group">
-                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
-                <div class="input-group date" style="max-width: 321px;">
-                  <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
-                  <span class="input-group-btn">
-                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                  </span></div>
+           <div class="form-group">
+            <label class="control-label" for="input-company">Company Name</label>
+            <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="input-email"><?php echo $entry_email; ?></label>
+                <input type="text" name="filter_email" value="<?php echo $filter_email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
               </div>
+            
            </div>
             <div class="col-sm-3">
               <div class="form-group">
                 <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
               </div>
-              <div class="form-group">
-                <label class="control-label" for="input-email"><?php echo $entry_email; ?></label>
-                <input type="text" name="filter_email" value="<?php echo $filter_email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
+              <div class="form-group" style="margin-top:35px;">
+                  <label class="control-label"></label>
+                  <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
               </div>
             </div>
-            <div class="col-sm-3">
-              <div class="form-group">
-                <label class="control-label" for="input-customer-group"><?php echo $entry_customer_group; ?></label>
-                <select name="filter_customer_group_id" id="input-customer-group" class="form-control">
-                  <option value="*"></option>
-                  <?php foreach ($customer_groups as $customer_group) { ?>
-                  <?php if ($customer_group['customer_group_id'] == $filter_customer_group_id) { ?>
-                  <option value="<?php echo $customer_group['customer_group_id']; ?>" selected="selected"><?php echo $customer_group['name']; ?></option>
-                  <?php } else { ?>
-                  <option value="<?php echo $customer_group['customer_group_id']; ?>"><?php echo $customer_group['name']; ?></option>
-                  <?php } ?>
-                  <?php } ?>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
-                <select name="filter_status" id="input-status" class="form-control">
-                  <option value="*"></option>
-                  <?php if ($filter_status) { ?>
-                  <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                  <?php } else { ?>
-                  <option value="1"><?php echo $text_enabled; ?></option>
-                  <?php } ?>
-                  <?php if (!$filter_status && !is_null($filter_status)) { ?>
-                  <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                  <?php } else { ?>
-                  <option value="0"><?php echo $text_disabled; ?></option>
-                  <?php } ?>
-                </select>
-              </div>
-            </div>
+            
             <div class="col-sm-3">
              <div class="form-group">
                 <label class="control-label" for="input-telephone"><?php echo $column_telephone; ?></label>
                 <div class="input-group">
                 <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button"><?php echo '+' . $this->config->get('config_telephone_code'); ?></button>                                      
+             <button class="btn btn-default" type="button"><?php echo '+' . $this->config->get('config_telephone_code'); ?></button>                                      
                 </span>
                 <input type="text" name="filter_telephone" value="<?php echo $filter_telephone; ?>" placeholder="<?php echo $entry_telephone; ?>" id="input-telephone" class="form-control" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57"  minlength="9" maxlength="9"/>
               </div>
               </div>
-
-              <div class="form-group">
-                <label class="control-label" for="input-ip"><?php echo $entry_ip; ?></label>
-                <input type="text" name="filter_ip" value="<?php echo $filter_ip; ?>" placeholder="<?php echo $entry_ip; ?>" id="input-ip" class="form-control" />
-              </div>
             </div>
-              <div class="col-sm-3">
-                  <div class="form-group">
-                      <label class="control-label" for="input-parent-customer">Parent Customer Name</label>
-                      <input type="text" name="filter_parent_customer" value="<?php if($filter_parent_customer != NULL && $filter_parent_customer_id != NULL) { echo $filter_parent_customer; } ?>" placeholder="<?php echo $entry_parent_customer; ?>" id="input-parent-customer" class="form-control" data-parent-customer-id="<?php if($filter_parent_customer != NULL && $filter_parent_customer_id != NULL) { echo $filter_parent_customer_id; } ?>" />
-                  </div>
-              </div>
-             <div class="col-sm-3">
-             <div class="form-group">
-                      <label class="control-label" for="input-account-manager-name">Account Manager Name</label>
-                      <input type="text" name="filter_account_manager_name" value="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_name; } ?>" placeholder="<?php echo $entry_account_manager_name; ?>" id="input-account-manager-name" class="form-control" data-account-manager-id="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_id; } ?>" />
-              </div>
-             </div>
-              <div class="col-sm-3" style="margin-top:25px;">
-                  <label><input type="checkbox" name="filter_sub_customer_show[]" value="<?php echo $filter_sub_customer_show; ?>" <?php if($filter_sub_customer_show == 1) { ?> checked="" <?php } ?>> Show Sub Customer </label>
-              </div>
-              <div class="col-sm-3" style="margin-top:25px;">
+            <div class="col-sm-3">
               <div class="form-group">
-                  <label class="control-label"></label>
-                  <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
-              </div>
+                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
+                <div class="input-group date" style="max-width: 321px;">
+                  <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                  <span class="input-group-btn">
+                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                  </span></div>
             </div>
+            </div>
+              
           </div>
         </div>
         <form action="" method="post" enctype="multipart/form-data" id="form-customer">
