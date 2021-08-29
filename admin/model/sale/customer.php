@@ -284,16 +284,8 @@ class ModelSaleCustomer extends Model {
             $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
-        if (!empty($data['filter_customer_group_id'])) {
-            $implode[] = "c.customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
-        }
-
         if (!empty($data['filter_ip'])) {
             $implode[] = "c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
-        }
-
-        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
         }
 
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
@@ -317,7 +309,7 @@ class ModelSaleCustomer extends Model {
             $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
 
-        if (!isset($data['filter_date_added']) || !empty($data['filter_date_added'])) {
+        if (!isset($data['filter_date_added']) || empty($data['filter_date_added'])) {
             $implode[] = "(DATE_FORMAT(o.created_at, '%d-%m-%Y') = '" . date('d-m-Y') . "' OR DATE_FORMAT(o.updated_at, '%d-%m-%Y') = '" . date('d-m-Y') . "')";
         }
         /* if ($implode) {
@@ -361,8 +353,8 @@ class ModelSaleCustomer extends Model {
 
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
-        /* $log = new Log('error.log');
-          $log->write($sql); */
+        /*$log = new Log('error.log');
+        $log->write($sql);*/
         $query = $this->db->query($sql);
 
         //echo "<pre>";print_r($sql);die;
@@ -747,28 +739,8 @@ class ModelSaleCustomer extends Model {
             $implode[] = "telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
-        if (isset($data['filter_newsletter']) && !is_null($data['filter_newsletter'])) {
-            $implode[] = "newsletter = '" . (int) $data['filter_newsletter'] . "'";
-        }
-
-        if (!empty($data['filter_customer_group_id'])) {
-            $implode[] = "customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
-        }
-
         if (!empty($data['filter_ip'])) {
             $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";
-        }
-
-        if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
-            $implode[] = "account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
-        }
-
-        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $implode[] = "status = '" . (int) $data['filter_status'] . "'";
-        }
-
-        if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
-            $implode[] = "approved = '" . (int) $data['filter_approved'] . "'";
         }
 
         if (!empty($data['filter_date_added'])) {
