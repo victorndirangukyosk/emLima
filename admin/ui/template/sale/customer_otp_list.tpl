@@ -55,7 +55,7 @@
               </div>
               <div class="form-group" style="margin-top:35px;">
                   <label class="control-label"></label>
-                  <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
+                  <button type="button" id="button-filter" class="btn btn-primary pull-left"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
               </div>
             </div>
             
