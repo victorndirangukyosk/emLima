@@ -145,7 +145,7 @@
   </div>
   <script type="text/javascript">
 $('#button-filter').on('click', function() {
-  url = 'index.php?path=sale/customer&token=<?php echo $token; ?>';
+  url = 'index.php?path=sale/customer/customer_otp&token=<?php echo $token; ?>';
 
    var filter_company = $('input[name=\'filter_company\']').val();
 
