@@ -269,9 +269,6 @@ class ModelSaleCustomer extends Model {
             }
         }
 
-        if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
-            $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
-        }
 
         if (!empty($data['filter_email'])) {
             $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
@@ -285,10 +282,6 @@ class ModelSaleCustomer extends Model {
 
         if (!empty($data['filter_telephone'])) {
             $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
-        }
-
-        if (isset($data['filter_newsletter']) && !is_null($data['filter_newsletter'])) {
-            $implode[] = "c.newsletter = '" . (int) $data['filter_newsletter'] . "'";
         }
 
         if (!empty($data['filter_customer_group_id'])) {
@@ -308,7 +301,8 @@ class ModelSaleCustomer extends Model {
         }
 
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            //$implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "(DATE_FORMAT(o.created_at, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "' OR DATE_FORMAT(o.updated_at, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         if (isset($data['filter_parent']) && !is_null($data['filter_parent'])) {
@@ -319,20 +313,13 @@ class ModelSaleCustomer extends Model {
             $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
 
-        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !array_key_exists('filter_parent_customer_id', $data)) {
-            $implode[] = "(parent = 0 OR parent IS NULL)";
-        }
-
-        if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
-            //$implode[] = "parent > 0";
-        }
-
         if (!empty($data['filter_monthyear_added'])) {
             $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
 
-        $implode[] = "(DATE_FORMAT(o.created_at, '%d-%m-%Y') = '" . date('d-m-Y') . "' OR DATE_FORMAT(o.updated_at, '%d-%m-%Y') = '" . date('d-m-Y') . "')";
-
+        if (!isset($data['filter_date_added']) || !empty($data['filter_date_added'])) {
+            $implode[] = "(DATE_FORMAT(o.created_at, '%d-%m-%Y') = '" . date('d-m-Y') . "' OR DATE_FORMAT(o.updated_at, '%d-%m-%Y') = '" . date('d-m-Y') . "')";
+        }
         /* if ($implode) {
           $sql .= ' AND ' . implode(' AND ', $implode);
           } */
@@ -772,20 +759,8 @@ class ModelSaleCustomer extends Model {
             $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";
         }
 
-        if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
-            $implode[] = "parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
-        }
-
         if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
             $implode[] = "account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
-        }
-
-        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !array_key_exists('filter_parent_customer_id', $data)) {
-            $implode[] = "(parent = 0 OR parent IS NULL)";
-        }
-
-        if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
-            //$implode[] = "parent > 0";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
@@ -797,7 +772,8 @@ class ModelSaleCustomer extends Model {
         }
 
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            //$implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "(DATE_FORMAT(o.created_at, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "' OR DATE_FORMAT(o.updated_at, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         if ($this->user->isAccountManager()) {
@@ -807,7 +783,10 @@ class ModelSaleCustomer extends Model {
         if (!empty($data['filter_monthyear_added'])) {
             $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
-        $implode[] = "(DATE_FORMAT(o.created_at, '%d-%m-%Y') = '" . date('d-m-Y') . "' OR DATE_FORMAT(o.updated_at, '%d-%m-%Y') = '" . date('d-m-Y') . "')";
+
+        if (!isset($data['filter_date_added']) || empty($data['filter_date_added'])) {
+            $implode[] = "(DATE_FORMAT(o.created_at, '%d-%m-%Y') = '" . date('d-m-Y') . "' OR DATE_FORMAT(o.updated_at, '%d-%m-%Y') = '" . date('d-m-Y') . "')";
+        }
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
