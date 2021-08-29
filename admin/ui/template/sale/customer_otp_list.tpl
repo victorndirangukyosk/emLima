@@ -166,7 +166,7 @@
                   <td class="text-left"><?php echo $customer['name']; ?>
                    <br/> <?php echo $customer['company_name']; ?></td>
                   <td class="text-left"><?php echo $customer['email']; ?></td>
-                  <td class="text-left"><?php echo $customer['telephone']; ?></td>
+                  <td class="text-left"><?php if($customer['telephone'] != NULL) { echo $customer['telephone']; } else { echo $customer['otp_phone']; }?></td>
                   <td class="text-left"><?php echo $customer['otp']; ?></td>
                   <td class="text-left"><?php echo $customer['type']; ?></td>
                   <td class="text-left"><?php echo $customer['source']; ?></td>
