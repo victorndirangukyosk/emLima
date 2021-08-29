@@ -8763,12 +8763,12 @@ class ControllerSaleOrder extends Controller {
             }
         }
         try {
-        sleep(5);    
-        $this->SendMailToCustomerWithDriverDetails($order_id);
-        } catch(exception $ex) {
-        $log = new Log('error.log');
-        $log->write('Order History Mail Error');
-        $log->write($ex);    
+            sleep(5);
+            $this->SendMailToCustomerWithDriverDetails($order_id);
+        } catch (exception $ex) {
+            $log = new Log('error.log');
+            $log->write('Order History Mail Error');
+            $log->write($ex);
         }
         // Add to activity log
         $log = new Log('error.log');
@@ -8890,6 +8890,30 @@ class ControllerSaleOrder extends Controller {
         $html .= '</tbody></table><div>';
         echo $html;
         exit();
+    }
+
+    public function SaveOrUpdateOrderShippingChargesDetails() {
+        $order_id = $this->request->post['order_id'];
+        $delivery_charge = $this->request->post['kw_shipping_charges'];
+        /* $log = new Log('error.log');
+          $log->write('SaveOrUpdateOrderDriverDetails');
+          $log->write($this->request->post['driver_id']);
+          $log->write($this->request->post['order_id']); */
+
+        $this->load->model('checkout/order');
+        $this->load->model('sale/order');
+        $order_info = $this->model_checkout_order->getOrder($order_id);
+        if (is_array($order_info) && $order_info != NULL) {
+
+            if ($delivery_charge > 0) {
+                $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
+            }
+        }
+
+        $json['status'] = 'success';
+        $json['message'] = 'Order Driver Details Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
