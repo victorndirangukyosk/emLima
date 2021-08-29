@@ -152,6 +152,8 @@
                   <td class="text-left">OTP</td>
                   <td class="text-left">TYPE</td>
                   <td class="text-left">Source</td>
+                  <td class="text-left">Created At</td>
+                  <td class="text-left">Updated At</td>
                 </tr>
               </thead>
               <tbody>
@@ -170,6 +172,8 @@
                   <td class="text-left"><?php echo $customer['otp']; ?></td>
                   <td class="text-left"><?php echo $customer['type']; ?></td>
                   <td class="text-left"><?php echo $customer['source']; ?></td>
+                  <td class="text-left"><?php echo $customer['created_at']; ?></td>
+                  <td class="text-left"><?php echo $customer['updated_at']; ?></td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>

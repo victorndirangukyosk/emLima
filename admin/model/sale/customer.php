@@ -253,7 +253,7 @@ class ModelSaleCustomer extends Model {
     }
 
     public function getCustomersOTP($data = []) {
-        $sql = "SELECT c.customer_id, c.company_name, c.email, c.source, c.telephone, o.id, o.customer_id as otp_customer_id, o.otp, o.type, o.expiry_time, o.created_at, o.updated_at, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'otp o LEFT JOIN ' . DB_PREFIX . "customer c ON (o.customer_id = c.customer_id)";
+        $sql = "SELECT c.customer_id, c.company_name, c.email, c.source, c.telephone, o.id, o.customer_id as otp_customer_id, o.otp, o.type, o.expiry_time, o.created_at as otp_created_at, o.updated_at as otp_updated_at, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'otp o LEFT JOIN ' . DB_PREFIX . "customer c ON (o.customer_id = c.customer_id)";
 
         $implode = [];
 
@@ -331,8 +331,14 @@ class ModelSaleCustomer extends Model {
             $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
 
+        $implode[] = "(DATE_FORMAT(o.created_at, '%d-%m-%Y') = '" . date('d-m-Y') . "' OR DATE_FORMAT(o.updated_at, '%d-%m-%Y') = '" . date('d-m-Y') . "')";
+
+        /* if ($implode) {
+          $sql .= ' AND ' . implode(' AND ', $implode);
+          } */
+
         if ($implode) {
-            $sql .= ' AND ' . implode(' AND ', $implode);
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
 
         $sort_data = [
@@ -368,7 +374,8 @@ class ModelSaleCustomer extends Model {
 
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
-
+        /* $log = new Log('error.log');
+          $log->write($sql); */
         $query = $this->db->query($sql);
 
         //echo "<pre>";print_r($sql);die;
@@ -732,7 +739,8 @@ class ModelSaleCustomer extends Model {
     }
 
     public function getTotalOTPCustomers($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'otp';
+        $sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . 'otp o LEFT JOIN ' . DB_PREFIX . "customer c ON (o.customer_id = c.customer_id)";
+        //$sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'otp';
 
         $implode = [];
 
@@ -799,6 +807,7 @@ class ModelSaleCustomer extends Model {
         if (!empty($data['filter_monthyear_added'])) {
             $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
+        $implode[] = "(DATE_FORMAT(o.created_at, '%d-%m-%Y') = '" . date('d-m-Y') . "' OR DATE_FORMAT(o.updated_at, '%d-%m-%Y') = '" . date('d-m-Y') . "')";
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);

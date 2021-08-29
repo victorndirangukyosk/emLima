@@ -1364,6 +1364,8 @@ class ControllerSaleCustomer extends Controller {
                 'otp' => $result['otp'],
                 'type' => $result['type'],
                 'otp_phone' => $result['otp_customer_id'],
+                'created_at' => $result['otp_created_at'],
+                'updated_at' => $result['otp_updated_at'],
             ];
         }
 
