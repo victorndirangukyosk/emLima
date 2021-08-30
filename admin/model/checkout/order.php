@@ -75,6 +75,7 @@ class ModelCheckoutOrder extends Model
 
                 'delivery_date' => $order_query->row['delivery_date'],
                 'delivery_timeslot' => $order_query->row['delivery_timeslot'],
+                'delivery_charges' => $order_query->row['delivery_charges'],
                 /*'date_modified' => $order_query->row['date_modified'],
                 'date_added' => $order_query->row['date_added']*/
             ];
