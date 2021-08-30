@@ -1981,6 +1981,10 @@ class ModelSaleOrder extends Model {
         $sql = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $total . "', order_id = '" . $order_id . "', title = 'Total', code = 'total', sort_order = '" . $sort_order . "'";
 
         $query = $this->db->query($sql);
+
+        $order_sql = 'UPDATE ' . DB_PREFIX . "order SET total = '" . $total . "' WHERE order_id = '" . (int) $order_id . "'";
+
+        $order_query = $this->db->query($order_sql);
     }
 
     public function hasRealOrderProducts($order_id) {
