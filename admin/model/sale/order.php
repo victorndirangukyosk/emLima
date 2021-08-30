@@ -209,7 +209,6 @@ class ModelSaleOrder extends Model {
         }
 
         $store_id = $store_id;
-        
 
         $this->db->select('product_to_store.*,product_to_category.category_id,product.*,product_description.*,product_description.name as pd_name', false);
         $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
@@ -365,7 +364,6 @@ class ModelSaleOrder extends Model {
                 $r['category_price_variant'] = $category_price > 0 && $category_price_status == 0 ? 'disabled' : '';
                 $r['model'] = $r['model'];
 
-
                 $res = [
                     'variation_id' => $r['product_store_id'],
                     'unit' => $r['unit'],
@@ -381,7 +379,6 @@ class ModelSaleOrder extends Model {
                     'key' => $key,
                     'model' => $r['model']
                 ];
-
 
                 if (true == $formated) {
                     array_push($returnData, $res);
@@ -439,7 +436,6 @@ class ModelSaleOrder extends Model {
                     'key' => $key,
                     'model' => $r['model']
                 ];
-
 
                 if (true == $formated) {
                     array_push($returnData, $res);
@@ -1038,11 +1034,11 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
-    
+
     public function getOrdersDelivaries($data = []) {
         $sql = "SELECT od.order_reference_id, od.delivery_partner, od.delivery_status, od.drop_latitude, od.drop_longitude, od.created_at, od.updated_at, c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, o.latitude, o.longitude,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
         //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
-        
+
         $sql .= ' JOIN `' . DB_PREFIX . 'order_delivery` od on od.order_id = o.order_id ';
         $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
@@ -1206,7 +1202,7 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
-    
+
     public function getOrdersByAccountManager($data = []) {
         $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
         //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
@@ -1679,7 +1675,6 @@ class ModelSaleOrder extends Model {
         $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
 
-
         if (!empty($data['filter_order_status'])) {
             $implode = [];
 
@@ -1986,6 +1981,10 @@ class ModelSaleOrder extends Model {
         $sql = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $total . "', order_id = '" . $order_id . "', title = 'Total', code = 'total', sort_order = '" . $sort_order . "'";
 
         $query = $this->db->query($sql);
+
+        $order_sql = 'UPDATE ' . DB_PREFIX . "order SET total = '" . $total . "' WHERE order_id = '" . (int) $order_id . "'";
+
+        $order_query = $this->db->query($order_sql);
     }
 
     public function hasRealOrderProducts($order_id) {
@@ -2223,12 +2222,12 @@ class ModelSaleOrder extends Model {
 
         return $query->row['total'];
     }
-    
+
     public function getTotalOrdersDelivaries($data = []) {
         $log = new Log('error.log');
         $log->write('Check For Orders');
         $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'order` o ';
-        
+
         $sql .= ' JOIN `' . DB_PREFIX . 'order_delivery` od on od.order_id = o.order_id ';
         $sql .= ' left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id ';
         $sql .= 'LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id)';
@@ -2346,6 +2345,7 @@ class ModelSaleOrder extends Model {
 
         return $query->row['total'];
     }
+
     public function getTotalOrdersCustom($data = []) {
         $log = new Log('error.log');
         $log->write('Check For Orders');
@@ -3113,56 +3113,128 @@ class ModelSaleOrder extends Model {
         $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET driver_id="' . $driver_id . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
     }
 
-
     public function UpdateOrderDeliveryCharge($order_id, $delivery_charge) {
 
         // $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
         //insert into order_total
-        $alreadyupdated = $this->db->query('select delivery_charges from ' . DB_PREFIX . 'order  WHERE order_id="' . $order_id . '" and delivery_charges >0')->row;
-        if($alreadyupdated)
-        return;
-         $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
+        $alreadyupdated = $this->db->query('select delivery_charges from ' . DB_PREFIX . 'order  WHERE order_id="' . $order_id . '" and delivery_charges > 0');
+        if ($alreadyupdated->num_rows <= 0) {
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
 
-        $exists = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="shipping"')->row;
-        // echo "<pre>";print_r($exists);
-        //  echo "<pre>";print_r('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+ '.$delivery_charge.'  WHERE order_id="' . $order_id . '" and code="shipping"');die;
-        if($exists!=null)
-            {
-             $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="shipping"');
-            }
-            else
-            {                  
+            $exists = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="shipping"');
+            // echo "<pre>";print_r($exists);
+            //  echo "<pre>";print_r('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+ '.$delivery_charge.'  WHERE order_id="' . $order_id . '" and code="shipping"');die;
+            if ($exists->num_rows > 0) {
+                $delivery_charge = $exists->row['value'] + $delivery_charge;
+                $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=' . (int) $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="shipping"');
+            } else {
                 //   echo "<pre>";print_r('INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge . "', order_id = '" . $order_id . "', title = 'Standard Delivery', sort_order = 6, code = 'shipping'");die;
-                    $sql = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge . "', order_id = '" . $order_id . "', title = 'Standard Delivery', sort_order = 6, code = 'shipping'";
-                    $query = $this->db->query($sql);
+                $sql = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge . "', order_id = '" . $order_id . "', title = 'Standard Delivery', sort_order = 6, code = 'shipping'";
+                $query = $this->db->query($sql);
             }
-         //insert vat delivery charge
-         $delivery_vat_applicable=0;
-         try{
-         $deliverycharge_temp = $this->db->query('select * from ' . DB_PREFIX . 'temp_deliverycharge Limit 0,1')->row;
+            //insert vat delivery charge
+            $delivery_vat_applicable = 0;
+            try {
+                $deliverycharge_temp = $this->db->query('select * from ' . DB_PREFIX . 'temp_deliverycharge Limit 0,1')->row;
 
-            $delivery_vat_applicable=$deliverycharge_temp['delivery_charge_vat'];
-            $delivery_vat_percentage=$deliverycharge_temp['VAT_percent'];
-         }
-         catch(exception $ex)
-         {$delivery_vat_applicable=0;
-
-         }
-            if($delivery_vat_applicable==1)
-            {
-         $delivery_charge_vat=(($delivery_charge)*$delivery_vat_percentage);
-         $Total_amount=$delivery_charge_vat+$delivery_charge;
-
-         $sql2 = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge_vat . "', order_id = '" . $order_id . "', title = 'VAT on Standard Delivery', sort_order = 6, code = 'delivery_vat'";
-         $query2 = $this->db->query($sql2);
+                $delivery_vat_applicable = $deliverycharge_temp['delivery_charge_vat'];
+                $delivery_vat_percentage = $deliverycharge_temp['VAT_percent'];
+            } catch (exception $ex) {
+                $delivery_vat_applicable = 0;
             }
-            else{
-                $Total_amount=$delivery_charge;
+            if ($delivery_vat_applicable == 1) {
+                $delivery_charge_vat = (($delivery_charge) * $delivery_vat_percentage);
+                $Total_amount = $delivery_charge_vat + $delivery_charge;
+
+                $sql2 = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge_vat . "', order_id = '" . $order_id . "', title = 'VAT on Standard Delivery', sort_order = 6, code = 'delivery_vat'";
+                $query2 = $this->db->query($sql2);
+            } else {
+                $Total_amount = $delivery_charge;
             }
 
             $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $Total_amount . ' WHERE order_id="' . $order_id . '" and code="total"');
+            $order_totals = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="total"');
+            if ($order_totals->num_rows > 0) {
+                $log = new Log('error.log');
+                $log->write('order_totals_shipping_charge');
+                $log->write($order_totals->num_rows);
+                $log->write('order_totals_shipping_charge');
+                $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET total=' . (int) $order_totals->row['value'] . ' WHERE order_id="' . $order_id . '"');
+            }
             // echo "<pre>";print_r('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="total"');die;
-          
+        }
+    }
+
+    public function UpdateOrderDeliveryCharges($order_id, $delivery_charge) {
+
+        $old_delivery_charge = 0;
+        $old_delivery_vat_charge = 0;
+        $old_delivery_charge_total = 0;
+        $order_total_without_delivery_charges = 0;
+
+        $total_without_delivery_charges = $this->db->query('SELECT SUM(value) AS total FROM `' . DB_PREFIX . "order_total` WHERE order_id ='" . $order_id . "' and code NOT IN ('shipping', 'delivery_vat', 'total')");
+        $order_total_without_delivery_charges = $total_without_delivery_charges->row['total'];
+        $log = new Log('error.log');
+        $log->write($order_total_without_delivery_charges);
+        //insert into order_total
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
+
+        $exists = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="shipping"');
+        // echo "<pre>";print_r($exists);
+        //  echo "<pre>";print_r('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+ '.$delivery_charge.'  WHERE order_id="' . $order_id . '" and code="shipping"');die;
+        if ($exists->num_rows > 0) {
+            $old_delivery_charge = $exists->row['value'];
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=' . (int) $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="shipping"');
+        } else {
+            $old_delivery_charge = 0;
+            //   echo "<pre>";print_r('INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge . "', order_id = '" . $order_id . "', title = 'Standard Delivery', sort_order = 6, code = 'shipping'");die;
+            $sql = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge . "', order_id = '" . $order_id . "', title = 'Standard Delivery', sort_order = 6, code = 'shipping'";
+            $query = $this->db->query($sql);
+        }
+
+        $exists2 = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="delivery_vat"');
+        if ($exists2->num_rows > 0) {
+            $old_delivery_vat_charge = $exists2->row['value'];
+        } else {
+            $old_delivery_vat_charge = 0;
+        }
+        $old_delivery_charge_total = $old_delivery_charge + $old_delivery_vat_charge;
+
+        //insert vat delivery charge
+        $delivery_vat_applicable = 0;
+        try {
+            $deliverycharge_temp = $this->db->query('select * from ' . DB_PREFIX . 'temp_deliverycharge Limit 0,1')->row;
+
+            $delivery_vat_applicable = $deliverycharge_temp['delivery_charge_vat'];
+            $delivery_vat_percentage = $deliverycharge_temp['VAT_percent'];
+        } catch (exception $ex) {
+            $delivery_vat_applicable = 0;
+        }
+        if ($delivery_vat_applicable == 1 && $exists2->num_rows <= 0) {
+            $delivery_charge_vat = (($delivery_charge) * $delivery_vat_percentage);
+            $Total_amount = $delivery_charge_vat + $delivery_charge;
+
+            $sql2 = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge_vat . "', order_id = '" . $order_id . "', title = 'VAT on Standard Delivery', sort_order = 6, code = 'delivery_vat'";
+            $query2 = $this->db->query($sql2);
+        } elseif ($delivery_vat_applicable == 1 && $exists2->num_rows >= 0) {
+            $delivery_charge_vat = (($delivery_charge) * $delivery_vat_percentage);
+            $Total_amount = $delivery_charge_vat + $delivery_charge;
+
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=' . $delivery_charge_vat . ' WHERE order_id="' . $order_id . '" and code="delivery_vat"');
+        } else {
+            $Total_amount = $delivery_charge;
+        }
+        $order_grand_total = $Total_amount + $order_total_without_delivery_charges;
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=' . $order_grand_total . ' WHERE order_id="' . $order_id . '" and code="total"');
+        $order_totals = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="total"');
+        if ($order_totals->num_rows > 0) {
+            $log = new Log('error.log');
+            $log->write('order_totals_shipping_charge');
+            $log->write($order_totals->num_rows);
+            $log->write('order_totals_shipping_charge');
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET total=' . (int) $order_totals->row['value'] . ' WHERE order_id="' . $order_id . '"');
+        }
+        // echo "<pre>";print_r('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="total"');die;
     }
 
     public function UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id) {
@@ -3284,7 +3356,7 @@ class ModelSaleOrder extends Model {
                 if (is_array($order_totals) && count($order_totals) > 0) {
                     foreach ($order_totals as $order_total) {
                         if ($order_total['code'] == 'total') {
-                            $order_grand_total+= $order_total['value'];
+                            $order_grand_total += $order_total['value'];
                             //$log->write($order_total);
                         }
                     }
@@ -3293,15 +3365,14 @@ class ModelSaleOrder extends Model {
         }
         return $order_grand_total;
     }
+
     public function getOrderedProducts($data = []) {
         $sql = "SELECT p.order_product_id, o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, o.order_status_id,p.product_id,p.general_product_id,p.name,p.unit,p.quantity,p.price,p.total,p.tax FROM `" . DB_PREFIX . 'order` o ';
-         
+
         $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_product p on (o.order_id = p.order_id) ';
-
-
 
         if (isset($data['filter_order_status'])) {
             $implode = [];
@@ -3461,16 +3532,14 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
-    
+
     public function getOrderedMissingProducts($data = []) {
         $sql = "SELECT mp.id,o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id,p.product_id,p.general_product_id,p.name,p.unit,p.quantity,p.price,p.total,p.tax,mp.quantity_required FROM `" . DB_PREFIX . 'order` o ';
-         
+
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'order_product p on (o.order_id = p.order_id) ';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'missing_products mp on (p.product_id = mp.product_store_id) ';
-
-
 
         if (isset($data['filter_order_status'])) {
             $implode = [];
@@ -3630,6 +3699,7 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
+
     public function getTotalOrderedProducts($data = []) {
         $log = new Log('error.log');
         $log->write('Check For Orders');
@@ -3752,7 +3822,7 @@ class ModelSaleOrder extends Model {
 
         return $query->row['total'];
     }
-    
+
     public function getTotalOrderedMissingProducts($data = []) {
         $log = new Log('error.log');
         $log->write('Check For Orders');
@@ -3875,43 +3945,40 @@ class ModelSaleOrder extends Model {
         return $query->row['total'];
     }
 
-    public function addOrderProductToMissingProduct($order_product_id,$required_quantity=0) {
+    public function addOrderProductToMissingProduct($order_product_id, $required_quantity = 0) {
         $sql = 'Select * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
 
         $query = $this->db->query($sql);
 
-        $productinfo=$query->row;
-        if($productinfo!=null )
-        {
-        //    echo "<pre>";print_r($productinfo['general_product_id']);die;
+        $productinfo = $query->row;
+        if ($productinfo != null) {
+            //    echo "<pre>";print_r($productinfo['general_product_id']);die;
 
-        $sql = 'Delete FROM ' . DB_PREFIX . "missing_products WHERE order_id = '" . (int) $productinfo['order_id'] . "' and product_store_id = '" . (int) $productinfo['product_id'] . "'";
+            $sql = 'Delete FROM ' . DB_PREFIX . "missing_products WHERE order_id = '" . (int) $productinfo['order_id'] . "' and product_store_id = '" . (int) $productinfo['product_id'] . "'";
 
-        $query = $this->db->query($sql);
+            $query = $this->db->query($sql);
 
-        if($required_quantity==0 || $required_quantity==null)
-        $required_quantity=$productinfo['quantity'];
+            if ($required_quantity == 0 || $required_quantity == null)
+                $required_quantity = $productinfo['quantity'];
 
-        // echo "<pre>";print_r($required_quantity);die;
+            // echo "<pre>";print_r($required_quantity);die;
 
-        $sql = 'INSERT into ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['total'] . "',  quantity_required = '" . $required_quantity. "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'";
-        //  echo "<pre>";print_r($sql);die;
+            $sql = 'INSERT into ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['total'] . "',  quantity_required = '" . $required_quantity . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'";
+            //  echo "<pre>";print_r($sql);die;
 
 
-        $query = $this->db->query($sql);
+            $query = $this->db->query($sql);
         }
     }
 
     //changes in this getOrderedMissingProducts need to chek 
     public function getOrderedMissingProductsOnlyOrder($data = []) {
         $sql = "SELECT distinct o.order_id FROM `" . DB_PREFIX . 'order` o ';
-         
+
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'order_product p on (o.order_id = p.order_id) ';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'missing_products mp on (p.product_id = mp.product_store_id) ';
-
-
 
         if (isset($data['filter_order_status'])) {
             $implode = [];

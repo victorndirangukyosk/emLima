@@ -37,6 +37,7 @@ class ModelAccountWishList extends Model
                     'wishlist_id' => $wishlist['wishlist_id'],
                     'product_id' => $wishlist['product_id'],
                     'product_store_id' => $store_product_detail['product_store_id'],
+                    'store_id' => $store_product_detail['store_id'],
                     'quantity' => $wishlist['quantity'],
                     'name' => $wishlist['name'],
                     'image' => $image,

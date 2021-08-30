@@ -869,7 +869,8 @@ class ControllerApiCustomerProducts extends Controller {
                           $temp['only_name'] = htmlspecialchars_decode($tempProduct['name']);
                           $temp['product_id'] = $tempProduct['product_id'];
                           $temp['product_store_id'] = $tempProduct['product_store_id']; */
-
+                        $price = strval($price);
+                        $special_price = strval($special_price);
                         $data['products'][] = [
                             'key' => $key,
                             'qty_in_cart' => $qty_in_cart,
@@ -1044,6 +1045,7 @@ class ControllerApiCustomerProducts extends Controller {
     }
 
     public function getProductSearch() {
+        $cachePrice_data = $this->cache->get('category_price_data');
         $log = new Log('error.log');
         $log->write('data');
         $log->write($this->request->get);
@@ -1252,6 +1254,18 @@ class ControllerApiCustomerProducts extends Controller {
                         $o_price = 0;
 
                         if (!$this->config->get('config_inclusiv_tax')) {
+                            //FOR CATEGORY PRICING
+                            $category_s_price = 0;
+                            $category_o_price = 0;
+                            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']])) {
+                                $category_s_price = $cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']];
+                                $category_o_price = $cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']];
+                                if ($category_s_price != NULL && $category_s_price > 0) {
+                                    $result['price'] = $category_s_price;
+                                    $result['special_price'] = $category_s_price;
+                                }
+                            }
+                            //FOR CATEGORY PRICING
                             //get price html
                             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                                 //$price = $this->currency->format( $this->tax->calculate( $result['price'], $result['tax_class_id'], $this->config->get( 'config_tax' ) ) );
@@ -1286,6 +1300,17 @@ class ControllerApiCustomerProducts extends Controller {
 
                             $s_price = $result['special_price'];
                             $o_price = $result['price'];
+
+                            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']])) {
+                                $category_s_price = $cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']];
+                                $category_o_price = $cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']];
+                                if ($category_s_price != NULL && $category_s_price > 0) {
+                                    $result['price'] = $category_s_price;
+                                    $result['special_price'] = $category_s_price;
+                                    $special_price = $category_s_price;
+                                    $price = $category_s_price;
+                                }
+                            }
                         }
 
                         $percent_off = null;
@@ -1299,16 +1324,16 @@ class ControllerApiCustomerProducts extends Controller {
                         }
 
 
-                        $cachePrice_data = $this->cache->get('category_price_data');
+                        /* $cachePrice_data = $this->cache->get('category_price_data'); */
                         // echo "<pre>";print_r($_SESSION['customer_category']);die;
-                        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']])) {
-                            //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
-                            $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']];
-                            $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']];
-                            $special_price = $s_price;
-                            $price = $o_price;
-                            // echo "<pre>";print_r($special_price);die;
-                        }
+                        /* if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']])) {
+                          //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+                          $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']];
+                          $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']];
+                          $special_price = $s_price;
+                          $price = $o_price;
+                          // echo "<pre>";print_r($special_price);die;
+                          } */
 
                         //get qty in cart
                         $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $store_id]));
@@ -1326,6 +1351,8 @@ class ControllerApiCustomerProducts extends Controller {
                         $unit = $result['unit'] ? $result['unit'] : false;
 
                         $productNames = array_column($data['products'], 'name');
+                        $price = strval($price);
+                        $special_price = strval($special_price);
                         if (false !== array_search($result['name'], $productNames)) {
                             // Add variation to existing product
                             $productIndex = array_search($result['name'], $productNames);
@@ -1688,6 +1715,7 @@ class ControllerApiCustomerProducts extends Controller {
     }
 
     public function getProductsFnNew($filter_data, $store_id) {
+        $cachePrice_data = $this->cache->get('category_price_data');
         $this->load->model('assets/product');
         $this->load->model('tool/image');
 
@@ -1729,6 +1757,17 @@ class ControllerApiCustomerProducts extends Controller {
             $o_price = 0;
 
             if (!$this->config->get('config_inclusiv_tax')) {
+
+                $category_s_price = 0;
+                $category_o_price = 0;
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']])) {
+                    $category_s_price = $cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']];
+                    $category_o_price = $cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']];
+                    if ($category_s_price != NULL && $category_s_price > 0) {
+                        $result['price'] = $category_s_price;
+                        $result['special_price'] = $category_s_price;
+                    }
+                }
                 //get price html
                 if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
@@ -1761,6 +1800,13 @@ class ControllerApiCustomerProducts extends Controller {
 
                 $s_price = $result['special_price'];
                 $o_price = $result['price'];
+
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']])) {
+                    $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']];
+                    $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']];
+                    $special_price = $this->currency->format($s_price);
+                    $price = $this->currency->format($o_price);
+                }
             }
 
             //get qty in cart
@@ -1829,6 +1875,8 @@ class ControllerApiCustomerProducts extends Controller {
                 }
             }
 
+            $price = strval($price);
+            $special_price = strval($special_price);
             $data['products'][] = [
                 'key' => $key,
                 'qty_in_cart' => $qty_in_cart,

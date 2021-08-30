@@ -503,6 +503,12 @@
                               } ?>
                               <td><?=$order_processor_name ?></td>
                           </tr>
+                          <?php if($store_id == 75) { ?>
+                          <tr>
+                           <td>Shipping Charges</td>
+                           <td><input min="0" type="number" name="kw_shipping_charges" id="kw_shipping_charges" value="<?=round($kw_shipping_charges, 2) ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_kw_shipping_charges" class="btn btn-primary" type="button"> Save </button></td>
+                          </tr>
+                          <?php } ?>
 			</table>
 		  </div>
 		  <?php } ?>
@@ -2395,6 +2401,34 @@ $(document).delegate('#save_order_vehicle_number', 'click', function() {
     }
     $.ajax({
             url: 'index.php?path=sale/order/SaveOrUpdateOrderVehilceDetails&token=<?php echo $token; ?>',
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            cache: false,
+            async: false,
+            beforeSend: function() {
+            },
+            success: function(html) {
+                console.log(html);
+                setTimeout(function(){ window.location.reload(false); }, 1000);
+               
+                
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+});
+
+$(document).delegate('#save_kw_shipping_charges', 'click', function() {
+    var kw_shipping_charges = $('input[name=\'kw_shipping_charges\']').val();
+    var order_id = $('input[name=\'kw_shipping_charges\']').attr('data_order_id');
+    data = {
+            order_id : order_id,
+            kw_shipping_charges : kw_shipping_charges
+    }
+    $.ajax({
+            url: 'index.php?path=sale/order/SaveOrUpdateOrderShippingChargesDetails&token=<?php echo $token; ?>',
             type: 'post',
             data: data,
             dataType: 'json',
