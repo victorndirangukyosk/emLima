@@ -8,6 +8,11 @@ class ModelAccountCustomer extends Model {
         $log = new Log('error.log');
         $log->write($data['login_latitude']);
         $log->write($data['login_longitude']);
+        if (isset($data['cityid']) && $data['cityid'] != NULL && $data['cityid'] > 0) {
+            $data['cityid'] = $data['cityid'];
+        } else {
+            $data['cityid'] = 32;
+        }
 
         $customer_accountmanager_id = NULL;
         if (isset($data['accountmanagerid'])) {
@@ -157,7 +162,7 @@ class ModelAccountCustomer extends Model {
         //Get Email Template
 
         if ($onlycustomer == false) {//the same method used for mobile registration, 
-        //in mobile , customer is saving, before OTP check ,so  $onlycustomer is added
+            //in mobile , customer is saving, before OTP check ,so  $onlycustomer is added
             if (!$customer_group_info['approval']) {
                 try {
                     //Customer Registration Register
