@@ -506,7 +506,7 @@
                           <?php if($store_id == 75) { ?>
                           <tr>
                            <td>Shipping Charges</td>
-                           <td><input min="0" type="number" name="kw_shipping_charges" id="kw_shipping_charges" value="<?=$kw_shipping_charges ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_kw_shipping_charges" class="btn btn-primary" type="button"> Save </button></td>
+                           <td><input min="0" type="number" name="kw_shipping_charges" id="kw_shipping_charges" value="<?=round($kw_shipping_charges, 2) ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_kw_shipping_charges" class="btn btn-primary" type="button"> Save </button></td>
                           </tr>
                           <?php } ?>
 			</table>
