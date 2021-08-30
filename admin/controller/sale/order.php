@@ -6640,8 +6640,8 @@ class ControllerSaleOrder extends Controller {
                     $datas['totals']['shipping'] = [];
                     $datas['totals']['shipping']['code'] = 'shipping';
                     $datas['totals']['shipping']['title'] = 'Shipping charge';
-                    $datas['totals']['shipping']['value'] = 0;
-                    $datas['totals']['shipping']['actual_value'] = 0;
+                    $datas['totals']['shipping']['value'] = $value_coming_tmp;
+                    $datas['totals']['shipping']['actual_value'] = $value_coming_tmp;
 
                     $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
                 }
@@ -6674,7 +6674,7 @@ class ControllerSaleOrder extends Controller {
                 $tot['sort'] = $p;
                 $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
 
-                if ('shipping' == $tot['code']) {
+                /*if ('shipping' == $tot['code']) {
                     if (count($shipping_price) > 0 && isset($shipping_price['cost']) && isset($shipping_price['actual_cost'])) {
                         if ((array_key_exists('value_coming', $tot))) {
                             $orderTotal -= $tot['value_coming'];
@@ -6688,7 +6688,7 @@ class ControllerSaleOrder extends Controller {
                             $orderTotal -= $tot['value_coming'];
                         }
                     }
-                }
+                }*/
 
                 ++$p;
             }
