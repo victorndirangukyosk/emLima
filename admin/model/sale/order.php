@@ -3161,6 +3161,78 @@ class ModelSaleOrder extends Model {
         }
     }
 
+    public function UpdateOrderDeliveryCharges($order_id, $delivery_charge) {
+
+        $old_delivery_charge = 0;
+        $old_delivery_vat_charge = 0;
+        $old_delivery_charge_total = 0;
+        $order_total_without_delivery_charges = 0;
+
+        $total_without_delivery_charges = $this->db->query('SELECT SUM(value) AS total FROM `' . DB_PREFIX . "order_total` WHERE order_id ='" . $order_id . "' and code NOT IN ('shipping', 'delivery_vat', 'total')");
+        $order_total_without_delivery_charges = $total_without_delivery_charges->row['total'];
+        $log = new Log('error.log');
+        $log->write($order_total_without_delivery_charges);
+        //insert into order_total
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
+
+        $exists = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="shipping"');
+        // echo "<pre>";print_r($exists);
+        //  echo "<pre>";print_r('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+ '.$delivery_charge.'  WHERE order_id="' . $order_id . '" and code="shipping"');die;
+        if ($exists->num_rows > 0) {
+            $old_delivery_charge = $exists->row['value'];
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=' . (int) $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="shipping"');
+        } else {
+            $old_delivery_charge = 0;
+            //   echo "<pre>";print_r('INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge . "', order_id = '" . $order_id . "', title = 'Standard Delivery', sort_order = 6, code = 'shipping'");die;
+            $sql = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge . "', order_id = '" . $order_id . "', title = 'Standard Delivery', sort_order = 6, code = 'shipping'";
+            $query = $this->db->query($sql);
+        }
+
+        $exists2 = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="delivery_vat"');
+        if ($exists2->num_rows > 0) {
+            $old_delivery_vat_charge = $exists2->row['value'];
+        } else {
+            $old_delivery_vat_charge = 0;
+        }
+        $old_delivery_charge_total = $old_delivery_charge + $old_delivery_vat_charge;
+
+        //insert vat delivery charge
+        $delivery_vat_applicable = 0;
+        try {
+            $deliverycharge_temp = $this->db->query('select * from ' . DB_PREFIX . 'temp_deliverycharge Limit 0,1')->row;
+
+            $delivery_vat_applicable = $deliverycharge_temp['delivery_charge_vat'];
+            $delivery_vat_percentage = $deliverycharge_temp['VAT_percent'];
+        } catch (exception $ex) {
+            $delivery_vat_applicable = 0;
+        }
+        if ($delivery_vat_applicable == 1 && $exists2->num_rows <= 0) {
+            $delivery_charge_vat = (($delivery_charge) * $delivery_vat_percentage);
+            $Total_amount = $delivery_charge_vat + $delivery_charge;
+
+            $sql2 = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $delivery_charge_vat . "', order_id = '" . $order_id . "', title = 'VAT on Standard Delivery', sort_order = 6, code = 'delivery_vat'";
+            $query2 = $this->db->query($sql2);
+        } elseif ($delivery_vat_applicable == 1 && $exists2->num_rows >= 0) {
+            $delivery_charge_vat = (($delivery_charge) * $delivery_vat_percentage);
+            $Total_amount = $delivery_charge_vat + $delivery_charge;
+
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=' . $delivery_charge_vat . ' WHERE order_id="' . $order_id . '" and code="delivery_vat"');
+        } else {
+            $Total_amount = $delivery_charge;
+        }
+        $order_grand_total = $Total_amount + $order_total_without_delivery_charges;
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order_total` SET value=' . $order_grand_total . ' WHERE order_id="' . $order_id . '" and code="total"');
+        $order_totals = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="total"');
+        if ($order_totals->num_rows > 0) {
+            $log = new Log('error.log');
+            $log->write('order_totals_shipping_charge');
+            $log->write($order_totals->num_rows);
+            $log->write('order_totals_shipping_charge');
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET total=' . (int) $order_totals->row['value'] . ' WHERE order_id="' . $order_id . '"');
+        }
+        // echo "<pre>";print_r('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+' . $delivery_charge . ' WHERE order_id="' . $order_id . '" and code="total"');die;
+    }
+
     public function UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id) {
         $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_executive_id="' . $delivery_executive_id . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
     }
