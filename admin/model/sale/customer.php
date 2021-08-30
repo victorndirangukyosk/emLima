@@ -253,7 +253,7 @@ class ModelSaleCustomer extends Model {
     }
 
     public function getCustomersOTP($data = []) {
-        $sql = "SELECT c.customer_id, c.company_name, c.email, c.source, c.telephone, o.id, o.customer_id as otp_customer_id, o.otp, o.type, o.expiry_time, o.created_at, o.updated_at, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'otp o LEFT JOIN ' . DB_PREFIX . "customer c ON (c.customer_id = o.customer_id)";
+        $sql = "SELECT c.customer_id, c.company_name, c.email, c.source, c.telephone, o.id, o.customer_id as otp_customer_id, o.otp, o.type, o.expiry_time, o.created_at as otp_created_at, o.updated_at as otp_updated_at, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'otp o LEFT JOIN ' . DB_PREFIX . "customer c ON (o.customer_id = c.customer_id)";
 
         $implode = [];
 
@@ -269,9 +269,6 @@ class ModelSaleCustomer extends Model {
             }
         }
 
-        if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
-            $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
-        }
 
         if (!empty($data['filter_email'])) {
             $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
@@ -287,20 +284,8 @@ class ModelSaleCustomer extends Model {
             $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
-        if (isset($data['filter_newsletter']) && !is_null($data['filter_newsletter'])) {
-            $implode[] = "c.newsletter = '" . (int) $data['filter_newsletter'] . "'";
-        }
-
-        if (!empty($data['filter_customer_group_id'])) {
-            $implode[] = "c.customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
-        }
-
         if (!empty($data['filter_ip'])) {
             $implode[] = "c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
-        }
-
-        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
         }
 
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
@@ -308,7 +293,8 @@ class ModelSaleCustomer extends Model {
         }
 
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            //$implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "(DATE_FORMAT(o.created_at, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "' OR DATE_FORMAT(o.updated_at, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         if (isset($data['filter_parent']) && !is_null($data['filter_parent'])) {
@@ -319,20 +305,19 @@ class ModelSaleCustomer extends Model {
             $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
 
-        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !array_key_exists('filter_parent_customer_id', $data)) {
-            $implode[] = "(parent = 0 OR parent IS NULL)";
-        }
-
-        if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
-            //$implode[] = "parent > 0";
-        }
-
         if (!empty($data['filter_monthyear_added'])) {
             $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
 
+        if (!isset($data['filter_date_added']) || empty($data['filter_date_added'])) {
+            $implode[] = "(DATE_FORMAT(o.created_at, '%d-%m-%Y') = '" . date('d-m-Y') . "' OR DATE_FORMAT(o.updated_at, '%d-%m-%Y') = '" . date('d-m-Y') . "')";
+        }
+        /* if ($implode) {
+          $sql .= ' AND ' . implode(' AND ', $implode);
+          } */
+
         if ($implode) {
-            $sql .= ' AND ' . implode(' AND ', $implode);
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
 
         $sort_data = [
@@ -368,7 +353,118 @@ class ModelSaleCustomer extends Model {
 
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
+        /* $log = new Log('error.log');
+          $log->write($sql); */
+        $query = $this->db->query($sql);
 
+        //echo "<pre>";print_r($sql);die;
+
+        return $query->rows;
+    }
+
+    public function getCustomersOTPS($data = []) {
+        $sql = "SELECT c.customer_id, c.company_name, c.email, c.source, c.telephone, o.id, o.customer_id as otp_customer_id, o.otp, o.type, o.expiry_time, o.created_at as otp_created_at, o.updated_at as otp_updated_at, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'otp o LEFT JOIN ' . DB_PREFIX . "customer c ON (o.customer_id = c.telephone)";
+
+        $implode = [];
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = "c.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_name'])) {
+            if ($this->user->isVendor()) {
+                $implode[] = "c.firstname LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            } else {
+                $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            }
+        }
+
+
+        if (!empty($data['filter_email'])) {
+            $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            if ('' != $data['filter_company']) {
+                $implode[] = "c.company_name = '" . $this->db->escape($data['filter_company']) . "'";
+            }
+        }
+
+        if (!empty($data['filter_telephone'])) {
+            $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+        }
+
+        if (!empty($data['filter_ip'])) {
+            $implode[] = "c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
+        }
+
+        if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
+            $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
+        }
+
+        if (!empty($data['filter_date_added'])) {
+            //$implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "(DATE_FORMAT(o.created_at, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "' OR DATE_FORMAT(o.updated_at, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if (isset($data['filter_parent']) && !is_null($data['filter_parent'])) {
+            $implode[] = "c.parent = '" . (int) $data['filter_parent'] . "'";
+        }
+
+        if (isset($data['filter_account_manager_name']) && !is_null($data['filter_account_manager_id'])) {
+            $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
+        }
+
+        if (!empty($data['filter_monthyear_added'])) {
+            $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+        }
+
+        if (!isset($data['filter_date_added']) || empty($data['filter_date_added'])) {
+            $implode[] = "(DATE_FORMAT(o.created_at, '%d-%m-%Y') = '" . date('d-m-Y') . "' OR DATE_FORMAT(o.updated_at, '%d-%m-%Y') = '" . date('d-m-Y') . "')";
+        }
+        /* if ($implode) {
+          $sql .= ' AND ' . implode(' AND ', $implode);
+          } */
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $sort_data = [
+            'name',
+            'c.email',
+            'customer_group',
+            'c.status',
+            'c.approved',
+            'c.ip',
+            'c.date_added',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY name';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+        /* $log = new Log('error.log');
+          $log->write($sql); */
         $query = $this->db->query($sql);
 
         //echo "<pre>";print_r($sql);die;
@@ -732,7 +828,8 @@ class ModelSaleCustomer extends Model {
     }
 
     public function getTotalOTPCustomers($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'otp';
+        $sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . 'otp o LEFT JOIN ' . DB_PREFIX . "customer c ON (o.customer_id = c.customer_id)";
+        //$sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'otp';
 
         $implode = [];
 
@@ -752,44 +849,13 @@ class ModelSaleCustomer extends Model {
             $implode[] = "telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
-        if (isset($data['filter_newsletter']) && !is_null($data['filter_newsletter'])) {
-            $implode[] = "newsletter = '" . (int) $data['filter_newsletter'] . "'";
-        }
-
-        if (!empty($data['filter_customer_group_id'])) {
-            $implode[] = "customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
-        }
-
         if (!empty($data['filter_ip'])) {
             $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";
         }
 
-        if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
-            $implode[] = "parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
-        }
-
-        if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
-            $implode[] = "account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
-        }
-
-        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !array_key_exists('filter_parent_customer_id', $data)) {
-            $implode[] = "(parent = 0 OR parent IS NULL)";
-        }
-
-        if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
-            //$implode[] = "parent > 0";
-        }
-
-        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $implode[] = "status = '" . (int) $data['filter_status'] . "'";
-        }
-
-        if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
-            $implode[] = "approved = '" . (int) $data['filter_approved'] . "'";
-        }
-
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            //$implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "(DATE_FORMAT(o.created_at, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "' OR DATE_FORMAT(o.updated_at, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         if ($this->user->isAccountManager()) {
@@ -798,6 +864,62 @@ class ModelSaleCustomer extends Model {
 
         if (!empty($data['filter_monthyear_added'])) {
             $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+        }
+
+        if (!isset($data['filter_date_added']) || empty($data['filter_date_added'])) {
+            $implode[] = "(DATE_FORMAT(o.created_at, '%d-%m-%Y') = '" . date('d-m-Y') . "' OR DATE_FORMAT(o.updated_at, '%d-%m-%Y') = '" . date('d-m-Y') . "')";
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
+
+    public function getTotalOTPCustomerss($data = []) {
+        $sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . 'otp o LEFT JOIN ' . DB_PREFIX . "customer c ON (o.customer_id = c.telephone)";
+        //$sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'otp';
+
+        $implode = [];
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_name'])) {
+            $implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (!empty($data['filter_email'])) {
+            $implode[] = "email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+        }
+
+        if (!empty($data['filter_telephone'])) {
+            $implode[] = "telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+        }
+
+        if (!empty($data['filter_ip'])) {
+            $implode[] = "ip = '" . $this->db->escape($data['filter_ip']) . "'";
+        }
+
+        if (!empty($data['filter_date_added'])) {
+            //$implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "(DATE_FORMAT(o.created_at, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "' OR DATE_FORMAT(o.updated_at, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if ($this->user->isAccountManager()) {
+            $implode[] = "account_manager_id = '" . (int) $this->user->getId() . "'";
+        }
+
+        if (!empty($data['filter_monthyear_added'])) {
+            $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+        }
+
+        if (!isset($data['filter_date_added']) || empty($data['filter_date_added'])) {
+            $implode[] = "(DATE_FORMAT(o.created_at, '%d-%m-%Y') = '" . date('d-m-Y') . "' OR DATE_FORMAT(o.updated_at, '%d-%m-%Y') = '" . date('d-m-Y') . "')";
         }
 
         if ($implode) {

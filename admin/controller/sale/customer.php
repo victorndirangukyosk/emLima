@@ -1339,8 +1339,12 @@ class ControllerSaleCustomer extends Controller {
         ];
 
         $customer_total = $this->model_sale_customer->getTotalOTPCustomers($filter_data);
+        $customer_totals = $this->model_sale_customer->getTotalOTPCustomerss($filter_data);
+        $customer_total = $customer_total + $customer_totals;
 
         $results = $this->model_sale_customer->getCustomersOTP($filter_data);
+        $resultss = $this->model_sale_customer->getCustomersOTPS($filter_data);
+        $results = array_merge($results, $resultss);
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
@@ -1363,6 +1367,9 @@ class ControllerSaleCustomer extends Controller {
                 'source' => $result['source'],
                 'otp' => $result['otp'],
                 'type' => $result['type'],
+                'otp_phone' => $result['otp_customer_id'],
+                'created_at' => $result['otp_created_at'],
+                'updated_at' => $result['otp_updated_at'],
             ];
         }
 
@@ -2219,9 +2226,9 @@ class ControllerSaleCustomer extends Controller {
                 $this->error['password'] = $this->language->get('error_password');
             }
 
-            /*if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
-                $this->error['password'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
-            }*/
+            /* if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
+              $this->error['password'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
+              } */
 
             if ($this->request->post['password'] != $this->request->post['confirm']) {
                 $this->error['confirm'] = $this->language->get('error_confirm');
