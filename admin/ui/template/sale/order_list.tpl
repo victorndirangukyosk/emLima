@@ -1635,10 +1635,12 @@ $.ajax({
                     console.log(json.order_info.driver_id);
                     console.log(json.order_info.vehicle_number);
                     console.log(json.order_info.delivery_executive_id);
+                    console.log(json.order_info.delivery_charges);
                     if(/*order_status != 'Ready for delivery'*/ json.order_info.order_status == 'Order Approval Pending' || order_status == 'Order Approval Pending' || json.order_info.order_status == 'Order Recieved' || order_status == 'Order Recieved' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
                     {
                     $('input[name="order_id"]').val(order_id);
                     $('input[name="invoice_custom"]').val(invoice);
+                    $('input[name="order_delivery_charge"]').val(json.order_info.delivery_charges);
                     $('#driverModal').modal('toggle');
                     if(json.order_info.order_status == 'Order Approval Pending' || order_status == 'Order Approval Pending' || json.order_info.order_status == 'Order Recieved' || order_status == 'Order Recieved') {
                     //if(order_status != 'Ready for delivery') {
