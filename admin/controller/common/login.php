@@ -10,19 +10,18 @@ class ControllerCommonLogin extends Controller {
         $this->document->setTitle($this->language->get('heading_title'));
 
         $shopper_group_id = $this->config->get('config_shopper_group_ids');
-        //   echo "<pre>";print_r($this->user->isLogged());die;
 
+        if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
+            if ($shopper_group_id == $this->user->getGroupId()) {
+                $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
+            } else {
+                $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+            }
+        }
 
-        // if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
-        //     if ($shopper_group_id == $this->user->getGroupId()) {
-        //         $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
-        //     } else {
-        //         $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
-        //     }
-        // }
-
+        //echo "<pre>";print_r($this->request->post);die;
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
-            // echo "<pre>";print_r($this->request->post);die;
+            //echo "<pre>";print_r($this->request->post);die;
 
             $this->session->data['token'] = md5(mt_rand());
             $this->session->data['admintoken'] = $this->session->data['token']; //this name is used in API
@@ -68,17 +67,16 @@ class ControllerCommonLogin extends Controller {
 
             $log->write('user login');
 
-            // if ($shopper_group_id == $this->user->getGroupId()) {
-            //     $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
-            // } elseif ($this->user->getGroupId() == 21) {
-            //     $this->response->redirect($this->url->link('setting/jobposition', 'token=' . $this->session->data['token'], 'SSL'));
-            // } elseif (isset($this->request->post['redirect']) && (0 === strpos($this->request->post['redirect'], HTTP_SERVER) || 0 === strpos($this->request->post['redirect'], HTTPS_SERVER))) {
-            //     $this->response->redirect($this->request->post['redirect'] . '&token=' . $this->session->data['token']);
-            // } else {
-            //     $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
-            // }
+            if ($shopper_group_id == $this->user->getGroupId()) {
+                $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
+            } elseif ($this->user->getGroupId() == 21) {
+                $this->response->redirect($this->url->link('setting/jobposition', 'token=' . $this->session->data['token'], 'SSL'));
+            } elseif (isset($this->request->post['redirect']) && (0 === strpos($this->request->post['redirect'], HTTP_SERVER) || 0 === strpos($this->request->post['redirect'], HTTPS_SERVER))) {
+                $this->response->redirect($this->request->post['redirect'] . '&token=' . $this->session->data['token']);
+            } else {
+                $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+            }
         }
-
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -175,20 +173,8 @@ class ControllerCommonLogin extends Controller {
 
         $data['header'] = $this->load->controller('common/header');
         $data['footer'] = $this->load->controller('common/footer');
-        echo "<pre>";print_r($this->request->post);die;
 
-        if(isset($this->request->post['mlogin']))    //if condition for mobile login
-        {
-
-            $json = [];
-            $json['data'] = $data;
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($json));
-            return;
-        }
-        else{
         $this->response->setOutput($this->load->view('common/login.tpl', $data));
-        }
     }
 
     protected function validate() {
