@@ -1442,13 +1442,18 @@ class ControllerCatalogGeneral extends Controller {
     }
 
     function convertImageToWebP($source, $destination, $quality = 100) {
+        $log = new Log('error.log');
         $extension = pathinfo($source, PATHINFO_EXTENSION);
-        if ($extension == 'jpeg' || $extension == 'jpg')
+        if ($extension == 'jpeg' || $extension == 'jpg') {
+            $log->write($extension);
             $image = imagecreatefromjpeg($source);
-        elseif ($extension == 'gif')
+        } elseif ($extension == 'gif') {
+            $log->write($extension);
             $image = imagecreatefromgif($source);
-        elseif ($extension == 'png')
+        } elseif ($extension == 'png') {
+            $log->write($extension);
             $image = imagecreatefrompng($source);
+        }
         return imagewebp($image, $destination, $quality);
     }
 
