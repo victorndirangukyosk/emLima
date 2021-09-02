@@ -1422,19 +1422,17 @@ class ControllerCatalogGeneral extends Controller {
             if (is_file(DIR_IMAGE . $result['image'])) {
                 $log->write(DIR_IMAGE . $result['image']);
                 $image_array = explode('.', $result['image']);
-                $image_array2 = explode('/', $result['image']);
-                $log->write($image_array2);
                 if (is_array($image_array)) {
                     $log->write(end($image_array));
                     $image_extension = end($image_array);
                     if ($image_extension = 'jpg' || $image_extension = 'jpeg') {
-                        $destination = DIR_IMAGE . 'data/Asian Vegetable/';
+                        $destination = DIR_IMAGE . 'data/Asian Vegetable/' . $result['name'] . '.webp';
                         $this->convertImageToWebP(DIR_IMAGE . $result['image'], $destination);
                         exit;
                     }
 
                     if ($image_extension = 'png') {
-                        $destination = DIR_IMAGE . 'data/Asian Vegetable/';
+                        $destination = DIR_IMAGE . 'data/Asian Vegetable/' . $result['name'] . '.webp';
                         $this->convertImageToWebP(DIR_IMAGE . $result['image'], $destination);
                         exit;
                     }
