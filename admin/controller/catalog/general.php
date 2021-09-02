@@ -1426,13 +1426,13 @@ class ControllerCatalogGeneral extends Controller {
                     $log->write(end($image_array));
                     $image_extension = end($image_array);
                     if ($image_extension = 'jpg' || $image_extension = 'jpeg') {
-                        $destination = DIR_IMAGE . 'data/Asian Vegetable/';
+                        $destination = DIR_IMAGE . 'data/Asian Vegetable';
                         $this->convertImageToWebP(DIR_IMAGE . $result['image'], $destination);
                         exit;
                     }
 
                     if ($image_extension = 'png') {
-                        $destination = DIR_IMAGE . 'data/Asian Vegetable/';
+                        $destination = DIR_IMAGE . 'data/Asian Vegetable';
                         $this->convertImageToWebP(DIR_IMAGE . $result['image'], $destination);
                         exit;
                     }
