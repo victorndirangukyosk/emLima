@@ -1534,6 +1534,17 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->load->model('catalog/vendor_product');
         if (isset($this->request->get['store_product_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $product_info = $this->model_catalog_vendor_product->getProduct($this->request->get['store_product_id']);
+
+            if ($product_info != NULL) {
+                $data['monday'] = $product_info['monday'];
+                $data['tuesday'] = $product_info['tuesday'];
+                $data['wednesday'] = $product_info['wednesday'];
+                $data['thursday'] = $product_info['thursday'];
+                $data['friday'] = $product_info['friday'];
+                $data['saturday'] = $product_info['saturday'];
+                $data['sunday'] = $product_info['sunday'];
+            }
+
             if ($this->user->isVendor() && $product_info['vendor_id'] != $this->user->getId()) {
                 die('illegal access!');
             }
