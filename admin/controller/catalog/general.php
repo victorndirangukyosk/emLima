@@ -1419,8 +1419,37 @@ class ControllerCatalogGeneral extends Controller {
         $this->load->model('catalog/general');
         $results = $this->model_catalog_general->getProducts($filter_data);
         foreach ($results as $result) {
-            $log->write($result);
+            if (is_file(DIR_IMAGE . $result['image'])) {
+                $log->write(DIR_IMAGE . $result['image']);
+                $image_array = explode('.', $result['image']);
+                if (is_array($image_array)) {
+                    $log->write(end($image_array));
+                    $image_extension = end($image_array);
+                    if ($image_extension = 'jpg' || $image_extension = 'jpeg') {
+                        $destination = 'C:\xampp\htdocs\kwikbasket\image\data\Asian Vegetable';
+                        $this->convertImageToWebP(DIR_IMAGE . $result['image'], $destination);
+                        exit;
+                    }
+
+                    if ($image_extension = 'png') {
+                        $destination = 'C:\xampp\htdocs\kwikbasket\image\data\Asian Vegetable';
+                        $this->convertImageToWebP(DIR_IMAGE . $result['image'], $destination);
+                        exit;
+                    }
+                }
+            }
         }
+    }
+
+    function convertImageToWebP($source, $destination, $quality = 100) {
+        $extension = pathinfo($source, PATHINFO_EXTENSION);
+        if ($extension == 'jpeg' || $extension == 'jpg')
+            $image = imagecreatefromjpeg($source);
+        elseif ($extension == 'gif')
+            $image = imagecreatefromgif($source);
+        elseif ($extension == 'png')
+            $image = imagecreatefrompng($source);
+        return imagewebp($image, $destination, $quality);
     }
 
 }
