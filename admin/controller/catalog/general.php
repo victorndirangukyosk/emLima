@@ -1457,6 +1457,7 @@ class ControllerCatalogGeneral extends Controller {
             }
             return imagewebp($image, $destination, $quality);
         } catch (Exception $e) {
+            $log = new Log('error.log');
             $log->write($e);
         }
     }
