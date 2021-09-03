@@ -1651,6 +1651,7 @@ class ControllerApiCustomerCheckout extends Controller {
                         $data['selected_date_slot'] = reset($data['dates']);
                     }
                 }
+                $data['dates'] = array_values($data['dates']);
                 $log->write('dates');
                 $log->write($data['dates']);
                 $log->write('dates');
