@@ -1658,14 +1658,14 @@ class ControllerApiCustomerCheckout extends Controller {
             $json['data']['dates'] = $data['dates'];
             $json['data']['timeslots'] = $data['timeslots'];
             $json['data']['selected_time_slot'] = $data['selected_slot'];
-            $json['data']['selected_date_slot'] = $data['dates'][0];
+            $json['data']['selected_date_slot'] = $data['selected_date_slot'];
             $json['data']['disabled_slot'] = $data['disabled_slot'];
             $json['message'] = 'Please Pre Populate These Date And Time Slots!';
 
             $stores = $this->cart->getStores();
             foreach ($stores as $store_id) {
                 $this->session->data['timeslot'][$store_id] = $data['selected_slot'];
-                $this->session->data['dates'][$store_id] = $data['dates'][0];
+                $this->session->data['dates'][$store_id] = $data['selected_date_slot'];
             }
             /* $log = new Log('error.log');
               $log->write('SLOTS');
