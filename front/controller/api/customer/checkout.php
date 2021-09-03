@@ -1606,6 +1606,9 @@ class ControllerApiCustomerCheckout extends Controller {
             $data['store'] = $this->getStoreDetail($store_id);
 
             if (isset($this->request->get['shipping_address_id']) && $this->request->get['shipping_address_id'] != NULL && $this->request->get['shipping_address_id'] > 0) {
+                $log->write('shipping_address_id');
+                $log->write($this->request->get['shipping_address_id']);
+                $log->write('shipping_address_id');
                 /* REMOVE DAYS BASED ON CITY OR REGION */
                 $order_delivery_days = NULL;
                 $city_details = NULL;
