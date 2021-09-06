@@ -27,6 +27,19 @@ class ModelAccountAddress extends Model {
         if (!empty($data['default'])) {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $this->customer->getId() . "'");
         }
+        else//else condition is to remove default address , if user unchecks the existing default address
+        {
+            $default_address_id=0;           
+            $default_address_query = $this->db->query('SELECT address_id FROM ' . DB_PREFIX . "customer WHERE   customer_id = '" . (int) $this->customer->getId() . "'");
+            if ($default_address_query->num_rows) {
+                $default_address_id=$default_address_query->row['address_id'];
+            }
+            if($default_address_id==$address_id)
+            {
+                $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = 0 WHERE customer_id = '" . (int) $this->customer->getId() . "'");
+
+            }
+        }
 
         $this->trigger->fire('post.customer.edit.address', $address_id);
     }
