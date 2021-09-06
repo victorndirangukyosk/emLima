@@ -3545,4 +3545,294 @@ class ControllerSaleCustomer extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function api() {
+        $this->load->language('sale/customer');
+
+        // $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('sale/customer');
+
+        $this->getListAPI();
+
+        $data['kondutoStatus'] = $this->config->get('config_konduto_status');
+        $this->load->language('account/address');
+        $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
+
+        // $this->load->model('account/address');
+    }
+
+
+    protected function getListAPI() {
+
+        $json = [];
+        $json['success'] = '';
+        $json['message'] = '';
+        
+        $this->load->language('sale/customer');
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
+
+        if (isset($this->request->get['filter_email'])) {
+            $filter_email = $this->request->get['filter_email'];
+        } else {
+            $filter_email = null;
+        }
+
+        if (isset($this->request->get['filter_telephone'])) {
+            $filter_telephone = $this->request->get['filter_telephone'];
+        } else {
+            $filter_telephone = null;
+        }
+
+        if (isset($this->request->get['filter_customer_group_id'])) {
+            $filter_customer_group_id = $this->request->get['filter_customer_group_id'];
+        } else {
+            $filter_customer_group_id = null;
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $filter_status = $this->request->get['filter_status'];
+        } else {
+            $filter_status = null;
+        }
+
+        if (isset($this->request->get['filter_approved'])) {
+            $filter_approved = $this->request->get['filter_approved'];
+        } else {
+            $filter_approved = null;
+        }
+
+        if (isset($this->request->get['filter_ip'])) {
+            $filter_ip = $this->request->get['filter_ip'];
+        } else {
+            $filter_ip = null;
+        }
+
+        if (isset($this->request->get['filter_parent_customer'])) {
+            $filter_parent_customer = $this->request->get['filter_parent_customer'];
+        } else {
+            $filter_parent_customer = null;
+        }
+
+        if (isset($this->request->get['filter_parent_customer_id'])) {
+            $filter_parent_customer_id = $this->request->get['filter_parent_customer_id'];
+        } else {
+            $filter_parent_customer_id = null;
+        }
+
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $filter_account_manager_name = $this->request->get['filter_account_manager_name'];
+        } else {
+            $filter_account_manager_name = null;
+        }
+
+        if (isset($this->request->get['filter_account_manager_id'])) {
+            $filter_account_manager_id = $this->request->get['filter_account_manager_id'];
+        } else {
+            $filter_account_manager_id = null;
+        }
+
+        if (isset($this->request->get['filter_sub_customer_show'])) {
+            $filter_sub_customer_show = $this->request->get['filter_sub_customer_show'];
+        } else {
+            $filter_sub_customer_show = null;
+        }
+
+        if (isset($this->request->get['filter_sub_customer_show'])) {
+            $filter_sub_customer_show = $this->request->get['filter_sub_customer_show'];
+        } else {
+            $filter_sub_customer_show = null;
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'name';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+ 
+
+        $data['add'] = $this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('sale/customer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+
+        $data['customers'] = [];
+
+        $filter_data = [
+            'filter_company' => $filter_company,
+            'filter_name' => $filter_name,
+            'filter_email' => $filter_email,
+            'filter_telephone' => $filter_telephone,
+            'filter_customer_group_id' => $filter_customer_group_id,
+            'filter_status' => $filter_status,
+            'filter_approved' => $filter_approved,
+            'filter_date_added' => $filter_date_added,
+            'filter_ip' => $filter_ip,
+            'filter_parent_customer' => $filter_parent_customer,
+            'filter_parent_customer_id' => $filter_parent_customer_id,
+            'filter_account_manager_name' => $filter_account_manager_name,
+            'filter_account_manager_id' => $filter_account_manager_id,
+            'filter_sub_customer_show' => $filter_sub_customer_show,
+            'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
+            'sort' => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
+
+        $customer_total = $this->model_sale_customer->getTotalCustomers($filter_data);
+
+        $results = $this->model_sale_customer->getCustomers($filter_data);
+
+        //echo "<pre>";print_r($results);die;
+        foreach ($results as $result) {
+            if (!$result['approved']) {
+                $approve = $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL');
+            } else {
+                $approve = '';
+            }
+
+            $login_info = $this->model_sale_customer->getTotalLoginAttempts($result['email']);
+
+            if ($login_info && $login_info['total'] >= $this->config->get('config_login_attempts')) {
+                $unlock = $this->url->link('sale/customer/unlock', 'token=' . $this->session->data['token'] . '&email=' . $result['email'] . $url, 'SSL');
+            } else {
+                $unlock = '';
+            }
+
+            $country_code = '+' . $this->config->get('config_telephone_code');
+            if ($result['company_name']) {
+                $result['company_name'] = ' (' . $result['company_name'] . ')';
+            } else {
+                // $result['company_name'] = "(NA)";
+            }
+
+            $data['customers'][] = [
+                'customer_id' => $result['customer_id'],
+                'name' => $result['name'],
+                'company_name' => $result['company_name'],
+                'email' => $result['email'],
+                'telephone' => $country_code . $result['telephone'],
+                'customer_group' => $result['customer_group'],
+                'status_row' => $result['status'],
+                'approved_row' => $result['approved'],
+                'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+                'source' => $result['source'],
+                'ip' => $result['ip'],
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                'approve' => $approve,
+                'unlock' => $unlock,
+                'edit' => $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
+                'customer_view' => $this->url->link('sale/customer/view_customer', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
+            ];
+        }
+
+         
+
+        $data['token'] = $this->session->data['token'];
+
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
+
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
+        }
+
+        if (isset($this->request->post['selected'])) {
+            $data['selected'] = (array) $this->request->post['selected'];
+        } else {
+            $data['selected'] = [];
+        }
+
+           
+
+        $data['sort_name'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_email'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
+        $data['sort_customer_group'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=customer_group' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
+        $data['sort_ip'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
+ 
+ 
+ 
+        $pagination = new Pagination();
+        $pagination->total = $customer_total;
+        $pagination->page = $page;
+        $pagination->limit = $this->config->get('config_limit_admin');
+        $pagination->url = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($customer_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($customer_total - $this->config->get('config_limit_admin'))) ? $customer_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $customer_total, ceil($customer_total / $this->config->get('config_limit_admin')));
+
+        $data['filter_company'] = $filter_company;
+        $data['filter_name'] = $filter_name;
+        $data['filter_email'] = $filter_email;
+        $data['filter_telephone'] = $filter_telephone;
+        $data['filter_customer_group_id'] = $filter_customer_group_id;
+        $data['filter_status'] = $filter_status;
+        $data['filter_approved'] = $filter_approved;
+        $data['filter_ip'] = $filter_ip;
+        $data['filter_parent_customer'] = $filter_parent_customer;
+        $data['filter_parent_customer_id'] = $filter_parent_customer_id;
+        $data['filter_account_manager_name'] = $filter_account_manager_name;
+        $data['filter_account_manager_id'] = $filter_account_manager_id;
+        $data['filter_sub_customer_show'] = $filter_sub_customer_show;
+        $data['filter_date_added'] = $filter_date_added;
+
+        $this->load->model('sale/customer_group');
+
+        $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
+
+        $this->load->model('setting/store');
+
+        $data['stores'] = $this->model_setting_store->getStores();
+
+        $data['sort'] = $sort;
+        $data['order'] = $order;
+
+        // $data['header'] = $this->load->controller('common/header');
+        // $data['column_left'] = $this->load->controller('common/column_left');
+        // $data['footer'] = $this->load->controller('common/footer');
+        $this->load->model('user/accountmanager');
+        $data['accountmanagers'] = $this->model_sale_customer_group->getCustomerGroups();
+
+        $json['data'] = $data;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+         // $this->response->setOutput($this->load->view('sale/customer_list.tpl', $data));
+    }
 }

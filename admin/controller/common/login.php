@@ -256,9 +256,9 @@ class ControllerCommonLogin extends Controller {
 
         // if ($this->user->isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
         //     if ($shopper_group_id == $this->user->getGroupId()) {
-        //         $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
+        //         // $this->response->redirect($this->url->link('shopper/request', 'token=' . $this->session->data['token'], 'SSL'));
         //     } else {
-        //         $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+        //         // $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
         //     }
         // }
 
@@ -274,28 +274,28 @@ class ControllerCommonLogin extends Controller {
                 $this->session->data['language'] = $this->request->post['lang'];
             }
 
-            if ($this->config->get('config_sec_admin_login')) {
-                $mailData = [
-                    'username' => $this->request->post['username'],
-                    'store_name' => $this->config->get('config_name'),
-                    'ip_address' => $this->request->server['REMOTE_ADDR'],
-                ];
+            // if ($this->config->get('config_sec_admin_login')) {
+            //     $mailData = [
+            //         'username' => $this->request->post['username'],
+            //         'store_name' => $this->config->get('config_name'),
+            //         'ip_address' => $this->request->server['REMOTE_ADDR'],
+            //     ];
 
-                $subject = $this->emailtemplate->getSubject('Login', 'admin_1', $mailData);
-                $message = $this->emailtemplate->getMessage('Login', 'admin_1', $mailData);
+            //     $subject = $this->emailtemplate->getSubject('Login', 'admin_1', $mailData);
+            //     $message = $this->emailtemplate->getMessage('Login', 'admin_1', $mailData);
 
-                try {
-                    $mail = new Mail($this->config->get('config_mail'));
-                    $mail->setTo($this->config->get('config_sec_admin_login'));
-                    $mail->setFrom($this->config->get('config_from_email'));
-                    $mail->setSender($this->config->get('config_name'));
-                    $mail->setSubject($subject);
-                    $mail->setHtml($message);
-                    $mail->send();
-                } catch (Exception $e) {
+            //     try {
+            //         $mail = new Mail($this->config->get('config_mail'));
+            //         $mail->setTo($this->config->get('config_sec_admin_login'));
+            //         $mail->setFrom($this->config->get('config_from_email'));
+            //         $mail->setSender($this->config->get('config_name'));
+            //         $mail->setSubject($subject);
+            //         $mail->setHtml($message);
+            //         $mail->send();
+            //     } catch (Exception $e) {
                     
-                }
-            }
+            //     }
+            // }
             // Add to activity log
             $log = new Log('error.log');
             $this->load->model('user/user_activity');
@@ -320,6 +320,8 @@ class ControllerCommonLogin extends Controller {
             // } else {
             //     $this->response->redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
             // }
+            $json['success'] = TRUE;
+            $json['message'] = 'User Logged in';
         }
         else{
 
