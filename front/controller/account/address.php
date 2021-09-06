@@ -53,6 +53,11 @@ class ControllerAccountAddress extends Controller
                 $zipcode_exists = $this->model_account_address->zipcodeExists($data['zipcode']);
             }
 
+            if(isset($data['isdefault_address']))//if true then field will come or else not come
+            {
+                $data['default']=1;
+            }
+            
             /*
                 get city_id from zipcode
             */
