@@ -42,6 +42,15 @@ class ModelAccountAddress extends Model {
     public function getAddress($address_id) {
         $address_query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "address WHERE address_id = '" . (int) $address_id . "' AND customer_id = '" . (int) $this->customer->getId() . "'");
 
+        //get default addresss from customer table
+        $default_address_id=0;
+        $isdefault_address=0;
+        $default_address_query = $this->db->query('SELECT address_id FROM ' . DB_PREFIX . "customer WHERE   customer_id = '" . (int) $this->customer->getId() . "'");
+        if ($default_address_query->num_rows) {
+            $default_address_id=$default_address_query->row['address_id'];
+        }
+        //end default address region
+
         if ($address_query->num_rows) {
             $city_query = $this->db->query('select * from `' . DB_PREFIX . 'city` WHERE city_id="' . $address_query->row['city_id'] . '"');
 
@@ -55,6 +64,11 @@ class ModelAccountAddress extends Model {
             $log->write('address_query');
             $log->write($address_query->row);
             $log->write('address_query');
+
+            if($address_query->row['address_id']==$default_address_id)
+            {
+                $isdefault_address=1;
+            }
 
             $address_data = [
                 'address_id' => $address_query->row['address_id'],
@@ -70,6 +84,8 @@ class ModelAccountAddress extends Model {
                 'city' => $city,
                 'latitude' => $address_query->row['latitude'],
                 'longitude' => $address_query->row['longitude'],
+                'isdefault_address' => $isdefault_address,
+
             ];
 
             return $address_data;
