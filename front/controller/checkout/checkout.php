@@ -397,7 +397,7 @@ class ControllerCheckoutCheckout extends Controller
         /*$data['latitude'] = const_latitude;
         $data['longitude'] = const_longitude;*/
 
-        //echo "<pre>";print_r($store_info);die;
+        // echo "<pre>";print_r($data['addresses']);die;
         if (count($_COOKIE) > 0 && isset($_COOKIE['zipcode'])) {
             $data['zipcode'] = $_COOKIE['zipcode'];
         } elseif (count($_COOKIE) > 0 && isset($_COOKIE['location'])) {

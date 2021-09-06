@@ -110,15 +110,29 @@ class ModelAccountAddress extends Model {
     public function getAddresses() {
         $address_data = [];
 
+         //get default addresss from customer table
+         $default_address_id=0;
+         $default_address_query = $this->db->query('SELECT address_id FROM ' . DB_PREFIX . "customer WHERE   customer_id = '" . (int) $this->customer->getId() . "'");
+         if ($default_address_query->num_rows) {
+             $default_address_id=$default_address_query->row['address_id'];
+         }
+         //end default address region
+
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "address WHERE customer_id = '" . (int) $this->customer->getId() . "'");
 
         foreach ($query->rows as $result) {
+         $isdefault_address=0;
+
             $city_query = $this->db->query('select * from `' . DB_PREFIX . 'city` WHERE city_id="' . $result['city_id'] . '"');
 
             if ($city_query->num_rows) {
                 $city = $city_query->row['name'];
             } else {
                 $city = '';
+            }
+            if($result['address_id']==$default_address_id)
+            {
+                $isdefault_address=1;
             }
 
             /* if($result['address_type']) {
@@ -142,6 +156,8 @@ class ModelAccountAddress extends Model {
                 'latitude' => $result['latitude'],
                 'longitude' => $result['longitude'],
                 'address_type' => ucfirst($result['address_type']),
+                'isdefault_address' => $isdefault_address,
+
             ];
         }
 
