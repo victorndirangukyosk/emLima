@@ -404,6 +404,11 @@ class ControllerCheckoutAddress extends Controller
                 $data['longitude'] = const_longitude;
             }
 
+            if(isset($data['isdefault_address']))//if true then field will come or else not come
+            {
+                $data['default']=1;
+            }
+
             if ($this->config->get('config_address_check')) {
                 $correctAddress['lat'] = isset($data['latitude']) ? $data['latitude'] : null;
                 $correctAddress['lng'] = isset($data['longitude']) ? $data['longitude'] : null;
