@@ -171,6 +171,21 @@
                                         <input id="shipping_zipcode" type="hidden" value="<?php echo $zipcode; ?>" name="shipping_zipcode">
                                     <?php } ?>
                                     
+
+
+  <div class="form-group">
+            <label class="col-md-4 control-label" style="top:8px" for="isdefault_address">Default Address
+            </label>
+            <div class="col-sm-4" >
+            
+                <input id="isdefault_address" name="isdefault_address"  type="checkbox" value="<?php echo $isdefault_address; ?>"   class="form-control input-md" >
+            
+
+
+           </div>
+        </div>
+
+
                                     
                                     <!-- Button -->
                                     <div class="form-group">
