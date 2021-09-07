@@ -100,12 +100,17 @@
                                         <input type="hidden" value="" name="shipping_address_id" id="shipping_address_id">
 
                                         <div class="row" id="address-panel">
-                                            <?php if($addresses){ ?>
+                                            <?php $shipping_address_default_id = 0; if($addresses){ ?>
                                              
                                                 <?php foreach($addresses as $address){ ?>
                                                     <div class="col-md-6">
                                                         <div class="address-block">
                                                             <h3 class="address-locations">
+
+                                                             <?php  if( $address['isdefault_address']=='1')  { 
+                                                                        $shipping_address_default_id = $address['address_id'];
+                                                                    } ?>
+                                                                    
                                                             <?php if($address['address_type'] == 'Home') { ?>
                                                                 <?= $text_home_address ?>
 
@@ -159,7 +164,20 @@
                                                         </div>
                                                     </div>
                                                 <?php } ?>
+
+
+                                                 <?php if($shipping_address_default_id>0){ ?>
+                                            <script type="text/javascript">
+                                            //alert ("<?php echo $shipping_address_default_id; ?>");
+
+                                            var addre_id=<?php echo $shipping_address_default_id; ?>;
+                                            //alert(addre_id);
+                                             addresslogic(addre_id);
+                                            </script>
                                             <?php } ?>
+
+                                       
+                                             <?php } ?>
                                         </div>
                                         <div class="col-md-12" style="text-align:left; padding:0px;"><a href="#" type="button" class="btn-link" data-toggle="modal" data-target="#addressModal"><i class="fa fa-plus-circle"></i> <?= $text_new_delivery_adddress?></a>
                                             </div>
@@ -619,7 +637,7 @@
         </div>
 
 
-        
+
                                     
                                     <!-- Button -->
                                     <div class="form-group">
@@ -1902,11 +1920,13 @@ function saveInAddressBook() {
         $('#save-address').prop('disabled', false);
     });
 
-    $(document).delegate('#open-address', 'click', function() {
+
+    function addresslogic(shipping_address_id_value) {
+       
         
-        var selected_address_id = $(this).attr('data-address-id');
-        $('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
-        console.log("address id selected"+$(this).attr('data-address-id'));
+        var selected_address_id =shipping_address_id_value;
+        $('input[name="shipping_address_id"]').val(shipping_address_id_value);
+        console.log("address id selected"+shipping_address_id_value);
         
         $.ajax({
             url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
@@ -1951,7 +1971,20 @@ function saveInAddressBook() {
 
         
         //$(this).css({'background-color' : "green",'border-color' : "green"});
+    }
+
+    $(document).delegate('#open-address', 'click', function() {
+        
+        var selected_address_id = $(this).attr('data-address-id');
+         //$('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
+        //console.log("address id selected"+$(this).attr('data-address-id'));
+        addresslogic(selected_address_id);
+       
     });
+
+
+ 
+
     $(document).delegate('#dates_selected', 'click', function() {
         $('input[name="dates_selected"]').val($(this).attr('data-value'));
         console.log("address id selected"+$(this).attr('data-value'));
