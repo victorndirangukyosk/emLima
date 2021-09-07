@@ -3835,4 +3835,559 @@ class ControllerSaleCustomer extends Controller {
         $this->response->setOutput(json_encode($json));
          // $this->response->setOutput($this->load->view('sale/customer_list.tpl', $data));
     }
+
+
+
+    public function editapi() {
+        $this->load->language('sale/customer');
+
+        // $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('sale/customer');
+
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
+            $date = $this->request->post['dob'];
+            if (!empty($date)) {
+                //echo "<pre>";print_r($date);die;
+
+                $date = DateTime::createFromFormat('d/m/Y', $date);
+
+                $this->request->post['dob'] = $date->format('Y-m-d');
+            } else {
+                $this->request->post['dob'] = null;
+            }
+
+            //echo "<pre>";print_r($this->request->post);die;
+            $log = new Log('error.log');
+            $log->write('address');
+            $log->write($this->request->post);
+            $log->write('address');
+            $this->model_sale_customer->editCustomer($this->request->get['customer_id'], $this->request->post);
+            $customer_device_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+            if (is_array($customer_device_info) && array_key_exists('customer_id', $customer_device_info) && array_key_exists('device_id', $customer_device_info) && $customer_device_info['customer_id'] > 0 && $customer_device_info['device_id'] != NULL) {
+                //$sen['customer_id'] = '';
+                //$ret = $this->emailtemplate->sendDynamicPushNotification($customer_device_info['customer_id'], $customer_device_info['device_id'], 'Customer Category Prices Updated', 'Customer Category Prices Updated', $sen);
+                $this->load->model('account/customer');
+                $this->model_account_customer->sendCustomerByCategoryPriceNotification($customer_device_info);
+            }
+            $this->session->data['success'] = $this->language->get('text_success');
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'customer_id' => $this->request->get['customer_id'],
+            ];
+            $log->write('customer edit');
+
+            $this->model_user_user_activity->addActivity('customer_edit', $activity_data);
+
+            $log->write('customer edit');
+
+             
+
+            // if (isset($this->request->post['button']) and 'save' == $this->request->post['button']) {
+            //     $this->response->redirect($this->url->link('sale/customer/edit', 'customer_id=' . $this->request->get['customer_id'] . '&token=' . $this->session->data['token'] . $url, 'SSL'));
+            // }
+
+            // if (isset($this->request->post['button']) and 'new' == $this->request->post['button']) {
+            //     $this->response->redirect($this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            // }
+
+            // $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+        }
+
+        $this->getFormAPI();
+    }
+
+
+    protected function getFormAPI() {
+        // $data['heading_title'] = $this->language->get('heading_title');
+        // $data['entry_referred_by'] = $this->language->get('entry_referred_by');
+        // $data['text_form'] = !isset($this->request->get['customer_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
+        // $data['text_enabled'] = $this->language->get('text_enabled');
+        // $data['text_disabled'] = $this->language->get('text_disabled');
+        // $data['text_yes'] = $this->language->get('text_yes');
+        // $data['text_no'] = $this->language->get('text_no');
+        // $data['text_select'] = $this->language->get('text_select');
+        // $data['text_none'] = $this->language->get('text_none');
+        // $data['text_loading'] = $this->language->get('text_loading');
+        // $data['text_add_ban_ip'] = $this->language->get('text_add_ban_ip');
+        // $data['text_remove_ban_ip'] = $this->language->get('text_remove_ban_ip');
+
+        // $data['text_male'] = $this->language->get('text_male');
+        // $data['text_female'] = $this->language->get('text_female');
+        // $data['text_other'] = $this->language->get('text_other');
+        // $data['entry_dob'] = $this->language->get('entry_dob');
+        // $data['entry_gender'] = $this->language->get('entry_gender');
+
+        // $data['entry_customer_group'] = $this->language->get('entry_customer_group');
+        // $data['entry_firstname'] = $this->language->get('entry_firstname');
+        // $data['entry_lastname'] = $this->language->get('entry_lastname');
+        // $data['entry_email'] = $this->language->get('entry_email');
+
+        // $data['entry_company_name'] = $this->language->get('entry_company_name');
+        // $data['entry_company_address'] = $this->language->get('entry_company_address');
+
+        // $data['entry_telephone'] = $this->language->get('entry_telephone');
+        // $data['entry_fax'] = $this->language->get('entry_fax');
+        // $data['entry_password'] = $this->language->get('entry_password');
+        // $data['entry_confirm'] = $this->language->get('entry_confirm');
+        // $data['entry_newsletter'] = $this->language->get('entry_newsletter');
+        // $data['entry_status'] = $this->language->get('entry_status');
+        // $data['entry_approved'] = $this->language->get('entry_approved');
+        // $data['entry_safe'] = $this->language->get('entry_safe');
+        // $data['entry_company'] = $this->language->get('entry_company');
+        // $data['entry_address_1'] = $this->language->get('entry_address_1');
+        // $data['entry_address_2'] = $this->language->get('entry_address_2');
+        // $data['entry_city'] = $this->language->get('entry_city');
+        // $data['entry_postcode'] = $this->language->get('entry_postcode');
+        // $data['entry_zone'] = $this->language->get('entry_zone');
+        // $data['entry_country'] = $this->language->get('entry_country');
+        // $data['entry_default'] = $this->language->get('entry_default');
+        // $data['entry_comment'] = $this->language->get('entry_comment');
+        // $data['entry_description'] = $this->language->get('entry_description');
+        // $data['entry_amount'] = $this->language->get('entry_amount');
+        // $data['entry_points'] = $this->language->get('entry_points');
+        // $data['entry_send_email'] = $this->language->get('entry_send_email');
+        // $data['entry_name'] = $this->language->get('entry_name');
+        // $data['entry_contact_no'] = $this->language->get('entry_contact_no');
+        // $data['entry_address'] = $this->language->get('entry_address');
+
+        // $data['help_safe'] = $this->language->get('help_safe');
+        // $data['help_points'] = $this->language->get('help_points');
+
+        // $data['button_save'] = $this->language->get('button_save');
+        // $data['button_savenew'] = $this->language->get('button_savenew');
+        // $data['button_saveclose'] = $this->language->get('button_saveclose');
+        // $data['button_cancel'] = $this->language->get('button_cancel');
+        // $data['button_address_add'] = $this->language->get('button_address_add');
+        // $data['button_history_add'] = $this->language->get('button_history_add');
+        // $data['button_credit_add'] = $this->language->get('button_credit_add');
+        // $data['button_reward_add'] = $this->language->get('button_reward_add');
+        // $data['button_remove'] = $this->language->get('button_remove');
+        // $data['button_upload'] = $this->language->get('button_upload');
+        // $data['button_contact_add'] = $this->language->get('button_contact_add');
+
+        // $data['tab_general'] = $this->language->get('tab_general');
+        // $data['tab_address'] = $this->language->get('tab_address');
+        // $data['tab_history'] = $this->language->get('tab_history');
+        // $data['tab_credit'] = $this->language->get('tab_credit');
+        // $data['tab_reward'] = $this->language->get('tab_reward');
+        // $data['tab_referral'] = $this->language->get('tab_referral');
+        // $data['tab_sub_customer'] = $this->language->get('tab_sub_customer');
+        // $data['tab_ip'] = $this->language->get('tab_ip');
+        // $data['tab_contact'] = $this->language->get('tab_contact');
+
+        $data['token'] = $this->session->data['token'];
+
+        // $data['text_flat_house_office'] = $this->language->get('text_flat_house_office');
+        // $data['text_stree_society_office'] = $this->language->get('text_stree_society_office');
+        // $data['label_zipcode'] = $this->language->get('label_zipcode');
+        // $data['text_locality'] = $this->language->get('text_locality');
+
+        if (isset($this->request->get['customer_id'])) {
+            $data['customer_id'] = $this->request->get['customer_id'];
+        } else {
+            $data['customer_id'] = 0;
+        }
+
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
+        }
+
+        if (isset($this->error['firstname'])) {
+            $data['error_firstname'] = $this->error['firstname'];
+        } else {
+            $data['error_firstname'] = '';
+        }
+
+        if (isset($this->error['lastname'])) {
+            $data['error_lastname'] = $this->error['lastname'];
+        } else {
+            $data['error_lastname'] = '';
+        }
+
+        if (isset($this->error['dob'])) {
+            $data['error_dob'] = $this->error['dob'];
+        } else {
+            $data['error_dob'] = '';
+        }
+
+        if (isset($this->error['gender'])) {
+            $data['error_gender'] = $this->error['gender'];
+        } else {
+            $data['error_gender'] = '';
+        }
+
+        if (isset($this->error['email'])) {
+            $data['error_email'] = $this->error['email'];
+        } else {
+            $data['error_email'] = '';
+        }
+
+        if (isset($this->error['company_name'])) {
+            $data['error_company_name'] = $this->error['company_name'];
+        } else {
+            $data['error_company_name'] = '';
+        }
+
+        if (isset($this->error['company_address'])) {
+            $data['error_company_address'] = $this->error['company_address'];
+        } else {
+            $data['error_company_address'] = '';
+        }
+
+        if (isset($this->error['telephone'])) {
+            $data['error_telephone'] = $this->error['telephone'];
+        } else {
+            $data['error_telephone'] = '';
+        }
+
+        if (isset($this->error['password'])) {
+            $data['error_password'] = $this->error['password'];
+        } else {
+            $data['error_password'] = '';
+        }
+
+        if (isset($this->error['confirm'])) {
+            $data['error_confirm'] = $this->error['confirm'];
+        } else {
+            $data['error_confirm'] = '';
+        }
+
+        if (isset($this->error['custom_field'])) {
+            $data['error_custom_field'] = $this->error['custom_field'];
+        } else {
+            $data['error_custom_field'] = [];
+        }
+
+        if (isset($this->error['address'])) {
+            $data['error_address'] = $this->error['address'];
+        } else {
+            $data['error_address'] = [];
+        }
+ 
+
+        // if (!isset($this->request->get['customer_id'])) {
+        //     $data['action'] = $this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        // } else {
+        //     $data['action'] = $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . $url, 'SSL');
+        // }
+
+        // $data['cancel'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['parent_user_name'] = NULL;
+        $data['parent_user_email'] = NULL;
+        $data['parent_user_phone'] = NULL;
+        if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
+            $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+            $data['payment_terms'] = $customer_info['payment_terms'];
+            $data['statement_duration'] = $customer_info['statement_duration'];
+            $data['customer_category'] = $customer_info['customer_category'];
+            $data['customer_category_disabled'] = '';
+            $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
+            $customer_account_manager_info = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
+            $customer_customer_experience_info = $this->model_sale_customer->getCustomerExperinceDetails($this->request->get['customer_id']);
+
+            if ($customer_parent_info != NULL) {
+                $data['parent_user_name'] = $customer_parent_info['firstname'] . '' . $customer_parent_info['lastname'];
+                $data['parent_user_email'] = $customer_parent_info['email'];
+                $data['parent_user_phone'] = $customer_parent_info['telephone'];
+                $data['customer_category'] = $customer_parent_info['customer_category'];
+                $data['customer_category_disabled'] = 'disabled';
+            }
+
+            if ($customer_account_manager_info != NULL) {
+                $data['account_manager_name'] = $customer_account_manager_info['firstname'] . '' . $customer_account_manager_info['lastname'];
+                $data['account_manager_email'] = $customer_account_manager_info['email'];
+                $data['account_manager_phone'] = $customer_account_manager_info['telephone'];
+            }
+
+            if ($customer_customer_experience_info != NULL) {
+                $data['customer_experince_name'] = $customer_customer_experience_info['firstname'] . '' . $customer_customer_experience_info['lastname'];
+                $data['customer_experince_email'] = $customer_customer_experience_info['email'];
+                $data['customer_experince_phone'] = $customer_customer_experience_info['telephone'];
+            }
+
+            //$log = new Log('error.log');
+            //$log->write($customer_parent_info);
+        }
+
+        //echo "<pre>";print_r($customer_info);die;
+        $this->load->model('sale/customer_group');
+        $this->load->model('user/accountmanager');
+        $this->load->model('user/customerexperience');
+        $this->load->model('account/customer');
+        $filter_data = [
+            'filter_parent' => $this->request->get['customer_id'],
+            'order' => 'DESC',
+            'start' => 0,
+            'limit' => 1000,
+        ];
+        $data['sub_users'] = $this->model_sale_customer->getSubCustomers($filter_data);
+        $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
+        $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['account_managers_list'] = $this->model_user_accountmanager->getAccountManagers();
+        $data['customer_experience_list'] = $this->model_user_customerexperience->getCustomerExperience();
+        $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);
+        $data['customer_otp_list_phone'] = $this->model_account_customer->getCustomerOTPByPhone($customer_info['telephone']);
+
+        if (isset($this->request->post['company_name'])) {
+            $data['company_name'] = $this->request->post['company_name'];
+        } elseif (!empty($customer_info)) {
+            $data['company_name'] = $customer_info['company_name'];
+        } else {
+            $data['company_name'] = '';
+        }
+
+        if (isset($this->request->post['company_address'])) {
+            $data['company_address'] = $this->request->post['company_address'];
+        } elseif (!empty($customer_info)) {
+            $data['company_address'] = $customer_info['company_address'];
+        } else {
+            $data['company_address'] = '';
+        }
+
+        if (isset($this->request->post['customer_group_id'])) {
+            $data['customer_group_id'] = $this->request->post['customer_group_id'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_group_id'] = $customer_info['customer_group_id'];
+        } else {
+            $data['customer_group_id'] = $this->config->get('config_customer_group_id');
+        }
+
+        if (isset($this->request->post['customer_category'])) {
+            $data['customer_category'] = $this->request->post['customer_category'];
+        } elseif (!empty($customer_info) && $customer_parent_info == NULL) {
+            $data['customer_category'] = $customer_info['customer_category'];
+        }
+
+        if (isset($this->request->post['firstname'])) {
+            $data['firstname'] = $this->request->post['firstname'];
+        } elseif (!empty($customer_info)) {
+            $data['firstname'] = $customer_info['firstname'];
+        } else {
+            $data['firstname'] = '';
+        }
+
+        if (isset($this->request->post['lastname'])) {
+            $data['lastname'] = $this->request->post['lastname'];
+        } elseif (!empty($customer_info)) {
+            $data['lastname'] = $customer_info['lastname'];
+        } else {
+            $data['lastname'] = '';
+        }
+
+        if (isset($this->request->post['email'])) {
+            $data['email'] = $this->request->post['email'];
+        } elseif (!empty($customer_info)) {
+            $data['email'] = $customer_info['email'];
+        } else {
+            $data['email'] = '';
+        }
+
+        if (isset($this->request->post['telephone'])) {
+            $data['telephone'] = $this->request->post['telephone'];
+        } elseif (!empty($customer_info)) {
+            $data['telephone'] = $customer_info['telephone'];
+        } else {
+            $data['telephone'] = '';
+        }
+
+        if (isset($this->request->post['fax'])) {
+            $data['fax'] = $this->request->post['fax'];
+        } elseif (!empty($customer_info)) {
+            $data['fax'] = $customer_info['fax'];
+        } else {
+            $data['fax'] = '';
+        }
+
+        if (isset($this->request->post['sex'])) {
+            $data['gender'] = $this->request->post['sex'];
+        } elseif (!empty($customer_info)) {
+            $data['gender'] = $customer_info['gender'];
+        } else {
+            $data['gender'] = '';
+        }
+
+        if (isset($this->request->post['dob'])) {
+            $data['dob'] = date('d/m/Y', strtotime($this->request->post['dob']));
+        } elseif (!empty($customer_info['dob'])) {
+            $data['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
+        } else {
+            $data['dob'] = null;
+        }
+
+        //echo "<pre>";print_r($data);die;
+
+        if (isset($this->request->post['send_email'])) {
+            $data['send_email'] = $this->request->post['send_email'];
+        } elseif (!empty($customer_info)) {
+            $data['send_email'] = $customer_info['email'];
+        } else {
+            $data['send_email'] = '';
+        }
+
+        $data['show_send_email'] = '';
+
+        if (!isset($this->request->get['customer_id'])) {
+            $data['show_send_email'] = true;
+        }
+
+        if (isset($this->request->post['custom_field'])) {
+            $data['account_custom_field'] = $this->request->post['custom_field'];
+        } elseif (!empty($customer_info)) {
+            $data['account_custom_field'] = unserialize($customer_info['custom_field']);
+        } else {
+            $data['account_custom_field'] = [];
+        }
+
+        if (isset($this->request->post['newsletter'])) {
+            $data['newsletter'] = $this->request->post['newsletter'];
+        } elseif (!empty($customer_info)) {
+            $data['newsletter'] = $customer_info['newsletter'];
+        } else {
+            $data['newsletter'] = '';
+        }
+
+        if (isset($this->request->post['status'])) {
+            $data['status'] = $this->request->post['status'];
+        } elseif (!empty($customer_info)) {
+            $data['status'] = $customer_info['status'];
+        } else {
+            $data['status'] = true;
+        }
+
+        if (isset($this->request->post['approved'])) {
+            $data['approved'] = $this->request->post['approved'];
+        } elseif (!empty($customer_info)) {
+            $data['approved'] = $customer_info['approved'];
+        } else {
+            $data['approved'] = true;
+        }
+
+        if (isset($this->request->post['safe'])) {
+            $data['safe'] = $this->request->post['safe'];
+        } elseif (!empty($customer_info)) {
+            $data['safe'] = $customer_info['safe'];
+        } else {
+            $data['safe'] = 0;
+        }
+
+        if (isset($this->request->post['password'])) {
+            $data['password'] = $this->request->post['password'];
+        } elseif (!empty($customer_info)) {
+            //else if is added ,because while editing of some other fields in screen,
+            // password field is asking to enter password again
+            $data['password'] = 'default';
+        } else {
+            $data['password'] = '';
+        }
+
+        if (isset($this->request->post['confirm'])) {
+            $data['confirm'] = $this->request->post['confirm'];
+        } elseif (!empty($customer_info)) {
+            $data['confirm'] = 'default';
+        } else {
+            $data['confirm'] = '';
+        }
+
+        if (isset($this->request->post['address'])) {
+            $data['addresses'] = $this->request->post['address'];
+        } elseif (isset($this->request->get['customer_id'])) {
+            $data['addresses'] = $this->model_sale_customer->getAddresses($this->request->get['customer_id']);
+        } else {
+            $data['addresses'] = [];
+        }
+
+        $data['referee'] = [];
+        if (!empty($customer_info)) {
+            $data['referee'] = $this->model_sale_customer->getCustomer($customer_info['refree_user_id']);
+
+            $data['referee_link'] = $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $customer_info['refree_user_id'], 'SSL');
+        }
+
+        //echo "<pre>";print_r($data);die;
+        //echo "<pre>";print_r($this->request->post);die;
+        if (isset($this->request->post['address_id'])) {
+            $data['address_id'] = $this->request->post['address_id'];
+        } elseif (!empty($customer_info)) {
+            $data['address_id'] = $customer_info['address_id'];
+        } else {
+            $data['address_id'] = '';
+        }
+        $data['source'] = $customer_info['source'];
+
+        if (isset($this->request->post['SAP_customer_no'])) {
+            $data['SAP_customer_no'] = $this->request->post['SAP_customer_no'];
+        } elseif (!empty($customer_info)) {
+            $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
+        } else {
+            $data['SAP_customer_no'] = '';
+        }
+
+        if (isset($this->request->post['account_manager'])) {
+            $data['account_manager'] = $this->request->post['account_manager'];
+        } elseif (!empty($customer_info)) {
+            $data['account_manager'] = $customer_info['account_manager_id'];
+        } else {
+            $data['account_manager'] = '';
+        }
+
+        if (isset($this->request->post['customer_experience'])) {
+            $data['customer_experience'] = $this->request->post['customer_experience'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_experience'] = $customer_info['customer_experience_id'];
+        } else {
+            $data['customer_experience'] = '';
+        }
+
+        if (isset($this->request->post['payment_terms'])) {
+            $data['payment_terms'] = $this->request->post['payment_terms'];
+        } elseif (!empty($customer_info)) {
+            $data['payment_terms'] = $customer_info['payment_terms'];
+        } else {
+            $data['payment_terms'] = '';
+        }
+
+        if (isset($this->request->post['statement_duration'])) {
+            $data['statement_duration'] = $this->request->post['statement_duration'];
+        } elseif (!empty($customer_info)) {
+            $data['statement_duration'] = $customer_info['statement_duration'];
+        } else {
+            $data['statement_duration'] = '';
+        }
+
+        // $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
+        $this->load->model('sale/customer_group');
+
+        //echo "<pre>";print_r($data);die;
+        $data['cities'] = $this->model_sale_customer_group->getCities();
+
+        // $data['header'] = $this->load->controller('common/header');
+        // $data['column_left'] = $this->load->controller('common/column_left');
+        // $data['footer'] = $this->load->controller('common/footer');
+
+        // $this->response->setOutput($this->load->view('sale/customer_form.tpl', $data));
+        $json = [];
+        $json['success'] = TRUE;
+        $json['message'] = '';
+        $json['data'] = $data;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+   
+    
+    }
 }
