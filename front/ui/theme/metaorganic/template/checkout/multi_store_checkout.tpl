@@ -87,7 +87,9 @@
 
                                 
                                 <h5 id="select-address" style="float:left; color:#555; margin-top:5px;">
+                                   <?php if($selected_address_data != NULL) { echo $selected_address_data['address']; } else { ?>
                                    Please select address
+                                   <?php } ?>
                                </h5>
                                 
                             </div>
@@ -1420,7 +1422,11 @@ $(document).ready(function() {
             $('#delivery_option__panel_link').attr("href","");
             $('#delivery_time_panel_link').attr("href","");
             $('#payment_panel_link').attr("href","");
+            <?php if($selected_address_id == NULL) { ?>
             document.getElementById('address-next').click();
+            <?php } elseif($selected_address_id > 0) { ?>
+            document.getElementById('delivery-option').click();
+            <?php } ?>
             
         <?php } else { ?>
             $('#address_panel_link').attr("href","");
