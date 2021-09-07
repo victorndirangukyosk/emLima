@@ -61,6 +61,7 @@ class ControllerErrorPermission extends Controller
                 'common/farmerreset',
                 'common/dashboard',
                 'common/login',
+                'api/login',
                 'common/logout',
                 'common/forgotten',
                 'common/reset',
@@ -83,8 +84,65 @@ class ControllerErrorPermission extends Controller
             ];
 
             if (!in_array($path, $ignore) && !$this->user->hasPermission('access', $path)) {
-                return new Action('error/permission');
+                // echo $path;die;
+                $pos = strpos($path, 'api/');
+
+                if ($pos === false) {
+                    // echo "The string   was not found in the string  ";
+                    return new Action('error/permission');
+                } else {
+                    // echo " exists at position $pos";
+                    return new Action('error/permission/apipermissioncheck');
+
+                }
+                
+               
+
+
             }
         }
+    }
+
+
+    public function apipermissioncheck()
+    {
+        $json = [];
+        $json['success'] = '';
+        $json['statuscode'] = 200;
+        $json['message'] = '';
+        try{
+
+            $this->load->language('error/permission');
+            $data['text_permission'] = $this->language->get('text_permission');
+
+            $shopper_group_ids = explode(',', $this->config->get('config_shopper_group_ids'));
+
+            if (in_array($this->user->getGroupId(), $shopper_group_ids)) {
+                // $data['header'] = $this->load->controller('shopper/common/header');
+                // $data['footer'] = $this->load->controller('shopper/common/footer');
+
+                // $this->response->setOutput($this->load->view('shopper/error/permission.tpl', $data));
+                $json['success'] = FALSE;
+                $json['message'] = 'Permission Denied';
+            } else {
+                // $data['header'] = $this->load->controller('common/header');
+                // $data['column_left'] = $this->load->controller('common/column_left');
+                // $data['footer'] = $this->load->controller('common/footer');
+
+                // $this->response->setOutput($this->load->view('error/permission.tpl', $data));
+                $json['success'] = FALSE;
+                $json['message'] = 'Permission Denied';
+            }
+        }
+        catch(exception $ex)
+        {
+            $json['success'] = FALSE;
+            $json['message'] = $ex;
+        }
+        finally{
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+
+        } 
     }
 }
