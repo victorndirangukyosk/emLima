@@ -182,6 +182,9 @@ class ControllerCommonLogin extends Controller {
             $this->error['warning'] = $this->language->get('error_login');
         }
 
+        // echo $this->error['warning'];die;
+
+
         return !$this->error;
     }
 
@@ -205,6 +208,7 @@ class ControllerCommonLogin extends Controller {
             'common/farmerforgotten',
             'common/farmerreset',
             'common/login',
+            'api/login',
             'common/forgotten',
             'common/reset',
             'common/scheduler',
@@ -223,6 +227,7 @@ class ControllerCommonLogin extends Controller {
                 'common/farmerforgotten',
                 'common/farmerreset',
                 'common/login',
+                'api/login',
                 'common/logout',
                 'common/forgotten',
                 'common/reset',
