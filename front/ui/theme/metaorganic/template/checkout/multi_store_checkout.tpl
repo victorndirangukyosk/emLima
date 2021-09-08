@@ -1928,15 +1928,15 @@ function saveInAddressBook() {
       //your stuff
       console.log("in change");
         $('#save-address').prop('disabled', false);
-    });
+    }); 
+     
 
-
-    function addresslogic(shipping_address_id_value) {
-       
+    $(document).delegate('#open-address', 'click', function() {
         
-        var selected_address_id =shipping_address_id_value;
-        $('input[name="shipping_address_id"]').val(shipping_address_id_value);
-        console.log("address id selected"+shipping_address_id_value);
+        var selected_address_id = $(this).attr('data-address-id');
+          $('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
+         console.log("address id selected"+$(this).attr('data-address-id')); 
+         
         
         $.ajax({
             url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
@@ -1981,14 +1981,7 @@ function saveInAddressBook() {
 
         
         //$(this).css({'background-color' : "green",'border-color' : "green"});
-    }
 
-    $(document).delegate('#open-address', 'click', function() {
-        
-        var selected_address_id = $(this).attr('data-address-id');
-         //$('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
-        //console.log("address id selected"+$(this).attr('data-address-id'));
-        addresslogic(selected_address_id);
        
     });
 
