@@ -1169,6 +1169,7 @@ __kdt.push({"post_on_load": false});
     $(document).ready(function() {
           loadUnpaidorders();
           getLocationOnly();
+          setAddressId();
 
         $('.replacable').on('click', function(){
             console.log("replacable");
@@ -1221,8 +1222,23 @@ __kdt.push({"post_on_load": false});
         });
     });
     </script>
-
-
+<script type="text/javascript">
+function setAddressId() {
+    $.ajax({
+        url: 'index.php?path=checkout/checkout/setAddressIdSession',
+        type: 'get',
+        dataType: 'json',
+        cache: false,
+        async: true,
+        beforeSend: function() {
+        },
+        success: function(json) {
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        }
+});
+}
+</script>
 <script type="text/javascript">
     $('#button-reward').on('click', function() {
         $.ajax({

@@ -850,4 +850,31 @@ class ControllerCheckoutCheckout extends Controller {
         }
     }
 
+    public function setAddressIdSession() {
+
+        $this->load->model('account/address');
+        $selected_address_id = NULL;
+        $selected_address_data = NULL;
+        $data['address'] = NULL;
+        if (isset($this->session->data['shipping_address_id']) && $this->session->data['shipping_address_id'] != NULL && $this->session->data['shipping_address_id'] > 0) {
+            $selected_address_id = $this->session->data['shipping_address_id'];
+            $selected_address_data = $this->model_account_address->getAddress($selected_address_id);
+        }
+
+        if ((!isset($this->session->data['shipping_address_id']) || $this->session->data['shipping_address_id'] == NULL || $this->session->data['shipping_address_id'] <= 0) && $this->customer->getAddressId() != NULL && $this->customer->getAddressId() > 0) {
+            $selected_address_id = $this->customer->getAddressId();
+            $selected_address_data = $this->model_account_address->getAddress($selected_address_id);
+        }
+
+        if ($selected_address_id > 0) {
+            $this->session->data['shipping_address_id'] = $selected_address_id;
+
+            $shipping_address_data = $this->model_account_address->getAddress($selected_address_id);
+
+            $data['address'] = strlen($shipping_address_data['address']) > 27 ? substr($shipping_address_data['address'], 0, 27) . '...' : $shipping_address_data['address'];
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
+    }
+
 }
