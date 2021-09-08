@@ -102,16 +102,12 @@
                                         <input type="hidden" value="" name="shipping_address_id" id="shipping_address_id">
 
                                         <div class="row" id="address-panel">
-                                            <?php $shipping_address_default_id = 0; if($addresses){ ?>
+                                            <?php if($addresses){ ?>
                                              
                                                 <?php foreach($addresses as $address){ ?>
                                                     <div class="col-md-6">
                                                         <div class="address-block">
-                                                            <h3 class="address-locations">
-
-                                                             <?php  if( $address['isdefault_address']=='1')  { 
-                                                                        $shipping_address_default_id = $address['address_id'];
-                                                                    } ?>
+                                                            <h3 class="address-locations">                                                            
                                                                     
                                                             <?php if($address['address_type'] == 'Home') { ?>
                                                                 <?= $text_home_address ?>
@@ -168,15 +164,7 @@
                                                 <?php } ?>
 
 
-                                                 <?php if($shipping_address_default_id>0){ ?>
-                                            <script type="text/javascript">
-                                            //alert ("<?php echo $shipping_address_default_id; ?>");
-
-                                            var addre_id=<?php echo $shipping_address_default_id; ?>;
-                                            //alert(addre_id);
-                                             addresslogic(addre_id);
-                                            </script>
-                                            <?php } ?>
+                                                 
 
                                        
                                              <?php } ?>
