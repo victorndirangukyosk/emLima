@@ -81,7 +81,7 @@ class ControllerReportCustomerOrderPlaced extends Controller
         } else {
             $customer_total = 0;
             $results = null;
-        }
+        } 
 
       
 
