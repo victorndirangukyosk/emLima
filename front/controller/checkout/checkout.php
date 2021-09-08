@@ -856,6 +856,7 @@ class ControllerCheckoutCheckout extends Controller {
         $selected_address_id = NULL;
         $selected_address_data = NULL;
         $data['address'] = NULL;
+        $data['shipping_address_id'] = NULL;
         if (isset($this->session->data['shipping_address_id']) && $this->session->data['shipping_address_id'] != NULL && $this->session->data['shipping_address_id'] > 0) {
             $selected_address_id = $this->session->data['shipping_address_id'];
             $selected_address_data = $this->model_account_address->getAddress($selected_address_id);
@@ -872,6 +873,7 @@ class ControllerCheckoutCheckout extends Controller {
             $shipping_address_data = $this->model_account_address->getAddress($selected_address_id);
 
             $data['address'] = strlen($shipping_address_data['address']) > 27 ? substr($shipping_address_data['address'], 0, 27) . '...' : $shipping_address_data['address'];
+            $data['shipping_address_id'] = $selected_address_id;
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));

@@ -1221,6 +1221,10 @@ function setAddressId() {
         beforeSend: function() {
         },
         success: function(json) {
+        if(json.shipping_address_id > 0) {
+        $('input[name="shipping_address_id"]').val(json.shipping_address_id);
+        $('#step-2').addClass('checkout-step-color');
+        }
         },
         error: function(xhr, ajaxOptions, thrownError) {
         }
