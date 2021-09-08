@@ -1438,9 +1438,9 @@ $(document).ready(function() {
             $('#delivery_option__panel_link').attr("href","");
             $('#delivery_time_panel_link').attr("href","");
             $('#payment_panel_link').attr("href","");
-            <?php if($selected_address_id == NULL) { ?>
+            <?php if($selected_address_id == NULL || $selected_address_data == NULL) { ?>
             document.getElementById('address-next').click();
-            <?php } elseif($selected_address_id > 0) { ?>
+            <?php } elseif($selected_address_id > 0 && $selected_address_data != NULL) { ?>
             document.getElementById('delivery-option').click();
             <?php } ?>
             

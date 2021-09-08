@@ -866,7 +866,7 @@ class ControllerCheckoutCheckout extends Controller {
             $selected_address_data = $this->model_account_address->getAddress($selected_address_id);
         }
 
-        if ($selected_address_id > 0) {
+        if ($selected_address_id > 0 && $selected_address_data != NULL) {
             $this->session->data['shipping_address_id'] = $selected_address_id;
 
             $shipping_address_data = $this->model_account_address->getAddress($selected_address_id);
