@@ -1224,6 +1224,7 @@ function setAddressId() {
         if(json.shipping_address_id > 0) {
         $('input[name="shipping_address_id"]').val(json.shipping_address_id);
         $('#step-2').addClass('checkout-step-color');
+        loadShippingMethods(75); 
         }
         },
         error: function(xhr, ajaxOptions, thrownError) {
