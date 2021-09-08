@@ -38,8 +38,29 @@ class ControllerSaleCustomer extends Controller {
 
     public function export_excel() {
         $data = [];
-        $this->load->model('report/excel');
-        $this->model_report_excel->download_customer_excel($data);
+        $this->load->model('report/excel');            
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'c.date_added';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'DESC';
+        }
+
+
+
+        $filter_data = [
+           'sort' => $sort,
+            'order' => $order, 
+        ];
+
+        
+        $this->model_report_excel->download_customer_excel($filter_data);
     }
 
     public function add() {
