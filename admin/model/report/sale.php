@@ -441,7 +441,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " WHERE o.order_status_id > '0'";
         }
-        $sql .= " AND o.order_status_id NOT IN (0,6,8)";
+        $sql .= " AND o.order_status_id NOT IN (0,6,8,9,10,16)";
 
         if (!empty($data['filter_date_start'])) {
             $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -614,7 +614,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " WHERE o.order_status_id > '0'";
         }
-        $sql .= " AND o.order_status_id NOT IN (0,6,8)";
+        $sql .= " AND o.order_status_id NOT IN (0,6,8,9,10,16)";
 
         if (!empty($data['filter_date_start'])) {
             $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -893,7 +893,7 @@ class ModelReportSale extends Model {
 
         $sql .= " where c.account_manager_id='" . $this->user->getId() . "'";
         $sql .= " AND  o.order_status_id > '0'";
-        $sql .= " AND o.order_status_id NOT IN (0,6,8)";
+        $sql .= " AND o.order_status_id NOT IN (0,6,8,9,10,16)";
 
         if (!empty($data['filter_date_added'])) {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
@@ -1229,7 +1229,7 @@ class ModelReportSale extends Model {
             $sql .= " WHERE o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         } else {
             // $sql .= " WHERE o.order_status_id > '0'";
-            $sql .= " WHERE o.order_status_id not in (0,6,8)";
+            $sql .= " WHERE o.order_status_id not in (0,6,8,9,10,16)";
 
         }
 
@@ -1713,7 +1713,7 @@ class ModelReportSale extends Model {
             $sql .= " WHERE o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         } else {
             // $sql .= " WHERE o.order_status_id > '0'";
-            $sql .= " WHERE o.order_status_id not in (0,6,8)";
+            $sql .= " WHERE o.order_status_id not in (0,6,8,9,10,16)";
 
         }
 
@@ -2720,7 +2720,7 @@ class ModelReportSale extends Model {
         } else {
             $sql .= " AND o.order_status_id > '0'";
         }
-        $sql .= " AND o.order_status_id NOT IN (0,6,8)";
+        $sql .= " AND o.order_status_id NOT IN (0,6,8,9,10,16)";
         if (!empty($data['filter_date_start'])) {
             $sql .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
         }
@@ -2777,7 +2777,7 @@ class ModelReportSale extends Model {
             $sql .= " WHERE o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         } else {
             // $sql .= " WHERE o.order_status_id > '0'";
-            $sql .= " WHERE o.order_status_id not in (0,6,8)";
+            $sql .= " WHERE o.order_status_id not in (0,6,8,9,10,16)";
 
         }
 
