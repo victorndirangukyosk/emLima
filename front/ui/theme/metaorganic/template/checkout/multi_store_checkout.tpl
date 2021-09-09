@@ -1822,6 +1822,9 @@ var name="dropoff_notes";
                 if(storeorder == 1 && $('input[name=\'payment_method\']:checked').attr('value') == 'cod') {
                 save_cod_order();
                 }
+                if(storeorder == 1 && $('input[name=\'payment_method\']:checked').attr('value') == 'mod') {
+                save_mod_order();
+                }
                 return true;
                     //window.location = json.redirect;
                 },

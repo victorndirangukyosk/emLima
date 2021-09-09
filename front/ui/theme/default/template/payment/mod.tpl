@@ -2,7 +2,7 @@
  -->
 <button type="button" id="button-confirm" data-toggle="collapse" data-loading-text="<?= $text_loading ?>" class="btn btn-default">CONFIRM ORDER</button>
 
-<script type="text/javascript"><!--
+<script type="text/javascript">
 $('#button-confirm').on('click', function() {
     
     //location = '<?php echo $continue; ?>';
@@ -13,9 +13,8 @@ $('#button-confirm').on('click', function() {
     if (!saveAddress()) { 
         return false; 
     }
-    
-
-
+});
+function save_mod_order() {
     $.ajax({
         type: 'get',
         url: 'index.php?path=payment/mod/confirm',
@@ -36,5 +35,5 @@ $('#button-confirm').on('click', function() {
                 location = '<?php echo $continue; ?>';
         }       
     });
-});
-//--></script> 
+}
+</script> 
