@@ -1687,7 +1687,7 @@ function saveNewTimeSlot(store_id,timeslot,date) {
     return false;
 }
 
-function saveOrder() {
+function saveOrder(storeorder = 0) {
 
     console.log("saveOrder");
     console.log("sri ");
@@ -1799,7 +1799,7 @@ var name="dropoff_notes";
      
         
        console.log(lat.innerHTML);
-       sendData=sendData+'&login_latitude=' + lat.innerHTML+'&login_longitude=' + lng.innerHTML+'&login_mode=web';
+       sendData=sendData+'&login_latitude=' + lat.innerHTML+'&login_longitude=' + lng.innerHTML+'&login_mode=web&storeorder=' + storeorder;
     
        console.log(sendData);
       
@@ -1819,7 +1819,9 @@ var name="dropoff_notes";
                 /*$('#confirm-order').remove(); */
                 $('#pay-confirm-order').html(json);
                 $('#pay-confirm-order').removeAttr('style');
-                
+                if(storeorder == 1 && $('input[name=\'payment_method\']:checked').attr('value') == 'cod') {
+                save_cod_order();
+                }
                 return true;
                     //window.location = json.redirect;
                 },
@@ -2004,14 +2006,15 @@ function saveInAddressBook() {
     //     console.log("time id selected"+$(this).attr('data-date'));
     // });
 
-    $(document).delegate('#confirm-order', 'click', function() {
+    $(document).delegate('#confirm-order, #button-confirm', 'click', function() {
         console.log("order confirm click");
 
         var text = $('.confirm-order-text').html();
         console.log(text);
         $('.confirm-order-text').html('');
         $('.confirm-order-loader').show();
-        setTimeout(function(){saveOrder();},200);
+        var storeorder = 1;
+        setTimeout(function(){saveOrder(storeorder);},200);
         
     });
 

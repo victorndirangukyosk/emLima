@@ -1154,8 +1154,9 @@ class ControllerCheckoutConfirm extends Controller {
 
             $log->write('addMultiOrder call');
             //$log->write($order_data);
-
+            if($this->request->post['storeorder'] == 1) {
             $this->model_checkout_order->addMultiOrder($order_data);
+            }
 
             $data['text_recurring_item'] = $this->language->get('text_recurring_item');
             $data['text_payment_recurring'] = $this->language->get('text_payment_recurring');
