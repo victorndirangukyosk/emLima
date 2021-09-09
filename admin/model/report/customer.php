@@ -146,7 +146,7 @@ class ModelReportCustomer extends Model {
         } else {
             $sql .= " AND o.order_status_id > '0'";
         }
-        $sql .= " AND o.order_status_id NOT IN (0,6,8,9,10,16)";
+        $sql .= " AND o.order_status_id NOT IN (0,6,8,16)";
         if ($this->user->isAccountManager()) {
             $sql .= " AND c.account_manager_id = '" . (int) $this->user->getId() . "'";
         }
@@ -250,7 +250,7 @@ class ModelReportCustomer extends Model {
         } else {
             $sql .= " AND o.order_status_id > '0'";
         }
-        $sql .= " AND o.order_status_id NOT IN (0,6,8,9,10,16)";
+        $sql .= " AND o.order_status_id NOT IN (0,6,8,16)";
         if ($this->user->isAccountManager()) {
             $sql .= " AND c.account_manager_id = '" . (int) $this->user->getId() . "'";
         }
