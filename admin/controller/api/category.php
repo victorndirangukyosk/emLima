@@ -313,7 +313,7 @@ class ControllerApiCategory extends Controller
 
     protected function getForm()
     {
-        $data = $this->language->all();
+        // $data = $this->language->all();
         // leaving the followings for extension B/C purpose
         // $data['heading_title'] = $this->language->get('heading_title');
 
