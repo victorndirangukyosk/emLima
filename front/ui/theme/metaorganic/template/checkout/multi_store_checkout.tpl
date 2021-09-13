@@ -87,7 +87,9 @@
 
                                 
                                 <h5 id="select-address" style="float:left; color:#555; margin-top:5px;">
+                                   <?php if($selected_address_data != NULL) { echo $selected_address_data['address']; } else { ?>
                                    Please select address
+                                   <?php } ?>
                                </h5>
                                 
                             </div>
@@ -105,7 +107,8 @@
                                                 <?php foreach($addresses as $address){ ?>
                                                     <div class="col-md-6">
                                                         <div class="address-block">
-                                                            <h3 class="address-locations">
+                                                            <h3 class="address-locations">                                                            
+                                                                    
                                                             <?php if($address['address_type'] == 'Home') { ?>
                                                                 <?= $text_home_address ?>
 
@@ -159,7 +162,12 @@
                                                         </div>
                                                     </div>
                                                 <?php } ?>
-                                            <?php } ?>
+
+
+                                                 
+
+                                       
+                                             <?php } ?>
                                         </div>
                                         <div class="col-md-12" style="text-align:left; padding:0px;"><a href="#" type="button" class="btn-link" data-toggle="modal" data-target="#addressModal"><i class="fa fa-plus-circle"></i> <?= $text_new_delivery_adddress?></a>
                                             </div>
@@ -602,6 +610,23 @@
                                         <input id="shipping_zipcode" type="hidden" value="<?php echo $zipcode; ?>" name="shipping_zipcode">
                                     <?php } ?>
                                     
+
+
+
+
+  <div class="form-group">
+            <label class="col-md-4 control-label" style="top:8px" for="isdefault_address">Default Address
+            </label>
+            <div class="col-sm-4" >
+            
+                <input id="isdefault_address" name="isdefault_address"  type="checkbox" value="<?php echo $isdefault_address; ?>"   class="form-control input-md" >
+            
+
+
+           </div>
+        </div>
+
+
 
                                     
                                     <!-- Button -->
@@ -1132,6 +1157,7 @@ __kdt.push({"post_on_load": false});
     $(document).ready(function() {
           loadUnpaidorders();
           getLocationOnly();
+          setAddressId();
 
         $('.replacable').on('click', function(){
             console.log("replacable");
@@ -1184,8 +1210,28 @@ __kdt.push({"post_on_load": false});
         });
     });
     </script>
-
-
+<script type="text/javascript">
+function setAddressId() {
+    $.ajax({
+        url: 'index.php?path=checkout/checkout/setAddressIdSession',
+        type: 'get',
+        dataType: 'json',
+        cache: false,
+        async: true,
+        beforeSend: function() {
+        },
+        success: function(json) {
+        if(json.shipping_address_id > 0) {
+        $('input[name="shipping_address_id"]').val(json.shipping_address_id);
+        $('#step-2').addClass('checkout-step-color');
+        loadShippingMethods(75); 
+        }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        }
+});
+}
+</script>
 <script type="text/javascript">
     $('#button-reward').on('click', function() {
         $.ajax({
@@ -1385,7 +1431,11 @@ $(document).ready(function() {
             $('#delivery_option__panel_link').attr("href","");
             $('#delivery_time_panel_link').attr("href","");
             $('#payment_panel_link').attr("href","");
+            <?php if($selected_address_id == NULL || $selected_address_data == NULL) { ?>
             document.getElementById('address-next').click();
+            <?php } elseif($selected_address_id > 0 && $selected_address_data != NULL) { ?>
+            document.getElementById('delivery-option').click();
+            <?php } ?>
             
         <?php } else { ?>
             $('#address_panel_link').attr("href","");
@@ -1883,13 +1933,15 @@ function saveInAddressBook() {
       //your stuff
       console.log("in change");
         $('#save-address').prop('disabled', false);
-    });
+    }); 
+     
 
     $(document).delegate('#open-address', 'click', function() {
         
         var selected_address_id = $(this).attr('data-address-id');
-        $('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
-        console.log("address id selected"+$(this).attr('data-address-id'));
+          $('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
+         console.log("address id selected"+$(this).attr('data-address-id')); 
+         
         
         $.ajax({
             url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
@@ -1934,7 +1986,13 @@ function saveInAddressBook() {
 
         
         //$(this).css({'background-color' : "green",'border-color' : "green"});
+
+       
     });
+
+
+ 
+
     $(document).delegate('#dates_selected', 'click', function() {
         $('input[name="dates_selected"]').val($(this).attr('data-value'));
         console.log("address id selected"+$(this).attr('data-value'));

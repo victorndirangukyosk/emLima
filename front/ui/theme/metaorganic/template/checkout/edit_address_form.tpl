@@ -106,6 +106,24 @@
         <input id="shipping_zipcode" type="hidden" value="00100" name="shipping_zipcode">
     <?php } ?>
 
+
+     <div class="form-group">
+            <label class="col-md-3 control-label" style="top:8px" for="isdefault_address">Default Address
+            </label>
+            <div class="col-sm-4" >
+             <?php if($isdefault_address == 1) { ?>
+                <input id="isdefault_address" name="isdefault_address"  type="checkbox" value="<?php echo $isdefault_address; ?>"   class="form-control input-md" checked>
+            <?php } else { ?>
+                <input id="isdefault_address"  name="isdefault_address"  type="checkbox" value="<?php echo $isdefault_address; ?>"   class="form-control input-md" >
+        
+    <?php } ?> 
+
+
+           </div>
+        </div>
+
+
+
     <!-- Button -->
     <div class="form-group">
         <div class="col-md-12">

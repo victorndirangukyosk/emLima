@@ -318,6 +318,13 @@ class ControllerApiCustomerAddress extends Controller
             /*
                 get city_id from zipcode
             */
+
+
+            if(isset($data['is_default_address']) && $data['is_default_address']==1)//if true then field will come or else not come
+            {
+                $data['default']=1;
+            }
+
             if (count($zipcode_exists) > 0) {
                 //$data['city_id'] = $data['shipping_city_id'];
                 $data['city_id'] = 0;
@@ -512,6 +519,11 @@ class ControllerApiCustomerAddress extends Controller
             $this->load->model('account/address');
 
             $save = false;
+
+            if(isset($data['is_default_address']) && $data['is_default_address']==1)//if true then field will come or else not come
+            {
+                $data['default']=1;
+            }
 
             $zipcode_exists = $this->model_account_address->zipcodeExists($data['zipcode']);
             /*

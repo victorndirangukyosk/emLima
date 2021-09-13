@@ -182,6 +182,9 @@ class ControllerCommonLogin extends Controller {
             $this->error['warning'] = $this->language->get('error_login');
         }
 
+        // echo $this->error['warning'];die;
+
+
         return !$this->error;
     }
 
@@ -205,6 +208,7 @@ class ControllerCommonLogin extends Controller {
             'common/farmerforgotten',
             'common/farmerreset',
             'common/login',
+            'api/login',
             'common/forgotten',
             'common/reset',
             'common/scheduler',
@@ -223,6 +227,7 @@ class ControllerCommonLogin extends Controller {
                 'common/farmerforgotten',
                 'common/farmerreset',
                 'common/login',
+                'api/login',
                 'common/logout',
                 'common/forgotten',
                 'common/reset',
@@ -234,7 +239,23 @@ class ControllerCommonLogin extends Controller {
                 'amitruck/amitruckquotes',
             ];
 
-            if (!in_array($path, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
+            //if for checking API methods and to return JSON
+            
+            $apimethods = [
+                
+                'api/customer',
+                'api/catalog',
+                'api/sale',
+                
+            ];
+
+
+            if (in_array($path, $apimethods) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
+        //  echo "<pre>";print_r($this->session->data['token']);die;
+         
+         return new Action('api/login');
+            }
+            else if (!in_array($path, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
                 return new Action('common/login');
             }
         } else {
@@ -244,4 +265,6 @@ class ControllerCommonLogin extends Controller {
         }
     }
 
+   
+  
 }
