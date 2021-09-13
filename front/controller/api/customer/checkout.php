@@ -1604,17 +1604,72 @@ class ControllerApiCustomerCheckout extends Controller {
             $log->write($data['dates']);
             $log->write($data['timeslots']);
             $data['store'] = $this->getStoreDetail($store_id);
+
+            if (isset($this->request->get['shipping_address_id']) && $this->request->get['shipping_address_id'] != NULL && $this->request->get['shipping_address_id'] > 0) {
+                $log->write('shipping_address_id');
+                $log->write($this->request->get['shipping_address_id']);
+                $log->write('shipping_address_id');
+                /* REMOVE DAYS BASED ON CITY OR REGION */
+                $order_delivery_days = NULL;
+                $city_details = NULL;
+                $selected_address_id = $this->request->get['shipping_address_id'];
+                $this->load->model('account/address');
+                $customer_selected_address = $this->model_account_address->getAddress($selected_address_id);
+                $log->write($customer_selected_address);
+                if (isset($customer_selected_address) && is_array($customer_selected_address) && $customer_selected_address['city_id'] > 0) {
+                    $city_details = $this->model_account_address->getCityDetails($customer_selected_address['city_id']);
+                    $order_delivery_days = $this->model_account_address->getRegion($city_details['region_id']);
+                }
+
+                if ($order_delivery_days != NULL && is_array($order_delivery_days)) {
+                    $log->write($city_details);
+                    $log->write($order_delivery_days);
+                    foreach ($data['timeslots'] as $key => $value) {
+                        $order_delivery_days_timestamp = strtotime($key);
+                        $day_name = date('l', $order_delivery_days_timestamp);
+                        $day_name = strtolower($day_name);
+                        if ($order_delivery_days[$day_name] == 0) {
+                            $log->write($key . ' ' . $day_name);
+                            unset($data['timeslots'][$key]);
+                        }
+                    }
+                    foreach ($data['dates'] as $order_day_dates) {
+                        $order_day_dates_timestamp = strtotime($order_day_dates);
+                        $order_day_name = date('l', $order_day_dates_timestamp);
+                        $order_day_name = strtolower($order_day_name);
+                        if ($order_delivery_days[$order_day_name] == 0) {
+                            $log->write($order_day_name);
+                            if (($get_key = array_search($order_day_dates, $data['dates'])) !== false) {
+                                unset($data['dates'][$get_key]);
+                            }
+                        }
+                    }
+                    if (in_array($data['selected_date_slot'], $data['dates'])) {
+                        $log->write('FOUNDED');
+                    } else {
+                        $log->write('NOT FOUNDED');
+                        $data['selected_date_slot'] = reset($data['dates']);
+                    }
+                }
+                $data['dates'] = array_values($data['dates']);
+                $log->write('dates');
+                $log->write($data['dates']);
+                $log->write('dates');
+                /* REMOVE DAYS BASED ON CITY OR REGION */
+            }
+
+
             $json['data']['dates'] = $data['dates'];
             $json['data']['timeslots'] = $data['timeslots'];
             $json['data']['selected_time_slot'] = $data['selected_slot'];
-            $json['data']['selected_date_slot'] = $data['dates'][0];
+            $json['data']['selected_date_slot'] = $data['selected_date_slot'];
             $json['data']['disabled_slot'] = $data['disabled_slot'];
             $json['message'] = 'Please Pre Populate These Date And Time Slots!';
 
             $stores = $this->cart->getStores();
             foreach ($stores as $store_id) {
                 $this->session->data['timeslot'][$store_id] = $data['selected_slot'];
-                $this->session->data['dates'][$store_id] = $data['dates'][0];
+                $this->session->data['dates'][$store_id] = $data['selected_date_slot'];
             }
             /* $log = new Log('error.log');
               $log->write('SLOTS');

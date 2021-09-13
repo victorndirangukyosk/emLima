@@ -3964,7 +3964,7 @@ class ModelReportExcel extends Model {
         $this->load->model('sale/customer');
         $rows = $this->model_sale_customer->getCustomers($data);
 
-        //echo "<pre>";print_r($rows);die;
+        // echo "<pre>";print_r($rows);die;
 
         try {
             // set appropriate timeout limit
@@ -4013,7 +4013,7 @@ class ModelReportExcel extends Model {
             }
 
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Customer Id');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Customer Name');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Email');
 
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'DOB');
@@ -4036,12 +4036,22 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(9, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(10, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyle('B')->getAlignment()->setWrapText(true);
 
             // Fetching the table data
             $row = 5;
             foreach ($rows as $result) {
+                
+
+                if ($result['company_name']) {
+                    $result['company_name'] = ' (' . $result['company_name'] . ')';
+                } 
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer_id']);
+                if ($result['company_name']) 
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['name']. PHP_EOL . $result['company_name']);
+                else
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['name']);
+
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['email']);
 
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['dob'] == '0000-00-00 00:00:00' ? '' : $result['dob']);

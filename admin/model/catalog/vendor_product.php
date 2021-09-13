@@ -9,7 +9,15 @@ class ModelCatalogVendorProduct extends Model {
             $data['status'] = $this->config->get('config_auto_approval_product');
         }
 
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_to_store SET  product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $this->db->escape($data['merchant_id']) . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "'");
+        $monday = in_array("monday", $data['product_delivery']) ? 1 : 0;
+        $tuesday = in_array("tuesday", $data['product_delivery']) ? 1 : 0;
+        $wednesday = in_array("wednesday", $data['product_delivery']) ? 1 : 0;
+        $thursday = in_array("thursday", $data['product_delivery']) ? 1 : 0;
+        $friday = in_array("friday", $data['product_delivery']) ? 1 : 0;
+        $saturday = in_array("saturday", $data['product_delivery']) ? 1 : 0;
+        $sunday = in_array("sunday", $data['product_delivery']) ? 1 : 0;
+
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_to_store SET  product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $this->db->escape($data['merchant_id']) . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "'");
         $product_store_id = $this->db->getLastId();
 
         foreach ($data['product_variation']['variation'] as $prv => $value) {
@@ -30,7 +38,15 @@ class ModelCatalogVendorProduct extends Model {
           $data['status'] = $this->config->get('config_auto_approval_product');
           } */
 
-        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $data['merchant_id'] . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
+        $monday = in_array("monday", $data['product_delivery']) ? 1 : 0;
+        $tuesday = in_array("tuesday", $data['product_delivery']) ? 1 : 0;
+        $wednesday = in_array("wednesday", $data['product_delivery']) ? 1 : 0;
+        $thursday = in_array("thursday", $data['product_delivery']) ? 1 : 0;
+        $friday = in_array("friday", $data['product_delivery']) ? 1 : 0;
+        $saturday = in_array("saturday", $data['product_delivery']) ? 1 : 0;
+        $sunday = in_array("sunday", $data['product_delivery']) ? 1 : 0;
+
+        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $data['merchant_id'] . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
 
         $this->db->query($query);
 
@@ -145,7 +161,7 @@ class ModelCatalogVendorProduct extends Model {
         if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
             $sql .= " AND p2c.category_id = '" . $this->db->escape($data['filter_category']) . "'";
         }
-        
+
         if (isset($data['filter_tax_class_id']) && !is_null($data['filter_tax_class_id'])) {
             $sql .= " AND ps.tax_class_id = '" . (int) $data['filter_tax_class_id'] . "'";
         }
@@ -257,7 +273,7 @@ class ModelCatalogVendorProduct extends Model {
         if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
             $sql .= " AND p2c.category_id = '" . $this->db->escape($data['filter_category']) . "'";
         }
-        
+
         if (isset($data['filter_tax_class_id']) && !is_null($data['filter_tax_class_id'])) {
             $sql .= " AND ps.tax_class_id = '" . (int) $data['filter_tax_class_id'] . "'";
         }
@@ -341,7 +357,7 @@ class ModelCatalogVendorProduct extends Model {
         if (!empty($data['filter_name'])) {
             $sql .= " AND pd.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
-        
+
         if (isset($data['filter_tax_class_id']) && !is_null($data['filter_tax_class_id'])) {
             $sql .= " AND ps.tax_class_id = '" . (int) $data['filter_tax_class_id'] . "'";
         }
@@ -751,7 +767,6 @@ class ModelCatalogVendorProduct extends Model {
 
     public function updateProductInventoryPricing($store_product_id, $data) {
         $this->trigger->fire('pre.admin.product.edit', $data);
-
 
         $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET buying_price = '" . $data['buying_price'] . "', source = '" . $data['source'] . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
         //echo $query;

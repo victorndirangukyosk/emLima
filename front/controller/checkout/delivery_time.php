@@ -174,6 +174,12 @@ class Controllercheckoutdeliverytime extends Controller {
                     }
                 }
             }
+            if (in_array($data['selected_date_slot'], $data['dates'])) {
+                $log->write('FOUNDED');
+            } else {
+                $log->write('NOT FOUNDED');
+                $data['selected_date_slot'] = reset($data['dates']);
+            }
         }
         /* REMOVE DAYS BASED ON CITY OR REGION */
 
@@ -1963,6 +1969,12 @@ class Controllercheckoutdeliverytime extends Controller {
                         unset($data['dates'][$get_key]);
                     }
                 }
+            }
+            if (in_array($data['selected_date_slot'], $data['dates'])) {
+                $log->write('FOUNDED');
+            } else {
+                $log->write('NOT FOUNDED');
+                $data['selected_date_slot'] = reset($data['dates']);
             }
         }
         $log->write('dates');
