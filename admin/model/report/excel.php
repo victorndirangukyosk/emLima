@@ -1466,11 +1466,11 @@ class ModelReportExcel extends Model {
             if (strpos($email, "@") == false) {//if mail Id not set in define.php
                 $email = "sridivya.talluri@technobraingroup.com";
             }
-            // $bccemail = "sridivya.talluri@technobraingroup.com";
+            $bccemail = "sridivya.talluri@technobraingroup.com";
             //   echo "<pre>";print_r($email);die;
             $log = new Log('error.log');
             $log->write('EMAIL START');
-            /*try {
+            try {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
@@ -1485,7 +1485,7 @@ class ModelReportExcel extends Model {
             $log = new Log('error.log');
             $log->write('EMAIL EXCEPTION'); 
             $log->write($e);
-            }*/
+            }
             $log->write('EMAIL END');
             #endregion
             exit;
