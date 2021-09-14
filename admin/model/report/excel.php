@@ -9311,16 +9311,10 @@ class ModelReportExcel extends Model {
             $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
-            $mail->setSubject('Hi');
-            $mail->setHTML('Hi');
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
             $mail->addAttachment($filepath);
-            try {
             $mail->send();
-            } catch(\Exception $e){
-            $log = new Log('error.log');
-            $log->write($e);    
-            // Get error here
-            }
             #endregion
             exit;
         } catch (Exception $e) {
