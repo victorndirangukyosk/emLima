@@ -1471,6 +1471,7 @@ class ModelReportExcel extends Model {
             $log = new Log('error.log');
             $log->write('EMAIL START');
             try {
+            ini_set('max_execution_time', 180);
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
