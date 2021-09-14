@@ -9281,8 +9281,9 @@ class ModelReportExcel extends Model {
             $files = glob($folder_path . '/*');
             // Deleting all the files in the list 
             foreach ($files as $file) {
-                if (is_file($file))
-                    unlink($file); // Delete the given file  
+                if (is_file($file)) {
+                    unlink($file); // Delete the given file
+                }
             }
             // echo "<pre>";print_r($file);;
             $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
