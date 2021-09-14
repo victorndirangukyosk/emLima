@@ -1468,6 +1468,8 @@ class ModelReportExcel extends Model {
             }
             // $bccemail = "sridivya.talluri@technobraingroup.com";
             //   echo "<pre>";print_r($email);die;
+            $log = new Log('error.log');
+            $log->write('EMAIL START');
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
@@ -1478,6 +1480,7 @@ class ModelReportExcel extends Model {
             $mail->setHTML($message);
             $mail->addAttachment($filepath);
             $mail->send();
+            $log->write('EMAIL END');
             #endregion
             exit;
         } catch (Exception $e) {
@@ -9281,9 +9284,8 @@ class ModelReportExcel extends Model {
             $files = glob($folder_path . '/*');
             // Deleting all the files in the list 
             foreach ($files as $file) {
-                if (is_file($file)) {
-                    unlink($file); // Delete the given file
-                }
+                if (is_file($file))
+                    unlink($file); // Delete the given file  
             }
             // echo "<pre>";print_r($file);;
             $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
@@ -9306,8 +9308,6 @@ class ModelReportExcel extends Model {
             }
             // $bccemail = "sridivya.talluri@technobraingroup.com";
             //   echo "<pre>";print_r($email);die;
-            $log = new Log('error.log');
-            $log->write('EMAIL START');
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
@@ -9319,7 +9319,6 @@ class ModelReportExcel extends Model {
             $mail->addAttachment($filepath);
             $mail->send();
             #endregion
-            $log->write('EMAIL END');
             exit;
         } catch (Exception $e) {
 
