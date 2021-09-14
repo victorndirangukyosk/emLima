@@ -904,12 +904,8 @@ class ModelReportExcel extends Model {
     public function download_consolidated_order_sheet_excel($data) {
         //	    echo "<pre>";print_r($data);die;
 
-
-       
         $this->load->library('excel');
         $this->load->library('iofactory');
-
-        
 
         try {
             set_time_limit(2500);
@@ -1166,10 +1162,6 @@ class ModelReportExcel extends Model {
             exit;
         } catch (Exception $e) {
             //            echo "<pre>";print_r($e);die;
-
-      
-
-
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
@@ -1185,8 +1177,7 @@ class ModelReportExcel extends Model {
 
     public function mail_consolidated_order_sheet_excel($data) {
         //	    echo "<pre>";print_r($data);die;
-        $log = new Log('error.log');
-        $log->write('Connsolidated Order Sheet -Mail method in excel.php');
+
         $this->load->library('excel');
         $this->load->library('iofactory');
 
@@ -1454,9 +1445,7 @@ class ModelReportExcel extends Model {
             // Deleting all the files in the list 
             foreach ($files as $file) {
                 if (is_file($file))
-                {
                     unlink($file); // Delete the given file  
-                }
             }
             // echo "<pre>";print_r($file);;
             $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
@@ -1477,59 +1466,19 @@ class ModelReportExcel extends Model {
             }
             // $bccemail = "sridivya.talluri@technobraingroup.com";
             //   echo "<pre>";print_r($email);die;
-            $log->write('Connsolidated Order Sheet Mail -mail code');
-        echo "<pre>";print_r($this->config->get('config_mail'));
-
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
-            $log->write('config_mail-'.print_r($this->config->get('config_mail'), true));
-            $log->write('config_from_email-'.$this->config->get('config_from_email'));
-            $log->write('config_name-'.$this->config->get('config_name'));
-            $log->write('email-'.$email);
-            $log->write('subject-'.$subject);
-            $log->write('message-'.$message);
-            $log->write('filepath-'.$filepath);
-
-
-            // exit;
-
-            try
-            {
-            $log->write('message-');
-
             $mail = new Mail($this->config->get('config_mail'));
-            $log->write('mail-'.$mail);
-
             $mail->setTo($email);
-            $log->write('message-');
-
-            // $mail->setBCC($bccemail);
+            $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
-            $log->write('message-');
-
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
             $mail->setHTML($message);
-            // $mail->addAttachment($filepath);
-           
+            $mail->addAttachment($filepath);
             $mail->send();
-            }
-            catch (Exception $e) {
-                $log = new Log('error.log');
-                $log->write('Connsolidated Order Sheet Mail -error');
-                $log->write('Error -' . $e);
-                $log->write('Error -' . $e->getMessage());
-            }
-
-            $log->write('Connsolidated Order Sheet Mail -mail sent');
-
             #endregion
             exit;
         } catch (Exception $e) {
-
-            $log = new Log('error.log');
-            $log->write('Connsolidated Order Sheet Mail -error');
-            $log->write('Error -' . $e);
-            $log->write('Error -' . $e->getMessage());
 
             $errstr = $e->getMessage();
             $errline = $e->getLine();
@@ -9357,7 +9306,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            // $mail->setBCC($bccemail);
+            $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);

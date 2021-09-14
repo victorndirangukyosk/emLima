@@ -9,12 +9,9 @@ class ControllerCommonScheduler extends Controller {
     private $error = [];
 
     public function consolidatedOrderSheet() {
-
-        try{
         // $deliveryDate =   date("Y-m-d");// date("Y-m-d",strtotime("-1 days"));//$this->request->get['filter_delivery_date'];
         $deliveryDate = date("Y-m-d", strtotime("1 days")); // as eat at 11:30 means , next day orders need to be displayed
-        $log = new Log('error.log');
-        $log->write('Connsolidated Order Sheet -' . $deliveryDate);
+
         $filter_data = [
             'filter_delivery_date' => $deliveryDate,
         ];
@@ -90,10 +87,7 @@ class ControllerCommonScheduler extends Controller {
 
         $data['products'] = $consolidatedProducts;
         //   echo "<pre>";print_r($data);die;
-
         if ($data['products'] != null) {
-        $log->write('Connsolidated Order Sheet - products Available');
-
             // echo "<pre>";print_r($data['products']);die;
             $this->load->model('report/excel');
             $file = $this->model_report_excel->mail_consolidated_order_sheet_excel($data);
@@ -102,13 +96,6 @@ class ControllerCommonScheduler extends Controller {
         //    echo "<pre>";print_r(1);die;
         //     }
         //    echo "<pre>";print_r($file);die;
-        }
-        catch(exception $ex)
-        {
-            $log = new Log('error.log');
-            $log->write('Connsolidated Order Sheet -error');
-            $log->write('Error -' . $ex);
-        }
     }
 
     public function stockout() {
@@ -587,4 +574,7 @@ class ControllerCommonScheduler extends Controller {
         }
     }
 
+
+
+    
 }
