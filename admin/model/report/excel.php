@@ -905,8 +905,7 @@ class ModelReportExcel extends Model {
         //	    echo "<pre>";print_r($data);die;
 
 
-        $log = new Log('error.log');
-        $log->write('Connsolidated Order Sheet -Mail method in excel.php');
+       
         $this->load->library('excel');
         $this->load->library('iofactory');
 
@@ -1168,9 +1167,7 @@ class ModelReportExcel extends Model {
         } catch (Exception $e) {
             //            echo "<pre>";print_r($e);die;
 
-        $log->write('Connsolidated Order Sheet Mail -error');
-        $log->write('Error -' . $e);
-        $log->write('Error -' . $e->getMessage());
+      
 
 
             $errstr = $e->getMessage();
@@ -1188,7 +1185,8 @@ class ModelReportExcel extends Model {
 
     public function mail_consolidated_order_sheet_excel($data) {
         //	    echo "<pre>";print_r($data);die;
-
+        $log = new Log('error.log');
+        $log->write('Connsolidated Order Sheet -Mail method in excel.php');
         $this->load->library('excel');
         $this->load->library('iofactory');
 
@@ -1477,6 +1475,7 @@ class ModelReportExcel extends Model {
             }
             // $bccemail = "sridivya.talluri@technobraingroup.com";
             //   echo "<pre>";print_r($email);die;
+            $log->write('Connsolidated Order Sheet Mail -mail sending');
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
@@ -1490,6 +1489,11 @@ class ModelReportExcel extends Model {
             #endregion
             exit;
         } catch (Exception $e) {
+
+            $log = new Log('error.log');
+            $log->write('Connsolidated Order Sheet Mail -error');
+            $log->write('Error -' . $e);
+            $log->write('Error -' . $e->getMessage());
 
             $errstr = $e->getMessage();
             $errline = $e->getLine();
