@@ -1475,7 +1475,7 @@ class ModelReportExcel extends Model {
             }
             // $bccemail = "sridivya.talluri@technobraingroup.com";
             //   echo "<pre>";print_r($email);die;
-            $log->write('Connsolidated Order Sheet Mail -mail sending');
+            $log->write('Connsolidated Order Sheet Mail -mail code');
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $log->write();
 
@@ -1488,6 +1488,9 @@ class ModelReportExcel extends Model {
             $mail->setHTML($message);
             $mail->addAttachment($filepath);
             $mail->send();
+
+            $log->write('Connsolidated Order Sheet Mail -mail sent');
+
             #endregion
             exit;
         } catch (Exception $e) {
