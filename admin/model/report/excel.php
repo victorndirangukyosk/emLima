@@ -1488,10 +1488,18 @@ class ModelReportExcel extends Model {
             
             try
             {
+            $log->write('message-');
+
             $mail = new Mail($this->config->get('config_mail'));
+            $log->write('mail-'.$mail);
+
             $mail->setTo($email);
+            $log->write('message-');
+
             // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
+            $log->write('message-');
+
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
             $mail->setHTML($message);
