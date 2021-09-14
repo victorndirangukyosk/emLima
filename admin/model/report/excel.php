@@ -1168,7 +1168,7 @@ class ModelReportExcel extends Model {
         } catch (Exception $e) {
             //            echo "<pre>";print_r($e);die;
 
-        $log->write('Connsolidated Order Sheet -error');
+        $log->write('Connsolidated Order Sheet Mail -error');
         $log->write('Error -' . $e);
         $log->write('Error -' . $e->getMessage());
 
