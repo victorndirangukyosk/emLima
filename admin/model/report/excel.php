@@ -1486,7 +1486,7 @@ class ModelReportExcel extends Model {
             $log->write('filepath-'.$filepath);
 
             
-
+            exit;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
             // $mail->setBCC($bccemail);
