@@ -9311,8 +9311,8 @@ class ModelReportExcel extends Model {
             $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
-            $mail->setSubject($subject);
-            $mail->setHTML($message);
+            $mail->setSubject('Hi');
+            $mail->setHTML('Hi');
             $mail->addAttachment($filepath);
             try {
             $mail->send();
