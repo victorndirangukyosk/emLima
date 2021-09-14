@@ -1477,7 +1477,7 @@ class ModelReportExcel extends Model {
             //   echo "<pre>";print_r($email);die;
             $log->write('Connsolidated Order Sheet Mail -mail code');
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
-            $log->write('config_mail-'.$this->config->get('config_mail'));
+            $log->write('config_mail-'.print_r($this->config->get('config_mail'), true));
             $log->write('config_from_email-'.$this->config->get('config_from_email'));
             $log->write('config_name-'.$this->config->get('config_name'));
             $log->write('email-'.$email);
