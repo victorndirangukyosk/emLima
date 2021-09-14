@@ -9305,6 +9305,8 @@ class ModelReportExcel extends Model {
             }
             // $bccemail = "sridivya.talluri@technobraingroup.com";
             //   echo "<pre>";print_r($email);die;
+            $log = new Log('error.log');
+            $log->write('EMAIL START');
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
@@ -9316,7 +9318,6 @@ class ModelReportExcel extends Model {
             $mail->addAttachment($filepath);
             $mail->send();
             #endregion
-            $log = new Log('error.log');
             $log->write('EMAIL END');
             exit;
         } catch (Exception $e) {
