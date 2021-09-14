@@ -1488,7 +1488,7 @@ class ModelReportExcel extends Model {
             $log->write('filepath-'.$filepath);
 
 
-            exit;
+            // exit;
 
             try
             {
