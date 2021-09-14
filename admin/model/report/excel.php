@@ -1477,6 +1477,14 @@ class ModelReportExcel extends Model {
             //   echo "<pre>";print_r($email);die;
             $log->write('Connsolidated Order Sheet Mail -mail code');
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
+            $log->write('config_mail-'.$this->config->get('config_mail'));
+            $log->write('config_from_email-'.$this->config->get('config_from_email'));
+            $log->write('config_name-'.$this->config->get('config_name'));
+            $log->write('email-'.$email);
+            $log->write('subject-'.$subject);
+            $log->write('message-'.$message);
+            $log->write('filepath-'.$filepath);
+
             
 
             $mail = new Mail($this->config->get('config_mail'));
@@ -1487,7 +1495,16 @@ class ModelReportExcel extends Model {
             $mail->setSubject($subject);
             $mail->setHTML($message);
             $mail->addAttachment($filepath);
+            try
+            {
             $mail->send();
+            }
+            catch (Exception $e) {
+                $log = new Log('error.log');
+                $log->write('Connsolidated Order Sheet Mail -error');
+                $log->write('Error -' . $e);
+                $log->write('Error -' . $e->getMessage());
+            }
 
             $log->write('Connsolidated Order Sheet Mail -mail sent');
 
