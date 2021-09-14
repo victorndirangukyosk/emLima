@@ -1486,7 +1486,8 @@ class ModelReportExcel extends Model {
             $log->write('filepath-'.$filepath);
 
             
-            exit;
+            try
+            {
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
             // $mail->setBCC($bccemail);
@@ -1495,8 +1496,7 @@ class ModelReportExcel extends Model {
             $mail->setSubject($subject);
             $mail->setHTML($message);
             // $mail->addAttachment($filepath);
-            try
-            {
+           
             $mail->send();
             }
             catch (Exception $e) {
