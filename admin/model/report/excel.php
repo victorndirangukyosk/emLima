@@ -904,8 +904,13 @@ class ModelReportExcel extends Model {
     public function download_consolidated_order_sheet_excel($data) {
         //	    echo "<pre>";print_r($data);die;
 
+
+        $log = new Log('error.log');
+        $log->write('Connsolidated Order Sheet -Mail method in excel.php');
         $this->load->library('excel');
         $this->load->library('iofactory');
+
+        
 
         try {
             set_time_limit(2500);
@@ -1162,6 +1167,12 @@ class ModelReportExcel extends Model {
             exit;
         } catch (Exception $e) {
             //            echo "<pre>";print_r($e);die;
+
+        $log->write('Connsolidated Order Sheet -error');
+        $log->write('Error -' . $e);
+        $log->write('Error -' . $e->getMessage());
+
+
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
