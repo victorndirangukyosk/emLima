@@ -1494,7 +1494,7 @@ class ModelReportExcel extends Model {
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
             $mail->setHTML($message);
-            $mail->addAttachment($filepath);
+            // $mail->addAttachment($filepath);
             try
             {
             $mail->send();
