@@ -9,6 +9,8 @@ class ControllerCommonScheduler extends Controller {
     private $error = [];
 
     public function consolidatedOrderSheet() {
+
+        try{
         // $deliveryDate =   date("Y-m-d");// date("Y-m-d",strtotime("-1 days"));//$this->request->get['filter_delivery_date'];
         $deliveryDate = date("Y-m-d", strtotime("1 days")); // as eat at 11:30 means , next day orders need to be displayed
         $log = new Log('error.log');
@@ -100,6 +102,12 @@ class ControllerCommonScheduler extends Controller {
         //    echo "<pre>";print_r(1);die;
         //     }
         //    echo "<pre>";print_r($file);die;
+        }
+        catch(exception $ex)
+        {
+            $log->write('Connsolidated Order Sheet -error');
+            $log->write('Error -' . $ex);
+        }
     }
 
     public function stockout() {
