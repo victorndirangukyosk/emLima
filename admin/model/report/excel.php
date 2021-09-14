@@ -9314,7 +9314,13 @@ class ModelReportExcel extends Model {
             $mail->setSubject($subject);
             $mail->setHTML($message);
             $mail->addAttachment($filepath);
+            try {
             $mail->send();
+            } catch(\Exception $e){
+            $log = new Log('error.log');
+            $log->write($e);    
+            // Get error here
+            }
             #endregion
             exit;
         } catch (Exception $e) {
