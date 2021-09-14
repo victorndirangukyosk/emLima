@@ -1476,6 +1476,8 @@ class ModelReportExcel extends Model {
             // $bccemail = "sridivya.talluri@technobraingroup.com";
             //   echo "<pre>";print_r($email);die;
             $log->write('Connsolidated Order Sheet Mail -mail code');
+        echo "<pre>";print_r($this->config->get('config_mail'));
+
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $log->write('config_mail-'.print_r($this->config->get('config_mail'), true));
             $log->write('config_from_email-'.$this->config->get('config_from_email'));
@@ -1485,7 +1487,9 @@ class ModelReportExcel extends Model {
             $log->write('message-'.$message);
             $log->write('filepath-'.$filepath);
 
-            
+
+            exit;
+
             try
             {
             $log->write('message-');
