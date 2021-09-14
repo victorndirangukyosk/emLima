@@ -105,6 +105,7 @@ class ControllerCommonScheduler extends Controller {
         }
         catch(exception $ex)
         {
+            $log = new Log('error.log');
             $log->write('Connsolidated Order Sheet -error');
             $log->write('Error -' . $ex);
         }
