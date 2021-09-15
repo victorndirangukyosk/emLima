@@ -170,8 +170,17 @@ class ModelToolBackup extends Model
         foreach ($files as $file) {
             if (is_file($file))
             {
-                unlink($file); // Delete the given file  
+                $filelastmodified = filemtime($file);
+        //24 hours in a day * 3600 seconds per hour
+        if((time() - $filelastmodified) > 1*3600)
+        {
+           unlink($path . $file);
+        }
+
+
+                // unlink($file); // Delete the given file  
             }
+
         }
         // echo "<pre>";print_r($file);     
 
