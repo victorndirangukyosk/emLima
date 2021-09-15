@@ -574,4 +574,107 @@ class ControllerCommonScheduler extends Controller {
         }
     }
 
+
+
+
+    public function consolidatedOrderSheet3PM() {
+         $deliveryDate = date("Y-m-d"); // current day delivery date
+
+         $dateAdded = date("Y-m-d", strtotime("-1 days"));
+         $dateAdded = new DateTime($dateAdded);
+         // Here 5 hours, 3 Minutes and 10 seconds is added--PT5H3M10S
+            $dateAdded->add(new DateInterval('PT20H0M0S'));
+        // echo "<pre>";print_r($dateAdded);die;
+        $dateAdded_filter=$dateAdded->format('Y-m-d H:i:s');
+
+        $filter_data = [
+            'filter_delivery_date' => $deliveryDate,
+            'filter_date_added_greater'=>$dateAdded_filter
+        ];
+
+        // echo "<pre>";print_r($filter_data);die;
+
+        $this->load->model('sale/order');
+        // $results = $this->model_sale_order->getOrders($filter_data);
+        $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+        $data = [];
+        $unconsolidatedProducts = [];
+
+        foreach ($results as $index => $order) {
+            $data['orders'][$index] = $order;
+            $orderProducts = $this->model_sale_order->getOrderAndRealOrderProducts($data['orders'][$index]['order_id']);
+            $data['orders'][$index]['products'] = $orderProducts;
+
+            foreach ($orderProducts as $product) {
+                $unconsolidatedProducts[] = [
+                    'name' => $product['name'],
+                    'unit' => $product['unit'],
+                    'quantity' => $product['quantity'],
+                    'note' => $product['product_note'],
+                    'produce_type' => $product['produce_type'],
+                ];
+            }
+        }
+
+        $consolidatedProducts = [];
+
+        foreach ($unconsolidatedProducts as $product) {
+            $productName = $product['name'];
+            $productUnit = $product['unit'];
+            $productQuantity = $product['quantity'];
+            $productNote = $product['product_note'];
+            $produceType = $product['produce_type'];
+
+            $consolidatedProductNames = array_column($consolidatedProducts, 'name');
+            if (false !== array_search($productName, $consolidatedProductNames)) {
+                $indexes = array_keys($consolidatedProductNames, $productName);
+
+                $foundExistingProductWithSimilarUnit = false;
+                foreach ($indexes as $index) {
+                    if ($productUnit == $consolidatedProducts[$index]['unit']) {
+                        if ($consolidatedProducts[$index]['produce_type']) {
+                            $produceType = $consolidatedProducts[$index]['produce_type'] . ' / ' . $produceType . ' ';
+                        }
+
+                        $consolidatedProducts[$index]['quantity'] += $productQuantity;
+                        $consolidatedProducts[$index]['produce_type'] = $produceType;
+                        $foundExistingProductWithSimilarUnit = true;
+                        break;
+                    }
+                }
+
+                if (!$foundExistingProductWithSimilarUnit) {
+                    $consolidatedProducts[] = [
+                        'name' => $productName,
+                        'unit' => $productUnit,
+                        'quantity' => $productQuantity,
+                        'note' => $productNote,
+                        'produce_type' => $produceType,
+                    ];
+                }
+            } else {
+                $consolidatedProducts[] = [
+                    'name' => $productName,
+                    'unit' => $productUnit,
+                    'quantity' => $productQuantity,
+                    'note' => $productNote,
+                    'produce_type' => $produceType,
+                ];
+            }
+        }
+        // echo "<pre>";print_r($consolidatedProducts);die;
+
+        $data['products'] = $consolidatedProducts;
+        //   echo "<pre>";print_r($data);die;
+        if ($data['products'] != null) {
+            // echo "<pre>";print_r($data['products']);die;
+            $this->load->model('report/excel');
+            $file = $this->model_report_excel->mail_consolidated_order_sheet_excel($data);
+        }
+        //     else{
+        //    echo "<pre>";print_r(1);die;
+        //     }
+        //    echo "<pre>";print_r($file);die;
+    }
+    
 }

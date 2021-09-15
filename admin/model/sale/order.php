@@ -1620,6 +1620,10 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_date_added']) && $data['filter_date_added'] != 'undefined') {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
+            //added below filter to get orders added after the given date time
+        if (!empty($data['filter_date_added_greater']) && $data['filter_date_added_greater'] != 'undefined') {
+            $sql .= " AND DATE(o.date_added) >= DATE('" . $this->db->escape($data['filter_date_added_greater']) . "')";
+        }
 
         if (!empty($data['filter_date_modified']) && $data['filter_date_modified'] != 'undefined') {
             $sql .= " AND DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
