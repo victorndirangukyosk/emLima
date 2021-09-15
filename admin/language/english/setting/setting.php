@@ -542,3 +542,5 @@ $_['text_footer_text'] = 'Text';
 $_['text_footer_video'] = 'Video';
 $_['entry_footer_video_link'] = 'Video Link';
 $_['entry_footer_image'] = 'Video Image';
+$_['error_active_store_id'] = 'Please Enter Active Store ID';
+$_['error_active_store_minimum_order_amount'] = 'Please Enter Active Store Minimum Order Amount';

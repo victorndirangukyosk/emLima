@@ -155,6 +155,18 @@ class ControllerSettingSetting extends Controller
         } else {
             $data['error_farmer_group_id'] = '';
         }
+        
+        if (isset($this->error['active_store_id'])) {
+            $data['error_active_store_id'] = $this->error['active_store_id'];
+        } else {
+            $data['error_active_store_id'] = '';
+        }
+        
+        if (isset($this->error['active_store_minimum_order_amount'])) {
+            $data['error_active_store_minimum_order_amount'] = $this->error['active_store_minimum_order_amount'];
+        } else {
+            $data['error_active_store_minimum_order_amount'] = '';
+        }
 
         if (isset($this->error['owner'])) {
             $data['error_owner'] = $this->error['owner'];
@@ -543,6 +555,18 @@ class ControllerSettingSetting extends Controller
             $data['config_farmer_group_id'] = $this->request->post['config_farmer_group_id'];
         } else {
             $data['config_farmer_group_id'] = $this->config->get('config_farmer_group_id');
+        }
+        
+        if (isset($this->request->post['config_active_store_id'])) {
+            $data['config_active_store_id'] = $this->request->post['config_active_store_id'];
+        } else {
+            $data['config_active_store_id'] = $this->config->get('config_active_store_id');
+        }
+        
+        if (isset($this->request->post['config_active_store_minimum_order_amount'])) {
+            $data['config_active_store_minimum_order_amount'] = $this->request->post['config_active_store_minimum_order_amount'];
+        } else {
+            $data['config_active_store_minimum_order_amount'] = $this->config->get('config_active_store_minimum_order_amount');
         }
 
         if (isset($this->request->post['config_owner'])) {
@@ -2198,6 +2222,14 @@ class ControllerSettingSetting extends Controller
         
         if (!$this->request->post['config_farmer_group_id']) {
             $this->error['farmer_group_id'] = $this->language->get('error_farmer_group_id');
+        }
+        
+        if (!$this->request->post['config_active_store_id']) {
+            $this->error['active_store_id'] = $this->language->get('error_active_store_id');
+        }
+        
+        if (!$this->request->post['config_active_store_minimum_order_amount']) {
+            $this->error['active_store_minimum_order_amount'] = $this->language->get('error_active_store_minimum_order_amount');
         }
 
         if ((utf8_strlen($this->request->post['config_owner']) < 3) || (utf8_strlen($this->request->post['config_owner']) > 64)) {
