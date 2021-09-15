@@ -680,5 +680,31 @@ class ControllerCommonScheduler extends Controller {
         //     }
         //    echo "<pre>";print_r($file);die;
     }
+
+
+
+    public function backupDB()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '512M');
+
+        $this->load->language('tool/backup');
+ 
+            $this->response->addheader('Pragma: public');
+            $this->response->addheader('Expires: 0');
+            $this->response->addheader('Content-Description: File Transfer');
+            $this->response->addheader('Content-Type: application/octet-stream');
+            $this->response->addheader('Content-Disposition: attachment; filename='.DB_DATABASE.'_'.date('Y-m-d_H-i-s', time()).'_backup.sql');
+            $this->response->addheader('Content-Transfer-Encoding: binary');
+
+            $this->load->model('tool/backup');
+            // $data['tables'] = $this->model_tool_backup->getAllTables();
+            $data['tables'] = $this->model_tool_backup->getTables();
+            // echo "<pre>";print_r($data['tables']);die;
+
+
+            $this->response->setOutput($this->model_tool_backup->backupToLocation($data['tables']));
+         
+    }
     
 }
