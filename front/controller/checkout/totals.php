@@ -85,9 +85,9 @@ class ControllerCheckoutTotals extends Controller
             $store_info['servicable_zipcodes'] = $this->model_account_address->getZipList($os);
             $store_data[] = $store_info;
 
-            if ($this->cart->getTotalProductsByStore($os) && $store_info['min_order_amount'] > $store_total) {
+            if ($this->cart->getTotalProductsByStore($os) && $this->config->get('config_active_store_minimum_order_amount') > $this->cart->getSubTotal()) {
                 $data['min_order_amount_reached'] = FALSE;
-                $data['min_order_amount_away'] = '*' . $this->currency->format($store_info['min_order_amount'] - $store_total) . ' away from minimum order value.';
+                $data['min_order_amount_away'] = '*' . $this->currency->format($this->config->get('config_active_store_minimum_order_amount') - $this->cart->getSubTotal()) . ' away from minimum order value.';
             }
         }
         /* MINIMUM ORDER AMOUNT CHECKING */
