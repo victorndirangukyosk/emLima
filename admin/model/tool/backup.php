@@ -266,14 +266,14 @@ class ModelToolBackup extends Model
             ));
             $xtime = strtotime("now -48 hours");//delete files earlier to two days
             foreach($iterator as $object){
-                echo "{$object['Name']} - {$object['CreationDate']}- {$object['LastModified']}\n";
-                $uploaded = strtotime($object["LastModified"]->date);
-                if($uploaded < $xtime){
-                    $s3Client->deleteObject(array(
-                        "Bucket"        => $bucket,
-                        "Key"           => $object["Key"]
-                    ));
-                }
+                echo "{$object['Key']} - {$object['CreationDate']}- {$object['LastModified']}\n";
+                // $uploaded = strtotime($object["LastModified"]->date);
+                // if($uploaded < $xtime){
+                //     $s3Client->deleteObject(array(
+                //         "Bucket"        => $bucket,
+                //         "Key"           => $object["Key"]
+                //     ));
+                // }
             }
 
             #endregion
