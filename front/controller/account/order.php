@@ -4869,8 +4869,8 @@ class ControllerAccountOrder extends Controller {
             $store_info = $this->model_account_address->getStoreData($order_info['store_id']);
             $log->write($store_info);
             $data['store_warning'] = '';
-            if ($store_info['min_order_amount'] > $data['subtotal']) {
-            $currentprice = $store_info['min_order_amount'] - $data['subtotal'];
+            if ($this->config->get('config_active_store_minimum_order_amount') > $this->cart->getSubTotal()) {
+            $currentprice = $this->config->get('config_active_store_minimum_order_amount') - $this->cart->getSubTotal();
             $data['store_warning'] = "<center style='background-color:#ee4054;color:#fff'>" . $this->currency->format($currentprice) . ' away from minimum order value </center>';    
             }
 
