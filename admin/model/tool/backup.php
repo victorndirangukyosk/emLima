@@ -215,7 +215,7 @@ class ModelToolBackup extends Model
         try {
             //$s3Client->createBucket(['Bucket' => 'kwikbasket-logs']);
 
-            $bucket = 'kwikbasket-logs';
+            $bucket = 'kwikbasket-backups';
             // $folder_path ."/". $filename,"wb"
             $file_Path = $folder_path ."/". $filename;
             $key = basename($file_Path);
