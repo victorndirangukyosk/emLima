@@ -213,9 +213,25 @@ class ModelToolBackup extends Model
         $s3Client = $sdk->createS3();
 
         try {
-             $s3Client->createBucket(['Bucket' => 'kwikbasket-backups']);
 
+            $resultBucketList = $s3Client->listBuckets();
+            $bucketexists=false;
             $bucket = 'kwikbasket-backups';
+            foreach ($resultBucketList['Buckets'] as $bucketlist) {
+                // Each Bucket value will contain a Name and CreationDate
+                //  echo "{$bucketlist['Name']} - {$bucketlist['CreationDate']}\n";
+                if($bucketlist['Name']==$bucket)
+                {
+                    $bucketexists=true;
+                }
+            }
+            if($bucketexists==false)
+            {
+                $s3Client->createBucket(['Bucket' => 'kwikbasket-backups']);
+            }
+
+
+           
             // $folder_path ."/". $filename,"wb"
             $file_Path = $folder_path ."/". $filename;
             $key = basename($file_Path);
@@ -225,6 +241,26 @@ class ModelToolBackup extends Model
                 'SourceFile' => $file_Path,
                 'ACL' => 'private',
             ]);
+
+            #region delete previous files
+
+            $iterator = $s3Client->getIterator('ListObjects', array(
+                'Bucket' => $bucket
+            ));
+            $xtime = strtotime("now -48 hours");//delete files earlier to two days
+            foreach($iterator as $object){
+                echo "{$object['Name']} - {$object['CreationDate']}- {$object['LastModified']}\n";
+                $uploaded = strtotime($object["LastModified"]->date);
+                if($uploaded < $xtime){
+                    $s3Client->deleteObject(array(
+                        "Bucket"        => $bucket,
+                        "Key"           => $object["Key"]
+                    ));
+                }
+            }
+
+            #endregion
+
         } catch (S3Exception $e) {
             // Catch an S3 specific exception.
             echo $e->getMessage();
