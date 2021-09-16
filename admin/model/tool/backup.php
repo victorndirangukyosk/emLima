@@ -264,16 +264,18 @@ class ModelToolBackup extends Model
             $iterator = $s3Client->getIterator('ListObjects', array(
                 'Bucket' => $bucket
             ));
-            $xtime = strtotime("now -48 hours");//delete files earlier to two days
+            $xtime = date("Y-m-d  H:i:s", strtotime("-48 hour"));
+           
             foreach($iterator as $object){
                 echo "{$object['Key']} - {$object['CreationDate']}- {$object['LastModified']}\n";
-                // $uploaded = strtotime($object["LastModified"]->date);
-                // if($uploaded < $xtime){
-                //     $s3Client->deleteObject(array(
-                //         "Bucket"        => $bucket,
-                //         "Key"           => $object["Key"]
-                //     ));
-                // }
+                $uploaded =$object["LastModified"];
+                if($uploaded < $xtime){
+                    
+                    $s3Client->deleteObject(array(
+                        "Bucket"        => $bucket,
+                        "Key"           => $object["Key"]
+                    ));
+                }
             }
 
             #endregion
