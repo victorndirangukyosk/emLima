@@ -39,6 +39,23 @@ class ModelToolBackup extends Model
         return $table_data;
     }
 
+
+    public function getSelectedTables()
+    {
+        $table_data = [];
+
+        $query = $this->db->query('SELECT * FROM `hf7_table_backup` where backup_required=1');
+        foreach ($query->rows as $result) {
+                if (isset($result['table_name'])) {
+                    $table_data[] = $result['table_name'];
+                }
+            
+        }
+        // echo "<pre>";print_r($table_data);  die;
+
+        return $table_data;
+    }
+
     public function backup($tables)
     {
         $this->trigger->fire('pre.admin.backup', $tables);
