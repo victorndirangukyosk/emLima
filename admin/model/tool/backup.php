@@ -241,6 +241,26 @@ class ModelToolBackup extends Model
                 'SourceFile' => $file_Path,
                 'ACL' => 'private',
             ]);
+
+            #region delete previous files
+
+            $iterator = $s3Client->getIterator('ListObjects', array(
+                'Bucket' => $bucket
+            ));
+            $xtime = strtotime("now -48 hours");//delete files earlier to two days
+            foreach($iterator as $object){
+                echo "{$object['Name']} - {$object['CreationDate']}- {$object['LastModified']}\n";
+                $uploaded = strtotime($object["LastModified"]->date);
+                if($uploaded < $xtime){
+                    $s3Client->deleteObject(array(
+                        "Bucket"        => $bucket,
+                        "Key"           => $object["Key"]
+                    ));
+                }
+            }
+
+            #endregion
+
         } catch (S3Exception $e) {
             // Catch an S3 specific exception.
             echo $e->getMessage();
