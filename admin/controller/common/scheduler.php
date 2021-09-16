@@ -579,20 +579,24 @@ class ControllerCommonScheduler extends Controller {
 
     public function consolidatedOrderSheet3PM() {
          $deliveryDate = date("Y-m-d"); // current day delivery date
-
+         $time = $this->request->get['time'];
          $dateAdded = date("Y-m-d", strtotime("-1 days"));
          $dateAdded = new DateTime($dateAdded);
          // Here 5 hours, 3 Minutes and 10 seconds is added--PT5H3M10S
-            $dateAdded->add(new DateInterval('PT20H0M0S'));
+            $dateAdded->add(new DateInterval('PT23H0M0S'));
         // echo "<pre>";print_r($dateAdded);die;
         $dateAdded_filter=$dateAdded->format('Y-m-d H:i:s');
+        if(!isset($time))
+        {
+            $dateAdded_filter=null;
+
+        }
 
         $filter_data = [
             'filter_delivery_date' => $deliveryDate,
             'filter_date_added_greater'=>$dateAdded_filter
         ];
 
-        // echo "<pre>";print_r($filter_data);die;
 
         $this->load->model('sale/order');
         // $results = $this->model_sale_order->getOrders($filter_data);
@@ -669,12 +673,38 @@ class ControllerCommonScheduler extends Controller {
         if ($data['products'] != null) {
             // echo "<pre>";print_r($data['products']);die;
             $this->load->model('report/excel');
-            $file = $this->model_report_excel->mail_consolidated_order_sheet_excel($data);
+            $file = $this->model_report_excel->mail_consolidated_order_sheet_excel($data,'3pm');
         }
         //     else{
         //    echo "<pre>";print_r(1);die;
         //     }
         //    echo "<pre>";print_r($file);die;
+    }
+
+
+
+    public function backupDB()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '512M');
+
+        $this->load->language('tool/backup');
+ 
+            $this->response->addheader('Pragma: public');
+            $this->response->addheader('Expires: 0');
+            $this->response->addheader('Content-Description: File Transfer');
+            $this->response->addheader('Content-Type: application/octet-stream');
+            $this->response->addheader('Content-Disposition: attachment; filename='.DB_DATABASE.'_'.date('Y-m-d_H-i-s', time()).'_backup.sql');
+            $this->response->addheader('Content-Transfer-Encoding: binary');
+
+            $this->load->model('tool/backup');
+            // $data['tables'] = $this->model_tool_backup->getAllTables();
+            $data['tables'] = $this->model_tool_backup->getTables();
+            // echo "<pre>";print_r($data['tables']);die;
+
+
+            $this->response->setOutput($this->model_tool_backup->backupToLocation($data['tables']));
+         
     }
     
 }

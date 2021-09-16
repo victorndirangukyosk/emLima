@@ -693,6 +693,34 @@
                                     <?php } ?>
                                 </div>
                             </div>
+                            
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-active-store-id">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="Add Active Store ID">
+                                        Active Store ID
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_active_store_id" value="<?php echo $config_active_store_id; ?>" placeholder="Enter Active Store ID" id="input-active-store-id" class="form-control" />
+                                    <?php if ($error_active_store_id) { ?>
+                                    <div class="text-danger"><?php echo $error_active_store_id; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-active-store-minimum-order-amount">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="Add Active Store Minimum Order Amount">
+                                         Active Store Minimum Amount
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_active_store_minimum_order_amount" value="<?php echo $config_active_store_minimum_order_amount; ?>" placeholder="Enter Active Store Minimum Order Amount" id="input-active-store-minimum-order-amount" class="form-control" />
+                                    <?php if ($error_active_store_minimum_order_amount) { ?>
+                                    <div class="text-danger"><?php echo $error_active_store_minimum_order_amount; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
 
 
                             <div class="form-group required">

@@ -277,10 +277,10 @@ class ControllerCheckoutCart extends Controller {
 
                 $store_total = $this->cart->getSubTotal($os);
                 $store_city = $store_info['city_id'];
-                if ($this->cart->getTotalProductsByStore($os) && $store_info['min_order_amount'] > $store_total) {
+                if ($this->cart->getTotalProductsByStore($os) && $this->config->get('config_active_store_minimum_order_amount') > $this->cart->getSubTotal()) {
                     $min_order_or_not['store'] = $store_info['name'];
-                    $min_order_or_not['amount'] = $store_info['min_order_amount'] - $store_total;
-                    $data['error_warning'] = sprintf($this->language->get('error_minimum'), $min_order_or_not['store'], $this->currency->format($store_info['min_order_amount']));
+                    $min_order_or_not['amount'] = $this->config->get('config_active_store_minimum_order_amount') - $this->cart->getSubTotal();
+                    $data['error_warning'] = sprintf($this->language->get('error_minimum'), $min_order_or_not['store'], $this->currency->format($this->config->get('config_active_store_minimum_order_amount')));
                 }
             }
 

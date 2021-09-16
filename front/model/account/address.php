@@ -400,8 +400,8 @@ class ModelAccountAddress extends Model {
             $ret = '';
         }
 
-        if ($store_info['min_order_amount'] > $store_total) {
-            $currentprice = $store_info['min_order_amount'] - $store_total;
+        if ($this->config->get('config_active_store_minimum_order_amount') > $this->cart->getSubTotal()) {
+            $currentprice = $this->config->get('config_active_store_minimum_order_amount') - $this->cart->getSubTotal();
 
             $ret = "<center style='background-color:#ee4054;color:#fff'>" . $this->currency->format($currentprice) . ' away from minimum order value </center>';
         }
