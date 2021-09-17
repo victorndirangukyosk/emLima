@@ -39,6 +39,23 @@ class ModelToolBackup extends Model
         return $table_data;
     }
 
+
+    public function getSelectedTables()
+    {
+        $table_data = [];
+
+        $query = $this->db->query('SELECT * FROM `hf7_table_backup` where backup_required=1');
+        foreach ($query->rows as $result) {
+                if (isset($result['table_name'])) {
+                    $table_data[] = $result['table_name'];
+                }
+            
+        }
+        // echo "<pre>";print_r($table_data);  die;
+
+        return $table_data;
+    }
+
     public function backup($tables)
     {
         $this->trigger->fire('pre.admin.backup', $tables);
@@ -247,11 +264,13 @@ class ModelToolBackup extends Model
             $iterator = $s3Client->getIterator('ListObjects', array(
                 'Bucket' => $bucket
             ));
-            $xtime = strtotime("now -48 hours");//delete files earlier to two days
+            $xtime = date("Y-m-d  H:i:s", strtotime("-48 hour"));
+           
             foreach($iterator as $object){
-                echo "{$object['Name']} - {$object['CreationDate']}- {$object['LastModified']}\n";
-                $uploaded = strtotime($object["LastModified"]->date);
+                echo "{$object['Key']} - {$object['CreationDate']}- {$object['LastModified']}\n";
+                $uploaded =$object["LastModified"];
                 if($uploaded < $xtime){
+                    
                     $s3Client->deleteObject(array(
                         "Bucket"        => $bucket,
                         "Key"           => $object["Key"]
