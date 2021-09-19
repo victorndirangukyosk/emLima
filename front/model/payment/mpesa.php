@@ -31,7 +31,10 @@ class ModelPaymentMpesa extends Model
         //$this->db->query("DELETE FROM " . DB_PREFIX . "mpesa_order WHERE order_id = " . (int) $order_info['order_id']);
 
         $this->db->query('INSERT INTO `'.DB_PREFIX."mpesa_order` SET `order_id` = '".(int) $order_info['order_id']."', `request_id` = '".$request_id."', `checkout_request_id` = '".$checkout_request_id."'");
-
+        $log = new Log('error.log');
+        $log->write('MPESA addOrder');
+        $log->write($this->db->getLastId());
+        $log->write('MPESA addOrder');
         return $this->db->getLastId();
     }
 
