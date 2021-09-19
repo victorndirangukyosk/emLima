@@ -206,6 +206,11 @@ class ControllerPaymentMpesa extends Controller {
 
             //$order_id = 2;
             $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderId($order_id);
+            $log = new Log('error.log');
+            $log->write('mpesaDetails');
+            $log->write($mpesaDetails);
+            $log->write('mpesaDetails');
+
 
             $live = true;
 
