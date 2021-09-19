@@ -474,6 +474,7 @@
 <script type="text/javascript">
 function showPayWith() {
     $('#pay-confirm-order').html('');
+    $('#pay-confirm-order-mpesa').hide();
     $('input[name="pay_with"]:checked').removeAttr('checked');
     $('#pay_with').hide();
     var radioValue = $("input[name='pay_option']:checked").val();
