@@ -136,6 +136,11 @@ class ControllerPaymentMpesa extends Controller {
                 if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
                     if (!empty($order_id)) {
                         //save in
+                        $log = new Log('error.log');
+                        $log->write('MPESA ORDER DETAILS');
+                        $log->write($order_id);
+                        $log->write($stkPushSimulation);
+                        $log->write('MPESA ORDER DETAILS');
                         $this->model_payment_mpesa->addOrder($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
                     } else {
                         if (isset($this->request->post['paymode']) && !empty($this->request->post['paymode']) && 'pay_other' == $this->request->post['paymode']) {
