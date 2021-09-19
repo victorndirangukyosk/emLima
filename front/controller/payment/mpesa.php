@@ -206,11 +206,6 @@ class ControllerPaymentMpesa extends Controller {
 
             //$order_id = 2;
             $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderId($order_id);
-            $log = new Log('error.log');
-            $log->write('mpesaDetails');
-            $log->write($mpesaDetails);
-            $log->write('mpesaDetails');
-
 
             $live = true;
 
@@ -218,6 +213,10 @@ class ControllerPaymentMpesa extends Controller {
 
             if ($mpesaDetails) {
                 foreach ($mpesaDetails as $mpesaDetail) {
+                    $log = new Log('error.log');
+                    $log->write('mpesaDetails');
+                    $log->write($mpesaDetail);
+                    $log->write('mpesaDetails');
                     //echo "<pre>";print_r($mpesaDetail);die;
 
                     $BusinessShortCode = $this->config->get('mpesa_business_short_code');
