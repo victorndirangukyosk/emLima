@@ -294,7 +294,7 @@ class ControllerPaymentMpesa extends Controller {
 
                             $json['status'] = true;
 
-                            break;
+                            //break;
                         }
                     }
                 /*}*/
