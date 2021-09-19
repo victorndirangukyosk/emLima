@@ -212,6 +212,10 @@ class ControllerPaymentMpesa extends Controller {
             $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
 
             if ($mpesaDetails) {
+                $log = new Log('error.log');
+                $log->write('mpesaDetails_1');
+                $log->write($mpesaDetails);
+                $log->write('mpesaDetails_1');
                 foreach ($mpesaDetails as $mpesaDetail) {
                     $log = new Log('error.log');
                     $log->write('mpesaDetails');
