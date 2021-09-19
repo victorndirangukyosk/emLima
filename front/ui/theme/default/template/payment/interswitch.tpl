@@ -1,5 +1,5 @@
 <div class="checkout-container" style="display:none;">
-    <h4>Inline Checkout Demo</h4>
+    <h4>Checkout - Kwik Basket</h4>
 
     <form id="submit-form">
         <div class="form-input">
