@@ -229,7 +229,9 @@ class ControllerPaymentMpesa extends Controller {
                     $log->write($stkPushSimulation);
 
                     $stkPushSimulation = json_decode($stkPushSimulation);
-
+                    if (isset($stkPushSimulation['ResultCode']) && 0 != $stkPushSimulation['ResultCode']) {
+                        $json['error'] = $stkPushSimulation['ResultDesc'];
+                    }
                     /* stdClass Object
                       (
                       [ResponseCode] => 0
