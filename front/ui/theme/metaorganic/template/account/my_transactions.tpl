@@ -91,18 +91,47 @@
                 </div>
             </div>
         </div>
+        
         <div class="col-md-9" id="payment_options">
             Payment Options
-            <div class="radio">
-                <label><input class="option_pay" onchange="payOptionSelected()"  value="pay_full" type="radio" name="pay_option">Pay Full</label>
-            </div>
-            <!--<div class="radio">
-                <label><input type="radio" class="option_pay" onchange="payOptionSelected()" value="pay_other" name="pay_option">Pay Other Amount</label>
-            </div>-->
-            <div class="radio">
-                <label><input type="radio" class="option_pay" onchange="payOptionSelected()" value="pay_selected_order" name="pay_option">Pay Selected Orders</label>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="radio">
+                        <label><input class="option_pay" onchange="showPayWith()"  value="pay_full" type="radio" name="pay_option">Pay Full</label>
+                    </div>
+                </div>
+                <!--<div class="radio">
+                    <label><input type="radio" class="option_pay" onchange="showPayWith()" value="pay_other" name="pay_option">Pay Other Amount</label>
+                </div>-->
+                <div class="col-md-4">
+                    <div class="radio">
+                        <label><input type="radio" class="option_pay" onchange="showPayWith()" value="pay_selected_order" name="pay_option">Pay Selected Orders</label>
+                    </div>
+                </div>
             </div>
         </div>
+        
+        <div class="col-md-9" id="pay_with" style="display:none;">
+            Pay With
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="radio">
+                        <label><input class="option_pay" onchange="payOptionSelected()" type="radio" name="pay_with">PesaPal</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="radio">
+                        <label><input class="option_pay" onchange="payWithmPesa()" type="radio" name="pay_with">mPesa Online</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="radio">
+                        <label><input class="option_pay" onchange="payWithInterswitch()" type="radio" name="pay_with">Interswitch</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="col-md-9" id="payment_options_input" style="display:none;">
             <input id="pesapal_amount" name="pesapal_amount" type="number" min="0.01" step="0.01" value="" class="form-control input-md" required="" placeholder="Enter Amount" minlength="9" maxlength="9" style="display:inline-block; width: 22%;margin-left: 10px;">
             <button type="button" id="button-confirm" data-toggle="collapse" style="width:200px;" class="btn btn-default">PAY &amp; CONFIRM</button>
@@ -335,6 +364,11 @@
                 dataType: 'html',
                 cache: false,
                 async: false,
+                beforeSend: function () {
+                $('#pay-confirm-order').html('Loading Please Wait....');
+                },
+                complete: function () {
+                },
                 success: function (json) {
                     console.log("json");
                     console.log(json);
@@ -382,6 +416,11 @@
                 dataType: 'html',
                 cache: false,
                 async: false,
+                beforeSend: function () {
+                $('#pay-confirm-order').html('Loading Please Wait....');
+                },
+                complete: function () {
+                },
                 success: function (json) {
                     console.log("json");
                     console.log(json);
@@ -401,6 +440,49 @@
             $("#payment_options_input").show();
         }
     }
+    
+    function payWithmPesa() {
+    }
+    
+    function payWithInterswitch() {
+    }
+</script>
+<script type="text/javascript">
+function showPayWith() {
+    $('#pay-confirm-order').html('');
+    $('input[name="pay_with"]:checked').removeAttr('checked');
+    $('#pay_with').hide();
+    var radioValue = $("input[name='pay_option']:checked").val();
+    if (radioValue == 'pay_selected_order') {
+            var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
+            console.log(checkedNum);
+            var val = [];
+            var amount = [];
+            if (!checkedNum) {
+                $(':checkbox:checked').each(function (i) {
+                    val[i] = $(this).data("id");
+                    amount[i] = $(this).data("amount");
+                });
+                console.log(val);
+                console.log(amount);
+                var total = 0;
+                for (var i = 0; i < amount.length; i++) {
+                    total += amount[i] << 0;
+                }
+                console.log(total);
+            }
+            if (val.length == 0 || amount.length == 0) {
+                $("#pay_with").hide();
+                $("input:radio").removeAttr("checked");
+                alert('Please select atleast one order!');
+                return false;
+            }else {
+            $("#pay_with").show(); 
+            }
+    } else {
+      $("#pay_with").show(); 
+    }
+}
 </script>
 
 <script type="text/javascript">
