@@ -212,21 +212,13 @@ class ControllerPaymentMpesa extends Controller {
             $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
 
             if ($mpesaDetails) {
-                $log = new Log('error.log');
-                $log->write('mpesaDetails_1');
-                $log->write($mpesaDetails);
-                $log->write('mpesaDetails_1');
-                foreach ($mpesaDetails as $mpesaDetail) {
-                    $log = new Log('error.log');
-                    $log->write('mpesaDetails');
-                    $log->write($mpesaDetail);
-                    $log->write('mpesaDetails');
+                /*foreach ($mpesaDetails as $mpesaDetail) {*/
                     //echo "<pre>";print_r($mpesaDetail);die;
 
                     $BusinessShortCode = $this->config->get('mpesa_business_short_code');
                     $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
 
-                    $checkoutRequestID = $mpesaDetail['checkout_request_id']; //'ws_CO_28032018142406660';
+                    $checkoutRequestID = $mpesaDetails['checkout_request_id']; //'ws_CO_28032018142406660';
                     $timestamp = '20' . date('ymdhis');
                     $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
 
@@ -305,7 +297,7 @@ class ControllerPaymentMpesa extends Controller {
                             break;
                         }
                     }
-                }
+                /*}*/
             }
             $this->load->controller('payment/cod/confirmnonkb');
         }
