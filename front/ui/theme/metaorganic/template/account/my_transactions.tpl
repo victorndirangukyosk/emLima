@@ -95,7 +95,7 @@
         <div class="col-md-9" id="payment_options">
             Payment Options
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="radio">
                         <label><input class="option_pay" onchange="showPayWith()"  value="pay_full" type="radio" name="pay_option">Pay Full</label>
                     </div>
@@ -103,7 +103,7 @@
                 <!--<div class="radio">
                     <label><input type="radio" class="option_pay" onchange="showPayWith()" value="pay_other" name="pay_option">Pay Other Amount</label>
                 </div>-->
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="radio">
                         <label><input type="radio" class="option_pay" onchange="showPayWith()" value="pay_selected_order" name="pay_option">Pay Selected Orders</label>
                     </div>
@@ -145,7 +145,26 @@
         <div id="pay-confirm-order" class="col-md-9 confirm_order_class" style="padding:35px;">
             <!--MPESA REMOVED FROM HERE-->
         </div>
+        
+        <div id="pay-confirm-order-mpesa" class="col-md-9 confirm_order_class" style="display:none; padding:35px;">
+            <p>mPesa Online</p>
+            <div class="row">
+                <div class="col-md-9">
+                    <span class="input-group-btn" style="padding-bottom: 10px;">
+                        <p id="button-reward" class="" style="padding: 13px 14px;    margin-top: -9px;border-radius: 2px;font-size: 15px;font-weight: 600;color: #fff;background-color: #522e5b;border-color: #522e5b;display: inline-block;margin-bottom: 0;line-height: 1.42857143;vertical-align: middle;-ms-touch-action: manipulation;touch-action: manipulation;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;background-image: none;margin-right: -1px;">
+                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">+254</font></font></font></font>
+                        </p>
 
+                        <input id="mpesa_phone_number" name="telephone" type="text" value="" class="form-control input-md" required="" placeholder="Mobile number" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 50%;" >
+
+                    </span>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" id="button-confirm" data-toggle="collapse" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button>
+                </div>
+            </div>
+            <!--MPESA REMOVED FROM HERE-->
+        </div>
     </div>                        
 </div>
 
@@ -351,6 +370,7 @@
         console.log(total_pending_amount);
         $('#pay-confirm-order').html('');
         if (radioValue == 'pay_full') {
+            $("#pay-confirm-order-mpesa").hide();
             $("#payment_options_input").hide();
             console.log($("input[name=total_pending_amount]").val());
             $.ajax({
@@ -383,6 +403,7 @@
                 }
             });
         } else if (radioValue == 'pay_selected_order') {
+            $("#pay-confirm-order-mpesa").hide();
             var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
             console.log(checkedNum);
             var val = [];
@@ -442,6 +463,9 @@
     }
     
     function payWithmPesa() {
+        $("#pay-confirm-order").html('');
+        $("#pay-confirm-order").hide();
+        $("#pay-confirm-order-mpesa").show();
     }
     
     function payWithInterswitch() {
