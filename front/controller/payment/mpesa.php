@@ -432,7 +432,7 @@ class ControllerPaymentMpesa extends Controller {
             $this->load->model('payment/mpesa');
 
             $this->load->model('checkout/order');
-
+            $amount = 0;
             foreach ($this->request->post['order_id'] as $key => $value) {
                 $order_info = $this->model_checkout_order->getOrder($value);
                 if (count($order_info) > 0) {
