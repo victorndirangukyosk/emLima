@@ -155,12 +155,12 @@
                             <font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">+254</font></font></font></font>
                         </p>
 
-                        <input id="mpesa_phone_number" name="telephone" type="text" value="" class="form-control input-md" required="" placeholder="Mobile number" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 50%;" >
+                        <input id="mpesa_phone_number" name="telephone" type="text" value="<?php echo $this->customer->getTelephone(); ?>" class="form-control input-md" required="" placeholder="Mobile number" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 50%;" >
 
                     </span>
                 </div>
                 <div class="col-md-3">
-                    <button type="button" id="button-confirm" data-toggle="collapse" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button>
+                    <button type="button" id="mpesa-button-confirm" data-toggle="collapse" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button>
                 </div>
             </div>
             <!--MPESA REMOVED FROM HERE-->
@@ -782,22 +782,22 @@ function showPayWith() {
         $( document ).ready(function() {
             console.log("referfxx def");
             if($('#mpesa_phone_number').val().length >= 9) {
-                $( "#button-confirm" ).prop( "disabled", false );
+                $( "#mpesa-button-confirm" ).prop( "disabled", false );
             } else {
-                $( "#button-confirm" ).prop( "disabled", true );
+                $( "#mpesa-button-confirm" ).prop( "disabled", true );
             }
         });
 
         $('#mpesa_phone_number').on('input', function() { 
             console.log("referfxx");
             if($(this).val().length >= 9) {
-                $( "#button-confirm" ).prop( "disabled", false );
+                $( "#mpesa-button-confirm" ).prop( "disabled", false );
             } else {
-                $( "#button-confirm" ).prop( "disabled", true );
+                $( "#mpesa-button-confirm" ).prop( "disabled", true );
             }
         });
 
-        $('#button-confirm,#button-retry').on('click', function() {
+        $('#mpesa-button-confirm,#button-retry').on('click', function() {
 	    
             $('#loading').show();
 
@@ -849,7 +849,7 @@ function showPayWith() {
                         cache: false,
                         beforeSend: function() {
                             $(".overlayed").show();
-                            $('#button-confirm').button('loading');
+                            $('#mpesa-button-confirm').button('loading');
                         },
                         complete: function() {
                             $(".overlayed").hide();
@@ -859,7 +859,7 @@ function showPayWith() {
                                 console.log(json);
                                 console.log('json mpesa');
 
-                                $('#button-confirm').button('reset');
+                                $('#mpesa-button-confirm').button('reset');
                             $('#loading').hide();
 
                                 if(json['processed']) {
@@ -874,7 +874,7 @@ function showPayWith() {
                                         $('#button-complete').show();
 
                                         console.log('json mpesa1');
-                                        $('#button-confirm').hide();
+                                        $('#mpesa-button-confirm').hide();
                                         $('#button-retry').hide();
                                         console.log('json mpesa2');
 
@@ -931,7 +931,7 @@ function showPayWith() {
                         } else {
 
                                 //failed
-                                //$('#button-confirm').show();
+                                //$('#mpesa-button-confirm').show();
                                 //$('#button-retry').hide();
                                 //$('#button-complete').hide();
 
