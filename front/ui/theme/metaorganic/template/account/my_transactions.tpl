@@ -126,7 +126,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="radio">
-                        <label><input class="option_pay" onchange="payWithInterswitch()" type="radio" name="pay_with">Interswitch</label>
+                        <label><input class="option_pay" onchange="LoadInterSwitch()" type="radio" name="pay_with">Interswitch</label>
                     </div>
                 </div>
             </div>
@@ -518,7 +518,7 @@
             }    
             
             $.ajax({
-                url: 'index.php?path=payment/interswitch/interswitchtransaction',
+                url: 'index.php?path=account/transactions/interswitch',
                 type: 'post',
                 data: {
                     order_id: val,
@@ -527,17 +527,15 @@
                 },
                 dataType: 'html',
                 cache: false,
-                async: true,
+                async: false,
                 beforeSend: function () {
                 $('#pay-confirm-order-interswitch').html('Loading Please Wait....');
                 },
                 complete: function () {
                 },
-                success: function (json) {
-                    console.log("json");
-                    console.log(json);
-                    $('#pay-confirm-order-interswitch').html(json);
-                    $('#pay-confirm-order-interswitch').removeAttr('style');
+                success: function (html) {
+                    console.log(html);
+                    $('#pay-confirm-order-interswitch').html(html);
                     return true;
                     //window.location = json.redirect;
                 }, error: function (xhr, ajaxOptions, thrownError) {
@@ -545,11 +543,15 @@
                     return false;
                 }
             });
-            //submitHandler(event);
     }
+    
+function LoadInterSwitch() {
+submitHandler(event);
+}
 </script>
 <script type="text/javascript">
 function showPayWith() {
+    payWithInterswitch();
     $('#pay-confirm-order').html('');
     $('#pay-confirm-order-mpesa').hide();
     $('input[name="pay_with"]:checked').removeAttr('checked');
