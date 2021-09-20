@@ -247,6 +247,10 @@ class ControllerPaymentMpesa extends Controller {
                 $json['error'] = $json['response']->errorMessage;
             }
 
+            if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
+                $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
+            }
+
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
 
                 $pendingOrdersIds = explode('--', $this->request->post['pending_order_ids']);
