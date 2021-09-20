@@ -912,12 +912,50 @@ function showPayWith() {
 	    
             $('#error_msg').hide();
             $('#success_msg').hide();
+        
+            var radioValue = $("input[name='pay_option']:checked").val();
+            var total_pending_amount = $("input[name='total_pending_amount']").val();
+            console.log(total_pending_amount);
+            
+            if (radioValue == 'pay_full') {
+                
+            } else if (radioValue == 'pay_selected_order') {
+            var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
+            console.log(checkedNum);
+            var val = [];
+            var amount = [];
+            if (!checkedNum) {
+                $(':checkbox:checked').each(function (i) {
+                    val[i] = $(this).data("id");
+                    amount[i] = $(this).data("amount");
+                });
+                console.log(val);
+                console.log(amount);
+                var total = 0;
+                for (var i = 0; i < amount.length; i++) {
+                    total += amount[i] << 0;
+                }
+                console.log(total);
+            }
+            if (val.length == 0 || amount.length == 0) {
+                $("input:radio").removeAttr("checked");
+                alert('Please select atleast one order!');
+                return false;
+            }
+            }
 
         $.ajax({
                 type: 'post',
-                url: 'index.php?path=payment/mpesa/complete',
+                url: 'index.php?path=payment/mpesa/completetransaction',
             dataType: 'json',
                 cache: false,
+                data: { 
+                        mobile : encodeURIComponent($('#mpesa_phone_number').val()),
+                        order_id: val,
+                        amount: total,
+                        payment_type: radioValue,
+                        payment_method : 'mpesa'
+                        },
                 beforeSend: function() {
                     $(".overlayed").show();
                     $('#button-complete').button('loading');
@@ -935,9 +973,6 @@ function showPayWith() {
 	        		
                                 $('#success_msg').html('Payment Successfull.');
                                 $('#success_msg').show();
-
-                                setTimeout(function(){ location = '<?php echo $continue; ?>'; }, 1500);
-
                         } else {
 
                                 //failed
