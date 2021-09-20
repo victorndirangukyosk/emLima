@@ -168,6 +168,111 @@ class ControllerPaymentMpesa extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function confirmtransaction() {
+        $log = new Log('error.log');
+        $json['processed'] = false;
+
+        if ('mpesa' == $this->request->post['payment_method']) {
+            $this->load->language('payment/mpesa');
+
+            $this->load->model('payment/mpesa');
+
+            $this->load->model('checkout/order');
+
+            $log->write($this->request->post['mobile']);
+            $log->write($this->request->post['order_id']);
+            $log->write($this->request->post['amount']);
+            $log->write($this->request->post['payment_type']);
+            $log->write($this->request->post['payment_method']);
+
+            $amount = 0;
+
+            foreach ($this->request->post['order_id'] as $key => $value) {
+                $order_info = $this->model_checkout_order->getOrder($value);
+                if (count($order_info) > 0) {
+                    $amount += (int) ($order_info['total']);
+                }
+            }
+
+            $this->request->post['pending_order_ids'] = '';
+            if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 1) {
+                $this->request->post['pending_order_ids'] = implode('--', $this->request->post['order_id']);
+            }
+
+            $live = 'true';
+
+            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+
+            //$sta = $this->checkMpesaStatus($order_id,$mpesa);
+
+            $sta = false;
+
+            $log->write('STKPushSimulation confirm');
+            $log->write($sta);
+
+            if (!$sta) {
+                $PartyA = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
+
+                $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+                $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+                $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
+                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
+                //$CallBackURL = 'https://a1c6dda0aaba.ngrok.io/kwikbasket/index.php?path=deliversystem/deliversystem/mpesaOrderStatus';
+
+                $Amount = $amount;
+                //$Amount = 10;
+                $PartyB = $this->config->get('mpesa_business_short_code');
+
+                $PhoneNumber = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
+                $AccountReference = 'GPK'; //$this->config->get('config_name');
+
+                $TransactionDesc = '#' . $this->request->post['pending_order_ids'] . '##' . $this->customer->getId();
+            }
+
+            $Remarks = 'PAYMENT';
+
+            $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
+
+            $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
+
+            // Void the order first
+            $log->write('STKPushSimulation');
+            $log->write($stkPushSimulation);
+
+            $stkPushSimulation = json_decode($stkPushSimulation);
+
+            $json['response'] = $stkPushSimulation;
+            $json['error'] = '';
+            if (isset($json['response']->errorMessage)) {
+                $json['error'] = $json['response']->errorMessage;
+            }
+
+            if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
+
+                $pendingOrdersIds = explode('--', $this->request->post['pending_order_ids']);
+                if (count($pendingOrdersIds)) {
+                    foreach ($pendingOrdersIds as $key => $value) {
+                        $order_info = $this->model_checkout_order->getOrder($value);
+                        $this->model_payment_mpesa->addOrder($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
+                    }
+                }
+                /* foreach ($this->session->data['order_id'] as $order_id) {
+
+                  $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mpesa_order_status_id'));
+                  } */
+
+                $json['processed'] = true;
+            } else {
+                $json['processed'] = false;
+            }
+        } else {
+            $json['processed'] = true;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function complete() {
         $log = new Log('error.log');
         $json['processed'] = false;
@@ -212,96 +317,96 @@ class ControllerPaymentMpesa extends Controller {
             $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
 
             if ($mpesaDetails) {
-                /*foreach ($mpesaDetails as $mpesaDetail) {*/
-                    //echo "<pre>";print_r($mpesaDetail);die;
+                /* foreach ($mpesaDetails as $mpesaDetail) { */
+                //echo "<pre>";print_r($mpesaDetail);die;
 
-                    $BusinessShortCode = $this->config->get('mpesa_business_short_code');
-                    $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+                $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+                $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
 
-                    $checkoutRequestID = $mpesaDetails['checkout_request_id']; //'ws_CO_28032018142406660';
-                    $timestamp = '20' . date('ymdhis');
-                    $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+                $checkoutRequestID = $mpesaDetails['checkout_request_id']; //'ws_CO_28032018142406660';
+                $timestamp = '20' . date('ymdhis');
+                $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
 
-                    $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
+                $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
 
-                    // Void the order first
-                    $log->write('STKPushSimulation');
-                    $log->write($stkPushSimulation);
+                // Void the order first
+                $log->write('STKPushSimulation');
+                $log->write($stkPushSimulation);
 
-                    $stkPushSimulation = json_decode($stkPushSimulation);
-                    $log->write('STKPushSimulation JSON ARRAY');
-                    $log->write($stkPushSimulation);
-                    if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
-                        $json['error'] = $json['error'].' '.$stkPushSimulation->ResultDesc;
-                    }
-                    /* stdClass Object
-                      (
-                      [ResponseCode] => 0
-                      [ResponseDescription] => The service request has been accepted successsfully
-                      [MerchantRequestID] => 12365-2129383-1
-                      [CheckoutRequestID] => ws_CO_28032018142406660
-                      [ResultCode] => 0
-                      [ResultDesc] => The service request is processed successfully.
-                      )
-                     */
+                $stkPushSimulation = json_decode($stkPushSimulation);
+                $log->write('STKPushSimulation JSON ARRAY');
+                $log->write($stkPushSimulation);
+                if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
+                    $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
+                }
+                /* stdClass Object
+                  (
+                  [ResponseCode] => 0
+                  [ResponseDescription] => The service request has been accepted successsfully
+                  [MerchantRequestID] => 12365-2129383-1
+                  [CheckoutRequestID] => ws_CO_28032018142406660
+                  [ResultCode] => 0
+                  [ResultDesc] => The service request is processed successfully.
+                  )
+                 */
 
-                    if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
-                        //success pending to processing
-                        $order_status_id = $this->config->get('mpesa_order_status_id');
+                if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
+                    //success pending to processing
+                    $order_status_id = $this->config->get('mpesa_order_status_id');
 
-                        $log->write('updateMpesaOrderStatus validatex');
+                    $log->write('updateMpesaOrderStatus validatex');
 
-                        $this->load->model('localisation/order_status');
+                    $this->load->model('localisation/order_status');
 
-                        $order_status = $this->model_localisation_order_status->getOrderStatuses();
+                    $order_status = $this->model_localisation_order_status->getOrderStatuses();
 
-                        $dataAddHisory['order_id'] = $order_id;
-                        $dataAddHisory['order_status_id'] = $order_status_id;
-                        $dataAddHisory['notify'] = 0;
-                        $dataAddHisory['append'] = 0;
-                        $dataAddHisory['comment'] = '';
+                    $dataAddHisory['order_id'] = $order_id;
+                    $dataAddHisory['order_status_id'] = $order_status_id;
+                    $dataAddHisory['notify'] = 0;
+                    $dataAddHisory['append'] = 0;
+                    $dataAddHisory['comment'] = '';
 
-                        $url = HTTPS_SERVER;
-                        $api = 'api/order/addHistory';
+                    $url = HTTPS_SERVER;
+                    $api = 'api/order/addHistory';
 
-                        if (isset($api)) {
-                            $url_data = [];
-                            $log->write('if');
-                            foreach ($dataAddHisory as $key => $value) {
-                                if ('path' != $key && 'token' != $key && 'store_id' != $key) {
-                                    $url_data[$key] = $value;
-                                }
+                    if (isset($api)) {
+                        $url_data = [];
+                        $log->write('if');
+                        foreach ($dataAddHisory as $key => $value) {
+                            if ('path' != $key && 'token' != $key && 'store_id' != $key) {
+                                $url_data[$key] = $value;
                             }
-
-                            $curl = curl_init();
-
-                            // Set SSL if required
-                            if ('https' == substr($url, 0, 5)) {
-                                curl_setopt($curl, CURLOPT_PORT, 443);
-                            }
-
-                            curl_setopt($curl, CURLOPT_HEADER, false);
-                            curl_setopt($curl, CURLINFO_HEADER_OUT, true);
-                            curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
-                            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                            curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
-                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                            curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
-
-                            $resp = curl_exec($curl);
-                            $log->write('resp');
-                            $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
-
-                            $log->write($resp);
-                            curl_close($curl);
-
-                            $json['status'] = true;
-
-                            //break;
                         }
+
+                        $curl = curl_init();
+
+                        // Set SSL if required
+                        if ('https' == substr($url, 0, 5)) {
+                            curl_setopt($curl, CURLOPT_PORT, 443);
+                        }
+
+                        curl_setopt($curl, CURLOPT_HEADER, false);
+                        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+                        curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
+                        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+                        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                        curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
+                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+
+                        $resp = curl_exec($curl);
+                        $log->write('resp');
+                        $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+
+                        $log->write($resp);
+                        curl_close($curl);
+
+                        $json['status'] = true;
+
+                        //break;
                     }
-                /*}*/
+                }
+                /* } */
             }
             $this->load->controller('payment/cod/confirmnonkb');
         }

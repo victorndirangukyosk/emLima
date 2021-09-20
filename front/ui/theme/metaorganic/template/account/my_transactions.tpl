@@ -562,7 +562,7 @@ function showPayWith() {
         }
     });
 
-    $(document).delegate('#button-confirm', 'click', function () {
+    /*$(document).delegate('#button-confirm', 'click', function () {
         console.log('PAY OTHER AMOUNT');
         var amount = $("#pesapal_amount").val();
         var radioValue = $("input[name='pay_option']:checked").val();
@@ -600,7 +600,7 @@ function showPayWith() {
                 return false;
             }
         });
-    });
+    });*/
 </script>
 
 <script type="text/javascript">
@@ -703,6 +703,10 @@ function showPayWith() {
         }
     });
     $(document).delegate('input[name="order_id_selected"]', 'click', function () {
+        $('#pay_with').hide();
+        $("#pay-confirm-order").html('');
+        $("#pay-confirm-order").hide();
+        $("#pay-confirm-order-mpesa").hide();
         var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
         console.log(checkedNum);
         var val = [];
@@ -768,7 +772,185 @@ function showPayWith() {
         }
     });
 </script>
+<script type="text/javascript">
 
+        $('#error_msg').hide();
+        $('#success_msg').hide();
+        $('#button-complete').hide();
+        $('#button-retry').hide();
+	
+        $( document ).ready(function() {
+            console.log("referfxx def");
+            if($('#mpesa_phone_number').val().length >= 9) {
+                $( "#button-confirm" ).prop( "disabled", false );
+            } else {
+                $( "#button-confirm" ).prop( "disabled", true );
+            }
+        });
+
+        $('#mpesa_phone_number').on('input', function() { 
+            console.log("referfxx");
+            if($(this).val().length >= 9) {
+                $( "#button-confirm" ).prop( "disabled", false );
+            } else {
+                $( "#button-confirm" ).prop( "disabled", true );
+            }
+        });
+
+        $('#button-confirm,#button-retry').on('click', function() {
+	    
+            $('#loading').show();
+
+            $('#error_msg').hide();
+            
+            var radioValue = $("input[name='pay_option']:checked").val();
+            var total_pending_amount = $("input[name='total_pending_amount']").val();
+            console.log(total_pending_amount);
+            
+            if (radioValue == 'pay_full') {
+                
+            } else if (radioValue == 'pay_selected_order') {
+            var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
+            console.log(checkedNum);
+            var val = [];
+            var amount = [];
+            if (!checkedNum) {
+                $(':checkbox:checked').each(function (i) {
+                    val[i] = $(this).data("id");
+                    amount[i] = $(this).data("amount");
+                });
+                console.log(val);
+                console.log(amount);
+                var total = 0;
+                for (var i = 0; i < amount.length; i++) {
+                    total += amount[i] << 0;
+                }
+                console.log(total);
+            }
+            if (val.length == 0 || amount.length == 0) {
+                $("input:radio").removeAttr("checked");
+                alert('Please select atleast one order!');
+                return false;
+            }
+            }
+
+            if($('#mpesa_phone_number').val().length >= 9) {
+                $.ajax({
+                        type: 'post',
+                        url: 'index.php?path=payment/mpesa/confirmtransaction',
+                        data: { 
+                        mobile : encodeURIComponent($('#mpesa_phone_number').val()),
+                        order_id: val,
+                        amount: total,
+                        payment_type: radioValue,
+                        payment_method : 'mpesa'
+                        },
+                        dataType: 'json',
+                        cache: false,
+                        beforeSend: function() {
+                            $(".overlayed").show();
+                            $('#button-confirm').button('loading');
+                        },
+                        complete: function() {
+                            $(".overlayed").hide();
+                        },      
+                        success: function(json) {
+
+                                console.log(json);
+                                console.log('json mpesa');
+
+                                $('#button-confirm').button('reset');
+                            $('#loading').hide();
+
+                                if(json['processed']) {
+                                        //location = '<?php echo $continue; ?>';
+		        		
+                                        //$('#success_msg').html('A payment request has been sent to the mpesa number '+$('#mpesa_phone_number').val()+'. Please wait for a few seconds then check for your phone for an MPESA PIN entry prompt.');
+
+                                        $('#success_msg').html('A payment request has been sent on your above number. Please make the payment by entering mpesa PIN and click on Confirm Payment button after receiving sms from mpesa');
+		        		
+                                        $('#success_msg').show();
+		        		
+                                        $('#button-complete').show();
+
+                                        console.log('json mpesa1');
+                                        $('#button-confirm').hide();
+                                        $('#button-retry').hide();
+                                        console.log('json mpesa2');
+
+                                } else {
+                                        console.log('json mpesa err');
+                                        console.log(json['error']);
+                                        $('#error_msg').html(json['error']);
+                                        $('#error_msg').show();
+                                }
+		            
+                        },
+                        error: function(json) {
+
+                                console.log('josn mpesa');
+                                console.log(json);
+
+                                $('#error_msg').html(json['responseText']);
+                                $('#error_msg').show();
+                        }
+                    });
+            }
+        });
+
+        $('#button-complete').on('click', function() {
+	    
+            $('#error_msg').hide();
+            $('#success_msg').hide();
+
+        $.ajax({
+                type: 'post',
+                url: 'index.php?path=payment/mpesa/complete',
+            dataType: 'json',
+                cache: false,
+                beforeSend: function() {
+                    $(".overlayed").show();
+                    $('#button-complete').button('loading');
+                },
+                complete: function() {
+                    $(".overlayed").hide();
+                    $('#button-complete').button('reset');
+                },      
+                success: function(json) {
+
+                        console.log(json);
+                        console.log('json mpesa');
+                        if(json['status']) {
+                                //success
+	        		
+                                $('#success_msg').html('Payment Successfull.');
+                                $('#success_msg').show();
+
+                                setTimeout(function(){ location = '<?php echo $continue; ?>'; }, 1500);
+
+                        } else {
+
+                                //failed
+                                //$('#button-confirm').show();
+                                //$('#button-retry').hide();
+                                //$('#button-complete').hide();
+
+                                $('#error_msg').html(json['error']);
+                                $('#error_msg').show();
+
+                                $('#button-complete').hide();
+                                $('#button-retry').show();
+
+                        }
+	            
+                },
+                error: function(json) {
+                        $('#error_msg').html(json['responseText']);
+                        $('#error_msg').show();
+                }
+            });
+        });
+</script>
 <?php if($redirect_coming) { ?>
 <script type="text/javascript">
     $('#save-button').click();
