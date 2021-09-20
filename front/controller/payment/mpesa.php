@@ -259,7 +259,14 @@ class ControllerPaymentMpesa extends Controller {
 
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
 
-                $pendingOrdersIds = explode('--', $this->request->post['pending_order_ids']);
+                if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 1) {
+                    $pendingOrdersIds = explode('--', $this->request->post['pending_order_ids']);
+                }
+
+                if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) == 1) {
+                    $pendingOrdersIds = $this->request->post['order_id'];
+                }
+
                 if (count($pendingOrdersIds)) {
                     foreach ($pendingOrdersIds as $key => $value) {
                         $order_info = $this->model_checkout_order->getOrder($value);
