@@ -61,64 +61,6 @@ class ControllerPaymentInterswitch extends Controller {
         }
     }
 
-    public function interswitchtransaction() {
-
-        $this->load->language('payment/pesapal');
-        $this->load->model('setting/setting');
-        $this->load->model('payment/interswitch');
-        $this->load->model('checkout/order');
-        $this->load->model('account/customer');
-
-        $order_ids = array();
-        foreach ($this->request->post['order_id'] as $key => $value) {
-            /* FOR KWIKBASKET ORDERS */
-            $order_ids[] = $value;
-            $order_id = $value;
-            if ($order_id != NULL) {
-                $this->model_checkout_order->UpdateParentApproval($order_id);
-            }
-        }
-        $order_ids_string = NULL;
-        if (is_array($order_ids) && count($order_ids) > 0) {
-            $order_ids_string = implode('-', $order_ids);
-            $log = new Log('error.log');
-            $log->write('order_ids');
-            $log->write($order_ids_string);
-            $log->write($order_ids);
-            $log->write($order_id);
-            $log->write('order_ids');
-        }
-
-
-        $order_info = $this->model_checkout_order->getOrder($order_id);
-        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-
-        if (count($order_info) > 0) {
-            $amount = (int) ($order_info['total']);
-        }
-
-        $data['customer_number'] = $this->customer->getTelephone();
-
-        $interswitch_creds = $this->model_setting_setting->getSetting('interswitch', 0);
-        $data['interswitch_merchant_code'] = $interswitch_creds['interswitch_merchant_code'];
-        $data['interswitch_pay_item_id'] = $interswitch_creds['interswitch_pay_item_id'];
-        $data['interswitch_data_ref'] = base64_encode($order_info['customer_id'] . '_' . $order_id . '_' . $amount . '_' . date("Y-m-d h:i:s"));
-        $data['interswitch_customer_id'] = $customer_info['customer_id'];
-        $data['interswitch_customer_name'] = $customer_info['firstname'] . ' ' . $customer_info['lastname'];
-        //$data['interswitch_amount'] = $amount * 100;
-        //$data['interswitch_amount'] = $this->cart->getTotal() * 100;
-        /* FOR KWIKBASKET ORDERS */
-        $data['interswitch_amount'] = $amount * 100;
-        $log = new Log('error.log');
-        $log->write($interswitch_creds['interswitch_merchant_code']);
-
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/interswitch.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/payment/interswitch.tpl', $data);
-        } else {
-            return $this->load->view('default/template/payment/interswitch.tpl', $data);
-        }
-    }
-
     public function InterswitchPaymentResponse() {
         $json = [];
         $log = new Log('error.log');
