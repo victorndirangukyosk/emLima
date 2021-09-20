@@ -819,7 +819,11 @@ function showPayWith() {
             
             if (radioValue == 'pay_full') {
                 
+            var val = $("input[name=pending_order_id]").val();
+            var total = $("input[name=total_pending_amount]").val();
+            
             } else if (radioValue == 'pay_selected_order') {
+                
             var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
             console.log(checkedNum);
             var val = [];
@@ -919,7 +923,11 @@ function showPayWith() {
             
             if (radioValue == 'pay_full') {
                 
+            var val = $("input[name=pending_order_id]").val();
+            var total = $("input[name=total_pending_amount]").val();
+            
             } else if (radioValue == 'pay_selected_order') {
+                
             var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
             console.log(checkedNum);
             var val = [];
