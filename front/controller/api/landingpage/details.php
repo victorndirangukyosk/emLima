@@ -131,7 +131,7 @@ class ControllerApiLandingpagedetails extends Controller
         }
     }
 
-    public function addFarmers() {//account/farmerregister/register
+    public function addNewFarmer() {//account/farmerregister/register
         // above metho in use , omewhere
         $json = [];
         $json['status'] = false;
@@ -147,7 +147,7 @@ class ControllerApiLandingpagedetails extends Controller
                 $farmer_info['firstname'] = $this->request->post['first_name'];
                 $farmer_info['lastname'] = $this->request->post['last_name'];
                 $farmer_info['store_name'] = 'KwikBasket';
-                $farmer_info['order_link'] = HTTPS_SERVER . 'index.php?path=common/farmer';
+                // $farmer_info['order_link'] = HTTPS_SERVER . 'index.php?path=common/farmer';
                 $farmer_info['system_name'] = 'KwikBasket';
     
                 $log->write('SMS SENDING');
@@ -278,7 +278,7 @@ class ControllerApiLandingpagedetails extends Controller
 
         $this->request->post['telephone'] = preg_replace('/[^0-9]/', '', $this->request->post['telephone']);
 
-        //echo "<pre>";print_r($this->request->post);die;
+        // echo "<pre>";print_r($this->request->post);die;
 
         if ($this->model_account_farmer->getTotalfarmersByPhone($this->request->post['telephone'])) {
             $this->error['telephone_exists'] = $this->language->get('error_telephone_exists');
