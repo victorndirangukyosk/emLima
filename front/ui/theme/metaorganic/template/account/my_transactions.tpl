@@ -546,6 +546,9 @@
     }
     
 function LoadInterSwitch() {
+$("#pay-confirm-order").html('');
+$("#pay-confirm-order").hide();
+$("#pay-confirm-order-mpesa").hide();
 submitHandler(event);
 }
 </script>
