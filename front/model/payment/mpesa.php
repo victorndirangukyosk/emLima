@@ -81,7 +81,7 @@ class ModelPaymentMpesa extends Model {
         $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "mpesa_order` WHERE `order_id` = '" . $this->db->escape($order_id) . "'");
         $log = new Log('error.log');
         $log->write('result');
-        $log->write($result);
+        $log->write($result->rows);
         $log->write('result');
         if (count($result->rows) > 0) {
             $res = $result->rows[$result->num_rows - 1];
