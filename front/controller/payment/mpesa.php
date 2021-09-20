@@ -187,12 +187,18 @@ class ControllerPaymentMpesa extends Controller {
 
             $amount = 0;
 
+            if ($this->request->post['payment_type'] == 'pay_full') {
+                $this->request->post['order_id'] = explode('--', $this->request->post['order_id']);
+            }
+            $log->write($this->request->post['order_id']);
+
             foreach ($this->request->post['order_id'] as $key => $value) {
                 $order_info = $this->model_checkout_order->getOrder($value);
                 if (count($order_info) > 0) {
                     $amount += (int) ($order_info['total']);
                 }
             }
+            $log->write($amount);
 
             $this->request->post['pending_order_ids'] = '';
             if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 1) {
@@ -432,7 +438,14 @@ class ControllerPaymentMpesa extends Controller {
             $this->load->model('payment/mpesa');
 
             $this->load->model('checkout/order');
+
             $amount = 0;
+
+            if ($this->request->post['payment_type'] == 'pay_full') {
+                $this->request->post['order_id'] = explode('--', $this->request->post['order_id']);
+            }
+            $log->write($this->request->post['order_id']);
+
             foreach ($this->request->post['order_id'] as $key => $value) {
                 $order_info = $this->model_checkout_order->getOrder($value);
                 if (count($order_info) > 0) {
