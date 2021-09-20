@@ -52,7 +52,7 @@ class ControllerApiLandingpagedetails extends Controller
         }
     }
 
-    public function addFarmer() {
+    public function addFarmer() {//check thi metho account/farmerregister/register
         $json = [];
         try{
             $this->load->model('account/farmer');
