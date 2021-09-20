@@ -187,12 +187,18 @@ class ControllerPaymentMpesa extends Controller {
 
             $amount = 0;
 
+            if ($this->request->post['payment_type'] == 'pay_full') {
+                $this->request->post['order_id'] = explode('--', $this->request->post['order_id']);
+            }
+            $log->write($this->request->post['order_id']);
+
             foreach ($this->request->post['order_id'] as $key => $value) {
                 $order_info = $this->model_checkout_order->getOrder($value);
                 if (count($order_info) > 0) {
                     $amount += (int) ($order_info['total']);
                 }
             }
+            $log->write($amount);
 
             $this->request->post['pending_order_ids'] = '';
             if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 1) {
@@ -253,7 +259,14 @@ class ControllerPaymentMpesa extends Controller {
 
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
 
-                $pendingOrdersIds = explode('--', $this->request->post['pending_order_ids']);
+                if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 1) {
+                    $pendingOrdersIds = explode('--', $this->request->post['pending_order_ids']);
+                }
+
+                if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) == 1) {
+                    $pendingOrdersIds = $this->request->post['order_id'];
+                }
+
                 if (count($pendingOrdersIds)) {
                     foreach ($pendingOrdersIds as $key => $value) {
                         $order_info = $this->model_checkout_order->getOrder($value);
@@ -433,6 +446,13 @@ class ControllerPaymentMpesa extends Controller {
 
             $this->load->model('checkout/order');
 
+            $amount = 0;
+
+            if ($this->request->post['payment_type'] == 'pay_full') {
+                $this->request->post['order_id'] = explode('--', $this->request->post['order_id']);
+            }
+            $log->write($this->request->post['order_id']);
+
             foreach ($this->request->post['order_id'] as $key => $value) {
                 $order_info = $this->model_checkout_order->getOrder($value);
                 if (count($order_info) > 0) {
@@ -459,6 +479,10 @@ class ControllerPaymentMpesa extends Controller {
 
             //$order_id = 2;
             foreach ($this->request->post['order_id'] as $key => $value) {
+                $log->write('ORDER ID');
+                $log->write($value);
+                $log->write($this->request->post['order_id']);
+                $log->write('ORDER ID');
                 $order_id = $value;
                 $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderId($order_id);
 

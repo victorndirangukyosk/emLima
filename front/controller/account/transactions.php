@@ -251,6 +251,7 @@ class Controlleraccounttransactions extends Controller {
         //echo "<pre>";print_r($data);die;
         $data['total_pending_amount'] = $totalPendingAmount;
         $data['pending_order_id'] = implode('--', $data['pending_order_id']);
+        $data['payment_interswitch'] = $this->load->controller('payment/interswitch');
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/my_transactions.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/my_transactions.tpl', $data));
         } else {
@@ -314,9 +315,8 @@ class Controlleraccounttransactions extends Controller {
                     } elseif (!in_array($order['status'], $statusCancelledFilter)) {
                         if (is_array($order) && array_key_exists('value', $order)) {
                             $order['total_currency'] = $this->currency->format($order['value']);
-                            $order['pending_amount']=$order['value']-$order['amount_partialy_paid'];
-                            $order['pending_amount_currency']=$this->currency->format($order['pending_amount']);
-                        
+                            $order['pending_amount'] = $order['value'] - $order['amount_partialy_paid'];
+                            $order['pending_amount_currency'] = $this->currency->format($order['pending_amount']);
                         }
                         /* $log = new Log('error.log');
                           $log->write('NON NUMERIC');
@@ -324,10 +324,10 @@ class Controlleraccounttransactions extends Controller {
                           $log->write($order['total']);
                           $log->write('NON NUMERIC'); */
 
-                        if( $order['pending_amount']>0)
-                        $totalPendingAmount = $totalPendingAmount +  $order['pending_amount'];
+                        if ($order['pending_amount'] > 0)
+                            $totalPendingAmount = $totalPendingAmount + $order['pending_amount'];
                         else
-                        $totalPendingAmount = $totalPendingAmount +  $order['value'];
+                            $totalPendingAmount = $totalPendingAmount + $order['value'];
 
                         //$totalPendingAmount = $this->currency->format($totalPendingAmount);
                         $data['pending_order_id'][] = $order['order_id'];
@@ -459,13 +459,11 @@ class Controlleraccounttransactions extends Controller {
             $log->write($order_info);
             $log->write('Pesapal Order Info');
 
-            
             if (count($order_info) > 0) {
-                if($order_info['amount_partialy_paid']>0)
-                $amount = (int) ($order_info['total']-$order_info['amount_partialy_paid']);
+                if ($order_info['amount_partialy_paid'] > 0)
+                    $amount = (int) ($order_info['total'] - $order_info['amount_partialy_paid']);
                 else
-                $amount = (int) ($order_info['total']);
-
+                    $amount = (int) ($order_info['total']);
             }
 
             $this->model_checkout_order->UpdatePaymentMethod($order_id, 'PesaPal', 'pesapal');
