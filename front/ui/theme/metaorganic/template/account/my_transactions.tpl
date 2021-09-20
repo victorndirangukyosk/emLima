@@ -161,8 +161,12 @@
                 </div>
                 <div class="col-md-3">
                     <button type="button" id="mpesa-button-confirm" data-toggle="collapse" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button>
+                    
+                    <button type="button" id="button-retry" class="btn btn-default"> Retry</button>
+
+                    <button type="button" id="button-complete" data-toggle="collapse" data-loading-text="checking payment..." class="btn btn-default">Confirm Payment</button>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-12">
                     <div class="alert alert-danger" id="error_msg" style="margin-bottom: 7px;">
                     </div>
                     <div class="alert alert-success" style="font-size: 14px;" id="success_msg" style="margin-bottom: 7px;">
