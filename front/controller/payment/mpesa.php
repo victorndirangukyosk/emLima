@@ -472,6 +472,10 @@ class ControllerPaymentMpesa extends Controller {
 
             //$order_id = 2;
             foreach ($this->request->post['order_id'] as $key => $value) {
+                $log->write('ORDER ID');
+                $log->write($value);
+                $log->write($this->request->post['order_id']);
+                $log->write('ORDER ID');
                 $order_id = $value;
                 $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderId($order_id);
 
