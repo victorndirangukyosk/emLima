@@ -16,6 +16,7 @@ class ControllerApiLandingpagedetails extends Controller
         $json['FarmersCount']=$this->model_sale_order->getFarmersCount()??0;
         $json['Login']=$this->url->link('account/login/customer','','SSL');
         $json['Registraion']=$this->url->link('account/login/newCustomer','','SSL');
+        $json['FarmerRegistraion']=$this->url->link('account/login/farmer','','SSL');
 
         }
         catch(Exception $ex)
