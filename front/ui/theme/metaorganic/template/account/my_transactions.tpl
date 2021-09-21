@@ -95,7 +95,7 @@
         <div class="col-md-9" id="payment_options">
             Payment Options
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="radio">
                         <label><input class="option_pay" onchange="showPayWith()"  value="pay_full" type="radio" name="pay_option">Pay Full</label>
                     </div>
@@ -103,7 +103,7 @@
                 <!--<div class="radio">
                     <label><input type="radio" class="option_pay" onchange="showPayWith()" value="pay_other" name="pay_option">Pay Other Amount</label>
                 </div>-->
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="radio">
                         <label><input type="radio" class="option_pay" onchange="showPayWith()" value="pay_selected_order" name="pay_option">Pay Selected Orders</label>
                     </div>
@@ -114,17 +114,17 @@
         <div class="col-md-9" id="pay_with" style="display:none;">
             Pay With
             <div class="row">
-                <div class="col-md-4">
+                <!--<div class="col-md-4">
                     <div class="radio">
                         <label><input class="option_pay" onchange="payOptionSelected()" type="radio" name="pay_with">PesaPal</label>
                     </div>
-                </div>
-                <div class="col-md-4">
+                </div>-->
+                <div class="col-md-6">
                     <div class="radio">
                         <label><input class="option_pay" onchange="payWithmPesa()" type="radio" name="pay_with">mPesa Online</label>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="radio">
                         <label><input class="option_pay" onchange="LoadInterSwitch()" type="radio" name="pay_with">Interswitch</label>
                     </div>
