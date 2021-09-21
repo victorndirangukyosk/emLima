@@ -374,7 +374,11 @@
             }
         });
     }
-
+    
+    function changeOrderIdForPays(orderId, amount_to_pay) {
+    $('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked', true).trigger('change');
+    }
+    
     function payOptionSelected() {
         //total_pending_amount
         $("#pesapal_amount").prop("readonly", false);
@@ -625,7 +629,7 @@ function showPayWith() {
                 tr.append("<td class='amount'>" + displayRecords[i].total_currency + "</td>");
                 tr.append("<td class='amount'>" + displayRecords[i].pending_amount_currency + "</td>");
                 tr.append("<td>" + displayRecords[i].payment_method + "</td>");
-                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPay(" + displayRecords[i].order_id + "," + displayRecords[i].pending_amount + ")'>Pay Now</a></td>");
+                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPays(" + displayRecords[i].order_id + "," + displayRecords[i].pending_amount + ")'>Pay Now</a></td>");
                 $('#emp_body').append(tr);
             }
         }
