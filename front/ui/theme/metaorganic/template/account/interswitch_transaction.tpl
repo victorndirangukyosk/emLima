@@ -37,7 +37,7 @@
         <div class="form-input">
             <label>Mode(TEST or LIVE)</label>
             <input id="param-mode" required="" value="TEST" />
-            <input id="param-url" required="" value="<?=$this->url->link('payment/interswitch/status', '', 'SSL'); ?>"
+            <input id="param-url" required="" value="<?=$this->url->link('account/transactions/interswitchstatus', '', 'SSL'); ?>"
         </div>
 
         <button type="submit">Pay</button>
