@@ -12,11 +12,17 @@ class ModelPaymentCOD extends Model
             $status = true;
         }
 
+        $log = new Log('error.log');
+        $log->write('pyment metho checking');
+        $log->write($total);
+        
         //in case customer experience team apply coupon , then cart total will be 0
-        if($_SESSION["ce_id"] >0 && $total<=0)
+        if($_SESSION["ce_id"] > 0 )
         {
             $status = true;
         }
+        $log->write($status);
+        $log->write('status');
 
         $method_data = [];
 
@@ -28,7 +34,8 @@ class ModelPaymentCOD extends Model
                 'sort_order' => $this->config->get('cod_sort_order'),
             ];
         }
-
+        $log->write('status');
+        $log->write($method_data);
         return $method_data;
     }
 }
