@@ -607,7 +607,7 @@ class Controlleraccounttransactions extends Controller {
             $log->write($order_ids);
             $log->write($order_id);
             $log->write('order_ids');
-            $log->write(base64_encode($this->customer->getId() . '_' . $order_id . '_' . $amount . '_' . date("Y-m-d h:i:s")));
+            $log->write(base64_encode($this->customer->getId() . '_' . $amount . '_' . date("Y-m-d h:i:s")));
         }
 
         $data['customer_number'] = $this->customer->getTelephone();
