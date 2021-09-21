@@ -39,9 +39,10 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
         $results = $this->model_extension_extension->getExtensions('payment');
 
-        echo "<pre>";print_r($results);
+        // echo "<pre>";print_r($results);die;
         $recurring = $this->cart->hasRecurringProducts();
         $log->write($recurring);
+        $log->write('recurring');
 
         foreach ($results as $result) {
             if ($this->config->get($result['code'] . '_status')) {
@@ -49,21 +50,31 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
                 $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
                 $log->write($method);
+                $log->write('method');
 
                 if ($method) {
+                    $log->write('method1');
                     if ($recurring) {
+                    $log->write('method2');
+
                         if (method_exists($this->{'model_payment_' . $result['code']}, 'recurringPayments') && $this->{'model_payment_' . $result['code']}->recurringPayments()) {
                             $method_data[$result['code']] = $method;
+                    $log->write('method3');
+
                         }
                     } else {
                         $method_data[$result['code']] = $method;
+                    $log->write('method5');
+
                     }
                 }
+                $log->write($_SESSION["ce_id"]);
+                $log->write('qqqqqqqqqqqqqqqqqq');
             }
         }
         $sort_order = [];
 
-        echo "<pre>";print_r($method_data);
+        // echo "<pre>";print_r($method_data);die;
 
         foreach ($method_data as $key => $value) {
             $sort_order[$key] = $value['sort_order'];
