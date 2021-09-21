@@ -583,13 +583,19 @@ class Controlleraccounttransactions extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
 
+        if ($this->request->post['payment_type'] == 'pay_full') {
+            $this->request->post['order_id'] = explode('--', $this->request->post['order_id']);
+        }
+
         $order_ids = array();
+        $amount = 0;
         foreach ($this->request->post['order_id'] as $key => $value) {
-            /* FOR KWIKBASKET ORDERS */
             $order_ids[] = $value;
             $order_id = $value;
-            if ($order_id != NULL) {
-                $this->model_checkout_order->UpdateParentApproval($order_id);
+
+            $order_info = $this->model_checkout_order->getOrder($value);
+            if (count($order_info) > 0) {
+                $amount += (int) ($order_info['total']);
             }
         }
         $order_ids_string = NULL;
@@ -601,14 +607,7 @@ class Controlleraccounttransactions extends Controller {
             $log->write($order_ids);
             $log->write($order_id);
             $log->write('order_ids');
-        }
-
-
-        $order_info = $this->model_checkout_order->getOrder($order_id);
-        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-
-        if (count($order_info) > 0) {
-            $amount = (int) ($order_info['total']);
+            $log->write(base64_encode($this->customer->getId() . '_' . $order_id . '_' . $amount . '_' . date("Y-m-d h:i:s")));
         }
 
         $data['customer_number'] = $this->customer->getTelephone();
@@ -616,9 +615,9 @@ class Controlleraccounttransactions extends Controller {
         $interswitch_creds = $this->model_setting_setting->getSetting('interswitch', 0);
         $data['interswitch_merchant_code'] = $interswitch_creds['interswitch_merchant_code'];
         $data['interswitch_pay_item_id'] = $interswitch_creds['interswitch_pay_item_id'];
-        $data['interswitch_data_ref'] = base64_encode($order_info['customer_id'] . '_' . $order_id . '_' . $amount . '_' . date("Y-m-d h:i:s"));
-        $data['interswitch_customer_id'] = $customer_info['customer_id'];
-        $data['interswitch_customer_name'] = $customer_info['firstname'] . ' ' . $customer_info['lastname'];
+        $data['interswitch_data_ref'] = base64_encode($this->customer->getId() . '_' . $amount . '_' . date("Y-m-d h:i:s"));
+        $data['interswitch_customer_id'] = $this->customer->getId();
+        $data['interswitch_customer_name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
         //$data['interswitch_amount'] = $amount * 100;
         //$data['interswitch_amount'] = $this->cart->getTotal() * 100;
         /* FOR KWIKBASKET ORDERS */
@@ -631,6 +630,47 @@ class Controlleraccounttransactions extends Controller {
         } else {
             return $this->response->setOutput($this->load->view('default/template/account/interswitch_transaction.tpl', $data));
         }
+    }
+
+    public function InterswitchPaymentResponse() {
+        $json = [];
+        $log = new Log('error.log');
+        $log->write('interswitch payment response');
+        $log->write($this->request->post['payment_response']);
+        $log->write(base64_decode($this->request->post['payment_response']['txnref']));
+        $txn_ref = base64_decode($this->request->post['payment_response']['txnref']);
+        $txn_refl = explode('_', $txn_ref);
+        $order_id = $txn_refl[1];
+        $customer_id = $txn_refl[0];
+
+        $payment_gateway_description = $this->request->post['payment_response']['desc'];
+        $payment_reference_number = $this->request->post['payment_response']['payRef'];
+        $banking_reference_number = $this->request->post['payment_response']['retRef'];
+        $transaction_reference_number = $this->request->post['payment_response']['txnref'];
+        $approved_amount = $this->request->post['payment_response']['apprAmt'];
+        $payment_gateway_amount = $this->request->post['payment_response']['amount'];
+        $card_number = $this->request->post['payment_response']['cardNum'];
+        $mac = $this->request->post['payment_response']['mac'];
+        $response_code = $this->request->post['payment_response']['resp'];
+        $status = $this->request->post['payment_response']['resp'] == 00 ? 'COMPLETED' : 'FAILED';
+
+        $log->write($customer_id);
+        $log->write($order_id);
+
+        $this->load->language('payment/interswitch');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/interswitch');
+        $this->load->model('payment/interswitch_response');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+
+        $log->write('interswitch payment response');
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function interswitchstatus() {
+        $this->response->redirect($this->url->link('account/transactions'));
     }
 
     public function status() {

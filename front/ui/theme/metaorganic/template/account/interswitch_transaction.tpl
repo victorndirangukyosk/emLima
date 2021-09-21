@@ -37,7 +37,7 @@
         <div class="form-input">
             <label>Mode(TEST or LIVE)</label>
             <input id="param-mode" required="" value="TEST" />
-            <input id="param-url" required="" value="<?=$this->url->link('payment/interswitch/status', '', 'SSL'); ?>"
+            <input id="param-url" required="" value="<?=$this->url->link('account/transactions/interswitchstatus', '', 'SSL'); ?>"
         </div>
 
         <button type="submit">Pay</button>
@@ -90,7 +90,7 @@ function submitHandler(event) {
 function paymentCallback(response) {
 console.log(response);
     $.ajax({
-        url: 'index.php?path=payment/interswitch/InterswitchPaymentResponse',
+        url: 'index.php?path=account/transactions/InterswitchPaymentResponse',
         type: 'post',
         data: {
             payment_response : response
