@@ -1076,7 +1076,6 @@ class ControllerApiCustomerProducts extends Controller {
         $this->load->language('api/products');
 
         $this->load->model('assets/category');
-        $this->load->model('catalog/category');
 
         $this->load->model('assets/product');
 
@@ -1354,7 +1353,7 @@ class ControllerApiCustomerProducts extends Controller {
                         $productNames = array_column($data['products'], 'name');
                         $price = strval($price);
                         $special_price = strval($special_price);
-                        $product_category_data = $this->model_catalog_category->getCategory($result['category_id']);
+                        $product_category_data = $this->model_assets_category->getCategory($result['category_id']);
                         if (false !== array_search($result['name'], $productNames)) {
                             // Add variation to existing product
                             $productIndex = array_search($result['name'], $productNames);
