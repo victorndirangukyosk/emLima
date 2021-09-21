@@ -135,4 +135,36 @@ class ModelPaymentInterswitch extends Model {
         return $result;
     }
 
+    public function AddOrderTransaction($order_id, $payment_reference) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "interswitch_order SET order_id = '" . (int) $order_id . "', payment_reference = '" . $payment_reference . "', created_at = NOW()");
+        return $this->db->getLastId();
+    }
+
+    public function getInterswitchByOrderId($order_id) {
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "interswitch_order` WHERE `order_id` = '" . $this->db->escape($order_id) . "'");
+        $log = new Log('error.log');
+        $log->write('result');
+        $log->write($result->rows);
+        $log->write('result');
+        if (count($result->rows) > 0) {
+            $res = $result->rows[$result->num_rows - 1];
+        }
+        //echo '<pre>';print_r($res);exit;
+        return $res;
+    }
+
+    public function getInterswitchByPaymentReference($payment_reference) {
+        $res = NULL;
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "interswitch_order` WHERE `payment_reference` = '" . $this->db->escape($payment_reference) . "'");
+        $log = new Log('error.log');
+        $log->write('result');
+        $log->write($result->rows);
+        $log->write('result');
+        if (count($result->rows) > 0) {
+            $res = $result->rows;
+        }
+        //echo '<pre>';print_r($res);exit;
+        return $res;
+    }
+
 }
