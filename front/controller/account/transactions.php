@@ -674,8 +674,8 @@ class Controlleraccounttransactions extends Controller {
         $log->write($interswitch_orders);
         $log->write('interswitch_orders');
 
-        foreach ($interswitch_orders as $key => $value) {
-            $order_id = $value;
+        foreach ($interswitch_orders as $interswitch_order) {
+            $order_id = $interswitch_order['order_id'];
 
             $order_info = $this->model_checkout_order->getOrder($order_id);
             $this->model_payment_interswitch_response->Saveresponse($order_info['customer_id'], $order_id, json_encode($this->request->post['payment_response']));
