@@ -13,7 +13,7 @@ class ModelPaymentCOD extends Model
         }
 
         //in case customer experience team apply coupon , then cart total will be 0
-        if($_SESSION["ce_id"] >0 && $total==0)
+        if($_SESSION["ce_id"] >0 && $total<=0)
         {
             $status = true;
         }
