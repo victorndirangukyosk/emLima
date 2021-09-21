@@ -29,8 +29,6 @@ class ControllerCheckoutPaymentMethod extends Controller {
                 $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
             }
         }
-        $log = new Log('error.log');
-        $log->write('pyment metho checking');
 
         // Payment Methods
         $method_data = [];
@@ -39,16 +37,14 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
         $results = $this->model_extension_extension->getExtensions('payment');
 
-        echo "<pre>";print_r($results);
+        //echo "<pre>";print_r($results);die;
         $recurring = $this->cart->hasRecurringProducts();
-        $log->write($recurring);
 
         foreach ($results as $result) {
             if ($this->config->get($result['code'] . '_status')) {
                 $this->load->model('payment/' . $result['code']);
 
                 $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
-                $log->write($method);
 
                 if ($method) {
                     if ($recurring) {
@@ -63,7 +59,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
         }
         $sort_order = [];
 
-        echo "<pre>";print_r($method_data);
+        //echo "<pre>";print_r($method_data);die;
 
         foreach ($method_data as $key => $value) {
             $sort_order[$key] = $value['sort_order'];
