@@ -753,6 +753,10 @@ class ControllerAccountLogin extends Controller {
 
                 // maintain session to identify as admin login
                 $this->session->data['adminlogin'] = 1;
+                // maintain session to identify admin logged user group
+                if (!empty($this->request->get['ce_id'])) {
+                $this->session->data['ce_id'] = $this->request->get['ce_id'];
+                }
                 //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
                 //REDIRECTING TO HOME PAGE
                 $this->response->redirect('/');
