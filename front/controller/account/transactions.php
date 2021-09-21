@@ -615,7 +615,7 @@ class Controlleraccounttransactions extends Controller {
         $interswitch_creds = $this->model_setting_setting->getSetting('interswitch', 0);
         $data['interswitch_merchant_code'] = $interswitch_creds['interswitch_merchant_code'];
         $data['interswitch_pay_item_id'] = $interswitch_creds['interswitch_pay_item_id'];
-        $data['interswitch_data_ref'] = base64_encode($this->customer->getId() . '_' . $order_id . '_' . $amount . '_' . date("Y-m-d h:i:s"));
+        $data['interswitch_data_ref'] = base64_encode($this->customer->getId() . '_' . $amount . '_' . date("Y-m-d h:i:s"));
         $data['interswitch_customer_id'] = $this->customer->getId();
         $data['interswitch_customer_name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
         //$data['interswitch_amount'] = $amount * 100;
