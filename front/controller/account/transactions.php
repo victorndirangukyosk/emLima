@@ -600,6 +600,7 @@ class Controlleraccounttransactions extends Controller {
         }
 
         foreach ($this->request->post['order_id'] as $key => $value) {
+            $order_info = $this->model_checkout_order->getOrder($value);
             $interswitch_data_ref = base64_encode($this->customer->getId() . '_' . $amount . '_' . date("Y-m-d h:i:s"));
             $this->model_payment_interswitch->AddOrderTransaction($order_info['order_id'], $interswitch_data_ref);
         }
@@ -676,6 +677,10 @@ class Controlleraccounttransactions extends Controller {
 
         foreach ($interswitch_orders as $interswitch_order) {
             $order_id = $interswitch_order['order_id'];
+
+            $log->write('interswitch_orders_loop');
+            $log->write($order_id);
+            $log->write('interswitch_orders_loop');
 
             $order_info = $this->model_checkout_order->getOrder($order_id);
             $this->model_payment_interswitch_response->Saveresponse($order_info['customer_id'], $order_id, json_encode($this->request->post['payment_response']));
