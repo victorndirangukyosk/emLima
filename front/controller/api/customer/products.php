@@ -1076,6 +1076,7 @@ class ControllerApiCustomerProducts extends Controller {
         $this->load->language('api/products');
 
         $this->load->model('assets/category');
+        $this->load->model('catalog/category');
 
         $this->load->model('assets/product');
 
