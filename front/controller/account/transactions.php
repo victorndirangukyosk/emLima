@@ -632,6 +632,10 @@ class Controlleraccounttransactions extends Controller {
         }
     }
 
+    public function interswitchstatus() {
+        $this->response->redirect($this->url->link('account/transactions'));
+    }
+
     public function status() {
         $log = new Log('error.log');
 
