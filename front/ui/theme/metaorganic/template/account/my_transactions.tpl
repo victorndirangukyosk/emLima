@@ -376,7 +376,16 @@
     }
     
     function changeOrderIdForPays(orderId, amount_to_pay) {
+    if($('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked') == false) {
     $('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked', true).trigger('change');
+    return false;
+    }
+    
+    if($('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked') == true) {  
+    $('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked', false).trigger('change');
+    return false;
+    }
+    
     }
     
     function payOptionSelected() {
