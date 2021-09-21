@@ -632,6 +632,43 @@ class Controlleraccounttransactions extends Controller {
         }
     }
 
+    public function InterswitchPaymentResponse() {
+        $json = [];
+        $log = new Log('error.log');
+        $log->write('interswitch payment response');
+        $log->write($this->request->post['payment_response']);
+        $log->write(base64_decode($this->request->post['payment_response']['txnref']));
+        $txn_ref = base64_decode($this->request->post['payment_response']['txnref']);
+        $txn_refl = explode('_', $txn_ref);
+        $order_id = $txn_refl[1];
+        $customer_id = $txn_refl[0];
+
+        $payment_gateway_description = $this->request->post['payment_response']['desc'];
+        $payment_reference_number = $this->request->post['payment_response']['payRef'];
+        $banking_reference_number = $this->request->post['payment_response']['retRef'];
+        $transaction_reference_number = $this->request->post['payment_response']['txnref'];
+        $approved_amount = $this->request->post['payment_response']['apprAmt'];
+        $payment_gateway_amount = $this->request->post['payment_response']['amount'];
+        $card_number = $this->request->post['payment_response']['cardNum'];
+        $mac = $this->request->post['payment_response']['mac'];
+        $response_code = $this->request->post['payment_response']['resp'];
+        $status = $this->request->post['payment_response']['resp'] == 00 ? 'COMPLETED' : 'FAILED';
+
+        $log->write($customer_id);
+        $log->write($order_id);
+
+        $this->load->language('payment/interswitch');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/interswitch');
+        $this->load->model('payment/interswitch_response');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+
+        $log->write('interswitch payment response');
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function interswitchstatus() {
         $this->response->redirect($this->url->link('account/transactions'));
     }

@@ -90,7 +90,7 @@ function submitHandler(event) {
 function paymentCallback(response) {
 console.log(response);
     $.ajax({
-        url: 'index.php?path=payment/interswitch/InterswitchPaymentResponse',
+        url: 'index.php?path=account/transactions/InterswitchPaymentResponse',
         type: 'post',
         data: {
             payment_response : response
