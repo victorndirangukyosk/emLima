@@ -95,7 +95,7 @@
         <div class="col-md-9" id="payment_options">
             Payment Options
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="radio">
                         <label><input class="option_pay" onchange="showPayWith()"  value="pay_full" type="radio" name="pay_option">Pay Full</label>
                     </div>
@@ -103,7 +103,7 @@
                 <!--<div class="radio">
                     <label><input type="radio" class="option_pay" onchange="showPayWith()" value="pay_other" name="pay_option">Pay Other Amount</label>
                 </div>-->
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="radio">
                         <label><input type="radio" class="option_pay" onchange="showPayWith()" value="pay_selected_order" name="pay_option">Pay Selected Orders</label>
                     </div>
@@ -114,19 +114,19 @@
         <div class="col-md-9" id="pay_with" style="display:none;">
             Pay With
             <div class="row">
-                <div class="col-md-4">
+                <!--<div class="col-md-4">
                     <div class="radio">
                         <label><input class="option_pay" onchange="payOptionSelected()" type="radio" name="pay_with">PesaPal</label>
                     </div>
-                </div>
-                <div class="col-md-4">
+                </div>-->
+                <div class="col-md-6">
                     <div class="radio">
                         <label><input class="option_pay" onchange="payWithmPesa()" type="radio" name="pay_with">mPesa Online</label>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="radio">
-                        <label><input class="option_pay" onchange="payWithInterswitch()" type="radio" name="pay_with">Interswitch</label>
+                        <label><input class="option_pay" onchange="LoadInterSwitch()" type="radio" name="pay_with">Interswitch</label>
                     </div>
                 </div>
             </div>
@@ -174,6 +174,9 @@
                 </div>    
             </div>
             <!--MPESA REMOVED FROM HERE-->
+        </div>
+        
+        <div id="pay-confirm-order-interswitch" class="col-md-9 confirm_order_class" style="display:none; padding:35px;">
         </div>
     </div>                        
 </div>
@@ -371,7 +374,20 @@
             }
         });
     }
-
+    
+    function changeOrderIdForPays(orderId, amount_to_pay) {
+    if($('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked') == false) {
+    $('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked', true).trigger('change');
+    return false;
+    }
+    
+    if($('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked') == true) {  
+    $('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked', false).trigger('change');
+    return false;
+    }
+    
+    }
+    
     function payOptionSelected() {
         //total_pending_amount
         $("#pesapal_amount").prop("readonly", false);
@@ -479,10 +495,79 @@
     }
     
     function payWithInterswitch() {
+            var radioValue = $("input[name='pay_option']:checked").val();
+            var total_pending_amount = $("input[name='total_pending_amount']").val();
+            console.log(total_pending_amount);
+            
+            if (radioValue == 'pay_full') {
+                
+            var val = $("input[name=pending_order_id]").val();
+            var total = $("input[name=total_pending_amount]").val();
+            
+            } else if (radioValue == 'pay_selected_order') {
+                
+            var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
+            console.log(checkedNum);
+            var val = [];
+            var amount = [];
+            if (!checkedNum) {
+                $(':checkbox:checked').each(function (i) {
+                    val[i] = $(this).data("id");
+                    amount[i] = $(this).data("amount");
+                });
+                console.log(val);
+                console.log(amount);
+                var total = 0;
+                for (var i = 0; i < amount.length; i++) {
+                    total += amount[i] << 0;
+                }
+                console.log(total);
+            }
+            if (val.length == 0 || amount.length == 0) {
+                $("input:radio").removeAttr("checked");
+                alert('Please select atleast one order!');
+                return false;
+            }
+            }    
+            
+            $.ajax({
+                url: 'index.php?path=account/transactions/interswitch',
+                type: 'post',
+                data: {
+                    order_id: val,
+                    amount: total,
+                    payment_type: radioValue
+                },
+                dataType: 'html',
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                $('#pay-confirm-order-interswitch').html('Loading Please Wait....');
+                },
+                complete: function () {
+                },
+                success: function (html) {
+                    console.log(html);
+                    $('#pay-confirm-order-interswitch').html(html);
+                    return true;
+                    //window.location = json.redirect;
+                }, error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    return false;
+                }
+            });
     }
+    
+function LoadInterSwitch() {
+$("#pay-confirm-order").html('');
+$("#pay-confirm-order").hide();
+$("#pay-confirm-order-mpesa").hide();
+submitHandler(event);
+}
 </script>
 <script type="text/javascript">
 function showPayWith() {
+    payWithInterswitch();
     $('#pay-confirm-order').html('');
     $('#pay-confirm-order-mpesa').hide();
     $('input[name="pay_with"]:checked').removeAttr('checked');
@@ -553,7 +638,7 @@ function showPayWith() {
                 tr.append("<td class='amount'>" + displayRecords[i].total_currency + "</td>");
                 tr.append("<td class='amount'>" + displayRecords[i].pending_amount_currency + "</td>");
                 tr.append("<td>" + displayRecords[i].payment_method + "</td>");
-                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPay(" + displayRecords[i].order_id + "," + displayRecords[i].pending_amount + ")'>Pay Now</a></td>");
+                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPays(" + displayRecords[i].order_id + "," + displayRecords[i].pending_amount + ")'>Pay Now</a></td>");
                 $('#emp_body').append(tr);
             }
         }

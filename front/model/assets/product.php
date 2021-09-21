@@ -2556,7 +2556,7 @@ class ModelAssetsProduct extends Model {
 
         //$store_id = $data['store_id'];
 
-        $this->db->select('product_to_store.*,product.*,product_description.*', false);
+        $this->db->select('product_to_store.*,product.*,product_description.*,product_to_category.category_id', false);
         $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
         $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
         $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
