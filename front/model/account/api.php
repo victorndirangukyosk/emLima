@@ -345,7 +345,7 @@ class ModelAccountApi extends Model
         }
 
 
-        //echo "<pre>";print_r($this->error);die;
+        // echo "<pre>";print_r($this->request->post['password']);die;
         return !$this->error;
     }
 
@@ -363,7 +363,7 @@ class ModelAccountApi extends Model
 
         $log = new Log('error.log');
 
-        //echo "<pre>";print_r($this->request->post);die;
+        //  echo "<pre>";print_r($this->request->post);die;
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->signup_validate()) {
             $this->load->model('account/customer');
 
@@ -957,7 +957,7 @@ class ModelAccountApi extends Model
                 
             }
 
-    else{
+            else{
 
             if (false == strpos($this->request->post['telephone'], '#') || isset($this->request->post['telephone'])) {
 
@@ -1044,14 +1044,14 @@ class ModelAccountApi extends Model
                 }
 
 
-        }
-    }
+             }
+            }
 
-        foreach ($this->error as $key => $value) {
-            $data['errors'][] = ['type' => $key, 'body' => $value];
-        }
+                    foreach ($this->error as $key => $value) {
+                        $data['errors'][] = ['type' => $key, 'body' => $value];
+                    }
 
-        return $data;
+                    return $data;
     }
 
     public function register_verify_user_otp()
@@ -1169,6 +1169,8 @@ class ModelAccountApi extends Model
         $this->request->post['telephone'] = preg_replace('/[^0-9]/', '', $this->request->post['telephone']);
 
         $this->request->post['phone'] = $this->request->post['telephone'];
+        $this->request->post['password'] = $this->generatePassword();
+
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->signup_validate()) {
             $this->load->model('account/customer');
 
@@ -1180,15 +1182,14 @@ class ModelAccountApi extends Model
                     } else {
                         $this->request->post['dob'] = null;
                     }
-                    $this->request->post['source'] = 'WEB';
+                    $this->request->post['source'] = 'WEB_ERP';
                     $this->request->post['status'] = 1;
-                    $this->request->post['password'] = $this->generatePassword();
                     // echo "<pre>";print_r($this->request->post);die;
                     // $accountmanagerid = NULL;
                     // $accountmanagerid =$this->request->post['accountmanagerid'];
                     // $log->write('accountmanagerid from API');
                     // $log->write($accountmanagerid);
-                    $customer_id = $this->model_account_customer->addCustomerFromERP($this->request->post,false,true);
+                      $customer_id = $this->model_account_customer->addCustomerFromERP($this->request->post,false,true);
                         if($customer_id>0)
                     // Clear any previous login attempts for unregistered accounts.
                     $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
@@ -1202,8 +1203,8 @@ class ModelAccountApi extends Model
                         
                       #region SMS and mail sending
                          try{
-                        $sms_message = $this->emailtemplate->getSmsMessage('New Customer Password', 'Customer_18', $maildata);
-
+                        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'Customer_18', $maildata);
+                            //  echo "<pre>";print_r($sms_message);die;
                             $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
                             $log->write('welcome text send to phone number '.$this->request->post['phone']);
                              
@@ -1214,10 +1215,11 @@ class ModelAccountApi extends Model
                            } 
 
                         $data['status'] = true;
+                        $data['customer_id'] = $customer_id;
                          
                            try{
-                               $subject = $this->emailtemplate->getSubject('New Customer Password', 'Customer_18', $maildata);
-                            $message = $this->emailtemplate->getMessage('New Customer Password', 'Customer_18', $maildata);
+                               $subject = $this->emailtemplate->getSubject('Customer', 'Customer_18', $maildata);
+                            $message = $this->emailtemplate->getMessage('Customer', 'Customer_18', $maildata);
 
                             $mail = new mail($this->config->get('config_mail'));
                             $mail->setTo($this->request->post['email']);
@@ -1226,6 +1228,8 @@ class ModelAccountApi extends Model
                             $mail->setSender($this->config->get('config_name'));
                             $mail->setHtml($message);
                             $mail->send();
+                            $log->write('sending welcome text to email'.$this->request->post['email'].' - '.$ex);
+
                            }
                            catch(exception $ex)
                            {
