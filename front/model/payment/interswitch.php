@@ -93,6 +93,36 @@ class ModelPaymentInterswitch extends Model {
         //$this->insertOrderTransactionFee($order_id, $order_status_id);
     }
 
+    public function addOrderHistoryTransaction($order_id, $order_status_id, $added_by = '', $added_by_role = '', $present_order_status_id) {
+        $notify = 1;
+        $comment = '';
+
+        if ($present_order_status_id == 9 || $present_order_status_id == 14) {
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+        }
+
+        $order_history = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_history` WHERE `order_id` = '" . $order_id . "' AND order_status_id='" . (int) $order_status_id . "'")->num_rows;
+        $log = new Log('error.log');
+        $log->write('INTERSWITCH ORDER HISTORY');
+        $log->write($order_status_id);
+        $log->write($order_history);
+
+        /* if ($order_history <= 0) { */
+        $log = new Log('error.log');
+        $log->write('INTERSWITCH ORDER HISTORY');
+        $log->write($order_history);
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+        /* } */
+
+        /* if ($order_history > 0) {
+          $log = new Log('error.log');
+          $log->write('INTERSWITCH ORDER HISTORY');
+          $log->write($order_history);
+          $this->db->query('UPDATE `' . DB_PREFIX . "order_history` SET notify = '" . (int) $notify . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+          } */
+        //$this->insertOrderTransactionFee($order_id, $order_status_id);
+    }
+
     public function insertOrderTransactionFee($order_id, $order_status_id) {
         $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_total` WHERE `order_id` = '" . $order_id . "' AND code='sub_total'")->row;
         $order_total = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_total` WHERE `order_id` = '" . $order_id . "' AND code='total'")->row;
