@@ -33,7 +33,17 @@ class ControllerApiLandingpagedetails extends Controller
     }
 
     public function addPartner() {
+
+
+        //         $json = file_get_contents('php://input');
+
+        // // Converts it into a PHP object
+        // $data = json_decode($json);
+        // echo "<pre>";print_r($data->firstname);die;
+
+
         $json = [];
+
         try{
             $this->load->model('information/partners');
             if(empty($this->request->post['firstname']) || empty($this->request->post['lastname'])|| empty($this->request->post['designation'])|| empty($this->request->post['company'])|| empty($this->request->post['email'])|| empty($this->request->post['phone']))
