@@ -1428,4 +1428,10 @@ class ControllerCheckoutCart extends Controller {
         }
     }
 
+    public function clearcartdb() {
+        $log = new Log('error.log');
+        $this->load->model('account/customer');
+        $this->model_account_customer->ClearCart();
+    }
+
 }
