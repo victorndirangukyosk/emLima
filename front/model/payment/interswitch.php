@@ -93,12 +93,12 @@ class ModelPaymentInterswitch extends Model {
         //$this->insertOrderTransactionFee($order_id, $order_status_id);
     }
 
-    public function addOrderHistoryTransaction($order_id, $order_status_id, $added_by = '', $added_by_role = '', $present_order_status_id, $payment_method) {
+    public function addOrderHistoryTransaction($order_id, $order_status_id, $added_by = '', $added_by_role = '', $present_order_status_id, $payment_method, $payment_code) {
         $notify = 1;
         $comment = '';
 
         if (($present_order_status_id == 9 || $present_order_status_id == 14) && ($order_status_id == 1)) {
-            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', payment_method = '" . $payment_method . "', paid = 'Y', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', payment_method = '" . $payment_method . "', payment_code = '" . $payment_code . "', paid = 'Y', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
         }
 
         $order_history = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_history` WHERE `order_id` = '" . $order_id . "' AND order_status_id='" . (int) $order_status_id . "'")->num_rows;
