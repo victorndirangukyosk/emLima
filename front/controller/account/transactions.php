@@ -690,11 +690,11 @@ class Controlleraccounttransactions extends Controller {
 
                 if (00 == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
                     $this->model_payment_interswitch->OrderTransaction($order_id, $payment_reference_number);
-                    $this->model_payment_interswitch->addOrderHistoryTransaction($order_id, $this->config->get('interswitch_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'Interswitch');
+                    $this->model_payment_interswitch->addOrderHistoryTransaction($order_id, $this->config->get('interswitch_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'Interswitch', 'interswitch');
                 }
 
                 if (00 != $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
-                    $this->model_payment_interswitch->addOrderHistoryTransaction($order_id, $this->config->get('interswitch_failed_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'Interswitch');
+                    $this->model_payment_interswitch->addOrderHistoryTransaction($order_id, $this->config->get('interswitch_failed_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'Interswitch', 'interswitch');
                 }
             }
         }
