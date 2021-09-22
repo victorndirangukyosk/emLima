@@ -72,7 +72,8 @@ class ModelPaymentInterswitch extends Model {
     public function addOrderHistory($order_id, $order_status_id, $added_by = '', $added_by_role = '') {
         $notify = 1;
         $comment = '';
-        $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+        $paid = $order_status_id == $this->config->get('interswitch_order_status_id') ? 'Y' : 'N';
+        $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', paid = '" . $paid . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
         $order_history = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_history` WHERE `order_id` = '" . $order_id . "' AND order_status_id='" . (int) $order_status_id . "'")->num_rows;
         $log = new Log('error.log');
         $log->write('INTERSWITCH ORDER HISTORY');
