@@ -1311,4 +1311,18 @@ class ModelAccountCustomer extends Model {
         }
     }
 
+    public function ClearCart() {
+        $query = $this->db->query('DELETE FROM ' . DB_PREFIX . "cart WHERE customer_id='" . $this->customer->getId() . "'");
+    }
+
+    public function getDBCart() {
+        $customer_cart_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "cart WHERE customer_id = '" . (int) $this->customer->getId() . "'");
+        $cart_db_data = $customer_cart_info->rows;
+        if ($customer_cart_info->num_rows > 0 && is_array($cart_db_data) && count($cart_db_data) > 0) {
+            foreach ($cart_db_data as $cart_db_dat) {
+                $this->cart->add($cart_db_dat['product_store_id'], $cart_db_dat['quantity'], [], $cart_db_dat, $cart_db_dat['recurring_id'], $cart_db_dat['store_id'], $cart_db_dat['store_product_variation_id'], $cart_db_dat['product_type'], $cart_db_dat['product_note'], $cart_db_dat['produce_type']);
+            }
+        }
+    }
+
 }
