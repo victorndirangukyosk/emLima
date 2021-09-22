@@ -1292,7 +1292,7 @@ class ModelAccountCustomer extends Model {
         return $customer_id;
     }
 
-    public function functionName($product_id, $product_store_id, $quantity) {
+    public function AddToCart($product_id, $product_store_id, $quantity) {
         $this->db->query('INSERT INTO ' . DB_PREFIX . "cart SET customer_id = '" . (int) $this->customer->getId() . "', product_id = '" . (int) $product_id . "', product_store_id = '" . (int) $product_store_id . "', quantity = '" . $quantity . "', created_at = NOW()");
         return $this->db->getLastId();
     }
