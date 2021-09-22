@@ -995,8 +995,9 @@ class ModelAccountApi extends Model
                               }
                         // if ($this->emailtemplate->getSmsEnabled('registerOTP', 'registerotp_2')) {
                            try{
-                        // $sms_message = $this->emailtemplate->getSmsMessage('registerOTP', 'registerotp_2', $data);
+                          $sms_message = $this->emailtemplate->getSmsMessage('registerOTP', 'registerotp_2', $data);
                         //  echo "<pre>";print_r($sms_message);die;
+                        
 
                             $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
                             $log->write('OTP send to phone number '.$this->request->post['phone']);
@@ -1154,4 +1155,156 @@ class ModelAccountApi extends Model
     }
 
 
+
+
+
+    public function register_user_sap()
+    {
+        $data['status'] = false;
+        $this->load->language('account/login');
+        $this->load->language('account/register');
+        $this->load->language('api/general');
+        $this->load->model('account/customer');
+        $log = new Log('error.log');
+        $this->request->post['telephone'] = preg_replace('/[^0-9]/', '', $this->request->post['telephone']);
+
+        $this->request->post['phone'] = $this->request->post['telephone'];
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->signup_validate()) {
+            $this->load->model('account/customer');
+
+            if (false == strpos($this->request->post['phone'], '#') || isset($this->request->post['phone'])) {
+                  {
+                    if (isset($date)) {
+                        $date = DateTime::createFromFormat('d/m/Y', $date);
+                        $this->request->post['dob'] = $date->format('Y-m-d');
+                    } else {
+                        $this->request->post['dob'] = null;
+                    }
+                    $this->request->post['source'] = 'WEB';
+                    $this->request->post['status'] = 1;
+                    $this->request->post['password'] = $this->generatePassword();
+                    // echo "<pre>";print_r($this->request->post);die;
+                    // $accountmanagerid = NULL;
+                    // $accountmanagerid =$this->request->post['accountmanagerid'];
+                    // $log->write('accountmanagerid from API');
+                    // $log->write($accountmanagerid);
+                    $customer_id = $this->model_account_customer->addCustomer($this->request->post,false,true);
+                        if($customer_id>0)
+                    // Clear any previous login attempts for unregistered accounts.
+                    $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
+
+                        //Mail & SMS sending region
+                        $maildata = [];
+                        $maildata['firstname'] = $this->request->post['firstname'];
+                        $maildata['lastname'] = $this->request->post['lastname'];
+                        $maildata['email'] = $this->request->post['email'];
+                        $maildata['password'] =$this->request->post['password'] ;
+                        
+                      #region SMS and mail sending
+                         try{
+                        $sms_message = $this->emailtemplate->getSmsMessage('New Customer Password', 'Customer_18', $maildata);
+
+                            $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
+                            $log->write('welcome text send to phone number '.$this->request->post['phone']);
+                             
+                           }
+                           catch(exception $ex)
+                           {
+                            $log->write('error sending welcome text to phone number'.$this->request->post['phone'].' - '.$ex);
+                           } 
+
+                        $data['status'] = true;
+                         
+                           try{
+                               $subject = $this->emailtemplate->getSubject('New Customer Password', 'Customer_18', $maildata);
+                            $message = $this->emailtemplate->getMessage('New Customer Password', 'Customer_18', $maildata);
+
+                            $mail = new mail($this->config->get('config_mail'));
+                            $mail->setTo($this->request->post['email']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSubject($subject);
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setHtml($message);
+                            $mail->send();
+                           }
+                           catch(exception $ex)
+                           {
+                            $log->write('error sending welcome text to phone number'.$this->request->post['email'].' - '.$ex);
+
+
+                           }
+                         
+                     #endregion
+                    
+                    // Add to activity log
+                    $this->load->model('account/activity');
+                    $activity_data = [
+                        'customer_id' => $customer_id,
+                        'name' => $this->request->post['firstname'].' '.$this->request->post['lastname'],
+                    ];
+
+                    // $log->write('Registered');
+                    $this->model_account_activity->addActivity('register_sap', $activity_data);
+
+                     
+                    $data['status'] = true; 
+                }
+            } else {
+                // enter valid number throw error
+                $data['status'] = false; 
+                $data['warning'] = $this->language->get('error_telephone');
+            }
+        }
+
+        foreach ($this->error as $key => $value) {
+            $data['errors'][] = ['type' => $key, 'body' => $value];
+        }
+
+        return $data;
+    }
+
+
+    function generatePassword() {
+        $min_length=6;  //Minimum length of the password
+        $min_numbers=1; //Minimum of numbers 
+        $min_specials=1;//AND special characters
+        $min_letters=1; //Minimum of letters
+        
+        $password = '';
+        $numbers=0;
+        $specials=0;
+        $letters=0;
+        $length=0;
+        $type=3;
+        
+        while ( $length <= $min_length OR $numbers < $min_numbers OR $letters <= $min_letters OR $specials < $min_specials && $length<6) {
+            $length+=1;
+            // $type=rand(1, 3);
+           
+            if ($type==1) {
+                $password .= chr(rand(35, 37)); // special characters
+                $numbers+=1;
+                $type=2;
+            }elseif ($type==2) {
+                $password .= chr(rand(49, 57)); //Numbers and
+                $letters+=1;
+                $type=5;
+            }
+            elseif ($type==3) {
+                $password .= chr(rand(65, 90)); //A->Z
+                $letters+=1;
+                $type=5;
+            }
+            else {
+                $password .= chr(rand(97, 122)); //a->z
+                $letters+=1;
+                
+                if($type==5)
+                $type=4;
+                else $type=1;
+            }
+        
+        }
+        return $password;   
+        }
 }
