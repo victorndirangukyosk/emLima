@@ -675,7 +675,7 @@ class Controlleraccounttransactions extends Controller {
         $log->write($interswitch_orders);
         $log->write('interswitch_orders');
 
-        if (is_array($interswitch_orders) && count($interswitch_orders) > 0)) {
+        if (is_array($interswitch_orders) && count($interswitch_orders) > 0) {
             foreach ($interswitch_orders as $interswitch_order) {
                 $order_id = $interswitch_order['order_id'];
 
