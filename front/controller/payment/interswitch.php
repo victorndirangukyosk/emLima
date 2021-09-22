@@ -104,17 +104,20 @@ class ControllerPaymentInterswitch extends Controller {
                 $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
                 if (00 == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+                    $log->write('INTERSWITCH SUCCESS');
                     $this->model_payment_interswitch->OrderTransaction($order_id, $payment_reference_number);
                     $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_order_status_id'), $customer_info['customer_id'], 'customer');
                 }
 
                 if (00 != $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+                    $log->write('INTERSWITCH FAIL');
                     $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_failed_order_status_id'), $customer_info['customer_id'], 'customer');
                 }
             }
         }
 
         if (00 == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+            $log->write('INTERSWITCH SUCCESS');
             $this->load->controller('payment/cod/confirmnonkb');
             $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_order_status_id'), $customer_info['customer_id'], 'customer');
             $json['message'] = $payment_gateway_description;
@@ -123,6 +126,7 @@ class ControllerPaymentInterswitch extends Controller {
         }
 
         if (00 != $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+            $log->write('INTERSWITCH FAIL');
             $this->load->controller('payment/cod/confirmnonkb');
             $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_failed_order_status_id'), $customer_info['customer_id'], 'customer');
             $json['message'] = $payment_gateway_description;
