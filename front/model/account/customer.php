@@ -1137,4 +1137,160 @@ class ModelAccountCustomer extends Model {
         return $this->db->query('select * from `' . DB_PREFIX . 'city` WHERE status = 1 order by sort_order')->rows;
     }
 
+
+    public function addCustomerFromERP($data, $override = false) {
+        //echo '<pre>';print_r($data);exit;
+        $log = new Log('error.log');
+        // $log->write($data['login_latitude']);
+        // $log->write($data['login_longitude']);
+        if (isset($data['cityid']) && $data['cityid'] != NULL && $data['cityid'] > 0) {
+            $data['cityid'] = $data['cityid'];
+        } else {
+            $data['cityid'] = 32;
+        }
+
+        $customer_accountmanager_id = NULL;
+        if (isset($data['accountmanagerid'])) {
+            $accountmanagerid = $data['accountmanagerid'];
+            $log->write('accountmanagerid');
+            $log->write($accountmanagerid);
+            $log->write('accountmanagerid');
+            $account_manager_details = $this->getAccountManagerId($accountmanagerid);
+            if (isset($account_manager_details) && is_array($account_manager_details) && array_key_exists('user_id', $account_manager_details) && array_key_exists('user_group_id', $account_manager_details) && $account_manager_details['user_group_id'] == $this->config->get('config_account_manager_group_id') && $account_manager_details['user_id'] > 0) {
+                $customer_accountmanager_id = $account_manager_details['user_id'];
+            } else {
+                $random_accountmanager = $this->getRandomAccountManagerId();
+                $customer_accountmanager_id = $random_accountmanager['user_id'];
+            }
+        } else {
+            $random_accountmanager = $this->getRandomAccountManagerId();
+            $log->write('random_accountmanager');
+            $log->write($random_accountmanager);
+            $log->write('random_accountmanager');
+            $customer_accountmanager_id = $random_accountmanager['user_id'];
+        }
+
+        $login_latitude = NULL;
+        if (isset($data['login_latitude'])) {
+            $login_latitude = $data['login_latitude'];
+        }
+
+        $sub_customer_order_approval = 1;
+        if (isset($data['sub_customer_order_approval'])) {
+            $sub_customer_order_approval = $data['sub_customer_order_approval'];
+        }
+
+        $login_longitude = NULL;
+        if (isset($data['login_longitude'])) {
+            $login_longitude = $data['login_longitude'];
+        }
+
+        if (!isset($data['dob'])) {
+            $log->write('customer in');
+            $data['dob'] = null;
+        }
+
+        $log->write('customer add');
+        $this->trigger->fire('pre.customer.add', $data);
+        //below line commented,as the settings are not checking through out the application.
+        if (isset($data['customer_group_id'])) {// && is_array($this->config->get('config_customer_group_display')) && in_array($data['customer_group_id'], $this->config->get('config_customer_group_display')))
+            $customer_group_id = $data['customer_group_id'];
+        } elseif ($this->config->get('config_customer_group_id') > 0) {
+            $customer_group_id = $this->config->get('config_customer_group_id');
+        } else {
+            $customer_group_id = 9;
+        }
+
+        if (isset($data['company_name'])) {
+            $company_name = $data['company_name'];
+        } else {
+            $company_name = '';
+        }
+
+        if (isset($data['company_address'])) {
+            $company_address = $data['company_address'];
+        } else {
+            $company_address = '';
+        }
+
+        $log->write($customer_group_id);
+        $this->load->model('account/customer_group');
+
+        $customer_group_info = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
+
+        // echo "<pre>";print_r($customer_group_info);die;
+        $log->write($customer_group_info);
+
+        if ($override) {
+            $customer_group_info['approval'] = 0;
+        }
+        if (!isset($data['fax'])) {
+            $data['fax'] = null;
+        }
+
+        if (!isset($data['gender'])) {
+            $data['gender'] = null;
+        }
+
+        if (isset($data['telephone'])) {
+            //(21) 42353-5255
+            $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
+        }
+
+        $source = '';
+        if (isset($data['source'])) {
+            $source = $data['source'];
+        }
+
+        $status = 1;
+        if (isset($data['status'])) {
+            $status = $data['status'];
+        }
+
+        $customer_category = null;
+        if (null != $data['parent']) {
+            $parent_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $data['parent'] . "'");
+            $customer_category = $parent_info->row['customer_category'];
+        }
+        if (!isset($data['dob'])) {
+            //$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET customer_group_id = '" . (int) $customer_group_id . "', store_id = '" . (int) $this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', company_name = '" . $this->db->escape($data['company_name']) . "', company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . $this->db->escape($data['gender']). "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? serialize($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int) $data['newsletter'] : 0) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '" . (int) !$customer_group_info['approval'] . "', date_added = NOW()");
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $customer_group_id . "', store_id = '" . (int) $this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', company_name = '" . $this->db->escape($data['company_name']) . "', company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . $this->db->escape($data['gender']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? serialize($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int) $data['newsletter'] : 0) . "',parent = '" . (isset($data['parent']) ? (int) $data['parent'] : null) . "',customer_category = '" . (null != $customer_category ? $customer_category : null) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '" . (int) $status . "', approved = '" . (int) $customer_group_info['approval'] . "', source = '" . $source . "', latitude = '" . $login_latitude . "', longitude = '" . $login_longitude . "', sub_customer_order_approval = '" . $sub_customer_order_approval . "', account_manager_id = '" . $customer_accountmanager_id . "', date_added = NOW()");
+        } else {
+            //$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET customer_group_id = '" . (int) $customer_group_id . "', store_id = '" . (int) $this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', company_name = '" . $this->db->escape($data['company_name']) . "', company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . $this->db->escape($data['gender']). "', dob = '" . $data['dob']. "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? serialize($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int) $data['newsletter'] : 0) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '" . (int) !$customer_group_info['approval'] . "', date_added = NOW()");
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $customer_group_id . "', store_id = '" . (int) $this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', company_name = '" . $this->db->escape($data['company_name']) . "', company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . $this->db->escape($data['gender']) . "', dob = '" . $data['dob'] . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? serialize($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int) $data['newsletter'] : 0) . "',parent = '" . (isset($data['parent']) ? (int) $data['parent'] : null) . "',customer_category = '" . (null != $customer_category ? $customer_category : null) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '" . (int) $status . "', approved = '" . (int) $customer_group_info['approval'] . "', source = '" . $source . "', latitude = '" . $login_latitude . "', longitude = '" . $login_longitude . "', sub_customer_order_approval = '" . $sub_customer_order_approval . "', account_manager_id = '" . $customer_accountmanager_id . "', date_added = NOW()");
+        }
+
+        $customer_id = $this->db->getLastId();
+
+        if (!empty($data['country_id'])) {
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', dob = '" . $data['dob'] . "', company = '" . $this->db->escape($data['company']) . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', city_id = '" . $this->db->escape($data['cityid']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
+
+            $address_id = $this->db->getLastId();
+
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+
+        if (!empty($data['address'])) {
+            //$this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . " " . $this->db->escape($data['lastname']). "',  address = '" . $this->db->escape($data['address']) . "', location = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape($data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . ' ' . $this->db->escape($data['lastname']) . "',  address = '" . $this->db->escape($data['address']) . ' ' . $this->db->escape($data['location']) . "', city_id = '" . $this->db->escape($data['cityid']) . "', building_name = '" . $this->db->escape($data['house_building']) . "'");
+            $address_id = $this->db->getLastId();
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
+            if (!empty($data['address_lat']) && !empty($data['address_lng'])) {
+                $this->db->query('UPDATE ' . DB_PREFIX . "address SET latitude = '" . $data['address_lat'] . "', longitude = '" . $data['address_lng'] . "', city_id = '" . $data['cityid'] . "', WHERE customer_id = '" . (int) $customer_id . "' AND address_id = '" . $address_id . "'");
+            }
+        }
+
+        if (!empty($data['company_address'])) {
+            //$this->db->query("INSERT INTO " . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . " " . $this->db->escape($data['lastname']). "',  address = '" . $this->db->escape($data['address']) . "', location = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape($data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', name = '" . $this->db->escape($data['firstname']) . ' ' . $this->db->escape($data['lastname']) . "', city_id = '" . $this->db->escape($data['cityid']) . "',  address = '" . $this->db->escape($data['company_address']) . ' ' . $this->db->escape($data['modal_address_locality']) . "', flat_number = '" . $this->db->escape($data['company_address']) . "', building_name = '" . $this->db->escape($data['modal_address_locality']) . "',landmark = '" . $this->db->escape($data['modal_address_locality']) . "', latitude = '" . $this->db->escape($data['latitude']) . "', longitude = '" . $this->db->escape($data['longitude']) . "', address_type = '" . 'office' . "'");
+            $address_id = $this->db->getLastId();
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+ 
+
+        $this->trigger->fire('post.customer.add', $customer_id);
+
+        return $customer_id;
+    }
+
 }
