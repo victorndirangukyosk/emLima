@@ -1188,7 +1188,7 @@ class ModelAccountApi extends Model
                     // $accountmanagerid =$this->request->post['accountmanagerid'];
                     // $log->write('accountmanagerid from API');
                     // $log->write($accountmanagerid);
-                    $customer_id = $this->model_account_customer->addCustomer($this->request->post,false,true);
+                    $customer_id = $this->model_account_customer->addCustomerFromERP($this->request->post,false,true);
                         if($customer_id>0)
                     // Clear any previous login attempts for unregistered accounts.
                     $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
@@ -1229,7 +1229,7 @@ class ModelAccountApi extends Model
                            }
                            catch(exception $ex)
                            {
-                            $log->write('error sending welcome text to phone number'.$this->request->post['email'].' - '.$ex);
+                            $log->write('error sending welcome text to email'.$this->request->post['email'].' - '.$ex);
 
 
                            }

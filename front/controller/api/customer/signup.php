@@ -570,9 +570,8 @@ class ControllerApiCustomerSignup extends Controller
         $this->load->language('api/general');
         $this->load->model('account/api');
 
-        // $api_info = $this->model_account_api->register_send_otp();
-        $api_info = $this->model_account_api->generatePassword(); 
-        echo "<pre>";print_r($api_info);die;
+        $api_info = $this->model_account_api->register_send_otp();
+        // echo "<pre>";print_r($api_info);die;
         if ($api_info['status']) {
             $json['status'] = 200;
             // $json['message'][] = ['type' => '', 'body' => $api_info['success_message']];
