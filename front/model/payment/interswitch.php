@@ -101,6 +101,10 @@ class ModelPaymentInterswitch extends Model {
             $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
         }
 
+        if ($order_status_id == 1) {
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', paid = 'Y', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+        }
+
         $order_history = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_history` WHERE `order_id` = '" . $order_id . "' AND order_status_id='" . (int) $order_status_id . "'")->num_rows;
         $log = new Log('error.log');
         $log->write('INTERSWITCH ORDER HISTORY');
