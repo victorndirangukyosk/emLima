@@ -297,4 +297,52 @@ class ControllerApiLandingpagedetails extends Controller
 
         return !$this->error;
     }
+
+
+    public function addPartnerJson() {
+
+
+        $json = file_get_contents('php://input');
+        // Converts it into a PHP object
+        $data = json_decode($json);
+        // echo "<pre>";print_r($data->firstname);die;
+        $json = [];
+
+        try{
+            $this->load->model('information/partners');
+            if(empty($data->first_name) || empty($data->last_name)|| empty($data->designation)|| empty($data->company)|| empty($data->email)|| empty($data->phone))
+            {
+                $json['status'] = 500;
+                $json['error'] ="Please enter data";
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+                return;
+            }
+            //writing like this,as not to disturb model methods
+            $this->request->post['firstname']=$data->first_name;
+            $this->request->post['lastname']=$data->last_name;
+            $this->request->post['designation']=$data->designation;
+            $this->request->post['company']=$data->company;
+            $this->request->post['email']=$data->email;
+            $this->request->post['phone']=$data->phone;
+            $this->request->post['description']=$data->description;
+
+            // echo "<pre>";print_r($this->request->post);die;
+
+            $id= $this->model_information_partners->createPartners(str_replace("'", "", $this->request->post['firstname']), str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['designation']), str_replace("'", "", $this->request->post['company']), str_replace("'", "", $this->request->post['email']), str_replace("'", "", $this->request->post['phone']), str_replace("'", "", $this->request->post['description']));
+            $json['status'] = 200;
+            $json['message'] = 'Thank you we will contact you shortly';
+            $json['id'] = $id;
+        }
+        catch(Exception $ex)
+        {
+            $json['status'] = 500;
+            $json['error'] =$ex;
+        }
+        finally{
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
+    }
 }
