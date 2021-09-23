@@ -278,7 +278,7 @@
                                 <tr>
 
                                   <td style="width: 1px;" class="text-center">
-                                        <input type="checkbox" onclick="$('input[name*=\'selected_success\']').prop('checked', this.checked);"  name="selected_success[]"/>
+                                        <input type="checkbox" onclick="$('input[name*=\'select_success\']').prop('checked', this.checked);"  name="select_success[]"/>
                                     </td>
                                     
                                     <td class="text-right">
@@ -321,13 +321,13 @@
                                 <?php foreach ($orders_success as $order) { ?>
                                 <tr>
 
-                                 <td class="text-center"><?php if (in_array($order['order_id'], $selected_success)) { ?>
-                                        <input type="checkbox" name="selected_success[]" value="<?php echo $order['order_id']; ?>" checked="checked" />
+                                 <td class="text-center"><?php if (in_array($order['order_id'], $select_success)) { ?>
+                                        <input type="checkbox" name="select_success[]" value="<?php echo $order['order_id']; ?>" checked="checked" />
                                         <?php } else { ?>
-                                        <input type="checkbox" name="selected_success[]" value="<?php echo $order['order_id']; ?>" />
+                                        <input type="checkbox" name="select_success[]" value="<?php echo $order['order_id']; ?>" />
                                         <?php } ?>
-                                        <input type="hidden" name="order_value[]" value="<?php echo $order['total_value']; ?>" />
-                                        <input type="hidden" name="partially_paid_value[]" value="<?php echo $order['amount_partialy_paid_value']; ?>" />
+                                        <input type="hidden" name="order_value_success[]" value="<?php echo $order['total_value']; ?>" />
+                                        <input type="hidden" name="partially_paid_value_success[]" value="<?php echo $order['amount_partialy_paid_value']; ?>" />
                                     </td>
 
                                     
