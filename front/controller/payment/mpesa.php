@@ -195,7 +195,7 @@ class ControllerPaymentMpesa extends Controller {
             foreach ($this->request->post['order_id'] as $key => $value) {
                 $order_info = $this->model_checkout_order->getOrder($value);
                 if (count($order_info) > 0) {
-                    $amount += (int) ($order_info['total']);
+                    $amount += (int) ($order_info['total'] - $order_info['amount_partialy_paid']);
                 }
             }
             $log->write($amount);
