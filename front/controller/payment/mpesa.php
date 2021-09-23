@@ -534,51 +534,56 @@ class ControllerPaymentMpesa extends Controller {
 
                         $order_status = $this->model_localisation_order_status->getOrderStatuses();
 
-                        $dataAddHisory['order_id'] = $order_id;
-                        $dataAddHisory['order_status_id'] = $order_status_id;
-                        $dataAddHisory['notify'] = 0;
-                        $dataAddHisory['append'] = 0;
-                        $dataAddHisory['comment'] = '';
+                        $order_info = $this->model_checkout_order->getOrder($order_id);
+                        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                        $this->model_payment_mpesa->OrderTransaction($order_id, $stkPushSimulation->CheckoutRequestID);
+                        $this->model_payment_mpesa->addOrderHistoryTransaction($order_id, $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
+                        $json['status'] = true;
+                        /* $dataAddHisory['order_id'] = $order_id;
+                          $dataAddHisory['order_status_id'] = $order_status_id;
+                          $dataAddHisory['notify'] = 0;
+                          $dataAddHisory['append'] = 0;
+                          $dataAddHisory['comment'] = '';
 
-                        $url = HTTPS_SERVER;
-                        $api = 'api/order/addHistory';
+                          $url = HTTPS_SERVER;
+                          $api = 'api/order/addHistory';
 
-                        if (isset($api)) {
-                            $url_data = [];
-                            $log->write('if');
-                            foreach ($dataAddHisory as $key => $value) {
-                                if ('path' != $key && 'token' != $key && 'store_id' != $key) {
-                                    $url_data[$key] = $value;
-                                }
-                            }
+                          if (isset($api)) {
+                          $url_data = [];
+                          $log->write('if');
+                          foreach ($dataAddHisory as $key => $value) {
+                          if ('path' != $key && 'token' != $key && 'store_id' != $key) {
+                          $url_data[$key] = $value;
+                          }
+                          }
 
-                            $curl = curl_init();
+                          $curl = curl_init();
 
-                            // Set SSL if required
-                            if ('https' == substr($url, 0, 5)) {
-                                curl_setopt($curl, CURLOPT_PORT, 443);
-                            }
+                          // Set SSL if required
+                          if ('https' == substr($url, 0, 5)) {
+                          curl_setopt($curl, CURLOPT_PORT, 443);
+                          }
 
-                            curl_setopt($curl, CURLOPT_HEADER, false);
-                            curl_setopt($curl, CURLINFO_HEADER_OUT, true);
-                            curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
-                            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                            curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
-                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                            curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                          curl_setopt($curl, CURLOPT_HEADER, false);
+                          curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+                          curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
+                          curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+                          curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                          curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
+                          curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                          curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
-                            $resp = curl_exec($curl);
-                            $log->write('resp');
-                            $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                          $resp = curl_exec($curl);
+                          $log->write('resp');
+                          $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
-                            $log->write($resp);
-                            curl_close($curl);
+                          $log->write($resp);
+                          curl_close($curl);
 
-                            $json['status'] = true;
+                          $json['status'] = true;
 
-                            //break;
-                        }
+                          //break;
+                          } */
                     }
                     /* } */
                 }
