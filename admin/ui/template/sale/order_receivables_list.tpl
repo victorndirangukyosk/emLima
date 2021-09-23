@@ -278,7 +278,7 @@
                                 <tr>
 
                                   <td style="width: 1px;" class="text-center">
-                                        <input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);"  name="selected[]"/>
+                                        <input type="checkbox" onclick="$('input[name*=\'selected_success\']').prop('checked', this.checked);"  name="selected_success[]"/>
                                     </td>
                                     
                                     <td class="text-right">
@@ -321,10 +321,10 @@
                                 <?php foreach ($orders_success as $order) { ?>
                                 <tr>
 
-                                 <td class="text-center"><?php if (in_array($order['order_id'], $selected)) { ?>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $order['order_id']; ?>" checked="checked" />
+                                 <td class="text-center"><?php if (in_array($order['order_id'], $selected_success)) { ?>
+                                        <input type="checkbox" name="selected_success[]" value="<?php echo $order['order_id']; ?>" checked="checked" />
                                         <?php } else { ?>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $order['order_id']; ?>" />
+                                        <input type="checkbox" name="selected_success[]" value="<?php echo $order['order_id']; ?>" />
                                         <?php } ?>
                                         <input type="hidden" name="order_value[]" value="<?php echo $order['total_value']; ?>" />
                                         <input type="hidden" name="partially_paid_value[]" value="<?php echo $order['amount_partialy_paid_value']; ?>" />
@@ -464,9 +464,13 @@
                 url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
             }
 
-             if(filter_customer==0 && filter_order_id==0 && filter_company==0 && filter_date_added== '' && filter_date_added_end == '')
+        //filter commented, becoz, if multiple customers, then unable to add wallet to  particular customer
+              
+            //&& filter_company==0 && filter_date_added== '' && filter_date_added_end == ''
+             if(filter_customer==0 && filter_order_id==0 )
             {
-                alert("Please select either customer or order_id or company or date filters");
+                //or company or date filters
+                alert("Please select either customer or order_id ");
                 return;
             }
             
@@ -498,6 +502,7 @@
             },
             'select': function (item) {
                 $('input[name=\'filter_customer\']').val(item['label']);
+                //$('input[name=\'filter_customer_id\']').val(item['value']);
             }
         });
 
@@ -740,8 +745,16 @@ function showConfirmPopup($order_id,$order_value) {
             amountreceived=parseFloat(amountreceived);
             if(amountreceived>grand_total)
             {
-                alert("Amount received is more.please select more orders");
-                return;
+                //alert("Amount received is more.please select more orders");
+                //return;
+
+                 var result = confirm("Amount received is more.Do you want the amount to be added to wallet ?");
+                if (result == true) 
+                {
+                    //doc = "OK was pressed.";
+                    //go to below Ajax call and add balance to customer wallet
+                } 
+                else { return; } 
             }
             if(amountreceived<grand_total)
             {
@@ -749,7 +762,7 @@ function showConfirmPopup($order_id,$order_value) {
                 if (result == true) 
                 {
                     //doc = "OK was pressed.";
-                    //go to Ajax call
+                    //go to below Ajax call
                 } 
                 else { return; }  
             }

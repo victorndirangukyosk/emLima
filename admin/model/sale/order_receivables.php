@@ -4,7 +4,7 @@ class ModelSaleOrderReceivables extends Model
 {
     public function getOrderReceivables($data = [])
     {
-        $sql = "SELECT o.order_id, c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer,c.company_name as company, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
+        $sql = "SELECT o.order_id, c.customer_id,c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer,c.company_name as company, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
 
         $sql .= " Where (o.paid = 'P' or o.paid = 'N')  and  ot.transaction_id  is null ";
 
@@ -172,7 +172,7 @@ public function getOrderTotal($order_id)
 
 public function getSuccessfulOrderReceivables($data = [])
 {
-    $sql = "SELECT o.order_id, c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer,c.company_name as company, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
+    $sql = "SELECT o.order_id, c.customer_id,c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer,c.company_name as company, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
 
     $sql .= " Where (o.paid = 'Y')   ";//and  ot.transaction_id  is null
 
