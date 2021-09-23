@@ -73,7 +73,14 @@ class ControllerSaleOrderReceivables extends Controller
         } else {
             $page = 1;
         }
+        
 
+
+        if (isset($this->request->get['page_success'])) {
+            $page_success = $this->request->get['page_success'];
+        } else {
+            $page_success = 1;
+        }
         $url = '';
 
         if (isset($this->request->get['filter_order_id'])) {
@@ -114,7 +121,9 @@ class ControllerSaleOrderReceivables extends Controller
         if (isset($this->request->get['page'])) {
             $url .= '&page='.$this->request->get['page'];
         }
-
+        if (isset($this->request->get['page_success'])) {
+            $url .= '&page_success='.$this->request->get['page_success'];
+        }
         $data['breadcrumbs'] = [];
 
         $data['breadcrumbs'][] = [
@@ -143,15 +152,36 @@ class ControllerSaleOrderReceivables extends Controller
         ];
 
 
+        $filter_data_success = [
+            'filter_order_id' => $filter_order_id,
+            'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,            
+            'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
+
+            'sort' => $sort,
+            'order' => $order,
+            'start' => ($page_success - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
+
+
         if ('' != $filter_customer || '' != $filter_company || '' != $filter_order_id || '' != $filter_date_added || '' != $filter_date_added_end) {
            // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
-        $order_total_grandTotal = $this->model_sale_order_receivables->getTotalOrderReceivablesAndGrandTotal($filter_data);
+           $order_total_grandTotal = $this->model_sale_order_receivables->getTotalOrderReceivablesAndGrandTotal($filter_data);
+           $order_total_grandTotal_success = $this->model_sale_order_receivables->getTotalSuccessfulOrderReceivablesAndGrandTotal($filter_data_success);
         
         //    echo'<pre>';print_r($order_total_grandTotal['total']);exit;
         
         $order_total =$order_total_grandTotal['total'];
+        $order_total_success =$order_total_grandTotal_success['total'];
         $amount =$order_total_grandTotal['GrandTotal'];
+        $amount_success =$order_total_grandTotal_success['GrandTotal'];
         $results = $this->model_sale_order_receivables->getOrderReceivables($filter_data);
+        $results_success = $this->model_sale_order_receivables->getSuccessfulOrderReceivables($filter_data_success);
+
+            // echo "<pre>";print_r($results_success);die; 
+
         } else {
             $order_total_grandTotal = null;
             $order_total=0;
@@ -162,6 +192,7 @@ class ControllerSaleOrderReceivables extends Controller
 
         // $amount=0;
         $totalPages = ceil($order_total / $this->config->get('config_limit_admin'));
+        $totalPages_success = ceil($order_total_success / $this->config->get('config_limit_admin'));
         
         $this->load->model('sale/order');
         foreach ($results as $result) {
@@ -206,7 +237,55 @@ class ControllerSaleOrderReceivables extends Controller
 
             ];
         }
-        // echo'<pre>';print_r($data['orders']);exit;
+
+
+
+
+        foreach ($results_success as $result_success) {
+            // $amount=$amount+$result['total'];
+            $totals_success = $this->model_sale_order->getOrderTotals($result_success['order_id']);
+
+            // echo "<pre>";print_r($totals);die; 
+            foreach ($totals as $total) {
+                $data['totals'][] = [
+                    'title' => $total['title'],
+                    'code' => $total['code'],
+                    // 'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                ];
+
+                if ('total' == $total['code']) {
+                    $result_success['total'] = $total['value'];
+                }
+            }
+            if ($result_success['company']) {
+                $result_success['company'] = ' (' . $result_success['company'] . ')';
+            } else {
+                // $result_success['company_name'] = "(NA)";
+            }
+            $data['orders_success'][] = [
+                'order_id' => $result_success['order_id'],
+                // 'no_of_products' => $result_success['no_of_products'],
+                'customer' => $result_success['firstname'].' '.$result_success['lastname'],
+                'company' => $result_success['company'],
+                'total' => $this->currency->format($result_success['total']),
+                'total_value' =>($result_success['total']),
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result_success['date_added'])),
+                'grand_total' => $this->currency->format($amount_success),
+                'total_pages' => $totalPages_success,
+                // o.paid,o.amount_partialy_paid
+                'paid' => $result_success['paid'],
+
+                'amount_partialy_paid_value' => $result_success['amount_partialy_paid'],
+                'amount_partialy_paid' => $result_success['amount_partialy_paid']?$this->currency->format($result_success['amount_partialy_paid']):'',
+                'pending_amount' => 0,
+                // 'pending_amount' => $this->currency->format ($result_success['total']-$result_success['amount_partialy_paid']),
+
+
+
+            ];
+        }
+
+    //    echo'<pre>';print_r($data['orders_success']);exit;
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_list'] = $this->language->get('text_list');
@@ -293,6 +372,10 @@ class ControllerSaleOrderReceivables extends Controller
             $url .= '&page='.$this->request->get['page'];
         }
 
+        if (isset($this->request->get['page_success'])) {
+            $url .= '&page_success='.$this->request->get['page_success'];
+        }
+
         $data['sort_order'] = $this->url->link('sale/order_receivables', 'token='.$this->session->data['token'].'&sort=o.order_id'.$url, 'SSL');
         // $data['sort_city'] = $this->url->link('sale/order_receivables', 'token='.$this->session->data['token'].'&sort=c.name'.$url, 'SSL');
         $data['sort_customer'] = $this->url->link('sale/order_receivables', 'token='.$this->session->data['token'].'&sort=customer'.$url, 'SSL');
@@ -338,6 +421,20 @@ class ControllerSaleOrderReceivables extends Controller
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($order_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($order_total - $this->config->get('config_limit_admin'))) ? $order_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $order_total, ceil($order_total / $this->config->get('config_limit_admin')));
 
+
+
+        $pagination_success = new Pagination();
+        $pagination_success->total = $order_total_success;
+        $pagination_success->page = $page_success;
+        $pagination_success->limit = $this->config->get('config_limit_admin');
+        $pagination_success->url = $this->url->link('sale/order_receivables', 'token='.$this->session->data['token'].$url.'&page_success={page}', 'SSL');
+
+        $data['pagination_success'] = $pagination_success->render();
+
+        $data['results_success'] = sprintf($this->language->get('text_pagination'), ($order_total_success) ? (($page_success - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page_success - 1) * $this->config->get('config_limit_admin')) > ($order_total_success - $this->config->get('config_limit_admin'))) ? $order_total_success : ((($page_success - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $order_total_success, ceil($order_total_success / $this->config->get('config_limit_admin')));
+
+
+        
         $data['filter_customer'] = $filter_customer;
         $data['filter_company'] = $filter_company;
 
@@ -430,10 +527,10 @@ class ControllerSaleOrderReceivables extends Controller
         try{
         $this->load->model('sale/order_receivables'); 
          // echo '<pre>';print_r($this->request->post);exit;
-        if (!$this->user->hasPermission('modify', 'sale/order_receivables')) {
-            $data['error'] = $this->language->get('error_permission');
-            $data['status']=false;
-        } else {            
+            if (!$this->user->hasPermission('modify', 'sale/order_receivables')) {
+                $data['error'] = $this->language->get('error_permission');
+                $data['status']=false;
+            } else {            
 
              $this->model_sale_order_receivables->confirmPaymentReceived($this->request->post['paid_order_id'], $this->request->post['transaction_id']);
             
@@ -450,149 +547,196 @@ class ControllerSaleOrderReceivables extends Controller
             $log->write('order transaction id added');
             $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
             $log->write('order transaction id added');
-        $data['status']=true;
+            $data['status']=true;
 
+                }
         }
-    }
-    catch(exception $ex)
-    {
-        $data['error']="Please try again";
-        $data['status']=false;
-    }
-    finally{
-
-        if ($this->request->isAjax()) {
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($data));
-        }
-    }
- 
-    }
-
-
-    public function confirmBulkPaymentReceived() {
-
-    if (isset($this->request->post['selected'])) {
-        $orders =explode(",",$this->request->post['selected']);
-        sort($orders);
-    }  
- 
-    if (isset($this->request->post['amount_received'])) {
-        $amount_received = $this->request->post['amount_received'];
-    }  
-    if (isset($this->request->post['grand_total'])) {
-        $grand_total = $this->request->post['grand_total'];
-    }  
-    if (isset($this->request->post['transaction_id'])) {
-        $transaction_id = $this->request->post['transaction_id'];
-    }  
-
-    // echo'<pre>';print_r($orders);exit;
-
-    try{
-        $this->load->model('sale/order_receivables'); 
-         // echo '<pre>';print_r($this->request->post);exit;
-        if (!$this->user->hasPermission('modify', 'sale/order_receivables')) {
-            $data['error'] = $this->language->get('error_permission');
+        catch(exception $ex)
+        {
+            $data['error']="Please try again";
             $data['status']=false;
-        } else {           
-            
-            if($amount_received ==$grand_total)
-            {
-
-                foreach($orders as $order)
-                {
-
-                $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id);
-                // Add to activity log
-                $log = new Log('error.log');
-                $this->load->model('user/user_activity');
-                $activity_data = [
-                    'user_id' => $this->user->getId(),
-                    'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
-                    'user_group_id' => $this->user->getGroupId(),
-                    'order_id' => $this->request->post['order'],
-                ];
-                $log->write('order transaction id added');
-                $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
-                $log->write('order transaction id added');
-                
-                }
-            }
-
-            else
-            {
-                $log = new Log('error.log');
-                $log->write('check for payment receivables');
-
-                    $grand_amount_availble=$amount_received;
-                $log->write($grand_amount_availble);
-
-                foreach($orders as $order)
-                {
-                    $amount_partialy_paid=0;$ordertotal_remaining=0;
-                    $ordertotal_array=$this->model_sale_order_receivables->getOrderTotal($order);
-                    $ordertotal= $ordertotal_array[order_total];
-                    $amount_partialy_paid=$ordertotal_array[amount_partialy_paid];
-                
-                    $log->write($ordertotal);
-                    $log->write("ordertotal");
-                    
-                    $ordertotal_needtopay=$ordertotal-$amount_partialy_paid;
-                    $order_amount_sufficient=$grand_amount_availble-$ordertotal_needtopay;
-                    $log->write("order_amount_sufficient");
-                    $log->write($order_amount_sufficient);
-                    //    exit;
-                    if($order_amount_sufficient>=0){
-                $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id);
-                    }
-                    else
-                {
-
-                    $amount_partialy_paid=$amount_partialy_paid+$grand_amount_availble;
-                $this->model_sale_order_receivables->confirmPartialPaymentReceived($order, $transaction_id,'',$amount_partialy_paid);
-                }
-                $grand_amount_availble=$grand_amount_availble-$ordertotal_needtopay;
-
-                // Add to activity log
-               
-                $this->load->model('user/user_activity');
-                $activity_data = [
-                    'user_id' => $this->user->getId(),
-                    'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
-                    'user_group_id' => $this->user->getGroupId(),
-                    'order_id' => $this->request->post['order'],
-                ];
-                $log->write('order transaction id added');
-                $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
-                $log->write('order transaction id added');
-                
-
-                if($grand_amount_availble<=0)
-                {
-                    break;//break the loop if avaialble grand total received becomes 0
-                }
-                }
-            }
-            $data['success'] = 'Updated Successfully';
-           
-        $data['status']=true;
-
         }
+        finally{
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
+ 
     }
-    catch(exception $ex)
+
+
+    public function confirmBulkPaymentReceived() 
     {
-        $data['error']="Please try again";
-        $data['status']=false;
-    }
-    finally{
 
-        if ($this->request->isAjax()) {
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($data));
+        if (isset($this->request->post['selected'])) {
+            $orders =explode(",",$this->request->post['selected']);
+            sort($orders);
+        }  
+    
+        if (isset($this->request->post['amount_received'])) {
+            $amount_received = $this->request->post['amount_received'];
+        }  
+        if (isset($this->request->post['grand_total'])) {
+            $grand_total = $this->request->post['grand_total'];
+        }  
+        if (isset($this->request->post['transaction_id'])) {
+            $transaction_id = $this->request->post['transaction_id'];
+        }  
+
+        // echo'<pre>';print_r($orders);exit;
+
+        try{
+            $this->load->model('sale/order_receivables'); 
+            // echo '<pre>';print_r($this->request->post);exit;
+            if (!$this->user->hasPermission('modify', 'sale/order_receivables')) {
+                $data['error'] = $this->language->get('error_permission');
+                $data['status']=false;
+            } else {           
+                
+                if($amount_received ==$grand_total)
+                {
+
+                    foreach($orders as $order)
+                    {
+
+                    $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id);
+                    // Add to activity log
+                    $log = new Log('error.log');
+                    $this->load->model('user/user_activity');
+                    $activity_data = [
+                        'user_id' => $this->user->getId(),
+                        'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                        'user_group_id' => $this->user->getGroupId(),
+                        'order_id' => $this->request->post['order'],
+                    ];
+                    $log->write('order transaction id added');
+                    $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
+                    $log->write('order transaction id added');
+                    
+                    }
+                }
+
+                else
+                {
+                    $log = new Log('error.log');
+                    $log->write('check for payment receivables');
+
+                        $grand_amount_availble=$amount_received;
+                    $log->write($grand_amount_availble);
+
+                    foreach($orders as $order)
+                    {
+                        $amount_partialy_paid=0;$ordertotal_remaining=0;
+                        $ordertotal_array=$this->model_sale_order_receivables->getOrderTotal($order);
+                        $ordertotal= $ordertotal_array[order_total];
+                        $amount_partialy_paid=$ordertotal_array[amount_partialy_paid];
+                    
+                        $log->write($ordertotal);
+                        $log->write("ordertotal");
+                    
+                        $ordertotal_needtopay=$ordertotal-$amount_partialy_paid;
+                        $order_amount_sufficient=$grand_amount_availble-$ordertotal_needtopay;
+                        $log->write("order_amount_sufficient");
+                        $log->write($order_amount_sufficient);
+                        //    exit;
+                        if($order_amount_sufficient>=0){
+                    $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id);
+                        }
+                        else
+                    {
+
+                        $amount_partialy_paid=$amount_partialy_paid+$grand_amount_availble;
+                    $this->model_sale_order_receivables->confirmPartialPaymentReceived($order, $transaction_id,'',$amount_partialy_paid);
+                    }
+                    $grand_amount_availble=$grand_amount_availble-$ordertotal_needtopay;
+
+                    // Add to activity log
+                
+                    $this->load->model('user/user_activity');
+                    $activity_data = [
+                        'user_id' => $this->user->getId(),
+                        'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                        'user_group_id' => $this->user->getGroupId(),
+                        'order_id' => $this->request->post['order'],
+                    ];
+                    $log->write('order transaction id added');
+                    $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
+                    $log->write('order transaction id added');
+                    
+
+                    if($grand_amount_availble<=0)
+                    {
+                        break;//break the loop if avaialble grand total received becomes 0
+                    }
+                    }
+                }
+                $data['success'] = 'Updated Successfully';
+            
+            $data['status']=true;
+
+            }
         }
-    }
+        catch(exception $ex)
+        {
+            $data['error']="Please try again";
+            $data['status']=false;
+        }
+        finally{
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
  
 
-}
+    }
+
+
+
+    public function reversePaymentReceived() {
+        try{
+        $this->load->model('sale/order_receivables'); 
+        //    echo '<pre>';print_r($this->request->post);exit;
+            if (!$this->user->hasPermission('modify', 'sale/order_receivables')) {
+                $data['error'] = $this->language->get('error_permission');
+                $data['status']=false;
+            } else {            
+
+             $this->model_sale_order_receivables->reversePaymentReceived($this->request->post['paid_order_id'], $this->request->post['transaction_id']);
+            
+            $data['success'] = 'Reversed Successfully';
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $this->request->post['paid_order_id'],
+            ];
+            
+            $this->model_user_user_activity->addActivity('order_transaction_id_reversereversed', $activity_data);
+            
+            $data['status']=true;
+
+                }
+        }
+        catch(exception $ex)
+        {
+            $data['error']="Please try again";
+            $data['status']=false;
+        }
+        finally{
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
+ 
+    }
+
 }

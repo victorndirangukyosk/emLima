@@ -116,7 +116,20 @@
                        
                     </div>
                 </div>
-                <form method="post" enctype="multipart/form-data" target="_blank" id="form-order">
+
+                <ul class="nav nav-tabs">
+                <li class="active" style="width:25%;"><a data-toggle="tab" href="#pending">Pending Payments</a></li>
+                <li style="width:25%;"><a data-toggle="tab" href="#successfull">Successfull Payments</a></li>
+                 </ul>
+
+                <div class="tab-content">
+
+
+
+
+                    <div id="pending" class="tab-pane fade in active">
+                        
+                         <form method="post" enctype="multipart/form-data" target="_blank" id="form-order">
                     <div class="table-responsive">
 
  
@@ -232,6 +245,143 @@
                     <div class="col-sm-6 text-right"><?php echo $results; ?></div>
                 </div>
                 <?php } ?>
+
+                    </div>
+
+
+                    <div id="successfull" class="tab-pane fade">
+                      
+
+
+
+                          <form method="post" enctype="multipart/form-data" target="_blank" id="form-order-success">
+                    <div class="table-responsive">
+
+ 
+                      <!--<div class="btn-group" >                            
+                         <div class="row">
+                             <div class="col-sm-6">
+                                        <input disabled type="text" name="grand_total" value="" placeholder="No Order Selected" id="input-grand-total" class="form-control" />
+                             </div>  
+                             <div class="col-sm-4">
+                                    <button type="button" id="button-bulkpayment" class="btn btn-primary" onclick="showConfirmPopup(-1,0)"  data-toggle="modal" data-dismiss="modal" data-target="#paidModal" title="Payment Confirmation">  Receive Bulk Payment</button>
+                             </div>    
+                         </div>                             
+                            
+                      </div>
+                      <br>
+                      <br>-->
+
+
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+
+                                  <td style="width: 1px;" class="text-center">
+                                        <input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);"  name="selected[]"/>
+                                    </td>
+                                    
+                                    <td class="text-right">
+                                        <?php echo $column_order_id; ?></td>
+                                    <td class="text-left">
+                                        <?php if ($sort == 'customer') { ?>
+                                        <a href="<?php echo $sort_customer; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_customer; ?></a>
+                                        <?php } else { ?>
+                                        <a href="<?php echo $sort_customer; ?>"><?php echo $column_customer; ?></a>
+                                        <?php } ?>
+                                    </td>
+                                    
+                                    
+                                    <td class="text-right"> 
+                                       <?php echo $column_total; ?> 
+                                        </td>
+                                         <td class="text-left"> 
+                                       Paid  
+                                        </td>
+
+                                        <!-- <td class="text-right"> 
+                                       Paid Amount 
+                                        </td>
+
+                                         <td class="text-right"> 
+                                       Pending Amount 
+                                        </td>
+                                   <td class="text-left">
+                                        <?php if ($sort == 'o.date_added') { ?>
+                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
+                                        <?php } else { ?>
+                                        <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
+                                        <?php } ?>
+                                    </td>-->
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($orders_success) { ?>
+                                <?php foreach ($orders_success as $order) { ?>
+                                <tr>
+
+                                 <td class="text-center"><?php if (in_array($order['order_id'], $selected)) { ?>
+                                        <input type="checkbox" name="selected[]" value="<?php echo $order['order_id']; ?>" checked="checked" />
+                                        <?php } else { ?>
+                                        <input type="checkbox" name="selected[]" value="<?php echo $order['order_id']; ?>" />
+                                        <?php } ?>
+                                        <input type="hidden" name="order_value[]" value="<?php echo $order['total_value']; ?>" />
+                                        <input type="hidden" name="partially_paid_value[]" value="<?php echo $order['amount_partialy_paid_value']; ?>" />
+                                    </td>
+
+                                    
+                                    <td class="text-right">
+                                        <?php $or = explode(',',$order['order_id']) ?>
+                                        <?php foreach ($or as $o): ?>
+                                            <a href="<?php echo $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $o, 'SSL'); ?>" data-toggle="tooltip" title="<?php echo $button_view; ?>" class="btn btn-info"><?php echo $o; ?></a> 
+                                        <?php endforeach ?>
+                                    </td>
+                                    <td class="text-left"><?php echo $order['customer']; ?> <br/>
+                                            <?php echo $order['company']  ; ?></td>
+                                   
+                                    <td class="text-right"><?php echo $order['total']; ?></td>
+                                    <td class="text-left"><?php echo $order['paid']; ?></td>
+                                   <!-- <td class="text-right"><?php echo $order['amount_partialy_paid']; ?></td>
+                                    <td class="text-right"><?php echo $order['pending_amount']; ?></td>
+                                     <td class="text-left"><?php echo $order['date_added']; ?></td> -->
+                                    <td>
+ 
+                                    <button class="btn btn-default" type="button" onclick="reverse_payment(<?= $order['order_id'] ?>);" >Reverse Payment</button>  
+                                    </td>
+                                </tr>
+                                <?php } ?>
+                                <tr>
+                                 <td  colspan="3" class="text-right">
+                                     <b>Grand Total</b>
+                                    </td>
+                                    
+                                    <td class="text-right"><?php echo $order['grand_total']; ?></td>
+                                    
+                                    
+                                </tr>
+                                <?php } else { ?>
+                                <tr>
+                                    <td class="text-center" colspan="9"><?php echo $text_no_results; ?></td>
+                                </tr>
+                                <?php } ?>  
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+                <?php if ($orders_success) { ?>
+                <div class="row">
+                    <div class="col-sm-6 text-left"><?php echo $pagination_success; ?></div>
+                    <div class="col-sm-6 text-right"><?php echo $results_success; ?></div>
+                </div>
+                <?php } ?>
+
+
+                    </div>
+
+                </div>
+
+               
             </div>
         </div>
     </div>
@@ -556,133 +706,167 @@ function showConfirmPopup($order_id,$order_value) {
 
 
 
+
 <script>
 
 ////$("#paid_amount").change(function(){
    //alert("The text has been changed.");
 //});
 
-function confirmPayment() { 
- 
-    $('#paidModal-message').html('');
-               $('#paidModal-success-message').html('');
-   var transactionid = $('input[name="transaction_id"]').val();
-    var amountreceived = 0;
-     amountreceived =($('input[name="paid_amount"]').val());
-     var orde_id =   $('input[name="paid_order_id"]').val() ;
-     var grand_total =   ($('input[name="grand_total"]').val() );
+    function confirmPayment() 
+    { 
+    
+        $('#paidModal-message').html('');
+        $('#paidModal-success-message').html('');
+        var transactionid = $('input[name="transaction_id"]').val();
+        var amountreceived = 0;
+        amountreceived =($('input[name="paid_amount"]').val());
+        var orde_id =   $('input[name="paid_order_id"]').val() ;
+        var grand_total =   ($('input[name="grand_total"]').val() );
 
-              console.log($('#paidModal-form').serialize());
-              console.log(amountreceived);
-              console.log(grand_total);
-              
-  
-                if (transactionid.length  <= 1 || amountreceived.length<=1) {
-                   
-                      $('#paidModal-message').html("Please enter data");
-                       return false;
-                } 
-                if(orde_id == -1)
-                {
-                    amountreceived=parseFloat(amountreceived);
-                    if(amountreceived>grand_total)
-                    {
-                        alert("Amount received is more.please select more orders");
-                        return;
-                    }
-
-
-                    if(amountreceived<grand_total)
-
-                  {
-                     var result = confirm("Amount received and Grand total are different.Do you want to proceed with automatic updation of orders by system based on total ?");
-                            if (result == true) {
-                                //doc = "OK was pressed.";
-                                //go to Ajax call
-                            } else {
-                                return;
-                            }  
-                  }
-
-
-                     var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
-                        return n.value;
-                        }).join(','); 
-
-                         //alert(selected_order_id);
-                        if(selected_order_id=='' || selected_order_id==null)
-                        {
-                        alert("Please Select the order");
-                            return;
-                        }
-
-
-                  $.ajax({
-                    url: 'index.php?path=sale/order_receivables/confirmBulkPaymentReceived&token=<?php echo $token; ?>',
-                    type: 'post',
-                    dataType: 'json',
-                    data: 'selected=' + selected_order_id + '&transaction_id='+ transactionid+ '&grand_total='+ grand_total+ '&amount_received='+ amountreceived,
-                    async: true,
-                    success: function(json) {
-                        console.log(json); 
-                        if (json['status']) {
-                            $('#paidModal-success-message').html(' Saved Successfully');
-                            setTimeout(function() {
-                        location=location;
-                    }, 1000);
-                           
-                        }
-                        else {
-                            $('#paidModal-success-message').html('Please try again');
-                        }
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {    
-
-                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
-                                $('#paidModal-message').html("Please try again");
-                                    return false;
-                                }
-                });
-
-
-                  
-
-                   
-                }
-                else if(orde_id>0)
-                {  
-                  
+        console.log($('#paidModal-form').serialize());
+        console.log(amountreceived);
+        console.log(grand_total);
                 
+    
+        if (transactionid.length  <= 1 || amountreceived.length<=1) 
+        {
+                    
+            $('#paidModal-message').html("Please enter data");
+            return false;
+        } 
+        if(orde_id == -1)
+        {
+            amountreceived=parseFloat(amountreceived);
+            if(amountreceived>grand_total)
+            {
+                alert("Amount received is more.please select more orders");
+                return;
+            }
+            if(amountreceived<grand_total)
+            {
+                var result = confirm("Amount received and Grand total are different.Do you want to proceed with automatic updation of orders by system based on total ?");
+                if (result == true) 
+                {
+                    //doc = "OK was pressed.";
+                    //go to Ajax call
+                } 
+                else { return; }  
+            }
 
-                    $.ajax({
-                    url: 'index.php?path=sale/order_receivables/confirmPaymentReceived&token=<?php echo $token; ?>',
-                    type: 'post',
-                    dataType: 'json',
-                    data:$('#paidModal-form').serialize(),
-                    async: true,
-                    success: function(json) {
-                        console.log(json); 
-                        if (json['status']) {
-                            $('#paidModal-success-message').html(' Saved Successfully');
+
+            var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i)
+            {
+                return n.value;
+            }).join(','); 
+
+            //alert(selected_order_id);
+            if(selected_order_id=='' || selected_order_id==null)
+            {
+                alert("Please Select the order");
+                return;
+            }
+
+
+            $.ajax({
+            url: 'index.php?path=sale/order_receivables/confirmBulkPaymentReceived&token=<?php echo $token; ?>',
+            type: 'post',
+            dataType: 'json',
+            data: 'selected=' + selected_order_id + '&transaction_id='+ transactionid+ '&grand_total='+ grand_total+ '&amount_received='+ amountreceived,
+            async: true,
+            success: function(json) {
+                console.log(json); 
+                if (json['status']) 
+                {
+                    $('#paidModal-success-message').html(' Saved Successfully');
+                    setTimeout(function() {
+                            location=location;
+                        }, 1000);
+                            
+                }
+                else    {
+                            $('#paidModal-success-message').html('Please try again');
+                            
+                        }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {    
+
+                                    // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                    $('#paidModal-message').html("Please try again");
+                                        return false;
+                                    }
+                    });             
+
+                    
+        }
+        else if(orde_id>0)
+        {  
+            $.ajax({
+            url: 'index.php?path=sale/order_receivables/confirmPaymentReceived&token=<?php echo $token; ?>',
+            type: 'post',
+            dataType: 'json',
+            data:$('#paidModal-form').serialize(),
+            async: true,
+            success: function(json) {
+                console.log(json); 
+                    if (json['status']) {
+                        $('#paidModal-success-message').html(' Saved Successfully');
                             setTimeout(function() {
-                        location=location;
-                    }, 1000);
-                           
+                            location=location;
+                            }, 1000);
+                            
                         }
                         else {
-                            $('#paidModal-success-message').html('Please try again');
-                        }
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {    
+                                $('#paidModal-success-message').html('Please try again');
+                            }
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {    
 
-                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
-                                $('#paidModal-message').html("Please try again");
-                                    return false;
-                                }
-                });
-                }
-               
-            }
+                                    // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                    $('#paidModal-message').html("Please try again");
+                                        return false;
+                                    }
+                    });
+        }     
+    }
+
+
+	function reverse_payment($order_id){
+
+		if(confirm('Are You Sure,to reverse the payment status?')){
+			$.ajax({
+            url: 'index.php?path=sale/order_receivables/reversePaymentReceived&token=<?php echo $token; ?>',
+            type: 'post',
+            data: 'paid_order_id=' + $order_id ,
+            beforeSend: function() {
+            },
+            complete: function() {
+                
+            },
+		    success: function(json) {
+             console.log(json); 
+		        if(json['status']){
+                    //$(' .payment_status .text').html('Paid');
+                    //$('.payment_status button').html('Undo Vendor Pay').attr('onclick',"payment_status("+$store_id+",0);");
+                    alert("Payment status reversed");
+           
+                    setTimeout(function() {
+                    location=location;
+                    }, 1000);
+        
+                    }else{
+                        //$('.payment_status .text').html('Unpaid');
+                        //$('.payment_status button').html('Pay to Vendor').attr('onclick',"payment_status("+$store_id+",1);");
+                    }
+		    },
+            error: function(xhr, ajaxOptions, thrownError) {    
+                 alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                 }                  
+			});
+        }
+		
+	}
+
 
 </script>
 
