@@ -528,6 +528,9 @@ class Cart {
             $this->session->data['cart'][$key]['product_note'] = $product_note;
         }
 
+        $cart_data = $key;
+        $this->load->controller('checkout/cart/addcartdb', $cart_data);
+
         return $key;
     }
 
