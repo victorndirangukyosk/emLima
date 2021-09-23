@@ -240,14 +240,17 @@ class ControllerSaleOrderReceivables extends Controller
         }
 
 
+        // echo "<pre>";print_r($results_success);die; 
 
 
         foreach ($results_success as $result_success) {
+        // echo "<pre>";print_r($result_success);die; 
+
             // $amount=$amount+$result['total'];
             $totals_success = $this->model_sale_order->getOrderTotals($result_success['order_id']);
 
-            // echo "<pre>";print_r($totals);die; 
-            foreach ($totals as $total) {
+            //  echo "<pre>";print_r($totals);die; 
+            foreach ($totals_success as $total) {
                 $data['totals'][] = [
                     'title' => $total['title'],
                     'code' => $total['code'],
@@ -280,7 +283,7 @@ class ControllerSaleOrderReceivables extends Controller
 
                 'amount_partialy_paid_value' => $result_success['amount_partialy_paid'],
                 'amount_partialy_paid' => $result_success['amount_partialy_paid']?$this->currency->format($result_success['amount_partialy_paid']):'',
-                'pending_amount' => 0,
+                'pending_amount' => ($result_success['amount_partialy_paid']>0?($result_success['total']-$result_success['amount_partialy_paid']):0),
                 // 'pending_amount' => $this->currency->format ($result_success['total']-$result_success['amount_partialy_paid']),
 
 
