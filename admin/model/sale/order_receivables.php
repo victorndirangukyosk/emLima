@@ -174,7 +174,7 @@ public function getSuccessfulOrderReceivables($data = [])
 {
     $sql = "SELECT o.order_id, c.customer_id,c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer,c.company_name as company, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
 
-    $sql .= " Where (o.paid = 'Y')   ";//and  ot.transaction_id  is null
+    $sql .= " Where (o.paid = 'Y' || o.paid = 'P')   ";//and  ot.transaction_id  is null
 
     // $sql .= " and o.order_status_id not in (0,6,7,8,15,16,9,10,11,12) ";
 
@@ -251,7 +251,7 @@ public function getSuccessfulOrderReceivables($data = [])
 public function getTotalSuccessfulOrderReceivablesAndGrandTotal($data = [])
 {
     $sql = 'SELECT COUNT(*) as total,sum(ort.value) as GrandTotal FROM `'.DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join '.DB_PREFIX.'order_total ort on(o.order_id =ort.order_id) and ort.code="total" left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
-    $sql .= " Where (o.paid = 'Y')    ";//and  ot.transaction_id  is not null
+    $sql .= " Where (o.paid = 'Y' || o.paid = 'P')    ";//and  ot.transaction_id  is not null
     // $sql .= " and o.order_status_id not in (0,6,7,8,15,16,9,10,11,12) ";
 
     if (!empty($data['filter_order_id'])) {

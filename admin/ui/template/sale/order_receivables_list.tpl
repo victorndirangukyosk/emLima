@@ -258,19 +258,19 @@
                     <div class="table-responsive">
 
  
-                      <!--<div class="btn-group" >                            
+                      <div class="btn-group" >                            
                          <div class="row">
                              <div class="col-sm-6">
-                                        <input disabled type="text" name="grand_total" value="" placeholder="No Order Selected" id="input-grand-total" class="form-control" />
+                                        <input disabled type="text" name="grand_total_reverse" value="" placeholder="No Order Selected" id="input-grand-total-reverse" class="form-control" />
                              </div>  
                              <div class="col-sm-4">
-                                    <button type="button" id="button-bulkpayment" class="btn btn-primary" onclick="showConfirmPopup(-1,0)"  data-toggle="modal" data-dismiss="modal" data-target="#paidModal" title="Payment Confirmation">  Receive Bulk Payment</button>
+                                    <button type="button" id="button-reversepayment" class="btn btn-primary" onclick="showConfirmPopup(-1,0)"  data-toggle="modal" data-dismiss="modal" data-target="#paidModal" title="Payment Confirmation">  Receive Bulk Payment</button>
                              </div>    
                          </div>                             
                             
                       </div>
                       <br>
-                      <br>-->
+                      <br>
 
 
                         <table class="table table-bordered table-hover">
@@ -301,12 +301,12 @@
 
                                         <!-- <td class="text-right"> 
                                        Paid Amount 
-                                        </td>
+                                        </td>-->
 
                                          <td class="text-right"> 
                                        Pending Amount 
                                         </td>
-                                   <td class="text-left">
+                                   <!-- <td class="text-left">
                                         <?php if ($sort == 'o.date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
                                         <?php } else { ?>
@@ -342,9 +342,9 @@
                                    
                                     <td class="text-right"><?php echo $order['total']; ?></td>
                                     <td class="text-left"><?php echo $order['paid']; ?></td>
-                                   <!-- <td class="text-right"><?php echo $order['amount_partialy_paid']; ?></td>
+                                   <!-- <td class="text-right"><?php echo $order['amount_partialy_paid']; ?></td>-->
                                     <td class="text-right"><?php echo $order['pending_amount']; ?></td>
-                                     <td class="text-left"><?php echo $order['date_added']; ?></td> -->
+                                      <!--<td class="text-left"><?php echo $order['date_added']; ?></td> -->
                                     <td>
  
                                     <button class="btn btn-default" type="button" onclick="reverse_payment(<?= $order['order_id'] ?>);" >Reverse Payment</button>  
@@ -387,48 +387,79 @@
     </div>
     <script type="text/javascript"> 
 
-     $('input[name^=\'selected\']').on('change', function () {
+        $('input[name^=\'selected\']').on('change', function () 
+        {
 
-           $('#button-bulkpayment').prop('disabled', true);    
-
-            var selected = $('input[name^=\'selected\']:checked');
-
-            
-            if (selected.length) {
-                $('#button-bulkpayment').prop('disabled', false);
+            $('#button-bulkpayment').prop('disabled', true);
+            var selected = $('input[name^=\'selected\']:checked');            
+                if (selected.length) {
+                    $('#button-bulkpayment').prop('disabled', false);                
+                }
+                $grand_total_array=0;
+                for (i = 0; i < selected.length; i++) {                
+                $total_array= ($(selected[i]).parent().find('input[name^=\'order_value\']').val()) ;
+                console.log($total_array);
                 
-            }
-            $grand_total_array=0;
-            for (i = 0; i < selected.length; i++) {
+                $partial_array= ($(selected[i]).parent().find('input[name^=\'partially_paid_value\']').val()) ;
+                        
+                        if($partial_array!='' && $partial_array!=null && $total_array!=null)
+                        {                      
+                            $total_array=$total_array-$partial_array;
+                        }
+                        if($total_array!=null)
+                        {
+                        $grand_total_array += parseFloat($total_array);
+                        }
+                    
+                }
                 
-               $total_array= ($(selected[i]).parent().find('input[name^=\'order_value\']').val()) ;
-               console.log($total_array);
-               
-               $partial_array= ($(selected[i]).parent().find('input[name^=\'partially_paid_value\']').val()) ;
-                     
-                    if($partial_array!='' && $partial_array!=null && $total_array!=null)
-                    {                      
-                        $total_array=$total_array-$partial_array;
-                    }
-                    if($total_array!=null)
-                    {
-                    $grand_total_array += parseFloat($total_array);
-                    }
-                
-            }
-            
-            if($grand_total_array>0)
-             $('input[name=\'grand_total\']').val(parseFloat($grand_total_array).toFixed(2));
-             else
-              $('input[name=\'grand_total\']').val('');
-
-           
+                if($grand_total_array>0)
+                $('input[name=\'grand_total\']').val(parseFloat($grand_total_array).toFixed(2));
+                else
+                $('input[name=\'grand_total\']').val('');           
 
         });
 
-         $('input[name^=\'selected\']:first').trigger('change'); 
+        $('input[name^=\'selected\']:first').trigger('change'); 
 
-  $('#button-filter').on('click', function () {
+
+         $('input[name^=\'select\']').on('change', function () 
+        {
+
+            $('#button-bulkreverse').prop('disabled', true);
+            var select = $('input[name^=\'select\']:checked');            
+                if (select.length) {
+                    $('#button-bulkreverse').prop('disabled', false);                
+                }
+                $grand_total_array_reverse=0;
+                for (i = 0; i < select.length; i++) {                
+                $total_array_reverse= ($(select[i]).parent().find('input[name^=\'order_value_success\']').val()) ;
+                console.log($total_array_reverse);
+                
+                $partial_array_reverse= ($(select[i]).parent().find('input[name^=\'partially_paid_value_success\']').val()) ;
+                        
+                        if($partial_array_reverse!='' && $partial_array_reverse!=null && $total_array_reverse!=null)
+                        {                      
+                            $total_array_reverse=$total_array_reverse-$partial_array_reverse;
+                        }
+                        if($total_array_reverse!=null)
+                        {
+                        $grand_total_array_reverse += parseFloat($total_array_reverse);
+                        }
+                    
+                }
+                
+                if($grand_total_array_reverse>0)
+                $('input[name=\'grand_total_reverse\']').val(parseFloat($grand_total_array_reverse).toFixed(2));
+                else
+                $('input[name=\'grand_total_reverse\']').val('');           
+
+        });
+
+        $('input[name^=\'select\']:first').trigger('change'); 
+
+
+     $('#button-filter').on('click', function () {
             url = 'index.php?path=sale/order_receivables&token=<?php echo $token; ?>';
 
             
@@ -445,7 +476,7 @@
             }
 
 
- var filter_company = $('input[name=\'filter_company\']').val();
+        var filter_company = $('input[name=\'filter_company\']').val();
 
             if (filter_company) {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
@@ -480,6 +511,8 @@
             location = url;
         });
         //--></script> 
+   
+   
     <script type="text/javascript"><!--
         
         
