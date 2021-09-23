@@ -164,9 +164,9 @@ class ControllerSaleOrderReceivables extends Controller
             'start' => ($page_success - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
         ];
-
-
-        if ('' != $filter_customer || '' != $filter_company || '' != $filter_order_id || '' != $filter_date_added || '' != $filter_date_added_end) {
+        //filter commented, becoz, if multiple customers, then unable to add wallet to  particular customer
+        //|| '' != $filter_company|| '' != $filter_date_added || '' != $filter_date_added_end
+        if ('' != $filter_customer  || '' != $filter_order_id ) {
            // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
            $order_total_grandTotal = $this->model_sale_order_receivables->getTotalOrderReceivablesAndGrandTotal($filter_data);
            $order_total_grandTotal_success = $this->model_sale_order_receivables->getTotalSuccessfulOrderReceivablesAndGrandTotal($filter_data_success);
@@ -218,6 +218,7 @@ class ControllerSaleOrderReceivables extends Controller
             }
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
+                'customer_id' => $result['customer_id'],
                 // 'no_of_products' => $result['no_of_products'],
                 'customer' => $result['firstname'].' '.$result['lastname'],
                 'company' => $result['company'],
@@ -264,6 +265,8 @@ class ControllerSaleOrderReceivables extends Controller
             }
             $data['orders_success'][] = [
                 'order_id' => $result_success['order_id'],
+                'customer_id' => $result_success['customer_id'],
+
                 // 'no_of_products' => $result_success['no_of_products'],
                 'customer' => $result_success['firstname'].' '.$result_success['lastname'],
                 'company' => $result_success['company'],
@@ -595,12 +598,14 @@ class ControllerSaleOrderReceivables extends Controller
                 $data['status']=false;
             } else {           
                 
-                if($amount_received ==$grand_total)
+                if($amount_received >=$grand_total)
                 {
-
+                    $wallet_amount=0;
+                    $wallet_amount=$amount_received-$grand_total;
+                    $order_any_selected=0;
                     foreach($orders as $order)
                     {
-
+                        $order_any_selected=$order;//any order in the selection can be tken, to get customer
                     $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id);
                     // Add to activity log
                     $log = new Log('error.log');
@@ -609,13 +614,27 @@ class ControllerSaleOrderReceivables extends Controller
                         'user_id' => $this->user->getId(),
                         'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                         'user_group_id' => $this->user->getGroupId(),
-                        'order_id' => $this->request->post['order'],
+                        'order_id' => $order,
                     ];
                     $log->write('order transaction id added');
                     $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
                     $log->write('order transaction id added');
                     
                     }
+                    //  echo '<pre>';print_r($order_any_selected);exit;
+
+                    //get customer id
+                    $this->load->model('sale/customer');
+                    $customer_id= $this->model_sale_customer->getCutomerFromOrder($order_any_selected);
+
+                    
+                    if($wallet_amount > 0)//add to customer wallet
+                    {                    
+                        $v= $this->model_sale_customer->addOnlyCredit($customer_id, 'Advance', $wallet_amount);
+                    }
+                    
+                        
+                   
                 }
 
                 else
@@ -659,7 +678,7 @@ class ControllerSaleOrderReceivables extends Controller
                         'user_id' => $this->user->getId(),
                         'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                         'user_group_id' => $this->user->getGroupId(),
-                        'order_id' => $this->request->post['order'],
+                        'order_id' => $order,
                     ];
                     $log->write('order transaction id added');
                     $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
@@ -684,10 +703,12 @@ class ControllerSaleOrderReceivables extends Controller
             $data['status']=false;
         }
         finally{
-
+           
             if ($this->request->isAjax()) {
+                // echo '<pre>';print_r(123);exit;
                 $this->response->addHeader('Content-Type: application/json');
                 $this->response->setOutput(json_encode($data));
+               
             }
         }
  

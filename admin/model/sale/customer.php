@@ -1915,4 +1915,23 @@ class ModelSaleCustomer extends Model {
         }
     }
 
+
+    public function getCutomerFromOrder($order_id) {
+        $query = $this->db->query('SELECT customer_id FROM ' . DB_PREFIX . "order WHERE order_id = '" . (int) $order_id . "'");
+        // echo '<pre>';print_r($query->row['customer_id']);exit;
+        return $query->row['customer_id'];
+    }
+
+
+    public function addOnlyCredit($customer_id, $description = '', $amount = '', $order_id = 0) {
+        $customer_info = $this->getCustomer($customer_id);
+
+        $log = new Log('error.log');
+
+        if ($customer_info) {
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
+             
+        }
+    }
+
 }
