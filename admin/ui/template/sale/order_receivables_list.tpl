@@ -13,7 +13,7 @@
             </ul>
         </div>
     </div>
-    <div class="container-fluid">
+    <div class="container-fluid"> 
         
         <?php if ($error_warning) { ?>
         <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
@@ -45,14 +45,43 @@
                                 <label class="control-label" for="input-order-id"><?php echo $entry_order_id; ?></label>
                                 <input type="text" name="filter_order_id" value="<?php echo $filter_order_id; ?>" placeholder="<?php echo $entry_order_id; ?>" id="input-order-id" class="form-control" />
                             </div>
+                          
+                            
+
+                              <div class="form-group">
+                                <label class="control-label" for="input-date-added">From date added</label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="From date added" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+
+                           
+                            
+                        </div>
+
+
+                          <div class="col-sm-4">
+                             
                             <div class="form-group">
                                 <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
                                 <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
                             </div>
-                            
+                            <div class="form-group">    
+                                <label class="control-label" for="input-date-added-end">To date added</label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="To date added" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
                            
                             
                         </div>
+
 
                          <div class="col-sm-4">
                              
@@ -80,6 +109,8 @@
                                     </span>
                                 </div>
                             </div>-->
+                            <br>
+                            
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
                         </div>
                        
@@ -269,26 +300,26 @@
             if (filter_company) {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
-  
 
-            if(filter_customer==0 && filter_order_id==0 && filter_company==0)
-            {
-                alert("Please select either customer or order_id or company ");
-                return;
-            }
-
-
-            /*var filter_total = $('input[name=\'filter_total\']').val();
-
-            if (filter_total) {
-                url += '&filter_total=' + encodeURIComponent(filter_total);
-            }
 
             var filter_date_added = $('input[name=\'filter_date_added\']').val();
 
-            if (filter_date_added) {
+            if (filter_date_added != '*' && filter_date_added != '') {
                 url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
-            }*/
+            }
+            
+            var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
+
+            if (filter_date_added_end != '*' && filter_date_added_end != '') {
+                url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
+            }
+
+             if(filter_customer==0 && filter_order_id==0 && filter_company==0 && filter_date_added== '' && filter_date_added_end == '')
+            {
+                alert("Please select either customer or order_id or company or date filters");
+                return;
+            }
+            
 
             
 
@@ -353,7 +384,8 @@
     <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
     <script type="text/javascript"><!--
   $('.date').datetimepicker({
-            pickTime: false
+            pickTime: false,
+            widgetParent: 'body'
         });
          
         

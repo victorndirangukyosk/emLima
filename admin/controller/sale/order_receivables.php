@@ -42,16 +42,18 @@ class ControllerSaleOrderReceivables extends Controller
             $filter_company = null;
         }
 
-        if (isset($this->request->get['filter_total'])) {
-            $filter_total = $this->request->get['filter_total'];
-        } else {
-            $filter_total = null;
-        }
+      
 
         if (isset($this->request->get['filter_date_added'])) {
             $filter_date_added = $this->request->get['filter_date_added'];
         } else {
             $filter_date_added = null;
+        }
+
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $filter_date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $filter_date_added_end = null;
         }
 
         if (isset($this->request->get['sort'])) {
@@ -90,13 +92,16 @@ class ControllerSaleOrderReceivables extends Controller
             $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
         }
 
-        if (isset($this->request->get['filter_total'])) {
-            $url .= '&filter_total='.$this->request->get['filter_total'];
-        }
+        
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
+
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
+
 
         if (isset($this->request->get['sort'])) {
             $url .= '&sort='.$this->request->get['sort'];
@@ -127,9 +132,9 @@ class ControllerSaleOrderReceivables extends Controller
         $filter_data = [
             'filter_order_id' => $filter_order_id,
             'filter_customer' => $filter_customer,
-            'filter_company' => $filter_company,
-            'filter_total' => $filter_total,
+            'filter_company' => $filter_company,            
             'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
 
             'sort' => $sort,
             'order' => $order,
@@ -138,7 +143,7 @@ class ControllerSaleOrderReceivables extends Controller
         ];
 
 
-        if ('' != $filter_customer || '' != $filter_company || '' != $filter_order_id) {
+        if ('' != $filter_customer || '' != $filter_company || '' != $filter_order_id || '' != $filter_date_added || '' != $filter_date_added_end) {
            // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
         $order_total_grandTotal = $this->model_sale_order_receivables->getTotalOrderReceivablesAndGrandTotal($filter_data);
         
@@ -269,12 +274,13 @@ class ControllerSaleOrderReceivables extends Controller
             $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
         }
 
-        if (isset($this->request->get['filter_total'])) {
-            $url .= '&filter_total='.$this->request->get['filter_total'];
-        }
+        
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
+        }
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
 
         if ('ASC' == $order) {
@@ -305,14 +311,15 @@ class ControllerSaleOrderReceivables extends Controller
             $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_total'])) {
-            $url .= '&filter_total='.$this->request->get['filter_total'];
-        }
+       
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
         if (isset($this->request->get['sort'])) {
             $url .= '&sort='.$this->request->get['sort'];
         }
@@ -334,9 +341,11 @@ class ControllerSaleOrderReceivables extends Controller
         $data['filter_customer'] = $filter_customer;
         $data['filter_company'] = $filter_company;
 
-        $data['filter_total'] = $filter_total;
+         
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_order_id'] = $filter_order_id;
+        $data['filter_date_added_end'] = $filter_date_added_end;
+
 
         $data['sort'] = $sort;
         $data['order'] = $order;
