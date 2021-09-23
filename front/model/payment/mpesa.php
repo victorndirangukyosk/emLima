@@ -42,9 +42,9 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function insertOrderTransactionId($order_id, $transaction_id) {
-        $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
+        /* $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
 
-        $query = $this->db->query($sql);
+          $query = $this->db->query($sql); */
 
         $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $order_id . "', transaction_id = '" . $transaction_id . "'";
 
