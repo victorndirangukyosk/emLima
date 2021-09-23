@@ -1136,8 +1136,8 @@ class ModelSaleCustomer extends Model {
 
         $log = new Log('error.log');
 
-        if ($customer_info) {
-            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
+        if ($customer_info && 1!=1) {//customer credit NA
+             $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
 
             $this->load->language('mail/customer');
 

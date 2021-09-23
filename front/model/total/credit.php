@@ -181,7 +181,7 @@ class ModelTotalCredit extends Model
 
     public function unconfirm($order_id)
     {
-        /*return */$this->db->query('DELETE FROM '.DB_PREFIX."customer_credit WHERE order_id = '".(int) $order_id."'");
+        // /*return */$this->db->query('DELETE FROM '.DB_PREFIX."customer_credit WHERE order_id = '".(int) $order_id."'");
 
         //$this->model_account_activity->addCredit($order_info['customer_id'],$order_info['customer_id'],(float)$order_total['value'],$order_info['order_id']);
     }
