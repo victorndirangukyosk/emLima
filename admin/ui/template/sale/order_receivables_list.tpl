@@ -388,7 +388,6 @@
     <script type="text/javascript"> 
 
      $('input[name^=\'selected\']').on('change', function () {
-         alert(1);
 
            $('#button-bulkpayment').prop('disabled', true);    
 
