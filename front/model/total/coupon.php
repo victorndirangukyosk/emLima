@@ -95,7 +95,7 @@ class ModelTotalCoupon extends Model
                     } elseif ('P' == $coupon_info['type']) {
                         $discount_total = $sub_total / 100 * $coupon_info['discount'];
                     }
-                    echo "<pre>";print_r($discount_total);die; 
+                    // echo "<pre>";print_r($discount_total);die; 
 
                     /*if ($coupon_info['shipping'] && isset($this->session->data['shipping_method'][$store_id])) {
 
