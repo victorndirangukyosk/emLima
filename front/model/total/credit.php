@@ -7,10 +7,15 @@ class ModelTotalCredit extends Model
         $log = new Log('error.log');
 
         $log->write('ModelTotalCredit');
+        // echo "<pre>";print_r('$balance');die;
+
 
         if ($this->config->get('credit_status')) {
             $this->load->language('total/credit');
             $balance = $this->customer->getBalance();
+
+            // echo "<pre>";print_r($balance);die;
+
 
             if ($store_id) {
                 $log = new Log('error.log');
