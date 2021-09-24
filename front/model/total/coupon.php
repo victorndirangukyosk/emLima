@@ -173,6 +173,9 @@ class ModelTotalCoupon extends Model
                         $discount_total += $cost;
                     }*/
 
+                  
+
+
                     if ($coupon_info['shipping'] && isset($this->session->data['shipping_method'])) {
                         $store_id = key($this->session->data['shipping_method']);
 
@@ -192,6 +195,11 @@ class ModelTotalCoupon extends Model
                     // If discount greater than total
                     if ($discount_total > $total) {
                         $discount_total = $total;
+                    }
+                    //for 100% discount , this condition is added e
+                    if('P' == $coupon_info['type'] && $coupon_info['discount']==100.0000 && !$coupon_info['product'])
+                    {
+                        $discount_total=$this->cart->getTotal();
                     }
 
                     if ('c' == $coupon_info['coupon_type']) {

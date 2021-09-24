@@ -136,7 +136,7 @@ class ModelUserUser extends Model {
         }
 
         $query = $this->db->query($sql);
-
+        // echo "<pre>";print_r($sql);die; 
         return $query->rows;
     }
 
