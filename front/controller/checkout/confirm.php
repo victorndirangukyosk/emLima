@@ -1151,6 +1151,7 @@ class ControllerCheckoutConfirm extends Controller {
                     $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
                 }
             }
+            // echo "<pre>";print_r($order_data);die;
 
             $log->write('addMultiOrder call');
             //$log->write($order_data);
