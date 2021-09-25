@@ -1158,6 +1158,8 @@ class ControllerCheckoutConfirm extends Controller {
 
             $this->model_checkout_order->addMultiOrder($order_data);
 
+            //  echo "<pre>";print_r($order_data);die;
+
             $data['text_recurring_item'] = $this->language->get('text_recurring_item');
             $data['text_payment_recurring'] = $this->language->get('text_payment_recurring');
 
