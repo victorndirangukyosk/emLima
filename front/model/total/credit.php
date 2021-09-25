@@ -2,7 +2,7 @@
 
 class ModelTotalCredit extends Model
 {
-    public function getTotal(&$total_data, &$total, &$taxes, $store_id = '')
+    public function getTotal(&$total_data, &$total, &$taxes, $store_id = '', $prev_sub_order_credit = 0)
     {
         $log = new Log('error.log');
 
@@ -14,14 +14,25 @@ class ModelTotalCredit extends Model
             $this->load->language('total/credit');
             $balance = $this->customer->getBalance();
 
-            // echo "<pre>";print_r($balance);die;
+            //   echo "<pre>";print_r($total_data); die;
+            // echo "<pre>";print_r($prev_sub_order_credit);  
+            // echo "<pre>";print_r('$prev_sub_order_credit');  
+            // echo "<pre>";print_r($taxes);;
+            // echo "<pre>";print_r($store_id);die;
 
+            $main_total = $this->cart->getTotal();
+            if($balance<$main_total)//fcing problem with multi orer/venor
+            {//prev_sub_order_credit will gget
+                $total=0;
+                return;
+            }
 
             if ($store_id) {
                 $log = new Log('error.log');
                 $log->write('getTotal creditx');
 
                 if ((float) $balance) {
+                    $balance -=$prev_sub_order_credit;
                     if ($balance > $total) {
                         $credit = $total;
                     } else {
@@ -29,13 +40,30 @@ class ModelTotalCredit extends Model
                     }
 
                     if ($credit > 0) {
-                        $main_total = $this->cart->getSubTotal();
+                        // $main_total = $this->cart->getSubTotal();
+
+                        // $store_total = $this->cart->getSubTotal($store_id);
+
+                     
+
 
                         $store_total = $this->cart->getSubTotal($store_id);
 
-                        $weightage = ($store_total * 100) / $main_total;
+                        foreach ($taxes as $tax) {
+                            // $sort_order[$key] = $value['sort_order'];
+                            $store_total += $tax;
+                        }
+                        
+                        //  echo "<pre>";print_r($main_total);  die;
+                        // echo "<pre>";print_r($store_total);die;
 
-                        $giveCredit = ($credit * $weightage) / 100;
+                        // $weightage = ($store_total * 100) / $main_total;
+
+                        // $giveCredit = ($credit * $weightage) / 100;\
+                        $giveCredit = $store_total;
+
+                        // echo "<pre>";print_r($giveCredit);die;
+
 
                         /*$log->write($total);
                         $log->write($credit);$log->write($main_total);
