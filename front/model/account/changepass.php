@@ -86,6 +86,14 @@ class ModelAccountChangepass extends Model {
         $old_passwords = $query->rows;
         $log = new Log('error.log');
         $log->write($old_passwords);
+        if (count($old_passwords) > 3) {
+            $remove_count = count($old_passwords) - 3;
+            if ($remove_count > 0) {
+                for ($x = 0; $x < $remove_count; $x++) {
+                    $this->db->query('DELETE FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . $customer_id . "' and id='" . $old_passwords[$x]['id'] . "'");
+                }
+            }
+        }
     }
 
 }
