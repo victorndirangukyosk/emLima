@@ -361,6 +361,18 @@ class ControllerApiLandingpagedetails extends Controller
          $this->request->post['email']=$data->email;
          $this->request->post['telephone']=$data->telephone; 
 
+
+         $this->request->post['farmer_irrigation_type']=$data->farmer_irrigation_type; 
+         $this->request->post['farmer_location']=$data->farmer_location; 
+         $this->request->post['farmer_description']=$data->farmer_description; 
+         $this->request->post['farmsize']=$data->farm_size; 
+         $this->request->post['farmsizetype']=$data->farm_size_type; 
+         $this->request->post['farmerorganization']=$data->farmer_organization; 
+         $this->request->post['login_latitude']=$data->login_latitude; 
+         $this->request->post['login_longitude']=$data->login_longitude; 
+         $this->request->post['farmer_type']=$data->farmer_type; 
+
+
         $json = [];
         $json['status'] = false;
         try{
