@@ -100,4 +100,21 @@ class ModelAccountChangepass extends Model {
         }
     }
 
+    public function passwordexpired($customer_id) {
+        $diffInMonths = NULL;
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . (int) $customer_id . "'");
+        $old_passwords = $query->rows;
+        if (count($old_passwords) > 0) {
+            $record = end($old_passwords);
+            $old_password_created_at = $record['created_at'];
+            $current_password_created_at = date("Y-m-d H:i:s");
+
+            $d1 = new DateTime($old_password_created_at);
+            $d2 = new DateTime($current_password_created_at);
+            $interval = $d1->diff($d2);
+            $diffInMonths = $interval->m;
+        }
+        return $diffInMonths;
+    }
+
 }
