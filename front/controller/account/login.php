@@ -518,7 +518,7 @@ class ControllerAccountLogin extends Controller {
         $filter_data = [];
         $this->load->model('user/user');
         $data['account_managers'] = $this->model_user_user->getAccountManagerUsers($filter_data);
-        
+
         $filter_city_data = [];
         $this->load->model('account/customer');
         $data['cities'] = $this->model_account_customer->getAllCities($filter_city_data);
@@ -706,7 +706,7 @@ class ControllerAccountLogin extends Controller {
                 $log->write($data);
             }
         }
-
+        $this->model_account_customer->getDBCart();
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }
@@ -753,6 +753,10 @@ class ControllerAccountLogin extends Controller {
 
                 // maintain session to identify as admin login
                 $this->session->data['adminlogin'] = 1;
+                // maintain session to identify admin logged user group
+                if (!empty($this->request->get['ce_id'])) {
+                    $this->session->data['ce_id'] = $this->request->get['ce_id'];
+                }
                 //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
                 //REDIRECTING TO HOME PAGE
                 $this->response->redirect('/');

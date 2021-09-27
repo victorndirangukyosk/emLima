@@ -1353,6 +1353,8 @@ class ControllerApiCustomerProducts extends Controller {
                         $productNames = array_column($data['products'], 'name');
                         $price = strval($price);
                         $special_price = strval($special_price);
+                        $product_category_data = $this->model_assets_category->getCategory($result['category_id']);
+                        $product_category_name = isset($product_category_data) && is_array($product_category_data) && count($product_category_data) > 0 ? $product_category_data['name'] : NULL;
                         if (false !== array_search($result['name'], $productNames)) {
                             // Add variation to existing product
                             $productIndex = array_search($result['name'], $productNames);
@@ -1402,6 +1404,8 @@ class ControllerApiCustomerProducts extends Controller {
                                 'rating' => 0,
                                 'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
                                 'produce_type' => $result['produce_type'],
+                                'category_id' => $result['category_id'],
+                                'category_name' => $product_category_name
                             ];
                         }
                     }

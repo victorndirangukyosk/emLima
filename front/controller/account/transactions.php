@@ -217,7 +217,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -251,6 +251,7 @@ class Controlleraccounttransactions extends Controller {
         //echo "<pre>";print_r($data);die;
         $data['total_pending_amount'] = $totalPendingAmount;
         $data['pending_order_id'] = implode('--', $data['pending_order_id']);
+        $data['payment_interswitch'] = $this->load->controller('payment/interswitch');
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/my_transactions.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/my_transactions.tpl', $data));
         } else {
@@ -285,7 +286,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -314,9 +315,8 @@ class Controlleraccounttransactions extends Controller {
                     } elseif (!in_array($order['status'], $statusCancelledFilter)) {
                         if (is_array($order) && array_key_exists('value', $order)) {
                             $order['total_currency'] = $this->currency->format($order['value']);
-                            $order['pending_amount']=$order['value']-$order['amount_partialy_paid'];
-                            $order['pending_amount_currency']=$this->currency->format($order['pending_amount']);
-                        
+                            $order['pending_amount'] = $order['value'] - $order['amount_partialy_paid'];
+                            $order['pending_amount_currency'] = $this->currency->format($order['pending_amount']);
                         }
                         /* $log = new Log('error.log');
                           $log->write('NON NUMERIC');
@@ -324,10 +324,10 @@ class Controlleraccounttransactions extends Controller {
                           $log->write($order['total']);
                           $log->write('NON NUMERIC'); */
 
-                        if( $order['pending_amount']>0)
-                        $totalPendingAmount = $totalPendingAmount +  $order['pending_amount'];
+                        if ($order['pending_amount'] > 0)
+                            $totalPendingAmount = $totalPendingAmount + $order['pending_amount'];
                         else
-                        $totalPendingAmount = $totalPendingAmount +  $order['value'];
+                            $totalPendingAmount = $totalPendingAmount + $order['value'];
 
                         //$totalPendingAmount = $this->currency->format($totalPendingAmount);
                         $data['pending_order_id'][] = $order['order_id'];
@@ -352,7 +352,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -395,7 +395,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -459,13 +459,11 @@ class Controlleraccounttransactions extends Controller {
             $log->write($order_info);
             $log->write('Pesapal Order Info');
 
-            
             if (count($order_info) > 0) {
-                if($order_info['amount_partialy_paid']>0)
-                $amount = (int) ($order_info['total']-$order_info['amount_partialy_paid']);
+                if ($order_info['amount_partialy_paid'] > 0)
+                    $amount = (int) ($order_info['total'] - $order_info['amount_partialy_paid']);
                 else
-                $amount = (int) ($order_info['total']);
-
+                    $amount = (int) ($order_info['total']);
             }
 
             $this->model_checkout_order->UpdatePaymentMethod($order_id, 'PesaPal', 'pesapal');
@@ -576,6 +574,148 @@ class Controlleraccounttransactions extends Controller {
         $data['iframe'] = $iframe_src;
 
         echo '<iframe src=' . $iframe_src . ' width="100%" height="700px"  scrolling="no" frameBorder="0"><p>Browser unable to load iFrame</p></iframe>';
+    }
+
+    public function interswitch() {
+        $this->load->language('payment/pesapal');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/interswitch');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+
+        if ($this->request->post['payment_type'] == 'pay_full') {
+            $this->request->post['order_id'] = explode('--', $this->request->post['order_id']);
+        }
+
+        $order_ids = array();
+        $amount = 0;
+        foreach ($this->request->post['order_id'] as $key => $value) {
+            $order_ids[] = $value;
+            $order_id = $value;
+
+            $order_info = $this->model_checkout_order->getOrder($value);
+            if (count($order_info) > 0) {
+                $amount += (int) ($order_info['total'] - $order_info['amount_partialy_paid']);
+            }
+        }
+
+        foreach ($this->request->post['order_id'] as $key => $value) {
+            $order_info = $this->model_checkout_order->getOrder($value);
+            $interswitch_data_ref = base64_encode($this->customer->getId() . '_' . $amount . '_' . date("Y-m-d h:i:s"));
+            $this->model_payment_interswitch->AddOrderTransaction($order_info['order_id'], $interswitch_data_ref);
+        }
+
+        $order_ids_string = NULL;
+        if (is_array($order_ids) && count($order_ids) > 0) {
+            $order_ids_string = implode('-', $order_ids);
+            $log = new Log('error.log');
+            $log->write('order_ids');
+            $log->write($order_ids_string);
+            $log->write($order_ids);
+            $log->write($order_id);
+            $log->write('order_ids');
+        }
+        $data['customer_number'] = $this->customer->getTelephone();
+
+        $interswitch_creds = $this->model_setting_setting->getSetting('interswitch', 0);
+        $data['interswitch_merchant_code'] = $interswitch_creds['interswitch_merchant_code'];
+        $data['interswitch_pay_item_id'] = $interswitch_creds['interswitch_pay_item_id'];
+        $data['interswitch_data_ref'] = $interswitch_data_ref;
+        $data['interswitch_customer_id'] = $this->customer->getId();
+        $data['interswitch_customer_name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
+        //$data['interswitch_amount'] = $amount * 100;
+        //$data['interswitch_amount'] = $this->cart->getTotal() * 100;
+        /* FOR KWIKBASKET ORDERS */
+        $data['interswitch_amount'] = $amount * 100;
+        $log = new Log('error.log');
+        $log->write($interswitch_creds['interswitch_merchant_code']);
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/interswitch_transaction.tpl')) {
+            return $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/interswitch_transaction.tpl', $data));
+        } else {
+            return $this->response->setOutput($this->load->view('default/template/account/interswitch_transaction.tpl', $data));
+        }
+    }
+
+    public function InterswitchPaymentResponse() {
+        $json = [];
+        $log = new Log('error.log');
+        $log->write('interswitch payment response');
+        $log->write($this->request->post['payment_response']);
+        $log->write(base64_decode($this->request->post['payment_response']['txnref']));
+        $txn_ref = base64_decode($this->request->post['payment_response']['txnref']);
+        $txn_refl = explode('_', $txn_ref);
+        $order_id = $txn_refl[1];
+        $customer_id = $txn_refl[0];
+
+        $payment_gateway_description = $this->request->post['payment_response']['desc'];
+        $payment_reference_number = $this->request->post['payment_response']['payRef'];
+        $banking_reference_number = $this->request->post['payment_response']['retRef'];
+        $transaction_reference_number = $this->request->post['payment_response']['txnref'];
+        $approved_amount = $this->request->post['payment_response']['apprAmt'];
+        $payment_gateway_amount = $this->request->post['payment_response']['amount'];
+        $card_number = $this->request->post['payment_response']['cardNum'];
+        $mac = $this->request->post['payment_response']['mac'];
+        $response_code = $this->request->post['payment_response']['resp'];
+        $status = $this->request->post['payment_response']['resp'] == 00 ? 'COMPLETED' : 'FAILED';
+
+        $log->write($customer_id);
+        $log->write($order_id);
+
+        $this->load->language('payment/interswitch');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/interswitch');
+        $this->load->model('payment/interswitch_response');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+
+        $interswitch_orders = $this->model_payment_interswitch->getInterswitchByPaymentReference($this->request->post['payment_response']['txnref']);
+
+        $log->write('interswitch_orders');
+        $log->write($interswitch_orders);
+        $log->write('interswitch_orders');
+
+        if (is_array($interswitch_orders) && count($interswitch_orders) > 0) {
+            foreach ($interswitch_orders as $interswitch_order) {
+                $order_id = $interswitch_order['order_id'];
+
+                $log->write('interswitch_orders_loop');
+                $log->write($order_id);
+                $log->write('interswitch_orders_loop');
+
+                $order_info = $this->model_checkout_order->getOrder($order_id);
+                $this->model_payment_interswitch_response->Saveresponse($order_info['customer_id'], $order_id, json_encode($this->request->post['payment_response']));
+                $this->model_payment_interswitch_response->SaveResponseIndv($customer_id, $order_id, $payment_gateway_description, $payment_reference_number, $banking_reference_number, $transaction_reference_number, $approved_amount, $payment_gateway_amount, $card_number, $mac, $response_code, $status);
+                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
+                if ('00' == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+                    $this->model_payment_interswitch->OrderTransaction($order_id, $payment_reference_number);
+                    $this->model_payment_interswitch->addOrderHistoryTransaction($order_id, $this->config->get('interswitch_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'Interswitch', 'interswitch');
+                }
+
+                if ('00' != $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+                    $this->model_payment_interswitch->addOrderHistoryTransaction($order_id, $this->config->get('interswitch_failed_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'Interswitch', 'interswitch');
+                }
+            }
+        }
+
+        if ('00' == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+            $json['message'] = $payment_gateway_description;
+            $json['redirect_url'] = $this->url->link('account/transactions');
+        }
+
+        if ('00' != $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+            $json['message'] = $payment_gateway_description;
+            $json['redirect_url'] = $this->url->link('account/transactions');
+        }
+
+        $log->write('interswitch payment response');
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function interswitchstatus() {
+        $this->response->redirect($this->url->link('account/transactions'));
     }
 
     public function status() {

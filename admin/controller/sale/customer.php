@@ -2362,10 +2362,26 @@ class ControllerSaleCustomer extends Controller {
             $this->session->data['order_approval_access'] = $customer_info['order_approval_access'];
             $this->session->data['order_approval_access_role'] = $customer_info['order_approval_access_role'];
 
+            #region get logge in uer uer group
+            //to en thi , n pply coupon for emo prouct
+            $ce_id=0;
+            if ($this->user->isCustomerExperience()) {
+                $ce_id = $this->user->getId();
+            }
+            
+            #enregion
             if ($store_info) {
+                if($ce_id>0)
+                $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token.'&ce_id=' . $ce_id);
+                else
                 $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
+
             } else {
+                if($ce_id>0)
+                $this->response->redirect(HTTP_CATALOG . 'index.php?path=account/login/adminRedirectLogin&token=' . $token.'&ce_id=' . $ce_id);
+                else
                 $this->response->redirect(HTTP_CATALOG . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
+
             }
         } else {
             $this->load->language('error/not_found');

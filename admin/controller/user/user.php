@@ -264,6 +264,8 @@ class ControllerUserUser extends Controller
 
         $results = $this->model_user_user->getUsers($filter_data);
 
+        // echo "<pre>";print_r($results);die; 
+
         foreach ($results as $result) {
             $data['users'][] = [
                 'user_id' => $result['user_id'],

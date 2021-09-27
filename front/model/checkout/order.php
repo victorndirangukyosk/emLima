@@ -127,12 +127,39 @@ class ModelCheckoutOrder extends Model {
         if ($orders) {
             foreach ($stores as $key => $data) {
                 //print_r($this->session->data['order_id']);die;
+            // echo "<pre>";print_r($key);die;
+            // echo "<pre>";print_r($data['totals']);die;
 
                 $this->deleteOrder($this->session->data['order_id'][$key]);
                 $order_id = $this->session->data['order_id'][$key];
 
                 $this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET order_id='" . $order_id . "', invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int) $data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int) $data['customer_id'] . "', customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float) $data['total'] . "', latitude = '" . $data['latitude'] . "',longitude = '" . $data['longitude'] . "', affiliate_id = '" . (int) $data['affiliate_id'] . "',marketing_id = '" . (int) $data['marketing_id'] . "', tracking = '" . $this->db->escape($data['tracking']) . "', language_id = '" . (int) $data['language_id'] . "', currency_id = '" . (int) $data['currency_id'] . "', currency_code = '" . $this->db->escape($data['currency_code']) . "', currency_value = '" . (float) $data['currency_value'] . "', ip = '" . $this->db->escape($data['ip']) . "', forwarded_ip = '" . $this->db->escape($data['forwarded_ip']) . "', user_agent = '" . $this->db->escape($data['user_agent']) . "', accept_language = '" . $this->db->escape($data['accept_language']) . "', fixed_commission = '" . $this->db->escape($data['fixed_commission']) . "', commission = '" . $this->db->escape($data['commission']) . "',delivery_date = '" . $this->db->escape(date('Y-m-d', strtotime($data['delivery_date']))) . "',delivery_timeslot = '" . $this->db->escape($data['delivery_timeslot']) . "',  date_added = NOW(), date_modified = NOW(), login_latitude = '" . $this->db->escape($data['login_latitude']) . "', login_longitude = '" . $this->db->escape($data['login_longitude']) . "', login_mode = '" . $this->db->escape($data['login_mode']) . "'");
                 //cant place directly in insert , due to dependencies
+                $order_total_value=0;
+                $credit_total_value=0;
+                //check wallet update
+                foreach ($data['totals'] as $tot) {
+                    // echo "<pre>";print_r($tot);die;
+                    if($tot['code']=='credit')
+                    {
+                        $credit_total_value=$tot['value'];
+                        if($credit_total_value<0)
+                        {
+                        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount deducted', amount = '" . (float) $tot['value'] . "', date_added = NOW()");
+                           
+                        }
+                    }
+                    if($tot['code']=='total')
+                    {
+                        $order_total_value=$tot['value'];
+                    }
+
+                  }
+                  if($credit_total_value==$order_total_value)//credit amount and order total amount are same, then order is paid order
+                  {
+                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . $order_id . "'");
+                  }
+                
                 
                 //ADDED FOR MULTI VENDOR ORDER
                 if($order_id == NULL) {
@@ -187,12 +214,22 @@ class ModelCheckoutOrder extends Model {
                 }
             }
         } else {
+
+              echo "<pre>";print_r($stores);die;
+
             foreach ($stores as $data) {
                 $this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int) $data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int) $data['customer_id'] . "', customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '' ) . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float) $data['total'] . "', affiliate_id = '" . (int) $data['affiliate_id'] . "',marketing_id = '" . (int) $data['marketing_id'] . "', latitude = '" . $data['latitude'] . "',longitude = '" . $data['longitude'] . "', tracking = '" . $this->db->escape($data['tracking']) . "', language_id = '" . (int) $data['language_id'] . "', currency_id = '" . (int) $data['currency_id'] . "', currency_code = '" . $this->db->escape($data['currency_code']) . "', currency_value = '" . (float) $data['currency_value'] . "', ip = '" . $this->db->escape($data['ip']) . "', forwarded_ip = '" . $this->db->escape($data['forwarded_ip']) . "', user_agent = '" . $this->db->escape($data['user_agent']) . "', fixed_commission = '" . $this->db->escape($data['fixed_commission']) . "',commission = '" . $this->db->escape($data['commission']) . "',delivery_date = '" . $this->db->escape(date('Y-m-d', strtotime($data['delivery_date']))) . "',delivery_timeslot = '" . $this->db->escape($data['delivery_timeslot']) . "',  accept_language = '" . $this->db->escape($data['accept_language']) . "', date_added = NOW(), date_modified = NOW()");
                 $order_id = $this->db->getLastId();
-
+                echo "<pre>";print_r($data);die;
                 $this->session->data['order_id'][$data['store_id']] = $order_id;
 
+
+                  //check wallet update
+                // if()
+                // {
+                //     $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
+
+                // }
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
                         . "shipping_city_id = '" . $this->db->escape((array_key_exists('shipping_city_id', $data) ? $data['shipping_city_id'] : '')) . "', "
@@ -634,9 +671,32 @@ class ModelCheckoutOrder extends Model {
 
             $log->write('refund outer');
 
-            // 11 refunded and 7 cancelled. refund and cancel logic
+            // 11 refunded and 6 cancelled,16 order rejected. refund and cancel logic
             if (in_array($order_status_id, $this->config->get('config_refund_status'))) {
                 $log->write('refund if');
+
+                //check if payment paid by wallet
+                $this->load->model('account/order');
+                $totals_info = $this->model_account_order->getOrderTotals($order_id);
+     
+                $credit_refund = 0;
+                foreach ($totals_info as $total) {           
+    
+                    if ('credit' == $total['code']) {
+                        $credit_refund = $total['value'];
+                    }
+                     
+                }
+                // echo "<pre>";print_r($totals_info);    
+                if($credit_refund!=0)//as the order is cancelled, if  any cart amount deducted, then need to rever it
+                {
+                    // echo "<pre>";print_r($totals_info);die;                   
+                    $this->load->model('total/credit');
+                     $this->model_total_credit->addOnlyCredit($order_info['customer_id'],'Refund of order #'.$order_id,abs($credit_refund),$order_id);
+                }    
+                //  echo "<pre>";print_r('$totals_info');die;
+                //end of wallet payment check
+
                 //check if payment done via iugu then call refund API
                 if ($order_info['payment_code'] == 'iugu_credit_card') {
                     //refund successfull

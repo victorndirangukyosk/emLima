@@ -101,20 +101,23 @@ class ControllerPaymentInterswitch extends Controller {
                 $order_info = $this->model_checkout_order->getOrder($order_id);
                 $this->model_payment_interswitch_response->Saveresponse($order_info['customer_id'], $order_id, json_encode($this->request->post['payment_response']));
                 $this->model_payment_interswitch_response->SaveResponseIndv($customer_id, $order_id, $payment_gateway_description, $payment_reference_number, $banking_reference_number, $transaction_reference_number, $approved_amount, $payment_gateway_amount, $card_number, $mac, $response_code, $status);
-                $this->model_payment_interswitch->OrderTransaction($order_id, $payment_reference_number);
                 $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
-                if (00 == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+                if ('00' == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+                    $log->write('INTERSWITCH SUCCESS');
+                    $this->model_payment_interswitch->OrderTransaction($order_id, $payment_reference_number);
                     $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_order_status_id'), $customer_info['customer_id'], 'customer');
                 }
 
                 if (00 != $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+                    $log->write('INTERSWITCH FAIL');
                     $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_failed_order_status_id'), $customer_info['customer_id'], 'customer');
                 }
             }
         }
 
-        if (00 == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+        if ('00' == $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+            $log->write('INTERSWITCH SUCCESS');
             $this->load->controller('payment/cod/confirmnonkb');
             $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_order_status_id'), $customer_info['customer_id'], 'customer');
             $json['message'] = $payment_gateway_description;
@@ -122,7 +125,8 @@ class ControllerPaymentInterswitch extends Controller {
             //$this->response->redirect($this->url->link('checkout/success'));
         }
 
-        if (00 != $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+        if ('00' != $this->request->post['payment_response']['resp'] && 'Z6' != $this->request->post['payment_response']['resp']) {
+            $log->write('INTERSWITCH FAIL');
             $this->load->controller('payment/cod/confirmnonkb');
             $this->model_payment_interswitch->addOrderHistory($order_id, $this->config->get('interswitch_failed_order_status_id'), $customer_info['customer_id'], 'customer');
             $json['message'] = $payment_gateway_description;

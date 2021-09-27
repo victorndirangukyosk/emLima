@@ -700,7 +700,7 @@ class ControllerCheckoutCart extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
     //update for single product
     public function multiupdate() {
         $log = new Log('error.log');
@@ -1409,6 +1409,29 @@ class ControllerCheckoutCart extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function addcartdb($key) {
+        $log = new Log('error.log');
+        $this->load->model('account/customer');
+        foreach ($this->cart->getProducts() as $cart_product) {
+            if ($cart_product['key'] == $key) {
+                $option = NULL;
+                if (is_array($cart_product['option']) && count($cart_product['option']) > 0) {
+                    $option = implode("-", $cart_product['option']);
+                }
+                $log->write('quantity');
+                $log->write($cart_product['quantity']);
+                $log->write('quantity');
+                $this->model_account_customer->AddToCart($cart_product['product_store_id'], $cart_product['quantity'], $option, $cart_product['recurring'], $cart_product['store_id'], $cart_product['store_product_variation_id'], $cart_product['product_type'], $cart_product['product_note'], $cart_product['produce_type'], $cart_product['product_id']);
+            }
+        }
+    }
+
+    public function clearcartdb() {
+        $log = new Log('error.log');
+        $this->load->model('account/customer');
+        $this->model_account_customer->ClearCart();
     }
 
 }

@@ -101,6 +101,13 @@ class ControllerAccountChangepass extends Controller {
             $this->error['retype'] = $this->language->get('error_retype');
         }
 
+        $this->load->model('account/changepass');
+        $change_pass_count = $this->model_account_changepass->check_customer_previous_password($this->customer->getId(), $this->request->post['newpassword']);
+        $change_current_pass_count = $this->model_account_changepass->check_customer_current_password($this->customer->getId(), $this->request->post['newpassword']);
+
+        if ($change_pass_count > 0 || $change_current_pass_count > 0) {
+            $this->error['new'] = 'New password must not match previous 3 passwords';
+        }
         // if (empty($this->request->post['currentpassword'])) {
         //     $this->error['current'] = $this->language->get('error_check');
         // }
