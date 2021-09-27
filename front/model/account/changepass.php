@@ -78,6 +78,10 @@ class ModelAccountChangepass extends Model {
     }
 
     public function savepassword($customer_id, $password) {
+        /* TIME ZONE ISSUE */
+        $tz = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('P');
+        $this->db->query("SET time_zone='$tz';");
+        /* TIME ZONE ISSUE */
         $this->db->query('INSERT INTO ' . DB_PREFIX . "password_resets SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', customer_id = '" . $customer_id . "', created_at = NOW()");
     }
 
