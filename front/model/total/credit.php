@@ -23,7 +23,7 @@ class ModelTotalCredit extends Model
             $main_total = $this->cart->getTotal();
             if($balance<$main_total)//fcing problem with multi orer/venor
             {//prev_sub_order_credit will gget
-                $total=0;
+                // $total=0;
                 return;
             }
 
