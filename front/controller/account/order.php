@@ -1948,33 +1948,6 @@ class ControllerAccountOrder extends Controller {
 
             //update order status as cancelled
             $order_info = $this->model_checkout_order->getOrder($order_id);
-            
-            
-            $this->load->model('account/order');
-
-
-            $totals_info = $this->model_account_order->getOrderTotals($order_id);
- 
-            $credit_refund = 0;
-            foreach ($totals_info as $total) {           
-
-                if ('credit' == $total['code']) {
-                    $credit_refund = $total['value'];
-                }
-                 
-            }
-            // echo "<pre>";print_r($totals_info);
-
-            if($credit_refund!=0)//as the order is cancelled, if  any cart amount deducted, then need to rever it
-            {
-                // echo "<pre>";print_r($totals_info);die;
-                
-                
-                $this->load->model('total/credit');
-                 $this->model_total_credit->addOnlyCredit($order_info['customer_id'],'Refund of order #'.$order_id,abs($credit_refund),$order_id);
-            }
-
-            //  echo "<pre>";print_r('$totals_info');die;
 
             $log->write($order_id);
 
