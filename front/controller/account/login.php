@@ -604,9 +604,11 @@ class ControllerAccountLogin extends Controller {
             if ($user_query->num_rows) {
                 if ($user_query->row['approved'] && $user_query->row['status']) {
                     $expired_months = $this->model_account_changepass->passwordexpired($user_query->row['customer_id']);
+                    $checknewpasswordsetted = $this->model_account_changepass->checknewpasswordsetted($user_query->row['customer_id']);
                     $log = new Log('error.log');
                     $log->write('expired_months');
                     $log->write($expired_months);
+                    $log->write($checknewpasswordsetted);
                     $log->write('expired_months');
                     $data['customer_id'] = $user_query->row['customer_id'];
                     $data['customer_email'] = $user_query->row['email'];
