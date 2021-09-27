@@ -123,10 +123,10 @@ class ModelSaleOrderReceivables extends Model
     }
 
 
-    public function confirmPaymentReceived($paid_order_id, $transaction_id, $amount_received = '') {
+    public function confirmPaymentReceived($paid_order_id, $transaction_id, $amount_received = 0) {
   
-            $this->db->query('update `' . DB_PREFIX . 'order` SET paid="Y" WHERE order_id="' . $paid_order_id . '"');
-           
+            $this->db->query('update `' . DB_PREFIX . 'order` SET paid="Y" , amount_partialy_paid = 0 WHERE order_id="' . $paid_order_id . '"');
+            // echo 'update `' . DB_PREFIX . 'order` SET paid="Y" , amount_partialy_paid = amount_partialy_paid+"'.$amount_received.'" WHERE order_id="' . $paid_order_id . '"';die;
             
             $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $paid_order_id . "'";
 
