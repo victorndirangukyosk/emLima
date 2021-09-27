@@ -1325,4 +1325,49 @@ class ModelAccountCustomer extends Model {
         }
     }
 
+
+
+    public function checkWalletRunningLow($customer_id) {
+        //check the customer wallet and send mail, if wallet is low
+        $query = $this->db->query('SELECT SUM(amount) AS total FROM `'.DB_PREFIX."customer_credit` WHERE customer_id = '".(int) $customer_id."' GROUP BY customer_id");
+        $customer_wallet_amount=0; $customer_order_average=0;
+        if ($query->num_rows) {
+        $customer_wallet_amount= $query->row['total'];
+        }  
+        //get average order value of customer
+        //SELECT AVG(total) AS total FROM (select total,order_id from `hf7_order` WHERE customer_id = '273'   ORDER BY order_id DESC   LIMIT 0, 3) as t
+        $query1 = $this->db->query('SELECT AVG(total) AS total FROM (select total,order_id FROM `'.DB_PREFIX."order` WHERE customer_id = '".(int) $customer_id."' ORDER BY order_id DESC LIMIT 0, 5) as t");
+        // echo '<pre>';print_r('SELECT AVG(total) AS total FROM (select total,order_id FROM `'.DB_PREFIX."order` WHERE customer_id = '".(int) $customer_id."' ORDER BY order_id DESC LIMIT 0, 3) as t");exit;
+        if ($query1->num_rows) {
+            $customer_order_average= $query1->row['total'];
+            }  
+            // echo '<pre>';print_r( $customer_order_average);die;
+        if($customer_wallet_amount>0 && $customer_wallet_amount >=  $customer_order_average)
+        {
+            //then send mail to customer
+            $data=$this->model_account_customer->getCustomerById($customer_id);
+            //   echo '<pre>';print_r( $data);die;
+
+            try {
+                                 
+                $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
+                $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
+                $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
+
+                $mail = new Mail($this->config->get('config_mail'));
+                $mail->setTo($data['email']);
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setSubject($subject);
+                $mail->setHTML($message);
+                $mail->send();
+            } catch (Exception $e) {
+            //   echo '<pre>';print_r( $data);die;
+                
+            }
+
+        }
+
+    }
+
 }
