@@ -593,6 +593,7 @@ class ControllerAccountLogin extends Controller {
         $data['status'] = false;
 
         $this->load->model('account/customer');
+        $this->load->model('account/changepass');
 
         if (isset($this->request->post['password']) && isset($this->request->post['email'])) {
             //$otp_data = $this->model_account_customer->getOTP($this->request->post['customer_id'],$this->request->post['verify_otp'],'login');
@@ -602,6 +603,10 @@ class ControllerAccountLogin extends Controller {
             //print_r($user_query);
             if ($user_query->num_rows) {
                 if ($user_query->row['approved'] && $user_query->row['status']) {
+                    $expired_months = $this->model_account_changepass->passwordexpired($user_query->row['customer_id']);
+                    $log->write('expired_months');
+                    $log->write($expired_months);
+                    $log->write('expired_months');
                     $data['customer_id'] = $user_query->row['customer_id'];
                     $data['customer_email'] = $user_query->row['email'];
                     $data['temppassword'] = $user_query->row['tempPassword'];
