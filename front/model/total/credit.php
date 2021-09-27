@@ -228,20 +228,19 @@ class ModelTotalCredit extends Model
         if ($order_info['customer_id']) {
             $this->load->model('account/activity');
 
-            $this->addCreditOnly($order_info['customer_id'], $this->db->escape(sprintf($this->language->get('text_order_id'), (int) $order_info['order_id'])), $order_total['value'], $order_info['order_id']);
+            $this->addOnlyCredit($order_info['customer_id'], $this->db->escape(sprintf($this->language->get('text_order_id'), (int) $order_info['order_id'])), $order_total['value'], $order_info['order_id']);
         }
     }
 
 
     public function addOnlyCredit($customer_id, $description = '', $amount = '', $order_id = 0) {
-        $customer_info = $this->getCustomer($customer_id);
+        // $customer_info = $this->getCustomer($customer_id);
 
         $log = new Log('error.log');
 
-        if ($customer_info) {
+        // if ($customer_info) {
             $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
-             
-        }
+        // }
     }
 
     public function unconfirmWalletTransaction($order_id)
