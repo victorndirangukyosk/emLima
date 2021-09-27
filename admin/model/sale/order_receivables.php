@@ -293,7 +293,7 @@ public function getTotalSuccessfulOrderReceivablesAndGrandTotal($data = [])
 
     public function reversePaymentReceived($paid_order_id, $amount_received = '') {
     
-        $this->db->query('update `' . DB_PREFIX . 'order` SET paid="N" WHERE order_id="' . $paid_order_id . '"');
+        $this->db->query('update `' . DB_PREFIX . 'order` SET paid="N", amount_partialy_paid = 0 WHERE order_id="' . $paid_order_id . '"');
     
         
         $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $paid_order_id . "'";
