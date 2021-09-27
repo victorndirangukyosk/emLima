@@ -30,6 +30,7 @@ class ModelAccountChangepass extends Model {
 
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET   temppassword = 0, salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE customer_id = '$user_id'");
             $this->savepassword($user_id, $password);
+            $this->deleteoldpassword($user_id);
 
             $this->trigger->fire('post.customer.edit.password');
 
@@ -57,6 +58,7 @@ class ModelAccountChangepass extends Model {
 
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET   temppassword = 0, salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE customer_id = '$user_id'");
             $this->savepassword($user_id, $password);
+            $this->deleteoldpassword($user_id);
             $this->trigger->fire('post.customer.edit.password');
 
             return 1;
@@ -66,12 +68,19 @@ class ModelAccountChangepass extends Model {
     }
 
     public function check_customer_previous_password($customer_id, $password) {
-        $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $customer_id . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "')");
+        $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . $customer_id . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "')");
         return $user_query->num_rows;
     }
 
     public function savepassword($customer_id, $password) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', customer_id = '" . $customer_id . "', created_at = NOW()");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "password_resets SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', customer_id = '" . $customer_id . "', created_at = NOW()");
+    }
+
+    public function deleteoldpassword($customer_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . (int) $customer_id . "'");
+        $old_passwords = $query->rows;
+        $log = new Log('error.log');
+        $log->write($old_passwords);
     }
 
 }
