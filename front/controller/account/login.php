@@ -668,7 +668,7 @@ class ControllerAccountLogin extends Controller {
                         $this->session->data['order_approval_access'] = $user_query->row['order_approval_access'];
                         $this->session->data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
                     }
-                } elseif ($user_query->row['approved'] && $user_query->row['status'] && $checknewpasswordsetted <= 0 && $expired_months >= 3) {
+                } elseif ($user_query->row['approved'] && $user_query->row['status'] && ($checknewpasswordsetted <= 0 || $expired_months >= 3)) {
                     $data['status'] = false;
 
                     $data['error_warning'] = 'You need to update your password, Because your password is expired.';
