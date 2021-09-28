@@ -210,6 +210,7 @@ class ControllerAccountAccount extends Controller {
                 //echo "<pre>";print_r($this->request->post);die;
                 $this->model_account_customer->editPassword($this->request->post['email'], $this->request->post['password']);
                 $this->model_account_changepass->savepassword($this->customer->getId(), $this->request->post['password']);
+                $this->model_account_changepass->deleteoldpassword($this->customer->getId());
             }
 
             //$this->session->data['success'] = $this->language->get('text_success');
