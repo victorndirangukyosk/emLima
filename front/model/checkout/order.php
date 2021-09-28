@@ -135,6 +135,13 @@ class ModelCheckoutOrder extends Model {
 
                 $this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET order_id='" . $order_id . "', invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int) $data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int) $data['customer_id'] . "', customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float) $data['total'] . "', latitude = '" . $data['latitude'] . "',longitude = '" . $data['longitude'] . "', affiliate_id = '" . (int) $data['affiliate_id'] . "',marketing_id = '" . (int) $data['marketing_id'] . "', tracking = '" . $this->db->escape($data['tracking']) . "', language_id = '" . (int) $data['language_id'] . "', currency_id = '" . (int) $data['currency_id'] . "', currency_code = '" . $this->db->escape($data['currency_code']) . "', currency_value = '" . (float) $data['currency_value'] . "', ip = '" . $this->db->escape($data['ip']) . "', forwarded_ip = '" . $this->db->escape($data['forwarded_ip']) . "', user_agent = '" . $this->db->escape($data['user_agent']) . "', accept_language = '" . $this->db->escape($data['accept_language']) . "', fixed_commission = '" . $this->db->escape($data['fixed_commission']) . "', commission = '" . $this->db->escape($data['commission']) . "',delivery_date = '" . $this->db->escape(date('Y-m-d', strtotime($data['delivery_date']))) . "',delivery_timeslot = '" . $this->db->escape($data['delivery_timeslot']) . "',  date_added = NOW(), date_modified = NOW(), login_latitude = '" . $this->db->escape($data['login_latitude']) . "', login_longitude = '" . $this->db->escape($data['login_longitude']) . "', login_mode = '" . $this->db->escape($data['login_mode']) . "'");
                 //cant place directly in insert , due to dependencies
+
+                 //ADDED FOR MULTI VENDOR ORDER
+                 if($order_id == NULL) {
+                    $order_id = $this->db->getLastId();
+                    $this->session->data['order_id'][$key] = $order_id;
+                    }
+
                 $order_total_value=0;
                 $credit_total_value=0;
                 //check wallet update
@@ -161,11 +168,7 @@ class ModelCheckoutOrder extends Model {
                   }
                 
                 
-                //ADDED FOR MULTI VENDOR ORDER
-                if($order_id == NULL) {
-                $order_id = $this->db->getLastId();
-                $this->session->data['order_id'][$key] = $order_id;
-                }
+               
                 //ADDED FOR MULTI VENDOR ORDER
 
                 if ($this->session->data['adminlogin'] && $this->session->data['adminlogin'] == 1) {
@@ -215,21 +218,39 @@ class ModelCheckoutOrder extends Model {
             }
         } else {
 
-              echo "<pre>";print_r($stores);die;
+            //   echo "<pre>";print_r($stores);die;
 
             foreach ($stores as $data) {
                 $this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int) $data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int) $data['customer_id'] . "', customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '' ) . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float) $data['total'] . "', affiliate_id = '" . (int) $data['affiliate_id'] . "',marketing_id = '" . (int) $data['marketing_id'] . "', latitude = '" . $data['latitude'] . "',longitude = '" . $data['longitude'] . "', tracking = '" . $this->db->escape($data['tracking']) . "', language_id = '" . (int) $data['language_id'] . "', currency_id = '" . (int) $data['currency_id'] . "', currency_code = '" . $this->db->escape($data['currency_code']) . "', currency_value = '" . (float) $data['currency_value'] . "', ip = '" . $this->db->escape($data['ip']) . "', forwarded_ip = '" . $this->db->escape($data['forwarded_ip']) . "', user_agent = '" . $this->db->escape($data['user_agent']) . "', fixed_commission = '" . $this->db->escape($data['fixed_commission']) . "',commission = '" . $this->db->escape($data['commission']) . "',delivery_date = '" . $this->db->escape(date('Y-m-d', strtotime($data['delivery_date']))) . "',delivery_timeslot = '" . $this->db->escape($data['delivery_timeslot']) . "',  accept_language = '" . $this->db->escape($data['accept_language']) . "', date_added = NOW(), date_modified = NOW()");
                 $order_id = $this->db->getLastId();
-                echo "<pre>";print_r($data);die;
+                // echo "<pre>";print_r($data);die;
                 $this->session->data['order_id'][$data['store_id']] = $order_id;
 
 
-                  //check wallet update
-                // if()
-                // {
-                //     $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
+                $order_total_value=0;
+                $credit_total_value=0;
+                //check wallet update
+                foreach ($data['totals'] as $tot) {
+                    // echo "<pre>";print_r($tot);die;
+                    if($tot['code']=='credit')
+                    {
+                        $credit_total_value=$tot['value'];
+                        if($credit_total_value<0)
+                        {
+                        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount deducted', amount = '" . (float) $tot['value'] . "', date_added = NOW()");
+                           
+                        }
+                    }
+                    if($tot['code']=='total')
+                    {
+                        $order_total_value=$tot['value'];
+                    }
 
-                // }
+                  }
+                  if($credit_total_value==$order_total_value)//credit amount and order total amount are same, then order is paid order
+                  {
+                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . $order_id . "'");
+                  }
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
                         . "shipping_city_id = '" . $this->db->escape((array_key_exists('shipping_city_id', $data) ? $data['shipping_city_id'] : '')) . "', "
