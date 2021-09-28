@@ -69,7 +69,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     if (email.length > 0 && password.length > 0) {
                 loginButton.text('PLEASE WAIT');
                 loginButton.toggleClass('disabled');
-                $.ajax({​​​​​​​​  
+                $.ajax({  
                     url : 'index.php?path=account/login/checkipaddress',
                     type: 'post',
                     data: {email: email, password:password},
@@ -83,11 +83,11 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                         });
                         }
                         else if (json['isnewIP'] == true) {
-                        $.ajax({​​​​​​​​
+                        $.ajax({
                                 url: 'index.php?path=account/login/addSendNewIPotp',
                                 type: 'POST',
                                 dataType: 'json',
-                                data: {​​​​​​​​email:email }​​​​​​​​,
+                                data: {email:email },
                                 success: function (json) {
                                     if (json['status']) {
                                     iziToast.success({
