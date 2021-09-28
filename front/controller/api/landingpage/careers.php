@@ -139,6 +139,8 @@ class ControllerApiLandingpagecareers extends Controller
     }
 
     public function addcareer() {
+
+        
         $json = [];
         try{
         $this->load->model('information/careers');
@@ -150,10 +152,50 @@ class ControllerApiLandingpagecareers extends Controller
         $log->write('sr');
           if ($file_upload_status != NULL && $file_upload_status['status'] == TRUE && $file_upload_status['file_name'] != NULL) {
             $this->load->model('setting/setting');
+            if(isset($this->request->post['careers-first-name'])){
             $first_name=str_replace("'", "", $this->request->post['careers-first-name']);
+            }
+            else {
+                $first_name=str_replace("'", "", $this->request->post['full_name']);
+
+            }
+            if(isset($this->request->post['careers-email'])){
             $email=str_replace("'", "", $this->request->post['careers-email']);
+            }
+            else {
+                $email=str_replace("'", "", $this->request->post['email']);
+
+            }
+            if(isset($this->request->post['careers-phone-number'])){
             $phone=str_replace("'", "", $this->request->post['careers-phone-number']);
-            $id=$this->model_information_careers->createCareers($first_name, str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), $email, $phone, str_replace("'", "", $this->request->post['careers-job-id']), str_replace("'", "", $this->request->post['careers-cover-letter']), $file_upload_status['file_name'], str_replace("'", "", $this->request->post['careers-job-position']));
+            }
+            else
+            {
+            $phone=str_replace("'", "", $this->request->post['telephone']);
+
+            }
+
+            if(isset($this->request->post['careers-job-id'])){
+                $job_id=str_replace("'", "", $this->request->post['careers-job-id']);
+                }
+                else
+                {
+                $job_id=str_replace("'", "", $this->request->post['job_id']);
+    
+                }
+
+                if(isset($this->request->post['careers-cover-letter'])){
+                    $cover_letter=str_replace("'", "", $this->request->post['careers-cover-letter']);
+                    }
+                    else
+                    {
+                    $cover_letter=str_replace("'", "", $this->request->post['cover_letter']);
+        
+                    }
+
+                    $jobposition=$this->request->post['job_position'];
+            
+            $id=$this->model_information_careers->createCareers($first_name, str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), $email, $phone, $job_id, $cover_letter, $file_upload_status['file_name'], $jobposition);
              
             $json['uploadstatus']    = true;
             $json['message']  = 'Thank you we will contact you shortly';
@@ -213,6 +255,10 @@ class ControllerApiLandingpagecareers extends Controller
     public function FeatureFileUpload($file_data) {
         $status = array();
         // echo "<pre>";print_r($file_data);die;
+        if(isset($file_data['careers_resume']))
+        {
+            $file_data['careers-resume']= $file_data['careers_resume'];
+        }
         if ((isset($file_data['careers-resume'])) && (is_uploaded_file($file_data['careers-resume']['tmp_name']))) {
            
             if($file_data['careers-resume']['type']!="application/msword" && $file_data['careers-resume']['type'] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document" && $file_data['careers-resume']['type'] != "application/octet-stream" && $file_data['careers-resume']['type'] != "application/pdf")
@@ -237,5 +283,125 @@ class ControllerApiLandingpagecareers extends Controller
         }
     }
 
-    
+    public function addcareerJson() {
+
+
+
+        $json = file_get_contents('php://input');
+        // Converts it into a PHP object
+        $data = json_decode($json);
+        // echo "<pre>";print_r($data);die;
+         //writing like this,as not to disturb model methods
+         $this->request->post['careers-first-name']=$data->full_name;
+         $this->request->post['careers-email']=$data->email;
+         $this->request->post['careers-phone-number']=$data->telephone;
+         $this->request->post['job_id']=$data->job_id;
+         $this->request->post['cover_letter']=$data->cover_letter;
+
+
+
+
+        $json = [];
+        try{
+        $this->load->model('information/careers');
+          if (('POST' == $this->request->server['REQUEST_METHOD']) ) {
+           $this->load->model('setting/setting');
+            $first_name=str_replace("'", "", $this->request->post['careers-first-name']);
+            $email=str_replace("'", "", $this->request->post['careers-email']);
+            $phone=str_replace("'", "", $this->request->post['careers-phone-number']);
+            $jobid=str_replace("'", "", $this->request->post['job_id']);
+            $coverletter=str_replace("'", "", $this->request->post['cover_letter']);
+            $id=$this->model_information_careers->saveCareers($first_name,  $email, $phone, $jobid, $coverletter);
+                 
+            $json['message']  = 'Thank you we will contact you shortly';
+            $json['id']  = $id;
+           
+          } 
+
+        }
+        catch(Exception $ex)
+        {
+            $json['status'] = 500;
+            $json['error'] =$ex;
+        }
+        finally{
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
+    }
+
+    //below method fields need to verify
+    public function addcareerFileUpload() { 
+
+        $json = [];
+        try{
+        $this->load->model('information/careers');
+          if (('POST' == $this->request->server['REQUEST_METHOD']) ) {
+        $file_upload_status = $this->FeatureFileUpload($this->request->files);
+        $file_data =$this->request->files;
+        $job_id=$this->request->post['job_id'];
+        $jobposition=$this->request->post['job_position'];
+        
+          if ($file_upload_status != NULL && $file_upload_status['status'] == TRUE && $file_upload_status['file_name'] != NULL && $job_id !=NULL) {
+            $this->load->model('setting/setting');
+             $id=$this->model_information_careers->createCareers($first_name, str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), $email, $phone, str_replace("'", "", $this->request->post['careers-job-id']), str_replace("'", "", $this->request->post['careers-cover-letter']), $file_upload_status['file_name'], str_replace("'", "", $this->request->post['careers-job-position']));
+             
+              $json['uploadstatus']    = true;
+            $json['message']  = 'File Uploaded.';
+            if ($id>0) {
+           
+                //send mail notification to 'stalluri@technobraingroup.com'
+                // $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
+                // $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
+                $subject = "Job Request";
+                if($jobposition!="")
+                $message = "Following details are received for the job position - ". $jobposition."<br>";
+               else
+                $message = "Following details are received.  <br>";
+                $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
+               
+                $this->load->model('setting/setting');
+                $email = $this->model_setting_setting->getEmailSetting('careers');
+                 
+                if(strpos( $email,"@")==false)//if mail Id not set in define.php
+               {
+               $email = "sridivya.talluri@technobraingroup.com";
+               }
+
+                // $bccemail = "sridivya.talluri@technobraingroup.com";
+                //  echo "<pre>";print_r($file_data);die;
+                $filepath = DIR_UPLOAD . "careers/" . $file_upload_status['file_name'];
+                $mail = new Mail($this->config->get('config_mail'));
+                $mail->setTo($email);
+                $mail->setBCC($bccemail);
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setSubject($subject);
+                $mail->setHTML($message);
+                $mail->addAttachment($filepath);
+                $mail->send();
+            } 
+
+        } else {
+            $json['uploadstatus']    = false;
+            $json['message']  = 'Please upload correct file and data';
+          }
+        
+          } 
+
+        }
+        catch(Exception $ex)
+        {
+            $json['status'] = 500;
+            $json['error'] =$ex;
+        }
+        finally{
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
+    }
+
+   
 }
