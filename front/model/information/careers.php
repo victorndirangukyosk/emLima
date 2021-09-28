@@ -173,4 +173,19 @@ class ModelInformationCareers extends Model {
         // echo  $sql;die;
         return $query->rows;
     }
+
+
+
+    public function saveCareers($first_name,$email,$phone,$job_id,$cover) {
+
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "careers` SET `first_name` = '" . $first_name . "', `last_name` = '', `role` = '', `your_self` = '', `email` = '" . $email . "', `phone` = '" . $phone . "', `job_id` = '" . $job_id . "', `cover_letter` = '" . $cover . "', `cv_path` = '', created_at = NOW()");
+        
+        $id=$this->db->getLastId();
+       
+
+        return $id;
+    }
+
+
+
 }
