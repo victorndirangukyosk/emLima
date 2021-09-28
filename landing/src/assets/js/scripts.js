@@ -75,6 +75,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     data: {email: email, password:password},
                     dataType: 'json',
                     success: function (json) {
+                        console.log(json.password_expired);
                         console.log(json);
                         if(json.message == 'Username And Password Doest Match!') {
                         iziToast.error({
@@ -107,7 +108,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                 }
                         });
                         }
-                        else if(json['password_expired'] == true) {
+                        else if(json.password_expired == true) {
                         console.log('password expired!');
                         iziToast.error({
                         position: 'topRight',
