@@ -107,6 +107,14 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                 }
                         });
                         }
+                        else if(json['password_expired'] == true) {
+                        iziToast.error({
+                        position: 'topRight',
+                        message: json['error_warning']
+                        });
+                        $('#login-view').hide();
+                        $('#forgot-password-view').show();    
+                        }
                         else {
                         $.ajax({
                         url: 'index.php?path=account/login/login',
