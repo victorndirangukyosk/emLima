@@ -1346,13 +1346,17 @@ class ModelAccountCustomer extends Model {
         {
             //then send mail to customer
             $data=$this->model_account_customer->getCustomerById($customer_id);
-            //   echo '<pre>';print_r( $data);die;
+            $data= $data[0];
+            //    echo '<pre>'; print_r($data);die;
 
             try {
+                if ($data['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('Customer', 'customer_19'))
+                 {
                                  
-                $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
-                $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
-                $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
+                $subject = $this->emailtemplate->getSubject('Customer', 'customer_19', $data);
+                $message = $this->emailtemplate->getMessage('Customer', 'customer_19', $data);
+                $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_19', $data);
+                // echo '<pre>'; print_r($subject);die;
 
                 $mail = new Mail($this->config->get('config_mail'));
                 $mail->setTo($data['email']);
@@ -1361,6 +1365,36 @@ class ModelAccountCustomer extends Model {
                 $mail->setSubject($subject);
                 $mail->setHTML($message);
                 $mail->send();
+                }
+
+                
+
+                if ($data['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_19')) {
+
+                    $ret = $this->emailtemplate->sendmessage($data['telephone'], $sms_message);
+                }
+
+                // if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_19')) {
+
+                //     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_19', $data);
+
+                //     //$log->write($mobile_notification_template);
+                //     $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_19' , $data);
+
+                //     //$log->write($mobile_notification_title);
+
+                //     if (isset($data) && isset($data['device_id']) && $data['mobile_notification'] == 1 && strlen($data['device_id']) > 0) {
+
+                //         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                //         $ret = $this->emailtemplate->sendPushNotification($data['customer_id'], $data['device_id'], '', '', $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+
+                //     } else {
+                //         $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+                //     }
+
+                    
+                // }
+
             } catch (Exception $e) {
             //   echo '<pre>';print_r( $data);die;
                 
