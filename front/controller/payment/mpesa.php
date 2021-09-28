@@ -445,6 +445,7 @@ class ControllerPaymentMpesa extends Controller {
             $this->load->model('payment/mpesa');
 
             $this->load->model('checkout/order');
+            $this->load->model('account/customer');
 
             $amount = 0;
 
