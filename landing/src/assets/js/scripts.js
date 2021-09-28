@@ -121,9 +121,13 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                 window.location.href = json['redirect'];
                                 } else if (json['temppassword'] == '1') {
                                 location = $('.base_url').attr('href') + '/changepass';
-                                        console.log($('.base_url'));
-                                } 
-                                else if(json.password_expired == true) {
+                                console.log($('.base_url'));
+                                } else {
+                                location = $('.base_url').attr('href');
+                                }
+                                } else {
+                                    
+                                if(json.password_expired == true) {
                                 console.log('password expired!');
                                 iziToast.error({
                                 position: 'topRight',
@@ -131,16 +135,14 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                 });
                                 $('#login-view').hide();
                                 $('#forgot-password-view').show();    
-                                } else {
-                                location = $('.base_url').attr('href');
                                 }
-                                } else {
+                                
                                 iziToast.error({
                                 position: 'topRight',
-                                        message: json['error_warning']
+                                message: json['error_warning']
                                 });
-                                        loginButton.text('LOGIN');
-                                        loginButton.toggleClass('disabled');
+                                loginButton.text('LOGIN');
+                                loginButton.toggleClass('disabled');
                                 }
                                 }
                         });
