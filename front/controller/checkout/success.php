@@ -203,12 +203,17 @@ class ControllerCheckoutSuccess extends Controller {
         // $results_wallet = $this->model_extension_extension->getExtensions('total');
 
         // foreach ($results_wallet as $key => $value) {
+        // echo "<pre>";print_r('checkWalletRunningLow');
            
             if ($this->config->get('credit' . '_status')) //$result['code']
             {
                 $this->checkWalletRunningLow();
+        // echo "<pre>";print_r('sdfsdfsd');die;
+
 
             }
+                // echo "<pre>";print_r('checkWalletRunningLowsdfsdf');die;
+
         // }
 
 
@@ -1392,6 +1397,8 @@ class ControllerCheckoutSuccess extends Controller {
     public function checkWalletRunningLow() {
          try
          {
+            $log = new Log('error.log');
+            $log->write('checkWalletRunningLow ');
          $this->load->model('account/customer');
          $this->model_account_customer->checkWalletRunningLow($this->customer->getId());
          }
