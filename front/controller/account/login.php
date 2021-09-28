@@ -609,7 +609,7 @@ class ControllerAccountLogin extends Controller {
                 $log->write($expired_months);
                 $log->write($checknewpasswordsetted);
                 $log->write('expired_months');
-                if ($user_query->row['approved'] && $user_query->row['status'] && $checknewpasswordsetted > 0 && $expired_months < 3) {
+                if ($user_query->row['approved'] && $user_query->row['status'] && (($checknewpasswordsetted > 0 && $expired_months < 3) || $user_query->row['tempPassword'] == 1)) {
                     $data['customer_id'] = $user_query->row['customer_id'];
                     $data['customer_email'] = $user_query->row['email'];
                     $data['temppassword'] = $user_query->row['tempPassword'];
