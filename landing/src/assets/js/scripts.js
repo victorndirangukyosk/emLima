@@ -75,7 +75,6 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                     data: {email: email, password:password},
                     dataType: 'json',
                     success: function (json) {
-                        console.log(json.password_expired);
                         console.log(json);
                         if(json.message == 'Username And Password Doest Match!') {
                         iziToast.error({
@@ -108,15 +107,6 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                 }
                         });
                         }
-                        else if(json.password_expired == true) {
-                        console.log('password expired!');
-                        iziToast.error({
-                        position: 'topRight',
-                        message: json['error_warning']
-                        });
-                        $('#login-view').hide();
-                        $('#forgot-password-view').show();    
-                        }
                         else {
                         $.ajax({
                         url: 'index.php?path=account/login/login',
@@ -124,12 +114,22 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                 data: {email: email, password: password, login_latitude:login_latitude, login_longitude:login_longitude, login_mode:'web'},
                                 dataType: 'json',
                                 success: function (json) {
+                                console.log(json.password_expired);
                                 if (json['status']) {
                                 if (json['redirect'] != null) {
                                 window.location.href = json['redirect'];
                                 } else if (json['temppassword'] == '1') {
                                 location = $('.base_url').attr('href') + '/changepass';
                                         console.log($('.base_url'));
+                                } 
+                                else if(json.password_expired == true) {
+                                console.log('password expired!');
+                                iziToast.error({
+                                position: 'topRight',
+                                message: json.error_warning
+                                });
+                                $('#login-view').hide();
+                                $('#forgot-password-view').show();    
                                 } else {
                                 location = $('.base_url').attr('href');
                                 }
