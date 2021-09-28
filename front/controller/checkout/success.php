@@ -197,6 +197,27 @@ class ControllerCheckoutSuccess extends Controller {
             }
         }
 
+        #region
+        //check wallet amount , either running low or not
+
+        // $results_wallet = $this->model_extension_extension->getExtensions('total');
+
+        // foreach ($results_wallet as $key => $value) {
+        // echo "<pre>";print_r('checkWalletRunningLow');
+           
+            if ($this->config->get('credit' . '_status')) //$result['code']
+            {
+                $this->checkWalletRunningLow();
+        // echo "<pre>";print_r('sdfsdfsd');die;
+
+
+            }
+                // echo "<pre>";print_r('checkWalletRunningLowsdfsdf');die;
+
+        // }
+
+
+        #endregion 
         $data['button_continue'] = $this->language->get('button_continue');
 
         $data['continue'] = $this->url->link('common/home');
@@ -932,7 +953,7 @@ class ControllerCheckoutSuccess extends Controller {
                     ],
                     'shopping_cart' => $present, //(required) ,
                         //'payment' => array('type' => 'credit','status' => 'approved, declined or pending' )//(required) //(required)
-//Payment type used by the customer. We support credit, boleto, debit, transfer and voucher.
+        //Payment type used by the customer. We support credit, boleto, debit, transfer and voucher.
                 ]);
 
                 $kondutoPrivateKey = $this->config->get('config_konduto_private_key');
@@ -1369,6 +1390,27 @@ class ControllerCheckoutSuccess extends Controller {
         // 	return true;
         // return false;
         return $data['products'];
+    }
+
+
+
+    public function checkWalletRunningLow() {
+         try
+         {
+            $log = new Log('error.log');
+            $log->write('checkWalletRunningLow ');
+         $this->load->model('account/customer');
+         $this->model_account_customer->checkWalletRunningLow($this->customer->getId());
+         }
+         catch(exception $ex)
+         {
+            $log = new Log('error.log');
+            $log->write('checkWalletRunningLow ');
+            $log->write($ex);
+
+         }
+
+       
     }
 
 }

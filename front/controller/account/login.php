@@ -602,14 +602,14 @@ class ControllerAccountLogin extends Controller {
 
             //print_r($user_query);
             if ($user_query->num_rows) {
-                if ($user_query->row['approved'] && $user_query->row['status']) {
-                    $expired_months = $this->model_account_changepass->passwordexpired($user_query->row['customer_id']);
-                    $checknewpasswordsetted = $this->model_account_changepass->checknewpasswordsetted($user_query->row['customer_id']);
-                    $log = new Log('error.log');
-                    $log->write('expired_months');
-                    $log->write($expired_months);
-                    $log->write($checknewpasswordsetted);
-                    $log->write('expired_months');
+                $expired_months = $this->model_account_changepass->passwordexpired($user_query->row['customer_id']);
+                $checknewpasswordsetted = $this->model_account_changepass->checknewpasswordsetted($user_query->row['customer_id']);
+                $log = new Log('error.log');
+                $log->write('expired_months');
+                $log->write($expired_months);
+                $log->write($checknewpasswordsetted);
+                $log->write('expired_months');
+                if ($user_query->row['approved'] && $user_query->row['status'] && (($checknewpasswordsetted > 0 && $expired_months < 3) || $user_query->row['tempPassword'] == 1)) {
                     $data['customer_id'] = $user_query->row['customer_id'];
                     $data['customer_email'] = $user_query->row['email'];
                     $data['temppassword'] = $user_query->row['tempPassword'];
@@ -668,6 +668,10 @@ class ControllerAccountLogin extends Controller {
                         $this->session->data['order_approval_access'] = $user_query->row['order_approval_access'];
                         $this->session->data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
                     }
+                } elseif ($user_query->row['approved'] && $user_query->row['status'] && ($checknewpasswordsetted <= 0 || $expired_months >= 3)) {
+                    $data['status'] = false;
+
+                    $data['error_warning'] = 'You need to update your password, Because your password is expired.';
                 } else {
                     $data['status'] = false;
 

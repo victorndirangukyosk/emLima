@@ -1336,23 +1336,32 @@ class ModelAccountCustomer extends Model {
         }  
         //get average order value of customer
         //SELECT AVG(total) AS total FROM (select total,order_id from `hf7_order` WHERE customer_id = '273'   ORDER BY order_id DESC   LIMIT 0, 3) as t
-        $query1 = $this->db->query('SELECT AVG(total) AS total FROM (select total,order_id FROM `'.DB_PREFIX."order` WHERE customer_id = '".(int) $customer_id."' ORDER BY order_id DESC LIMIT 0, 5) as t");
+        $query1 = $this->db->query('SELECT AVG(total) AS total FROM (select total,order_id FROM `'.DB_PREFIX."order` WHERE total>0 and customer_id = '".(int) $customer_id."' ORDER BY order_id DESC LIMIT 0, 5) as t");
         // echo '<pre>';print_r('SELECT AVG(total) AS total FROM (select total,order_id FROM `'.DB_PREFIX."order` WHERE customer_id = '".(int) $customer_id."' ORDER BY order_id DESC LIMIT 0, 3) as t");exit;
         if ($query1->num_rows) {
             $customer_order_average= $query1->row['total'];
             }  
             // echo '<pre>';print_r( $customer_order_average);die;
-        if($customer_wallet_amount>0 && $customer_wallet_amount >=  $customer_order_average)
+            $log = new Log('error.log');
+            $log->write($customer_wallet_amount);
+            $log->write('Above wallet, below average order');
+            $log->write($customer_order_average);
+        if($customer_wallet_amount>0 && $customer_wallet_amount <=  $customer_order_average)
         {
             //then send mail to customer
             $data=$this->model_account_customer->getCustomerById($customer_id);
-            //   echo '<pre>';print_r( $data);die;
+            $data= $data[0];
+            //    echo '<pre>'; print_r($data);die;
+            $log->write($data['email']);
 
             try {
-                                 
-                $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
-                $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
-                $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
+                if ($data['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('Customer', 'customer_19'))
+                 {
+                    $log->write('low wallet mail sending');         
+                $subject = $this->emailtemplate->getSubject('Customer', 'customer_19', $data);
+                $message = $this->emailtemplate->getMessage('Customer', 'customer_19', $data);
+                $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_19', $data);
+                // echo '<pre>'; print_r($subject);die;
 
                 $mail = new Mail($this->config->get('config_mail'));
                 $mail->setTo($data['email']);
@@ -1361,6 +1370,36 @@ class ModelAccountCustomer extends Model {
                 $mail->setSubject($subject);
                 $mail->setHTML($message);
                 $mail->send();
+                }
+
+                
+
+                if ($data['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_19')) {
+
+                    $ret = $this->emailtemplate->sendmessage($data['telephone'], $sms_message);
+                }
+
+                // if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_19')) {
+
+                //     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_19', $data);
+
+                //     //$log->write($mobile_notification_template);
+                //     $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_19' , $data);
+
+                //     //$log->write($mobile_notification_title);
+
+                //     if (isset($data) && isset($data['device_id']) && $data['mobile_notification'] == 1 && strlen($data['device_id']) > 0) {
+
+                //         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                //         $ret = $this->emailtemplate->sendPushNotification($data['customer_id'], $data['device_id'], '', '', $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+
+                //     } else {
+                //         $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+                //     }
+
+                    
+                // }
+
             } catch (Exception $e) {
             //   echo '<pre>';print_r( $data);die;
                 
