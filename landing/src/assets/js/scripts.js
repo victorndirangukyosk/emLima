@@ -108,6 +108,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                         });
                         }
                         else if(json['password_expired'] == true) {
+                        console.log('password expired!');
                         iziToast.error({
                         position: 'topRight',
                         message: json['error_warning']
