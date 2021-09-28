@@ -469,6 +469,7 @@ class ModelAccountCustomer extends Model {
             'email' => $customer['email'],
             'password' => $password,
             'ip_address' => $customer['ip'],
+            'account_url' => $this->url->link('account/login/customer', '', 'SSL'),
         ];
 
 //Reset Password id = 3
