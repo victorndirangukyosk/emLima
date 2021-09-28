@@ -830,6 +830,14 @@ class ControllerAccountAccount extends Controller {
             }
         }
 
+        $this->load->model('account/changepass');
+        $change_pass_count = $this->model_account_changepass->check_customer_previous_password($this->customer->getId(), $this->request->post['password']);
+        $change_current_pass_count = $this->model_account_changepass->check_customer_current_password($this->customer->getId(), $this->request->post['password']);
+
+        if ($change_pass_count > 0 || $change_current_pass_count > 0) {
+            $this->error['password'] = 'Password must not match previous 3 passwords';
+        }
+
         // if ( DateTime::createFromFormat('d/m/Y', $this->request->post['dob'] ) == FALSE ) {
         //     $this->error['dob'] = $this->language->get( 'error_dob' );
         // }
