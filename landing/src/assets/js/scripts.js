@@ -114,6 +114,7 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                 data: {email: email, password: password, login_latitude:login_latitude, login_longitude:login_longitude, login_mode:'web'},
                                 dataType: 'json',
                                 success: function (json) {
+                                console.log(json);
                                 console.log(json.password_expired);
                                 if (json['status']) {
                                 if (json['redirect'] != null) {
