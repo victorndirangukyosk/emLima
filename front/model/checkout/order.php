@@ -476,7 +476,8 @@ class ModelCheckoutOrder extends Model {
                 'delivery_timeslot' => $order_query->row['delivery_timeslot'],
                 'dropoff_latitude' => $order_query->row['latitude'],
                 'dropoff_longitude' => $order_query->row['longitude'],
-                'amount_partialy_paid'=> $order_query->row['amount_partialy_paid']
+                'amount_partialy_paid'=> $order_query->row['amount_partialy_paid'],
+                'paid'=> $order_query->row['paid']
                     /* 'date_modified' => $order_query->row['date_modified'],
                       'date_added' => $order_query->row['date_added'] */
             );
