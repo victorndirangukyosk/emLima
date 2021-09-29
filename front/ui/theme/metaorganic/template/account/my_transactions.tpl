@@ -1103,16 +1103,16 @@ function showPayWith() {
     .option_pay {
         margin-top:-3px !important;
     }
-.amount
-{
-    text-align: center; 
-    vertical-align: middle;
-}
-.order_id
-{
-    text-align: center; 
-    vertical-align: middle;
-}
+    .amount
+    {
+        text-align: center; 
+        vertical-align: middle;
+    }
+    .order_id
+    {
+        text-align: center; 
+        vertical-align: middle;
+    }
 </style>
 </body>
 </html>
