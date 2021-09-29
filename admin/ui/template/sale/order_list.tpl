@@ -1911,10 +1911,10 @@ function validateFloatKeyPresswithVarient(el, evt, unitvarient) {
    return true;
 	}
 }
-
-
-
-    </script></div>
+$('a.customer_verified').bind("click", function (e) {
+e.preventDefault();
+});
+</script></div>
 <?php echo $footer; ?>
 
 <style>
