@@ -775,11 +775,7 @@ class ControllerDeliversystemDeliversystem extends Controller
         $log->write('updateMpesaOrderStatus');
         $log->write($postData);
 
-        $file = fopen('system/log/mpesa_log.txt', 'w'); //url fopen should be allowed for this to occur
-        if (false === fwrite($file, $postData)) {
-            fwrite('Error: no data written');
-        }
-        fclose($file);
+      
 
         $postData = json_decode($postData);
 
@@ -790,8 +786,28 @@ class ControllerDeliversystemDeliversystem extends Controller
         $log->write($stkCallback->stkCallback->MerchantRequestID);
 
         $manifest_id = $this->model_payment_mpesa->getMpesaOrder($stkCallback->stkCallback->MerchantRequestID);
-
         $log->write('order_id'.$manifest_id);
+        
+        if($manifest_id ==0)
+        {
+        $manifest_id_customer = $this->model_payment_mpesa->getMpesaCustomer($stkCallback->stkCallback->MerchantRequestID);
+        $log->write('customer_id'.$manifest_id_customer);
+        $file = fopen('system/log/mpesa_customer_log.txt', 'w'); //url fopen should be allowed for this to occur
+        if (false === fwrite($file, $postData)) {
+            fwrite('Error: no data written');
+        }
+        fclose($file);
+
+        }
+        else {
+            
+            $file = fopen('system/log/mpesa_log.txt', 'w'); //url fopen should be allowed for this to occur
+            if (false === fwrite($file, $postData)) {
+                fwrite('Error: no data written');
+            }
+            fclose($file);
+        }
+
 
         if (isset($manifest_id)) {
             // Store
@@ -864,7 +880,42 @@ class ControllerDeliversystemDeliversystem extends Controller
                     $response['status'] = true;
                 }
             }
-        } else {
+        } 
+        else if(isset($manifest_id_customer))
+        {
+            //save CallbackMetadata MpesaReceiptNumber
+
+            if (isset($stkCallback->stkCallback->CallbackMetadata->Item)) {
+                foreach ($stkCallback->stkCallback->CallbackMetadata->Item as $key => $value) {
+                    $log->write($value);
+
+                    if ('MpesaReceiptNumber' == $value->Name) {
+                        $this->model_payment_mpesa->insertCustomerTransactionId($manifest_id, $value->Value);
+                    }
+                }
+            }
+
+            // $order_info = $this->model_account_order->getAdminOrder($manifest_id);
+              $customer_info = $this->model_account_customer->getCustomer($manifest_id_customer);
+
+            if (isset($manifest_id_customer) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $customer_info ) {
+                //success pending to processing
+                $order_status_id = $this->config->get('config_order_status_id');
+                $log->write('updateMpesaStatus validate');               
+                $dataAddCredit['customer_id'] = $manifest_id;
+                $dataAddCredit['order_status_id'] = $order_status_id;
+                $dataAddCredit['notify'] = 0;
+                $dataAddCredit['append'] = 0;
+                $dataAddCredit['comment'] = '';
+                $this->load->model('payment/mpesa');
+                $this->model_payment_mpesa->addCustomerHistoryTransaction($customer_id, $this->config->get('mpesa_order_status_id'), $amount_topup,  'mPesa Online', 'mpesa');
+               
+                $response['status'] = true;
+              
+            }
+
+        }
+        else {
             $response['status'] = false;
             $response['error'] = 'Missing data';
         }
