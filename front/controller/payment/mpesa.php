@@ -202,7 +202,7 @@ class ControllerPaymentMpesa extends Controller {
             }
 
             if ($this->request->post['payment_type'] == 'topup') {
-                $amount=$this->request->post['amount'];
+                $amount = $this->request->post['amount'];
             }
             $log->write($amount);
 
@@ -214,7 +214,7 @@ class ControllerPaymentMpesa extends Controller {
             // echo "<pre>";print_r($this->request->post['pending_order_ids']); 
 
 
-             
+
 
 
             $live = 'true';
@@ -284,11 +284,9 @@ class ControllerPaymentMpesa extends Controller {
                         $order_info = $this->model_checkout_order->getOrder($value);
                         $this->model_payment_mpesa->addOrder($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
                     }
-                }
-                else {
-                    
-                    $this->model_payment_mpesa->addOrder(0, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID,$this->customer->getId(),$amount);
-                    
+                } else {
+
+                    $this->model_payment_mpesa->addOrder(0, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), $amount);
                 }
                 /* foreach ($this->session->data['order_id'] as $order_id) {
 
@@ -479,7 +477,7 @@ class ControllerPaymentMpesa extends Controller {
             }
 
             if ($this->request->post['payment_type'] == 'topup') {
-                $amount=$this->request->post['amount'];
+                $amount = $this->request->post['amount'];
             }
 
             $this->request->post['pending_order_ids'] = '';
@@ -561,6 +559,7 @@ class ControllerPaymentMpesa extends Controller {
                         $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
                         $this->model_payment_mpesa->addOrderHistoryTransaction($order_id, $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
                         $json['status'] = true;
+                        $json['redirect'] = $this->url->link('account/transactions');
                         /* $dataAddHisory['order_id'] = $order_id;
                           $dataAddHisory['order_status_id'] = $order_status_id;
                           $dataAddHisory['notify'] = 0;
@@ -612,18 +611,18 @@ class ControllerPaymentMpesa extends Controller {
             }
 
 
-                // for topup $this->request->post['order_id'] will be null
-            if ($this->request->post['payment_type'] == 'topup') {                  
-                
+            // for topup $this->request->post['order_id'] will be null
+            if ($this->request->post['payment_type'] == 'topup') {
+
                 $mpesaDetails = $this->model_payment_mpesa->getMpesaByCustomerId($this->customer->getId());
 
                 $live = true;
 
                 $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
-                $customer_id=$this->customer->getId();
-                $amount_topup=$this->request->post['amount'];
+                $customer_id = $this->customer->getId();
+                $amount_topup = $this->request->post['amount'];
                 if ($mpesaDetails) {
-                   
+
 
                     $BusinessShortCode = $this->config->get('mpesa_business_short_code');
                     $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
@@ -644,7 +643,7 @@ class ControllerPaymentMpesa extends Controller {
                     if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
                         $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
                     }
-                   
+
                     if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
                         //success pending to processing
                         $order_status_id = $this->config->get('mpesa_order_status_id');
@@ -659,11 +658,9 @@ class ControllerPaymentMpesa extends Controller {
                         // $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
                         $this->model_payment_mpesa->insertCustomerTransactionId($customer_id, $stkPushSimulation->CheckoutRequestID);
                         // $this->model_payment_mpesa->addOrderHistoryTransaction($order_id, $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
-                        $this->model_payment_mpesa->addCustomerHistoryTransaction($customer_id, $this->config->get('mpesa_order_status_id'), $amount_topup,  'mPesa Online', 'mpesa', $stkPushSimulation->CheckoutRequestID);
+                        $this->model_payment_mpesa->addCustomerHistoryTransaction($customer_id, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $stkPushSimulation->CheckoutRequestID);
                         $json['status'] = true;
-                        
                     }
-                     
                 }
             }
         }
