@@ -25,10 +25,10 @@ class ModelPaymentMpesa extends Model {
         return $method_data;
     }
 
-    public function addOrder($order_info, $request_id, $checkout_request_id) {
+    public function addOrder($order_info, $request_id, $checkout_request_id,$customer_id=0) {
         //$this->db->query("DELETE FROM " . DB_PREFIX . "mpesa_order WHERE order_id = " . (int) $order_info['order_id']);
 
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "mpesa_order` SET `order_id` = '" . (int) $order_info['order_id'] . "', `request_id` = '" . $request_id . "', `checkout_request_id` = '" . $checkout_request_id . "'");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "mpesa_order` SET `order_id` = '" . (int) $order_info['order_id'] . "', `request_id` = '" . $request_id . "', `checkout_request_id` = '" . $checkout_request_id . "', `customer_id` = '" . $customer_id . "'");
 
         return $this->db->getLastId();
     }
@@ -90,6 +90,19 @@ class ModelPaymentMpesa extends Model {
         return $res;
     }
 
+    public function getMpesaByCustomerId($customer_id) {
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "mpesa_order` WHERE `order_id` = 0 and customer_id='" . $this->db->escape($customer_id) . "'");
+        $log = new Log('error.log');
+        $log->write('result');
+        $log->write($result->rows);
+        $log->write('result');
+        if (count($result->rows) > 0) {
+            $res = $result->rows[$result->num_rows - 1];
+        }
+        //echo '<pre>';print_r($res);exit;
+        return $res;
+    }
+
     public function getMpesaByOrderIdApi($order_id) {
         $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "mpesa_order` WHERE `mpesa_receipt_number` = '" . $this->db->escape($order_id) . "'")->rows;
 
@@ -128,6 +141,32 @@ class ModelPaymentMpesa extends Model {
           $this->db->query('UPDATE `' . DB_PREFIX . "order_history` SET notify = '" . (int) $notify . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
           } */
         //$this->insertOrderTransactionFee($order_id, $order_status_id);
+    }
+
+
+
+
+    public function insertCustomerTransactionId($customer_id, $transaction_id) {
+        /* $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id='" . (int) $order_id . "'";
+
+          $query = $this->db->query($sql); */
+
+        $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = 0 ,customer_id='" . $customer_id . "', transaction_id = '" . $transaction_id . "'";
+
+        $query = $this->db->query($sql);
+    }
+
+
+
+    public function addCustomerHistoryTransaction($customer_id, $order_status_id,$amount_topup, $payment_method, $payment_code, $added_by = '', $added_by_role = '') {
+        $notify = 1;
+        $comment = 'mPesa Transaction Completed Successfully!';       
+
+        if ($order_status_id == 1) {
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = 0, description = 'Topup from mpesa', amount = '" . (float) $amount_topup. "', date_added = NOW()");
+        } 
+
+      
     }
 
 }

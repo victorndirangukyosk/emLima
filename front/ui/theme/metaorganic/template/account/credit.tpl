@@ -4,14 +4,95 @@
                                  
                                 <div class="row">
                                      <div class="col-md-12">
-                                            <div class="cash-info"><h1><?= $text_balance ?></h1>
+                                            <div class="cash-info" style="padding-bottom: 50px;padding-top: 50px;"><h1><?= $text_balance ?></h1>
                                             <div class="cash-block">
                                               <span class="your-cash"> <?= $total ?>  </span>
                                             </div>
                                             <a href="<?= $home ?>" class="btn btn-primary"><?= $text_shopping?></a>
                                             </div>
                                      </div>
+
+
+                                      <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
+                                    <div class="col-md-9" id="pay_with" >
+                                    Top Up With
+                                    <div class="row">
+                                        <!--<div class="col-md-4">
+                                            <div class="radio">
+                                                <label><input class="option_pay" onchange="payOptionSelected()" type="radio" name="pay_with">PesaPal</label>
+                                            </div>
+                                        </div>-->
+                                        <div class="col-md-6">
+                                            <div class="radio">
+                                                <label><input class="option_pay" onchange="payWithmPesa()" type="radio" name="pay_with">mPesa Online</label>
+                                            </div>
+                                        </div>
+                                        <!--<div class="col-md-6">
+                                            <div class="radio">
+                                                <label><input class="option_pay" onchange="LoadInterSwitch()" type="radio" name="pay_with">Interswitch</label>
+                                            </div>
+                                        </div>-->
+                                    </div>
                                 </div>
+
+                                 <input type="hidden" name="customer_id" value="<?php echo $_SESSION['customer_id'];?>">
+                                 
+                                 
+
+                                   <div id="pay-amount" class="col-md-12 confirm_order_class" style="display:none; ">
+                                    <p>Amount</p>
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <span class="input-group-btn" style="padding-bottom: 5px;">
+                                                
+
+                                                <input id="amount_topup" name="amount_topup" type="text" value="" class="form-control input-md" required="" placeholder="Amount" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 50%;" >
+
+                                            </span>
+                                        </div>   
+                                    </div>
+                                    
+                                </div>
+                                
+ 
+
+
+                                <div id="pay-confirm-order-mpesa" class="col-md-12 confirm_order_class" style="display:none; ">
+                                    <p>mPesa Online</p>
+                                    <div class="row">
+                                        <div class="col-md-7">
+                                            <span class="input-group-btn" style="padding-bottom: 10px;">
+                                                <p id="button-reward" class="" style="padding: 13px 14px;    margin-top: -9px;border-radius: 2px;font-size: 15px;font-weight: 600;color: #fff;background-color: #522e5b;border-color: #522e5b;display: inline-block;margin-bottom: 0;line-height: 1.42857143;vertical-align: middle;-ms-touch-action: manipulation;touch-action: manipulation;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;background-image: none;margin-right: -1px;">
+                                                    <font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">+254</font></font></font></font>
+                                                </p>
+
+                                                <input id="mpesa_phone_number" name="telephone" type="text" value="<?php echo $this->customer->getTelephone(); ?>" class="form-control input-md" required="" placeholder="Mobile number" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 50%;" >
+
+                                            </span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <button type="button" id="mpesa-button-confirm" data-toggle="collapse" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button>
+                                            
+                                            <button type="button" id="button-retry" class="btn btn-default"> Retry</button>
+
+                                            <button type="button" id="button-complete" data-toggle="collapse" data-loading-text="checking payment..." class="btn btn-default">Confirm Payment</button>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="alert alert-danger" id="error_msg" style="margin-bottom: 7px;">
+                                            </div>
+                                            <div class="alert alert-success" style="font-size: 14px;" id="success_msg" style="margin-bottom: 7px;">
+                                            </div>
+                                        </div>    
+                                    </div>
+                                    <!--MPESA REMOVED FROM HERE-->
+                                </div>
+                                
+                                </div>
+                                
+                                </div>
+                            
+
+
                                 <?php if ($credits) { ?>
                                  <div class="credit-details">
                                     <?php foreach ($credits  as $credit) { ?>
@@ -192,6 +273,197 @@ __kdt.push({"post_on_load": false});
 
             /**/
     });
+
+
+     function payWithmPesa() {
+        $("#pay-confirm-order").html('');
+        $("#pay-confirm-order").hide();
+        $("#pay-confirm-order-mpesa").show();
+        $("#pay-amount").show();
+    }
+
     </script>
+
+
+    <script type="text/javascript">
+
+        $('#error_msg').hide();
+        $('#success_msg').hide();
+        $('#button-complete').hide();
+        $('#button-retry').hide();
+	
+        $( document ).ready(function() {
+            console.log("referfxx def");
+            if($('#mpesa_phone_number').val().length >= 9) {
+                $( "#mpesa-button-confirm" ).prop( "disabled", false );
+            } else {
+                $( "#mpesa-button-confirm" ).prop( "disabled", true );
+            }
+        });
+
+        $('#mpesa_phone_number').on('input', function() { 
+            console.log("referfxx");
+            if($(this).val().length >= 9) {
+                $( "#mpesa-button-confirm" ).prop( "disabled", false );
+            } else {
+                $( "#mpesa-button-confirm" ).prop( "disabled", true );
+            }
+        });
+
+        $('#mpesa-button-confirm,#button-retry').on('click', function() {
+	    
+            $('#loading').show();
+
+            $('#error_msg').hide();
+            
+            //var radioValue = $("input[name='pay_option']:checked").val();
+            var total_amount = $("input[name='amount_topup']").val();
+            console.log(total_amount);
+            
+            if (total_amount <= 0) {
+                
+            alert('Please enter the amount, you like to top up with');
+            return;
+            
+            }  
+            var radioValue ='topup';
+            var val = null;
+            var total = $("input[name='amount_topup']").val();
+
+            if($('#mpesa_phone_number').val().length >= 9) {
+                $.ajax({
+                        type: 'post',
+                        url: 'index.php?path=payment/mpesa/confirmtransaction',
+                        data: { 
+                        mobile : encodeURIComponent($('#mpesa_phone_number').val()),
+                        order_id: null,
+                        amount: total,
+                        payment_type: radioValue,
+                        payment_method : 'mpesa'
+                        },
+                        dataType: 'json',
+                        cache: false,
+                        beforeSend: function() {
+                            $(".overlayed").show();
+                            $('#mpesa-button-confirm').button('loading');
+                        },
+                        complete: function() {
+                            $(".overlayed").hide();
+                        },      
+                        success: function(json) {
+
+                                console.log(json);
+                                console.log('json mpesa');
+
+                                $('#mpesa-button-confirm').button('reset');
+                            $('#loading').hide();
+
+                                if(json['processed']) {
+                                        //location = '<?php echo $continue; ?>';
+		        		
+                                        //$('#success_msg').html('A payment request has been sent to the mpesa number '+$('#mpesa_phone_number').val()+'. Please wait for a few seconds then check for your phone for an MPESA PIN entry prompt.');
+
+                                        $('#success_msg').html('A payment request has been sent on your above number. Please make the payment by entering mpesa PIN and click on Confirm Payment button after receiving sms from mpesa');
+		        		
+                                        $('#success_msg').show();
+		        		
+                                        $('#button-complete').show();
+
+                                        console.log('json mpesa1');
+                                        $('#mpesa-button-confirm').hide();
+                                        $('#button-retry').hide();
+                                        console.log('json mpesa2');
+
+                                } else {
+                                        console.log('json mpesa err');
+                                        console.log(json['error']);
+                                        $('#error_msg').html(json['error']);
+                                        $('#error_msg').show();
+                                }
+		            
+                        },
+                        error: function(json) {
+
+                                console.log('josn mpesa');
+                                console.log(json);
+
+                                $('#error_msg').html(json['responseText']);
+                                $('#error_msg').show();
+                        }
+                    });
+            }
+        });
+
+        $('#button-complete').on('click', function() {
+	    
+            $('#error_msg').hide();
+            $('#success_msg').hide();        
+            //var radioValue = $("input[name='pay_option']:checked").val();
+            
+            var total_amount = $("input[name='amount_topup']").val();
+            console.log(total_amount);
+
+            if (total_amount <= 0) {                
+            alert('Please enter the amount, you like to top up with');
+            return;            
+            }  
+            var radioValue ='topup';
+            var val = null;
+            var total = $("input[name='amount_topup']").val();
+            
+
+        $.ajax({
+                type: 'post',
+                url: 'index.php?path=payment/mpesa/completetransaction',
+            dataType: 'json',
+                cache: false,
+                data: { 
+                        mobile : encodeURIComponent($('#mpesa_phone_number').val()),
+                        order_id: null,
+                        amount: total,
+                        payment_type: radioValue,
+                        payment_method : 'mpesa'
+                        },
+                beforeSend: function() {
+                    $(".overlayed").show();
+                    $('#button-complete').button('loading');
+                },
+                complete: function() {
+                    $(".overlayed").hide();
+                    $('#button-complete').button('reset');
+                },      
+                success: function(json) {
+
+                        console.log(json);
+                        console.log('json mpesa');
+                        if(json['status']) {
+                                //success
+	        		
+                                $('#success_msg').html('Payment Successfull.');
+                                $('#success_msg').show();
+                        } else {
+
+                                //failed
+                                //$('#mpesa-button-confirm').show();
+                                //$('#button-retry').hide();
+                                //$('#button-complete').hide();
+
+                                $('#error_msg').html(json['error']);
+                                $('#error_msg').show();
+
+                                $('#button-complete').hide();
+                                $('#button-retry').show();
+
+                        }
+	            
+                },
+                error: function(json) {
+                        $('#error_msg').html(json['responseText']);
+                        $('#error_msg').show();
+                }
+            });
+        });
+</script>
+
     </body>
 </html>
