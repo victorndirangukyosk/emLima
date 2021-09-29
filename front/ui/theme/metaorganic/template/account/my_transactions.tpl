@@ -1063,9 +1063,9 @@ function showPayWith() {
                         console.log('json mpesa');
                         if(json['status']) {
                                 //success
-	        		
-                                $('#success_msg').html('Payment Successfull.');
+                                $('#success_msg').html('Payment Successfull. Wait Until Page Refresh!');
                                 $('#success_msg').show();
+                                setInterval(function(){ window.location.replace(json['redirect']); }, 10000);
                         } else {
 
                                 //failed
