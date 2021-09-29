@@ -182,6 +182,7 @@ class ModelPaymentMpesa extends Model {
         /* $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id='" . (int) $order_id . "'";
 
           $query = $this->db->query($sql); */
+        $this->deleteCustomerTransactionId($customer_id, $transaction_id);
 
         $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = 0 ,customer_id='" . $customer_id . "', transaction_id = '" . $transaction_id . "'";
 
