@@ -819,6 +819,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 $dataAddHisory['notify'] = 0;
                 $dataAddHisory['append'] = 0;
                 $dataAddHisory['comment'] = '';
+                $dataAddHisory['paid'] = 'Y';
 
                 $url = HTTPS_SERVER;
                 $api = 'api/order/addHistory';

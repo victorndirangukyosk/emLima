@@ -718,6 +718,7 @@ class ControllerApiOrder extends Controller
                 'notify',
                 'append',
                 'comment',
+                'paid',
             ];
 
             $log->write('1');
@@ -741,7 +742,7 @@ class ControllerApiOrder extends Controller
             $log->write($order_id);
 
             if ($order_info) {
-                $this->model_checkout_order->addOrderHistory($order_id, $this->request->get['order_status_id'], $this->request->get['comment'], $this->request->get['notify']);
+                $this->model_checkout_order->addOrderHistory($order_id, $this->request->get['order_status_id'], $this->request->get['comment'], $this->request->get['notify'], $this->request->get['paid']);
 
                 $json['success'] = $this->language->get('text_success');
             } else {
