@@ -867,13 +867,16 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                     if ('MpesaReceiptNumber' == $value->Name) {
                         $this->model_payment_mpesa->insertCustomerTransactionId($manifest_id, $value->Value);
+                        $transaction_id=$value->Value;
                     }
                 }
             }
 
 // $order_info = $this->model_account_order->getAdminOrder($manifest_id);
+            $this->load->model('account/customer');
             $customer_info = $this->model_account_customer->getCustomer($manifest_id_customer);
-
+            $this->load->model('payment/mpesa');
+            $amount_topup= $this->model_payment_mpesa->getTopupAmount($manifest_id_customer,$transaction_id);
             if (isset($manifest_id_customer) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $customer_info) {
 //success pending to processing
                 $order_status_id = $this->config->get('config_order_status_id');
@@ -884,7 +887,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 $dataAddCredit['append'] = 0;
                 $dataAddCredit['comment'] = '';
                 $this->load->model('payment/mpesa');
-                $this->model_payment_mpesa->addCustomerHistoryTransaction($customer_id, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa');
+                $this->model_payment_mpesa->addCustomerHistoryTransaction($manifest_id_customer, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa',$transaction_id);
 
                 $response['status'] = true;
             }
