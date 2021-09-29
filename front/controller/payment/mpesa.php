@@ -234,7 +234,7 @@ class ControllerPaymentMpesa extends Controller {
                 $BusinessShortCode = $this->config->get('mpesa_business_short_code');
                 $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
                 $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
-                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
+                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatusTransactions', '', 'SSL');
                 //$CallBackURL = 'https://a1c6dda0aaba.ngrok.io/kwikbasket/index.php?path=deliversystem/deliversystem/mpesaOrderStatus';
 
                 $Amount = $amount;
