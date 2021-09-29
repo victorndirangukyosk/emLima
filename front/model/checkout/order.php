@@ -112,7 +112,7 @@ class ModelCheckoutOrder extends Model {
     public function addMultiOrder($stores) {
 
         $log = new Log('error.log');
-        $log->write('addMultiOrder 1');
+        $log->write('addMultiOrder 1'); 
         /*TIME ZONE ISSUE*/
         $tz = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('P');
         $this->db->query("SET time_zone='$tz';");
@@ -152,7 +152,8 @@ class ModelCheckoutOrder extends Model {
                         $credit_total_value=$tot['value'];
                         if($credit_total_value<0)
                         {
-                        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount deducted', amount = '" . (float) $tot['value'] . "', date_added = NOW()");
+                            $this->db->query('DELETE FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $data['customer_id'] . "' and  order_id = '" . (int)  $order_id . "'");
+                            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount deducted', amount = '" . (float) $tot['value'] . "', date_added = NOW()");
                            
                         }
                     }
@@ -237,6 +238,9 @@ class ModelCheckoutOrder extends Model {
                         $credit_total_value=$tot['value'];
                         if($credit_total_value<0)
                         {
+                            //as the same method is calling multiple times, delete if credit record is available
+                        $this->db->query('DELETE FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $data['customer_id'] . "' and  order_id = '" . (int)  $order_id . "'");
+
                         $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount deducted', amount = '" . (float) $tot['value'] . "', date_added = NOW()");
                            
                         }
