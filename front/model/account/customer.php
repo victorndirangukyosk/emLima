@@ -126,6 +126,7 @@ class ModelAccountCustomer extends Model {
         }
 
         $customer_id = $this->db->getLastId();
+        $this->savepassword($customer_id, $data['password']);
 
         if (!empty($data['country_id'])) {
             $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', dob = '" . $data['dob'] . "', company = '" . $this->db->escape($data['company']) . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', city_id = '" . $this->db->escape($data['cityid']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
@@ -289,7 +290,7 @@ class ModelAccountCustomer extends Model {
 
             $this->trigger->fire('pre.customer.edit.password');
 
-            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '".$password."',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '" . $password . "',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
 
             $this->trigger->fire('post.customer.edit.password');
         }
@@ -1326,54 +1327,51 @@ class ModelAccountCustomer extends Model {
         }
     }
 
-
-
     public function checkWalletRunningLow($customer_id) {
         //check the customer wallet and send mail, if wallet is low
-        $query = $this->db->query('SELECT SUM(amount) AS total FROM `'.DB_PREFIX."customer_credit` WHERE customer_id = '".(int) $customer_id."' GROUP BY customer_id");
-        $customer_wallet_amount=0; $customer_order_average=0;
+        $query = $this->db->query('SELECT SUM(amount) AS total FROM `' . DB_PREFIX . "customer_credit` WHERE customer_id = '" . (int) $customer_id . "' GROUP BY customer_id");
+        $customer_wallet_amount = 0;
+        $customer_order_average = 0;
         if ($query->num_rows) {
-        $customer_wallet_amount= $query->row['total'];
-        }  
+            $customer_wallet_amount = $query->row['total'];
+        }
         //get average order value of customer
         //SELECT AVG(total) AS total FROM (select total,order_id from `hf7_order` WHERE customer_id = '273'   ORDER BY order_id DESC   LIMIT 0, 3) as t
-        $query1 = $this->db->query('SELECT AVG(total) AS total FROM (select total,order_id FROM `'.DB_PREFIX."order` WHERE total>0 and customer_id = '".(int) $customer_id."' ORDER BY order_id DESC LIMIT 0, 5) as t");
+        $query1 = $this->db->query('SELECT AVG(total) AS total FROM (select total,order_id FROM `' . DB_PREFIX . "order` WHERE total>0 and customer_id = '" . (int) $customer_id . "' ORDER BY order_id DESC LIMIT 0, 5) as t");
         // echo '<pre>';print_r('SELECT AVG(total) AS total FROM (select total,order_id FROM `'.DB_PREFIX."order` WHERE customer_id = '".(int) $customer_id."' ORDER BY order_id DESC LIMIT 0, 3) as t");exit;
         if ($query1->num_rows) {
-            $customer_order_average= $query1->row['total'];
-            }  
-            // echo '<pre>';print_r( $customer_order_average);die;
-            $log = new Log('error.log');
-            $log->write($customer_wallet_amount);
-            $log->write('Above wallet, below average order');
-            $log->write($customer_order_average);
-        if($customer_wallet_amount>0 && $customer_wallet_amount <=  $customer_order_average)
-        {
+            $customer_order_average = $query1->row['total'];
+        }
+        // echo '<pre>';print_r( $customer_order_average);die;
+        $log = new Log('error.log');
+        $log->write($customer_wallet_amount);
+        $log->write('Above wallet, below average order');
+        $log->write($customer_order_average);
+        if ($customer_wallet_amount > 0 && $customer_wallet_amount <= $customer_order_average) {
             //then send mail to customer
-            $data=$this->model_account_customer->getCustomerById($customer_id);
-            $data= $data[0];
+            $data = $this->model_account_customer->getCustomerById($customer_id);
+            $data = $data[0];
             //    echo '<pre>'; print_r($data);die;
             $log->write($data['email']);
 
             try {
-                if ($data['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('Customer', 'customer_19'))
-                 {
-                    $log->write('low wallet mail sending');         
-                $subject = $this->emailtemplate->getSubject('Customer', 'customer_19', $data);
-                $message = $this->emailtemplate->getMessage('Customer', 'customer_19', $data);
-                $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_19', $data);
-                // echo '<pre>'; print_r($subject);die;
+                if ($data['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('Customer', 'customer_19')) {
+                    $log->write('low wallet mail sending');
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_19', $data);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_19', $data);
+                    $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_19', $data);
+                    // echo '<pre>'; print_r($subject);die;
 
-                $mail = new Mail($this->config->get('config_mail'));
-                $mail->setTo($data['email']);
-                $mail->setFrom($this->config->get('config_from_email'));
-                $mail->setSender($this->config->get('config_name'));
-                $mail->setSubject($subject);
-                $mail->setHTML($message);
-                $mail->send();
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($data['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setSubject($subject);
+                    $mail->setHTML($message);
+                    $mail->send();
                 }
 
-                
+
 
                 if ($data['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_19')) {
 
@@ -1381,33 +1379,29 @@ class ModelAccountCustomer extends Model {
                 }
 
                 // if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_19')) {
-
                 //     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_19', $data);
-
                 //     //$log->write($mobile_notification_template);
                 //     $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_19' , $data);
-
                 //     //$log->write($mobile_notification_title);
-
                 //     if (isset($data) && isset($data['device_id']) && $data['mobile_notification'] == 1 && strlen($data['device_id']) > 0) {
-
                 //         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
                 //         $ret = $this->emailtemplate->sendPushNotification($data['customer_id'], $data['device_id'], '', '', $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
-
                 //     } else {
                 //         $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
                 //     }
-
-                    
                 // }
-
             } catch (Exception $e) {
-            //   echo '<pre>';print_r( $data);die;
-                
+                //   echo '<pre>';print_r( $data);die;
             }
-
         }
+    }
 
+    public function savepassword($customer_id, $password) {
+        /* TIME ZONE ISSUE */
+        $tz = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('P');
+        $this->db->query("SET time_zone='$tz';");
+        /* TIME ZONE ISSUE */
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "password_resets SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', customer_id = '" . $customer_id . "', created_at = NOW()");
     }
 
 }
