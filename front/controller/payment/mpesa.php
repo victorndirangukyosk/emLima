@@ -667,6 +667,7 @@ class ControllerPaymentMpesa extends Controller {
                         // $this->model_payment_mpesa->addOrderHistoryTransaction($order_id, $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
                         $this->model_payment_mpesa->addCustomerHistoryTransaction($customer_id, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $stkPushSimulation->MerchantRequestID);
                         $json['status'] = true;
+                        $json['redirect'] = $this->url->link('account/credit');
                     }
                 }
             }
