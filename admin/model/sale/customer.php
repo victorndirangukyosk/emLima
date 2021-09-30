@@ -1990,4 +1990,20 @@ class ModelSaleCustomer extends Model {
         return $query->num_rows;
     }
 
+
+    public function getParentCutomerFromOrder($order_id) {
+        $query = $this->db->query('SELECT customer_id,parent FROM ' . DB_PREFIX . "order WHERE order_id = '" . (int) $order_id . "'");
+        // echo '<pre>';print_r($query->row['customer_id']);exit;
+        if($query->row['parent']==null ||$query->row['parent']==0 )
+        {
+        return $query->row['customer_id'];
+        }
+        else {
+           
+        $parent=   $query->row['parent'];
+        $query1 = $this->db->query('SELECT customer_id FROM ' . DB_PREFIX . "customer WHERE parent = '" . (int) $parent . "'");
+        return $query->row['customer_id'];
+        }
+    }
+
 }
