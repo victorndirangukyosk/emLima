@@ -133,6 +133,11 @@
                                       <td><?php echo $SAP_customer_no; ?></td>
                                   </tr>
                                   <tr>
+                                      <th>Temporary Password</th>
+                                      <td><?php echo $temporary_password;  ?></td>
+                                  </tr>
+                                  
+                                  <tr>
                                       <th>Account Manager</th>
                                       <td><?php if($account_manager_name != NULL) { echo $account_manager_name; } ?></td>
                                   </tr>
