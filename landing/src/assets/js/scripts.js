@@ -129,18 +129,18 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                     
                                 if(json.password_expired == true) {
                                 console.log('password expired!');
-                                iziToast.error({
+                                /*iziToast.error({
                                 position: 'topRight',
                                 message: json.error_warning
-                                });
+                                });*/
                                 $('#login-view').hide();
                                 $('#forgot-password-view').show();    
                                 }
                                 
-                                /*iziToast.error({
+                                iziToast.error({
                                 position: 'topRight',
                                 message: json['error_warning']
-                                });*/
+                                });
                                 loginButton.text('LOGIN');
                                 loginButton.toggleClass('disabled');
                                 }
