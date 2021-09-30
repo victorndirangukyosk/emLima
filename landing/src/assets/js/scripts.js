@@ -137,10 +137,10 @@ $('input[name=\'register-accountmanager-id\']').autocomplete({
                                 $('#forgot-password-view').show();    
                                 }
                                 
-                                iziToast.error({
+                                /*iziToast.error({
                                 position: 'topRight',
                                 message: json['error_warning']
-                                });
+                                });*/
                                 loginButton.text('LOGIN');
                                 loginButton.toggleClass('disabled');
                                 }
