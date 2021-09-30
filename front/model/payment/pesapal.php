@@ -140,7 +140,7 @@ class ModelPaymentPesapal extends Model {
         $this->insertOrderTransactionFee($order_id, $order_status_id);
     }
 
-    public function addOrderHistoryFailed($order_id, $order_status_id, $added_by = '', $added_by_role = '', $paid = null) {
+    public function addOrderHistoryFailed($order_id, $order_status_id, $added_by = '', $added_by_role = '', $paid) {
         $notify = 1;
         $comment = '';
         if ($paid == 'Y') {
