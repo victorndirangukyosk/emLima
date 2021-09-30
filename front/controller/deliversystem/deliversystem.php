@@ -773,14 +773,14 @@ class ControllerDeliversystemDeliversystem extends Controller {
         if ($manifest_id == 0) {
             $manifest_id_customer = $this->model_payment_mpesa->getMpesaCustomer($stkCallback->stkCallback->MerchantRequestID);
             $log->write('customer_id' . $manifest_id_customer);
-            $file = fopen('system/log/mpesa_customer_log.txt', 'w'); //url fopen should be allowed for this to occur
+            $file = fopen('system/log/mpesa_customer_log.txt', 'w+'); //url fopen should be allowed for this to occur
             if (false === fwrite($file, $postData)) {
                 fwrite('Error: no data written');
             }
             fclose($file);
         } else {
 
-            $file = fopen('system/log/mpesa_log.txt', 'w'); //url fopen should be allowed for this to occur
+            $file = fopen('system/log/mpesa_log.txt', 'w+'); //url fopen should be allowed for this to occur
             if (false === fwrite($file, $postData)) {
                 fwrite('Error: no data written');
             }
