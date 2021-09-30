@@ -166,7 +166,7 @@ class ControllerSaleOrderReceivables extends Controller
         ];
         //filter commented, becoz, if multiple customers, then unable to add wallet to  particular customer
         //|| '' != $filter_company|| '' != $filter_date_added || '' != $filter_date_added_end
-        if ('' != $filter_customer  || '' != $filter_order_id ) {
+        if ('' != $filter_customer  || '' != $filter_order_id || '' != $filter_company) {
            // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
            $order_total_grandTotal = $this->model_sale_order_receivables->getTotalOrderReceivablesAndGrandTotal($filter_data);
            $order_total_grandTotal_success = $this->model_sale_order_receivables->getTotalSuccessfulOrderReceivablesAndGrandTotal($filter_data_success);
@@ -628,8 +628,9 @@ class ControllerSaleOrderReceivables extends Controller
 
                     //get customer id
                     $this->load->model('sale/customer');
-                    $customer_id= $this->model_sale_customer->getCutomerFromOrder($order_any_selected);
-
+                    // $customer_id= $this->model_sale_customer->getCutomerFromOrder($order_any_selected);
+                    //as we are using company filter, and it may contain different sub customers, add amount to parent customer
+                   $customer_id= $this->model_sale_customer->getParentCutomerFromOrder($order_any_selected);
                     
                     if($wallet_amount > 0)//add to customer wallet
                     {                    

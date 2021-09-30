@@ -496,9 +496,9 @@
             }
 
         //filter commented, becoz, if multiple customers, then unable to add wallet to  particular customer
-              
+             //add wallet to parent 
             //&& filter_company==0 && filter_date_added== '' && filter_date_added_end == ''
-             if(filter_customer==0 && filter_order_id==0 )
+             if(filter_customer==0 && filter_order_id==0  && filter_company==0)
             {
                 //or company or date filters
                 alert("Please select either customer or order_id ");
