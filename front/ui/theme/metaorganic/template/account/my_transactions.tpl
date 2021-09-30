@@ -24,7 +24,7 @@
                                 <th class="order_id">Order Total</th>
                                 <th class="order_id">Amount Payable</th>
                                 <th class="order_id">Payment Method</th>
-                                <th class="order_id">Action</th>
+                                <!--<th class="order_id">Action</th>-->
                             </tr>
                         </thead>
                         <tbody id="emp_body">
@@ -114,21 +114,21 @@
         <div class="col-md-9" id="pay_with" style="display:none;">
             Pay With
             <div class="row">
-                <!--<div class="col-md-4">
+                <div class="col-md-6">
                     <div class="radio">
                         <label><input class="option_pay" onchange="payOptionSelected()" type="radio" name="pay_with">PesaPal</label>
                     </div>
-                </div>-->
+                </div>
                 <div class="col-md-6">
                     <div class="radio">
                         <label><input class="option_pay" onchange="payWithmPesa()" type="radio" name="pay_with">mPesa Online</label>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <!--<div class="col-md-6">
                     <div class="radio">
                         <label><input class="option_pay" onchange="LoadInterSwitch()" type="radio" name="pay_with">Interswitch</label>
                     </div>
-                </div>
+                </div>//-->
             </div>
         </div>
         
@@ -638,7 +638,7 @@ function showPayWith() {
                 tr.append("<td class='amount'>" + displayRecords[i].total_currency + "</td>");
                 tr.append("<td class='amount'>" + displayRecords[i].pending_amount_currency + "</td>");
                 tr.append("<td>" + displayRecords[i].payment_method + "</td>");
-                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPays(" + displayRecords[i].order_id + "," + displayRecords[i].pending_amount + ")'>Pay Now</a></td>");
+                <!--tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPays(" + displayRecords[i].order_id + "," + displayRecords[i].pending_amount + ")'>Pay Now</a></td>");//-->
                 $('#emp_body').append(tr);
             }
         }

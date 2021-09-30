@@ -406,6 +406,16 @@
                                        <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
                                        </a> 
                                        <?php } ?>
+                                       <?php if ($order['paid'] == 'Y'  && (!$this->user->isVendor())) { ?>
+                                       <a href="#" class="customer_verified" data-toggle="tooltip" title="Paid">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                                       </a> 
+                                       <?php } ?>
+                                       <?php if ($order['paid'] == 'P'  && (!$this->user->isVendor())) { ?>
+                                       <a href="#" class="customer_verified" data-toggle="tooltip" title="Partially Paid">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                                       </a> 
+                                       <?php } ?>
                                        <!-- <?php if ($order['order_status_id'] == 1  && (!$this->user->isVendor()))    { ?>
                                        <a href="#" data-toggle="tooltip" data-target="store_modal" title="Order Products List" data-orderid="<?= $order['order_id'] ?>" id="order_products_list">
                                        <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 512 512" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M499.5 385.4L308.9 57.2c-31.8-52.9-74.1-52.9-105.9 0L12.5 385.4c-31.8 52.9 0 95.3 63.5 95.3h360c63.5 0 95.3-42.4 63.5-95.3zm-201.1 52.9h-84.7v-84.7h84.7v84.7zm0-127h-84.7V120.7h84.7v190.6z" fill="#626262"/></svg>
@@ -1901,10 +1911,10 @@ function validateFloatKeyPresswithVarient(el, evt, unitvarient) {
    return true;
 	}
 }
-
-
-
-    </script></div>
+$('a.customer_verified').bind("click", function (e) {
+e.preventDefault();
+});
+</script></div>
 <?php echo $footer; ?>
 
 <style>

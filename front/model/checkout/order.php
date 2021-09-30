@@ -486,7 +486,7 @@ class ModelCheckoutOrder extends Model {
         }
     }
 
-    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '', $other_vendor_terms = null) {
+    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '', $other_vendor_terms = null, $paid = null) {
 
         //$notify = true;
         $log = new Log('error.log');
@@ -621,9 +621,9 @@ class ModelCheckoutOrder extends Model {
             $log->write('accept_vendor_terms');
             $log->write($other_vendor_terms);
             $log->write('accept_vendor_terms');
-            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', vendor_terms_cod ='" . (int) $other_vendor_terms . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', vendor_terms_cod ='" . (int) $other_vendor_terms . "', paid ='" .  $paid . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
             } else {
-            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");    
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', paid ='" .  $paid . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");    
             }
 
             $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
