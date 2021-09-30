@@ -2002,7 +2002,7 @@ class ModelSaleCustomer extends Model {
            
         $parent=   $query->row['parent'];
         $query1 = $this->db->query('SELECT customer_id FROM ' . DB_PREFIX . "customer WHERE parent = '" . (int) $parent . "'");
-        return $query->row['customer_id'];
+        return $query1->row['customer_id'];
         }
     }
 
