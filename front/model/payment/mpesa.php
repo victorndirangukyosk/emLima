@@ -182,22 +182,22 @@ class ModelPaymentMpesa extends Model {
         /* $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id='" . (int) $order_id . "'";
 
           $query = $this->db->query($sql); */
-        $this->deleteCustomerTransactionId($customer_id, $transaction_id);
+        // $this->deleteCustomerTransactionId($customer_id, $transaction_id);
 
         $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = 0 ,customer_id='" . $customer_id . "', transaction_id = '" . $transaction_id . "'";
 
         $query = $this->db->query($sql);
     }
 
-    public function addCustomerHistoryTransaction($customer_id, $order_status_id, $amount_topup, $payment_method, $payment_code, $transaction_id, $added_by = '', $added_by_role = '') {
+    public function addCustomerHistoryTransaction($customer_id, $order_status_id, $amount_topup, $payment_method, $payment_code, $merchant_request_id, $added_by = '', $added_by_role = '') {
         $notify = 1;
         $comment = 'mPesa Transaction Completed Successfully!';
-        $sql1 = 'DELETE FROM ' . DB_PREFIX . "customer_credit WHERE order_id = 0 and customer_id= '" . (int) $customer_id . "'and transaction_id = '" . $transaction_id . "'";
+        $sql1 = 'DELETE FROM ' . DB_PREFIX . "customer_credit WHERE order_id = 0 and customer_id= '" . (int) $customer_id . "'and transaction_id = '" . $merchant_request_id . "'";
 
         $query = $this->db->query($sql1);
 
         // if ($order_status_id == 1) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = 0, description = 'Topup from mpesa', amount = '" . (float) $amount_topup . "', date_added = NOW(),transaction_id='" . $transaction_id . "'");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = 0, description = 'Topup from mpesa', amount = '" . (float) $amount_topup . "', date_added = NOW(),transaction_id='" . $merchant_request_id . "'");
         // } 
     }
 

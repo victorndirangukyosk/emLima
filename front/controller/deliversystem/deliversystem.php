@@ -805,7 +805,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     $order_info = $this->model_account_order->getAdminOrder($manifest_id);
 
                     if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $order_info && !$order_info['order_status_id']) {
-        //success pending to processing
+                        //success pending to processing
                         $order_status_id = $this->config->get('config_order_status_id');
 
                         $log->write('updateMpesaOrderStatus validate');
@@ -860,26 +860,29 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         }
                     }
                 } else if (isset($manifest_id_customer)) {
-        //save CallbackMetadata MpesaReceiptNumber
-
+                        //save CallbackMetadata MpesaReceiptNumber
+                        $amount_topup=0;
                     if (isset($stkCallback->stkCallback->CallbackMetadata->Item)) {
                         foreach ($stkCallback->stkCallback->CallbackMetadata->Item as $key => $value) {
                             $log->write($value);
 
                             if ('MpesaReceiptNumber' == $value->Name) {
                                 $this->model_payment_mpesa->insertCustomerTransactionId($manifest_id, $value->Value);
-                                $transaction_id=$value->Value;
+                                // $transaction_id=$value->Value;wrong
+                            }
+
+                            if ('Amount' == $value->Name) {
+                                 $amount_topup==$value->Value;
                             }
                         }
                     }
 
-        // $order_info = $this->model_account_order->getAdminOrder($manifest_id);
+                // $order_info = $this->model_account_order->getAdminOrder($manifest_id);
                     $this->load->model('account/customer');
                     $customer_info = $this->model_account_customer->getCustomer($manifest_id_customer);
                     $this->load->model('payment/mpesa');
-                    $amount_topup= $this->model_payment_mpesa->getTopupAmount($manifest_id_customer,$transaction_id);
                     if (isset($manifest_id_customer) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $customer_info) {
-        //success pending to processing
+                        //success pending to processing
                         $order_status_id = $this->config->get('config_order_status_id');
                         $log->write('updateMpesaStatus validate');
                         $dataAddCredit['customer_id'] = $manifest_id;
@@ -888,7 +891,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         $dataAddCredit['append'] = 0;
                         $dataAddCredit['comment'] = '';
                         $this->load->model('payment/mpesa');
-                        $this->model_payment_mpesa->addCustomerHistoryTransaction($manifest_id_customer, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa',$transaction_id);
+                        $this->model_payment_mpesa->addCustomerHistoryTransaction($manifest_id_customer, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $stkCallback->stkCallback->MerchantRequestID);
 
                         $response['status'] = true;
                     }
@@ -900,7 +903,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 return $response;
             }
 
-            public function mpesaOrderStatusTransactions() {
+    public function mpesaOrderStatusTransactions() {
                 $response['status'] = false;
 
                 $this->load->model('payment/mpesa');
