@@ -2014,7 +2014,7 @@ class ModelSaleCustomer extends Model {
         }
        
         }
-        echo '<pre>';print_r($id);die;
+        // echo '<pre>';print_r($id);die;
         return  $id;
     }
 
