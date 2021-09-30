@@ -144,6 +144,10 @@ class ModelPaymentPesapal extends Model {
         $notify = 1;
         $comment = '';
         if ($paid == 'Y') {
+            $log = new Log('error.log');
+            $log->write('PESAPAL ORDER HISTORY FAILED');
+            $log->write($paid);
+            $log->write('PESAPAL ORDER HISTORY FAILED');
             $this->db->query('UPDATE `' . DB_PREFIX . "order` SET paid = 'N', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
         } else {
             $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
