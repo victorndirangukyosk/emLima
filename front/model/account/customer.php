@@ -289,7 +289,7 @@ class ModelAccountCustomer extends Model {
 
             $this->trigger->fire('pre.customer.edit.password');
 
-            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '".$password."',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
 
             $this->trigger->fire('post.customer.edit.password');
         }

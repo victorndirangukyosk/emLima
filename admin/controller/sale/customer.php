@@ -3411,6 +3411,7 @@ class ControllerSaleCustomer extends Controller {
 
         $data['addresses'] = $this->model_sale_customer->getAddresses($this->request->get['customer_id']);
         $data['address_id'] = $customer_info['address_id'];
+        $data['temporary_password'] = $customer_info['temporary_password'];
 
         $this->load->model('sale/customer_group');
 
