@@ -143,6 +143,10 @@ class ModelPaymentPesapal extends Model {
     public function addOrderHistoryFailed($order_id, $order_status_id, $added_by = '', $added_by_role = '', $paid) {
         $notify = 1;
         $comment = '';
+        $log = new Log('error.log');
+        $log->write('PESAPAL ORDER HISTORY FAILED');
+        $log->write($paid);
+        $log->write('PESAPAL ORDER HISTORY FAILED');
         if ($paid == 'Y') {
             $log = new Log('error.log');
             $log->write('PESAPAL ORDER HISTORY FAILED');
