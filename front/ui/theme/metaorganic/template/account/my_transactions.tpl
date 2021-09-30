@@ -114,21 +114,21 @@
         <div class="col-md-9" id="pay_with" style="display:none;">
             Pay With
             <div class="row">
-                <!--<div class="col-md-4">
+                <div class="col-md-6">
                     <div class="radio">
                         <label><input class="option_pay" onchange="payOptionSelected()" type="radio" name="pay_with">PesaPal</label>
                     </div>
-                </div>-->
+                </div>
                 <div class="col-md-6">
                     <div class="radio">
                         <label><input class="option_pay" onchange="payWithmPesa()" type="radio" name="pay_with">mPesa Online</label>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <!--<div class="col-md-6">
                     <div class="radio">
                         <label><input class="option_pay" onchange="LoadInterSwitch()" type="radio" name="pay_with">Interswitch</label>
                     </div>
-                </div>
+                </div>//-->
             </div>
         </div>
         

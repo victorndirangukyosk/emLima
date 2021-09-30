@@ -117,10 +117,10 @@ class ModelPaymentPesapal extends Model {
         $this->db->query('UPDATE `' . DB_PREFIX . "pesapal_transactions` SET `status` = '" . $status . "',updated_at = NOW() where order_id='" . $order_id . "' AND pesapal_transaction_tracking_id ='" . $transaction_tracking_id . "'");
     }
 
-    public function addOrderHistory($order_id, $order_status_id, $added_by = '', $added_by_role = '') {
+    public function addOrderHistory($order_id, $order_status_id, $added_by = '', $added_by_role = '', $paid = null) {
         $notify = 1;
         $comment = '';
-        $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+        $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', amount_partialy_paid = '0', paid = 'Y', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
         $order_history = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_history` WHERE `order_id` = '" . $order_id . "' AND order_status_id='" . (int) $order_status_id . "'")->num_rows;
         $log = new Log('error.log');
         $log->write('PESAPAL ORDER HISTORY');
@@ -138,6 +138,33 @@ class ModelPaymentPesapal extends Model {
             $this->db->query('UPDATE `' . DB_PREFIX . "order_history` SET notify = '" . (int) $notify . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
         }
         $this->insertOrderTransactionFee($order_id, $order_status_id);
+    }
+
+    public function addOrderHistoryFailed($order_id, $order_status_id, $added_by = '', $added_by_role = '', $paid = null) {
+        $notify = 1;
+        $comment = '';
+        if ($paid == 'Y') {
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET paid = 'N', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+        } else {
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+        }
+        $order_history = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_history` WHERE `order_id` = '" . $order_id . "' AND order_status_id='" . (int) $order_status_id . "'")->num_rows;
+        $log = new Log('error.log');
+        $log->write('PESAPAL ORDER HISTORY');
+        $log->write($order_history);
+        if ($order_history <= 0) {
+            $log = new Log('error.log');
+            $log->write('PESAPAL ORDER HISTORY');
+            $log->write($order_history);
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+        }
+        if ($order_history > 0) {
+            $log = new Log('error.log');
+            $log->write('PESAPAL ORDER HISTORY');
+            $log->write($order_history);
+            $this->db->query('UPDATE `' . DB_PREFIX . "order_history` SET notify = '" . (int) $notify . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
+        }
+        //$this->insertOrderTransactionFee($order_id, $order_status_id);
     }
 
     public function insertOrderTransactionFee($order_id, $order_status_id) {
