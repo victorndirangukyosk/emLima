@@ -1992,7 +1992,7 @@ class ModelSaleCustomer extends Model {
 
 
     public function getParentCutomerFromOrder($order_id) {
-        $query = $this->db->query('SELECT o.customer_id,c.parent FROM ' . DB_PREFIX . 'order o join ' . DB_PREFIX . "customer c on o.customer_id =c.customer_id  WHERE order_id = '" . (int) $order_id . "'");
+        $query = $this->db->query('SELECT o.customer_id,c.parent,c.company_name, FROM ' . DB_PREFIX . 'order o join ' . DB_PREFIX . "customer c on o.customer_id =c.customer_id  WHERE order_id = '" . (int) $order_id . "'");
         //   echo '<pre>';print_r('SELECT o.customer_id,c.parent FROM ' . DB_PREFIX . 'order o join ' . DB_PREFIX . "customer c on o.customer_id =c.customer_id  WHERE order_id = '" . (int) $order_id . "'");exit;
         if($query->row['parent']==null ||$query->row['parent']==0 )
         {
@@ -2001,8 +2001,15 @@ class ModelSaleCustomer extends Model {
         else {
            
         $parent=   $query->row['parent'];
-        $query1 = $this->db->query('SELECT customer_id FROM ' . DB_PREFIX . "customer WHERE parent = '" . (int) $parent . "'");
-        return $query1->row['customer_id'];
+        $query1 = $this->db->query('SELECT customer_id,company_name FROM ' . DB_PREFIX . "customer WHERE parent = '" . (int) $parent . "'");
+        if($query1->row['company_name']==$query->row['company_name'])
+        {
+            return $query1->row['customer_id'];
+        }
+        else {
+            return $query->row['customer_id'];
+        }
+       
         }
     }
 
