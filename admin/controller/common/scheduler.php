@@ -574,4 +574,139 @@ class ControllerCommonScheduler extends Controller {
         }
     }
 
+
+
+
+    public function consolidatedOrderSheet3PM() {
+         $deliveryDate = date("Y-m-d"); // current day delivery date
+         $time = $this->request->get['time'];
+         $dateAdded = date("Y-m-d", strtotime("-1 days"));
+         $dateAdded = new DateTime($dateAdded);
+         // Here 5 hours, 3 Minutes and 10 seconds is added--PT5H3M10S
+            $dateAdded->add(new DateInterval('PT23H0M0S'));
+        // echo "<pre>";print_r($dateAdded);die;
+        $dateAdded_filter=$dateAdded->format('Y-m-d H:i:s');
+        if(!isset($time))
+        {
+            $dateAdded_filter=null;
+
+        }
+
+        $filter_data = [
+            'filter_delivery_date' => $deliveryDate,
+            'filter_date_added_greater'=>$dateAdded_filter
+        ];
+
+
+        $this->load->model('sale/order');
+        // $results = $this->model_sale_order->getOrders($filter_data);
+        $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+        $data = [];
+        $unconsolidatedProducts = [];
+
+        foreach ($results as $index => $order) {
+            $data['orders'][$index] = $order;
+            $orderProducts = $this->model_sale_order->getOrderAndRealOrderProducts($data['orders'][$index]['order_id']);
+            $data['orders'][$index]['products'] = $orderProducts;
+
+            foreach ($orderProducts as $product) {
+                $unconsolidatedProducts[] = [
+                    'name' => $product['name'],
+                    'unit' => $product['unit'],
+                    'quantity' => $product['quantity'],
+                    'note' => $product['product_note'],
+                    'produce_type' => $product['produce_type'],
+                ];
+            }
+        }
+
+        $consolidatedProducts = [];
+
+        foreach ($unconsolidatedProducts as $product) {
+            $productName = $product['name'];
+            $productUnit = $product['unit'];
+            $productQuantity = $product['quantity'];
+            $productNote = $product['product_note'];
+            $produceType = $product['produce_type'];
+
+            $consolidatedProductNames = array_column($consolidatedProducts, 'name');
+            if (false !== array_search($productName, $consolidatedProductNames)) {
+                $indexes = array_keys($consolidatedProductNames, $productName);
+
+                $foundExistingProductWithSimilarUnit = false;
+                foreach ($indexes as $index) {
+                    if ($productUnit == $consolidatedProducts[$index]['unit']) {
+                        if ($consolidatedProducts[$index]['produce_type']) {
+                            $produceType = $consolidatedProducts[$index]['produce_type'] . ' / ' . $produceType . ' ';
+                        }
+
+                        $consolidatedProducts[$index]['quantity'] += $productQuantity;
+                        $consolidatedProducts[$index]['produce_type'] = $produceType;
+                        $foundExistingProductWithSimilarUnit = true;
+                        break;
+                    }
+                }
+
+                if (!$foundExistingProductWithSimilarUnit) {
+                    $consolidatedProducts[] = [
+                        'name' => $productName,
+                        'unit' => $productUnit,
+                        'quantity' => $productQuantity,
+                        'note' => $productNote,
+                        'produce_type' => $produceType,
+                    ];
+                }
+            } else {
+                $consolidatedProducts[] = [
+                    'name' => $productName,
+                    'unit' => $productUnit,
+                    'quantity' => $productQuantity,
+                    'note' => $productNote,
+                    'produce_type' => $produceType,
+                ];
+            }
+        }
+        // echo "<pre>";print_r($consolidatedProducts);die;
+
+        $data['products'] = $consolidatedProducts;
+        //   echo "<pre>";print_r($data);die;
+        if ($data['products'] != null) {
+            // echo "<pre>";print_r($data['products']);die;
+            $this->load->model('report/excel');
+            $file = $this->model_report_excel->mail_consolidated_order_sheet_excel($data,'3pm');
+        }
+        //     else{
+        //    echo "<pre>";print_r(1);die;
+        //     }
+        //    echo "<pre>";print_r($file);die;
+    }
+
+
+
+    public function backupDB()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '512M');
+
+        $this->load->language('tool/backup');
+ 
+            // $this->response->addheader('Pragma: public');
+            // $this->response->addheader('Expires: 0');
+            // $this->response->addheader('Content-Description: File Transfer');
+            // $this->response->addheader('Content-Type: application/octet-stream');
+            // $this->response->addheader('Content-Disposition: attachment; filename='.DB_DATABASE.'_'.date('Y-m-d_H-i-s', time()).'_backup.sql');
+            // $this->response->addheader('Content-Transfer-Encoding: binary');
+
+            $this->load->model('tool/backup');
+            // $data['tables'] = $this->model_tool_backup->getAllTables();//all tables in DB
+            // $data['tables'] = $this->model_tool_backup->getTables();//all hf7_ tables
+            $data['tables'] = $this->model_tool_backup->getSelectedTables();// only main transaction tables
+            // echo "<pre>";print_r($data['tables']);die;
+
+
+            // $this->response->setOutput($this->model_tool_backup->backupToLocation($data['tables']));
+           $this->model_tool_backup->backupToLocation($data['tables']);
+         
+    }
+    
 }

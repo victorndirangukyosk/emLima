@@ -4,7 +4,7 @@ class ModelTotalCoupon extends Model
 {
     public function getTotal(&$total_data, &$total, &$taxes, $store_id = '')
     {
-        //echo "$store_id";print_r($total_data);die;
+        //  echo "$store_id";print_r($total_data);die;
 
         //print_r($this->session->data['shipping_method']);
         /*Array ( [8] => Array ( [store_id] => 8 [shipping_method] => Array ( [code] => express.express [title] => Express Delivery [cost] => 25 [tax_class_id] => 0 [text] => R$25.00 ) ) )*/
@@ -15,9 +15,11 @@ class ModelTotalCoupon extends Model
 
         /*echo "<pre>";print_r($total);die;
         echo "<pre>";print_r($total_data);die;*/
+        // echo "<pre>";print_r($taxes);
 
         if ($store_id) {
             if (isset($this->session->data['coupon'])) {
+
                 $this->load->language('total/coupon');
 
                 $this->load->model('checkout/coupon');
@@ -27,12 +29,40 @@ class ModelTotalCoupon extends Model
                 if ($coupon_info) {
                     $discount_total = 0;
 
+
                     if (!$coupon_info['product']) {
                         $sub_total = $this->cart->getSubTotal($store_id);
+                           //for 100% discount , this condition is added e
+                    if('P' == $coupon_info['type'] && $coupon_info['discount']==100.0000 && !$coupon_info['product'])
+                    {
+                        foreach ($taxes as $tax1) {
+                          $sub_total += $tax1;
+                        }
+                    }
+                            // echo "<pre>";print_r($sub_total); 
+                            // echo "<pre>";print_r('fff'); 
+
                     } else {
-                        $sub_total = 0;
+                        $sub_total = 0; 
 
                         foreach ($this->cart->getProducts() as $product) {
+
+                            if ($product['tax_class_id'] && 'c' != $coupon_info['coupon_type']) {
+                                $tax_rates = $this->tax->getRates($product['total'] - ($product['total'] - $discount), $product['tax_class_id']);
+                                $log->write('taxes appl');
+                                $log->write($tax_rates);
+                                $log->write($discount);        
+                                // foreach ($tax_rates as $tax_rate) {
+                                //     if ('P' == $tax_rate['type']) {
+                                //         $taxes[$tax_rate['tax_rate_id']] -= $tax_rate['amount'];
+                                       
+                                //     }
+                                // }
+                            }
+                            // echo "<pre>";print_r($product);die; 
+                            //get store tax
+
+                            
                             if ($product['store_id'] == $store_id) {
                                 if (in_array($product['product_id'], $coupon_info['product'])) {
                                     $sub_total += $product['total'];
@@ -44,8 +74,23 @@ class ModelTotalCoupon extends Model
                             }
                         }
                     }
-                    $main_total = $this->cart->getSubTotal();
+
+
+                     // echo "<pre>";print_r($taxes);die; 
+                    if('P' == $coupon_info['type'] && $coupon_info['discount']==100.0000 && !$coupon_info['product'])
+                    {
+                        $main_total = $this->cart->getTotal();
+                    }
+                    else
+                    {
+                        $main_total = $this->cart->getSubTotal();
+                    }
                     $weightage = ($sub_total * 100) / $main_total;
+
+                    //  echo "<pre>";print_r($sub_total); 
+                    //  echo "<pre>";print_r($main_total); 
+                    //  echo "<pre>";print_r($weightage); 
+
                     if ('F' == $coupon_info['type']) {
                         $store_discount = ($coupon_info['discount'] * $weightage) / 100;
 
@@ -53,6 +98,8 @@ class ModelTotalCoupon extends Model
                     } elseif ('P' == $coupon_info['type']) {
                         $discount_total = $sub_total / 100 * $coupon_info['discount'];
                     }
+                    // echo "<pre>";print_r($discount_total);  
+                    //  echo "<pre>";print_r('$discount_total');  
 
                     /*if ($coupon_info['shipping'] && isset($this->session->data['shipping_method'][$store_id])) {
 
@@ -60,6 +107,7 @@ class ModelTotalCoupon extends Model
 
                         $discount_total += $cost;
                     }*/
+ 
 
                     if ($coupon_info['shipping'] && isset($this->session->data['shipping_method'][$store_id])) {
                         if (!empty($this->session->data['shipping_method'][$store_id]['shipping_method']['tax_class_id'])) {
@@ -75,14 +123,24 @@ class ModelTotalCoupon extends Model
                         $discount_total += $this->session->data['shipping_method'][$store_id]['shipping_method']['cost'];
                     }
 
-                    if ($discount_total > $total) {
-                        $discount_total = $total;
+                      // echo "<pre>";print_r($taxes);die; 
+                      if('P' == $coupon_info['type'] && $coupon_info['discount']==100.0000 && !$coupon_info['product'])
+                      {
+                        //   $discount_total > $total-->kip
+                      }
+                      else
+                      {
+
+                        if ($discount_total > $total) {
+                            $discount_total = $total;
+                        }
                     }
 
                     if ('c' == $coupon_info['coupon_type']) {
                         $discount_total = -0;
                     }
 
+                    
                     $total_data[] = [
                         'code' => 'coupon',
                         'title' => sprintf($this->language->get('text_coupon'), $this->session->data['coupon']),
@@ -91,9 +149,16 @@ class ModelTotalCoupon extends Model
                     ];
 
                     $total -= $discount_total;
+                    // echo "<pre>";print_r($discount_total);  
+                    // echo "<pre>";print_r( $total_data); 
+                    // echo "<pre>";print_r( '$total_data'); 
+
+
                 }
             }
         } else {
+            // echo "<pre>";print_r($this->session->data['coupon']);die; 
+
             if (isset($this->session->data['coupon'])) {
                 $this->load->language('total/coupon');
 
@@ -136,15 +201,12 @@ class ModelTotalCoupon extends Model
                         }
 
                         if ($status) {
-                            if ('F' == $coupon_info['type']) {
-                                $discount = $coupon_info['discount'] * ($product['total'] / $sub_total);
-                            } elseif ('P' == $coupon_info['type']) {
-                                $discount = $product['total'] / 100 * $coupon_info['discount'];
-                            }
 
+                           
+                            // echo "<pre>";print_r($taxes);die; 
                             if ($product['tax_class_id'] && 'c' != $coupon_info['coupon_type']) {
                                 $tax_rates = $this->tax->getRates($product['total'] - ($product['total'] - $discount), $product['tax_class_id']);
-
+                                // echo "<pre>";print_r($tax_rates);die; 
                                 $log->write('taxes appl');
                                 $log->write($tax_rates);
                                 $log->write($discount);
@@ -152,9 +214,21 @@ class ModelTotalCoupon extends Model
                                 foreach ($tax_rates as $tax_rate) {
                                     if ('P' == $tax_rate['type']) {
                                         $taxes[$tax_rate['tax_rate_id']] -= $tax_rate['amount'];
+                                       
+
+                                          //for 100% discount , this condition is added e && !$coupon_info['product']
+                                   
+
                                     }
                                 }
                             }
+                            if ('F' == $coupon_info['type']) {
+                                $discount = $coupon_info['discount'] * ($product['total'] / $sub_total);
+                            } elseif ('P' == $coupon_info['type']) {
+                                $discount = $product['total'] / 100 * $coupon_info['discount'];
+                            }
+                            
+                            
                         }
 
                         $discount_total += $discount;
@@ -172,6 +246,9 @@ class ModelTotalCoupon extends Model
 
                         $discount_total += $cost;
                     }*/
+
+                  
+
 
                     if ($coupon_info['shipping'] && isset($this->session->data['shipping_method'])) {
                         $store_id = key($this->session->data['shipping_method']);
@@ -193,6 +270,11 @@ class ModelTotalCoupon extends Model
                     if ($discount_total > $total) {
                         $discount_total = $total;
                     }
+                    // for 100% discount , this condition is added e
+                    if('P' == $coupon_info['type'] && $coupon_info['discount']==100.0000 && !$coupon_info['product'])
+                    {
+                        $discount_total=$this->cart->getTotal();
+                    }
 
                     if ('c' == $coupon_info['coupon_type']) {
                         $discount_total = -0;
@@ -204,6 +286,8 @@ class ModelTotalCoupon extends Model
                     'value' => -$discount_total,
                     'sort_order' => $this->config->get('coupon_sort_order'),
                 ];
+
+                    //  echo "<pre>";print_r( $total_data); die;
 
                     $total -= $discount_total;
                 }

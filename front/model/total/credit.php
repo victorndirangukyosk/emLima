@@ -2,21 +2,37 @@
 
 class ModelTotalCredit extends Model
 {
-    public function getTotal(&$total_data, &$total, &$taxes, $store_id = '')
+    public function getTotal(&$total_data, &$total, &$taxes, $store_id = '', $prev_sub_order_credit = 0)
     {
         $log = new Log('error.log');
 
         $log->write('ModelTotalCredit');
+        // echo "<pre>";print_r('$balance');die;
+
 
         if ($this->config->get('credit_status')) {
             $this->load->language('total/credit');
             $balance = $this->customer->getBalance();
+
+            //   echo "<pre>";print_r($total_data); die;
+            // echo "<pre>";print_r($prev_sub_order_credit);  
+            // echo "<pre>";print_r('$prev_sub_order_credit');  
+            // echo "<pre>";print_r($taxes);;
+            // echo "<pre>";print_r($store_id);die;
+
+            $main_total = $this->cart->getTotal();
+            if($balance<$main_total)//fcing problem with multi orer/venor
+            {//prev_sub_order_credit will gget
+                // $total=0;
+                return;
+            }
 
             if ($store_id) {
                 $log = new Log('error.log');
                 $log->write('getTotal creditx');
 
                 if ((float) $balance) {
+                    $balance -=$prev_sub_order_credit;
                     if ($balance > $total) {
                         $credit = $total;
                     } else {
@@ -24,13 +40,30 @@ class ModelTotalCredit extends Model
                     }
 
                     if ($credit > 0) {
-                        $main_total = $this->cart->getSubTotal();
+                        // $main_total = $this->cart->getSubTotal();
+
+                        // $store_total = $this->cart->getSubTotal($store_id);
+
+                     
+
 
                         $store_total = $this->cart->getSubTotal($store_id);
 
-                        $weightage = ($store_total * 100) / $main_total;
+                        foreach ($taxes as $tax) {
+                            // $sort_order[$key] = $value['sort_order'];
+                            $store_total += $tax;
+                        }
+                        
+                        //  echo "<pre>";print_r($main_total);  die;
+                        // echo "<pre>";print_r($store_total);die;
 
-                        $giveCredit = ($credit * $weightage) / 100;
+                        // $weightage = ($store_total * 100) / $main_total;
+
+                        // $giveCredit = ($credit * $weightage) / 100;\
+                        $giveCredit = $store_total;
+
+                        // echo "<pre>";print_r($giveCredit);die;
+
 
                         /*$log->write($total);
                         $log->write($credit);$log->write($main_total);
@@ -181,8 +214,37 @@ class ModelTotalCredit extends Model
 
     public function unconfirm($order_id)
     {
-        /*return */$this->db->query('DELETE FROM '.DB_PREFIX."customer_credit WHERE order_id = '".(int) $order_id."'");
+        // /*return */$this->db->query('DELETE FROM '.DB_PREFIX."customer_credit WHERE order_id = '".(int) $order_id."'");
 
         //$this->model_account_activity->addCredit($order_info['customer_id'],$order_info['customer_id'],(float)$order_total['value'],$order_info['order_id']);
+    }
+
+
+    //new method to deduct wallet amount , after confirm order
+    public function confirmWalletTransaction($order_info, $order_total)
+    {
+        $this->load->language('total/credit');
+
+        if ($order_info['customer_id']) {
+            $this->load->model('account/activity');
+
+            $this->addOnlyCredit($order_info['customer_id'], $this->db->escape(sprintf($this->language->get('text_order_id'), (int) $order_info['order_id'])), $order_total['value'], $order_info['order_id']);
+        }
+    }
+
+
+    public function addOnlyCredit($customer_id, $description = '', $amount = '', $order_id = 0) {
+        // $customer_info = $this->getCustomer($customer_id);
+
+        $log = new Log('error.log');
+
+        // if ($customer_info) {
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
+        // }
+    }
+
+    public function unconfirmWalletTransaction($order_id)
+    {
+         $this->db->query('DELETE FROM '.DB_PREFIX."customer_credit WHERE order_id = '".(int) $order_id."'");
     }
 }

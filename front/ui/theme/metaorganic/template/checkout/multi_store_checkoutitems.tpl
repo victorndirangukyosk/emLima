@@ -321,7 +321,7 @@
 </div>   
 
 <div class="col-sm-4"> 
-<?php if($customer_orders_count == 0 || $customer_orders_count == 4 || $customer_orders_count == 14) { ?>                                        
+<?php if($customer_orders_count == 0 || $customer_orders_count == 4 || $customer_orders_count == 14|| $_SESSION["ce_id"] >0) { ?>                                        
 <div class="discount" >
       <h3>Discount Codes</h3>
   <form id="discount-coupon-form" action="" method="post" class="promo-form">  

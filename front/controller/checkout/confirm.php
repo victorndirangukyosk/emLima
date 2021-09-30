@@ -1151,11 +1151,14 @@ class ControllerCheckoutConfirm extends Controller {
                     $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
                 }
             }
+            // echo "<pre>";print_r($order_data);die;
 
             $log->write('addMultiOrder call');
             //$log->write($order_data);
 
             $this->model_checkout_order->addMultiOrder($order_data);
+
+            //  echo "<pre>";print_r($order_data);die;
 
             $data['text_recurring_item'] = $this->language->get('text_recurring_item');
             $data['text_payment_recurring'] = $this->language->get('text_payment_recurring');

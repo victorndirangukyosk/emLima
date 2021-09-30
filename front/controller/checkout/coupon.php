@@ -51,7 +51,7 @@ class ControllerCheckoutCoupon extends Controller
 
         $coupon_info = $this->model_checkout_coupon->getCoupon($coupon);
 
-        //echo "<pre>";print_r($coupon_info);die;
+        //  echo "<pre>";print_r($coupon_info);die;
         $json['status'] = false;
         if (empty($this->request->post['coupon'])) {
             $json['error'] = $this->language->get('error_empty');

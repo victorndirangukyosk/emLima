@@ -35,16 +35,18 @@
 
 
                     <div class="checkout-invoice">
-                        <div class="checout-invoice-title"><?php echo $total['title']; ?></div>
-                        <?php if(strpos($total['text'], '0.00') !== false) { ?>
+                       <div class="checout-invoice-title"><?php echo $total['title']; ?></div>
+                         <!--<?php if(strpos($total['text'], '0.00') !== false) { ?>
                             <div class="checout-invoice-price" style="color: red"><?= $cashbackAmount; ?><sup>*</sup></div>
                         <?php } elseif(strpos($total['text'], '1.00') !== false) { ?>
                             <div class="checout-invoice-price"><?= $text_coupon_credited; ?></div>
                         <?php } else { ?>
                             <div class="checout-invoice-price"><?php echo $total['text']; ?></div>
-                        <?php } ?>
+                        <?php } ?>-->
+                            <div class="checout-invoice-price"><?php echo $total['text']; ?></div>
                         
                     </div>
+
             
             <?php /* } else { */ ?>
             <?php  } elseif($total['title'] != 'Transaction-Fee') {  ?>

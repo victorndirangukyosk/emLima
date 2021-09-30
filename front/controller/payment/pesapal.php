@@ -677,11 +677,12 @@ class ControllerPaymentPesapal extends Controller {
             $log->write('ORDER STATUS');
             curl_close($ch);
 
+            $order_info = $this->model_checkout_order->getOrder($order_id);
             if ($response != null && $status != null && $status == 'FAILED') {
-                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_failed_order_status_id'), $customer_info['customer_id'], 'customer');
+                $this->model_payment_pesapal->addOrderHistoryFailed($order_id, $this->config->get('pesapal_failed_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['paid']);
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             } elseif ($response != null && $status != null && $status == 'PENDING') {
-                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_pending_order_status_id'), $customer_info['customer_id'], 'customer');
+                $this->model_payment_pesapal->addOrderHistoryFailed($order_id, $this->config->get('pesapal_pending_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['paid']);
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             } elseif ($response != null && $status != null && $status == 'COMPLETED') {
                 $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
@@ -861,11 +862,12 @@ class ControllerPaymentPesapal extends Controller {
                     $log->write('ORDER STATUS');
                     curl_close($ch);
 
+                    $order_info = $this->model_checkout_order->getOrder($ord_ar);
                     if ($response != null && $status != null && $status == 'FAILED') {
-                        $this->model_payment_pesapal->addOrderHistory($ord_ar, $this->config->get('pesapal_failed_order_status_id'));
+                        $this->model_payment_pesapal->addOrderHistoryFailed($ord_ar, $this->config->get('pesapal_failed_order_status_id'), $customer_id, 'customer', $order_info['paid']);
                         $this->model_payment_pesapal->updateorderstatusipn($ord_ar, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                     } elseif ($response != null && $status != null && $status == 'PENDING') {
-                        $this->model_payment_pesapal->addOrderHistory($ord_ar, $this->config->get('pesapal_pending_order_status_id'));
+                        $this->model_payment_pesapal->addOrderHistoryFailed($ord_ar, $this->config->get('pesapal_pending_order_status_id'), $customer_id, 'customer', $order_info['paid']);
                         $this->model_payment_pesapal->updateorderstatusipn($ord_ar, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                     } elseif ($response != null && $status != null && $status == 'COMPLETED') {
                         $this->model_payment_pesapal->addOrderHistory($ord_ar, $this->config->get('pesapal_order_status_id'));

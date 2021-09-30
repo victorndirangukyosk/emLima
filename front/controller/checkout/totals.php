@@ -20,13 +20,14 @@ class ControllerCheckoutTotals extends Controller
         if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
             $sort_order = [];
 
-            $results = $this->model_extension_extension->getExtensions('total');
+            $results = $this->model_extension_extension->getExtensions('total');           
 
             foreach ($results as $key => $value) {
                 $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
             }
 
             array_multisort($sort_order, SORT_ASC, $results);
+
 
             foreach ($results as $result) {
                 if ($this->config->get($result['code'] . '_status')) {
@@ -35,8 +36,9 @@ class ControllerCheckoutTotals extends Controller
                     $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
                 }
             }
+            // echo "<pre>";print_r($results);die;
 
-            //echo "<pre>";print_r($results);die;
+
             $sort_order = [];
 
             foreach ($total_data as $key => $value) {
@@ -85,9 +87,9 @@ class ControllerCheckoutTotals extends Controller
             $store_info['servicable_zipcodes'] = $this->model_account_address->getZipList($os);
             $store_data[] = $store_info;
 
-            if ($this->cart->getTotalProductsByStore($os) && $store_info['min_order_amount'] > $store_total) {
+            if ($this->cart->getTotalProductsByStore($os) && $this->config->get('config_active_store_minimum_order_amount') > $this->cart->getSubTotal()) {
                 $data['min_order_amount_reached'] = FALSE;
-                $data['min_order_amount_away'] = '*' . $this->currency->format($store_info['min_order_amount'] - $store_total) . ' away from minimum order value.';
+                $data['min_order_amount_away'] = '*' . $this->currency->format($this->config->get('config_active_store_minimum_order_amount') - $this->cart->getSubTotal()) . ' away from minimum order value.';
             }
         }
         /* MINIMUM ORDER AMOUNT CHECKING */
@@ -111,6 +113,10 @@ class ControllerCheckoutTotals extends Controller
         $taxes = $this->cart->getTaxes();
 
         $total_data = $this->model_account_order->getOrderTotals($order_id);
+       
+
+
+        // $total_data
 
         $data['text_inc_tax'] = $this->language->get('text_inc_tax');
         $sort_order = [];

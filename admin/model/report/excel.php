@@ -1175,7 +1175,7 @@ class ModelReportExcel extends Model {
         }
     }
 
-    public function mail_consolidated_order_sheet_excel($data) {
+    public function mail_consolidated_order_sheet_excel($data,$name='') {
         //	    echo "<pre>";print_r($data);die;
 
         $this->load->library('excel');
@@ -1445,7 +1445,9 @@ class ModelReportExcel extends Model {
             // Deleting all the files in the list 
             foreach ($files as $file) {
                 if (is_file($file))
+                {
                     unlink($file); // Delete the given file  
+                }
             }
             // echo "<pre>";print_r($file);;
             $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
@@ -1455,6 +1457,10 @@ class ModelReportExcel extends Model {
             $subject = $this->emailtemplate->getSubject('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
             $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
 
+            if($name !="")
+            {
+                $subject=$subject.' evening'; 
+            }
             // $subject = "Consolidated Order Sheet";                 
             // $message = "Please find the attachment.  <br>";
             // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";

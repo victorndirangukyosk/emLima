@@ -554,4 +554,36 @@ class ControllerApiCustomerSignup extends Controller
 
         return true;
     }
+
+
+
+    public function addRegiterCustomer()
+    {
+        //echo "<pre>";print_r( "addLoginByOtp");die;
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('api/login');
+        $this->load->language('api/general');
+        $this->load->model('account/api');
+
+        $api_info = $this->model_account_api->register_user_sap();
+        //  echo "<pre>";print_r($api_info);die;
+        if ($api_info['status']) {
+            $json['status'] = 200;
+            $json['data']=$api_info['customer_id'];
+            // $json['message'][] = ['type' => '', 'body' => $api_info['success_message']];
+            $json['message']= 'success';
+        } else {
+            $json['status'] = 500; //form invalid
+            $json['message'] = $api_info['errors'];
+            // http_response_code(400);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }

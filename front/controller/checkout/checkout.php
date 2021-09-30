@@ -129,7 +129,7 @@ class ControllerCheckoutCheckout extends Controller {
             $store_info['servicable_zipcodes'] = $this->model_account_address->getZipList($os);
             $store_data[] = $store_info;
 
-            if ($this->cart->getTotalProductsByStore($os) && $store_info['min_order_amount'] > $store_total) {
+            if ($this->cart->getTotalProductsByStore($os) && $this->config->get('config_active_store_minimum_order_amount') > $this->cart->getSubTotal()) {
                 $this->response->redirect($this->url->link('checkout/cart'));
             }
         }

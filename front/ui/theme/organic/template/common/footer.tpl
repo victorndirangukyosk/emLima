@@ -65,7 +65,7 @@
                   <address>
                   PO Box 57666-00200, Heritan House Woodlands Road, Off. Argwings-Kodhek Road, Kenya<br>
                   </address>
-                  <div class="phone-footer">+254 738770186</div>
+                  <div class="phone-footer">+254 780703586</div>
                   <div class="email-footer"><a href="mailto:no-reply@emlima.com">no-reply@emlima.com</a></div>
                 </div>
               </div>

@@ -189,6 +189,7 @@ class ControllerAccountAccount extends Controller {
         $this->document->setTitle($this->language->get('heading_title'));
         //echo "<pre>";print_r($this->language->get('heading_title'));die;
         $this->load->model('account/customer');
+        $this->load->model('account/changepass');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             // $date = $this->request->post['dob'];
@@ -208,6 +209,8 @@ class ControllerAccountAccount extends Controller {
             if (isset($this->request->post['email']) && isset($this->request->post['password'])) {
                 //echo "<pre>";print_r($this->request->post);die;
                 $this->model_account_customer->editPassword($this->request->post['email'], $this->request->post['password']);
+                $this->model_account_changepass->savepassword($this->customer->getId(), $this->request->post['password']);
+                $this->model_account_changepass->deleteoldpassword($this->customer->getId());
             }
 
             //$this->session->data['success'] = $this->language->get('text_success');
@@ -826,6 +829,14 @@ class ControllerAccountAccount extends Controller {
             if (!$json['success']) {
                 $this->error['captcha'] = $this->language->get('error_captcha');
             }
+        }
+
+        $this->load->model('account/changepass');
+        $change_pass_count = $this->model_account_changepass->check_customer_previous_password($this->customer->getId(), $this->request->post['password']);
+        $change_current_pass_count = $this->model_account_changepass->check_customer_current_password($this->customer->getId(), $this->request->post['password']);
+
+        if ($change_pass_count > 0 || $change_current_pass_count > 0) {
+            $this->error['password'] = 'Password must not match previous 3 passwords';
         }
 
         // if ( DateTime::createFromFormat('d/m/Y', $this->request->post['dob'] ) == FALSE ) {

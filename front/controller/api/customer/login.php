@@ -149,7 +149,8 @@ class ControllerApiCustomerLogin extends Controller {
 
             $json['status'] = false;
         }
-
+        $this->load->model('account/customer');
+        $this->model_account_customer->getDBCart();
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

@@ -12,6 +12,7 @@ class ModelSaleCustomer extends Model {
             $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', gender = '" . $this->db->escape($data['sex']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "',company_name = '" . $this->db->escape($data['company_name']) . "',company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', newsletter = '" . (int) $data['newsletter'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int) $data['status'] . "', approved = '" . (int) $data['approved'] . "', safe = '" . (int) $data['safe'] . "', account_manager_id = '" . $data['account_manager'] . "', customer_experience_id = '" . $data['customer_experience'] . "', customer_category = '" . $data['customer_category'] . "', source = '" . $data['source'] . "', payment_terms = '" . $data['payment_terms'] . "', statement_duration = '" . $data['statement_duration'] . "', date_added = NOW()");
         }
         $customer_id = $this->db->getLastId();
+        $this->savepassword($customer_id, $data['password']);
 
         if (isset($data['address'])) {
             foreach ($data['address'] as $address) {
@@ -45,6 +46,8 @@ class ModelSaleCustomer extends Model {
         if ($data['SAP_customer_no'] && NULL != $data['SAP_customer_no']) {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET SAP_customer_no = '" . $data['SAP_customer_no'] . "' WHERE customer_id = '" . (int) $customer_id . "'");
         }
+        $this->savepassword($customer_id, $data['password']);
+        $this->deleteoldpassword($customer_id);
 
         $this->db->query('DELETE FROM ' . DB_PREFIX . "address WHERE customer_id = '" . (int) $customer_id . "'");
 
@@ -1136,7 +1139,7 @@ class ModelSaleCustomer extends Model {
 
         $log = new Log('error.log');
 
-        if ($customer_info) {
+        if ($customer_info && 1 != 1) {//customer credit NA
             $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
 
             $this->load->language('mail/customer');
@@ -1913,6 +1916,78 @@ class ModelSaleCustomer extends Model {
         if (isset($data['statement_duration']) && $data['statement_duration'] != NULL && $data['customer_category'] != 'undefined') {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', statement_duration = '" . $data['statement_duration'] . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
         }
+    }
+
+    public function getCutomerFromOrder($order_id) {
+        $query = $this->db->query('SELECT customer_id FROM ' . DB_PREFIX . "order WHERE order_id = '" . (int) $order_id . "'");
+        // echo '<pre>';print_r($query->row['customer_id']);exit;
+        return $query->row['customer_id'];
+    }
+
+    public function addOnlyCredit($customer_id, $description = '', $amount = '', $order_id = 0) {
+        $customer_info = $this->getCustomer($customer_id);
+
+        $log = new Log('error.log');
+
+        if ($customer_info) {
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
+        }
+    }
+
+    public function check_customer_previous_password($customer_id, $password) {
+        $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . $customer_id . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "')");
+        return $user_query->num_rows;
+    }
+
+    public function check_customer_current_password($customer_id, $password) {
+        $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $customer_id . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "')");
+        return $user_query->num_rows;
+    }
+
+    public function savepassword($customer_id, $password) {
+        /* TIME ZONE ISSUE */
+        $tz = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('P');
+        $this->db->query("SET time_zone='$tz';");
+        /* TIME ZONE ISSUE */
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "password_resets SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', customer_id = '" . $customer_id . "', created_at = NOW()");
+    }
+
+    public function deleteoldpassword($customer_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . (int) $customer_id . "'");
+        $old_passwords = $query->rows;
+        $log = new Log('error.log');
+        $log->write($old_passwords);
+        if (count($old_passwords) > 3) {
+            $remove_count = count($old_passwords) - 3;
+            if ($remove_count > 0) {
+                for ($x = 0; $x < $remove_count; $x++) {
+                    $this->db->query('DELETE FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . $customer_id . "' and id='" . $old_passwords[$x]['id'] . "'");
+                }
+            }
+        }
+    }
+
+    public function passwordexpired($customer_id) {
+        $diffInMonths = 0;
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . (int) $customer_id . "'");
+        $old_passwords = $query->rows;
+        if (count($old_passwords) > 0) {
+            $record = end($old_passwords);
+            $old_password_created_at = $record['created_at'];
+            date_default_timezone_set('Africa/Nairobi');
+            $current_password_created_at = date("Y-m-d H:i:s");
+
+            $d1 = new DateTime($old_password_created_at);
+            $d2 = new DateTime($current_password_created_at);
+            $interval = $d1->diff($d2);
+            $diffInMonths = $interval->m;
+        }
+        return $diffInMonths;
+    }
+
+    public function checknewpasswordsetted($customer_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . (int) $customer_id . "'");
+        return $query->num_rows;
     }
 
 }

@@ -78,6 +78,7 @@ class ControllerApiCategories extends Controller {
                 foreach ($categories as $cat) {
                     $cat['name'] = htmlspecialchars_decode($cat['name']);
                     $cat['thumb'] = $this->model_tool_image->resize($cat['image'], 300, 300);
+                    $cat['thumb_two'] = $this->model_tool_image->resize($cat['image'], 316, 140);
                     $cat['description'] = htmlspecialchars_decode($cat['description']);
                     $products = NULL;
                     $data['filter_category_id'] = $cat['category_id'];
@@ -102,6 +103,7 @@ class ControllerApiCategories extends Controller {
                 foreach ($categories as $cat) {
                     $cat['name'] = htmlspecialchars_decode($cat['name']);
                     $cat['thumb'] = $this->model_tool_image->resize($cat['image'], 300, 300);
+                    $cat['thumb_two'] = $this->model_tool_image->resize($cat['image'], 316, 140);
                     $cat['description'] = htmlspecialchars_decode($cat['description']);
                     $products = NULL;
                     $data['filter_category_id'] = $cat['category_id'];

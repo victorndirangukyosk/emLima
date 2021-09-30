@@ -6,16 +6,14 @@
  * and open the template in the editor.
  */
 
-class ModelAccountChangepass extends Model
-{
-    public function index()
-    {
+class ModelAccountChangepass extends Model {
+
+    public function index() {
+        
     }
 
-    public function change()
-    {
+    public function change() {
         //  echo "Update `" . DB_PREFIX . "user` set password=$this->request->post['newpassword'] where user_id=" . $this->customer->getid();
-
         // if ($result !== 0) {
         //    echo "success......";
         // } else {
@@ -30,7 +28,9 @@ class ModelAccountChangepass extends Model
 
             // echo "<pre>";print_r("UPDATE " . DB_PREFIX . "customer SET   temppassword = 0, salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE customer_id = '$user_id '");die;
 
-            $this->db->query('UPDATE '.DB_PREFIX."customer SET   temppassword = 0, salt = '".$this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9))."', password = '".$this->db->escape(sha1($salt.sha1($salt.sha1($password))))."' WHERE customer_id = '$user_id'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET   temppassword = 0, salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE customer_id = '$user_id'");
+            $this->savepassword($user_id, $password);
+            $this->deleteoldpassword($user_id);
 
             $this->trigger->fire('post.customer.edit.password');
 
@@ -40,10 +40,8 @@ class ModelAccountChangepass extends Model
         }
     }
 
-    public function changePassword()
-    {
+    public function changePassword() {
         //  echo "Update `" . DB_PREFIX . "user` set password=$this->request->post['newpassword'] where user_id=" . $this->customer->getid();
-
         // if ($result !== 0) {
         //    echo "success......";
         // } else {
@@ -58,8 +56,9 @@ class ModelAccountChangepass extends Model
 
             // echo "<pre>";print_r("UPDATE " . DB_PREFIX . "customer SET   temppassword = 0, salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE customer_id = '$user_id '");die;
 
-            $this->db->query('UPDATE '.DB_PREFIX."customer SET   temppassword = 0, salt = '".$this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9))."', password = '".$this->db->escape(sha1($salt.sha1($salt.sha1($password))))."' WHERE customer_id = '$user_id'");
-
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET   temppassword = 0, salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "' WHERE customer_id = '$user_id'");
+            $this->savepassword($user_id, $password);
+            $this->deleteoldpassword($user_id);
             $this->trigger->fire('post.customer.edit.password');
 
             return 1;
@@ -67,4 +66,61 @@ class ModelAccountChangepass extends Model
             return 0;
         }
     }
+
+    public function check_customer_previous_password($customer_id, $password) {
+        $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . $customer_id . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "')");
+        return $user_query->num_rows;
+    }
+
+    public function check_customer_current_password($customer_id, $password) {
+        $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $customer_id . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "')");
+        return $user_query->num_rows;
+    }
+
+    public function savepassword($customer_id, $password) {
+        /* TIME ZONE ISSUE */
+        $tz = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('P');
+        $this->db->query("SET time_zone='$tz';");
+        /* TIME ZONE ISSUE */
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "password_resets SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', customer_id = '" . $customer_id . "', created_at = NOW()");
+    }
+
+    public function deleteoldpassword($customer_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . (int) $customer_id . "'");
+        $old_passwords = $query->rows;
+        $log = new Log('error.log');
+        $log->write($old_passwords);
+        if (count($old_passwords) > 3) {
+            $remove_count = count($old_passwords) - 3;
+            if ($remove_count > 0) {
+                for ($x = 0; $x < $remove_count; $x++) {
+                    $this->db->query('DELETE FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . $customer_id . "' and id='" . $old_passwords[$x]['id'] . "'");
+                }
+            }
+        }
+    }
+
+    public function passwordexpired($customer_id) {
+        $diffInMonths = 0;
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . (int) $customer_id . "'");
+        $old_passwords = $query->rows;
+        if (count($old_passwords) > 0) {
+            $record = end($old_passwords);
+            $old_password_created_at = $record['created_at'];
+            date_default_timezone_set('Africa/Nairobi');
+            $current_password_created_at = date("Y-m-d H:i:s");
+
+            $d1 = new DateTime($old_password_created_at);
+            $d2 = new DateTime($current_password_created_at);
+            $interval = $d1->diff($d2);
+            $diffInMonths = $interval->m;
+        }
+        return $diffInMonths;
+    }
+
+    public function checknewpasswordsetted($customer_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . (int) $customer_id . "'");
+        return $query->num_rows;
+    }
+
 }

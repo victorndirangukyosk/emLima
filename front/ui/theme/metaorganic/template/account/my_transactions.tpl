@@ -24,7 +24,7 @@
                                 <th class="order_id">Order Total</th>
                                 <th class="order_id">Amount Payable</th>
                                 <th class="order_id">Payment Method</th>
-                                <th class="order_id">Action</th>
+                                <!--<th class="order_id">Action</th>-->
                             </tr>
                         </thead>
                         <tbody id="emp_body">
@@ -91,18 +91,47 @@
                 </div>
             </div>
         </div>
+        
         <div class="col-md-9" id="payment_options">
             Payment Options
-            <div class="radio">
-                <label><input class="option_pay" onchange="payOptionSelected()"  value="pay_full" type="radio" name="pay_option">Pay Full</label>
-            </div>
-            <!--<div class="radio">
-                <label><input type="radio" class="option_pay" onchange="payOptionSelected()" value="pay_other" name="pay_option">Pay Other Amount</label>
-            </div>-->
-            <div class="radio">
-                <label><input type="radio" class="option_pay" onchange="payOptionSelected()" value="pay_selected_order" name="pay_option">Pay Selected Orders</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="radio">
+                        <label><input class="option_pay" onchange="showPayWith()"  value="pay_full" type="radio" name="pay_option">Pay Full</label>
+                    </div>
+                </div>
+                <!--<div class="radio">
+                    <label><input type="radio" class="option_pay" onchange="showPayWith()" value="pay_other" name="pay_option">Pay Other Amount</label>
+                </div>-->
+                <div class="col-md-6">
+                    <div class="radio">
+                        <label><input type="radio" class="option_pay" onchange="showPayWith()" value="pay_selected_order" name="pay_option">Pay Selected Orders</label>
+                    </div>
+                </div>
             </div>
         </div>
+        
+        <div class="col-md-9" id="pay_with" style="display:none;">
+            Pay With
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="radio">
+                        <label><input class="option_pay" onchange="payOptionSelected()" type="radio" name="pay_with">PesaPal</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="radio">
+                        <label><input class="option_pay" onchange="payWithmPesa()" type="radio" name="pay_with">mPesa Online</label>
+                    </div>
+                </div>
+                <!--<div class="col-md-6">
+                    <div class="radio">
+                        <label><input class="option_pay" onchange="LoadInterSwitch()" type="radio" name="pay_with">Interswitch</label>
+                    </div>
+                </div>//-->
+            </div>
+        </div>
+        
         <div class="col-md-9" id="payment_options_input" style="display:none;">
             <input id="pesapal_amount" name="pesapal_amount" type="number" min="0.01" step="0.01" value="" class="form-control input-md" required="" placeholder="Enter Amount" minlength="9" maxlength="9" style="display:inline-block; width: 22%;margin-left: 10px;">
             <button type="button" id="button-confirm" data-toggle="collapse" style="width:200px;" class="btn btn-default">PAY &amp; CONFIRM</button>
@@ -116,7 +145,39 @@
         <div id="pay-confirm-order" class="col-md-9 confirm_order_class" style="padding:35px;">
             <!--MPESA REMOVED FROM HERE-->
         </div>
+        
+        <div id="pay-confirm-order-mpesa" class="col-md-9 confirm_order_class" style="display:none; padding:35px;">
+            <p>mPesa Online</p>
+            <div class="row">
+                <div class="col-md-9">
+                    <span class="input-group-btn" style="padding-bottom: 10px;">
+                        <p id="button-reward" class="" style="padding: 13px 14px;    margin-top: -9px;border-radius: 2px;font-size: 15px;font-weight: 600;color: #fff;background-color: #522e5b;border-color: #522e5b;display: inline-block;margin-bottom: 0;line-height: 1.42857143;vertical-align: middle;-ms-touch-action: manipulation;touch-action: manipulation;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;background-image: none;margin-right: -1px;">
+                            <font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">+254</font></font></font></font>
+                        </p>
 
+                        <input id="mpesa_phone_number" name="telephone" type="text" value="<?php echo $this->customer->getTelephone(); ?>" class="form-control input-md" required="" placeholder="Mobile number" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 50%;" >
+
+                    </span>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" id="mpesa-button-confirm" data-toggle="collapse" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button>
+                    
+                    <button type="button" id="button-retry" class="btn btn-default"> Retry</button>
+
+                    <button type="button" id="button-complete" data-toggle="collapse" data-loading-text="checking payment..." class="btn btn-default">Confirm Payment</button>
+                </div>
+                <div class="col-md-12">
+                    <div class="alert alert-danger" id="error_msg" style="margin-bottom: 7px;">
+                    </div>
+                    <div class="alert alert-success" style="font-size: 14px;" id="success_msg" style="margin-bottom: 7px;">
+                    </div>
+                </div>    
+            </div>
+            <!--MPESA REMOVED FROM HERE-->
+        </div>
+        
+        <div id="pay-confirm-order-interswitch" class="col-md-9 confirm_order_class" style="display:none; padding:35px;">
+        </div>
     </div>                        
 </div>
 
@@ -313,7 +374,20 @@
             }
         });
     }
-
+    
+    function changeOrderIdForPays(orderId, amount_to_pay) {
+    if($('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked') == false) {
+    $('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked', true).trigger('change');
+    return false;
+    }
+    
+    if($('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked') == true) {  
+    $('input[type="checkbox"][data-id="'+orderId+'"]').prop('checked', false).trigger('change');
+    return false;
+    }
+    
+    }
+    
     function payOptionSelected() {
         //total_pending_amount
         $("#pesapal_amount").prop("readonly", false);
@@ -322,6 +396,7 @@
         console.log(total_pending_amount);
         $('#pay-confirm-order').html('');
         if (radioValue == 'pay_full') {
+            $("#pay-confirm-order-mpesa").hide();
             $("#payment_options_input").hide();
             console.log($("input[name=total_pending_amount]").val());
             $.ajax({
@@ -335,6 +410,11 @@
                 dataType: 'html',
                 cache: false,
                 async: false,
+                beforeSend: function () {
+                $('#pay-confirm-order').html('Loading Please Wait....');
+                },
+                complete: function () {
+                },
                 success: function (json) {
                     console.log("json");
                     console.log(json);
@@ -349,6 +429,7 @@
                 }
             });
         } else if (radioValue == 'pay_selected_order') {
+            $("#pay-confirm-order-mpesa").hide();
             var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
             console.log(checkedNum);
             var val = [];
@@ -382,6 +463,11 @@
                 dataType: 'html',
                 cache: false,
                 async: false,
+                beforeSend: function () {
+                $('#pay-confirm-order').html('Loading Please Wait....');
+                },
+                complete: function () {
+                },
                 success: function (json) {
                     console.log("json");
                     console.log(json);
@@ -401,6 +487,122 @@
             $("#payment_options_input").show();
         }
     }
+    
+    function payWithmPesa() {
+        $("#pay-confirm-order").html('');
+        $("#pay-confirm-order").hide();
+        $("#pay-confirm-order-mpesa").show();
+    }
+    
+    function payWithInterswitch() {
+            var radioValue = $("input[name='pay_option']:checked").val();
+            var total_pending_amount = $("input[name='total_pending_amount']").val();
+            console.log(total_pending_amount);
+            
+            if (radioValue == 'pay_full') {
+                
+            var val = $("input[name=pending_order_id]").val();
+            var total = $("input[name=total_pending_amount]").val();
+            
+            } else if (radioValue == 'pay_selected_order') {
+                
+            var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
+            console.log(checkedNum);
+            var val = [];
+            var amount = [];
+            if (!checkedNum) {
+                $(':checkbox:checked').each(function (i) {
+                    val[i] = $(this).data("id");
+                    amount[i] = $(this).data("amount");
+                });
+                console.log(val);
+                console.log(amount);
+                var total = 0;
+                for (var i = 0; i < amount.length; i++) {
+                    total += amount[i] << 0;
+                }
+                console.log(total);
+            }
+            if (val.length == 0 || amount.length == 0) {
+                $("input:radio").removeAttr("checked");
+                alert('Please select atleast one order!');
+                return false;
+            }
+            }    
+            
+            $.ajax({
+                url: 'index.php?path=account/transactions/interswitch',
+                type: 'post',
+                data: {
+                    order_id: val,
+                    amount: total,
+                    payment_type: radioValue
+                },
+                dataType: 'html',
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                $('#pay-confirm-order-interswitch').html('Loading Please Wait....');
+                },
+                complete: function () {
+                },
+                success: function (html) {
+                    console.log(html);
+                    $('#pay-confirm-order-interswitch').html(html);
+                    return true;
+                    //window.location = json.redirect;
+                }, error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    return false;
+                }
+            });
+    }
+    
+function LoadInterSwitch() {
+$("#pay-confirm-order").html('');
+$("#pay-confirm-order").hide();
+$("#pay-confirm-order-mpesa").hide();
+submitHandler(event);
+}
+</script>
+<script type="text/javascript">
+function showPayWith() {
+    payWithInterswitch();
+    $('#pay-confirm-order').html('');
+    $('#pay-confirm-order-mpesa').hide();
+    $('input[name="pay_with"]:checked').removeAttr('checked');
+    $('#pay_with').hide();
+    var radioValue = $("input[name='pay_option']:checked").val();
+    if (radioValue == 'pay_selected_order') {
+            var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
+            console.log(checkedNum);
+            var val = [];
+            var amount = [];
+            if (!checkedNum) {
+                $(':checkbox:checked').each(function (i) {
+                    val[i] = $(this).data("id");
+                    amount[i] = $(this).data("amount");
+                });
+                console.log(val);
+                console.log(amount);
+                var total = 0;
+                for (var i = 0; i < amount.length; i++) {
+                    total += amount[i] << 0;
+                }
+                console.log(total);
+            }
+            if (val.length == 0 || amount.length == 0) {
+                $("#pay_with").hide();
+                $("input:radio").removeAttr("checked");
+                alert('Please select atleast one order!');
+                return false;
+            }else {
+            $("#pay_with").show(); 
+            }
+    } else {
+      $("#pay_with").show(); 
+    }
+}
 </script>
 
 <script type="text/javascript">
@@ -436,7 +638,7 @@
                 tr.append("<td class='amount'>" + displayRecords[i].total_currency + "</td>");
                 tr.append("<td class='amount'>" + displayRecords[i].pending_amount_currency + "</td>");
                 tr.append("<td>" + displayRecords[i].payment_method + "</td>");
-                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPay(" + displayRecords[i].order_id + "," + displayRecords[i].pending_amount + ")'>Pay Now</a></td>");
+                <!--tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPays(" + displayRecords[i].order_id + "," + displayRecords[i].pending_amount + ")'>Pay Now</a></td>");//-->
                 $('#emp_body').append(tr);
             }
         }
@@ -455,7 +657,7 @@
         }
     });
 
-    $(document).delegate('#button-confirm', 'click', function () {
+    /*$(document).delegate('#button-confirm', 'click', function () {
         console.log('PAY OTHER AMOUNT');
         var amount = $("#pesapal_amount").val();
         var radioValue = $("input[name='pay_option']:checked").val();
@@ -493,7 +695,7 @@
                 return false;
             }
         });
-    });
+    });*/
 </script>
 
 <script type="text/javascript">
@@ -596,6 +798,10 @@
         }
     });
     $(document).delegate('input[name="order_id_selected"]', 'click', function () {
+        $('#pay_with').hide();
+        $("#pay-confirm-order").html('');
+        $("#pay-confirm-order").hide();
+        $("#pay-confirm-order-mpesa").hide();
         var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
         console.log(checkedNum);
         var val = [];
@@ -661,7 +867,228 @@
         }
     });
 </script>
+<script type="text/javascript">
 
+        $('#error_msg').hide();
+        $('#success_msg').hide();
+        $('#button-complete').hide();
+        $('#button-retry').hide();
+	
+        $( document ).ready(function() {
+            console.log("referfxx def");
+            if($('#mpesa_phone_number').val().length >= 9) {
+                $( "#mpesa-button-confirm" ).prop( "disabled", false );
+            } else {
+                $( "#mpesa-button-confirm" ).prop( "disabled", true );
+            }
+        });
+
+        $('#mpesa_phone_number').on('input', function() { 
+            console.log("referfxx");
+            if($(this).val().length >= 9) {
+                $( "#mpesa-button-confirm" ).prop( "disabled", false );
+            } else {
+                $( "#mpesa-button-confirm" ).prop( "disabled", true );
+            }
+        });
+
+        $('#mpesa-button-confirm,#button-retry').on('click', function() {
+	    
+            $('#loading').show();
+
+            $('#error_msg').hide();
+            
+            var radioValue = $("input[name='pay_option']:checked").val();
+            var total_pending_amount = $("input[name='total_pending_amount']").val();
+            console.log(total_pending_amount);
+            
+            if (radioValue == 'pay_full') {
+                
+            var val = $("input[name=pending_order_id]").val();
+            var total = $("input[name=total_pending_amount]").val();
+            
+            } else if (radioValue == 'pay_selected_order') {
+                
+            var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
+            console.log(checkedNum);
+            var val = [];
+            var amount = [];
+            if (!checkedNum) {
+                $(':checkbox:checked').each(function (i) {
+                    val[i] = $(this).data("id");
+                    amount[i] = $(this).data("amount");
+                });
+                console.log(val);
+                console.log(amount);
+                var total = 0;
+                for (var i = 0; i < amount.length; i++) {
+                    total += amount[i] << 0;
+                }
+                console.log(total);
+            }
+            if (val.length == 0 || amount.length == 0) {
+                $("input:radio").removeAttr("checked");
+                alert('Please select atleast one order!');
+                return false;
+            }
+            }
+
+            if($('#mpesa_phone_number').val().length >= 9) {
+                $.ajax({
+                        type: 'post',
+                        url: 'index.php?path=payment/mpesa/confirmtransaction',
+                        data: { 
+                        mobile : encodeURIComponent($('#mpesa_phone_number').val()),
+                        order_id: val,
+                        amount: total,
+                        payment_type: radioValue,
+                        payment_method : 'mpesa'
+                        },
+                        dataType: 'json',
+                        cache: false,
+                        beforeSend: function() {
+                            $(".overlayed").show();
+                            $('#mpesa-button-confirm').button('loading');
+                        },
+                        complete: function() {
+                            $(".overlayed").hide();
+                        },      
+                        success: function(json) {
+
+                                console.log(json);
+                                console.log('json mpesa');
+
+                                $('#mpesa-button-confirm').button('reset');
+                            $('#loading').hide();
+
+                                if(json['processed']) {
+                                        //location = '<?php echo $continue; ?>';
+		        		
+                                        //$('#success_msg').html('A payment request has been sent to the mpesa number '+$('#mpesa_phone_number').val()+'. Please wait for a few seconds then check for your phone for an MPESA PIN entry prompt.');
+
+                                        $('#success_msg').html('A payment request has been sent on your above number. Please make the payment by entering mpesa PIN and click on Confirm Payment button after receiving sms from mpesa');
+		        		
+                                        $('#success_msg').show();
+		        		
+                                        $('#button-complete').show();
+
+                                        console.log('json mpesa1');
+                                        $('#mpesa-button-confirm').hide();
+                                        $('#button-retry').hide();
+                                        console.log('json mpesa2');
+
+                                } else {
+                                        console.log('json mpesa err');
+                                        console.log(json['error']);
+                                        $('#error_msg').html(json['error']);
+                                        $('#error_msg').show();
+                                }
+		            
+                        },
+                        error: function(json) {
+
+                                console.log('josn mpesa');
+                                console.log(json);
+
+                                $('#error_msg').html(json['responseText']);
+                                $('#error_msg').show();
+                        }
+                    });
+            }
+        });
+
+        $('#button-complete').on('click', function() {
+	    
+            $('#error_msg').hide();
+            $('#success_msg').hide();
+        
+            var radioValue = $("input[name='pay_option']:checked").val();
+            var total_pending_amount = $("input[name='total_pending_amount']").val();
+            console.log(total_pending_amount);
+            
+            if (radioValue == 'pay_full') {
+                
+            var val = $("input[name=pending_order_id]").val();
+            var total = $("input[name=total_pending_amount]").val();
+            
+            } else if (radioValue == 'pay_selected_order') {
+                
+            var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
+            console.log(checkedNum);
+            var val = [];
+            var amount = [];
+            if (!checkedNum) {
+                $(':checkbox:checked').each(function (i) {
+                    val[i] = $(this).data("id");
+                    amount[i] = $(this).data("amount");
+                });
+                console.log(val);
+                console.log(amount);
+                var total = 0;
+                for (var i = 0; i < amount.length; i++) {
+                    total += amount[i] << 0;
+                }
+                console.log(total);
+            }
+            if (val.length == 0 || amount.length == 0) {
+                $("input:radio").removeAttr("checked");
+                alert('Please select atleast one order!');
+                return false;
+            }
+            }
+
+        $.ajax({
+                type: 'post',
+                url: 'index.php?path=payment/mpesa/completetransaction',
+            dataType: 'json',
+                cache: false,
+                data: { 
+                        mobile : encodeURIComponent($('#mpesa_phone_number').val()),
+                        order_id: val,
+                        amount: total,
+                        payment_type: radioValue,
+                        payment_method : 'mpesa'
+                        },
+                beforeSend: function() {
+                    $(".overlayed").show();
+                    $('#button-complete').button('loading');
+                },
+                complete: function() {
+                    $(".overlayed").hide();
+                    $('#button-complete').button('reset');
+                },      
+                success: function(json) {
+
+                        console.log(json);
+                        console.log('json mpesa');
+                        if(json['status']) {
+                                //success
+                                $('#success_msg').html('Payment Successfull. Wait Until Page Refresh!');
+                                $('#success_msg').show();
+                                setInterval(function(){ window.location.replace(json['redirect']); }, 10000);
+                        } else {
+
+                                //failed
+                                //$('#mpesa-button-confirm').show();
+                                //$('#button-retry').hide();
+                                //$('#button-complete').hide();
+
+                                $('#error_msg').html(json['error']);
+                                $('#error_msg').show();
+
+                                $('#button-complete').hide();
+                                $('#button-retry').show();
+
+                        }
+	            
+                },
+                error: function(json) {
+                        $('#error_msg').html(json['responseText']);
+                        $('#error_msg').show();
+                }
+            });
+        });
+</script>
 <?php if($redirect_coming) { ?>
 <script type="text/javascript">
     $('#save-button').click();
@@ -676,16 +1103,16 @@
     .option_pay {
         margin-top:-3px !important;
     }
-.amount
-{
-    text-align: center; 
-    vertical-align: middle;
-}
-.order_id
-{
-    text-align: center; 
-    vertical-align: middle;
-}
+    .amount
+    {
+        text-align: center; 
+        vertical-align: middle;
+    }
+    .order_id
+    {
+        text-align: center; 
+        vertical-align: middle;
+    }
 </style>
 </body>
 </html>

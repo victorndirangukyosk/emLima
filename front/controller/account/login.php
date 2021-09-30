@@ -518,7 +518,7 @@ class ControllerAccountLogin extends Controller {
         $filter_data = [];
         $this->load->model('user/user');
         $data['account_managers'] = $this->model_user_user->getAccountManagerUsers($filter_data);
-        
+
         $filter_city_data = [];
         $this->load->model('account/customer');
         $data['cities'] = $this->model_account_customer->getAllCities($filter_city_data);
@@ -593,6 +593,7 @@ class ControllerAccountLogin extends Controller {
         $data['status'] = false;
 
         $this->load->model('account/customer');
+        $this->load->model('account/changepass');
 
         if (isset($this->request->post['password']) && isset($this->request->post['email'])) {
             //$otp_data = $this->model_account_customer->getOTP($this->request->post['customer_id'],$this->request->post['verify_otp'],'login');
@@ -601,7 +602,14 @@ class ControllerAccountLogin extends Controller {
 
             //print_r($user_query);
             if ($user_query->num_rows) {
-                if ($user_query->row['approved'] && $user_query->row['status']) {
+                $expired_months = $this->model_account_changepass->passwordexpired($user_query->row['customer_id']);
+                $checknewpasswordsetted = $this->model_account_changepass->checknewpasswordsetted($user_query->row['customer_id']);
+                $log = new Log('error.log');
+                $log->write('expired_months');
+                $log->write($expired_months);
+                $log->write($checknewpasswordsetted);
+                $log->write('expired_months');
+                if ($user_query->row['approved'] && $user_query->row['status'] && (($checknewpasswordsetted > 0 && $expired_months < 3) || $user_query->row['tempPassword'] == 1)) {
                     $data['customer_id'] = $user_query->row['customer_id'];
                     $data['customer_email'] = $user_query->row['email'];
                     $data['temppassword'] = $user_query->row['tempPassword'];
@@ -660,6 +668,12 @@ class ControllerAccountLogin extends Controller {
                         $this->session->data['order_approval_access'] = $user_query->row['order_approval_access'];
                         $this->session->data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
                     }
+                } elseif ($user_query->row['approved'] && $user_query->row['status'] && ($checknewpasswordsetted <= 0 || $expired_months >= 3)) {
+                    $data['status'] = false;
+                    $data['password_expired'] = true;
+                    $data['redirect'] = $this->url->link('account/order', '', 'SSL');
+
+                    $data['error_warning'] = 'You need to update your password, Because your password is expired.';
                 } else {
                     $data['status'] = false;
 
@@ -706,7 +720,7 @@ class ControllerAccountLogin extends Controller {
                 $log->write($data);
             }
         }
-
+        $this->model_account_customer->getDBCart();
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }
@@ -753,6 +767,10 @@ class ControllerAccountLogin extends Controller {
 
                 // maintain session to identify as admin login
                 $this->session->data['adminlogin'] = 1;
+                // maintain session to identify admin logged user group
+                if (!empty($this->request->get['ce_id'])) {
+                    $this->session->data['ce_id'] = $this->request->get['ce_id'];
+                }
                 //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
                 //REDIRECTING TO HOME PAGE
                 $this->response->redirect('/');
