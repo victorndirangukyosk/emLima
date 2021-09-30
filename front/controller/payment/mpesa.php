@@ -286,7 +286,7 @@ class ControllerPaymentMpesa extends Controller {
                     $pendingOrdersIds = $this->request->post['order_id'];
                 }
 
-                if (count($pendingOrdersIds)) {
+                if (isset($pendingOrdersIds) && count($pendingOrdersIds)) {
                     foreach ($pendingOrdersIds as $key => $value) {
                         $order_info = $this->model_checkout_order->getOrder($value);
                         $this->model_payment_mpesa->addOrder($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
