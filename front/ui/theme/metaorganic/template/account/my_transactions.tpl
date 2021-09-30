@@ -24,7 +24,7 @@
                                 <th class="order_id">Order Total</th>
                                 <th class="order_id">Amount Payable</th>
                                 <th class="order_id">Payment Method</th>
-                                <th class="order_id">Action</th>
+                                <!--<th class="order_id">Action</th>-->
                             </tr>
                         </thead>
                         <tbody id="emp_body">
@@ -638,7 +638,7 @@ function showPayWith() {
                 tr.append("<td class='amount'>" + displayRecords[i].total_currency + "</td>");
                 tr.append("<td class='amount'>" + displayRecords[i].pending_amount_currency + "</td>");
                 tr.append("<td>" + displayRecords[i].payment_method + "</td>");
-                tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPays(" + displayRecords[i].order_id + "," + displayRecords[i].pending_amount + ")'>Pay Now</a></td>");
+                <!--tr.append("<td><a class='btn btn-default' onclick='changeOrderIdForPays(" + displayRecords[i].order_id + "," + displayRecords[i].pending_amount + ")'>Pay Now</a></td>");//-->
                 $('#emp_body').append(tr);
             }
         }
