@@ -773,6 +773,7 @@ class ControllerAccountLogin extends Controller {
                 }
                 //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
                 //REDIRECTING TO HOME PAGE
+                $this->model_account_customer->getDBCart();
                 $this->response->redirect('/');
             }
         }
