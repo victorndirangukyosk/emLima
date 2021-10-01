@@ -486,7 +486,7 @@ class ModelCheckoutOrder extends Model {
         }
     }
 
-    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '', $other_vendor_terms = null, $paid = null) {
+    public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '', $other_vendor_terms = null, $paid = 'N') {
 
         //$notify = true;
         $log = new Log('error.log');
