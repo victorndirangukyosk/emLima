@@ -1111,6 +1111,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
         if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
             $this->load->model('account/order');
+            $this->load->model('sale/order');
             $page = 1;
             $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
             $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
