@@ -234,15 +234,12 @@ class ControllerPaymentMpesa extends Controller {
                 $BusinessShortCode = $this->config->get('mpesa_business_short_code');
                 $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
                 $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
-                
+
                 if ($this->request->post['payment_type'] == 'topup') {
                     $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
-
-                }
-                else {
+                } else {
                     $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatusTransactions', '', 'SSL');
-                //$CallBackURL = 'https://a1c6dda0aaba.ngrok.io/kwikbasket/index.php?path=deliversystem/deliversystem/mpesaOrderStatus';
-
+                    //$CallBackURL = 'https://a1c6dda0aaba.ngrok.io/kwikbasket/index.php?path=deliversystem/deliversystem/mpesaOrderStatus';
                 }
                 $Amount = $amount;
                 //$Amount = 10;
@@ -658,9 +655,7 @@ class ControllerPaymentMpesa extends Controller {
                         $log->write('updateMpesaOrderStatus validatex');
 
                         // $this->load->model('localisation/order_status');
-
                         // $order_status = $this->model_localisation_order_status->getOrderStatuses();
-
                         // $order_info = $this->model_checkout_order->getOrder($order_id);
                         // $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
                         $this->model_payment_mpesa->insertCustomerTransactionId($customer_id, $stkPushSimulation->CheckoutRequestID);
