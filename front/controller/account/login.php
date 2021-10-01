@@ -778,6 +778,7 @@ class ControllerAccountLogin extends Controller {
         }
 
         if ($this->customer->isLogged()) {
+            $this->model_account_customer->getDBCart();
             $this->model_account_customer->cacheProductPrices(75);
             $this->response->redirect('/');
             //REDIRECTING TO HOME PAGE
