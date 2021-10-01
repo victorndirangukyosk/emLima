@@ -773,12 +773,12 @@ class ControllerAccountLogin extends Controller {
                 }
                 //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
                 //REDIRECTING TO HOME PAGE
+                $this->model_account_customer->getDBCart();
                 $this->response->redirect('/');
             }
         }
 
         if ($this->customer->isLogged()) {
-            $this->model_account_customer->getDBCart();
             $this->model_account_customer->cacheProductPrices(75);
             $this->response->redirect('/');
             //REDIRECTING TO HOME PAGE
