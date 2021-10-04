@@ -217,15 +217,14 @@
                                 </td>
                                 <td class="text-right">
                                     <br>
-                                    <h6 class="bold">LIPA NA MPESA</h6>
+                                    <h6 class="bold">PAYMENT ON DELIVERY</h6>
                                     <ul class="list-block">
-                                        <li>Go to the M-PESA Menu</li>
-                                        <li>Select Lipa Na M-PESA</li>
-                                        <li>Select Pay Bill</li>
-                                        <li>Enter <strong>4029127</strong></li>
-                                        <li>Enter <strong>KB<?= $order['order_id'] ?></strong> as the account number</li>
-                                        <li>Enter total amount</li>
-                                        <li>Enter M-PESA Pin</li>
+                                        <li>Step 1: Go to my account</li>
+                                        <li>Step 2: Click on my transactions</li>
+                                        <li>Step 3: Click on Mpesa online</li>
+                                        <li>Step 4: Verify your Mpesa number as shown on platform</li>
+                                        <li>Step 5: Click to pay & confirm</li>
+                                        <li>Step 6: Click on confirm payment</li>
                                     </ul>
                                 </td>
                             </tr>
