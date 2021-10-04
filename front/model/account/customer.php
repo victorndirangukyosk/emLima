@@ -1299,7 +1299,7 @@ class ModelAccountCustomer extends Model {
         return $product_info->row;
     }
 
-    public function AddToCart($product_store_id, $qty = 1, $option = [], $recurring_id = 0, $store_id = false, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null, $product_id) {
+    public function AddToCart($product_store_id, $qty, $option = [], $recurring_id = 0, $store_id = false, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null, $product_id) {
         $options = NULL;
         if (isset($option) && is_array($option) && count($option) > 0) {
             $options = implode("-", $option);
@@ -1311,6 +1311,10 @@ class ModelAccountCustomer extends Model {
             $this->db->query('INSERT INTO ' . DB_PREFIX . "cart SET customer_id = '" . (int) $this->customer->getId() . "', product_id = '" . (int) $product_id . "', product_store_id = '" . (int) $product_store_id . "', quantity = '" . $qty . "', options = '" . $options . "', recurring_id = '" . $recurring_id . "', store_id = '" . $store_id . "', store_product_variation_id = '" . $store_product_variation_id . "', product_type = '" . $product_type . "', product_note = '" . $product_note . "', produce_type = '" . $produce_type . "', created_at = NOW()");
             return $this->db->getLastId();
         }
+    }
+
+    public function DeleteFromCart($product_store_id) {
+        $query = $this->db->query('DELETE FROM ' . DB_PREFIX . "cart WHERE product_store_id='" . $product_store_id . "' AND customer_id='" . $this->customer->getId() . "'");
     }
 
     public function ClearCart() {

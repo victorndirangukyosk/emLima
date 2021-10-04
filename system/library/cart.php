@@ -732,11 +732,15 @@ class Cart {
     }
 
     public function remove($key) {
+        $cart_data = $key;
+        $this->load->controller('checkout/cart/removecartdb', $cart_data);
         $this->data = [];
         unset($this->session->data['cart'][$key]);
     }
 
     public function removeTempCart($key) {
+        $cart_data = $key;
+        $this->load->controller('checkout/cart/removecartdb', $cart_data);
         $this->data = [];
 
         unset($this->session->data['temp_cart'][$key]);
@@ -748,6 +752,13 @@ class Cart {
         $this->session->data['cart'] = [];
         $this->session->data['temp_cart'] = [];
         $this->load->controller('checkout/cart/clearcartdb');
+    }
+
+    public function clearcart() {
+        $this->data = [];
+
+        $this->session->data['cart'] = [];
+        $this->session->data['temp_cart'] = [];
     }
 
     public function getWeight() {
