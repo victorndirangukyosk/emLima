@@ -46,9 +46,6 @@ class ControllerCommonCart extends Controller
 
         $countProducts = 0;
         $products = [];
-        $this->cart->clearcustom();
-        $this->load->model('account/customer');
-        $this->model_account_customer->getDBCart();
         $result = $this->cart->getCartProducts();
         //		echo '<pre>';print_r($result);die;
         if ($result) {
