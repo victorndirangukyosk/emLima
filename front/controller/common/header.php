@@ -875,6 +875,7 @@ class ControllerCommonHeader extends Controller {
             $data['zipcode'] = '';
         }
         $this->load->model('account/customer');
+        $this->cart->clearcustom();
         $this->model_account_customer->getDBCart();
         $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
 
