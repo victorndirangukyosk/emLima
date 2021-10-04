@@ -1,6 +1,6 @@
 <?php
 
-class ControllerCommonDashboard extends Controller {
+class ControllerCommonDashboard extends Controller { 
 
     public function temp() {
         $this->load->model('catalog/product');
@@ -108,12 +108,12 @@ class ControllerCommonDashboard extends Controller {
         }
 
         $data['online_customers_url'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL');
-        $data['order'] = $this->load->controller('dashboard/order');
-        $data['sale'] = $this->load->controller('dashboard/sale');
-        $data['customer'] = $this->load->controller('dashboard/customer');
+        // $data['order'] = $this->load->controller('dashboard/order');
+        // $data['sale'] = $this->load->controller('dashboard/sale');
+        // $data['customer'] = $this->load->controller('dashboard/customer');
         $data['online'] = $this->load->controller('dashboard/online');
-        $data['manualorders'] = $this->load->controller('dashboard/manualorders');
-        $data['onlineorders'] = $this->load->controller('dashboard/onlineorders');
+        $data['manualorders'] = $this->load->controller('dashboard/manualorders/ManualOrdersAll');
+        $data['onlineorders'] = $this->load->controller('dashboard/onlineorders/OnlineOrdersAll');
 
         $data['map'] = $this->load->controller('dashboard/map');
         $data['chart'] = $this->load->controller('dashboard/chart');
@@ -122,21 +122,21 @@ class ControllerCommonDashboard extends Controller {
         $data['recent'] = $this->load->controller('dashboard/recent');
         $data['recenttabs'] = $this->load->controller('dashboard/recenttabs');
 
-        //OverView       
-        $data['order_received'] = $this->load->controller('dashboard/order/ReceivedOrders');
-        $data['order_processed'] = $this->load->controller('dashboard/order/ProcessedOrders');
-        $data['order_cancelled'] = $this->load->controller('dashboard/order/CancelledOrders');
-        $data['order_incomeplete'] = $this->load->controller('dashboard/order/IncompleteOrders');
-        $data['order_approval_pening'] = $this->load->controller('dashboard/order/ApprovalPendingOrders');
-        $data['order_fast'] = $this->load->controller('dashboard/order/FastOrders');
+        //OverView        
+        $data['order_received'] = $this->load->controller('dashboard/order/ReceivedOrdersAll');
+        $data['order_processed'] = $this->load->controller('dashboard/order/ProcessedOrdersAll');
+        $data['order_cancelled'] = $this->load->controller('dashboard/order/CancelledOrdersAll');
+        $data['order_incomeplete'] = $this->load->controller('dashboard/order/IncompleteOrdersAll');
+        $data['order_approval_pening'] = $this->load->controller('dashboard/order/ApprovalPendingOrdersAll');
+        $data['order_fast'] = $this->load->controller('dashboard/order/FastOrdersAll');
         
-        $data['total_customers_onboarded'] = $this->load->controller('dashboard/customer/CustomersOnboarded');
-        $data['total_customers_registered'] = $this->load->controller('dashboard/customer/CustomersRegistered');
-        $data['total_customers_approval_pending'] = $this->load->controller('dashboard/customer/CustomersPendingApproval');
+        $data['total_customers_onboarded'] = $this->load->controller('dashboard/customer/CustomersOnboardedAll');
+        $data['total_customers_registered'] = $this->load->controller('dashboard/customer/CustomersRegisteredAll');
+        $data['total_customers_approval_pending'] = $this->load->controller('dashboard/customer/CustomersPendingApprovalAll');
 
-        $data['total_revenue_booked'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoard');
-        $data['total_revenue_collected'] = $this->load->controller('dashboard/order/TotalRevenueCollectedDashBoard');
-        $data['total_revenue_pending'] = $this->load->controller('dashboard/order/TotalRevenuePendingDashBoard');
+        $data['total_revenue_booked'] = $this->load->controller('dashboard/order/TotalRevenueBookedDashBoardAll');
+        $data['total_revenue_collected'] = $this->load->controller('dashboard/order/TotalRevenueCollectedDashBoardAll');
+        $data['total_revenue_pending'] = $this->load->controller('dashboard/order/TotalRevenuePendingDashBoardAll');
         
         //OverView 2 
         $data['order_received_month'] = $this->load->controller('dashboard/order/ReceivedOrders');

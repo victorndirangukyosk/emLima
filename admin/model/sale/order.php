@@ -4143,4 +4143,98 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
+
+    public function getOrdersDashboard($data = []) {
+        $sql = "SELECT o.order_id,  ot.value FROM `" . DB_PREFIX . 'order` o ';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_total ot on (o.order_id = ot.order_id) where ot.code="total"';
+
+        if (isset($data['filter_order_status'])) {
+            $implode = [];
+
+            $order_statuses = explode(',', $data['filter_order_status']);
+
+            foreach ($order_statuses as $order_status_id) {
+                $implode[] = "o.order_status_id = '" . (int) $order_status_id . "'";
+            }
+
+            if ($implode) {
+                $sql .= ' and (' . implode(' OR ', $implode) . ')';
+            }  
+        } else {
+            $sql .= " and o.order_status_id > '0'";
+        }
+
+        //   echo "<pre>";print_r($data['filter_order_type']);die; 
+
+
+        if (isset($data['filter_order_type'])) {
+
+            $sql .= ' AND isadmin_login= ' . $data['filter_order_type'] . '';
+        }
+
+        //below if condition added for fast orders used in fast order sreen 
+        if (!empty($data['filter_order_day'])) {
+            $current_date = date('Y-m-d');
+            if ('today' == $data['filter_order_day']) {
+                $delivery_date = date('Y-m-d');
+            } else {
+                $delivery_date = date('Y-m-d', strtotime('+1 day'));
+            }
+
+            //$sql .= " AND DATE(o.delivery_date) = " . $delivery_date;
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($delivery_date) . "')";
+
+            // fast orders means, ordered placed on current dadte
+            $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($current_date) . "')";
+
+            //echo "<pre>";print_r($delivery_date);die;
+        }
+
+
+
+        if ($this->user->isVendor()) {
+            $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
+        }
+
+         
+        if (isset($data['filter_order_status_id_not_in'])) {
+            $sql .= " AND o.order_status_id NOT IN (" . $data['filter_order_status_id_not_in'] . ")";
+        }
+ 
+            $sql .= ' ORDER BY o.order_id';
+        
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        
+
+            // echo "<pre>";print_r($sql);die;
+
+        $query = $this->db->query($sql);
+
+        //   return $query->rows;
+
+
+        $all_orders = $query->rows;
+        $log = new Log('error.log');
+        if (is_array($all_orders) && count($all_orders) > 0) {
+            $order_grand_total = 0;
+            foreach ($all_orders as $all_order) {
+               
+                
+                        
+                            $order_grand_total += $all_order['value'];
+                            //$log->write($order_total);
+                   
+                
+            }
+        }
+        return $order_grand_total;
+    }
+
+
 }
