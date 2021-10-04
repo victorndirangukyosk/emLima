@@ -215,7 +215,7 @@
                                         <li>SWIFT Code: SBICKENX</li>
                                     </ul>
                                 </td>
-                                <td class="text-right">
+                                <td class="text-left">
                                     <br>
                                     <h6 class="bold">PAYMENT ON DELIVERY</h6>
                                     <ul class="list-block">
