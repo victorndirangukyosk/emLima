@@ -203,7 +203,7 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td>
+                                <td class="col-md-4">
                                     <h6 class="bold">BANK TRANSFER</h6>
                                     <ul class="list-block">
                                         <li>Beneficiary Name: KWIKBASKET SOLUTIONS LIMITED</li>
@@ -215,7 +215,8 @@
                                         <li>SWIFT Code: SBICKENX</li>
                                     </ul>
                                 </td>
-                                <td class="text-left">
+                                <td class="col-md-4"></td>
+                                <td class="col-md-4 text-left">
                                     <br>
                                     <h6 class="bold">PAYMENT ON DELIVERY</h6>
                                     <ul class="list-block">
