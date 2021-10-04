@@ -1299,13 +1299,13 @@ class ModelAccountCustomer extends Model {
         return $product_info->row;
     }
 
-    public function AddToCart($product_store_id, $qty = 1, $option = [], $recurring_id = 0, $store_id = false, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null, $product_id) {
+    public function AddToCart($product_store_id, $qty, $option = [], $recurring_id = 0, $store_id = false, $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null, $product_id) {
         $options = NULL;
         if (isset($option) && is_array($option) && count($option) > 0) {
             $options = implode("-", $option);
         }
         $product_info = $this->getCartProduct($product_store_id);
-        if (isset($product_info) && is_array($product_info) && count($product_info) >= 0 && $product_info['product_store_id'] == $product_store_id) {
+        if (isset($product_info) && is_array($product_info) && count($product_info) > 0 && $product_info['product_store_id'] == $product_store_id) {
             $this->db->query('UPDATE ' . DB_PREFIX . "cart SET customer_id = '" . (int) $this->customer->getId() . "', product_id = '" . (int) $product_id . "', product_store_id = '" . (int) $product_store_id . "', quantity = '" . $qty . "', options = '" . $options . "', recurring_id = '" . $recurring_id . "', store_id = '" . $store_id . "', store_product_variation_id = '" . $store_product_variation_id . "', product_type = '" . $product_type . "', product_note = '" . $product_note . "', produce_type = '" . $produce_type . "', updated_at = NOW() WHERE product_store_id = '" . $product_store_id . "' AND customer_id ='" . $this->customer->getId() . "'");
         } else {
             $this->db->query('INSERT INTO ' . DB_PREFIX . "cart SET customer_id = '" . (int) $this->customer->getId() . "', product_id = '" . (int) $product_id . "', product_store_id = '" . (int) $product_store_id . "', quantity = '" . $qty . "', options = '" . $options . "', recurring_id = '" . $recurring_id . "', store_id = '" . $store_id . "', store_product_variation_id = '" . $store_product_variation_id . "', product_type = '" . $product_type . "', product_note = '" . $product_note . "', produce_type = '" . $produce_type . "', created_at = NOW()");
