@@ -1424,6 +1424,9 @@ class ControllerCheckoutCart extends Controller {
                 $log->write($cart_product['quantity']);
                 $log->write('quantity');
                 $this->model_account_customer->AddToCart($cart_product['product_store_id'], $cart_product['quantity'], $option, $cart_product['recurring'], $cart_product['store_id'], $cart_product['store_product_variation_id'], $cart_product['product_type'], $cart_product['product_note'], $cart_product['produce_type'], $cart_product['product_id']);
+            } else {
+                $product_store_id = base64_decode($key);
+                $this->model_account_customer->DeleteFromCart($product_store_id);
             }
         }
     }
