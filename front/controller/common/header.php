@@ -874,6 +874,8 @@ class ControllerCommonHeader extends Controller {
         } else {
             $data['zipcode'] = '';
         }
+        $this->load->model('account/customer');
+        $this->model_account_customer->getDBCart();
         $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header.tpl')) {
