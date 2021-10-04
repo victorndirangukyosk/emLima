@@ -216,7 +216,7 @@
                                     </ul>
                                 </td>
                                 <td class="col-md-5"></td>
-                                <td class="col-md-3 text-left">
+                                <td class="col-md-3 text-right">
                                     <h6 class="bold">PAYMENT ON DELIVERY</h6>
                                     <ul class="list-block">
                                         <li>Step 1: Go to my account</li>
