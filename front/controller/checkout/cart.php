@@ -1428,6 +1428,23 @@ class ControllerCheckoutCart extends Controller {
         }
     }
 
+    public function removecartdb($key) {
+        $log = new Log('error.log');
+        $this->load->model('account/customer');
+        foreach ($this->cart->getProducts() as $cart_product) {
+            if ($cart_product['key'] == $key) {
+                $option = NULL;
+                if (is_array($cart_product['option']) && count($cart_product['option']) > 0) {
+                    $option = implode("-", $cart_product['option']);
+                }
+                $log->write('quantity');
+                $log->write($cart_product['quantity']);
+                $log->write('quantity');
+                $this->model_account_customer->DeleteFromCart($cart_product['product_store_id']);
+            }
+        }
+    }
+
     public function clearcartdb() {
         $log = new Log('error.log');
         $this->load->model('account/customer');
