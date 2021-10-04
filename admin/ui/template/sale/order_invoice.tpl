@@ -203,7 +203,7 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td class="col-md-4">
+                                <td class="col-md-4" style="padding-left: 0px !important;">
                                     <h6 class="bold">BANK TRANSFER</h6>
                                     <ul class="list-block">
                                         <li>Beneficiary Name: KWIKBASKET SOLUTIONS LIMITED</li>
