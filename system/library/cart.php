@@ -754,6 +754,13 @@ class Cart {
         $this->load->controller('checkout/cart/clearcartdb');
     }
 
+    public function clearcart() {
+        $this->data = [];
+
+        $this->session->data['cart'] = [];
+        $this->session->data['temp_cart'] = [];
+    }
+
     public function getWeight() {
         $weight = 0;
 
