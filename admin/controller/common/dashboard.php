@@ -108,9 +108,9 @@ class ControllerCommonDashboard extends Controller {
         }
 
         $data['online_customers_url'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL');
-        $data['order'] = $this->load->controller('dashboard/order');
-        $data['sale'] = $this->load->controller('dashboard/sale');
-        $data['customer'] = $this->load->controller('dashboard/customer');
+        // $data['order'] = $this->load->controller('dashboard/order');
+        // $data['sale'] = $this->load->controller('dashboard/sale');
+        // $data['customer'] = $this->load->controller('dashboard/customer');
         $data['online'] = $this->load->controller('dashboard/online');
         $data['manualorders'] = $this->load->controller('dashboard/manualorders');
         $data['onlineorders'] = $this->load->controller('dashboard/onlineorders');
