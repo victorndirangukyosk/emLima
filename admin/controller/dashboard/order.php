@@ -149,6 +149,34 @@ class ControllerDashboardOrder extends Controller {
         return $this->load->view('dashboard/order.tpl', $data);
     }
 
+
+    public function ReceivedOrdersAll() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+        //  echo "<pre>";print_r($this->request->get['filter_monthyear_added']);die;
+        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 14,  NULL]);
+
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14', 'SSL'));
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14', 'SSL');
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/dashboard_order.tpl', $data);
+        }
+    }
+
+
     public function ReceivedOrders() {
 
         $this->load->language('dashboard/order');
@@ -201,6 +229,32 @@ class ControllerDashboardOrder extends Controller {
         }
     }
 
+    public function ProcessedOrdersAll() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 1,  NULL]);
+
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1', 'SSL'));
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1', 'SSL');
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/dashboard_processing_order.tpl', $data);
+        }
+    }
+
     public function CancelledOrders() {
 
         $this->load->language('dashboard/order');
@@ -219,6 +273,32 @@ class ControllerDashboardOrder extends Controller {
         $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/dashboard_cancelled_order.tpl', $data);
+        }
+    }
+
+    public function CancelledOrdersAll() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 6, NULL]);
+
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6', 'SSL'));
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
@@ -252,6 +332,32 @@ class ControllerDashboardOrder extends Controller {
         }
     }
 
+
+    public function IncompleteOrdersAll() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        $order_total = $this->model_sale_order->getTotalIncompleteOrders(['filter_order_status' => 0, NULL]);
+
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6', 'SSL');
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/dashboard_incomplete_order.tpl', $data);
+        }
+    }
+
     public function ApprovalPendingOrders() {
 
         $this->load->language('dashboard/order');
@@ -270,6 +376,33 @@ class ControllerDashboardOrder extends Controller {
         $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=15&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
         $data['total'] = $order_total;
         $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=15&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/dashboard_approval_pending_order.tpl', $data);
+        }
+    }
+
+
+    public function ApprovalPendingOrdersAll() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 15, NULL]);
+
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=15', 'SSL'));
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=15', 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
@@ -308,6 +441,37 @@ class ControllerDashboardOrder extends Controller {
         }
     }
 
+
+    public function FastOrdersAll() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        $order_total_today = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'today',NULL]);
+        $log = new Log('error.log');
+        /* 'filter_order_status' => 1, 14, */
+        $order_total_tomorrow = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'tomorrow', NULL]);
+        $order_total = $order_total_today + $order_total_tomorrow;
+
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/fast_order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1&filter_order_day=today', 'SSL'));
+        $data['total'] = $order_total;
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1&filter_order_day=today', 'SSL');
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/fast_order.tpl', $data);
+        }
+    }
+
     public function TotalRevenueBookedDashBoard() {
 
         $this->load->language('dashboard/order');
@@ -322,6 +486,35 @@ class ControllerDashboardOrder extends Controller {
         $this->load->model('sale/order');
 
         $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 6, 8', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
+        $data['total'] = $this->currency->format($order_grand_total);
+        $log = new Log('error.log');
+        /* $log->write('order_grand_total');
+          $log->write($order_grand_total);
+          $log->write('order_grand_total'); */
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/total_revenue_booked.tpl', $data);
+        }
+    }
+
+
+    public function TotalRevenueBookedDashBoardAll() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        // $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 6, 8']);
+        $order_grand_total = $this->model_sale_order->getOrdersDashboard(['filter_order_status_id_not_in' => '0, 6, 8']);
         $data['total'] = $this->currency->format($order_grand_total);
         $log = new Log('error.log');
         /* $log->write('order_grand_total');
@@ -362,6 +555,37 @@ class ControllerDashboardOrder extends Controller {
         }
     }
 
+
+
+    public function TotalRevenueCollectedDashBoardAll() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        // $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status' => 5]);
+        $order_grand_total = $this->model_sale_order->getOrdersDashboard(['filter_order_status' => '5']);
+       
+        $data['total'] = $this->currency->format($order_grand_total);
+        $log = new Log('error.log');
+        /* $log->write('order_grand_total');
+          $log->write($order_grand_total);
+          $log->write('order_grand_total'); */
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/total_revenue_collected.tpl', $data);
+        }
+    }
+
     public function TotalRevenuePendingDashBoard() {
 
         $this->load->language('dashboard/order');
@@ -376,6 +600,37 @@ class ControllerDashboardOrder extends Controller {
         $this->load->model('sale/order');
 
         $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 5, 6, 8', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
+        $data['total'] = $this->currency->format($order_grand_total);
+        $log = new Log('error.log');
+        /* $log->write('order_grand_total');
+          $log->write($order_grand_total);
+          $log->write('order_grand_total'); */
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/total_revenue_pending.tpl', $data);
+        }
+    }
+
+
+    public function TotalRevenuePendingDashBoardAll() {
+
+        $this->load->language('dashboard/order');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/order');
+
+        // $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 5, 6, 8', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
+        
+        $order_grand_total = $this->model_sale_order->getOrdersDashboard(['filter_order_status_id_not_in' =>  '0, 5, 6, 8']);
+        
         $data['total'] = $this->currency->format($order_grand_total);
         $log = new Log('error.log');
         /* $log->write('order_grand_total');
