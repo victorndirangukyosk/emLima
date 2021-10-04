@@ -1219,7 +1219,10 @@ class ControllerCommonHeader extends Controller {
         }
         $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
         $data['multi_store_checkoutitems_css'] = $param;
-
+        
+        $this->load->model('account/customer');
+        $this->cart->clearcustom();
+        $this->model_account_customer->getDBCart();
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/only_header_information.tpl')) {
             return $this->load->view($this->config->get('config_template') . '/template/common/only_header_information.tpl', $data);
         } else {
@@ -1465,7 +1468,10 @@ class ControllerCommonHeader extends Controller {
         }
 
         $data['cart'] = $this->load->controller('common/cart');
-
+        $this->load->model('account/customer');
+        $this->cart->clearcustom();
+        $this->model_account_customer->getDBCart();
+        
         // For page specific css
         if (isset($this->request->get['path'])) {
             if (isset($this->request->get['product_id'])) {
@@ -2092,6 +2098,10 @@ class ControllerCommonHeader extends Controller {
 
         $products = $this->model_assets_product->getProductDataByStoreId(2);
         $data['latest_products'] = $products;
+        
+        $this->load->model('account/customer');
+        $this->cart->clearcustom();
+        $this->model_account_customer->getDBCart();
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/store_header.tpl')) {
             return $this->load->view($this->config->get('config_template') . '/template/common/store_header.tpl', $data);
