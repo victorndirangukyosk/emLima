@@ -1313,6 +1313,10 @@ class ModelAccountCustomer extends Model {
         }
     }
 
+    public function DeleteFromCart($product_store_id) {
+        $query = $this->db->query('DELETE FROM ' . DB_PREFIX . "cart WHERE product_store_id='" . $product_store_id . "' AND customer_id='" . $this->customer->getId() . "'");
+    }
+
     public function ClearCart() {
         $query = $this->db->query('DELETE FROM ' . DB_PREFIX . "cart WHERE customer_id='" . $this->customer->getId() . "'");
     }
