@@ -467,6 +467,9 @@ class ControllerCommonHeader extends Controller {
         $data['language'] = $this->load->controller('common/language/dropdown');
         $data['contactus_modal'] = $this->load->controller('information/contact');
         $data['reportissue_modal'] = $this->load->controller('information/reportissue');
+        $data['wallet_url'] = $this->url->link('account/credit', '', 'SSL');
+        $data['wallet_amount'] = $this->load->controller('account/credit/getWalletTotal');
+
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header_information.tpl')) {
             return $this->load->view($this->config->get('config_template') . '/template/common/header_information.tpl', $data);
         } else {
