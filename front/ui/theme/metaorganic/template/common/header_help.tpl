@@ -298,7 +298,7 @@ width: 550px;
 
 </style>
 
-+<style>
+<style>
 
 .mini-wallet-button
 {
