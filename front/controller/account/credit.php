@@ -164,4 +164,20 @@ class ControllerAccountCredit extends Controller
             $this->response->setOutput($this->load->view('default/template/account/credit.tpl', $data));
         }
     }
+
+
+    public function getWalletTotal() {
+        $total = 0;
+        if (!$this->customer->isLogged()) {
+            $this->session->data['redirect'] = $this->url->link('account/credit', '', 'SSL');
+
+            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+        } 
+        $this->load->model('account/credit');         
+
+        $result = $this->model_account_credit->getTotalAmount();       
+        $total=$this->currency->format($result, $this->config->get('config_currency'));
+        return $total;
+    }
+
 }
