@@ -168,11 +168,11 @@ class ControllerAccountCredit extends Controller
 
     public function getWalletTotal() {
         $total = 0;
-        if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/credit', '', 'SSL');
+        // if (!$this->customer->isLogged()) {
+        //     $this->session->data['redirect'] = $this->url->link('account/credit', '', 'SSL');
 
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
-        } 
+        //     $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+        // } 
         $this->load->model('account/credit');         
 
         $result = $this->model_account_credit->getTotalAmount();       
