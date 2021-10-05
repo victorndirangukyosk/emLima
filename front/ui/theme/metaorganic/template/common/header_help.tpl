@@ -124,6 +124,25 @@
                                           </div>
                                           </a>
                                         </div>
+
+
+                 <?php if($this->config->get('credit' . '_status')){?>
+                     <div class="butn setui" style="position:relative;z-index:-1000; padding-right:0px;">
+                    <a href=<?= $wallet_url ?>>
+                      <div class="btn mini-wallet-button" role="button"  
+                          id="mini-wallet-button"
+                        style="margin-right: -10px;margin-top:0px;display:flex;flex-flow: column nowrap;background-color:transparent!important">
+                        <div style="display:flex;align-items: center;align-content: center;justify-content: center;">
+                          <i class="fa fa-money"></i>&nbsp;&nbsp;                           
+                        </div>
+                        <span class="badge mini-wallet" style="margin: 8px 0px;">
+                           <?= $wallet_amount ?>
+                        </span>
+                      </div>
+                      </a>
+                    </div>
+
+                  <?php }?>
                                     </div>
                                     </div>
                        <?php } ?>
@@ -277,4 +296,28 @@ width: 550px;
 
 
 
+</style>
+
+<style>
+
+.mini-wallet-button
+{
+  color: #ea7128!important;
+    background-color: transparent!important;
+    box-shadow: none;
+    border: none!important;
+    padding: 6px 14px;
+    border-radius: 2px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.mini-wallet
+{
+  background-color:#ea7128
+}
+
+.mini-wallet-button:hover {
+    color: #ccc !important;
+}
 </style>

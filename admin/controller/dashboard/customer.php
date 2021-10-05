@@ -71,6 +71,31 @@ class ControllerDashboardCustomer extends Controller {
         }
     }
 
+    public function CustomersOnboardedAll() {
+
+        $this->load->language('dashboard/customer');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/customer');
+        $customer_total = $this->model_sale_customer->getTotalCustomersOnBoarded(NULL);
+
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] , 'SSL'));
+        $data['total'] = $customer_total;
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] , 'SSL');
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/customer_onboarded.tpl', $data);
+        }
+    }
+
     public function CustomersRegistered() {
 
         $this->load->language('dashboard/customer');
@@ -88,6 +113,32 @@ class ControllerDashboardCustomer extends Controller {
         $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
         $data['total'] = $customer_total;
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/customer_registered.tpl', $data);
+        }
+    }
+
+
+    public function CustomersRegisteredAll() {
+
+        $this->load->language('dashboard/customer');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/customer');
+
+        $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard();
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] , 'SSL'));
+        $data['total'] = $customer_total;
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] , 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
@@ -114,6 +165,33 @@ class ControllerDashboardCustomer extends Controller {
         $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_approved=0&filter_sub_customer_show=1&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
         $data['total'] = $customer_total;
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        if ($this->request->isAjax()) {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($data));
+        } else {
+            return $this->load->view('dashboard/customer_pending_approval.tpl', $data);
+        }
+    }
+
+
+    public function CustomersPendingApprovalAll() {
+
+        $this->load->language('dashboard/customer');
+
+        $data['heading_title'] = $this->language->get('heading_title');
+
+        $data['text_view'] = $this->language->get('text_view');
+
+        $data['token'] = $this->session->data['token'];
+
+        // Total Orders
+        $this->load->model('sale/customer');
+
+        $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard(['filter_approved' => 0]);
+
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_approved=0&filter_sub_customer_show=1', 'SSL'));
+        $data['total'] = $customer_total;
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] , 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));

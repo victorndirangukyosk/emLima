@@ -19081,3 +19081,11 @@ box-shadow: 0 0 12px rgba(53, 53, 53, .2);
 #button-reward{
   border-radius: 20px;
 }
+
+.mini-wallet-button{
+	color:#ea7128 !important;
+    background-color: transparent !important;
+    box-shadow: none;
+    border: none !important;
+    margin-top: 0px;
+}
