@@ -1295,7 +1295,7 @@ class ModelAccountCustomer extends Model {
     }
 
     public function getCartProduct($product_store_id) {
-        $product_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "cart WHERE product_store_id = '" . (int) $product_store_id . "'");
+        $product_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "cart WHERE customer_id='" . (int) $this->customer->getId() . "' AND product_store_id = '" . (int) $product_store_id . "'");
         return $product_info->row;
     }
 
