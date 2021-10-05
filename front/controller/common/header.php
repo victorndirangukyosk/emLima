@@ -882,6 +882,9 @@ class ControllerCommonHeader extends Controller {
         }
         $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
 
+        $data['wallet_url'] = $this->url->link('account/credit', '', 'SSL');
+        $data['wallet_amount'] = $this->load->controller('account/credit/getWalletTotal');
+        
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header.tpl')) {
             return $this->load->view($this->config->get('config_template') . '/template/common/header.tpl', $data);
         } else {
