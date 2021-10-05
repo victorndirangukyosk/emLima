@@ -1155,6 +1155,8 @@ class ControllerCommonHome extends Controller {
         $data['mostboughtproducts'] = array_slice($this->getMostBoughtProducts(), 0, 6);
         $data['mostboughtproducts_url'] = $this->url->link('product/store/featuredproducts', '', 'SSL');
         $data['cartproducts'] = $this->cart->getProducts();
+        $data['wallet_url'] = $this->url->link('account/credit', '', 'SSL');
+        $data['wallet_amount'] = $this->load->controller('account/credit/getWalletTotal');
         /* $log->write('mostboughtproducts');
           $log->write($this->cart->getProducts());
           $log->write($this->getMostBoughtProducts());
