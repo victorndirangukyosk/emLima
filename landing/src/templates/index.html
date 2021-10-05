@@ -1,261 +1,330 @@
 @@include('./_partials/header.html')
 @@include('./_partials/navbar.html')
 <main>
-  <section id="hero">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="hero-title anim-from-top"><span class="primary-text">Save time, </span><span
-              class="secondary-text">Get
-              value</span></h1>
-          <div class="anim-from-bottom">
-            <p class="hero-subtitle">
-              With fresh produce straight from farms
-            </p>
-            <p class="hero-description">
-              Refining the agricultural and consumer space in Africa using Big Data and Machine Learning
-            </p>
-            <a href='<?= BASE_URL."/index.php?path=account/login/customer" ?>' class="btn btn-primary btn-cta mt-2"
-              data-scroll>Place an Order</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="existing-clients">
-    <div class="container">
-      <div class="row">
-        <div class="section-header col-md-12">
-          <h4 class="section-title">Customers who already trust us</h4>
-        </div>
-      </div>
-      <div class="row mt-4">
-        <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <img src="assets/img/tribe.png" alt="Tribe Hotels, a KwikBasket Client" class="client-logo">
-        </div>
-        <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <img src="assets/img/inti.svg" alt="INTI, a KwikBasket Client" class="client-logo">
-        </div>
-        <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <img style="width: 120px" src="assets/img/mama-ashanti.png" alt="Mama Ashanti, a KwikBasket Client" class="client-logo">
-        </div>
-        <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <img style="width: 200px; margin: 0;" src="assets/img/hemingways.png" alt="Hemingways, a KwikBasket Client" class="client-logo">
-        </div>
-        <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <img src="assets/img/sarova.png" alt="Sarova, a KwikBasket Client" class="client-logo">
-        </div>
-        <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <img src="assets/img/strathmore.png" alt="Strathmore University, a KwikBasket Client" class="client-logo">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <img src="assets/img/pallet-cafe.png" alt="Pallet Cafe, a KwikBasket Client" class="client-logo">
-        </div>
-        <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <img style="width: 200px; margin: 0;" src="assets/img/honey-dough.png" alt="Honey & Dough, a KwikBasket Client" class="client-logo">
-        </div>
-        <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <img style="width: 150px; margin: 0;" src="assets/img/boma-hotels.png" alt="The Boma Hotels, a KwikBasket Client" class="client-logo">
-        </div>
-        <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <img style="width: 150px; margin: 0;" src="assets/img/mercado.png" alt="Mercado, a KwikBasket Client" class="client-logo">
-        </div>
-        <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <img src="assets/img/mada-hotels.png" alt="Mada Hotels, a KwikBasket Client" class="client-logo">
-        </div>
-        <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <img src="assets/img/cedars.png" alt="Cedars, a KwikBasket Client" class="client-logo">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="what-we-do">
-    <div class="container">
-      <div class="row">
-        <div class="section-header col-md-12">
-          <h4 class="section-title">Creating technology that works for farmers and consumers</h4>
-          <p class="section-subtitle">We are a team of passionate agriculture enthusiasts and techies committed to
-            changing farmers'
-            lives by improving their access to fair markets and providing high quality fresh produce to our customers
-          </p>
-        </div>
-      </div>
-
-      <div class="row mt-5">
-        <div class="col-md-6 form-group">
-          <div class="card kwikbasket-promise">
-            <picture>
-              <source srcset="assets/img/farmer-technology.webp" type="image/webp">
-              <source srcset="assets/img/farmer-technology.jpg" type="image/jpeg">
-              <img src="assets/img/farmer-technology.jpg" alt="KwikBasket Farmer Technology">
-            </picture>
-            <div class="promise-description">
-              <h6 class="secondary-text">What's in it for farmers?</h6>
-              <ul>
-                <li>Realtime advisories and insights</li>
-                <li>Comprehensive operational support</li>
-                <li>Fair prices for their produce</li>
-              </ul>
+    <section id="hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="hero-title anim-from-top"><span class="primary-text">Save time, </span><span
+                            class="secondary-text">Get
+                            value</span></h1>
+                    <div class="anim-from-bottom">
+                        <p class="hero-subtitle">
+                            With fresh produce straight from farms
+                        </p>
+                        <p class="hero-description">
+                            Refining the agricultural and consumer space in Africa using Big Data and Machine Learning
+                        </p>
+                        <a href='<?= BASE_URL."/index.php?path=account/login/customer" ?>' class="btn btn-primary btn-cta mt-2"
+                           data-scroll>Place an Order</a>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="col-md-6 form-group">
-          <div class="card kwikbasket-promise">
-            <picture>
-              <source srcset="assets/img/consumer-technology.webp" type="image/webp">
-              <source srcset="assets/img/consumer-technology.jpg" type="image/jpeg">
-              <img src="assets/img/consumer-technology.jpg" alt="KwikBasket Consumer Technology">
-            </picture>
-            <div class="promise-description">
-              <h6 class="primary-text">What we offer our customers?</h6>
-              <ul>
-                <li>A seamless digital experience</li>
-                <li>High quality fresh produce deliveries</li>
-                <li>Good value for their money</li>
-              </ul>
+    </section>
+
+    <section id="existing-clients">
+        <div class="container">
+            <div class="row">
+                <div class="section-header col-md-12">
+                    <h4 class="section-title">Customers who already trust us</h4>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div class="container text-center">
+                <div class="row mx-auto my-auto">
+                    <div id="myCarousel" class="carousel slide w-100" data-ride="carousel">
+                        <div class="carousel-inner w-100" role="listbox">
+                            <div class="carousel-item active">
+                                <div class="col-lg-2 col-md-4">
+                                    <img class="img-fluid" src="assets/img/tribe.png" alt="Tribe Hotels, a KwikBasket Client" class="client-logo">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-lg-2 col-md-4">
+                                    <img class="img-fluid" src="assets/img/inti.svg" alt="INTI, a KwikBasket Client" class="client-logo">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-lg-2 col-md-4">
+                                    <img class="img-fluid" src="assets/img/mama-ashanti.png" alt="Mama Ashanti, a KwikBasket Client" class="client-logo">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-lg-2 col-md-4">
+                                    <img class="img-fluid" src="assets/img/hemingways.png" alt="Hemingways, a KwikBasket Client" class="client-logo">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-lg-2 col-md-4">
+                                    <img class="img-fluid" src="assets/img/sarova.png" alt="Sarova, a KwikBasket Client" class="client-logo">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-lg-2 col-md-4">
+                                    <img class="img-fluid" src="assets/img/strathmore.png" alt="Strathmore University, a KwikBasket Client" class="client-logo">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-lg-2 col-md-4">
+                                    <img class="img-fluid" src="assets/img/pallet-cafe.png" alt="Pallet Cafe, a KwikBasket Client" class="client-logo">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-lg-2 col-md-4">
+                                    <img class="img-fluid" src="assets/img/honey-dough.png" alt="Honey & Dough, a KwikBasket Client" class="client-logo">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-lg-2 col-md-4">
+                                    <img class="img-fluid" src="assets/img/boma-hotels.png" alt="The Boma Hotels, a KwikBasket Client" class="client-logo">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-lg-2 col-md-4">
+                                    <img class="img-fluid" src="assets/img/mercado.png" alt="Mercado, a KwikBasket Client" class="client-logo">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-lg-2 col-md-4">
+                                    <img class="img-fluid" src="assets/img/mada-hotels.png" alt="Mada Hotels, a KwikBasket Client" class="client-logo">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-lg-2 col-md-4">
+                                    <img class="img-fluid" src="assets/img/cedars.png" alt="Cedars, a KwikBasket Client" class="client-logo">
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <!--<div class="row mt-4">
+                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                    <img src="assets/img/tribe.png" alt="Tribe Hotels, a KwikBasket Client" class="client-logo">
+                </div>
+                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                    <img src="assets/img/inti.svg" alt="INTI, a KwikBasket Client" class="client-logo">
+                </div>
+                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                    <img style="width: 120px" src="assets/img/mama-ashanti.png" alt="Mama Ashanti, a KwikBasket Client" class="client-logo">
+                </div>
+                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                    <img style="width: 200px; margin: 0;" src="assets/img/hemingways.png" alt="Hemingways, a KwikBasket Client" class="client-logo">
+                </div>
+                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                    <img src="assets/img/sarova.png" alt="Sarova, a KwikBasket Client" class="client-logo">
+                </div>
+                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                    <img src="assets/img/strathmore.png" alt="Strathmore University, a KwikBasket Client" class="client-logo">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                    <img src="assets/img/pallet-cafe.png" alt="Pallet Cafe, a KwikBasket Client" class="client-logo">
+                </div>
+                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                    <img style="width: 200px; margin: 0;" src="assets/img/honey-dough.png" alt="Honey & Dough, a KwikBasket Client" class="client-logo">
+                </div>
+                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                    <img style="width: 150px; margin: 0;" src="assets/img/boma-hotels.png" alt="The Boma Hotels, a KwikBasket Client" class="client-logo">
+                </div>
+                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                    <img style="width: 150px; margin: 0;" src="assets/img/mercado.png" alt="Mercado, a KwikBasket Client" class="client-logo">
+                </div>
+                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                    <img src="assets/img/mada-hotels.png" alt="Mada Hotels, a KwikBasket Client" class="client-logo">
+                </div>
+                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                    <img src="assets/img/cedars.png" alt="Cedars, a KwikBasket Client" class="client-logo">
+                </div>
+            </div>
+        </div>-->
+    </section>
 
-  </section>
+    <section id="what-we-do">
+        <div class="container">
+            <div class="row">
+                <div class="section-header col-md-12">
+                    <h4 class="section-title">Creating technology that works for farmers and consumers</h4>
+                    <p class="section-subtitle">We are a team of passionate agriculture enthusiasts and techies committed to
+                        changing farmers'
+                        lives by improving their access to fair markets and providing high quality fresh produce to our customers
+                    </p>
+                </div>
+            </div>
 
-  <section id="order-cycle">
-    <div class="container">
-      <div class="row" data-scroll>
-        <div class="col-md-4 scorecard form-group">
-          <img src="assets/img/customer-satisfaction.svg" alt="KwikBasket Customer Satisfaction">
-          <div class="d-flex flex-column align-items-start">
-            <h1 class="secondary-text">600+</h1>
-            <p class="secondary-text"><strong>Kitchens</strong></p>
-          </div>
-
-        </div>
-        <div class="col-md-4 scorecard form-group">
-          <img src="assets/img/farmers-impacted.svg" alt="KwikBasket Farmer Impact">
-          <div class="d-flex flex-column align-items-start">
-            <h1 class="secondary-text">5250</h1>
-            <p class="secondary-text"><strong>Farmers Impacted</strong></p>
-          </div>
-
-        </div>
-        <div class="col-md-4 scorecard form-group">
-          <img src="assets/img/orders-delivered.svg" alt="KwikBasket Delivered Orders">
-          <div class="d-flex flex-column align-items-start">
-            <h1 class="secondary-text"><?= $order_count ?></h1>
-            <p class="secondary-text"><strong>Orders Delivered</strong></p>
-          </div>
-        </div>
-      </div>
-      <div class="row order-step">
-        <div class="col-md-4 step-content form-group" data-scroll>
-          <h5 class="step-title">We're always getting to know you better</h5>
-          <p class="step-description">At KwikBasket, we're constantly innovating to design profitable models and
-            build delightful user experiences while crafting digital tools to further streamline our efficiency.
-            Using Artificial Intelligence, we learn customer preferences and
-              customize their in app experience making placing orders quick and hassle free.</p>
-          <a href='<?= BASE_URL."/index.php?path=account/login/customer" ?>' class="btn btn-primary btn-cta">Place
-            Your Order</a>
-        </div>
-
-        <div class="col-md-4 step-content form-group" data-scroll>
-          <h5 class="step-title">Everyday is payday for our farmers</h5>
-          <p class="step-description">
-            We're always engaging farmers. We continuously collect and analyze our customers' data, understanding their
-            purchasing habits inside out.
-            With this data, we advise farmers on what to plant, in what quantities and when to do so.
-            Better yet, we pay our farmers fairly, immediately we source
-            produce from them!
-          </p>
-          <a href='<?= BASE_URL."/index.php?path=account/login/farmer" ?>' class="btn btn-primary btn-cta">Sell
-            Your Produce</a>
+            <div class="row mt-5">
+                <div class="col-md-6 form-group">
+                    <div class="card kwikbasket-promise">
+                        <picture>
+                            <source srcset="assets/img/farmer-technology.webp" type="image/webp">
+                            <source srcset="assets/img/farmer-technology.jpg" type="image/jpeg">
+                            <img src="assets/img/farmer-technology.jpg" alt="KwikBasket Farmer Technology">
+                        </picture>
+                        <div class="promise-description">
+                            <h6 class="secondary-text">What's in it for farmers?</h6>
+                            <ul>
+                                <li>Realtime advisories and insights</li>
+                                <li>Comprehensive operational support</li>
+                                <li>Fair prices for their produce</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 form-group">
+                    <div class="card kwikbasket-promise">
+                        <picture>
+                            <source srcset="assets/img/consumer-technology.webp" type="image/webp">
+                            <source srcset="assets/img/consumer-technology.jpg" type="image/jpeg">
+                            <img src="assets/img/consumer-technology.jpg" alt="KwikBasket Consumer Technology">
+                        </picture>
+                        <div class="promise-description">
+                            <h6 class="primary-text">What we offer our customers?</h6>
+                            <ul>
+                                <li>A seamless digital experience</li>
+                                <li>High quality fresh produce deliveries</li>
+                                <li>Good value for their money</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="col-md-4 step-content form-group" data-scroll>
-          <h5 class="step-title">Kwik Orders, Kwik Deliveries</h5>
-          <p class="step-description">
-            What if we told you it's possible to do a background check on your veggies?
-            We use IoT devices and sensors all across our supply chain. These enable our customers to not only
-            track delivery progress but also know what environmental conditions the produce
-              is being subjected to while in transit.
-          </p>
-          <a href='<?= BASE_URL."/index.php?path=account/login/customer" ?>' class="btn btn-primary btn-cta">Track
-            Your Order</a>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="partners">
-    <div class="container">
-      <div class="row">
-        <div class="section-header col-md-12">
-          <h4 class="section-title">Some of our strategic partners</h4>
-          <p class="section-subtitle">
-            Our partners are companies involved in the fresh produce agriculture supply chain.
-            We've partnered with suppliers, logistics providers, cold storage facilities,
-            farmer insurance brokers, seed suppliers, soil testing experts and
-            agricultural research organizations.
-          </p>
-        </div>
-      </div>
-      <div class="row mt-4">
-        <div class="col-md-4 form-group d-flex justify-content-center align-items-center">
-          <img src="assets/img/etg.png" alt="Export Trading Group, a KwikBasket Partner" class="partner-logo">
-        </div>
-        <div class="col-md-4 form-group d-flex justify-content-center align-items-center">
-          <img src="assets/img/technobrain.png" alt="Techno Brain Group, a KwikBasket Partner" class="partner-logo">
-        </div>
-        <div class="col-md-4 form-group d-flex justify-content-center align-items-center">
-          <img src="assets/img/vpgroup.png" alt="VegPro, a KwikBasket Partner" class="partner-logo">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 form-group d-flex justify-content-center align-items-center">
-          <img src="assets/img/fruitbox.png" alt="Fruit Box, a KwikBasket Partner" class="partner-logo">
-        </div>
-        <div class="col-md-4 form-group d-flex justify-content-center align-items-center">
-          <img src="assets/img/quatrix.png" alt="Quatrix, a KwikBasket Partner" class="partner-logo">
-        </div>
-        <div class="col-md-4 form-group d-flex justify-content-center align-items-center">
-          <img src="assets/img/fresh2go.png" alt="Fresh2Go, a KwikBasket Partner" class="partner-logo">
-        </div>
-      </div>
-      <div class="row mt-4">
-        <div class="col-md-4 offset-md-4 form-group d-flex justify-content-center align-items-center">
-            <img src="assets/img/avocadosocietykenya.png" alt="Avocado Society of Kenya, a KwikBasket Partner" class="partner-logo">
-        </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-md-12 text-center">
-          <a href='<?= BASE_URL."/index.php?path=common/home/partners" ?>' class="btn btn-primary btn-cta mt-2">Partner With Us</a>
-        </div>
-      </div>
-    </div>
-  </section>
+    <section id="order-cycle">
+        <div class="container">
+            <div class="row" data-scroll>
+                <div class="col-md-4 scorecard form-group">
+                    <img src="assets/img/customer-satisfaction.svg" alt="KwikBasket Customer Satisfaction">
+                    <div class="d-flex flex-column align-items-start">
+                        <h1 class="secondary-text">600+</h1>
+                        <p class="secondary-text"><strong>Kitchens</strong></p>
+                    </div>
 
-  <section id="app-download" class="py-4">
-    <div class="container">
-      <div class="row mb-3">
-        <div class="col-md-12 text-center d-flex flex-row justify-content-center">
-          <h5 class="text-white">Download the KwikBasket app to enjoy a revolutionary digital experience,<br>
-            free deliveries and exclusive price offers</h5>
+                </div>
+                <div class="col-md-4 scorecard form-group">
+                    <img src="assets/img/farmers-impacted.svg" alt="KwikBasket Farmer Impact">
+                    <div class="d-flex flex-column align-items-start">
+                        <h1 class="secondary-text">5250</h1>
+                        <p class="secondary-text"><strong>Farmers Impacted</strong></p>
+                    </div>
+
+                </div>
+                <div class="col-md-4 scorecard form-group">
+                    <img src="assets/img/orders-delivered.svg" alt="KwikBasket Delivered Orders">
+                    <div class="d-flex flex-column align-items-start">
+                        <h1 class="secondary-text"><?= $order_count ?></h1>
+                        <p class="secondary-text"><strong>Orders Delivered</strong></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row order-step">
+                <div class="col-md-4 step-content form-group" data-scroll>
+                    <h5 class="step-title">We're always getting to know you better</h5>
+                    <p class="step-description">At KwikBasket, we're constantly innovating to design profitable models and
+                        build delightful user experiences while crafting digital tools to further streamline our efficiency.
+                        Using Artificial Intelligence, we learn customer preferences and
+                        customize their in app experience making placing orders quick and hassle free.</p>
+                    <a href='<?= BASE_URL."/index.php?path=account/login/customer" ?>' class="btn btn-primary btn-cta">Place
+                        Your Order</a>
+                </div>
+
+                <div class="col-md-4 step-content form-group" data-scroll>
+                    <h5 class="step-title">Everyday is payday for our farmers</h5>
+                    <p class="step-description">
+                        We're always engaging farmers. We continuously collect and analyze our customers' data, understanding their
+                        purchasing habits inside out.
+                        With this data, we advise farmers on what to plant, in what quantities and when to do so.
+                        Better yet, we pay our farmers fairly, immediately we source
+                        produce from them!
+                    </p>
+                    <a href='<?= BASE_URL."/index.php?path=account/login/farmer" ?>' class="btn btn-primary btn-cta">Sell
+                        Your Produce</a>
+                </div>
+
+                <div class="col-md-4 step-content form-group" data-scroll>
+                    <h5 class="step-title">Kwik Orders, Kwik Deliveries</h5>
+                    <p class="step-description">
+                        What if we told you it's possible to do a background check on your veggies?
+                        We use IoT devices and sensors all across our supply chain. These enable our customers to not only
+                        track delivery progress but also know what environmental conditions the produce
+                        is being subjected to while in transit.
+                    </p>
+                    <a href='<?= BASE_URL."/index.php?path=account/login/customer" ?>' class="btn btn-primary btn-cta">Track
+                        Your Order</a>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12 d-flex flex-row justify-content-center">
-          <a target="_blank" href="https://play.google.com/store/apps/details?id=com.kwikbasket.customer">
-            <img width="130" src="assets/img/badge-google-play.png" alt="KwikBasket application on Google Play">
-          </a>
+    </section>
+
+    <section id="partners">
+        <div class="container">
+            <div class="row">
+                <div class="section-header col-md-12">
+                    <h4 class="section-title">Some of our strategic partners</h4>
+                    <p class="section-subtitle">
+                        Our partners are companies involved in the fresh produce agriculture supply chain.
+                        We've partnered with suppliers, logistics providers, cold storage facilities,
+                        farmer insurance brokers, seed suppliers, soil testing experts and
+                        agricultural research organizations.
+                    </p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4 form-group d-flex justify-content-center align-items-center">
+                    <img src="assets/img/etg.png" alt="Export Trading Group, a KwikBasket Partner" class="partner-logo">
+                </div>
+                <div class="col-md-4 form-group d-flex justify-content-center align-items-center">
+                    <img src="assets/img/technobrain.png" alt="Techno Brain Group, a KwikBasket Partner" class="partner-logo">
+                </div>
+                <div class="col-md-4 form-group d-flex justify-content-center align-items-center">
+                    <img src="assets/img/vpgroup.png" alt="VegPro, a KwikBasket Partner" class="partner-logo">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 form-group d-flex justify-content-center align-items-center">
+                    <img src="assets/img/fruitbox.png" alt="Fruit Box, a KwikBasket Partner" class="partner-logo">
+                </div>
+                <div class="col-md-4 form-group d-flex justify-content-center align-items-center">
+                    <img src="assets/img/quatrix.png" alt="Quatrix, a KwikBasket Partner" class="partner-logo">
+                </div>
+                <div class="col-md-4 form-group d-flex justify-content-center align-items-center">
+                    <img src="assets/img/fresh2go.png" alt="Fresh2Go, a KwikBasket Partner" class="partner-logo">
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4 offset-md-4 form-group d-flex justify-content-center align-items-center">
+                    <img src="assets/img/avocadosocietykenya.png" alt="Avocado Society of Kenya, a KwikBasket Partner" class="partner-logo">
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-12 text-center">
+                    <a href='<?= BASE_URL."/index.php?path=common/home/partners" ?>' class="btn btn-primary btn-cta mt-2">Partner With Us</a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
+
+    <section id="app-download" class="py-4">
+        <div class="container">
+            <div class="row mb-3">
+                <div class="col-md-12 text-center d-flex flex-row justify-content-center">
+                    <h5 class="text-white">Download the KwikBasket app to enjoy a revolutionary digital experience,<br>
+                        free deliveries and exclusive price offers</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 d-flex flex-row justify-content-center">
+                    <a target="_blank" href="https://play.google.com/store/apps/details?id=com.kwikbasket.customer">
+                        <img width="130" src="assets/img/badge-google-play.png" alt="KwikBasket application on Google Play">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 @@include('./_partials/footer-links.html')
 @@include('./_partials/footer.html')
