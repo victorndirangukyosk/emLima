@@ -195,6 +195,9 @@ class ControllerCommonHeader extends Controller {
         $data['signup_modal'] = $this->load->controller('common/signup_modal');
         $data['forget_modal'] = $this->load->controller('common/forget_modal');
 
+        $data['wallet_url'] = $this->url->link('account/credit', '', 'SSL');
+        $data['wallet_amount'] = $this->load->controller('account/credit/getWalletTotal');
+
         $data['language'] = $this->load->controller('common/language/dropdown');
         if (isset($this->session->data['config_store_id'])) {
             $data['go_to_store'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
