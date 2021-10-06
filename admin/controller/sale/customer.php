@@ -3382,7 +3382,7 @@ class ControllerSaleCustomer extends Controller {
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
         $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);
         $data['customer_otp_list_phone'] = $this->model_account_customer->getCustomerOTPByPhone($customer_info['telephone']);
-
+        
         $data['company_name'] = $customer_info['company_name'];
         $data['company_address'] = $customer_info['company_address'];
 
@@ -4412,6 +4412,76 @@ class ControllerSaleCustomer extends Controller {
         $json['data'] = $data;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+
+    public function customerviewactivity() {
+        $this->load->language('sale/customer');
+
+        $this->load->model('sale/customer');
+
+        $data['text_no_results'] = $this->language->get('text_no_results');
+         $data['text_loading'] = $this->language->get('text_loading');       
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['activities'] = [];
+
+        $results = $this->model_sale_customer->getCustomerActivities($this->request->get['customer_id'], ($page - 1) * 10, 10);
+        // echo "<pre>";print_r($results); 
+
+        $this->load->language('report/customer_activity');
+
+        foreach ($results as $result) {
+            $comment = vsprintf($this->language->get('text_'.$result['key']), unserialize($result['data']));
+
+            $find = [
+                'farmer_id=',
+                'customer_id=',
+                'order_id=',
+                'sub_customers_id='
+            ];
+
+            // $replace = [
+            //     $this->url->link('sale/farmer/edit', 'token='.$this->session->data['token'].'&farmer_id=', 'SSL'),
+            //     $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
+            //     $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
+            //     $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&sub_customers_id=', 'SSL'),
+            // ];
+           
+
+            $data['activities'][] = [
+                
+                'comment' => str_replace($find, $replace, $comment),
+                // 'comment' => $comment,
+                'ip' => $result['ip'],
+                'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
+                'order_id' => ($result['order_id']==0?'NA':$result['order_id']),
+            ];
+
+            
+        }
+
+        // echo "<pre>";print_r($data); die;
+        
+
+        $activity_total = $this->model_sale_customer->getTotalCustomerActivities($this->request->get['customer_id']);
+
+        $pagination = new Pagination();
+        $pagination->total = $activity_total;
+        $pagination->page = $page;
+        $pagination->limit = 10;
+        $pagination->url = $this->url->link('sale/customer/activity', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($activity_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($activity_total - 10)) ? $activity_total : ((($page - 1) * 10) + 10), $activity_total, ceil($activity_total / 10));
+
+        $this->response->setOutput($this->load->view('sale/customer_view_activity.tpl', $data));
     }
 
 }
