@@ -424,10 +424,10 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        $order_total_today = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'today', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
+        $order_total_today = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'today', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],'filter_order_status'=>'14,1']);
         $log = new Log('error.log');
         /* 'filter_order_status' => 1, 14, */
-        $order_total_tomorrow = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'tomorrow', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
+        $order_total_tomorrow = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'tomorrow', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],'filter_order_status'=>'14,1']);
         $order_total = $order_total_today + $order_total_tomorrow;
 
         $data['url'] = htmlspecialchars_decode($this->url->link('sale/fast_order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1&filter_order_day=today&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
@@ -455,10 +455,10 @@ class ControllerDashboardOrder extends Controller {
         // Total Orders
         $this->load->model('sale/order');
 
-        $order_total_today = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'today',NULL]);
+        $order_total_today = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'today','filter_order_status'=>'14,1']);
         $log = new Log('error.log');
         /* 'filter_order_status' => 1, 14, */
-        $order_total_tomorrow = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'tomorrow', NULL]);
+        $order_total_tomorrow = $this->model_sale_order->getTotalOrders(['filter_order_day' => 'tomorrow','filter_order_status'=>'14,1']);
         $order_total = $order_total_today + $order_total_tomorrow;
 
         $data['url'] = htmlspecialchars_decode($this->url->link('sale/fast_order', 'token=' . $this->session->data['token'] . '&filter_order_status=14,1&filter_order_day=today', 'SSL'));
