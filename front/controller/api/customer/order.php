@@ -4088,8 +4088,6 @@ class ControllerApiCustomerOrder extends Controller {
     }
 
     protected function validatenew($args) {
-        $log = new Log('error.log');
-        $log->write('VALIDATE_ORDER');
         if (empty($args['payment_method'])) {
             $this->error['payment_method'] = $this->language->get('error_payment_method');
         }
@@ -4120,10 +4118,6 @@ class ControllerApiCustomerOrder extends Controller {
         }
 
         $pending_orders_count = $this->getunpaidorderscount();
-        $log = new Log('error.log');
-        $log->write('pending_orders_count');
-        $log->write($pending_orders_count);
-        $log->write('pending_orders_count');
         if ($pending_orders_count['unpaid_orders_count'] > 0) {
             $this->error['unpaid_orders'] = 'Your Order(s) Payment Is Pending!';
         }
@@ -4198,6 +4192,7 @@ class ControllerApiCustomerOrder extends Controller {
         }
 
         $data['unpaid_orders_count'] = count($data['pending_order_id']);
+        $data['message'] = count($data['pending_order_id']) > 0 ? 'Your Order(s) Payment Is Pending!' : '';
         return $data;
     }
 
