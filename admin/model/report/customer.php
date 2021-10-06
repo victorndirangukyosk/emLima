@@ -505,7 +505,7 @@ class ModelReportCustomer extends Model {
     }
 
     public function getCustomerActivities($data = []) {
-        $sql = 'SELECT c.company_name ,c.email, ca.activity_id, ca.customer_id, ca.key, ca.data, ca.ip, ca.date_added FROM ' . DB_PREFIX . 'customer_activity ca LEFT JOIN ' . DB_PREFIX . 'customer c ON (ca.customer_id = c.customer_id)';
+        $sql = 'SELECT c.company_name ,c.email, ca.activity_id, ca.customer_id, ca.key, ca.data, ca.ip, ca.date_added ,ca.order_id FROM ' . DB_PREFIX . 'customer_activity ca LEFT JOIN ' . DB_PREFIX . 'customer c ON (ca.customer_id = c.customer_id)';
 
         $implode = [];
 
@@ -536,6 +536,10 @@ class ModelReportCustomer extends Model {
 
         if (!empty($data['filter_key'])) {
             $implode[] = "ca.key LIKE '" . $this->db->escape($data['filter_key']) . "'";
+        }
+
+        if (!empty($data['filter_order'])) {
+            $implode[] = "ca.order_id = '" . $this->db->escape($data['filter_order']) . "'";
         }
 
         if ($implode) {
@@ -593,6 +597,10 @@ class ModelReportCustomer extends Model {
 
         if (!empty($data['filter_key'])) {
             $implode[] = "ca.key LIKE '" . $this->db->escape($data['filter_key']) . "'";
+        }
+
+        if (!empty($data['filter_order'])) {
+            $implode[] = "ca.order_id = '" . $this->db->escape($data['filter_order']) . "'";
         }
 
         if ($implode) {

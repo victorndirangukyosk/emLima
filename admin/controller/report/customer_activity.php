@@ -43,7 +43,11 @@ class ControllerReportCustomerActivity extends Controller
         } else {
             $filter_key = null;
         }
-
+        if (isset($this->request->get['filter_order'])) {
+            $filter_order = $this->request->get['filter_order'];
+        } else {
+            $filter_order = null;
+        }
 
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
@@ -75,6 +79,10 @@ class ControllerReportCustomerActivity extends Controller
             $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
         }
 
+        if (isset($this->request->get['filter_order'])) {
+            $url .= '&filter_order='.urlencode($this->request->get['filter_order']);
+        }
+
 
         if (isset($this->request->get['page'])) {
             $url .= '&page='.$this->request->get['page'];
@@ -103,6 +111,7 @@ class ControllerReportCustomerActivity extends Controller
             'filter_date_end' => $filter_date_end,
             'filter_company' => $filter_company,
             'filter_key' => $filter_key,
+            'filter_order' => $filter_order,
             'start' => ($page - 1) * 20,
             'limit' => 20,
         ];
@@ -112,6 +121,8 @@ class ControllerReportCustomerActivity extends Controller
         $results = $this->model_report_customer->getCustomerActivities($filter_data);
 
         foreach ($results as $result) {
+
+
             $comment = vsprintf($this->language->get('text_'.$result['key']), unserialize($result['data']));
 
             $find = [
@@ -134,6 +145,7 @@ class ControllerReportCustomerActivity extends Controller
                 'comment' => str_replace($find, $replace, $comment),
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
+                'order_id' => ($result['order_id']==0?'NA':$result['order_id']),
             ];
         }
 
@@ -183,6 +195,9 @@ class ControllerReportCustomerActivity extends Controller
         if (isset($this->request->get['filter_key'])) {
             $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
         }
+        if (isset($this->request->get['filter_order'])) {
+            $url .= '&filter_order='.urlencode($this->request->get['filter_order']);
+        }
 
         $pagination = new Pagination();
         $pagination->total = $activity_total;
@@ -200,6 +215,7 @@ class ControllerReportCustomerActivity extends Controller
         $data['filter_date_end'] = $filter_date_end;
         $data['filter_company'] = $filter_company;
         $data['filter_key'] = $filter_key;
+        $data['filter_order'] = $filter_order;
 
 
         $data['header'] = $this->load->controller('common/header');
@@ -252,6 +268,13 @@ class ControllerReportCustomerActivity extends Controller
             $filter_key = null;
         }
 
+
+        if (isset($this->request->get['filter_order'])) {
+            $filter_order = $this->request->get['filter_order'];
+        } else {
+            $filter_order = null;
+        }
+
         $filter_data = [
             'filter_customer' => $filter_customer,
             'filter_ip' => $filter_ip,
@@ -259,6 +282,7 @@ class ControllerReportCustomerActivity extends Controller
             'filter_date_end' => $filter_date_end,
             'filter_company' => $filter_company,
             'filter_key' => $filter_key,
+            'filter_order' => $filter_order,
         ];
 
         $this->load->model('report/excel');
