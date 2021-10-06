@@ -761,9 +761,13 @@ class ControllerCommonScheduler extends Controller {
                 'SourceFile' => $file_Path,
                 'ACL' => 'private',
             ]);
+            echo $result['ObjectURL'] . "\n";
+            //insert the log file url in table with date.
+            $this->load->model('scheduler/dbupdates');
+            $result = $this->model_scheduler_dbupdates->insertLogURL($result['ObjectURL']);
 
+            unlink($file_Path);
             #region delete previous files
-
             $iterator = $s3Client->getIterator('ListObjects', array(
                 'Bucket' => $bucket
             ));
@@ -772,7 +776,8 @@ class ControllerCommonScheduler extends Controller {
             foreach($iterator as $object){
                 echo "{$object['Key']} - {$object['CreationDate']}- {$object['LastModified']}\n";
                 $uploaded =$object["LastModified"];
-                if($uploaded < $xtime){
+                if($uploaded < $xtime)
+                {
                     
                     $s3Client->deleteObject(array(
                         "Bucket"        => $bucket,
