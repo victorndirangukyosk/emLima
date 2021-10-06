@@ -1007,74 +1007,77 @@ class ModelSaleCustomer extends Model {
     }
 
     public function getTotalCustomersOnBoarded($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'customer c JOIN ' . DB_PREFIX . 'order o ON (c.customer_id = o.customer_id)';
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'customer c where approved = 1 and c.customer_id  in (select o.customer_id from ' . DB_PREFIX . 'order o where o.order_status_id NOT IN (0))';
 
-        $implode = [];
+        // $implode = [];
 
         if (!empty($data['filter_company'])) {
-            $implode[] = "c.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+            $sql .= "And c.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
         if (!empty($data['filter_name'])) {
-            $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $sql .= "And CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (!empty($data['filter_email'])) {
-            $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+            $sql .= "And c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
         }
 
         if (!empty($data['filter_telephone'])) {
-            $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+            $sql .= "And c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
         if (isset($data['filter_newsletter']) && !is_null($data['filter_newsletter'])) {
-            $implode[] = "c.newsletter = '" . (int) $data['filter_newsletter'] . "'";
+            $sql .= "And c.newsletter = '" . (int) $data['filter_newsletter'] . "'";
         }
 
         if (!empty($data['filter_customer_group_id'])) {
-            $implode[] = "c.customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
+            $sql .= "And c.customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
         }
 
         if (!empty($data['filter_ip'])) {
-            $implode[] = "c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
+            $sql .= "And c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
         }
 
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
-            $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
+            $sql .= "And c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }
 
         if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
-            $implode[] = "c.account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
+            $sql .= "And c.account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
+            $sql .= "And c.status = '" . (int) $data['filter_status'] . "'";
         }
-        $implode[] = "approved = 1";
+        // $implode[] = "approved = 1";
 
-        if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
-            $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
-        }
+        // if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
+        //     $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
+        // }
 
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $sql .= "And DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         if ($this->user->isAccountManager()) {
-            $implode[] = "c.account_manager_id = '" . (int) $this->user->getId() . "'";
+            $sql .= "And  c.account_manager_id = '" . (int) $this->user->getId() . "'";
         }
 
         if (!empty($data['filter_monthyear_added'])) {
-            $implode[] = "DATE_FORMAT(c.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+            $sql .= "And  DATE_FORMAT(c.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
 
-        $implode[] = " o.order_status_id NOT IN (0)";
+        // $implode[] = " o.order_status_id NOT IN (0)";
         //$implode[] = "c.parent is null or c.parent = 0";
 
-        if ($implode) {
-            $sql .= ' WHERE ' . implode(' AND ', $implode);
-        }
-        $sql .= ' GROUP BY c.customer_id';
+        // if ($implode) {
+        //     $sql .= ' WHERE ' . implode(' AND ', $implode);
+        // }
+        // $sql .= ' GROUP BY c.customer_id';
+
+            // echo "<pre>";print_r($sql);die;
+        
         $query = $this->db->query($sql);
 
         return $query->row['total'];
