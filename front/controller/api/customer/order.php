@@ -4118,6 +4118,10 @@ class ControllerApiCustomerOrder extends Controller {
         }
 
         $pending_orders_count = $this->getunpaidorderscount();
+        $log = new Log('error.log');
+        $log->write('pending_orders_count');
+        $log->write($pending_orders_count);
+        $log->write('pending_orders_count');
         if ($pending_orders_count['unpaid_orders_count'] > 0) {
             $this->error['unpaid_orders'] = 'Your Order(s) Payment Is Pending!';
         }
