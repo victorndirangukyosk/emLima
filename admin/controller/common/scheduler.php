@@ -728,15 +728,14 @@ class ControllerCommonScheduler extends Controller {
                 'key' => 'AKIAUWRTJZVBETGW5LVM',
                 'secret' => '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'
             ]
-        ]);
-
+        ]); 
         // Use an Aws\Sdk class to create the S3Client object.
         $s3Client = $sdk->createS3();
         try {
-
+           
             $resultBucketList = $s3Client->listBuckets();
             $bucketexists=false;
-            $bucket = 'kwikbasket-log';
+            $bucket = BUCKET_PREFIX.'kwikbasket-log';
             foreach ($resultBucketList['Buckets'] as $bucketlist) {
                 // Each Bucket value will contain a Name and CreationDate
                 //  echo "{$bucketlist['Name']} - {$bucketlist['CreationDate']}\n";
@@ -747,7 +746,7 @@ class ControllerCommonScheduler extends Controller {
             }
             if($bucketexists==false)
             {
-                $s3Client->createBucket(['Bucket' => 'kwikbasket-log']);
+                $s3Client->createBucket(['Bucket' => BUCKET_PREFIX.'kwikbasket-log']);
             }
 
 
@@ -761,18 +760,25 @@ class ControllerCommonScheduler extends Controller {
                 'SourceFile' => $file_Path,
                 'ACL' => 'private',
             ]);
-
+            echo $result['ObjectURL'] . "\n";
+            //insert the log file url in table with date.
+            $this->load->model('scheduler/dbupdates');
+            $result = $this->model_scheduler_dbupdates->insertLogURL($result['ObjectURL']);
+            if($result==1)
+            {
+            unlink($file_Path);
+            }
             #region delete previous files
-
             $iterator = $s3Client->getIterator('ListObjects', array(
                 'Bucket' => $bucket
             ));
-            $xtime = date("Y-m-d  H:i:s", strtotime("-48 hour"));
+            $xtime = date("Y-m-d  H:i:s", strtotime("-3 days"));
              
             foreach($iterator as $object){
                 echo "{$object['Key']} - {$object['CreationDate']}- {$object['LastModified']}\n";
                 $uploaded =$object["LastModified"];
-                if($uploaded < $xtime){
+                if($uploaded < $xtime)
+                {
                     
                     $s3Client->deleteObject(array(
                         "Bucket"        => $bucket,

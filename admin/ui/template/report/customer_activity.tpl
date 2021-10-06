@@ -24,7 +24,30 @@
       <div class="panel-body">
         <div class="well" style="display:none;">
           <div class="row">
-            <div class="col-sm-4">
+         
+
+            
+           <div class="col-sm-4">
+
+           <div class="form-group">
+                                <label class="control-label" for="input-company">Company Name</label>
+                                <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
+                            </div>
+
+              <div class="form-group">
+               <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
+                <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" id="input-customer" class="form-control" />
+              
+              </div>
+ 
+              <div class="form-group">
+                                <label class="control-label" for="input-order-id">Order ID</label>
+                                <input type="text" name="filter_order_id" value="<?php echo $filter_order; ?>" placeholder="<?php echo $entry_order_id; ?>" id="input-order-id" class="form-control" />
+                            </div>
+                            
+            </div>
+
+   <div class="col-sm-4">
               <div class="form-group">
                 <label class="control-label" for="input-date-start"><?php echo $entry_date_start; ?></label>
                 <div class="input-group date">
@@ -41,23 +64,10 @@
                   <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                   </span></div>
               </div>
-            </div>
 
-
-            
-           <div class="col-sm-4">
-
-           <div class="form-group">
-                                <label class="control-label" for="input-company">Company Name</label>
-                                <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
-                            </div>
-
-              <div class="form-group">
-               <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
-                <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" id="input-customer" class="form-control" />
               
-              </div>
             </div>
+
 
             <div class="col-sm-4">
               <div class="form-group">
@@ -83,6 +93,7 @@
               </div>
               <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
             </div>
+
           </div>
         </div>
         <div class="table-responsive">
@@ -94,6 +105,7 @@
                 <td class="text-left"><?php echo $column_comment; ?></td>
                 <td class="text-left"><?php echo $column_ip; ?></td>
                 <td class="text-left"><?php echo $column_date_added; ?></td>
+                <td class="text-left">Order ID</td>
               </tr>
             </thead>
             <tbody>
@@ -105,6 +117,7 @@
                 <td class="text-left"><?php echo $activity['comment']; ?></td>
                 <td class="text-left"><?php echo $activity['ip']; ?></td>
                 <td class="text-left"><?php echo $activity['date_added']; ?></td>
+                <td class="text-left"><?php echo $activity['order_id']; ?></td>
               </tr>
               <?php } ?>
               <?php } else { ?>
@@ -158,6 +171,13 @@ $('#button-filter').on('click', function() {
 	
 	if (filter_key != 0) {
 		url += '&filter_key=' + encodeURIComponent(filter_key);
+	}	
+
+  var filter_order = $('input[name=\'filter_order_id\']').val();
+
+	
+	if (filter_order) {
+		url += '&filter_order=' + encodeURIComponent(filter_order);
 	}	
  
 
@@ -249,6 +269,12 @@ function excel() {
 		url += '&filter_key=' + encodeURIComponent(filter_key);
 	}	
  
+  var filter_order = $('input[name=\'filter_order_id\']').val();
+
+	
+	if (filter_order) {
+		url += '&filter_order=' + encodeURIComponent(filter_order);
+	}	
 
 	location = url;
 }

@@ -44,6 +44,25 @@ class ControllerReportUserActivity extends Controller {
         }
 
 
+        if (isset($this->request->get['filter_cutomer'])) {
+            $filter_cutomer = $this->request->get['filter_cutomer'];
+        } else {
+            $filter_cutomer = null;
+        }
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        if (isset($this->request->get['filter_order'])) {
+            $filter_order = $this->request->get['filter_order'];
+        } else {
+            $filter_order = null;
+        }
+
+
+
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
@@ -75,11 +94,22 @@ class ControllerReportUserActivity extends Controller {
         if (isset($this->request->get['filter_key'])) {
             $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
         }
+
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode($this->request->get['filter_company']);
+        }
+        if (isset($this->request->get['filter_customer'])) {
+            $url .= '&filter_customer='.urlencode($this->request->get['filter_customer']);
+        }
+
+        if (isset($this->request->get['filter_order'])) {
+            $url .= '&filter_order='.urlencode($this->request->get['filter_order']);
+        }
         if (isset($this->request->get['page'])) {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = [];
+        $data['breadcrumbs'] = []; 
 
         $data['breadcrumbs'][] = [
             'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
@@ -102,6 +132,9 @@ class ControllerReportUserActivity extends Controller {
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'filter_key' => $filter_key,
+            'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
+            'filter_order' => $filter_order,
             'start' => ($page - 1) * 20,
             'limit' => 20,
         ];
@@ -196,6 +229,18 @@ class ControllerReportUserActivity extends Controller {
         if (isset($this->request->get['filter_key'])) {
             $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
         }
+
+        if (isset($this->request->get['filter_company'])) {
+            $url .= '&filter_company='.urlencode($this->request->get['filter_company']);
+        }
+
+        if (isset($this->request->get['filter_customer'])) {
+            $url .= '&filter_customer='.urlencode($this->request->get['filter_customer']);
+        }
+
+        if (isset($this->request->get['filter_order'])) {
+            $url .= '&filter_order='.urlencode($this->request->get['filter_order']);
+        }
         $pagination = new Pagination();
         $pagination->total = $activity_total;
         $pagination->page = $page;
@@ -212,6 +257,10 @@ class ControllerReportUserActivity extends Controller {
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
         $data['filter_key'] = $filter_key;
+        $data['filter_company'] = $filter_company;
+        $data['filter_customer'] = $filter_customer;
+        $data['filter_order'] = $filter_order;
+
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
