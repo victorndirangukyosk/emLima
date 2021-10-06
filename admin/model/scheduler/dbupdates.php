@@ -75,4 +75,19 @@ class ModelSchedulerDbupdates extends Model {
          return true;   
     }
 
+
+    public function insertLogURL($log_file_url) 
+    {
+        $log = new Log('error.log');  
+        try
+        {                 
+            $this->db->query("INSERT INTO " . DB_PREFIX . "logfile_url SET url = '" .  $log_file_url . "', date_added = NOW()");
+        }
+        catch(exception $ex)
+        {
+            $log->write('Log URL insertion Error');
+        }
+
+     }
+
 }
