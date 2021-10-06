@@ -3,7 +3,7 @@
 class ModelReportUser extends Model {
 
     public function getUserActivities($data = []) {
-        $sql = 'SELECT ca.activity_id, ca.user_id, ca.key, ca.data, ca.ip, ca.date_added FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)';
+        $sql = 'SELECT ca.activity_id, ca.user_id, ca.key, ca.data, ca.ip, ca.date_added,ca.order_id,cust.company_name FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'customer cust ON (cust.customer_id = ca.customer_id) ';
 
         $implode = [];
 
@@ -29,6 +29,18 @@ class ModelReportUser extends Model {
         }
         if (!empty($data['filter_key'])) {
             $implode[] = "ca.key LIKE '" . $this->db->escape($data['filter_key']) . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_order'])) {
+            $implode[] = "ca.order_id = '" . $this->db->escape($data['filter_order']) . "'";
         }
 
         if ($implode) {
@@ -49,13 +61,17 @@ class ModelReportUser extends Model {
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
 
+        //    echo "<pre>";print_r($sql);die;
+
+
+        
         $query = $this->db->query($sql);
 
         return $query->rows;
     }
 
     public function getTotalUserActivities($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'user_activity` ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)';
+        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'user_activity` ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'customer cust ON (cust.customer_id = ca.customer_id) ';
 
         $implode = [];
 
@@ -82,6 +98,18 @@ class ModelReportUser extends Model {
 
         if (!empty($data['filter_key'])) {
             $implode[] = "ca.key LIKE '" . $this->db->escape($data['filter_key']) . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_order'])) {
+            $implode[] = "ca.order_id = '" . $this->db->escape($data['filter_order']) . "'";
         }
 
         if ($implode) {
