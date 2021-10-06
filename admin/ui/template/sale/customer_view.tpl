@@ -28,6 +28,7 @@
             <li><a href="#tab-referral" data-toggle="tab"><?php echo $tab_referral; ?></a></li>
 	    <li><a href="#tab-sub-customer" data-toggle="tab"><?php echo $tab_sub_customer; ?></a></li>
             <li><a href="#tab-otp" data-toggle="tab">OTP</a></li>
+            <li><a href="#tab-activity" data-toggle="tab">Activities</a></li>
             <?php } ?>
           </ul>
           <div class="tab-content">
@@ -236,6 +237,13 @@
               <div id="referral"></div>
               <br />
             </div>
+
+
+               <div class="tab-pane" id="tab-activity">
+                <div id="activity"></div>
+                <br />
+            </div>
+
             <?php } ?>
             <div class="tab-pane" id="tab-sub-customer">
               <table class="table table-bordered">
@@ -485,6 +493,17 @@ $('body').delegate('.button-ban-add', 'click', function() {
     }
   });
 });
+
+
+
+$('#activity').delegate('.pagination a', 'click', function(e) {
+  e.preventDefault();
+
+ $('#activity').load(this.href);
+});
+
+
+$('#activity').load('index.php?path=sale/customer/customerviewactivity&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
 
 
