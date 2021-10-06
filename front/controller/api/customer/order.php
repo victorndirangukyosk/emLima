@@ -4192,6 +4192,7 @@ class ControllerApiCustomerOrder extends Controller {
         }
 
         $data['unpaid_orders_count'] = count($data['pending_order_id']);
+        $data['message'] = count($data['pending_order_id']) > 0 ? 'Your Order(s) Payment Is Pending!' : '';
         return $data;
     }
 
