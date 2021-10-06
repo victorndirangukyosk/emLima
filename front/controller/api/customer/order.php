@@ -4088,6 +4088,8 @@ class ControllerApiCustomerOrder extends Controller {
     }
 
     protected function validatenew($args) {
+        $log = new Log('error.log');
+        $log->write('VALIDATE_ORDER');
         if (empty($args['payment_method'])) {
             $this->error['payment_method'] = $this->language->get('error_payment_method');
         }
