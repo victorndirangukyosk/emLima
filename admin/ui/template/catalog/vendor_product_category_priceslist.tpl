@@ -71,10 +71,10 @@
                                 <input type="text" name="filter_model" value="<?php echo $filter_model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
                             </div>-->
 
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-model"><?php echo $entry_product_id_from; ?></label>
                                 <input type="text" name="filter_product_id_from" value="<?php echo $filter_product_id_from; ?>" placeholder="<?php echo $entry_product_id_from; ?>" id="input-model" class="form-control" />
-                            </div>
+                            </div>-->
 
                         </div>
                         <?php if (!$is_vendor): ?>
@@ -90,10 +90,10 @@
                                 <input type="text" name="filter_vendor_name" value="<?php echo $filter_vendor_name; ?>" placeholder="Vendor Name" id="input-model" class="form-control" />
                             </div>
 
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-model"><?php echo $entry_price; ?></label>
                                 <input type="text" name="filter_price" value="<?php echo $filter_price; ?>" placeholder="<?php echo $entry_price; ?>" id="input-model" class="form-control" />
-                            </div>
+                            </div>-->
                             
                         </div>
                         <?php endif ?>
@@ -148,10 +148,10 @@
                             </div>
 
                              
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-model"><?php echo $entry_product_id_to; ?></label>
                                 <input type="text" name="filter_product_id_to" value="<?php echo $filter_product_id_to; ?>" placeholder="<?php echo $entry_product_id_to; ?>" id="input-model" class="form-control" />
-                            </div>
+                            </div>-->
 
 
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
