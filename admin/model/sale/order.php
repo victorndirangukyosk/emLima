@@ -4345,4 +4345,14 @@ class ModelSaleOrder extends Model {
     }
 
 
+
+    public function getOrderInfo($order_id) {
+
+        $sql = "SELECT o.order_id, o.delivery_date, o.delivery_timeslot,  o.payment_method,  (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id ) AS status,  o.order_status_id,o.store_name,  o.total,  o.date_added,o.paid,o.amount_partialy_paid,o.delivery_charges FROM `" . DB_PREFIX . 'order` o where o.order_id='.$order_id;
+       
+        //   echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->row;
+    }
 }
