@@ -4457,6 +4457,7 @@ class ControllerSaleCustomer extends Controller {
 
         $data['text_no_results'] = $this->language->get('text_no_results');
          $data['text_loading'] = $this->language->get('text_loading');       
+         $data['token'] = $this->session->data['token'];       
 
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
