@@ -506,7 +506,40 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['categories'] = $this->model_catalog_category->getCategories(0);
 
         foreach ($results as $result) {
-            if ($result['category_price_status'] == $this->request->get['filter_price_category_status']) {
+            if (isset($this->request->get['filter_price_category_status']) && $result['category_price_status'] == $this->request->get['filter_price_category_status']) {
+                $category = $this->model_catalog_vendor_product->getProductCategories($result['product_id']);
+
+                if (is_file(DIR_IMAGE . $result['image'])) {
+                    $image = $this->model_tool_image->resize($result['image'], 40, 40);
+                    $bigimage = $this->model_tool_image->getImage($result['image']);
+                } else {
+                    $image = $this->model_tool_image->resize('no_image.png', 40, 40);
+                    $bigimage = $this->model_tool_image->getImage('no_image.png');
+                }
+
+                $data['products'][] = [
+                    'buying_price' => $result['buying_price'],
+                    'source' => $result['source'],
+                    'store_name' => $result['store_name'],
+                    //'vendor_name'=>$result['fs'].' '.$result['ls'],
+                    'product_store_id' => $result['product_store_id'],
+                    'product_id' => $result['product_id'],
+                    'price' => $result['price'],
+                    'special_price' => $result['special_price'],
+                    'quantity' => $result['quantity'],
+                    'image' => $image,
+                    'bigimage' => $bigimage,
+                    'name' => $result['product_name'],
+                    'unit' => $result['unit'],
+                    //'weight' => $result['weight'],
+                    'model' => $result['model'],
+                    'category' => $category,
+                    'category_price_status' => array_key_exists('category_price_status', $result) ? $result['category_price_status'] : '',
+                    'status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+                    'edit' => $this->url->link('catalog/vendor_product/edit', 'token=' . $this->session->data['token'] . '&store_product_id=' . $result['product_store_id'] . $url, 'SSL'),
+                ];
+            }
+            if (!isset($this->request->get['filter_price_category_status'])) {
                 $category = $this->model_catalog_vendor_product->getProductCategories($result['product_id']);
 
                 if (is_file(DIR_IMAGE . $result['image'])) {
