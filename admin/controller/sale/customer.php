@@ -4434,10 +4434,11 @@ class ControllerSaleCustomer extends Controller {
         $results = $this->model_sale_customer->getCustomerActivities($this->request->get['customer_id'], ($page - 1) * 10, 10);
         // echo "<pre>";print_r($results); 
 
-        $this->load->language('report/customer_activity');
+        $this->load->language('report/customer_activity'); 
 
         foreach ($results as $result) {
             $comment = vsprintf($this->language->get('text_'.$result['key']), unserialize($result['data']));
+            // $comment = vsprintf($this->language->get('text1_'.$result['key']), unserialize($result['data']));
 
             $find = [
                 'farmer_id=',
@@ -4446,18 +4447,18 @@ class ControllerSaleCustomer extends Controller {
                 'sub_customers_id='
             ];
 
-            // $replace = [
+              $replace = [
             //     $this->url->link('sale/farmer/edit', 'token='.$this->session->data['token'].'&farmer_id=', 'SSL'),
             //     $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
             //     $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
             //     $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&sub_customers_id=', 'SSL'),
-            // ];
+             ];
            
-
+             $comment = str_replace($find, $replace, $comment);
+             $comt = preg_replace("/<\/?a( [^>]*)?>/i", "", $comment);
             $data['activities'][] = [
                 
-                'comment' => str_replace($find, $replace, $comment),
-                // 'comment' => $comment,
+                'comment' => $comt,
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
                 'order_id' => ($result['order_id']==0?'NA':$result['order_id']),
@@ -4475,7 +4476,7 @@ class ControllerSaleCustomer extends Controller {
         $pagination->total = $activity_total;
         $pagination->page = $page;
         $pagination->limit = 10;
-        $pagination->url = $this->url->link('sale/customer/activity', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/customer/customerviewactivity', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
