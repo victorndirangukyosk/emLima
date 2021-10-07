@@ -3408,6 +3408,39 @@ class ControllerSaleCustomer extends Controller {
         $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
         $data['latitude'] = $customer_info['latitude'];
         $data['longitude'] = $customer_info['longitude'];
+         $data['payment_terms'] = $customer_info['payment_terms'];
+         
+
+        //  echo "<pre>";print_r($customer_info);die;
+         
+            $data['statement_duration'] = $customer_info['statement_duration'];
+            $data['customer_category'] = $customer_info['customer_category'];
+            if( $data['statement_duration'] =="7")
+            {
+                $data['statement_duration'] ="Weekly";
+            }
+            else if( $data['statement_duration'] =="15")
+            {
+                $data['statement_duration'] ="Bi-Weekly";
+            }
+            else if( $data['statement_duration'] =="30")
+            {
+                $data['statement_duration'] ="Monthly";
+            }
+
+            $data['account_manager_id'] = $customer_info['account_manager_id'];
+            $data['customer_experience_id'] = $customer_info['customer_experience_id'];
+            $accountmanager = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
+            if( $accountmanager!=null)
+            {
+                $data['account_manager'] =$accountmanager['firstname'].' '.$accountmanager['lastname'];
+            }
+
+            $customerexperience = $this->model_sale_customer->getCustomerExperinceDetails($this->request->get['customer_id']);
+            if( $customerexperience!=null)
+            {
+                $data['customer_experience'] =$customerexperience['firstname'].' '.$customerexperience['lastname'];
+            }
 
         $data['addresses'] = $this->model_sale_customer->getAddresses($this->request->get['customer_id']);
         $data['address_id'] = $customer_info['address_id'];
