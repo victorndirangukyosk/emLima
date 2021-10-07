@@ -610,7 +610,12 @@ class ControllerReportVendorOrders extends Controller {
 
         $this->load->model('sale/order');
         // $results = $this->model_sale_order->getOrders($filter_data);
-        $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+        // $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+        $results = $this->model_sale_order->getOrderswithProcessing($filter_data);
+
+        
+
+        // echo "<pre>";print_r($results);die;
 
         $data = [];
         $unconsolidatedProducts = [];
