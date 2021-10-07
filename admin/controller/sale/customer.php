@@ -4464,28 +4464,55 @@ class ControllerSaleCustomer extends Controller {
 
         $data['activities'] = [];
 
-        $results = $this->model_sale_customer->getCustomerActivities($this->request->get['customer_id'], ($page - 1) * 10, 10);
+        // $results = $this->model_sale_customer->getCustomerActivities($this->request->get['customer_id'], ($page - 1) * 10, 10);
+        $results = $this->model_sale_customer->getUserActivitiesofCustomer($this->request->get['customer_id'], ($page - 1) * 10, 10);
         // echo "<pre>";print_r($results); 
 
-        $this->load->language('report/customer_activity'); 
+        // $this->load->language('report/customer_activity'); 
+        $this->load->language('report/user_activity');
 
         foreach ($results as $result) {
             $comment = vsprintf($this->language->get('text_'.$result['key']), unserialize($result['data']));
             // $comment = vsprintf($this->language->get('text1_'.$result['key']), unserialize($result['data']));
 
-            $find = [
-                'farmer_id=',
-                'customer_id=',
-                'order_id=',
-                'sub_customers_id='
-            ];
+            // $find = [
+            //     'farmer_id=',
+            //     'customer_id=',
+            //     'order_id=',
+            //     'sub_customers_id='
+            // ];
 
-              $replace = [
+            //   $replace = [
             //     $this->url->link('sale/farmer/edit', 'token='.$this->session->data['token'].'&farmer_id=', 'SSL'),
             //     $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
             //     $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
             //     $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&sub_customers_id=', 'SSL'),
-             ];
+            //  ];
+
+            $find = [
+                'user_id=',
+                'order_id=',
+                'account_manager_id=',
+                'customer_id=',
+                'driver_id=',
+                'order_processing_group_id=',
+                'order_processor_id=',
+                'vehicle_id=',
+                'farmer_id=',
+                'feedback_id=',
+            ];
+            $replace = [
+                // $this->url->link('user/user/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
+                // $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=', 'SSL'),
+                // $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
+                // $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=', 'SSL'),
+                // $this->url->link('drivers/drivers_list/edit', 'token=' . $this->session->data['token'] . '&driver_id=', 'SSL'),
+                // $this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'token=' . $this->session->data['token'] . '&order_processing_group_id=', 'SSL'),
+                // $this->url->link('orderprocessinggroup/orderprocessor/edit', 'token=' . $this->session->data['token'] . '&order_processor_id=', 'SSL'),
+                // $this->url->link('vehicles/vehicles_list/edit', 'token=' . $this->session->data['token'] . '&vehicle_id=', 'SSL'),
+                // $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=', 'SSL'),
+                // $this->url->link('sale/customer_feedback', 'token=' . $this->session->data['token'] . '&feedback_id=', 'SSL'),
+            ];
            
              $comment = str_replace($find, $replace, $comment);
              $comt = preg_replace("/<\/?a( [^>]*)?>/i", "", $comment);
@@ -4495,6 +4522,8 @@ class ControllerSaleCustomer extends Controller {
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
                 'order_id' => ($result['order_id']==0?'NA':$result['order_id']),
+                'user' => $result['firstname'].' '.$result['lastname'],
+
             ];
 
             
@@ -4503,7 +4532,7 @@ class ControllerSaleCustomer extends Controller {
         // echo "<pre>";print_r($data); die;
         
 
-        $activity_total = $this->model_sale_customer->getTotalCustomerActivities($this->request->get['customer_id']);
+        $activity_total = $this->model_sale_customer->getTotalUserActivitiesofCustomer($this->request->get['customer_id']);
 
         $pagination = new Pagination();
         $pagination->total = $activity_total;
