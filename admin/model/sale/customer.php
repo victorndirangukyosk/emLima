@@ -2068,4 +2068,63 @@ class ModelSaleCustomer extends Model {
         
     }
 
+
+    public function getUserActivitiesofCustomer($customer_id,$start,$limit) {
+
+        $sql1 = ' SELECT ca.activity_id, ca.user_id,c.firstname,c.lastname, ca.key, ca.data, ca.ip, ca.date_added,ca.order_id FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'customer cust ON (cust.customer_id = ca.customer_id) ';
+        $sql2 = ' SELECT ca.activity_id, ca.user_id,c.firstname,c.lastname, ca.key, ca.data, ca.ip, ca.date_added,ca.order_id  FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'order o ON (o.order_id = ca.order_id) ';
+  
+        $implode = [];
+
+        if (!empty($customer_id)) {
+            $implode[] = "ca.customer_id =" . $customer_id ;
+        }
+
+        if ($implode) {
+            $sql1 .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $implode = [];
+
+        if (!empty($customer_id)) {
+            $implode[] = "o.customer_id =" . $customer_id ;
+        }
+
+        if ($implode) {
+            $sql2 .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        // $sql = 'select * from ( '.$sql1.' union '.$sql2.') as t ORDER BY date_added DESC';
+        $sql =$sql1;
+        if (isset($start) || isset($limit)) {
+            if ($start < 0) {
+                $start = 0;
+            }
+
+            if ($limit < 1) {
+                $limit = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $start . ',' . (int) $limit;
+        }
+        // echo "<pre>";print_r($sql); 
+
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+    public function getTotalUserActivitiesofCustomer($customer_id) {
+
+         
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'customer cust ON (cust.customer_id = ca.customer_id)  WHERE ca.customer_id = ' . (int) $customer_id);
+
+        // echo "<pre>";print_r('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'customer cust ON (cust.customer_id = ca.customer_id)  WHERE ca.customer_id = ' . (int) $customer_id ); 
+
+        return $query->row['total'];
+
+ 
+        
+    }
+
 }
