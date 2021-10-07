@@ -75,6 +75,22 @@
                                 <label class="control-label" for="input-model"><?php echo $entry_product_id_from; ?></label>
                                 <input type="text" name="filter_product_id_from" value="<?php echo $filter_product_id_from; ?>" placeholder="<?php echo $entry_product_id_from; ?>" id="input-model" class="form-control" />
                             </div>-->
+                            <div class="form-group">
+                                <label class="control-label" for="input-model">Price Category Status</label>
+                                <select name="filter_price_category_status" id="input-status" class="form-control">
+                                    <option value="*"></option>
+                                    <?php if ($filter_price_category_status) { ?>
+                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                    <?php } else { ?>
+                                    <option value="1"><?php echo $text_enabled; ?></option>
+                                    <?php } ?>
+                                    <?php if (!$filter_price_category_status && !is_null($filter_price_category_status)) { ?>
+                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                                    <?php } else { ?>
+                                    <option value="0"><?php echo $text_disabled; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
 
                         </div>
                         <?php if (!$is_vendor): ?>
@@ -147,7 +163,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-model">Price Category Status</label>
                                 <select name="filter_price_category_status" id="input-status" class="form-control">
                                     <option value="*"></option>
@@ -161,7 +177,7 @@
                                     <?php } else { ?>
                                     <option value="0"><?php echo $text_disabled; ?></option>
                                     <?php } ?>
-                                </select>
+                                </select>-->
                             </div> 
                             <!--<div class="form-group">
                                 <label class="control-label" for="input-model"><?php echo $entry_product_id_to; ?></label>
