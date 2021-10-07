@@ -733,6 +733,9 @@ class ControllerCommonScheduler extends Controller {
         ]); 
         // Use an Aws\Sdk class to create the S3Client object.
         $s3Client = $sdk->createS3();
+
+        // echo BUCKET_PREFIX . "\n";die;
+
         try {
            
             $resultBucketList = $s3Client->listBuckets();
@@ -754,7 +757,7 @@ class ControllerCommonScheduler extends Controller {
 
            
             // $folder_path ."/". $filename,"wb"
-            $file_Path = DIR_LOG . date('Y-m-d') . '.log';
+            $file_Path = DIR_LOG . date('Y-m-d', strtotime("-1 days")) . '.log';
             $key = basename($file_Path);
             $result = $s3Client->putObject([
                 'Bucket' => $bucket,
