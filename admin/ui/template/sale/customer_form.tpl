@@ -47,6 +47,7 @@
             <li><a href="#tab-contact" data-toggle="tab"><?php echo $tab_contact; ?></a></li>
             <li><a href="#tab-configuration" data-toggle="tab">Configuration</a></li>
             <li><a href="#tab-otp" data-toggle="tab">OTP</a></li>
+            <li><a href="#tab-activity" data-toggle="tab">Activities</a></li>
            
             <?php } ?>
           </ul>
@@ -687,6 +688,12 @@
                 <button type="button" id="button-configuration" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-save"></i> Save Configuration </button>
             </div>                
             </div>
+
+               <div class="tab-pane" id="tab-activity">
+                <div id="activity"></div>
+                <br />
+            </div>
+
             
             <div class="tab-pane" id="tab-otp">
               <table class="table table-bordered">
@@ -1666,6 +1673,22 @@ $('.time').datetimepicker({
                     }
                 });
             }
+
+
+
+            
+
+$('#activity').delegate('.pagination a', 'click', function(e) {
+  e.preventDefault();
+
+ $('#activity').load(this.href);
+});
+
+
+$('#activity').load('index.php?path=sale/customer/customeractivity&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
+
+
+
     </script>
 
 <?php if ($kondutoStatus) { ?>

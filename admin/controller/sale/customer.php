@@ -2193,6 +2193,8 @@ class ControllerSaleCustomer extends Controller {
         //echo "<pre>";print_r($data);die;
         $data['cities'] = $this->model_sale_customer_group->getCities();
 
+
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
@@ -4545,6 +4547,105 @@ class ControllerSaleCustomer extends Controller {
         $data['results'] = sprintf($this->language->get('text_pagination'), ($activity_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($activity_total - 10)) ? $activity_total : ((($page - 1) * 10) + 10), $activity_total, ceil($activity_total / 10));
 
         $this->response->setOutput($this->load->view('sale/customer_view_activity.tpl', $data));
+    }
+
+    public function customeractivity() {
+        $this->load->language('sale/customer');
+
+        $this->load->model('sale/customer');
+
+        $data['text_no_results'] = $this->language->get('text_no_results');
+         $data['text_loading'] = $this->language->get('text_loading');       
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['activities'] = [];
+
+        // $results = $this->model_sale_customer->getCustomerActivities($this->request->get['customer_id'], ($page - 1) * 10, 10);
+        $results = $this->model_sale_customer->getUserActivitiesofCustomer($this->request->get['customer_id'], ($page - 1) * 10, 10);
+        // echo "<pre>";print_r($results); 
+
+        // $this->load->language('report/customer_activity'); 
+        $this->load->language('report/user_activity');
+
+        foreach ($results as $result) {
+            $comment = vsprintf($this->language->get('text_'.$result['key']), unserialize($result['data']));
+            // $comment = vsprintf($this->language->get('text1_'.$result['key']), unserialize($result['data']));
+
+            // $find = [
+            //     'farmer_id=',
+            //     'customer_id=',
+            //     'order_id=',
+            //     'sub_customers_id='
+            // ];
+
+            //   $replace = [
+            //     $this->url->link('sale/farmer/edit', 'token='.$this->session->data['token'].'&farmer_id=', 'SSL'),
+            //     $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
+            //     $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id=', 'SSL'),
+            //     $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&sub_customers_id=', 'SSL'),
+            //  ];
+
+            $find = [
+                'user_id=',
+                'order_id=',
+                'account_manager_id=',
+                'customer_id=',
+                'driver_id=',
+                'order_processing_group_id=',
+                'order_processor_id=',
+                'vehicle_id=',
+                'farmer_id=',
+                'feedback_id=',
+            ];
+            $replace = [
+                $this->url->link('user/user/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
+                $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=', 'SSL'),
+                $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
+                $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=', 'SSL'),
+                $this->url->link('drivers/drivers_list/edit', 'token=' . $this->session->data['token'] . '&driver_id=', 'SSL'),
+                $this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'token=' . $this->session->data['token'] . '&order_processing_group_id=', 'SSL'),
+                $this->url->link('orderprocessinggroup/orderprocessor/edit', 'token=' . $this->session->data['token'] . '&order_processor_id=', 'SSL'),
+                $this->url->link('vehicles/vehicles_list/edit', 'token=' . $this->session->data['token'] . '&vehicle_id=', 'SSL'),
+                $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=', 'SSL'),
+                $this->url->link('sale/customer_feedback', 'token=' . $this->session->data['token'] . '&feedback_id=', 'SSL'),
+            ];
+           
+             $comment = str_replace($find, $replace, $comment);
+             $comt = preg_replace("/<\/?a( [^>]*)?>/i", "", $comment);
+            $data['activities'][] = [
+                
+                'comment' => $comment,
+                'ip' => $result['ip'],
+                'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
+                'order_id' => ($result['order_id']==0?'NA':$result['order_id']),
+                'user' => $result['firstname'].' '.$result['lastname'],
+
+            ];
+
+            
+        }
+
+        // echo "<pre>";print_r($data); die;
+        
+
+        $activity_total = $this->model_sale_customer->getTotalUserActivitiesofCustomer($this->request->get['customer_id']);
+
+        $pagination = new Pagination();
+        $pagination->total = $activity_total;
+        $pagination->page = $page;
+        $pagination->limit = 10;
+        $pagination->url = $this->url->link('sale/customer/customeractivity', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($activity_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($activity_total - 10)) ? $activity_total : ((($page - 1) * 10) + 10), $activity_total, ceil($activity_total / 10));
+
+        $this->response->setOutput($this->load->view('sale/customer_activity.tpl', $data));
     }
 
 }
