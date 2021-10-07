@@ -432,7 +432,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $filter_data = [
             'filter_name' => $filter_name,
-            'filter_vendor_name' => $filter_vendor_name,
+            'filter_vendor_name' => $this->getUserByName($filter_vendor_name),
             'filter_price' => $filter_price,
             'filter_product_id_from' => $filter_product_id_from,
             'filter_model' => $filter_model,
@@ -2931,6 +2931,14 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->load->model('report/excel');
 
         $this->model_report_excel->download_inventoryhistoryexcel($data, $filter_data);
+    }
+    
+        public function getUserByName($name) {
+        if ($name) {
+            $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '" . $this->db->escape($name) . "%'");
+
+            return $query->row['user_id'];
+        }
     }
 
 }
