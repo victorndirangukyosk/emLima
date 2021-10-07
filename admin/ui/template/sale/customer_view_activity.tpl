@@ -2,20 +2,30 @@
   <table class="table table-bordered table-hover">
     <thead>
       <tr>
-        <td class="text-left">Comment</td>
-        <td class="text-right">IP</td>
-        <td class="text-left">Date Added</td>
         <td class="text-left">Order ID</td>
+        <td class="text-left">Activity</td>
+        <td class="text-left">IP</td>
+        <td class="text-left">Activity Date</td>
+        <td class="text-left">Activity By</td>
+        <td class="text-left">Action</td>
+
+
       </tr>
     </thead>
     <tbody>
       <?php if ($activities) { ?>
       <?php foreach ($activities as $activity) { ?>
       <tr>
+        <td class="text-left"><?php echo $activity['order_id']; ?></td>
         <td class="text-left"><?php echo $activity['comment']; ?></td>
         <td class="text-left"><?php echo $activity['ip']; ?></td>
         <td class="text-left"><?php echo $activity['date_added']; ?></td>
-        <td class="text-left"><?php echo $activity['order_id']; ?></td>
+        <td class="text-left"><?php echo $activity['user']; ?></td>
+        <td class="text-left"></td>
+
+
+
+
       </tr>
       <?php } ?>
       <?php } else { ?>
