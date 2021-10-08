@@ -4357,4 +4357,10 @@ class ModelSaleOrder extends Model {
 
         return $query->row;
     }
+
+
+    public function UpdateOrderDeliveryDate($order_id) {
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_date= NOW() WHERE order_id="' . $order_id . '"');
+    }
+
 }
