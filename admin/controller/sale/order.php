@@ -8789,6 +8789,13 @@ class ControllerSaleOrder extends Controller {
                 $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
             }
             $currentdate= date("d/m/Y");
+            echo "<pre>";print_r( $order_delivery_date);
+
+            echo "<pre>";print_r( 'current date below');
+            echo "<pre>";print_r( $currentdate);
+
+
+
             if($order_delivery_date > $currentdate)
             {
                 //update delivery date to current date
