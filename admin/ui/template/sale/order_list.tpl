@@ -1332,7 +1332,7 @@ function savedriverdetail() {
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge,,order_delivery_date:order_delivery_date },
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge,order_delivery_date:order_delivery_date },
                     async: true,
                     success: function(json) {
                         console.log(json); 
@@ -1648,7 +1648,10 @@ var mm = String(currentdate.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = currentdate.getFullYear();
 
 currentdate = dd + '/' + mm + '/' + yyyy;
+console.log(order_delivery_date);
+console.log('beloe current');
 
+console.log(currentdate);
 if(order_delivery_date > currentdate)
  if (confirm("Do you want to modify delivery date to current date")) {
      //continue;
