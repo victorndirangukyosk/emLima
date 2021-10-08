@@ -515,9 +515,10 @@ class ControllerReportVendorOrders extends Controller {
 
         if (isset($this->request->get['filter_delivery_date'])) {
             $deliveryDate = $this->request->get['filter_delivery_date'];
-        } else {
-            $deliveryDate = null;
+        } else {//consolidated orders data should not be more , so get delivery date
+            $deliveryDate = date("Y-m-d");
         }
+        
 
         if (isset($this->request->get['filter_order_status'])) {
             $order_status = $this->request->get['filter_order_status'];
