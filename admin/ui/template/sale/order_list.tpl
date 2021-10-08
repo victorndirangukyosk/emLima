@@ -882,6 +882,7 @@
                                                     <label > Driver </label>
                                                         <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
                                                         <input id="order_delivery_date"   name="order_delivery_date" type="hidden"  class="form-control input-md" required>
+                                                        <input id="updateDeliveryDate"   name="updateDeliveryDate" type="hidden" value=0 class="form-control input-md" required>
                                                     
                                                     <div class="col-md-12">
                                                         <!--<input id="order_driver" maxlength="30" required style="max-width:100% ;" name="order_driver" type="text" placeholder="Driver" class="form-control" data_driver_id="" required>-->
@@ -1192,6 +1193,7 @@ function savedriverdetails() {
     $('#driverModal-success-message').html('');
    var order_id = $('input[name="order_id"]').val();
    var order_delivery_date = $('input[name="order_delivery_date"]').val();  
+   var updateDeliveryDate = $('input[name="updateDeliveryDate"]').val();  
  
    var invoice = $('input[name="invoice_custom"]').val();
    var driver_id = $('select[name="order_drivers"]').val();
@@ -1235,7 +1237,7 @@ function savedriverdetails() {
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge ,order_delivery_date:order_delivery_date},
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge ,updateDeliveryDate:updateDeliveryDate},
                     async: true,
                     success: function(json) {
                         console.log(json); 
@@ -1283,6 +1285,7 @@ function savedriverdetail() {
    var invoice = $('input[name="invoice_custom"]').val();
    var driver_id = $('select[name="order_drivers"]').val();
    var order_delivery_date = $('input[name="order_delivery_date"]').val();  
+   var updateDeliveryDate = $('input[name="updateDeliveryDate"]').val();  
  
    //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
    var vehicle_number =  $('input[name="order_vehicle_number"]').val();
@@ -1332,7 +1335,7 @@ function savedriverdetail() {
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge,order_delivery_date:order_delivery_date },
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge,updateDeliveryDate:updateDeliveryDate },
                     async: true,
                     success: function(json) {
                         console.log(json); 
@@ -1629,8 +1632,7 @@ var invoice = $(this).attr("data-order-invoice");
 var order_id = $(this).attr("data-order-id");
 var order_vendor = $(this).attr("data-order-vendor");
 var order_delivery_date = $(this).attr("data-order-delivery-date");
-
-
+var updateDeliveryDate=0;
 
 var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selected').text();
 
@@ -1655,6 +1657,7 @@ console.log(currentdate);
 if(new Date(order_delivery_date) > new Date(currentdate))
  if (confirm("Do you want to modify delivery date to current date")) {
      //continue;
+     updateDeliveryDate=1;
  }
  else{
      return;
@@ -1674,7 +1677,7 @@ $.ajax({
                     if(/*order_status != 'Ready for delivery'*/ json.order_info.order_status == 'Order Approval Pending' || order_status == 'Order Approval Pending' || json.order_info.order_status == 'Order Recieved' || order_status == 'Order Recieved' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
                     {
                     $('input[name="order_id"]').val(order_id);
-                    $('input[name="order_delivery_date"]').val(order_delivery_date);
+                    $('input[name="updateDeliveryDate"]').val(updateDeliveryDate);
                     $('input[name="invoice_custom"]').val(invoice);
                     $('input[name="order_delivery_charge"]').val(json.order_info.delivery_charges);
                     $('#driverModal').modal('toggle');
