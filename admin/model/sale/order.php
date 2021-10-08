@@ -1684,7 +1684,7 @@ class ModelSaleOrder extends Model {
 
         // if (isset($data['filter_order_status'])) {
         // $sql .= " WHERE o.order_status_id = '1' ";
-        $sql .= " WHERE o.order_status_id not in (0,2,5,6,8,4,16,13,10,3)";
+        $sql .= " WHERE o.order_status_id not in (0,2,5,6,4,16,13,10,3)";//8?
         // $sql .= " WHERE o.order_status_id!=0 and o.order_status_id!=2 and o.order_status_id!=5 ";
 
         //} else {
