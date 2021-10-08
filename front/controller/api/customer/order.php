@@ -4196,4 +4196,39 @@ class ControllerApiCustomerOrder extends Controller {
         return $data;
     }
 
+    public function getunpaidorderscounts() {
+        $json = [];
+        $log = new Log('error.log');
+        $log->write($this->customer->getPaymentTerms());
+        $log->write($this->customer->getId());
+
+        $data['pending_order_id'] = NULL;
+
+        if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
+            $this->load->model('account/order');
+            $this->load->model('sale/order');
+            $page = 1;
+            $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
+            $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
+            if (count($results_orders) > 0) {
+                foreach ($results_orders as $order) {
+                    if (in_array($order['payment_method'], $PaymentFilter) && $order['order_status_id'] == 4) {
+                        $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                        if (empty($order['transcation_id'])) {
+                            $data['pending_order_id'][] = $order['order_id'];
+                        }
+                    }
+                }
+            }
+        }
+
+        $data['unpaid_orders_count'] = count($data['pending_order_id']);
+        $data['message'] = count($data['pending_order_id']) > 0 ? 'Your Order(s) Payment Is Pending!' : '';
+        //return $data;
+        $json['status'] = 200;
+        $json['data'] = $data;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

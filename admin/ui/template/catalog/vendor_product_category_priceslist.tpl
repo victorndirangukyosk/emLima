@@ -71,9 +71,25 @@
                                 <input type="text" name="filter_model" value="<?php echo $filter_model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
                             </div>-->
 
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-model"><?php echo $entry_product_id_from; ?></label>
                                 <input type="text" name="filter_product_id_from" value="<?php echo $filter_product_id_from; ?>" placeholder="<?php echo $entry_product_id_from; ?>" id="input-model" class="form-control" />
+                            </div>-->
+                            <div class="form-group">
+                                <label class="control-label" for="input-model">Price Category Status</label>
+                                <select name="filter_price_category_status" id="input-status" class="form-control">
+                                    <option value="*"></option>
+                                    <?php if ($filter_price_category_status) { ?>
+                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                    <?php } else { ?>
+                                    <option value="1"><?php echo $text_enabled; ?></option>
+                                    <?php } ?>
+                                    <?php if (!$filter_price_category_status && !is_null($filter_price_category_status)) { ?>
+                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                                    <?php } else { ?>
+                                    <option value="0"><?php echo $text_disabled; ?></option>
+                                    <?php } ?>
+                                </select>
                             </div>
 
                         </div>
@@ -90,10 +106,10 @@
                                 <input type="text" name="filter_vendor_name" value="<?php echo $filter_vendor_name; ?>" placeholder="Vendor Name" id="input-model" class="form-control" />
                             </div>
 
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-model"><?php echo $entry_price; ?></label>
                                 <input type="text" name="filter_price" value="<?php echo $filter_price; ?>" placeholder="<?php echo $entry_price; ?>" id="input-model" class="form-control" />
-                            </div>
+                            </div>-->
                             
                         </div>
                         <?php endif ?>
@@ -147,11 +163,26 @@
                                 </select>
                             </div>
 
-                             
-                            <div class="form-group">
+                            <!--<div class="form-group">
+                                <label class="control-label" for="input-model">Price Category Status</label>
+                                <select name="filter_price_category_status" id="input-status" class="form-control">
+                                    <option value="*"></option>
+                                    <?php if ($filter_price_category_status) { ?>
+                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                                    <?php } else { ?>
+                                    <option value="1"><?php echo $text_enabled; ?></option>
+                                    <?php } ?>
+                                    <?php if (!$filter_price_category_status && !is_null($filter_price_category_status)) { ?>
+                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                                    <?php } else { ?>
+                                    <option value="0"><?php echo $text_disabled; ?></option>
+                                    <?php } ?>
+                                </select>-->
+                            </div> 
+                            <!--<div class="form-group">
                                 <label class="control-label" for="input-model"><?php echo $entry_product_id_to; ?></label>
                                 <input type="text" name="filter_product_id_to" value="<?php echo $filter_product_id_to; ?>" placeholder="<?php echo $entry_product_id_to; ?>" id="input-model" class="form-control" />
-                            </div>
+                            </div>-->
 
 
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
@@ -374,6 +405,27 @@ $('input[name=\'filter_store_id\']').autocomplete({
     }
 });
 
+$('input[name=\'filter_vendor_name\']').autocomplete({
+    'source': function(request, response) {
+        $.ajax({
+            url: 'index.php?path=setting/store/vendor_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+            dataType: 'json',
+            success: function(json) {
+                response($.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['user_id']
+                    }
+                }));
+            }
+        });
+    },
+    'select': function(item) {
+
+        
+        $('input[name=\'filter_vendor_name\']').val(item['label']);
+    }
+});                                   
 
 
 function submit_copy() {
@@ -419,7 +471,7 @@ function submit_copy() {
                 url += '&filter_category=' + encodeURIComponent(filter_category);
             }
 			
-			var filter_category_price = $('select[name=\'filter_category_price\']').val();
+	    var filter_category_price = $('select[name=\'filter_category_price\']').val();
 
             if (filter_category_price != '*') {
                 url += '&filter_category_price=' + encodeURIComponent(filter_category_price);
@@ -460,6 +512,12 @@ function submit_copy() {
 
             if (filter_status != '*') {
                 url += '&filter_status=' + encodeURIComponent(filter_status);
+            }
+            
+            var filter_price_category_status = $('select[name=\'filter_price_category_status\']').val();
+
+            if (filter_price_category_status != '*') {
+                url += '&filter_price_category_status=' + encodeURIComponent(filter_price_category_status);
             }
 
             location = url;

@@ -16,7 +16,7 @@ class ControllerCommonScheduler extends Controller {
 
     private $error = [];
 
-    public function consolidatedOrderSheet() {
+    public function consolidatedOrderSheet() { 
         // $deliveryDate =   date("Y-m-d");// date("Y-m-d",strtotime("-1 days"));//$this->request->get['filter_delivery_date'];
         $deliveryDate = date("Y-m-d", strtotime("1 days")); // as eat at 11:30 means , next day orders need to be displayed
 
@@ -25,7 +25,8 @@ class ControllerCommonScheduler extends Controller {
         ];
         $this->load->model('sale/order');
         // $results = $this->model_sale_order->getOrders($filter_data);
-        $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+        // $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+        $results = $this->model_sale_order->getOrderswithProcessing($filter_data);
         $data = [];
         $unconsolidatedProducts = [];
 
@@ -585,7 +586,7 @@ class ControllerCommonScheduler extends Controller {
 
 
 
-    public function consolidatedOrderSheet3PM() {
+    public function consolidatedOrderSheet3PM() { 
          $deliveryDate = date("Y-m-d"); // current day delivery date
          $time = $this->request->get['time'];
          $dateAdded = date("Y-m-d", strtotime("-1 days"));
@@ -608,8 +609,9 @@ class ControllerCommonScheduler extends Controller {
 
         $this->load->model('sale/order');
         // $results = $this->model_sale_order->getOrders($filter_data);
-        $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
-        $data = [];
+        // $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+        $results = $this->model_sale_order->getOrderswithProcessing($filter_data);
+         $data = [];
         $unconsolidatedProducts = [];
 
         foreach ($results as $index => $order) {
@@ -731,6 +733,9 @@ class ControllerCommonScheduler extends Controller {
         ]); 
         // Use an Aws\Sdk class to create the S3Client object.
         $s3Client = $sdk->createS3();
+
+        // echo BUCKET_PREFIX . "\n";die;
+
         try {
            
             $resultBucketList = $s3Client->listBuckets();
@@ -752,7 +757,7 @@ class ControllerCommonScheduler extends Controller {
 
            
             // $folder_path ."/". $filename,"wb"
-            $file_Path = DIR_LOG . date('Y-m-d') . '.log';
+            $file_Path = DIR_LOG . date('Y-m-d', strtotime("-1 days")) . '.log';
             $key = basename($file_Path);
             $result = $s3Client->putObject([
                 'Bucket' => $bucket,

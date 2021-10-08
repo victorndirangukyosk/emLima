@@ -7080,6 +7080,8 @@ class ModelReportExcel extends Model {
                 'comment' => $comt,
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
+                'order_id' => $result['order_id'],
+          
             ];
         }
         // echo "<pre>";print_r($data['customers']);die;
@@ -7139,12 +7141,14 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Comment');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'IP');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Date');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Order ID');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 5;
@@ -7157,6 +7161,7 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['comment']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['ip']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['date_added']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['order_id']);
 
                 ++$row;
             }

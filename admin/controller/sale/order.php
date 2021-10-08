@@ -8941,4 +8941,48 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function getOrderInfo() {
+        $this->load->model('sale/order');
+        //echo 'date.timezone ' ;;
+        $data = $this->request->post;
+
+        /// echo '<pre>';print_r($this->request->post);exit;
+
+        if ('POST' == $this->request->server['REQUEST_METHOD']) {
+            $data = $this->model_sale_order->getOrderInfo($this->request->post['order_id']);
+
+
+            // $totals = $this->model_sale_order->getOrderTotals($data['order_id']);
+
+            // echo "<pre>";print_r($data);die;
+            // foreach ($totals as $total) {
+            //     if ('sub_total' == $total['code']) {
+            //         $sub_total = $total['value'];
+            //         break;
+            //     }
+            // }
+            $data['total']=$this->currency->format($data['total']);
+            $data['date_added']= date($this->language->get('date_format_short'), strtotime($data['date_added']));
+            $data['delivery_date']= date($this->language->get('date_format_short'), strtotime($data['delivery_date']));
+            $data['paid']=($data['paid']=='N'?"Payment Pending":($data['paid']=='Y'?"Payment Done": "Partially Paid"));
+                    
+
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        } else {
+            $data['status'] = false;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
+        //  echo '<pre>';print_r($data);exit;
+
+        return true;
+    }
 }

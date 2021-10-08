@@ -310,6 +310,12 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $filter_status = null;
         }
+        
+        if (isset($this->request->get['filter_price_category_status'])) {
+            $filter_price_category_status = $this->request->get['filter_price_category_status'];
+        } else {
+            $filter_price_category_status = null;
+        }
 
         if (isset($this->request->get['filter_quantity'])) {
             $filter_quantity = $this->request->get['filter_quantity'];
@@ -368,6 +374,9 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_status'])) {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
+        if (isset($this->request->get['filter_price_category_status'])) {
+            $url .= '&filter_price_category_status=' . $this->request->get['filter_price_category_status'];
+        }
         if (isset($this->request->get['filter_quantity'])) {
             $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
         }
@@ -423,7 +432,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $filter_data = [
             'filter_name' => $filter_name,
-            'filter_vendor_name' => $filter_vendor_name,
+            'filter_vendor_name' => $this->getUserByName($filter_vendor_name),
             'filter_price' => $filter_price,
             'filter_product_id_from' => $filter_product_id_from,
             'filter_model' => $filter_model,
@@ -431,6 +440,7 @@ class ControllerCatalogVendorProduct extends Controller {
             'filter_category' => $filter_category,
             'filter_store_id' => $filter_store_id,
             'filter_status' => $filter_status,
+            'filter_price_category_status' => $filter_price_category_status,
             'filter_quantity' => $filter_quantity,
             'filter_category_price' => $filter_category_price,
             'filter_tax_class_id' => $filter_tax_class_id,
@@ -496,37 +506,72 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['categories'] = $this->model_catalog_category->getCategories(0);
 
         foreach ($results as $result) {
-            $category = $this->model_catalog_vendor_product->getProductCategories($result['product_id']);
+            if (isset($this->request->get['filter_price_category_status']) && $result['category_price_status'] == $this->request->get['filter_price_category_status']) {
+                $category = $this->model_catalog_vendor_product->getProductCategories($result['product_id']);
 
-            if (is_file(DIR_IMAGE . $result['image'])) {
-                $image = $this->model_tool_image->resize($result['image'], 40, 40);
-                $bigimage = $this->model_tool_image->getImage($result['image']);
-            } else {
-                $image = $this->model_tool_image->resize('no_image.png', 40, 40);
-                $bigimage = $this->model_tool_image->getImage('no_image.png');
+                if (is_file(DIR_IMAGE . $result['image'])) {
+                    $image = $this->model_tool_image->resize($result['image'], 40, 40);
+                    $bigimage = $this->model_tool_image->getImage($result['image']);
+                } else {
+                    $image = $this->model_tool_image->resize('no_image.png', 40, 40);
+                    $bigimage = $this->model_tool_image->getImage('no_image.png');
+                }
+
+                $data['products'][] = [
+                    'buying_price' => $result['buying_price'],
+                    'source' => $result['source'],
+                    'store_name' => $result['store_name'],
+                    //'vendor_name'=>$result['fs'].' '.$result['ls'],
+                    'product_store_id' => $result['product_store_id'],
+                    'product_id' => $result['product_id'],
+                    'price' => $result['price'],
+                    'special_price' => $result['special_price'],
+                    'quantity' => $result['quantity'],
+                    'image' => $image,
+                    'bigimage' => $bigimage,
+                    'name' => $result['product_name'],
+                    'unit' => $result['unit'],
+                    //'weight' => $result['weight'],
+                    'model' => $result['model'],
+                    'category' => $category,
+                    'category_price_status' => array_key_exists('category_price_status', $result) ? $result['category_price_status'] : '',
+                    'status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+                    'edit' => $this->url->link('catalog/vendor_product/edit', 'token=' . $this->session->data['token'] . '&store_product_id=' . $result['product_store_id'] . $url, 'SSL'),
+                ];
             }
+            if (!isset($this->request->get['filter_price_category_status'])) {
+                $category = $this->model_catalog_vendor_product->getProductCategories($result['product_id']);
 
-            $data['products'][] = [
-                'buying_price' => $result['buying_price'],
-                'source' => $result['source'],
-                'store_name' => $result['store_name'],
-                //'vendor_name'=>$result['fs'].' '.$result['ls'],
-                'product_store_id' => $result['product_store_id'],
-                'product_id' => $result['product_id'],
-                'price' => $result['price'],
-                'special_price' => $result['special_price'],
-                'quantity' => $result['quantity'],
-                'image' => $image,
-                'bigimage' => $bigimage,
-                'name' => $result['product_name'],
-                'unit' => $result['unit'],
-                //'weight' => $result['weight'],
-                'model' => $result['model'],
-                'category' => $category,
-                'category_price_status' => array_key_exists('category_price_status', $result) ? $result['category_price_status'] : '',
-                'status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
-                'edit' => $this->url->link('catalog/vendor_product/edit', 'token=' . $this->session->data['token'] . '&store_product_id=' . $result['product_store_id'] . $url, 'SSL'),
-            ];
+                if (is_file(DIR_IMAGE . $result['image'])) {
+                    $image = $this->model_tool_image->resize($result['image'], 40, 40);
+                    $bigimage = $this->model_tool_image->getImage($result['image']);
+                } else {
+                    $image = $this->model_tool_image->resize('no_image.png', 40, 40);
+                    $bigimage = $this->model_tool_image->getImage('no_image.png');
+                }
+
+                $data['products'][] = [
+                    'buying_price' => $result['buying_price'],
+                    'source' => $result['source'],
+                    'store_name' => $result['store_name'],
+                    //'vendor_name'=>$result['fs'].' '.$result['ls'],
+                    'product_store_id' => $result['product_store_id'],
+                    'product_id' => $result['product_id'],
+                    'price' => $result['price'],
+                    'special_price' => $result['special_price'],
+                    'quantity' => $result['quantity'],
+                    'image' => $image,
+                    'bigimage' => $bigimage,
+                    'name' => $result['product_name'],
+                    'unit' => $result['unit'],
+                    //'weight' => $result['weight'],
+                    'model' => $result['model'],
+                    'category' => $category,
+                    'category_price_status' => array_key_exists('category_price_status', $result) ? $result['category_price_status'] : '',
+                    'status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+                    'edit' => $this->url->link('catalog/vendor_product/edit', 'token=' . $this->session->data['token'] . '&store_product_id=' . $result['product_store_id'] . $url, 'SSL'),
+                ];
+            }
         }
 
         if ($this->user->isVendor()) {
@@ -638,6 +683,10 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_status'])) {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
+        
+        if (isset($this->request->get['filter_price_category_status'])) {
+            $url .= '&filter_price_category_status=' . $this->request->get['filter_price_category_status'];
+        }
 
         if (isset($this->request->get['filter_category_price'])) {
             $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
@@ -737,6 +786,10 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_status'])) {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
+        
+        if (isset($this->request->get['filter_price_category_status'])) {
+            $url .= '&filter_price_category_status=' . $this->request->get['filter_price_category_status'];
+        }
 
         if (isset($this->request->get['filter_category'])) {
             $url .= '&filter_category=' . $this->request->get['filter_category'];
@@ -788,6 +841,7 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['filter_category'] = $filter_category;
         $data['filter_store_id'] = $filter_store_id;
         $data['filter_status'] = $filter_status;
+        $data['filter_price_category_status'] = $filter_price_category_status;
         $data['filter_category_price'] = $filter_category_price;
         $data['filter_tax_class_id'] = $filter_tax_class_id;
         $this->load->model('localisation/tax_class');
@@ -2877,6 +2931,14 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->load->model('report/excel');
 
         $this->model_report_excel->download_inventoryhistoryexcel($data, $filter_data);
+    }
+    
+        public function getUserByName($name) {
+        if ($name) {
+            $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '" . $this->db->escape($name) . "%'");
+
+            return $query->row['user_id'];
+        }
     }
 
 }
