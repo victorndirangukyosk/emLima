@@ -78,6 +78,7 @@ class ControllerErrorPermission extends Controller
                 'dashboard/recenttabs',
                 'dashboard/sale',
                 'common/scheduler',
+                'common/scheduleraws',
                 'common/loginAPI',
                 'amitruck/amitruckstatus',
                 'amitruck/amitruckquotes',
