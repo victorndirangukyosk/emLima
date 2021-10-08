@@ -8789,11 +8789,11 @@ class ControllerSaleOrder extends Controller {
             if ($delivery_charge > 0) {
                 $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
             }
-            $currentdate= date("d/m/Y");
-            echo "<pre>";print_r( $order_delivery_date);
+            // $currentdate= date("d/m/Y");
+            // echo "<pre>";print_r( $order_delivery_date);
 
-            echo "<pre>";print_r( 'current date below');
-            echo "<pre>";print_r( $currentdate);
+            // echo "<pre>";print_r( 'current date below');
+            // echo "<pre>";print_r( $currentdate);
 
 
 
