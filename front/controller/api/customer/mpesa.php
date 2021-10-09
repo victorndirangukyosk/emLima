@@ -4,7 +4,7 @@ require_once DIR_SYSTEM . '/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
 class ControllerApiCustomerMpesa extends Controller {
 
-    public function index($data = []) {
+    public function addMpesa($data = []) {
         $orders = $data['orders'];
         $number = $data['mpesa_phonenumber'];
 
