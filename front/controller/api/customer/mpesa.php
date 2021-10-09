@@ -114,4 +114,87 @@ class ControllerApiCustomerMpesa extends Controller {
         return !$this->error;
     }
 
+    public function addMpesacomplete($data = []) {
+        $json['status'] = false;
+
+        $this->load->language('payment/mpesa');
+        $this->load->model('sale/order');
+        $this->load->model('payment/mpesa');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+
+        if ($this->validate($data)) {
+            $orders = $data['orders'];
+            $number = $data['mpesa_phonenumber'];
+            $log = new Log('error.log');
+            $log->write($data);
+
+            foreach ($data['orders'] as $order_id) {
+                $log->write('ORDER ID');
+                $log->write($data['orders']);
+                $log->write('ORDER ID');
+                $order_id = $data['orders'];
+                $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderId($order_id);
+
+                $live = true;
+
+                $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+
+                if ($mpesaDetails) {
+
+                    $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+                    $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+
+                    $checkoutRequestID = $mpesaDetails['checkout_request_id']; //'ws_CO_28032018142406660';
+                    $timestamp = '20' . date('ymdhis');
+                    $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+
+                    $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
+
+                    // Void the order first
+                    $log->write('STKPushSimulation');
+                    $log->write($stkPushSimulation);
+
+                    $stkPushSimulation = json_decode($stkPushSimulation);
+                    $log->write('STKPushSimulation JSON ARRAY');
+                    $log->write($stkPushSimulation);
+                    if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
+                        $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
+                        $json['mpesa_response'] = $stkPushSimulation;
+                    }
+
+                    if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
+                        //success pending to processing
+                        $order_status_id = $this->config->get('mpesa_order_status_id');
+
+                        $log->write('updateMpesaOrderStatus validatex');
+
+                        $this->load->model('localisation/order_status');
+
+                        $order_status = $this->model_localisation_order_status->getOrderStatuses();
+
+                        $order_info = $this->model_checkout_order->getOrder($order_id);
+                        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                        $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
+                        $this->model_payment_mpesa->addOrderHistoryTransaction($order_id, $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
+                        $json['status'] = true;
+                        $json['message'] = 'Payment Successfull.';
+                        $json['mpesa_response'] = $stkPushSimulation;
+                    }
+                }
+            }
+        } else {
+            $json['status'] = 10014;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
