@@ -8769,6 +8769,9 @@ class ControllerSaleOrder extends Controller {
         $vehicle_number = $this->request->post['vehicle_number'];
         $delivery_charge = $this->request->post['delivery_charge'];
         $delivery_executive_id = $this->request->post['delivery_executive_id'];
+        // $order_delivery_date = $this->request->post['order_delivery_date'];
+        $updateDeliveryDate = $this->request->post['updateDeliveryDate'];
+
         /* $log = new Log('error.log');
           $log->write('SaveOrUpdateOrderDriverDetails');
           $log->write($this->request->post['driver_id']);
@@ -8785,6 +8788,20 @@ class ControllerSaleOrder extends Controller {
             $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id);
             if ($delivery_charge > 0) {
                 $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
+            }
+            // $currentdate= date("d/m/Y");
+            // echo "<pre>";print_r( $order_delivery_date);
+
+            // echo "<pre>";print_r( 'current date below');
+            // echo "<pre>";print_r( $currentdate);
+
+
+
+            // if($order_delivery_date > $currentdate)
+            if(isset($updateDeliveryDate) && $updateDeliveryDate==1)
+            {
+                //update delivery date to current date
+                $this->model_sale_order->UpdateOrderDeliveryDate($order_id);
             }
         }
         try {

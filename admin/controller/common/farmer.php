@@ -244,6 +244,7 @@ class ControllerCommonFarmer extends Controller {
             'common/forgotten',
             'common/reset',
             'common/scheduler',
+            'common/scheduleraws',
             'common/loginAPI',
             'amitruck/amitruck',
         ];
@@ -264,6 +265,7 @@ class ControllerCommonFarmer extends Controller {
                 'error/not_found',
                 'error/permission',
                 'common/scheduler',
+                'common/scheduleraws',
                 'common/loginAPI',
                 'amitruck/amitruck',
             ];
