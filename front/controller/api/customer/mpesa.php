@@ -159,7 +159,7 @@ class ControllerApiCustomerMpesa extends Controller {
                     $log->write('STKPushSimulation JSON ARRAY');
                     $log->write($stkPushSimulation);
                     if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
-                        $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
+                        $json['error'] = $stkPushSimulation->ResultDesc;
                         $json['mpesa_response'] = $stkPushSimulation;
                     }
 
