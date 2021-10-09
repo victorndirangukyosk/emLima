@@ -4,7 +4,7 @@ require_once DIR_SYSTEM . '/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
 class ControllerApiCustomerMpesa extends Controller {
 
-    public function addMpesa() {
+    public function addMpesa($data) {
         $json['status'] = false;
 
         $this->load->language('payment/mpesa');
@@ -12,9 +12,9 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->load->model('payment/mpesa');
         $this->load->model('checkout/order');
 
-        if ($this->validate($this->request->post)) {
-            $orders = $this->request->post['orders'];
-            $number = $this->request->post['mpesa_phonenumber'];
+        if ($this->validate($data)) {
+            $orders = $data['orders'];
+            $number = $data['mpesa_phonenumber'];
 
             $log = new Log('error.log');
 
@@ -104,7 +104,7 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    protected function validate($args) {
+    protected function validate($data) {
         if (empty($args['payment_method'])) {
             $this->error['payment_method'] = 'Payment method required!';
         }
