@@ -14,9 +14,6 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->load->model('payment/mpesa');
         $this->load->model('checkout/order');
 
-        $error_response = $this->validate($data);
-        $log = new Log('error.log');
-        $log->write($error_response);
         if ($this->validate($data)) {
             $orders = $data['orders'];
             $number = $data['mpesa_phonenumber'];
@@ -31,19 +28,10 @@ class ControllerApiCustomerMpesa extends Controller {
             }
 
             if (isset($order_id)) {
-                $totals = $this->model_sale_order->getOrderTotals($order_id);
-
-                //echo "<pre>";print_r($totals);die;
-                foreach ($totals as $total) {
-                    if ('total' == $total['code']) {
-                        $amount = (int) $total['value'];
-                    }
+                $order_info = $this->model_checkout_order->getOrder($value);
+                if (count($order_info) > 0) {
+                    $amount += (int) ($order_info['total'] - $order_info['amount_partialy_paid']);
                 }
-
-                /* $order_info = $this->model_checkout_order->getOrder($order_id);
-                  if(count($order_info) > 0) {
-                  $amount = (int)($order_info['total']);
-                  } */
             }
 
             $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'));
