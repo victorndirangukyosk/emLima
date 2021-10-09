@@ -25,12 +25,12 @@ class ControllerApiCustomerMpesa extends Controller {
 
             foreach ($orders as $order_id) {
                 $order_id = $order_id;
-            }
 
-            if (isset($order_id)) {
-                $order_info = $this->model_checkout_order->getOrder($value);
-                if (count($order_info) > 0) {
-                    $amount += (int) ($order_info['total'] - $order_info['amount_partialy_paid']);
+                if (isset($order_id)) {
+                    $order_info = $this->model_checkout_order->getOrder($order_id);
+                    if (count($order_info) > 0) {
+                        $amount += (int) ($order_info['total'] - $order_info['amount_partialy_paid']);
+                    }
                 }
             }
 
@@ -41,18 +41,15 @@ class ControllerApiCustomerMpesa extends Controller {
             $BusinessShortCode = $this->config->get('mpesa_business_short_code');
             $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
             $TransactionType = 'CustomerBuyGoodsOnline';
-            $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
-            //$CallBackURL = 'cer';
+            $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatusTransactions', '', 'SSL');
 
             $Amount = $amount;
 
-            //$PartyB = '174379';
             $PartyB = $this->config->get('mpesa_business_short_code');
 
-            //$PhoneNumber = '254708374149';
             $PhoneNumber = $this->config->get('config_telephone_code') . '' . $number;
             $AccountReference = 'GPK'; //$this->config->get('config_name');
-            $TransactionDesc = '#' . $order_id;
+            $TransactionDesc = implode(" #", $orders);
             $Remarks = 'PAYMENT';
 
             $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
@@ -70,10 +67,11 @@ class ControllerApiCustomerMpesa extends Controller {
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
                 //save in
 
-                $sen['order_id'] = $order_id;
+                foreach ($orders as $order_id) {
+                    $sen['order_id'] = $order_id;
 
-                $this->model_payment_mpesa->addOrder($sen, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
-
+                    $this->model_payment_mpesa->addOrder($sen, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
+                }
                 $json['status'] = true;
                 $json['message'] = sprintf($this->language->get('text_sms_sent'), $number);
             } else {
