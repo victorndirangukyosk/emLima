@@ -105,19 +105,19 @@ class ControllerApiCustomerMpesa extends Controller {
     }
 
     protected function validate($data) {
-        if (empty($args['payment_method'])) {
+        if (empty($data['payment_method'])) {
             $this->error['payment_method'] = 'Payment method required!';
         }
 
-        if (empty($args['payment_method_code'])) {
+        if (empty($data['payment_method_code'])) {
             $this->error['payment_method_code'] = 'Payment method code required!';
         }
 
-        if (empty($args['mpesa_phonenumber'])) {
+        if (empty($data['mpesa_phonenumber'])) {
             $this->error['mpesa_phonenumber'] = 'Phone number required!';
         }
 
-        if (empty($args['orders'])) {
+        if (empty($data['orders'])) {
             $this->error['error_orders'] = 'Order(s) required!';
         }
         return !$this->error;
