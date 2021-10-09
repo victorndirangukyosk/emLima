@@ -4669,15 +4669,38 @@ class ControllerSaleOrder extends Controller {
                 } else {
                     $totals = $this->model_sale_order->getOrderTotals($order_id);
                 }
-
+                $credit_amount=0;
                 foreach ($totals as $total) {
-                    if ($total['value'] > 0)
+                    if ($total['value'] > 0 || $total['code'] =='credit')
+                            if($total['code'] =='credit')
+                            {
+                                $credit_amount=$total['value'];
+                            }
+                            if($total['code'] =='total')
+                            {
+                                $total['value']+=$credit_amount;
                         $total_data[] = [
                             'title' => $total['title'],
                             'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
                             'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
                         ];
+                        }
+                        else {
+                            $total_data[] = [
+                                'title' => $total['title'],
+                                'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                                'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
+                            ];
+                        }
                 }
+                // if($credit_available==1)
+                // {
+                // $total_data[] = [
+                //     'title' => 'Amount to be paid',
+                //     'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                //     'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
+                // ];
+                //  }
                 // echo "<pre>";print_r($total_data);die;
 
                 $this->load->model('sale/customer');
@@ -6671,12 +6694,21 @@ class ControllerSaleOrder extends Controller {
             $log->write($orderTotal);
             $log->write($shipping_price);
 
+
+            $wallet_amount_positive=0;
+            
             foreach ($datas['totals'] as $p_id_code => $tot) {
+            // echo "<pre>";print_r($tot);die;
+
                 /* $log->write("updatetotals");
                   $log->write($tot); */
                 $tot['sort'] = $p;
                 $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
+                if($tot['code']=="credit")
+                {
+                      $wallet_amount_positive=abs($tot['value']);
 
+                }
                 /*if ('shipping' == $tot['code']) {
                     if (count($shipping_price) > 0 && isset($shipping_price['cost']) && isset($shipping_price['actual_cost'])) {
                         if ((array_key_exists('value_coming', $tot))) {
@@ -6695,7 +6727,10 @@ class ControllerSaleOrder extends Controller {
 
                 ++$p;
             }
-
+                if($wallet_amount_positive>0)
+                {
+                $orderTotal +=$wallet_amount_positive;
+                }
             $orderTotal = round($orderTotal, 2);
             $subTotal = round($subTotal, 2);
 
@@ -6706,6 +6741,8 @@ class ControllerSaleOrder extends Controller {
             $this->editDeliveryRequest($order_id);
 
             //$this->sendNewInvoice($order_id);
+        // echo "<pre>";print_r($this->request->get['settle']);die;
+            
 
             if ($this->request->get['settle']) {
                 //settle and  update
@@ -6717,6 +6754,10 @@ class ControllerSaleOrder extends Controller {
                 $log->write($old_total);
 
                 if ($final_amount != $old_total) {
+
+                    //update Payment Paid status and pending amount
+                    $this->model_sale_order->updatePaymentStatus($order_id,$customer_id,$old_total,$final_amount);
+
                     //$iuguData = $this->refundAndChargeNewTotalStripe($order_id,$customer_id,$final_amount);
                 } else {
                     $log->write('same amount settle');
