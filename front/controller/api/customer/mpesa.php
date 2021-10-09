@@ -4,6 +4,8 @@ require_once DIR_SYSTEM . '/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
 class ControllerApiCustomerMpesa extends Controller {
 
+    private $error = [];
+
     public function addMpesa($data = []) {
         $json['status'] = false;
 
