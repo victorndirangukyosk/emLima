@@ -4,7 +4,7 @@ require_once DIR_SYSTEM . '/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
 class ControllerApiCustomerMpesa extends Controller {
 
-    public function addMpesa($data) {
+    public function addMpesa($data = []) {
         $json['status'] = false;
 
         $this->load->language('payment/mpesa');
@@ -12,13 +12,16 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->load->model('payment/mpesa');
         $this->load->model('checkout/order');
 
+        $error_response = $this->validate($data);
+        $log = new Log('error.log');
+        $log->write($error_response);
         if ($this->validate($data)) {
             $orders = $data['orders'];
             $number = $data['mpesa_phonenumber'];
 
             $log = new Log('error.log');
 
-            $log->write($this->request->post);
+            $log->write($data);
             /* start */
 
             foreach ($orders as $order_id) {
