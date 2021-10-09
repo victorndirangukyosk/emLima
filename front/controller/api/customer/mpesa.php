@@ -133,7 +133,7 @@ class ControllerApiCustomerMpesa extends Controller {
                 $log->write('ORDER ID');
                 $log->write($data['orders']);
                 $log->write('ORDER ID');
-                $order_id = $data['orders'];
+                $order_id = $order_id;
                 $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderId($order_id);
 
                 $live = true;
