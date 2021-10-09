@@ -4,7 +4,7 @@ require_once DIR_SYSTEM . '/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
 class ControllerApiCustomerMpesa extends Controller {
 
-    public function index() {
+    public function addMpesa() {
         $json['status'] = false;
 
         $this->load->language('payment/mpesa');
