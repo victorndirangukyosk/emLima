@@ -4,24 +4,21 @@ require_once DIR_SYSTEM . '/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
 class ControllerApiCustomerMpesa extends Controller {
 
-    public function addMpesa($data = []) {
-        $orders = $data['orders'];
-        $number = $data['mpesa_phonenumber'];
-
-        $log = new Log('error.log');
-
-        $log->write($data);
-
+    public function addMpesa() {
         $json['status'] = false;
 
         $this->load->language('payment/mpesa');
         $this->load->model('sale/order');
         $this->load->model('payment/mpesa');
-
         $this->load->model('checkout/order');
 
-        $json['message'] = sprintf($this->language->get('text_sms_sent'), $number);
-        if ($this->validatenew($data)) {
+        if ($this->validate($this->request->post)) {
+            $orders = $this->request->post['orders'];
+            $number = $this->request->post['mpesa_phonenumber'];
+
+            $log = new Log('error.log');
+
+            $log->write($data);
             /* start */
 
             foreach ($orders as $order_id) {
@@ -85,6 +82,7 @@ class ControllerApiCustomerMpesa extends Controller {
                 $this->model_payment_mpesa->addOrder($sen, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
 
                 $json['status'] = true;
+                $json['message'] = sprintf($this->language->get('text_sms_sent'), $number);
             } else {
                 //failing orders from api
             }
@@ -106,13 +104,17 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    protected function validatenew($args) {
+    protected function validate($args) {
         if (empty($args['payment_method'])) {
             $this->error['payment_method'] = 'Payment method required!';
         }
 
         if (empty($args['payment_method_code'])) {
             $this->error['payment_method_code'] = 'Payment method code required!';
+        }
+
+        if (empty($args['mpesa_phonenumber'])) {
+            $this->error['mpesa_phonenumber'] = 'Phone number required!';
         }
 
         if (empty($args['orders'])) {
