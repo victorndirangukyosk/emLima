@@ -114,6 +114,25 @@ class ControllerApiCustomerMpesa extends Controller {
         return !$this->error;
     }
 
+    protected function validatecheckout($data) {
+        if (empty($data['payment_method'])) {
+            $this->error['payment_method'] = 'Payment method required!';
+        }
+
+        if (empty($data['payment_method_code'])) {
+            $this->error['payment_method_code'] = 'Payment method code required!';
+        }
+
+        if (empty($data['mpesa_phonenumber'])) {
+            $this->error['mpesa_phonenumber'] = 'Phone number required!';
+        }
+
+        if (empty($data['order_reference_number'])) {
+            $this->error['order_reference_number'] = 'Order reference number required!';
+        }
+        return !$this->error;
+    }
+
     public function addMpesacomplete($data = []) {
         $json['status'] = false;
 
@@ -183,6 +202,80 @@ class ControllerApiCustomerMpesa extends Controller {
                     }
                 }
             }
+        } else {
+            $json['status'] = 10014;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function addMpesaCheckout($data = []) {
+        $json['status'] = false;
+
+        $this->load->language('payment/mpesa');
+        $this->load->model('sale/order');
+        $this->load->model('payment/mpesa');
+        $this->load->model('checkout/order');
+
+        if ($this->validatecheckout($data)) {
+            $order_reference_number = $data['order_reference_number'];
+            $number = $data['mpesa_phonenumber'];
+
+            $log = new Log('error.log');
+
+            $log->write($data);
+            /* start */
+
+            $amount = $this->cart->getTotalForKwikBasket();
+
+            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'));
+
+            $PartyA = $this->config->get('config_telephone_code') . '' . $number;
+
+            $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+            $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+            $TransactionType = 'CustomerBuyGoodsOnline';
+            $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatusTransactions', '', 'SSL');
+
+            $Amount = $amount;
+
+            $PartyB = $this->config->get('mpesa_business_short_code');
+
+            $PhoneNumber = $this->config->get('config_telephone_code') . '' . $number;
+            $AccountReference = 'GPK'; //$this->config->get('config_name');
+            $TransactionDesc = implode(" #", $order_reference_number);
+            $Remarks = 'PAYMENT';
+
+            $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
+
+            $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
+
+            // Void the order first
+            $log->write('STKPushSimulation');
+            $log->write($stkPushSimulation);
+
+            $stkPushSimulation = json_decode($stkPushSimulation);
+
+            $json['response'] = $stkPushSimulation;
+
+            if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
+                //save in
+                $json['status'] = true;
+                $json['message'] = sprintf($this->language->get('text_sms_sent'), $number);
+            } else {
+                //failing orders from api
+            }
+
+            /* end */
+
+            //return $json;
         } else {
             $json['status'] = 10014;
 
