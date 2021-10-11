@@ -4363,4 +4363,20 @@ class ModelSaleOrder extends Model {
         $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_date= NOW() WHERE order_id="' . $order_id . '"');
     }
 
+
+    public function updatePaymentStatus($order_id,$customer_id, $old_total, $final_amount) {
+
+        if($final_amount>$old_total)
+        {
+        $this->db->query('update ' . DB_PREFIX . 'order SET paid="P",amount_partialy_paid ="'. $old_total.'" where  order_id = "' . $order_id . '"');
+    
+        }
+        // else if($final_amount<$old_total)//commented as multiple edits may add more amount to customer wallet
+        // {
+        //     $credit=(($old_total)-($final_amount));
+        //     $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount returned from order change', amount = '" . (float) $credit . "', date_added = NOW()");
+        // }
+    }
+
+    
 }
