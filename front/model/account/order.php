@@ -1771,6 +1771,7 @@ class ModelAccountOrder extends Model {
         $query = $this->db->query('SELECT sum(amount) AS total FROM ' . DB_PREFIX . "customer_credit WHERE order_id = '" . (int) $order_id ."'");
         if ($query->num_rows) {
             $total= $query->row['total'];
+            return $total;
         } else {
             return 0;
         }
