@@ -1162,18 +1162,18 @@ class ControllerPaymentMpesa extends Controller {
             }
         }
         $this->session->data['mpesa_payments_response'] = array('result' => $stkCallback->ResultCode, 'merchant_request_id' => $stkCallback->MerchantRequestID, 'checkout_request_id' => $stkCallback->CheckoutRequestID, 'mpesa_receipt_number' => $MpesaReceiptNumber, 'description' => $stkCallback->ResultDesc);
-        $log->write('MpesaCallBackUpdate');
         $log->write($this->session->data['mpesa_payments_response']);
-        $log->write('MpesaCallBackUpdate');
-        return $this->session->data['mpesa_payments_response'];
     }
 
     public function MpesaAutoUpdate() {
+        $log = new Log('error.log');
+        $log->write('mpesa_payments_response');
+        $log->write($this->session->data['mpesa_payments_response']);
+        $log->write('mpesa_payments_response');
         $mpesa_payments_request = $this->session->data['mpesa_payments_request'];
         $mpesa_payments_response = $this->session->data['mpesa_payments_response'];
         $json['mpesa_payments_request'] = $mpesa_payments_request;
         $json['mpesa_payments_response'] = $mpesa_payments_response;
-        $log = new Log('error.log');
         $log->write($mpesa_payments_request);
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
