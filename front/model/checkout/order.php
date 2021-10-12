@@ -757,18 +757,19 @@ class ModelCheckoutOrder extends Model {
 
                 //check if payment paid by wallet
                 $this->load->model('account/order');
-                $totals_info = $this->model_account_order->getOrderTotals($order_id);
+                // $totals_info = $this->model_account_order->getOrderTotals($order_id);
+                  $credit_refund = $this->model_account_order->getOrderCreditAmount($order_id);
      
-                $credit_refund = 0;
-                foreach ($totals_info as $total) {           
+                
+                // foreach ($totals_info as $total) {           
     
-                    if ('credit' == $total['code']) {
-                        $credit_refund = $total['value'];
-                    }
+                //     if ('credit' == $total['code']) {
+                //         $credit_refund = $total['value'];
+                //     }
                      
-                }
+                // }
                 // echo "<pre>";print_r($totals_info);    
-                if($credit_refund!=0)//as the order is cancelled, if  any cart amount deducted, then need to rever it
+                if($credit_refund<0)//as the order is cancelled, if  any cart amount deducted, then need to rever it
                 {
                     // echo "<pre>";print_r($totals_info);die;                   
                     $this->load->model('total/credit');
