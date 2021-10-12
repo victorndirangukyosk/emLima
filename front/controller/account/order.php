@@ -92,7 +92,7 @@ class ControllerAccountOrder extends Controller {
 
         $results = $this->model_account_order->getOrders(($page - 1) * 10, 10);
 
-        //	echo "<pre>";print_r($results);die;
+        	// echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $city_name = $this->model_account_order->getCityName($result['shipping_city_id']);
 
@@ -244,6 +244,7 @@ class ControllerAccountOrder extends Controller {
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
                 //'edit_own_order' => $this->url->link('checkout/edit_order/index_new', 'order_id=' . $result['order_id'], 'SSL'),
                 'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours <= 2 && $result['payment_code'] == 'cod') ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
+                'paid' => $result['paid'],
             ];
         }
 
