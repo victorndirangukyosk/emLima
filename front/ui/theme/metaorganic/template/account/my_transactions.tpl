@@ -1091,7 +1091,7 @@ function showPayWith() {
         });
 </script>
 <script type="text/javascript">
-$( document ).ready(function() { setInterval(function(){ mpesaresponse(); }, 10000 ); });
+$( document ).ready(function() { setInterval(function(){ mpesaresponse(); }, 30000 ); });
 function mpesaresponse() {
                 if($('#mpesa_checkout_request_id').val() != '') {
                 $.ajax({
