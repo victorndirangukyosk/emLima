@@ -126,7 +126,7 @@
                                         </div>
 
 
-                 <?php if($this->config->get('credit' . '_status')){?>
+                 <?php if($this->config->get('wallet' . '_status')){?>
                      <div class="butn setui" style="position:relative;z-index:-1000; padding-right:0px;">
                     <a href=<?= $wallet_url ?>>
                       <div class="btn mini-wallet-button" role="button"  
