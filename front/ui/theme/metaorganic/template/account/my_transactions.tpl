@@ -1127,7 +1127,7 @@ function mpesaresponse() {
                         $('#button-complete').hide();
                         $('#button-retry').show();
                         }
-                        if(json['processed'] == NULL) {
+                        if(json['processed'] == '') {
                         $('#mpesa-button-confirm').button('reset');
                         $('#loading').hide();
                         }
