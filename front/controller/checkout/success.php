@@ -205,7 +205,7 @@ class ControllerCheckoutSuccess extends Controller {
         // foreach ($results_wallet as $key => $value) {
         // echo "<pre>";print_r('checkWalletRunningLow');
            
-            if ($this->config->get('credit' . '_status')) //$result['code']
+            if ($this->config->get('wallet' . '_status')) //$result['code']
             {
                 $this->checkWalletRunningLow();
         // echo "<pre>";print_r('sdfsdfsd');die;
