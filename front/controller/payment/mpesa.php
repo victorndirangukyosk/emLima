@@ -1142,7 +1142,7 @@ class ControllerPaymentMpesa extends Controller {
         return $json;
     }
 
-    public function MpesaCallBackUpdate($stkCallback) {
+    public function mpesacallbackupdate($stkCallback) {
         $log = new Log('error.log');
         $MpesaReceiptNumber = NULL;
         $this->load->model('payment/mpesa');
@@ -1165,7 +1165,7 @@ class ControllerPaymentMpesa extends Controller {
         $log->write($this->session->data['mpesa_payments_response']);
     }
 
-    public function MpesaAutoUpdate() {
+    public function mpesaautoupdate() {
         $log = new Log('error.log');
         $log->write('mpesa_payments_response');
         $log->write($this->session->data['mpesa_payments_response']);
