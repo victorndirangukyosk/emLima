@@ -288,6 +288,7 @@ class ControllerPaymentMpesa extends Controller {
                         $order_info = $this->model_checkout_order->getOrder($value);
                         $this->model_payment_mpesa->addOrder($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
                     }
+                $this->session->data['mpesa_payments_request'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID);    
                 } else {
 
                     $this->model_payment_mpesa->addOrder(0, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), $amount);
