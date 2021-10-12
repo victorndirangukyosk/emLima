@@ -1119,6 +1119,7 @@ function mpesaresponse() {
                         $('#success_msg').html('Payment Successfull. Wait Until Page Refresh!');
                         $('#success_msg').show();
                         setInterval(function(){ window.location.replace(json['redirect']); }, 10000);
+                        return false;
                         } 
                         if(json['processed'] == false) {
                         $('#mpesa_checkout_request_id').val('');
@@ -1128,6 +1129,7 @@ function mpesaresponse() {
                         $('#error_msg').show();
                         $('#button-complete').hide();
                         $('#button-retry').show();
+                        return false;
                         }
                         if(json['processed'] == '') {
                         $('#mpesa_checkout_request_id').val('');
@@ -1135,6 +1137,7 @@ function mpesaresponse() {
                         $('#mpesa-button-confirm').hide();
                         $('#button-retry').hide();
                         $('#loading').hide();
+                        return false;
                         }
                         },
                         error: function(json) {
