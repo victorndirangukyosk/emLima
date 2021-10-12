@@ -1144,6 +1144,7 @@ class ControllerPaymentMpesa extends Controller {
 
     public function MpesaCallBackUpdate($stkCallback) {
         $log = new Log('error.log');
+        $MpesaReceiptNumber = NULL;
         $this->load->model('payment/mpesa');
         $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->MerchantRequestID);
         if (is_array($manifest_id) && count($manifest_id) > 0) {
