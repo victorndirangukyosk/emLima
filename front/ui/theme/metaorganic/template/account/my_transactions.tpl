@@ -1101,6 +1101,8 @@ function mpesaresponse() {
                         mpesa_checkout_request_id : encodeURIComponent($('#mpesa_checkout_request_id').val()),
                         },
                         dataType: 'json',
+                        cache: false,
+                        async: true,
                         beforeSend: function() {
                             
                         },
