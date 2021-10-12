@@ -1172,7 +1172,7 @@ class ControllerPaymentMpesa extends Controller {
         $log->write($this->cache->get('mpesa_payments_response'));
         $log->write('mpesa_payments_response');
         $mpesa_payments_request = $this->session->data['mpesa_payments_request'];
-        $mpesa_payments_response = $this->session->data['mpesa_payments_response'];
+        $mpesa_payments_response = $this->cache->get('mpesa_payments_response');
         $json['mpesa_payments_request'] = $mpesa_payments_request;
         $json['mpesa_payments_response'] = $mpesa_payments_response;
         $log->write($mpesa_payments_request);
