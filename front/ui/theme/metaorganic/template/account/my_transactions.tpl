@@ -1110,11 +1110,18 @@ function mpesaresponse() {
                         $(".overlayed").hide();
                         },       
                         success: function(json) {
-                        if(json['processed']) {
+                        if(json['processed'] == true) {
                         $('#success_msg').html('Payment Successfull. Wait Until Page Refresh!');
                         $('#success_msg').show();
                         setInterval(function(){ window.location.replace(json['redirect']); }, 10000);
-                        } else {
+                        } 
+                        if(json['processed'] == false) {
+                        $('#error_msg').html(json['error']);
+                        $('#error_msg').show();
+                        $('#button-complete').hide();
+                        $('#button-retry').show();
+                        }
+                        if(json['processed'] == NULL) {
                         $('#mpesa-button-confirm').button('reset');
                         $('#loading').hide();
                         }
