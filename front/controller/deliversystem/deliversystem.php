@@ -961,11 +961,13 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $order_info != NULL && $customer_info != NULL) {
                             $this->model_payment_mpesa->addOrderHistoryTransaction($order_info['order_id'], $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
                             $this->session->data['mpesa_payments_response'] = array('result' => $stkCallback->stkCallback->ResultCode, 'merchant_request_id' => $stkCallback->stkCallback->MerchantRequestID, 'checkout_request_id' => $stkCallback->stkCallback->CheckoutRequestID, 'mpesa_receipt_number' => $MpesaReceiptNumber, 'description' => $stkCallback->stkCallback->ResultDesc);    
+                            $log->write('updateMpesaOrderStatus_Transactions SUCCESS');
                         }
                         if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 != $stkCallback->stkCallback->ResultCode && $order_info != NULL && $customer_info != NULL) {
                             $this->model_payment_mpesa->addOrderHistoryTransactionFailed($order_info['order_id'], $this->config->get('mpesa_failed_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa', $order_info['paid']);
                             $this->session->data['mpesa_payments'] = array($stkCallback->stkCallback->CheckoutRequestID => $MpesaReceiptNumber,);    
                             $this->session->data['mpesa_payments_response'] = array('result' => $stkCallback->stkCallback->ResultCode, 'merchant_request_id' => $stkCallback->stkCallback->MerchantRequestID, 'checkout_request_id' => $stkCallback->stkCallback->CheckoutRequestID, 'mpesa_receipt_number' => $MpesaReceiptNumber, 'description' => $stkCallback->stkCallback->ResultDesc);
+                            $log->write('updateMpesaOrderStatus_Transactions FAILED');
                         }
                     }
                 }
