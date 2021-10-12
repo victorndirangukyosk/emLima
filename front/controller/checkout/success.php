@@ -10,6 +10,9 @@ require_once DIR_APPLICATION . '/controller/api/settings.php';
 class ControllerCheckoutSuccess extends Controller {
 
     public function index() {
+
+        // echo "<pre>";print_r("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order WHERE customer_id = '" . (int) $this->customer->getId() . "' AND order_status_id > 0");die;
+        
         if (!isset($this->session->data['completed_order_products']) || !isset($this->session->data['completed_order_totals'])) {
             $this->response->redirect($this->url->link('common/home'));
         }
@@ -117,11 +120,27 @@ class ControllerCheckoutSuccess extends Controller {
             $config_reward_enabled = $this->config->get('config_reward_enabled');
 
             $fixedDivide = count($this->session->data['order_id']);
-            $this->load->model('account/customer');
+            $this->load->model('account/customer');    
+            $this->load->model('account/activity');   
+            $update_order_payment_status=false;  
+            if($this->session->data['payment_method'])   
+            {
+                if($this->session->data['payment_method']['code']=='wallet')
+                {
+                    $update_order_payment_status=true;
+                }
+            }
 
-            // Add to activity log
+            // Add to activity log and update payment status in case of wallet
             foreach ($this->session->data['order_id'] as $order_id) {
-                $this->load->model('account/activity');
+
+                     //region update payment status
+                     if($update_order_payment_status==true)
+                     {
+                        $this->load->model('account/order');  
+                        $this->model_account_order->updateWalletOrder($this->customer->getId(), $order_id);
+                     }
+                
 
                 if ($this->customer->isLogged()) {
                     $activity_data = [
