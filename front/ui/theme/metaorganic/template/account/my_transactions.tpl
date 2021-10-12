@@ -1114,6 +1114,9 @@ function mpesaresponse() {
                         $('#success_msg').html('Payment Successfull. Wait Until Page Refresh!');
                         $('#success_msg').show();
                         setInterval(function(){ window.location.replace(json['redirect']); }, 10000);
+                        } else {
+                        $('#mpesa-button-confirm').button('reset');
+                        $('#loading').hide();
                         }
                         },
                         error: function(json) {
