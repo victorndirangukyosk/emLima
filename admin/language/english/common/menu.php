@@ -108,6 +108,7 @@ $_['text_report_inventory_daily_prices'] = 'Inventory Prices';
 $_['text_report_customer_boughtproducts'] = 'Products Bought/ Consumption Data';
 $_['text_report_customer_orderplaced'] = 'Order Placed Customers';
 $_['text_report_customer_onboarded'] = 'Customers Onboarded';
+$_['text_report_customer_wallet'] = 'Customers Wallet';
 $_['text_report_customer_unordered'] = 'Unordered Customers';
 
 
