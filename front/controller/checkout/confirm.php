@@ -956,7 +956,14 @@ class ControllerCheckoutConfirm extends Controller {
                 if (isset($this->session->data['payment_method']['title']) && $store_id == 75) {
                     $order_data[$store_id]['payment_method'] = $this->session->data['payment_method']['title'];
                 } elseif (isset($this->session->data['payment_method']['title']) && $store_id != 75) {
-                    $order_data[$store_id]['payment_method'] = 'Corporate Account/ Cheque Payment';
+                    if($this->session->data['payment_method']['code']=='wallet' || $this->session->data['payment_method']['code']=='mod')
+                    {
+                        $order_data[$store_id]['payment_method'] = $this->session->data['payment_method']['title'];
+                   
+                    }
+                    else {
+                        $order_data[$store_id]['payment_method'] = 'Corporate Account/ Cheque Payment';
+                    }
                 } else {
                     $order_data[$store_id]['payment_method'] = '';
                 }
