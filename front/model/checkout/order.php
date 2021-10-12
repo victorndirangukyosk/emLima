@@ -142,29 +142,29 @@ class ModelCheckoutOrder extends Model {
                     $this->session->data['order_id'][$key] = $order_id;
                     }
 
-                $order_total_value=0;
-                $credit_total_value=0;
+                // $order_total_value=0;
+                // $credit_total_value=0;
                 //check wallet update
-                foreach ($data['totals'] as $tot) {
-                    // echo "<pre>";print_r($tot);die;
-                    if($tot['code']=='credit')
-                    {
-                        $credit_total_value=$tot['value'];
-                        if($credit_total_value<0)
-                        {
-                            $this->db->query('DELETE FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $data['customer_id'] . "' and  order_id = '" . (int)  $order_id . "'");
-                            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount deducted', amount = '" . (float) $tot['value'] . "', date_added = NOW()");
-                            $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0 ,total='" . (float) ABS($tot['value']) . "'  WHERE order_id='" . (int)  $order_id . "'");
-                            // console.log('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . (int)  $order_id . "'");
+                // foreach ($data['totals'] as $tot) {
+                //     // echo "<pre>";print_r($tot);die;
+                //     if($tot['code']=='credit')
+                //     {
+                //         $credit_total_value=$tot['value'];
+                //         if($credit_total_value<0)
+                //         {
+                //             $this->db->query('DELETE FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $data['customer_id'] . "' and  order_id = '" . (int)  $order_id . "'");
+                //             $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount deducted', amount = '" . (float) $tot['value'] . "', date_added = NOW()");
+                //             $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0 ,total='" . (float) ABS($tot['value']) . "'  WHERE order_id='" . (int)  $order_id . "'");
+                //             // console.log('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . (int)  $order_id . "'");
                            
-                        }
-                    }
-                    // if($tot['code']=='total')
-                    // {
-                    //     $order_total_value=$tot['value'];
-                    // }
+                //         }
+                //     }
+                //     // if($tot['code']=='total')
+                //     // {
+                //     //     $order_total_value=$tot['value'];
+                //     // }
 
-                  }
+                //   }
                 //   if($credit_total_value==$order_total_value)//credit amount and order total amount are same, then order is paid order
                 //   {
                 //     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . $order_id . "'");
@@ -213,10 +213,10 @@ class ModelCheckoutOrder extends Model {
                         if($total['code']=='total')
                         {
                             $value=$total['value'];
-                            if(isset($credit_total_value))
-                            {
-                                $value +=abs($credit_total_value);
-                            }
+                            // if(isset($credit_total_value))
+                            // {
+                            //     $value +=abs($credit_total_value);
+                            // }
                             if (isset($total['actual_value'])) {
                                 $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $value . "', `actual_value` = '" . (float) $total['actual_value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
                             } else {
@@ -246,36 +246,36 @@ class ModelCheckoutOrder extends Model {
                 $this->session->data['order_id'][$data['store_id']] = $order_id;
 
 
-                $order_total_value=0;
-                $credit_total_value=0;
+                // $order_total_value=0;
+                // $credit_total_value=0;
                 //check wallet update
-                foreach ($data['totals'] as $tot) {
-                    // echo "<pre>";print_r($tot);die;
-                    if($tot['code']=='credit')
-                    {
-                        $credit_total_value=$tot['value'];
-                        if($credit_total_value<0)
-                        {
-                            //as the same method is calling multiple times, delete if credit record is available
-                        $this->db->query('DELETE FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $data['customer_id'] . "' and  order_id = '" . (int)  $order_id . "'");
+                // foreach ($data['totals'] as $tot) {
+                //     // echo "<pre>";print_r($tot);die;
+                //     if($tot['code']=='credit')
+                //     {
+                //         $credit_total_value=$tot['value'];
+                //         if($credit_total_value<0)
+                //         {
+                //             //as the same method is calling multiple times, delete if credit record is available
+                //         $this->db->query('DELETE FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $data['customer_id'] . "' and  order_id = '" . (int)  $order_id . "'");
 
-                        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount deducted', amount = '" . (float) $tot['value'] . "', date_added = NOW()");
-                        // $this->db->query("UPDATE `" . DB_PREFIX . "order` SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . (int)  $order_id . "'");
-                        $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0 ,total='" . (float) ABS($tot['value']) . "'  WHERE order_id='" . (int)  $order_id . "'");
-                        // console.log('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . (int)  $order_id . "'");
-                        }
-                    }
-                    // if($tot['code']=='total')
-                    // {
-                    //     $order_total_value=$tot['value'];
-                    // }
+                //         $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount deducted', amount = '" . (float) $tot['value'] . "', date_added = NOW()");
+                //         // $this->db->query("UPDATE `" . DB_PREFIX . "order` SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . (int)  $order_id . "'");
+                //         $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0 ,total='" . (float) ABS($tot['value']) . "'  WHERE order_id='" . (int)  $order_id . "'");
+                //         // console.log('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . (int)  $order_id . "'");
+                //         }
+                //     }
+                //     // if($tot['code']=='total')
+                //     // {
+                //     //     $order_total_value=$tot['value'];
+                //     // }
 
-                     //   if($credit_total_value==$order_total_value)//credit amount and order total amount are same, then order is paid order
-                //   {
-                //     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . $order_id . "'");
+                //      //   if($credit_total_value==$order_total_value)//credit amount and order total amount are same, then order is paid order
+                // //   {
+                // //     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . $order_id . "'");
+                // //   }
+
                 //   }
-
-                  }
                
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
@@ -317,10 +317,10 @@ class ModelCheckoutOrder extends Model {
                         if($total['code']=='total')
                         {
                             $value=$total['value'];
-                            if(isset($credit_total_value))
-                            {
-                                $value +=abs($credit_total_value);
-                            }
+                            // if(isset($credit_total_value))
+                            // {
+                            //     $value +=abs($credit_total_value);
+                            // }
                             if (isset($total['actual_value'])) {
                                 $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $value . "', `actual_value` = '" . (float) $total['actual_value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
                             } else {
@@ -757,18 +757,19 @@ class ModelCheckoutOrder extends Model {
 
                 //check if payment paid by wallet
                 $this->load->model('account/order');
-                $totals_info = $this->model_account_order->getOrderTotals($order_id);
+                // $totals_info = $this->model_account_order->getOrderTotals($order_id);
+                  $credit_refund = $this->model_account_order->getOrderCreditAmount($order_id);
      
-                $credit_refund = 0;
-                foreach ($totals_info as $total) {           
+                
+                // foreach ($totals_info as $total) {           
     
-                    if ('credit' == $total['code']) {
-                        $credit_refund = $total['value'];
-                    }
+                //     if ('credit' == $total['code']) {
+                //         $credit_refund = $total['value'];
+                //     }
                      
-                }
+                // }
                 // echo "<pre>";print_r($totals_info);    
-                if($credit_refund!=0)//as the order is cancelled, if  any cart amount deducted, then need to rever it
+                if($credit_refund<0)//as the order is cancelled, if  any cart amount deducted, then need to rever it
                 {
                     // echo "<pre>";print_r($totals_info);die;                   
                     $this->load->model('total/credit');
