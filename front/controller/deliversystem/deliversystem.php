@@ -932,7 +932,6 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                 $log->write($stkCallback->stkCallback->MerchantRequestID);
                 $this->load->controller('payment/mpesa/mpesacallbackupdate', $stkCallback->stkCallback);
-                $this->load->controller('payment/mpesa/mpesacallbackupdatetwo', $stkCallback->stkCallback);
 
                 $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->stkCallback->MerchantRequestID);
 
