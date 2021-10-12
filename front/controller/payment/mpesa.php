@@ -1166,8 +1166,10 @@ class ControllerPaymentMpesa extends Controller {
         $log->write($this->session->data['mpesa_payments_response']);
     }
 
-    public function mpesacallbackupdatetwo() {
-        $this->session->data['mpesa_payments_response_two'] = 'Hi';
+    public function mpesacallbackupdatetwo($data = null) {
+        if ($data != null) {
+            $this->session->data['mpesa_payments_response_two'] = $data;
+        }
     }
 
     public function mpesaautoupdate() {
