@@ -1115,11 +1115,13 @@ function mpesaresponse() {
                         },       
                         success: function(json) {
                         if(json['processed'] == true) {
+                        $('#mpesa_checkout_request_id').val('');
                         $('#success_msg').html('Payment Successfull. Wait Until Page Refresh!');
                         $('#success_msg').show();
                         setInterval(function(){ window.location.replace(json['redirect']); }, 10000);
                         } 
                         if(json['processed'] == false) {
+                        $('#mpesa_checkout_request_id').val('');
                         $('#success_msg').html('');
                         $('#success_msg').hide();
                         $('#error_msg').html(json['mpesa_payments_response'].description);
@@ -1128,7 +1130,10 @@ function mpesaresponse() {
                         $('#button-retry').show();
                         }
                         if(json['processed'] == '') {
-                        $('#mpesa-button-confirm').button('reset');
+                        $('#mpesa_checkout_request_id').val('');
+                        $('#button-complete').show();
+                        $('#mpesa-button-confirm').hide();
+                        $('#button-retry').hide();
                         $('#loading').hide();
                         }
                         },
