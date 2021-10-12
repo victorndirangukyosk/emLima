@@ -1224,13 +1224,17 @@ class ModelSaleCustomer extends Model {
     }
 
     public function getAllCredits($data = []) {
-        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.*,c.email  FROM " . DB_PREFIX . 'customer c  JOIN ' . DB_PREFIX . 'customer_credit cgd ON (c.customer_id = cgd.customer_id)';
+        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,c.company_name, cgd.*,c.email  FROM " . DB_PREFIX . 'customer c  JOIN ' . DB_PREFIX . 'customer_credit cgd ON (c.customer_id = cgd.customer_id)';
 
         //echo "<pre>";print_r($sql);die;
         $implode = [];
 
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
         if (!empty($data['filter_email'])) {
@@ -1302,6 +1306,10 @@ class ModelSaleCustomer extends Model {
 
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
         if (!empty($data['filter_email'])) {
