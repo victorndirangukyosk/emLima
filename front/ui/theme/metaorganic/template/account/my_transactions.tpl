@@ -1102,14 +1102,19 @@ function mpesaresponse() {
                         },
                         dataType: 'json',
                         cache: false,
-                        async: true,
                         beforeSend: function() {
-                            
+                        $(".overlayed").show();
+                        $('#mpesa-button-confirm').button('loading');
                         },
                         complete: function() {
-                        },      
+                        $(".overlayed").hide();
+                        },       
                         success: function(json) {
-                        console.log(json);
+                        if(json['processed']) {
+                        $('#success_msg').html('Payment Successfull. Wait Until Page Refresh!');
+                        $('#success_msg').show();
+                        setInterval(function(){ window.location.replace(json['redirect']); }, 10000);
+                        }
                         },
                         error: function(json) {
                         console.log(json);
