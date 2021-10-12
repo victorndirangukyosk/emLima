@@ -1162,9 +1162,8 @@ class ControllerPaymentMpesa extends Controller {
                 }
             }
         }
-        $this->session->data['mpesa_payments_response'] = array('result' => $stkCallback->ResultCode, 'merchant_request_id' => $stkCallback->MerchantRequestID, 'checkout_request_id' => $stkCallback->CheckoutRequestID, 'mpesa_receipt_number' => $MpesaReceiptNumber, 'description' => $stkCallback->ResultDesc);
         $this->cache->set('mpesa_payments_response', array('result' => $stkCallback->ResultCode, 'merchant_request_id' => $stkCallback->MerchantRequestID, 'checkout_request_id' => $stkCallback->CheckoutRequestID, 'mpesa_receipt_number' => $MpesaReceiptNumber, 'description' => $stkCallback->ResultDesc));
-        $log->write($this->session->data['mpesa_payments_response']);
+        $log->write($this->cache->get('mpesa_payments_response'));
     }
 
     public function mpesaautoupdate() {
