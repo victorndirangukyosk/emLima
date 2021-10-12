@@ -1754,12 +1754,16 @@ class ModelAccountOrder extends Model {
     public function updateWalletOrder($customer_id,$order_id) {
         $query = $this->db->query('SELECT total AS total FROM ' . DB_PREFIX . "order WHERE customer_id = '" . (int) $this->customer->getId() . "' AND order_id = '" . (int) $order_id ."'");
         $total= $query->row['total'];
+        $description = 'Wallet amount deducted#' . $order_id;
     $this->db->query('DELETE FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $customer_id . "' and  order_id = '" . (int)  $order_id . "'");
-    $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount deducted#'". (int)  $order_id . "', amount = '" . (float) ($total*-1) . "', date_added = NOW()");
+    $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int)  $order_id . "', description = '".    $description . "', amount = '" . (float) ($total*-1) . "', date_added = NOW()");
     $this->db->query('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int)  $order_id . "', transaction_id = 'Paid from wallet amount'");
     
     $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0 ,total='" . (float) $total . "'  WHERE order_id='" . (int)  $order_id."'");
-    }
+    
+    // echo "<pre>";print_r('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int)  $order_id . "', description = '".    $description . "', amount = '" . (float) ($total*-1) . "', date_added = NOW()");die;
+
+}
 
    
 
