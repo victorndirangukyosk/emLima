@@ -1142,10 +1142,7 @@ class Emailtemplate {
 
         /* $log->write($result);
           $log->write($this->language->get('full_datetime_format')); */
-        $log = new Log('error.log');
-        $log->write('getCustomerReplace');
-        $log->write($result);
-        $log->write('getCustomerReplace');
+
         return $result;
     }
 
