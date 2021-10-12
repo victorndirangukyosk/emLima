@@ -1141,5 +1141,16 @@ class ControllerPaymentMpesa extends Controller {
 
         return $json;
     }
+    
+    public function MpesaAutoUpdate() {
+        $mpesa_payments_request = $this->session->data['mpesa_payments_request'];
+        $mpesa_payments_response = $this->session->data['mpesa_payments_response'];
+        $json['mpesa_payments_request'] = $mpesa_payments_request;
+        $json['mpesa_payments_response'] = $mpesa_payments_response;
+        $log = new Log('error.log');
+        $log->write($mpesa_payments_request);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 
 }
