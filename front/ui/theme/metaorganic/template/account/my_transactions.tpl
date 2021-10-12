@@ -1116,7 +1116,9 @@ function mpesaresponse() {
                         setInterval(function(){ window.location.replace(json['redirect']); }, 10000);
                         } 
                         if(json['processed'] == false) {
-                        $('#error_msg').html(json['error']);
+                        $('#success_msg').html('');
+                        $('#success_msg').hide();
+                        $('#error_msg').html(json['mpesa_payments_response'].description);
                         $('#error_msg').show();
                         $('#button-complete').hide();
                         $('#button-retry').show();
