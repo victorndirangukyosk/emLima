@@ -1167,7 +1167,7 @@ class ControllerPaymentMpesa extends Controller {
     }
 
     public function mpesaautoupdate() {
-        $mpesa_payments_response = NULL;
+        $mpesa_payments_response = '';
         $json['processed'] = NULL;
         $log = new Log('error.log');
         $log->write('mpesa_payments_response');
