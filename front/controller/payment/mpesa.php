@@ -1168,7 +1168,7 @@ class ControllerPaymentMpesa extends Controller {
 
     public function mpesaautoupdate() {
         $mpesa_payments_response = NULL;
-        $json['processed'] = false;
+        $json['processed'] = NULL;
         $log = new Log('error.log');
         $log->write('mpesa_payments_response');
         $log->write($this->cache->get('mpesa_payments_response'));
@@ -1180,6 +1180,9 @@ class ControllerPaymentMpesa extends Controller {
         $log->write($mpesa_payments_request);
         if (is_aray($mpesa_payments_response) && $mpesa_payments_response['checkout_request_id'] == $this->request->post['mpesa_checkout_request_id'] && $mpesa_payments_response['result'] == 0) {
             $json['processed'] = true;
+        }
+        if (is_aray($mpesa_payments_response) && $mpesa_payments_response['checkout_request_id'] == $this->request->post['mpesa_checkout_request_id'] && $mpesa_payments_response['result'] != 0) {
+            $json['processed'] = false;
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
