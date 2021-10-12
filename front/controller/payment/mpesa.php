@@ -288,7 +288,7 @@ class ControllerPaymentMpesa extends Controller {
                         $order_info = $this->model_checkout_order->getOrder($value);
                         $this->model_payment_mpesa->addOrder($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
                     }
-                $this->session->data['mpesa_payments_request'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID);    
+                    $this->session->data['mpesa_payments_request'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID);
                 } else {
 
                     $this->model_payment_mpesa->addOrder(0, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), $amount);
@@ -1140,6 +1140,42 @@ class ControllerPaymentMpesa extends Controller {
         }
 
         return $json;
+    }
+
+    public function MpesaCallBackUpdate($stkCallback) {
+        $log = new Log('error.log');
+        $MpesaReceiptNumber = NULL;
+        $this->load->model('payment/mpesa');
+        $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->MerchantRequestID);
+        if (is_array($manifest_id) && count($manifest_id) > 0) {
+            foreach ($manifest_id as $manifest_ids) {
+                $log->write($manifest_ids['order_id']);
+                if (isset($stkCallback->CallbackMetadata->Item)) {
+                    foreach ($stkCallback->CallbackMetadata->Item as $key => $value) {
+                        $log->write($value);
+
+                        if ('MpesaReceiptNumber' == $value->Name) {
+                            $MpesaReceiptNumber = $value->Value;
+                        }
+                    }
+                }
+            }
+        }
+        $this->session->data['mpesa_payments_response'] = array('result' => $stkCallback->ResultCode, 'merchant_request_id' => $stkCallback->MerchantRequestID, 'checkout_request_id' => $stkCallback->CheckoutRequestID, 'mpesa_receipt_number' => $MpesaReceiptNumber, 'description' => $stkCallback->ResultDesc);
+        $log->write('MpesaCallBackUpdate');
+        $log->write($this->session->data['mpesa_payments_response']);
+        $log->write('MpesaCallBackUpdate');
+    }
+
+    public function MpesaAutoUpdate() {
+        $mpesa_payments_request = $this->session->data['mpesa_payments_request'];
+        $mpesa_payments_response = $this->session->data['mpesa_payments_response'];
+        $json['mpesa_payments_request'] = $mpesa_payments_request;
+        $json['mpesa_payments_response'] = $mpesa_payments_response;
+        $log = new Log('error.log');
+        $log->write($mpesa_payments_request);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
