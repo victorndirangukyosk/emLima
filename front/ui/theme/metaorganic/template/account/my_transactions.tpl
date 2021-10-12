@@ -879,8 +879,10 @@ function showPayWith() {
             console.log("referfxx def");
             if($('#mpesa_phone_number').val().length >= 9) {
                 $( "#mpesa-button-confirm" ).prop( "disabled", false );
+                $( "#button-retry" ).prop( "disabled", false );
             } else {
                 $( "#mpesa-button-confirm" ).prop( "disabled", true );
+                $( "#button-retry" ).prop( "disabled", true );
             }
         });
 
@@ -888,8 +890,10 @@ function showPayWith() {
             console.log("referfxx");
             if($(this).val().length >= 9) {
                 $( "#mpesa-button-confirm" ).prop( "disabled", false );
+                $( "#button-retry" ).prop( "disabled", false );
             } else {
                 $( "#mpesa-button-confirm" ).prop( "disabled", true );
+                $( "#button-retry" ).prop( "disabled", true );
             }
         });
 
