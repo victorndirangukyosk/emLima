@@ -432,10 +432,6 @@ class Emailtemplate {
     }
 
     public function getCustomerReplace($data) {
-        $log = new Log('error.log');
-        $log->write('getCustomerReplace');
-        $log->write($this->resize($this->config->get('config_logo'), 197, 34));
-        $log->write('getCustomerReplace');
         $result = [
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
@@ -1146,7 +1142,10 @@ class Emailtemplate {
 
         /* $log->write($result);
           $log->write($this->language->get('full_datetime_format')); */
-
+        $log = new Log('error.log');
+        $log->write('getCustomerReplace');
+        $log->write($result);
+        $log->write('getCustomerReplace');
         return $result;
     }
 
