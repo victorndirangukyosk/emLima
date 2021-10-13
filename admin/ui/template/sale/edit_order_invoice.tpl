@@ -326,7 +326,7 @@
 <script type="text/javascript">
   
 $(document).delegate('.remove','click', function(){
-  if($('#order_status_id').val() == 14) {
+  if($('#order_status_id').val() == 5) {
    alert('Delivred Orders Not Editable!');    
    return false;
   }   
@@ -526,7 +526,7 @@ $('#button-settle-invoice-refund').on('click', function() {
 });
 
 $('#button-settle-invoice-charge').on('click', function() {
-   if($('#order_status_id').val() == 14) {
+   if($('#order_status_id').val() == 5) {
    alert('Delivred Orders Not Editable!');    
    return false;
    } 
@@ -686,7 +686,7 @@ function makeid() {
 
 function add() {
 
-  if($('#order_status_id').val() == 14) {
+  if($('#order_status_id').val() == 5) {
    alert('Delivred Orders Not Editable!');    
    return false;
   }  
