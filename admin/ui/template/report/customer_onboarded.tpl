@@ -40,6 +40,7 @@
                   <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                   </span></div>
               </div>
+              
             </div>
             <div class="col-sm-6">
              <!-- <div class="form-group">
@@ -57,7 +58,13 @@
               </div>-->
               <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
             </div>
+                    
           </div>
+           <div class="row" hidden> <div class="col-sm-8">
+               <p>Note : List of Customers who ordered for the first time in the selected date range and their first order ID and order date</p>  
+           
+            </div> </div>
+
         </div>
         <div class="table-responsive">
           <table class="table table-bordered table-hover">
