@@ -268,7 +268,7 @@ class ControllerApiCustomerMpesa extends Controller {
             $stkPushSimulation = json_decode($stkPushSimulation);
 
             $json['response'] = $stkPushSimulation;
-            $json['response']['order_reference_number'] = $order_reference_number;
+            $json['order_reference_number'] = $order_reference_number;
 
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
                 //save in
