@@ -1760,7 +1760,7 @@ class ControllerCommonHome extends Controller {
                     'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                     'rating' => 0,
                     'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
-                    'vendor_display_name' => $vendor_details['display_name'],
+                    'vendor_display_name' => isset($vendor_details['display_name']) ? $vendor_details['display_name'] : '',
                     'sort_price' => $s_price
                 ];
             }
