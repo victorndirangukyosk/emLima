@@ -130,6 +130,10 @@ class ControllerApiCustomerMpesa extends Controller {
         if (empty($data['order_reference_number'])) {
             $this->error['order_reference_number'] = 'Order reference number required!';
         }
+        $amount = $this->cart->getTotalForKwikBasket();
+        if ($amount <= 0) {
+            $this->error['kwikbasket_order_total'] = 'KwikBasket Store Order Total Cant Be Less Or Equal To Zero!';
+        }
         return !$this->error;
     }
 
@@ -242,7 +246,7 @@ class ControllerApiCustomerMpesa extends Controller {
             $BusinessShortCode = $this->config->get('mpesa_business_short_code');
             $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
             $TransactionType = 'CustomerBuyGoodsOnline';
-            $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatusTransactions', '', 'SSL');
+            $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaMobileCheckoutOrderStatusTransactions', '', 'SSL');
 
             $Amount = $amount;
 
