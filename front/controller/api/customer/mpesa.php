@@ -254,7 +254,7 @@ class ControllerApiCustomerMpesa extends Controller {
 
             $PhoneNumber = $this->config->get('config_telephone_code') . '' . $number;
             $AccountReference = 'GPK'; //$this->config->get('config_name');
-            $TransactionDesc = implode(" #", $order_reference_number);
+            $TransactionDesc = "#" . $order_reference_number;
             $Remarks = 'PAYMENT';
 
             $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
