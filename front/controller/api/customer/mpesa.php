@@ -271,6 +271,8 @@ class ControllerApiCustomerMpesa extends Controller {
 
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
                 //save in
+                $order_info['order_id'] = 0;
+                $this->model_payment_mpesa->addOrder($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), 0, $order_reference_number);
                 $json['status'] = true;
                 $json['message'] = sprintf($this->language->get('text_sms_sent'), $number);
             } else {
