@@ -4016,20 +4016,24 @@ class ControllerApiCustomerOrder extends Controller {
                 }
             } elseif ('mpesa' == $args['payment_method_code']) {
                 //save for refrence id correct order id
+                $log = new Log('error.log');
 
-                if (isset($args['mpesa_refrence_id'])) {
+                $kwikbasket_order_reference_number = $order_data[75]['order_reference_number'];
+                $log->write($kwikbasket_order_reference_number);
+
+                if ($kwikbasket_order_reference_number != NULL) {
                     $this->load->model('payment/mpesa');
-                    $this->load->model('checkout/order');
                     $this->load->model('account/order');
 
-                    foreach ($order_ids as $order_id) {
-                        $order_details = $this->model_account_order->getOrderDetailsById($order_id);
-                        /* ALLOWING PAYMENT FOR KWIKBASKET ORDERS ONLY */
-                        if ($order_details['store_id'] == 75) {
-                            $this->model_payment_mpesa->updateOrderIdMpesaOrder($order_id, $args['mpesa_refrence_id']);
+                    $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($kwikbasket_order_reference_number);
+                    $log->write($mpesaDetails);
+                    
+                    if (is_array($mpesaDetails) && count($mpesaDetails) > 0) {
+                        $mpesa_order_details = $this->model_account_order->getOrderByReferenceIdApi($kwikbasket_order_reference_number);
+                        $log->write($mpesa_order_details);
 
-                            $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mpesa_order_status_id'));
-                        }
+                        $this->model_checkout_order->addOrderHistory($mpesa_order_details['order_id'], $this->config->get('mpesa_order_status_id'));
+                        $this->model_payment_mpesa->updateMpesaOrder($mpesa_order_details['order_id'], $mpesaDetails['mpesa_receipt_number']);
                     }
                 }
             } elseif ('interswitch' == $args['payment_method_code']) {
