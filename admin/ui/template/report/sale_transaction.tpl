@@ -168,7 +168,7 @@
                                     <td class="text-right">Delivery Date</td>                             
 
                                     <td class="text-right"><?php echo $column_transaction_id; ?></td>
-                                     <td class="text-right"><?php echo Delivery.'  ' . $column_status; ?></td>  
+                                     <td class="text-right"><?php echo 'Delivery'.'  ' . $column_status; ?></td>  
 
                                      
 
