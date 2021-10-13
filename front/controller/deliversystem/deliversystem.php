@@ -1005,14 +1005,14 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->stkCallback->MerchantRequestID);
 
-        $log->write('order_id');
+        $log->write('order_reference_number');
         $log->write($manifest_id);
-        $log->write('order_id');
+        $log->write('order_reference_number');
 
         if (is_array($manifest_id) && count($manifest_id) > 0) {
             foreach ($manifest_id as $manifest_ids) {
 
-                $log->write($manifest_ids['order_id']);
+                $log->write($manifest_ids['order_reference_number']);
                 // Store
                 //save CallbackMetadata MpesaReceiptNumber
 
@@ -1022,20 +1022,16 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                         if ('MpesaReceiptNumber' == $value->Name) {
                             $MpesaReceiptNumber = $value->Value;
-                            $this->model_payment_mpesa->insertOrderTransactionId($manifest_ids['order_id'], $value->Value);
+                            $this->model_payment_mpesa->insertMobileCheckoutOrderTransactionId($manifest_ids['order_reference_number'], $value->Value);
                         }
                     }
                 }
 
-                $order_info = $this->model_checkout_order->getOrder($manifest_ids['order_id']);
-                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-                if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $order_info != NULL && $customer_info != NULL) {
-                    $this->model_payment_mpesa->addOrderHistoryTransaction($order_info['order_id'], $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
-                    $log->write('updateMpesaOrderStatus_Transactions SUCCESS');
+                if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode) {
+                    $log->write('MOBILE CHECKOUT SUCCESS');
                 }
-                if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 != $stkCallback->stkCallback->ResultCode && $order_info != NULL && $customer_info != NULL) {
-                    $this->model_payment_mpesa->addOrderHistoryTransactionFailed($order_info['order_id'], $this->config->get('mpesa_failed_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa', $order_info['paid']);
-                    $log->write('updateMpesaOrderStatus_Transactions FAILED');
+                if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 != $stkCallback->stkCallback->ResultCode) {
+                    $log->write('MOBILE CHECKOUT FAILED');
                 }
             }
         }

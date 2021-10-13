@@ -59,6 +59,10 @@ class ModelPaymentMpesa extends Model {
         $query = $this->db->query($sql);
     }
 
+    public function insertMobileCheckoutOrderTransactionId($order_reference_number, $mpesa_receipt_number) {
+        $this->db->query('UPDATE `' . DB_PREFIX . 'mpesa_order` SET `mpesa_receipt_number` = ' . $this->db->escape($mpesa_receipt_number) . ' where order_reference_number=' . $order_reference_number);
+    }
+
     public function updateMpesaOrder($order_id, $mpesa_receipt_number) {
         $this->db->query('UPDATE `' . DB_PREFIX . 'mpesa_order` SET `mpesa_receipt_number` = ' . $this->db->escape($mpesa_receipt_number) . ' where order_id=' . $order_id);
     }
