@@ -653,8 +653,12 @@
                               <h2>ACCEPT TERMS</h2>
                             </div>
                             <div class="modal-body">
+
+                             <p id="products_list" style="font-weight: bold; font-size: 12px;"></p>
+                                </br>
+
                             <p style="font-weight: bold; font-size: 12px;
-">The above products from the cart are available only for <span style="color:#ea7128;">"Payment On Delivery"</span></p>
+">The above product(s) from the cart are available only for <span style="color:#ea7128;">"Payment On Delivery"</span></p>
                             </div>
                             <div class="addnews-address-form">
                                 <div class="form-group">
@@ -786,9 +790,12 @@
             },
             success: function(json) {
                 if (json['modal_open']) {
+                    
                         $('#exampleModal').modal('toggle');
+                         $('#products_list').text(json['product_list']);
                 }else{
                      $('#exampleModal').modal('hide');   
+                      $('#products_list').text('');
                 }
             }
         });
@@ -976,9 +983,15 @@ $.ajax({
             success: function(json) {
                 if (json['modal_open']) {
                 $('#exampleModal').modal('show');
+                 //alert(json['product_list']);
+                       
+                         $('#products_list').text(json['product_list']);
+
                 return false;
                 }else{
                 $('#exampleModal').modal('hide'); 
+                         $('#products_list').text('');
+
                 window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";     
                 }
             }
