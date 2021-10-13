@@ -151,9 +151,9 @@ class ModelSaleOrderReceivables extends Model
 
         // $query = $this->db->query($sql);
 
-        // $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "'";
+        $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "'";
 
-        // $query = $this->db->query($sql);
+        $query = $this->db->query($sql);
 
 }
 public function getOrderTotal($order_id)
