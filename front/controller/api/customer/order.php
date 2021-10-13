@@ -4024,10 +4024,11 @@ class ControllerApiCustomerOrder extends Controller {
                 if ($kwikbasket_order_reference_number != NULL) {
                     $this->load->model('payment/mpesa');
                     $this->load->model('account/order');
+                    $this->load->model('checkout/order');
 
                     $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($kwikbasket_order_reference_number);
                     $log->write($mpesaDetails);
-                    
+
                     if (is_array($mpesaDetails) && count($mpesaDetails) > 0) {
                         $mpesa_order_details = $this->model_account_order->getOrderByReferenceIdApi($kwikbasket_order_reference_number);
                         $log->write($mpesa_order_details);
