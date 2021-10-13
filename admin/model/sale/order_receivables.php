@@ -176,7 +176,7 @@ public function getSuccessfulOrderReceivables($data = [])
 
     $sql .= " Where (o.paid = 'Y' || o.paid = 'P')   ";//and  ot.transaction_id  is null
 
-    // $sql .= " and o.order_status_id not in (0,6,7,8,15,16,9,10,11,12) ";
+    $sql .= " and o.order_status_id not in (0,6,7,8,16,9,10,11,12) ";//15
 
 
     if (!empty($data['filter_order_id'])) {
@@ -252,7 +252,7 @@ public function getTotalSuccessfulOrderReceivablesAndGrandTotal($data = [])
 {
     $sql = 'SELECT COUNT(*) as total,sum(ort.value) as GrandTotal FROM `'.DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join '.DB_PREFIX.'order_total ort on(o.order_id =ort.order_id) and ort.code="total" left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
     $sql .= " Where (o.paid = 'Y' || o.paid = 'P')    ";//and  ot.transaction_id  is not null
-    // $sql .= " and o.order_status_id not in (0,6,7,8,15,16,9,10,11,12) ";
+    $sql .= " and o.order_status_id not in (0,6,7,8,16,9,10,11,12) ";//15
 
     if (!empty($data['filter_order_id'])) {
         $sql .= " AND o.order_id LIKE '".$data['filter_order_id']."%'";
