@@ -985,10 +985,10 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $postData = file_get_contents('php://input');
 
         $log = new Log('error.log');
-        $log->write('updateMpesaOrderStatus_Transactions');
+        $log->write('MPESA MOBILE CHECKOUT');
         $log->write($postData);
 
-        $file = fopen('system/log/mpesa_transactions_log.txt', 'w+'); //url fopen should be allowed for this to occur
+        $file = fopen('system/log/mpesa_mobile_checkout_log.txt', 'w+'); //url fopen should be allowed for this to occur
         if (false === fwrite($file, $postData)) {
             fwrite('Error: no data written');
         }
@@ -1001,7 +1001,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $log->write($stkCallback);
 
         $log->write($stkCallback->stkCallback->MerchantRequestID);
-        $this->load->controller('payment/mpesa/mpesacallbackupdate', $stkCallback->stkCallback);
+        //$this->load->controller('payment/mpesa/mpesacallbackupdate', $stkCallback->stkCallback);
 
         $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->stkCallback->MerchantRequestID);
 
