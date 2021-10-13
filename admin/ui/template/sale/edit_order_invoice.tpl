@@ -327,7 +327,7 @@
   
 $(document).delegate('.remove','click', function(){
   if($('#order_status_id').val() == 5) {
-   alert('Delivred Orders Not Editable!');    
+   alert('Delivered Orders Not Editable!');    
    return false;
   }   
   $(this).parent().parent().remove();
@@ -527,7 +527,7 @@ $('#button-settle-invoice-refund').on('click', function() {
 
 $('#button-settle-invoice-charge').on('click', function() {
    if($('#order_status_id').val() == 5) {
-   alert('Delivred Orders Not Editable!');    
+   alert('Delivered Orders Not Editable!');    
    return false;
    } 
   // update invoice call this
@@ -687,7 +687,7 @@ function makeid() {
 function add() {
 
   if($('#order_status_id').val() == 5) {
-   alert('Delivred Orders Not Editable!');    
+   alert('Delivered Orders Not Editable!');    
    return false;
   }  
   noProduct = makeid();
