@@ -20,6 +20,7 @@
 <body>
 <div class="container">
   <?php foreach ($orders as $order) { ?>
+  <input type="hidden" id="order_status_id" name="order_status_id" value="<?php echo $order['order_status_id']; ?>" />
   <div style="page-break-after: always;">
     <h1><?php echo $text_invoice; ?> #<?php echo $order['order_id']; ?></h1>
     <table class="table table-bordered">
