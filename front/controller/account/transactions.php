@@ -326,9 +326,13 @@ class Controlleraccounttransactions extends Controller {
                           $log->write('NON NUMERIC'); */
 
                         if ($order['pending_amount'] > 0)
+                        {
                             $totalPendingAmount = $totalPendingAmount + $order['pending_amount'];
+                        }
                         else
+                        {
                             $totalPendingAmount = $totalPendingAmount + $order['value'];
+                        }
 
                         //$totalPendingAmount = $this->currency->format($totalPendingAmount);
                         $data['pending_order_id'][] = $order['order_id'];
