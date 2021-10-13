@@ -297,4 +297,68 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function addMpesaCheckoutComplete($data = []) {
+        $json['status'] = false;
+
+        $this->load->language('payment/mpesa');
+        $this->load->model('sale/order');
+        $this->load->model('payment/mpesa');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+
+        if ($this->validatecheckout($data)) {
+            $order_reference_number = $data['order_reference_number'];
+            $number = $data['mpesa_phonenumber'];
+            $log = new Log('error.log');
+            $log->write($data);
+
+            $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($order_reference_number);
+
+            $live = true;
+
+            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+
+            if ($mpesaDetails) {
+
+                $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+                $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+
+                $checkoutRequestID = $mpesaDetails['checkout_request_id']; //'ws_CO_28032018142406660';
+                $timestamp = '20' . date('ymdhis');
+                $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+
+                $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
+
+                // Void the order first
+                $log->write('STKPushSimulation');
+                $log->write($stkPushSimulation);
+
+                $stkPushSimulation = json_decode($stkPushSimulation);
+                $log->write('STKPushSimulation JSON ARRAY');
+                $log->write($stkPushSimulation);
+                if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
+                    $json['error'] = $stkPushSimulation->ResultDesc;
+                    $json['mpesa_response'] = $stkPushSimulation;
+                }
+
+                if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
+                    $json['status'] = true;
+                    $json['message'] = 'Payment Successfull.';
+                    $json['mpesa_response'] = $stkPushSimulation;
+                }
+            }
+        } else {
+            $json['status'] = 10014;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

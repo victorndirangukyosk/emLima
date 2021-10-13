@@ -107,6 +107,19 @@ class ModelPaymentMpesa extends Model {
         return $res;
     }
 
+    public function getMpesaByOrderReferenceNumber($order_reference_number) {
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "mpesa_order` WHERE `order_reference_number` = '" . $this->db->escape($order_reference_number) . "'");
+        $log = new Log('error.log');
+        $log->write('result');
+        $log->write($result->rows);
+        $log->write('result');
+        if (count($result->rows) > 0) {
+            $res = $result->rows[$result->num_rows - 1];
+        }
+        //echo '<pre>';print_r($res);exit;
+        return $res;
+    }
+
     public function getMpesaByCustomerId($customer_id) {
         $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "mpesa_order` WHERE `order_id` = 0 and customer_id='" . $this->db->escape($customer_id) . "'");
         $log = new Log('error.log');
