@@ -302,7 +302,7 @@ class Controlleraccounttransactions extends Controller {
                 $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                 //echo "<pre>";print_r($order);die;
                 if (in_array($order['payment_method'], $PaymentFilter)) {
-                    if (!empty($order['transcation_id']) && !in_array($order['status'], $statusCancelledFilter)) {
+                    if (!empty($order['transcation_id']) && $order['paid'] == 'Y' && !in_array($order['status'], $statusCancelledFilter)) {
                         //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
                         if (is_array($order) && array_key_exists('value', $order)) {
                             $order['total_currency'] = $this->currency->format($order['value']);
