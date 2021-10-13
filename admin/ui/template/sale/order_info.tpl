@@ -337,7 +337,7 @@
 
 				  <tr>
 					<td>Transaction ID</td>
-					<td><input type="text" name="order_transaction_id" id="order_transaction_id" value="<?= $order_transaction_id ?>" > <button id="save_order_transaction_id" class="btn btn-primary" type="button"> Save </button></td>
+                                        <td><input type="text" name="order_transaction_id" id="order_transaction_id" value="<?= $order_transaction_id ?>" > <button id="save_order_transaction_id" class="btn btn-primary" type="button" <?php if($order_status_id == 14) { ?> disabled <?php } ?> > Save </button></td>
 				  </tr>
 
 				</table>
@@ -373,7 +373,7 @@
 
 					<input type="text" name="shipping_flat_number" id="shipping_flat_number" value="<?= $shipping_flat_number ?>" style="width: 100%" >
 
-					<button type="button" class="btn btn-primary" type="button" onclick="saveFlatNumber()" >
+					<button type="button" class="btn btn-primary" type="button" onclick="saveFlatNumber()" <?php if($order_status_id == 14) { ?> disabled <?php } ?> >
 						Save
 					</button>
             	</td>
@@ -383,7 +383,7 @@
 				<td><?= $text_address ?></td>
 				<td> 
 				<?php echo $shipping_landmark; ?>
-							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#s_address_edit" onclick="locationpickerLoad()">
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#s_address_edit" onclick="locationpickerLoad()" <?php if($order_status_id == 14) { ?> disabled <?php } ?> >
 								Edit
 							</button>
             	</td>
@@ -468,7 +468,7 @@
                           $order_delivery_executive = $order_delivery_executive_details['firstname'].' '.$order_delivery_executive_details['lastname'];
                           $order_delivery_executive_id = $order_delivery_executive_details['delivery_executive_id'];
                           } ?>
-                          <td><input type="text" name="order_delivery_executive" id="order_delivery_executive" value="<?=$order_delivery_executive; ?>" data_order_id="<?=$order_id ?>" data_delivery_executive_id="<?=$order_delivery_executive_id ?>">&nbsp;<button id="save_order_delivery_executive" class="btn btn-primary" type="button"> Save </button></td>
+                          <td><input type="text" name="order_delivery_executive" id="order_delivery_executive" value="<?=$order_delivery_executive; ?>" data_order_id="<?=$order_id ?>" data_delivery_executive_id="<?=$order_delivery_executive_id ?>">&nbsp;<button id="save_order_delivery_executive" class="btn btn-primary" type="button" <?php if($order_status_id == 14) { ?> disabled <?php } ?> > Save </button></td>
                           </tr>
                           <tr>
                               <td>Driver</td>
@@ -479,11 +479,11 @@
                               $order_driver = $order_driver_details['firstname'].' '.$order_driver_details['lastname'];
                               $order_driver_id = $order_driver_details['driver_id'];
                               } ?>
-                              <td><input type="text" name="order_driver" id="order_driver" value="<?=$order_driver ?>" data_order_id="<?=$order_id ?>" data_driver_id="<?=$order_driver_id ?>">&nbsp;<button id="save_order_driver" class="btn btn-primary" type="button"> Save </button></td>
+                              <td><input type="text" name="order_driver" id="order_driver" value="<?=$order_driver ?>" data_order_id="<?=$order_id ?>" data_driver_id="<?=$order_driver_id ?>">&nbsp;<button id="save_order_driver" class="btn btn-primary" type="button" <?php if($order_status_id == 14) { ?> disabled <?php } ?> > Save </button></td>
                           </tr>
                           <tr>
                               <td>Vehicle Number</td>
-                              <td><input type="text" name="order_vehicle_number" id="order_vehicle_number" value="<?=$order_vehicle_number ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_order_vehicle_number" class="btn btn-primary" type="button"> Save </button></td>
+                              <td><input type="text" name="order_vehicle_number" id="order_vehicle_number" value="<?=$order_vehicle_number ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_order_vehicle_number" class="btn btn-primary" type="button" <?php if($order_status_id == 14) { ?> disabled <?php } ?> > Save </button></td>
                           </tr>
                           <tr>
                               <td>Order Processing Group</td>
@@ -506,7 +506,7 @@
                           <?php if($store_id == 75) { ?>
                           <tr>
                            <td>Shipping Charges</td>
-                           <td><input min="0" type="number" name="kw_shipping_charges" id="kw_shipping_charges" value="<?=round($kw_shipping_charges, 2) ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_kw_shipping_charges" class="btn btn-primary" type="button"> Save </button></td>
+                           <td><input min="0" type="number" name="kw_shipping_charges" id="kw_shipping_charges" value="<?=round($kw_shipping_charges, 2) ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_kw_shipping_charges" class="btn btn-primary" type="button" <?php if($order_status_id == 14) { ?> disabled <?php } ?> > Save </button></td>
                           </tr>
                           <?php } ?>
 			</table>
