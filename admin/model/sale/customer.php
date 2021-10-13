@@ -1007,7 +1007,7 @@ class ModelSaleCustomer extends Model {
     }
 
     public function getTotalCustomersOnBoarded($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'customer c where approved = 1 and c.customer_id  in (select o.customer_id from ' . DB_PREFIX . 'order o where o.order_status_id NOT IN (0))';
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'customer c where   c.customer_id  in (select o.customer_id from ' . DB_PREFIX . 'order o where o.order_status_id NOT IN (0,16,6,8,9,10))';
 
         // $implode = [];
 
