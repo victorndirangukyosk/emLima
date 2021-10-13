@@ -551,7 +551,7 @@ class ControllerCommonScheduler extends Controller {
                     'order_status_id' => $result['order_status_id'],
                     'order_status_color' => $result['color'],
                     'city' => $result['city'],
-                    'vendor_total' => $vendor_total,
+                    'vendor_total' => isset($vendor_total) ? $vendor_total : 0,
                     'total' => $this->currency->format($total, $result['currency_code'], $result['currency_value']),
                     'sub_total' => $this->currency->format($sub_total, $result['currency_code'], $result['currency_value']),
                     'sub_total_custom' => $sub_total, $result['currency_code'],
