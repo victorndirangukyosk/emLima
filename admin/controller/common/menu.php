@@ -160,6 +160,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_customer_order'] = $this->url->link('report/customer_order', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_orderplaced'] = $this->url->link('report/customer_orderplaced', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_onboarded'] = $this->url->link('report/customer_onboarded', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_wallet'] = $this->url->link('report/customer_wallet', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_unordered'] = $this->url->link('report/customer_unordered', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_account_manager_customer_order'] = $this->url->link('report/account_manager_customer_order', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_shopper'] = $this->url->link('report/shopper', 'token=' . $this->session->data['token'], 'SSL');
@@ -447,6 +448,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_customer_order'] = $this->user->hasPermission('access', 'report/customer_order');
         $data['preturn_customer_orderplaced'] = $this->user->hasPermission('access', 'report/customer_orderplaced');
         $data['preturn_customer_onboarded'] = $this->user->hasPermission('access', 'report/customer_onboarded');
+        $data['preturn_customer_wallet'] = $this->user->hasPermission('access', 'report/customer_wallet');
         $data['preturn_customer_unordered'] = $this->user->hasPermission('access', 'report/customer_unordered');
         $data['preturn_account_manager_customer_order'] = $this->user->hasPermission('access', 'report/account_manager_customer_order');
         $data['preturn_customer_order_pattern'] = $this->user->hasPermission('access', 'report/customer_order_pattern');
@@ -540,6 +542,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_customer_order'] = $this->url->link('report/customer_order', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_orderplaced'] = $this->url->link('report/customer_orderplaced', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_onboarded'] = $this->url->link('report/customer_onboarded', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_wallet'] = $this->url->link('report/customer_wallet', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_unordered'] = $this->url->link('report/customer_unordered', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_account_manager_customer_order'] = $this->url->link('report/account_manager_customer_order', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_reward'] = $this->url->link('report/customer_reward', 'token=' . $this->session->data['token'], 'SSL');

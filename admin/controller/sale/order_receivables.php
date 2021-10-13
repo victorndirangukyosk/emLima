@@ -634,7 +634,7 @@ class ControllerSaleOrderReceivables extends Controller
                     
                     if($wallet_amount > 0)//add to customer wallet
                     {                    
-                        $v= $this->model_sale_customer->addOnlyCredit($customer_id, 'Advance', $wallet_amount);
+                        $v= $this->model_sale_customer->addOnlyCredit($customer_id, 'Advance Received # Transaction ID - '.$transaction_id, $wallet_amount);
                     }
                     
                         
