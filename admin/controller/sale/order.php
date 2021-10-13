@@ -6727,10 +6727,10 @@ class ControllerSaleOrder extends Controller {
 
                 ++$p;
             }
-                if($wallet_amount_positive>0)
-                {
-                $orderTotal +=$wallet_amount_positive;
-                }
+                // if($wallet_amount_positive>0)
+                // {
+                // $orderTotal +=$wallet_amount_positive;
+                // }
             $orderTotal = round($orderTotal, 2);
             $subTotal = round($subTotal, 2);
 
