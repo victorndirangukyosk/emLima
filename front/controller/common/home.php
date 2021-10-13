@@ -1767,9 +1767,9 @@ class ControllerCommonHome extends Controller {
         }
         // echo "<pre>";print_r($data['products']);die;
         $log = new Log('error.log');
-        $log->write('filter_data');
+        /*$log->write('filter_data');
         $log->write($filter_data);
-        $log->write('filter_data');
+        $log->write('filter_data');*/
         if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'nasc') {
             $new_arry = $this->multisort($data['products'], 'name', 'nasc');
             $log = new Log('error.log');
