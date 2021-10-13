@@ -1935,15 +1935,77 @@ class ModelSaleCustomer extends Model {
         return $query->row['customer_id'];
     }
 
-    public function addOnlyCredit($customer_id, $description = '', $amount = '', $order_id = 0) {
-        $customer_info = $this->getCustomer($customer_id);
-
+    public function addOnlyCredit($customer_id, $description = '', $amount = '', $order_id = 0,$notify = 0) 
+    {
         $log = new Log('error.log');
+        try{
+                $customer_info = $this->getCustomer($customer_id);
+                if ($customer_info) {
+                    $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
+                }
 
-        if ($customer_info) {
-            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
-        }
+                if($notify==1)//send notification to customer
+                {                
+                    $this->load->language('mail/customer');           
+                    $store_name = $this->config->get('config_name');           
+
+                    $data = $customer_info;
+                    $data['amount'] = $amount;
+
+                    $data['transfer_type'] = 'debited in';
+                    if ($amount >= 0) {
+                        $data['transfer_type'] = 'credited in';
+                    }
+                    if ($amount < 0) {
+                        $data['amount'] = -$amount;
+                    }
+
+                    $data['amount'] = $this->currency->format($data['amount']);
+                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('Customer', 'customer_6')) {
+
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_6', $data);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_6', $data);
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($customer_info['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($store_name);
+                    $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+                    $mail->setHTML(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
+                    $mail->send();
+                    }
+
+                    if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_6')) {
+                        $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
+                    }
+
+                    if ($customer_info['mobile_notification'] == 1 && $this->emailtemplate->getNotificationEnabled('Customer', 'customer_6')) {
+                        $log->write('status enabled of mobi noti');
+                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_6', $data);
+                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_6', $data);
+
+                            if (isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
+                                $log->write('device id set');
+
+                                //$notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'],$customer_info['device_id'],$order_id,$mobile_notification_template,$mobile_notification_title);
+
+                                $sen['wallet_id'] = '';
+
+                                //->setData(array('order_id' => $order_id,'store_id' => $store_id,'notification_id' => $args['notification_id']));
+                                $ret = $this->emailtemplate->sendDynamicPushNotification($customer_info['customer_id'], $customer_info['device_id'], $mobile_notification_template, $mobile_notification_title, $sen);
+
+                                $log->write('device id set end');
+                            } else {
+                                $log->write('device id not set');
+                            }
+                    }
+                }//notify end
+            }
+            catch(exception $ex)
+            {} 
+             
     }
+
+        
 
     public function check_customer_previous_password($customer_id, $password) {
         $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . $customer_id . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "')");
