@@ -1952,7 +1952,7 @@ class ModelSaleCustomer extends Model {
                     $data = $customer_info;
                     $data['amount'] = $amount;
 
-                    $data['transfer_type'] = 'debited in';
+                    $data['transfer_type'] = 'debited from';
                     if ($amount >= 0) {
                         $data['transfer_type'] = 'credited in';
                     }
@@ -1969,8 +1969,8 @@ class ModelSaleCustomer extends Model {
                     $mail->setTo($customer_info['email']);
                     $mail->setFrom($this->config->get('config_from_email'));
                     $mail->setSender($store_name);
-                    $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
-                    $mail->setHTML(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
+                    $mail->setSubject($subject, ENT_QUOTES);
+                    $mail->setHTML($message, ENT_QUOTES);
                     $mail->send();
                     }
 
