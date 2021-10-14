@@ -521,6 +521,9 @@ class ModelAccountOrder extends Model {
         }
 
         $log = new Log('error.log');
+        $log->write('getOrders');
+        $log->write($this->customer->getId());
+        $log->write('getOrders');
         $s_users = [];
         $parent_user_id = NULL;
         $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $this->customer->getId() . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
