@@ -424,7 +424,10 @@ class ControllerApiCart extends Controller {
     }
 
     public function getCartProducts() {
-
+        
+        $this->load->model('account/customer');
+        $this->cart->clearcart();
+        $this->model_account_customer->getDBCart();
         $totalQuantity = 0;
         $json = [];
         $log = new Log('error.log');
