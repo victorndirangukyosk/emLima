@@ -2817,7 +2817,7 @@ class ModelAssetsProduct extends Model {
         if (isset($this->session->data['config_store_id'])) {
             $store_id = $this->session->data['config_store_id'];
         } else {
-            $store_id = $data['store_id'];
+            $store_id = isset($data['store_id']) ? $data['store_id'] : '';
         }
 
         $this->db->select('product_to_store.*,product_to_category.category_id,product.*,product_description.*,product_description.name as pd_name', false);
