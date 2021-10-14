@@ -432,6 +432,10 @@ class Emailtemplate {
     }
 
     public function getCustomerReplace($data) {
+
+        $log = new Log('error.log');
+
+        $log->write('in getcustomerrepaOrderAllReplace');
         $result = [
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
@@ -469,6 +473,10 @@ class Emailtemplate {
             'transfer_type' => isset($data['transfer_type']) ? $data['transfer_type'] : '',
             'ip_address' => $data['ip_address'],
         ];
+
+
+        $log->write($result);
+          $log->write($this->language->get('full_datetime_format'));
 
         return $result;
     }
@@ -978,18 +986,19 @@ class Emailtemplate {
         return $result;
     }
 
+
     public function getOrderAllReplace($data) {
         $emailTemplate = $this->getEmailTemplate($data['template_id']);
-        $data['order_href'] = $this->maskingOrderDetailUrl($data['order_href']);
+        // $data['order_href'] = $this->maskingOrderDetailUrl($data['order_href']);
         $log = new Log('error.log');
 
         $log->write('in getOrderAllReplace');
         //$log->write('in $dathref'.$data['order_href']);
         //die;
 
-        foreach ($data as $dataKey => $dataValue) {
-            $dataKey = $dataValue;
-        }
+        // foreach ($data as $dataKey => $dataValue) {
+        //     $dataKey = $dataValue;
+        // }
 
         // Special
         $special = [];
@@ -1125,23 +1134,26 @@ class Emailtemplate {
             'shipping_landmark' => $order_info['shipping_landmark'],
             'shipping_zipcode' => $order_info['shipping_zipcode'],
             //common replace
-            'site_url' => HTTPS_CATALOG,
-            //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
-            'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
-            //'site_url'=>$this->config->get('config_url'),
-            'system_name' => $this->config->get('config_name'),
-            'year' => date('Y'),
-            'help_center' => $this->url->adminLink('information/help'),
-            //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
-            'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
-            'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
-            'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
-            'system_email' => $this->config->get('config_email'),
-            'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
+             //common replace
+             'site_url' => HTTPS_CATALOG,
+             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
+             'logo' => $this->resize($this->config->get('config_logo'), 197, 34),
+             //'site_url'=>$this->config->get('config_url'),
+             'system_name' => $this->config->get('config_name'),
+             'year' => date('Y'),
+             'help_center' => $this->url->adminLink('information/help'),
+             //'white_logo'=> HTTPS_CATALOG.'image/'. $this->config->get('config_white_logo'),
+             'white_logo' => $this->resize($this->config->get('config_white_logo'), 197, 34),
+             'terms' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_account_id'), 'SSL'),
+             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
+             'system_email' => $this->config->get('config_email'),
+             'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
+            
+
         ];
 
-        /* $log->write($result);
-          $log->write($this->language->get('full_datetime_format')); */
+         $log->write($result);
+          $log->write($this->language->get('full_datetime_format')); 
 
         return $result;
     }
