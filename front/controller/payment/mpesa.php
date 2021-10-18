@@ -1143,6 +1143,144 @@ class ControllerPaymentMpesa extends Controller {
         return $json;
     }
 
+    public function mpesacallbackupdatemailfail($stkCallback) {
+        $log = new Log('error.log');
+        $MpesaReceiptNumber = NULL;
+        $this->load->model('payment/mpesa');
+        $this->load->model('account/customer');
+        $this->load->model('checkout/order');
+        $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->MerchantRequestID);
+
+        if (is_array($manifest_id) && count($manifest_id) > 0) {
+            foreach ($manifest_id as $manifest_ids) {
+                $log->write($manifest_ids['order_id']);
+                $order_info = $this->model_checkout_order->getOrder($manifest_ids['order_id']);
+                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
+                if (isset($stkCallback->CallbackMetadata->Item)) {
+                    foreach ($stkCallback->CallbackMetadata->Item as $key => $value) {
+                        $log->write($value);
+
+                        if ('MpesaReceiptNumber' == $value->Name) {
+                            $MpesaReceiptNumber = $value->Value;
+                        }
+                    }
+                }
+
+                $customer_info['order_id'] = $order_info['order_id'];
+                $customer_info['status'] = $stkCallback->ResultCode == 0 ? 'Successful' : 'Failed';
+                $customer_info['amount'] = $this->currency->format($order_info['total'] - $order_info['amount_partialy_paid']);
+                $customer_info['email'] = $customer_info['email'];
+
+                if ($customer_info['email_notification'] == 1) {
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_93', $customer_info);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_93', $customer_info);
+                    //$log->write($subject);
+                    //$log->write($message);
+
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($customer_info['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setSubject($subject);
+                    $mail->setHTML($message);
+                    $mail->send();
+                }
+
+                if ($customer_info['sms_notification'] == 1) {
+                    $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_93', $customer_info);
+
+                    if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_93')) {
+                        $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+                    }
+                }
+
+                if ($customer_info['mobile_notification'] == 1) {
+                    if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_93')) {
+                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_93', $customer_info);
+                        $log->write($mobile_notification_template);
+                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_93', $customer_info);
+                        $log->write($mobile_notification_title);
+                        if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
+                            $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
+                            $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                        } else {
+                            $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public function mpesacallbackupdatemail($stkCallback) {
+        $log = new Log('error.log');
+        $MpesaReceiptNumber = NULL;
+        $this->load->model('payment/mpesa');
+        $this->load->model('account/customer');
+        $this->load->model('checkout/order');
+        $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->MerchantRequestID);
+        if (is_array($manifest_id) && count($manifest_id) > 0) {
+            foreach ($manifest_id as $manifest_ids) {
+                $log->write($manifest_ids['order_id']);
+                $order_info = $this->model_checkout_order->getOrder($manifest_ids['order_id']);
+                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                if (isset($stkCallback->CallbackMetadata->Item)) {
+                    foreach ($stkCallback->CallbackMetadata->Item as $key => $value) {
+                        $log->write($value);
+
+                        if ('MpesaReceiptNumber' == $value->Name) {
+                            $MpesaReceiptNumber = $value->Value;
+                        }
+                    }
+                }
+
+                $customer_info['order_id'] = $order_info['order_id'];
+                $customer_info['status'] = $stkCallback->ResultCode == 0 ? 'Successful' : 'Failed';
+                $customer_info['amount'] = $this->currency->format($order_info['total'] - $order_info['amount_partialy_paid']);
+                $customer_info['email'] = $customer_info['email'];
+
+                if ($customer_info['email_notification'] == 1) {
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_93', $customer_info);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_93', $customer_info);
+                    //$log->write($subject);
+                    //$log->write($message);
+
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($customer_info['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setSubject($subject);
+                    $mail->setHTML($message);
+                    $mail->send();
+                }
+
+                if ($customer_info['sms_notification'] == 1) {
+                    $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_93', $customer_info);
+
+                    if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_93')) {
+                        $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+                    }
+                }
+
+                if ($customer_info['mobile_notification'] == 1) {
+                    if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_93')) {
+                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_93', $customer_info);
+                        $log->write($mobile_notification_template);
+                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_93', $customer_info);
+                        $log->write($mobile_notification_title);
+                        if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
+                            $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
+                            $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                        } else {
+                            $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public function mpesacallbackupdate($stkCallback) {
         $log = new Log('error.log');
         $MpesaReceiptNumber = NULL;

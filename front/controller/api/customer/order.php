@@ -2755,21 +2755,22 @@ class ControllerApiCustomerOrder extends Controller {
                         $s_price = 0;
                         $o_price = 0;
 
-                        if (!$this->config->get('config_inclusiv_tax')) {
-                            //get price html
-                            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                                $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
-                                $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                            } else {
-                                $product_info['price'] = false;
-                            }
-                            if ((float) $product_info['special_price']) {
-                                $product_info['special_price'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
-                                $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                            } else {
-                                $product_info['special_price'] = false;
-                            }
-                        } else {
+                        // if (!$this->config->get('config_inclusiv_tax')) {
+                        //     //get price html
+                        //     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                        //         $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+                        //         $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                        //     } else {
+                        //         $product_info['price'] = false;
+                        //     }
+                        //     if ((float) $product_info['special_price']) {
+                        //         $product_info['special_price'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+                        //         $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                        //     } else {
+                        //         $product_info['special_price'] = false;
+                        //     }
+                        // } else
+                         {
                             $s_price = $product_info['special_price'];
                             $o_price = $product_info['price'];
                             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -2931,23 +2932,24 @@ class ControllerApiCustomerOrder extends Controller {
                         $s_price = 0;
                         $o_price = 0;
 
-                        if (!$this->config->get('config_inclusiv_tax')) {
-                            //get price html
-                            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                                $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+                        // if (!$this->config->get('config_inclusiv_tax')) {
+                        //     //get price html
+                        //     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                        //         $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 
-                                $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                            } else {
-                                $product_info['price'] = false;
-                            }
-                            if ((float) $product_info['special_price']) {
-                                $product_info['special_price'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+                        //         $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                        //     } else {
+                        //         $product_info['price'] = false;
+                        //     }
+                        //     if ((float) $product_info['special_price']) {
+                        //         $product_info['special_price'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 
-                                $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                            } else {
-                                $product_info['special_price'] = false;
-                            }
-                        } else {
+                        //         $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                        //     } else {
+                        //         $product_info['special_price'] = false;
+                        //     }
+                        // } else 
+                        {
                             $s_price = $product_info['special_price'];
                             $o_price = $product_info['price'];
 
@@ -4016,20 +4018,25 @@ class ControllerApiCustomerOrder extends Controller {
                 }
             } elseif ('mpesa' == $args['payment_method_code']) {
                 //save for refrence id correct order id
+                $log = new Log('error.log');
 
-                if (isset($args['mpesa_refrence_id'])) {
+                $kwikbasket_order_reference_number = $order_data[75]['order_reference_number'];
+                $log->write($kwikbasket_order_reference_number);
+
+                if ($kwikbasket_order_reference_number != NULL) {
                     $this->load->model('payment/mpesa');
-                    $this->load->model('checkout/order');
                     $this->load->model('account/order');
+                    $this->load->model('checkout/order');
 
-                    foreach ($order_ids as $order_id) {
-                        $order_details = $this->model_account_order->getOrderDetailsById($order_id);
-                        /* ALLOWING PAYMENT FOR KWIKBASKET ORDERS ONLY */
-                        if ($order_details['store_id'] == 75) {
-                            $this->model_payment_mpesa->updateOrderIdMpesaOrder($order_id, $args['mpesa_refrence_id']);
+                    $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($kwikbasket_order_reference_number);
+                    $log->write($mpesaDetails);
 
-                            $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mpesa_order_status_id'));
-                        }
+                    if (is_array($mpesaDetails) && count($mpesaDetails) > 0) {
+                        $mpesa_order_details = $this->model_account_order->getOrderByReferenceIdApi($kwikbasket_order_reference_number);
+                        $log->write($mpesa_order_details);
+
+                        $this->model_checkout_order->addOrderHistory($mpesa_order_details['order_id'], $this->config->get('mpesa_order_status_id'));
+                        $this->model_payment_mpesa->updateMpesaOrder($mpesa_order_details['order_id'], $mpesaDetails['mpesa_receipt_number']);
                     }
                 }
             } elseif ('interswitch' == $args['payment_method_code']) {

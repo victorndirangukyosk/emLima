@@ -521,6 +521,9 @@ class ModelAccountOrder extends Model {
         }
 
         $log = new Log('error.log');
+        $log->write('getOrders');
+        $log->write($this->customer->getId());
+        $log->write('getOrders');
         $s_users = [];
         $parent_user_id = NULL;
         $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $this->customer->getId() . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
@@ -534,7 +537,7 @@ class ModelAccountOrder extends Model {
         }
 
         if ($parent_user_id != NULL) {
-            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $parent_user_id . "'");
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $parent_user_id . "' AND parent > 0");
             $sub_users = $sub_users_query->rows;
             //$log->write('SUB USERS ORDERS');
             //$log->write($sub_users);
@@ -543,7 +546,7 @@ class ModelAccountOrder extends Model {
             array_push($s_users, $order_approval_access_user['parent']);
             $sub_users_od = implode(',', $s_users);
         } else {
-            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "'");
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "' AND parent > 0");
             $sub_users = $sub_users_query->rows;
             //$log->write('SUB USERS ORDERS');
             //$log->write($sub_users);
@@ -758,7 +761,7 @@ class ModelAccountOrder extends Model {
         }
 
         if ($parent_user_id != NULL) {
-            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $parent_user_id . "'");
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $parent_user_id . "' AND parent > 0");
             $sub_users = $sub_users_query->rows;
             $log->write('SUB USERS ORDERS_1');
             $log->write($sub_users);
@@ -769,9 +772,10 @@ class ModelAccountOrder extends Model {
             $sub_users_od = implode(',', $s_users);
             $log->write($sub_users_od);
         } else {
-            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "'");
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "' AND parent > 0");
             $sub_users = $sub_users_query->rows;
             $log->write('SUB USERS ORDERS_2');
+            $log->write($this->customer->getId());
             $log->write($sub_users);
             $log->write('SUB USERS ORDERS_2');
             $s_users = array_column($sub_users, 'customer_id');

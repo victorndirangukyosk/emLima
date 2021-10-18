@@ -302,7 +302,7 @@ class Controlleraccounttransactions extends Controller {
                 $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                 //echo "<pre>";print_r($order);die;
                 if (in_array($order['payment_method'], $PaymentFilter)) {
-                    if (!empty($order['transcation_id']) && !in_array($order['status'], $statusCancelledFilter)) {
+                    if (!empty($order['transcation_id']) && $order['paid'] == 'Y' && !in_array($order['status'], $statusCancelledFilter)) {
                         //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
                         if (is_array($order) && array_key_exists('value', $order)) {
                             $order['total_currency'] = $this->currency->format($order['value']);
@@ -326,9 +326,13 @@ class Controlleraccounttransactions extends Controller {
                           $log->write('NON NUMERIC'); */
 
                         if ($order['pending_amount'] > 0)
+                        {
                             $totalPendingAmount = $totalPendingAmount + $order['pending_amount'];
+                        }
                         else
+                        {
                             $totalPendingAmount = $totalPendingAmount + $order['value'];
+                        }
 
                         //$totalPendingAmount = $this->currency->format($totalPendingAmount);
                         $data['pending_order_id'][] = $order['order_id'];

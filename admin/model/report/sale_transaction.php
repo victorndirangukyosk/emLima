@@ -846,6 +846,9 @@ class ModelReportSaleTransaction extends Model
             $sql .= " AND o.total = '".(float) $data['filter_total']."'";
         }
 
+
+        // echo "<pre>";print_r($sql);die;
+        
         $query = $this->db->query($sql);
 
         return $query->row['total'];

@@ -20,6 +20,6 @@ $_['column_total'] = 'Total';
 $_['column_action'] = 'Action';
 
 // Entry
-$_['entry_date_start'] = 'Customers Onboarded - Start Date';
-$_['entry_date_end'] = 'Customers Onboarded - End Date';
+$_['entry_date_start'] = 'Customers Ordered Date - Start Date';
+$_['entry_date_end'] = 'Customers Ordered Date - End Date';
 $_['entry_status'] = 'Order Status';

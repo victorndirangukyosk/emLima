@@ -401,6 +401,7 @@ class ControllerSaleOrder extends Controller {
                     'total' => $total_data,
                     'customer_id' => $order_info['customer_id'],
                     'comment' => nl2br($order_info['comment']),
+                    'order_status_id' => $order_info['order_status_id'],
                 ];
 
                 // echo '<pre>';
@@ -6727,10 +6728,10 @@ class ControllerSaleOrder extends Controller {
 
                 ++$p;
             }
-                if($wallet_amount_positive>0)
-                {
-                $orderTotal +=$wallet_amount_positive;
-                }
+                // if($wallet_amount_positive>0)
+                // {
+                // $orderTotal +=$wallet_amount_positive;
+                // }
             $orderTotal = round($orderTotal, 2);
             $subTotal = round($subTotal, 2);
 

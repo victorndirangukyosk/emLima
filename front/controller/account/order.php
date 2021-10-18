@@ -3987,23 +3987,24 @@ class ControllerAccountOrder extends Controller {
                 $s_price = 0;
                 $o_price = 0;
 
-                if (!$this->config->get('config_inclusiv_tax')) {
-                    //get price html
-                    if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                        $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+                // if (!$this->config->get('config_inclusiv_tax')) {
+                //     //get price html
+                //     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                //         $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 
-                        $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $product_info['price'] = false;
-                    }
-                    if ((float) $product_info['special_price']) {
-                        $product_info['special_price'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+                //         $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                //     } else {
+                //         $product_info['price'] = false;
+                //     }
+                //     if ((float) $product_info['special_price']) {
+                //         $product_info['special_price'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 
-                        $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $product_info['special_price'] = false;
-                    }
-                } else {
+                //         $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                //     } else {
+                //         $product_info['special_price'] = false;
+                //     }
+                // } else
+                 {
                     $s_price = $product_info['special_price'];
                     $o_price = $product_info['price'];
 
@@ -4173,23 +4174,24 @@ class ControllerAccountOrder extends Controller {
                 $s_price = 0;
                 $o_price = 0;
 
-                if (!$this->config->get('config_inclusiv_tax')) {
-                    //get price html
-                    if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                        $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+                // if (!$this->config->get('config_inclusiv_tax')) {
+                //     //get price html
+                //     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                //         $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 
-                        $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $product_info['price'] = false;
-                    }
-                    if ((float) $product_info['special_price']) {
-                        $product_info['special_price'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+                //         $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                //     } else {
+                //         $product_info['price'] = false;
+                //     }
+                //     if ((float) $product_info['special_price']) {
+                //         $product_info['special_price'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
 
-                        $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $product_info['special_price'] = false;
-                    }
-                } else {
+                //         $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                //     } else {
+                //         $product_info['special_price'] = false;
+                //     }
+                // } else
+                 {
                     $s_price = $product_info['special_price'];
                     $o_price = $product_info['price'];
 

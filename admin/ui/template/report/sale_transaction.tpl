@@ -168,7 +168,7 @@
                                     <td class="text-right">Delivery Date</td>                             
 
                                     <td class="text-right"><?php echo $column_transaction_id; ?></td>
-                                     <td class="text-right"><?php echo Delivery.'  ' . $column_status; ?></td>  
+                                     <td class="text-right"><?php echo 'Delivery'.'  ' . $column_status; ?></td>  
 
                                      
 
@@ -341,6 +341,14 @@ var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
                 url += '&filter_date_modified=' + encodeURIComponent(filter_date_modified);
             }
 
+
+             if((filter_customer==0 && filter_company==0 ) && (filter_date_modified=='' || filter_date_added==''))
+            {
+                alert("Please select either customer or company or start & end date filters");
+                return;
+            }
+
+
             location = url;
         });
         //--></script> 
@@ -497,6 +505,11 @@ var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
         if (filter_date_modified) {
             url += '&filter_date_modified=' + encodeURIComponent(filter_date_modified);
         }
+    if((filter_customer==0 && filter_company==0 ) && (filter_date_modified=='' || filter_date_added==''))
+            {
+                alert("Please select either customer or company or start & end date filters");
+                return;
+            }
 
 
     location = url;

@@ -2483,7 +2483,7 @@ class ControllerSaleCustomer extends Controller {
         $this->load->model('sale/customer');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->user->hasPermission('modify', 'sale/customer')) {
-            $this->model_sale_customer->addCredit($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount']);
+            $this->model_sale_customer->addOnlyCredit($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount'],0,1);
 
             $data['success'] = $this->language->get('text_success');
         } else {
