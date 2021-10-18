@@ -1173,8 +1173,8 @@ class ControllerPaymentMpesa extends Controller {
                 $customer_info['email'] = $customer_info['email'];
 
                 if ($customer_info['email_notification'] == 1) {
-                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_92', $customer_info);
-                    $message = $this->emailtemplate->getMessage('Customer', 'customer_92', $customer_info);
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_93', $customer_info);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_93', $customer_info);
                     //$log->write($subject);
                     //$log->write($message);
 
@@ -1188,18 +1188,18 @@ class ControllerPaymentMpesa extends Controller {
                 }
 
                 if ($customer_info['sms_notification'] == 1) {
-                    $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_92', $customer_info);
+                    $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_93', $customer_info);
 
-                    if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_92')) {
+                    if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_93')) {
                         $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
                     }
                 }
 
                 if ($customer_info['mobile_notification'] == 1) {
-                    if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_92')) {
-                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_92', $customer_info);
+                    if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_93')) {
+                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_93', $customer_info);
                         $log->write($mobile_notification_template);
-                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_92', $customer_info);
+                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_93', $customer_info);
                         $log->write($mobile_notification_title);
                         if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
                             $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
@@ -1241,8 +1241,8 @@ class ControllerPaymentMpesa extends Controller {
                 $customer_info['email'] = $customer_info['email'];
 
                 if ($customer_info['email_notification'] == 1) {
-                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_92', $customer_info);
-                    $message = $this->emailtemplate->getMessage('Customer', 'customer_92', $customer_info);
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_93', $customer_info);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_93', $customer_info);
                     //$log->write($subject);
                     //$log->write($message);
 
@@ -1256,18 +1256,18 @@ class ControllerPaymentMpesa extends Controller {
                 }
 
                 if ($customer_info['sms_notification'] == 1) {
-                    $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_92', $customer_info);
+                    $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_93', $customer_info);
 
-                    if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_92')) {
+                    if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_93')) {
                         $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
                     }
                 }
 
                 if ($customer_info['mobile_notification'] == 1) {
-                    if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_92')) {
-                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_92', $customer_info);
+                    if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_93')) {
+                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_93', $customer_info);
                         $log->write($mobile_notification_template);
-                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_92', $customer_info);
+                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_93', $customer_info);
                         $log->write($mobile_notification_title);
                         if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
                             $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
