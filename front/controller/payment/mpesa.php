@@ -1167,11 +1167,12 @@ class ControllerPaymentMpesa extends Controller {
                     }
                 }
 
+                $customer_info['order_id'] = $order_info['order_id'];
+                $customer_info['status'] = $stkCallback->ResultCode == 0 ? 'Successful' : 'Failed';
+                $customer_info['amount'] = $this->currency->format($order_info['total'] - $order_info['amount_partialy_paid']);
+                $customer_info['email'] = $customer_info['email'];
+
                 if ($customer_info['email_notification'] == 1) {
-                    $customer_info['order_id'] = $order_info['order_id'];
-                    $customer_info['status'] = $stkCallback->ResultCode == 0 ? 'Successful' : 'Failed';
-                    $customer_info['amount'] = $this->currency->format($order_info['total'] - $order_info['amount_partialy_paid']);
-                    $customer_info['email'] = $customer_info['email'];
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_92', $customer_info);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_92', $customer_info);
                     //$log->write($subject);
@@ -1191,6 +1192,21 @@ class ControllerPaymentMpesa extends Controller {
 
                     if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_92')) {
                         $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+                    }
+                }
+
+                if ($customer_info['mobile_notification'] == 1) {
+                    if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_92')) {
+                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_92', $customer_info);
+                        $log->write($mobile_notification_template);
+                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_92', $customer_info);
+                        $log->write($mobile_notification_title);
+                        if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
+                            $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
+                            $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], '', '', $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                        } else {
+                            $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
+                        }
                     }
                 }
             }
@@ -1219,11 +1235,12 @@ class ControllerPaymentMpesa extends Controller {
                     }
                 }
 
+                $customer_info['order_id'] = $order_info['order_id'];
+                $customer_info['status'] = $stkCallback->ResultCode == 0 ? 'Successful' : 'Failed';
+                $customer_info['amount'] = $this->currency->format($order_info['total'] - $order_info['amount_partialy_paid']);
+                $customer_info['email'] = $customer_info['email'];
+
                 if ($customer_info['email_notification'] == 1) {
-                    $customer_info['order_id'] = $order_info['order_id'];
-                    $customer_info['status'] = $stkCallback->ResultCode == 0 ? 'Successful' : 'Failed';
-                    $customer_info['amount'] = $this->currency->format($order_info['total'] - $order_info['amount_partialy_paid']);
-                    $customer_info['email'] = $customer_info['email'];
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_92', $customer_info);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_92', $customer_info);
                     //$log->write($subject);
@@ -1243,6 +1260,21 @@ class ControllerPaymentMpesa extends Controller {
 
                     if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_92')) {
                         $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+                    }
+                }
+
+                if ($customer_info['mobile_notification'] == 1) {
+                    if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_92')) {
+                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_92', $customer_info);
+                        $log->write($mobile_notification_template);
+                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_92', $customer_info);
+                        $log->write($mobile_notification_title);
+                        if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
+                            $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
+                            $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], '', '', $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                        } else {
+                            $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
+                        }
                     }
                 }
             }
