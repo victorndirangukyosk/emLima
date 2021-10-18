@@ -1170,7 +1170,7 @@ class ControllerPaymentMpesa extends Controller {
                 if ($customer_info['email_notification'] == 1) {
                     $customer_info['order_id'] = $order_info['order_id'];
                     $customer_info['status'] = $stkCallback->ResultCode == 0 ? 'Successful' : 'Failed';
-                    $customer_info['amount'] = $order_info['total'] - $order_info['amount_partialy_paid'];
+                    $customer_info['amount'] = $this->currency->format($order_info['total'] - $order_info['amount_partialy_paid']);
                     $customer_info['email'] = $customer_info['email'];
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_92', $customer_info);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_92', $customer_info);
@@ -1214,7 +1214,7 @@ class ControllerPaymentMpesa extends Controller {
                 if ($customer_info['email_notification'] == 1) {
                     $customer_info['order_id'] = $order_info['order_id'];
                     $customer_info['status'] = $stkCallback->ResultCode == 0 ? 'Successful' : 'Failed';
-                    $customer_info['amount'] = $order_info['total'] - $order_info['amount_partialy_paid'];
+                    $customer_info['amount'] = $this->currency->format($order_info['total'] - $order_info['amount_partialy_paid']);
                     $customer_info['email'] = $customer_info['email'];
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_92', $customer_info);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_92', $customer_info);
