@@ -1185,6 +1185,14 @@ class ControllerPaymentMpesa extends Controller {
                     $mail->setHTML($message);
                     $mail->send();
                 }
+
+                if ($customer_info['sms_notification'] == 1) {
+                    $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_92', $customer_info);
+
+                    if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_92')) {
+                        $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+                    }
+                }
             }
         }
     }
@@ -1228,6 +1236,14 @@ class ControllerPaymentMpesa extends Controller {
                     $mail->setSubject($subject);
                     $mail->setHTML($message);
                     $mail->send();
+                }
+
+                if ($customer_info['sms_notification'] == 1) {
+                    $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_92', $customer_info);
+
+                    if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_92')) {
+                        $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+                    }
                 }
             }
         }
