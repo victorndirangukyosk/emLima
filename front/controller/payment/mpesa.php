@@ -1175,6 +1175,14 @@ class ControllerPaymentMpesa extends Controller {
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_92', $customer_info);
                     $log->write($subject);
                     $log->write($message);
+
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($customer_info['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setSubject($subject);
+                    $mail->setHTML($message);
+                    $mail->send();
                 }
             }
         }
@@ -1210,6 +1218,14 @@ class ControllerPaymentMpesa extends Controller {
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_92', $customer_info);
                     $log->write($subject);
                     $log->write($message);
+
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($customer_info['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setSubject($subject);
+                    $mail->setHTML($message);
+                    $mail->send();
                 }
             }
         }
