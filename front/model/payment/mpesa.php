@@ -201,6 +201,7 @@ class ModelPaymentMpesa extends Model {
           $this->db->query('UPDATE `' . DB_PREFIX . "order_history` SET notify = '" . (int) $notify . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
           } */
         //$this->insertOrderTransactionFee($order_id, $order_status_id);
+        
     }
 
     public function insertCustomerTransactionId($customer_id, $transaction_id) {

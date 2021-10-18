@@ -426,7 +426,7 @@ class Emailtemplate {
 
     // Customer
     public function getCustomerFind() {
-        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{deliveryexecutivename}', '{deliveryexecutivephone}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}'];
+        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{deliveryexecutivename}', '{deliveryexecutivephone}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}', '{order_id}', '{status}'];
 
         return $result;
     }
@@ -468,6 +468,8 @@ class Emailtemplate {
             'amount' => isset($data['amount']) ? $data['amount'] : '',
             'transfer_type' => isset($data['transfer_type']) ? $data['transfer_type'] : '',
             'ip_address' => $data['ip_address'],
+            'order_id' => $data['order_id'],
+            'status' => $data['status'],
         ];
 
         return $result;
