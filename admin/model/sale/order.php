@@ -1682,14 +1682,28 @@ class ModelSaleOrder extends Model {
         $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
 
-        // if (isset($data['filter_order_status'])) {
+        if (isset($data['filter_order_status'])) {
         // $sql .= " WHERE o.order_status_id = '1' ";
-        $sql .= " WHERE o.order_status_id not in (0,2,5,6,4,16,13,10,3)";//8?
-        // $sql .= " WHERE o.order_status_id!=0 and o.order_status_id!=2 and o.order_status_id!=5 ";
 
-        //} else {
+        $implodestatus = [];
+
+        $order_statuses = explode(',', $data['filter_order_status']);
+
+        foreach ($order_statuses as $order_status_id) {
+            $implodestatus[] = "o.order_status_id = '" . (int) $order_status_id . "'";
+        }
+
+        if ($implodestatus) {
+            $sql .= ' WHERE (' . implode(' OR ', $implodestatus) . ')';
+        } 
+
+        // $sql .= " WHERE o.order_status_id not in (0,2,5,6,4,16,13,10,3)";//8?
+
+        } else {
         // $sql .= " WHERE o.order_status_id > '0'";
-        // }
+        $sql .= " WHERE o.order_status_id not in (0,2,5,6,4,16,13,10,3)";//8?
+
+        }
 
         if ($this->user->isVendor()) {
             $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
