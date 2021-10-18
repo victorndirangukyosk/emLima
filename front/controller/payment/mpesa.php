@@ -1143,6 +1143,67 @@ class ControllerPaymentMpesa extends Controller {
         return $json;
     }
 
+    public function mpesacallbackupdatemailfail($stkCallback) {
+        $log = new Log('error.log');
+        $MpesaReceiptNumber = NULL;
+        $this->load->model('payment/mpesa');
+        $this->load->model('account/customer');
+        $this->load->model('checkout/order');
+        $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->MerchantRequestID);
+
+        if (is_array($manifest_id) && count($manifest_id) > 0) {
+            foreach ($manifest_id as $manifest_ids) {
+                $log->write($manifest_ids['order_id']);
+                $order_info = $this->model_checkout_order->getOrder($manifest_ids['order_id']);
+                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
+                if (isset($stkCallback->CallbackMetadata->Item)) {
+                    foreach ($stkCallback->CallbackMetadata->Item as $key => $value) {
+                        $log->write($value);
+
+                        if ('MpesaReceiptNumber' == $value->Name) {
+                            $MpesaReceiptNumber = $value->Value;
+                        }
+                    }
+                }
+
+                $subject = $this->emailtemplate->getSubject('Customer', 'customer_92', $customer_info);
+                $message = $this->emailtemplate->getMessage('Customer', 'customer_92', $customer_info);
+                $log->write($subject);
+                $log->write($message);
+            }
+        }
+    }
+
+    public function mpesacallbackupdatemail($stkCallback) {
+        $log = new Log('error.log');
+        $MpesaReceiptNumber = NULL;
+        $this->load->model('payment/mpesa');
+        $this->load->model('account/customer');
+        $this->load->model('checkout/order');
+        $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->MerchantRequestID);
+        if (is_array($manifest_id) && count($manifest_id) > 0) {
+            foreach ($manifest_id as $manifest_ids) {
+                $log->write($manifest_ids['order_id']);
+                $order_info = $this->model_checkout_order->getOrder($manifest_ids['order_id']);
+                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                if (isset($stkCallback->CallbackMetadata->Item)) {
+                    foreach ($stkCallback->CallbackMetadata->Item as $key => $value) {
+                        $log->write($value);
+
+                        if ('MpesaReceiptNumber' == $value->Name) {
+                            $MpesaReceiptNumber = $value->Value;
+                        }
+                    }
+                }
+                $subject = $this->emailtemplate->getSubject('Customer', 'customer_92', $customer_info);
+                $message = $this->emailtemplate->getMessage('Customer', 'customer_92', $customer_info);
+                $log->write($subject);
+                $log->write($message);
+            }
+        }
+    }
+
     public function mpesacallbackupdate($stkCallback) {
         $log = new Log('error.log');
         $MpesaReceiptNumber = NULL;
