@@ -600,7 +600,7 @@ function showPayWith() {
             }else {
             $("#pay_with").show(); 
             }
-    } else {
+    } else if(radioValue == 'pay_full') {
       $("#pay_with").show(); 
     }
 }
