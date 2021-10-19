@@ -94,10 +94,13 @@ class Emailtemplate {
             // print_r($template['description']);
             // die;
             //$log->write($find);
+             //$log->write($replace);
+             //$log->write('finddddddddddd');
             /* $log->write("replace");
               $log->write($template['description']);
               $log->write($replace);
               $log->write($find); */
+              
             $message = trim(str_replace($find, $replace, $template['description']));
             //$log->write($message);
         } else {
@@ -974,7 +977,7 @@ class Emailtemplate {
             '{firstname}', '{lastname}', '{delivery_address}', '{shipping_address}', '{payment_address}', '{order_date}', '{product:start}', '{product:stop}',
             '{total:start}', '{total:stop}', '{voucher:start}', '{voucher:stop}', '{special}', '{date}', '{payment}', '{shipment}', '{order_id}', '{total}', '{invoice_number}',
             '{order_href}', '{store_url}', '{status_name}', '{store_name}', '{ip}', '{comment:start}', '{comment:stop}', '{sub_total}', '{shipping_cost}',
-            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}', '{order_pdf_href}', '{delivery_date}', '{delivery_time}', '{customer_notes}', '{customer_cpf}', '{store_address}', '{store_telephone}', '{store_tax_number}', '{shipping_contact_number}', '{shipping_flat_number}', '{shipping_street_address}', '{shipping_landmark}', '{shipping_zipcode}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{customer_company_name}',
+            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}', '{order_pdf_href}', '{delivery_date}', '{delivery_time}', '{customer_notes}', '{customer_cpf}', '{customer_company_name}', '{store_address}', '{store_telephone}', '{store_tax_number}', '{shipping_contact_number}', '{shipping_flat_number}', '{shipping_street_address}', '{shipping_landmark}', '{shipping_zipcode}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}',
         ];
 
         return $result;
@@ -1143,6 +1146,9 @@ class Emailtemplate {
         ];
 
         /* $log->write($result);
+        $log->write("MAIL DATA");
+        $log->write($this->config->get('config_logo'));
+
           $log->write($this->language->get('full_datetime_format')); */
 
         return $result;
