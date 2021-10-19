@@ -6,7 +6,7 @@ class ModelSaleOrderReceivables extends Model
     {
         $sql = "SELECT o.order_id, c.customer_id,c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer,c.company_name as company, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
 
-        $sql .= " Where (o.paid = 'P' or o.paid = 'N')  and  ot.transaction_id  is null ";
+        $sql .= " Where (o.paid = 'P' or o.paid = 'N')  ";//and  ot.transaction_id  is null ";
 
         $sql .= " and o.order_status_id not in (0,6,7,8,15,16,9,10,11,12) ";
 
@@ -83,7 +83,7 @@ class ModelSaleOrderReceivables extends Model
     public function getTotalOrderReceivablesAndGrandTotal($data = [])
     {
         $sql = 'SELECT COUNT(*) as total,sum(ort.value) as GrandTotal FROM `'.DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join '.DB_PREFIX.'order_total ort on(o.order_id =ort.order_id) and ort.code="total" left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
-        $sql .= " Where (o.paid = 'P' or o.paid = 'N')   and  ot.transaction_id  is null ";
+        $sql .= " Where (o.paid = 'P' or o.paid = 'N') ";//  and  ot.transaction_id  is null ";
         $sql .= " and o.order_status_id not in (0,6,7,8,15,16,9,10,11,12) ";
 
         if (!empty($data['filter_order_id'])) {
@@ -151,9 +151,9 @@ class ModelSaleOrderReceivables extends Model
 
         // $query = $this->db->query($sql);
 
-        // $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "'";
+        $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "'";
 
-        // $query = $this->db->query($sql);
+        $query = $this->db->query($sql);
 
 }
 public function getOrderTotal($order_id)
@@ -176,7 +176,7 @@ public function getSuccessfulOrderReceivables($data = [])
 
     $sql .= " Where (o.paid = 'Y' || o.paid = 'P')   ";//and  ot.transaction_id  is null
 
-    // $sql .= " and o.order_status_id not in (0,6,7,8,15,16,9,10,11,12) ";
+    $sql .= " and o.order_status_id not in (0,6,7,8,16,9,10,11,12) ";//15
 
 
     if (!empty($data['filter_order_id'])) {
@@ -252,7 +252,7 @@ public function getTotalSuccessfulOrderReceivablesAndGrandTotal($data = [])
 {
     $sql = 'SELECT COUNT(*) as total,sum(ort.value) as GrandTotal FROM `'.DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join '.DB_PREFIX.'order_total ort on(o.order_id =ort.order_id) and ort.code="total" left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
     $sql .= " Where (o.paid = 'Y' || o.paid = 'P')    ";//and  ot.transaction_id  is not null
-    // $sql .= " and o.order_status_id not in (0,6,7,8,15,16,9,10,11,12) ";
+    $sql .= " and o.order_status_id not in (0,6,7,8,16,9,10,11,12) ";//15
 
     if (!empty($data['filter_order_id'])) {
         $sql .= " AND o.order_id LIKE '".$data['filter_order_id']."%'";

@@ -217,7 +217,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch','Wallet Payment'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -233,9 +233,10 @@ class Controlleraccounttransactions extends Controller {
             foreach ($results_orders as $order) {
                 $this->load->model('sale/order');
                 $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
-                //echo "<pre>";print_r($order);die;
                 if (in_array($order['payment_method'], $PaymentFilter)) {
-                    if (!empty($order['transcation_id'])) {
+                //  echo "<pre>";print_r($order);die;
+
+                    if (!empty($order['transcation_id']) && !in_array($order['status'], $statusCancelledFilter)) {
                         //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
                         $data['success_transactions'][] = $order;
                     } elseif (in_array($order['status'], $statusCancelledFilter)) {
@@ -248,7 +249,7 @@ class Controlleraccounttransactions extends Controller {
                 }
             }
         }
-        //echo "<pre>";print_r($data);die;
+        //  echo "<pre>";print_r($data['success_transactions']);die;
         $data['total_pending_amount'] = $totalPendingAmount;
         $data['pending_order_id'] = implode('--', $data['pending_order_id']);
         $data['payment_interswitch'] = $this->load->controller('payment/interswitch');
@@ -286,7 +287,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch','Wallet Payment'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -301,7 +302,7 @@ class Controlleraccounttransactions extends Controller {
                 $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                 //echo "<pre>";print_r($order);die;
                 if (in_array($order['payment_method'], $PaymentFilter)) {
-                    if (!empty($order['transcation_id'])) {
+                    if (!empty($order['transcation_id']) && $order['paid'] == 'Y' && !in_array($order['status'], $statusCancelledFilter)) {
                         //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
                         if (is_array($order) && array_key_exists('value', $order)) {
                             $order['total_currency'] = $this->currency->format($order['value']);
@@ -325,9 +326,13 @@ class Controlleraccounttransactions extends Controller {
                           $log->write('NON NUMERIC'); */
 
                         if ($order['pending_amount'] > 0)
+                        {
                             $totalPendingAmount = $totalPendingAmount + $order['pending_amount'];
+                        }
                         else
+                        {
                             $totalPendingAmount = $totalPendingAmount + $order['value'];
+                        }
 
                         //$totalPendingAmount = $this->currency->format($totalPendingAmount);
                         $data['pending_order_id'][] = $order['order_id'];
@@ -352,7 +357,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch','Wallet Payment'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -367,7 +372,7 @@ class Controlleraccounttransactions extends Controller {
                 $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                 //echo "<pre>";print_r($order);die;
                 if (in_array($order['payment_method'], $PaymentFilter)) {
-                    if (!empty($order['transcation_id'])) {
+                    if (!empty($order['transcation_id']) && !in_array($order['status'], $statusCancelledFilter)) {
                         //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
                         $data['success_transactions'][] = $order;
                     } elseif (in_array($order['status'], $statusCancelledFilter)) {
@@ -395,7 +400,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch','Wallet Payment'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -410,7 +415,7 @@ class Controlleraccounttransactions extends Controller {
                 $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                 //echo "<pre>";print_r($order);die;
                 if (in_array($order['payment_method'], $PaymentFilter)) {
-                    if (!empty($order['transcation_id'])) {
+                    if (!empty($order['transcation_id']) && !in_array($order['status'], $statusCancelledFilter)) {
                         //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
                         $data['success_transactions'][] = $order;
                     } elseif (in_array($order['status'], $statusCancelledFilter)) {

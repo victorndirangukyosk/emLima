@@ -1007,74 +1007,77 @@ class ModelSaleCustomer extends Model {
     }
 
     public function getTotalCustomersOnBoarded($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'customer c JOIN ' . DB_PREFIX . 'order o ON (c.customer_id = o.customer_id)';
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'customer c where   c.customer_id  in (select o.customer_id from ' . DB_PREFIX . 'order o where o.order_status_id NOT IN (0,16,6,8,9,10))';
 
-        $implode = [];
+        // $implode = [];
 
         if (!empty($data['filter_company'])) {
-            $implode[] = "c.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+            $sql .= "And c.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
         if (!empty($data['filter_name'])) {
-            $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $sql .= "And CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (!empty($data['filter_email'])) {
-            $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+            $sql .= "And c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
         }
 
         if (!empty($data['filter_telephone'])) {
-            $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+            $sql .= "And c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
         }
 
         if (isset($data['filter_newsletter']) && !is_null($data['filter_newsletter'])) {
-            $implode[] = "c.newsletter = '" . (int) $data['filter_newsletter'] . "'";
+            $sql .= "And c.newsletter = '" . (int) $data['filter_newsletter'] . "'";
         }
 
         if (!empty($data['filter_customer_group_id'])) {
-            $implode[] = "c.customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
+            $sql .= "And c.customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
         }
 
         if (!empty($data['filter_ip'])) {
-            $implode[] = "c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
+            $sql .= "And c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
         }
 
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
-            $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
+            $sql .= "And c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }
 
         if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
-            $implode[] = "c.account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
+            $sql .= "And c.account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
+            $sql .= "And c.status = '" . (int) $data['filter_status'] . "'";
         }
-        $implode[] = "approved = 1";
+        // $implode[] = "approved = 1";
 
-        if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
-            $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
-        }
+        // if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
+        //     $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
+        // }
 
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $sql .= "And DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
         if ($this->user->isAccountManager()) {
-            $implode[] = "c.account_manager_id = '" . (int) $this->user->getId() . "'";
+            $sql .= "And  c.account_manager_id = '" . (int) $this->user->getId() . "'";
         }
 
         if (!empty($data['filter_monthyear_added'])) {
-            $implode[] = "DATE_FORMAT(c.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+            $sql .= "And  DATE_FORMAT(c.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
 
-        $implode[] = " o.order_status_id NOT IN (0)";
+        // $implode[] = " o.order_status_id NOT IN (0)";
         //$implode[] = "c.parent is null or c.parent = 0";
 
-        if ($implode) {
-            $sql .= ' WHERE ' . implode(' AND ', $implode);
-        }
-        $sql .= ' GROUP BY c.customer_id';
+        // if ($implode) {
+        //     $sql .= ' WHERE ' . implode(' AND ', $implode);
+        // }
+        // $sql .= ' GROUP BY c.customer_id';
+
+            // echo "<pre>";print_r($sql);die;
+        
         $query = $this->db->query($sql);
 
         return $query->row['total'];
@@ -1221,13 +1224,17 @@ class ModelSaleCustomer extends Model {
     }
 
     public function getAllCredits($data = []) {
-        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.*,c.email  FROM " . DB_PREFIX . 'customer c  JOIN ' . DB_PREFIX . 'customer_credit cgd ON (c.customer_id = cgd.customer_id)';
+        $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,c.company_name, cgd.*,c.email  FROM " . DB_PREFIX . 'customer c  JOIN ' . DB_PREFIX . 'customer_credit cgd ON (c.customer_id = cgd.customer_id)';
 
         //echo "<pre>";print_r($sql);die;
         $implode = [];
 
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
         if (!empty($data['filter_email'])) {
@@ -1299,6 +1306,10 @@ class ModelSaleCustomer extends Model {
 
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
         if (!empty($data['filter_email'])) {
@@ -1924,15 +1935,77 @@ class ModelSaleCustomer extends Model {
         return $query->row['customer_id'];
     }
 
-    public function addOnlyCredit($customer_id, $description = '', $amount = '', $order_id = 0) {
-        $customer_info = $this->getCustomer($customer_id);
-
+    public function addOnlyCredit($customer_id, $description = '', $amount = '', $order_id = 0,$notify = 0) 
+    {
         $log = new Log('error.log');
+        try{
+                $customer_info = $this->getCustomer($customer_id);
+                if ($customer_info) {
+                    $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
+                }
 
-        if ($customer_info) {
-            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
-        }
+                if($notify==1)//send notification to customer
+                {                
+                    $this->load->language('mail/customer');           
+                    $store_name = $this->config->get('config_name');           
+
+                    $data = $customer_info;
+                    $data['amount'] = $amount;
+
+                    $data['transfer_type'] = 'debited from';
+                    if ($amount >= 0) {
+                        $data['transfer_type'] = 'credited in';
+                    }
+                    if ($amount < 0) {
+                        $data['amount'] = -$amount;
+                    }
+
+                    $data['amount'] = $this->currency->format($data['amount']);
+                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('Customer', 'customer_6')) {
+
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_6', $data);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_6', $data);
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($customer_info['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($store_name);
+                    $mail->setSubject($subject, ENT_QUOTES);
+                    $mail->setHTML($message, ENT_QUOTES);
+                    $mail->send();
+                    }
+
+                    if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_6')) {
+                        $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
+                    }
+
+                    if ($customer_info['mobile_notification'] == 1 && $this->emailtemplate->getNotificationEnabled('Customer', 'customer_6')) {
+                        $log->write('status enabled of mobi noti');
+                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_6', $data);
+                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_6', $data);
+
+                            if (isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
+                                $log->write('device id set');
+
+                                //$notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'],$customer_info['device_id'],$order_id,$mobile_notification_template,$mobile_notification_title);
+
+                                $sen['wallet_id'] = '';
+
+                                //->setData(array('order_id' => $order_id,'store_id' => $store_id,'notification_id' => $args['notification_id']));
+                                $ret = $this->emailtemplate->sendDynamicPushNotification($customer_info['customer_id'], $customer_info['device_id'], $mobile_notification_template, $mobile_notification_title, $sen);
+
+                                $log->write('device id set end');
+                            } else {
+                                $log->write('device id not set');
+                            }
+                    }
+                }//notify end
+            }
+            catch(exception $ex)
+            {} 
+             
     }
+
+        
 
     public function check_customer_previous_password($customer_id, $password) {
         $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . $customer_id . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "')");
@@ -2016,6 +2089,112 @@ class ModelSaleCustomer extends Model {
         }
         // echo '<pre>';print_r($id);die;
         return  $id;
+    }
+
+
+    public function getCustomerActivities($customer_id,$start,$limit) {
+
+        $sql = "SELECT ca.activity_id, ca.customer_id, ca.key, ca.data, ca.ip, ca.date_added ,ca.order_id FROM " . DB_PREFIX . 'customer_activity ca ';
+  
+        $implode = [];
+
+        if (!empty($customer_id)) {
+            $implode[] = "ca.customer_id =" . $customer_id ;
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $sql .= ' ORDER BY ca.date_added DESC';
+
+        if (isset($start) || isset($limit)) {
+            if ($start < 0) {
+                $start = 0;
+            }
+
+            if ($limit < 1) {
+                $limit = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $start . ',' . (int) $limit;
+        }
+        // echo "<pre>";print_r($sql); 
+
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+    public function getTotalCustomerActivities($customer_id) {
+
+         
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "customer_activity ca WHERE ca.customer_id = '" . (int) $customer_id . "'");
+
+        return $query->row['total'];
+
+        // echo "<pre>";print_r($sql); 
+ 
+        
+    }
+
+
+    public function getUserActivitiesofCustomer($customer_id,$start,$limit) {
+
+        $sql1 = ' SELECT ca.activity_id, ca.user_id,c.firstname,c.lastname, ca.key, ca.data, ca.ip, ca.date_added,ca.order_id FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'customer cust ON (cust.customer_id = ca.customer_id) ';
+        $sql2 = ' SELECT ca.activity_id, ca.user_id,c.firstname,c.lastname, ca.key, ca.data, ca.ip, ca.date_added,ca.order_id  FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'order o ON (o.order_id = ca.order_id) ';
+  
+        $implode = [];
+
+        if (!empty($customer_id)) {
+            $implode[] = "ca.customer_id =" . $customer_id ;
+        }
+
+        if ($implode) {
+            $sql1 .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $implode = [];
+
+        if (!empty($customer_id)) {
+            $implode[] = "o.customer_id =" . $customer_id ;
+        }
+
+        if ($implode) {
+            $sql2 .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        // $sql = 'select * from ( '.$sql1.' union '.$sql2.') as t ORDER BY date_added DESC';
+        $sql =$sql1;
+        if (isset($start) || isset($limit)) {
+            if ($start < 0) {
+                $start = 0;
+            }
+
+            if ($limit < 1) {
+                $limit = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $start . ',' . (int) $limit;
+        }
+        // echo "<pre>";print_r($sql); 
+
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+    public function getTotalUserActivitiesofCustomer($customer_id) {
+
+         
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'customer cust ON (cust.customer_id = ca.customer_id)  WHERE ca.customer_id = ' . (int) $customer_id);
+
+        // echo "<pre>";print_r('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'customer cust ON (cust.customer_id = ca.customer_id)  WHERE ca.customer_id = ' . (int) $customer_id ); 
+
+        return $query->row['total'];
+
+ 
+        
     }
 
 }

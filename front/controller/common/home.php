@@ -1760,16 +1760,16 @@ class ControllerCommonHome extends Controller {
                     'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                     'rating' => 0,
                     'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
-                    'vendor_display_name' => $vendor_details['display_name'],
+                    'vendor_display_name' => isset($vendor_details['display_name']) ? $vendor_details['display_name'] : '',
                     'sort_price' => $s_price
                 ];
             }
         }
         // echo "<pre>";print_r($data['products']);die;
         $log = new Log('error.log');
-        $log->write('filter_data');
+        /*$log->write('filter_data');
         $log->write($filter_data);
-        $log->write('filter_data');
+        $log->write('filter_data');*/
         if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'nasc') {
             $new_arry = $this->multisort($data['products'], 'name', 'nasc');
             $log = new Log('error.log');

@@ -398,7 +398,7 @@ class ControllerReportVendorOrders extends Controller {
         $this->response->setOutput($this->load->view('report/vendor_orders.tpl', $data));
     }
 
-    public function consolidatedOrderSheet() {
+    public function consolidatedOrderSheet() { 
 
 
         if (isset($this->request->get['filter_delivery_date'])) {
@@ -410,8 +410,9 @@ class ControllerReportVendorOrders extends Controller {
             ];
             $this->load->model('sale/order');
             // $results = $this->model_sale_order->getOrders($filter_data);
-            $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
-        } else {
+            // $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+        $results = $this->model_sale_order->getOrderswithProcessing($filter_data);
+    } else {
             $deliveryDate = null;
         }
         //below if ondition for fast orders, not required in sheduler
@@ -460,7 +461,7 @@ class ControllerReportVendorOrders extends Controller {
             $productName = $product['name'];
             $productUnit = $product['unit'];
             $productQuantity = $product['quantity'];
-            $productNote = $product['product_note'];
+            $productNote = isset($product['product_note']) ? $product['product_note'] : '';
             $produceType = $product['produce_type'];
 
             $consolidatedProductNames = array_column($consolidatedProducts, 'name');
@@ -509,14 +510,15 @@ class ControllerReportVendorOrders extends Controller {
         $this->model_report_excel->download_consolidated_order_sheet_excel($data);
     }
 
-    public function consolidatedOrderSheetForOrders() {
+    public function consolidatedOrderSheetForOrders() { 
 
 
         if (isset($this->request->get['filter_delivery_date'])) {
             $deliveryDate = $this->request->get['filter_delivery_date'];
-        } else {
-            $deliveryDate = null;
+        } else {//consolidated orders data should not be more , so get delivery date
+            $deliveryDate = date("Y-m-d");
         }
+        
 
         if (isset($this->request->get['filter_order_status'])) {
             $order_status = $this->request->get['filter_order_status'];
@@ -609,7 +611,12 @@ class ControllerReportVendorOrders extends Controller {
 
         $this->load->model('sale/order');
         // $results = $this->model_sale_order->getOrders($filter_data);
-        $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+        // $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+        $results = $this->model_sale_order->getOrderswithProcessing($filter_data);
+
+        
+
+        // echo "<pre>";print_r($results);die;
 
         $data = [];
         $unconsolidatedProducts = [];

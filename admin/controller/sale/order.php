@@ -401,6 +401,7 @@ class ControllerSaleOrder extends Controller {
                     'total' => $total_data,
                     'customer_id' => $order_info['customer_id'],
                     'comment' => nl2br($order_info['comment']),
+                    'order_status_id' => $order_info['order_status_id'],
                 ];
 
                 // echo '<pre>';
@@ -4669,15 +4670,38 @@ class ControllerSaleOrder extends Controller {
                 } else {
                     $totals = $this->model_sale_order->getOrderTotals($order_id);
                 }
-
+                $credit_amount=0;
                 foreach ($totals as $total) {
-                    if ($total['value'] > 0)
+                    if ($total['value'] > 0 || $total['code'] =='credit')
+                            if($total['code'] =='credit')
+                            {
+                                $credit_amount=$total['value'];
+                            }
+                            if($total['code'] =='total')
+                            {
+                                $total['value']+=$credit_amount;
                         $total_data[] = [
                             'title' => $total['title'],
                             'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
                             'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
                         ];
+                        }
+                        else {
+                            $total_data[] = [
+                                'title' => $total['title'],
+                                'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                                'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
+                            ];
+                        }
                 }
+                // if($credit_available==1)
+                // {
+                // $total_data[] = [
+                //     'title' => 'Amount to be paid',
+                //     'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                //     'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
+                // ];
+                //  }
                 // echo "<pre>";print_r($total_data);die;
 
                 $this->load->model('sale/customer');
@@ -6671,12 +6695,21 @@ class ControllerSaleOrder extends Controller {
             $log->write($orderTotal);
             $log->write($shipping_price);
 
+
+            $wallet_amount_positive=0;
+            
             foreach ($datas['totals'] as $p_id_code => $tot) {
+            // echo "<pre>";print_r($tot);die;
+
                 /* $log->write("updatetotals");
                   $log->write($tot); */
                 $tot['sort'] = $p;
                 $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
+                if($tot['code']=="credit")
+                {
+                      $wallet_amount_positive=abs($tot['value']);
 
+                }
                 /*if ('shipping' == $tot['code']) {
                     if (count($shipping_price) > 0 && isset($shipping_price['cost']) && isset($shipping_price['actual_cost'])) {
                         if ((array_key_exists('value_coming', $tot))) {
@@ -6695,7 +6728,10 @@ class ControllerSaleOrder extends Controller {
 
                 ++$p;
             }
-
+                // if($wallet_amount_positive>0)
+                // {
+                // $orderTotal +=$wallet_amount_positive;
+                // }
             $orderTotal = round($orderTotal, 2);
             $subTotal = round($subTotal, 2);
 
@@ -6706,6 +6742,8 @@ class ControllerSaleOrder extends Controller {
             $this->editDeliveryRequest($order_id);
 
             //$this->sendNewInvoice($order_id);
+        // echo "<pre>";print_r($this->request->get['settle']);die;
+            
 
             if ($this->request->get['settle']) {
                 //settle and  update
@@ -6717,6 +6755,10 @@ class ControllerSaleOrder extends Controller {
                 $log->write($old_total);
 
                 if ($final_amount != $old_total) {
+
+                    //update Payment Paid status and pending amount
+                    $this->model_sale_order->updatePaymentStatus($order_id,$customer_id,$old_total,$final_amount);
+
                     //$iuguData = $this->refundAndChargeNewTotalStripe($order_id,$customer_id,$final_amount);
                 } else {
                     $log->write('same amount settle');
@@ -8769,6 +8811,9 @@ class ControllerSaleOrder extends Controller {
         $vehicle_number = $this->request->post['vehicle_number'];
         $delivery_charge = $this->request->post['delivery_charge'];
         $delivery_executive_id = $this->request->post['delivery_executive_id'];
+        // $order_delivery_date = $this->request->post['order_delivery_date'];
+        $updateDeliveryDate = $this->request->post['updateDeliveryDate'];
+
         /* $log = new Log('error.log');
           $log->write('SaveOrUpdateOrderDriverDetails');
           $log->write($this->request->post['driver_id']);
@@ -8785,6 +8830,20 @@ class ControllerSaleOrder extends Controller {
             $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id);
             if ($delivery_charge > 0) {
                 $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
+            }
+            // $currentdate= date("d/m/Y");
+            // echo "<pre>";print_r( $order_delivery_date);
+
+            // echo "<pre>";print_r( 'current date below');
+            // echo "<pre>";print_r( $currentdate);
+
+
+
+            // if($order_delivery_date > $currentdate)
+            if(isset($updateDeliveryDate) && $updateDeliveryDate==1)
+            {
+                //update delivery date to current date
+                $this->model_sale_order->UpdateOrderDeliveryDate($order_id);
             }
         }
         try {
@@ -8941,4 +9000,48 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function getOrderInfo() {
+        $this->load->model('sale/order');
+        //echo 'date.timezone ' ;;
+        $data = $this->request->post;
+
+        /// echo '<pre>';print_r($this->request->post);exit;
+
+        if ('POST' == $this->request->server['REQUEST_METHOD']) {
+            $data = $this->model_sale_order->getOrderInfo($this->request->post['order_id']);
+
+
+            // $totals = $this->model_sale_order->getOrderTotals($data['order_id']);
+
+            // echo "<pre>";print_r($data);die;
+            // foreach ($totals as $total) {
+            //     if ('sub_total' == $total['code']) {
+            //         $sub_total = $total['value'];
+            //         break;
+            //     }
+            // }
+            $data['total']=$this->currency->format($data['total']);
+            $data['date_added']= date($this->language->get('date_format_short'), strtotime($data['date_added']));
+            $data['delivery_date']= date($this->language->get('date_format_short'), strtotime($data['delivery_date']));
+            $data['paid']=($data['paid']=='N'?"Payment Pending":($data['paid']=='Y'?"Payment Done": "Partially Paid"));
+                    
+
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        } else {
+            $data['status'] = false;
+
+            if ($this->request->isAjax()) {
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($data));
+            }
+        }
+        //  echo '<pre>';print_r($data);exit;
+
+        return true;
+    }
 }

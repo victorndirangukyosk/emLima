@@ -20,6 +20,7 @@
 <body>
 <div class="container">
   <?php foreach ($orders as $order) { ?>
+  <input type="hidden" id="order_status_id" name="order_status_id" value="<?php echo $order['order_status_id']; ?>" />
   <div style="page-break-after: always;">
     <h1><?php echo $text_invoice; ?> #<?php echo $order['order_id']; ?></h1>
     <table class="table table-bordered">
@@ -325,6 +326,10 @@
 <script type="text/javascript">
   
 $(document).delegate('.remove','click', function(){
+  if($('#order_status_id').val() == 5) {
+   alert('Delivered Orders Not Editable!');    
+   return false;
+  }   
   $(this).parent().parent().remove();
   $(".changeTotal").trigger("blur");
   $(".changeTotalValue").trigger("blur");
@@ -521,6 +526,10 @@ $('#button-settle-invoice-refund').on('click', function() {
 });
 
 $('#button-settle-invoice-charge').on('click', function() {
+   if($('#order_status_id').val() == 5) {
+   alert('Delivered Orders Not Editable!');    
+   return false;
+   } 
   // update invoice call this
   if(!confirm('Are you sure?')) {
     return false;
@@ -677,7 +686,10 @@ function makeid() {
 
 function add() {
 
-
+  if($('#order_status_id').val() == 5) {
+   alert('Delivered Orders Not Editable!');    
+   return false;
+  }  
   noProduct = makeid();
 
   $html  = '<tr>';        

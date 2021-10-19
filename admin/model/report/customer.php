@@ -505,7 +505,7 @@ class ModelReportCustomer extends Model {
     }
 
     public function getCustomerActivities($data = []) {
-        $sql = 'SELECT c.company_name ,c.email, ca.activity_id, ca.customer_id, ca.key, ca.data, ca.ip, ca.date_added FROM ' . DB_PREFIX . 'customer_activity ca LEFT JOIN ' . DB_PREFIX . 'customer c ON (ca.customer_id = c.customer_id)';
+        $sql = 'SELECT c.company_name ,c.email, ca.activity_id, ca.customer_id, ca.key, ca.data, ca.ip, ca.date_added ,ca.order_id FROM ' . DB_PREFIX . 'customer_activity ca LEFT JOIN ' . DB_PREFIX . 'customer c ON (ca.customer_id = c.customer_id)';
 
         $implode = [];
 
@@ -536,6 +536,10 @@ class ModelReportCustomer extends Model {
 
         if (!empty($data['filter_key'])) {
             $implode[] = "ca.key LIKE '" . $this->db->escape($data['filter_key']) . "'";
+        }
+
+        if (!empty($data['filter_order'])) {
+            $implode[] = "ca.order_id = '" . $this->db->escape($data['filter_order']) . "'";
         }
 
         if ($implode) {
@@ -593,6 +597,10 @@ class ModelReportCustomer extends Model {
 
         if (!empty($data['filter_key'])) {
             $implode[] = "ca.key LIKE '" . $this->db->escape($data['filter_key']) . "'";
+        }
+
+        if (!empty($data['filter_order'])) {
+            $implode[] = "ca.order_id = '" . $this->db->escape($data['filter_order']) . "'";
         }
 
         if ($implode) {
@@ -1171,7 +1179,7 @@ class ModelReportCustomer extends Model {
     }
 
     public function getTotalCustomersOnboarded($data = []) {
-        $sql = 'SELECT count(DISTINCT c.customer_id) AS total FROM `' . DB_PREFIX . 'customer` c  JOIN `' . DB_PREFIX . "order` o ON (o.customer_id = c.customer_id) WHERE c.customer_id > '0' and o.order_status_id>'0'";
+        $sql = 'SELECT count(DISTINCT c.customer_id) AS total FROM `' . DB_PREFIX . 'customer` c  JOIN `' . DB_PREFIX . "order` o ON (o.customer_id = c.customer_id) WHERE c.customer_id > '0' and o.order_status_id not in (0,16,6,8,9,10)";
 
         // if (!empty($data['filter_order_status_id'])) {
         //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
@@ -1201,7 +1209,7 @@ class ModelReportCustomer extends Model {
         // if (!empty($data['filter_order_status_id'])) {
         //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         // } else {
-        $sql .= " AND o.order_status_id > '0'";
+        $sql .= " AND o.order_status_id not in (0,16,6,8,9,10)";
         // }
 
         if (!empty($data['filter_date_start'])) {
@@ -1215,7 +1223,7 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_customer'])) {
             $sql .= " AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
         }
-        $sql .= " AND o.customer_id not in (select customer_id from  `" . DB_PREFIX . "order` where date_added < '" . $this->db->escape($data['filter_date_start']) . "')";
+        $sql .= " AND o.customer_id not in (select customer_id from  `" . DB_PREFIX . "order` where date_added < '" . $this->db->escape($data['filter_date_start']) . "' and order_status_id not in(0,16,6,8,9,10))";
 
         // $sql .= ' GROUP BY o.order_id';
         $sql .= ' GROUP BY c.customer_id,c.company_name,customer ';
@@ -1234,7 +1242,7 @@ class ModelReportCustomer extends Model {
 
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
-        //  echo  ($sql);die;
+        //   echo  ($sql);die;
         $query = $this->db->query($sql);
 
         return $query->rows;

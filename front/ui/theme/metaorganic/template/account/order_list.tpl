@@ -170,10 +170,35 @@
                                 <div class="col-md-4"><?php echo $payment_status; ?></div>
                                 <?php if(!empty($order['payment_transaction_id'])){?>
 																<div class="col-md-5">Transaction Id</div>
-																<div class="col-md-8"><?php echo $order['payment_transaction_id']; ?></div>
+																<div class="col-md-6"><?php echo $order['payment_transaction_id']; ?></div>
 	
 																<?php } ?>
                                 <?php } ?>
+
+                                <?php if ($order['payment_method'] == 'Wallet Payment'){
+                                if(!empty($order['payment_transaction_id']) && $order['paid']=='Y'){
+                                $payment_status = '<span style="color:green">Paid</span>';
+                                }
+                                else if($order['paid']=='P'){
+                                $payment_status = '<span style="color:orange">Partially Paid</span>';
+                                }
+                                else{
+                                $payment_status = '<span style="color:red">Not Paid</span>';
+                                }
+
+                                if($order['status'] == 'Cancelled'){
+                                $payment_status = '<span style="color:#'.$order['order_status_color'].'">Cancelled</span>';
+                                }
+                                ?>
+                                <div class="col-md-5">Payment Status</div>
+                                <div class="col-md-4"><?php echo $payment_status; ?></div>
+                                <?php if(!empty($order['payment_transaction_id'])){?>
+																<div class="col-md-5">Transaction Id</div>
+																<div class="col-md-6"><?php echo $order['payment_transaction_id']; ?></div>
+	
+																<?php } ?>
+                                <?php } ?>
+
                             </div>   
                         </div>
                     </li>

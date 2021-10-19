@@ -424,7 +424,10 @@ class ControllerApiCart extends Controller {
     }
 
     public function getCartProducts() {
-
+        
+        $this->load->model('account/customer');
+        $this->cart->clearcart();
+        $this->model_account_customer->getDBCart();
         $totalQuantity = 0;
         $json = [];
         $log = new Log('error.log');
@@ -455,10 +458,10 @@ class ControllerApiCart extends Controller {
                     'key' => $keys,
                     'product_id' => $product_info['product_id'],
                     'product_store_id' => $product_info['product_store_id'],
-                    'store_product_variation_id' => $product_info['store_product_variation_id'],
+                    'store_product_variation_id' => isset($product_info['store_product_variation_id']) ? $product_info['store_product_variation_id'] : '',
                     'store_id' => $product_info['store_id'],
                     'store_name' => $product_info['store_name'],
-                    'product_type' => trim($product_info['product_type']),
+                    'product_type' => isset($product_info['product_type']) ? trim($product_info['product_type']) : '',
                     'produce_type' => $data['produce_type'],
                     'product_note' => $data['product_note'],
                     'unit' => $product_info['unit'],

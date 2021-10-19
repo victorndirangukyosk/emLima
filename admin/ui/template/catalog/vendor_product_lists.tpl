@@ -484,6 +484,28 @@ function submit_copy() {
                 $('input[name=\'filter_model\']').val(item['label']);
             }
         });
+        
+        $('input[name=\'filter_vendor_name\']').autocomplete({
+    'source': function(request, response) {
+        $.ajax({
+            url: 'index.php?path=setting/store/vendor_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+            dataType: 'json',
+            success: function(json) {
+                response($.map(json, function(item) {
+                    return {
+                        label: item['name'],
+                        value: item['user_id']
+                    }
+                }));
+            }
+        });
+    },
+    'select': function(item) {
+
+        
+        $('input[name=\'filter_vendor_name\']').val(item['label']);
+    }
+}); 
   //--></script></div>
 
 <script type="text/javascript"><!--

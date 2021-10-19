@@ -141,6 +141,7 @@
         <input type="hidden" name="customer_id" value="<?php echo $_SESSION['customer_id'];?>">
         <input type="hidden" name="total_pending_amount" value="<?php echo $total_pending_amount;?>">
         <input type="hidden" name="pending_order_id" value="<?php echo $pending_order_id;?>">
+        <input type="hidden" name="mpesa_checkout_request_id" id="mpesa_checkout_request_id" value="">
 
         <div id="pay-confirm-order" class="col-md-9 confirm_order_class" style="padding:35px;">
             <!--MPESA REMOVED FROM HERE-->
@@ -599,7 +600,7 @@ function showPayWith() {
             }else {
             $("#pay_with").show(); 
             }
-    } else {
+    } else if(radioValue == 'pay_full') {
       $("#pay_with").show(); 
     }
 }
@@ -878,8 +879,10 @@ function showPayWith() {
             console.log("referfxx def");
             if($('#mpesa_phone_number').val().length >= 9) {
                 $( "#mpesa-button-confirm" ).prop( "disabled", false );
+                $( "#button-retry" ).prop( "disabled", false );
             } else {
                 $( "#mpesa-button-confirm" ).prop( "disabled", true );
+                $( "#button-retry" ).prop( "disabled", true );
             }
         });
 
@@ -887,8 +890,10 @@ function showPayWith() {
             console.log("referfxx");
             if($(this).val().length >= 9) {
                 $( "#mpesa-button-confirm" ).prop( "disabled", false );
+                $( "#button-retry" ).prop( "disabled", false );
             } else {
                 $( "#mpesa-button-confirm" ).prop( "disabled", true );
+                $( "#button-retry" ).prop( "disabled", true );
             }
         });
 
@@ -967,7 +972,7 @@ function showPayWith() {
                                         //$('#success_msg').html('A payment request has been sent to the mpesa number '+$('#mpesa_phone_number').val()+'. Please wait for a few seconds then check for your phone for an MPESA PIN entry prompt.');
 
                                         $('#success_msg').html('A payment request has been sent on your above number. Please make the payment by entering mpesa PIN and click on Confirm Payment button after receiving sms from mpesa');
-		        		
+		        		$('#mpesa_checkout_request_id').val(json['response'].CheckoutRequestID);
                                         $('#success_msg').show();
 		        		
                                         $('#button-complete').show();
@@ -1089,6 +1094,59 @@ function showPayWith() {
             });
         });
 </script>
+<script type="text/javascript">
+$( document ).ready(function() { setInterval(function(){ mpesaresponse(); }, 30000 ); });
+function mpesaresponse() {
+                if($('#mpesa_checkout_request_id').val() != '') {
+                $.ajax({
+                        type: 'post',
+                        url: 'index.php?path=payment/mpesa/mpesaautoupdate',
+                        data: { 
+                        mpesa_checkout_request_id : encodeURIComponent($('#mpesa_checkout_request_id').val()),
+                        },
+                        dataType: 'json',
+                        cache: false,
+                        beforeSend: function() {
+                        $(".overlayed").show();
+                        $('#mpesa-button-confirm').button('loading');
+                        },
+                        complete: function() {
+                        $(".overlayed").hide();
+                        },       
+                        success: function(json) {
+                        if(json['processed'] == true) {
+                        $('#mpesa_checkout_request_id').val('');
+                        $('#success_msg').html('Payment Successfull. Wait Until Page Refresh!');
+                        $('#success_msg').show();
+                        setInterval(function(){ window.location.replace(json['redirect']); }, 10000);
+                        return false;
+                        } 
+                        if(json['processed'] == false) {
+                        $('#mpesa_checkout_request_id').val('');
+                        $('#success_msg').html('');
+                        $('#success_msg').hide();
+                        $('#error_msg').html(json['mpesa_payments_response'].description);
+                        $('#error_msg').show();
+                        $('#button-complete').hide();
+                        $('#button-retry').show();
+                        return false;
+                        }
+                        if(json['processed'] == '') {
+                        $('#mpesa_checkout_request_id').val('');
+                        $('#button-complete').show();
+                        $('#mpesa-button-confirm').hide();
+                        $('#button-retry').hide();
+                        $('#loading').hide();
+                        return false;
+                        }
+                        },
+                        error: function(json) {
+                        console.log(json);
+                        }
+                });
+                }                
+}
+</script>        
 <?php if($redirect_coming) { ?>
 <script type="text/javascript">
     $('#save-button').click();

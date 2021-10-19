@@ -108,10 +108,15 @@ class ControllerAccountCredit extends Controller
         $results = $this->model_account_credit->getCredits($filter_data);
 
         foreach ($results as $result) {
+            $transaction_ID="";
+            if(isset($result['transaction_id']) && $result['transaction_id']!="" )
+            {
+                $transaction_ID='#Transaction ID '.$result['transaction_id'];
+            }
             $data['credits'][] = [
                 'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
                 'plain_amount' => $result['amount'],
-                'description' => $result['description'],
+                'description' => $result['description'].' ' .$transaction_ID,
                 'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
             ];
         }

@@ -26,8 +26,10 @@
             <li><a href="#tab-credit" data-toggle="tab"><?php echo $tab_credit; ?></a></li>
             <li><a href="#tab-ip" data-toggle="tab"><?php echo $tab_ip; ?></a></li>
             <li><a href="#tab-referral" data-toggle="tab"><?php echo $tab_referral; ?></a></li>
-	    <li><a href="#tab-sub-customer" data-toggle="tab"><?php echo $tab_sub_customer; ?></a></li>
+	          <li><a href="#tab-sub-customer" data-toggle="tab"><?php echo $tab_sub_customer; ?></a></li>
+            <li><a href="#tab-configuration" data-toggle="tab">Configuration</a></li>
             <li><a href="#tab-otp" data-toggle="tab">OTP</a></li>
+            <li><a href="#tab-activity" data-toggle="tab">Activities</a></li>
             <?php } ?>
           </ul>
           <div class="tab-content">
@@ -232,11 +234,80 @@
               <div id="referral"></div>
               <br />
             </div>
-            <div class="tab-pane" id="tab-referral">
-              <div id="referral"></div>
-              <br />
+            
+
+
+               <div class="tab-pane" id="tab-activity">
+                <div id="activity"></div>
+                <br />
             </div>
+
+
+
+
             <?php } ?>
+
+              <div class="tab-pane" id="tab-configuration">
+              <div id="configuration"></div>
+              <br />
+              <div class="form-group">
+
+               <label class="col-sm-2 control-label" for="input-price-category">Price Category</label>
+                        <div class="col-sm-4">
+                           
+                  <input type="text" readonly name="customer_category" value="<?php echo $customer_category;?>" placeholder="NA" id="input-price-category" class="form-control" />
+
+                        </div>                
+              </div>
+
+              <div class="form-group">
+
+                                      <label class="col-sm-2 control-label" for="input-account-manager">Account Manager Name</label>
+             <div class="col-sm-4">
+                           
+                  <input type="text" readonly name="account_manager" value="<?php echo $account_manager;?>" placeholder="NA" id="input-account-manager" class="form-control" />
+
+                        </div>                
+              </div>
+
+
+
+ <div class="form-group">
+
+                        <label class="col-sm-2 control-label" for="input-customer-experience">Customer Experience</label>
+             <div class="col-sm-4">
+                           
+                  <input type="text" readonly name="customer_experience" value="<?php echo $customer_experience;?>" placeholder="NA" id="input-customer-experience" class="form-control" />
+
+                        </div>                
+              </div>
+
+
+              <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-payment-terms">Payment Terms</label>
+             <div class="col-sm-4">
+                           
+                  <input type="text" readonly name="payment_terms" value="<?php echo $payment_terms;?>" placeholder="NA" id="input-payment-terms" class="form-control" />
+
+                        </div>                
+              </div>
+
+
+
+              <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-statement_duration">Statement Duration</label>
+                   <div class="col-sm-4">
+                           
+                  <input type="text" readonly name="statement_duration" value="<?php echo $statement_duration;?>" placeholder="NA" id="input-statement_duration" class="form-control" />
+
+                        </div>                
+              </div>
+
+
+
+               
+            </div>
+
             <div class="tab-pane" id="tab-sub-customer">
               <table class="table table-bordered">
             <thead>
@@ -485,6 +556,17 @@ $('body').delegate('.button-ban-add', 'click', function() {
     }
   });
 });
+
+
+
+$('#activity').delegate('.pagination a', 'click', function(e) {
+  e.preventDefault();
+
+ $('#activity').load(this.href);
+});
+
+
+$('#activity').load('index.php?path=sale/customer/customerviewactivity&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>');
 
 
 

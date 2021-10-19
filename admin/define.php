@@ -47,6 +47,8 @@ define('DIR_LOGS', DIR_SYSTEM.'log/'); // depreciated due to plural usage, use D
 define('DIR_MODIFICATION', DIR_SYSTEM.'modification/');
 define('DIR_LANGUAGE', DIR_APPLICATION.'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION.'ui/template/');
+define('BUCKET_PREFIX', 'local-');
+
 
 // Installation check, and check on removal of the install directory.
 if (!file_exists(DIR_ROOT.'config.php') or (filesize(DIR_ROOT.'config.php') < 10) or file_exists(DIR_INSTALL.'index.php')) {

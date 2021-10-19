@@ -125,8 +125,9 @@ class ModelCatalogVendorProduct extends Model {
         }
 
         if (!empty($data['filter_vendor_name'])) {
-            $sql .= " AND v.firstname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
-            $sql .= " OR v.lastname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
+            $sql .= ' AND v.user_id="' . $this->db->escape($data['filter_vendor_name']) . '"';
+            /*$sql .= " AND v.firstname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
+            $sql .= " OR v.lastname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";*/
         }
 
         if (!empty($data['filter_model'])) {
@@ -242,8 +243,9 @@ class ModelCatalogVendorProduct extends Model {
         }
 
         if (!empty($data['filter_vendor_name'])) {
-            $sql .= " AND v.firstname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
-            $sql .= " OR v.lastname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
+            $sql .= ' AND v.user_id="' . $this->db->escape($data['filter_vendor_name']) . '"';
+            /*$sql .= " AND v.firstname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
+            $sql .= " OR v.lastname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";*/
         }
 
         if (!empty($data['filter_model'])) {

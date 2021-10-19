@@ -956,7 +956,14 @@ class ControllerCheckoutConfirm extends Controller {
                 if (isset($this->session->data['payment_method']['title']) && $store_id == 75) {
                     $order_data[$store_id]['payment_method'] = $this->session->data['payment_method']['title'];
                 } elseif (isset($this->session->data['payment_method']['title']) && $store_id != 75) {
-                    $order_data[$store_id]['payment_method'] = 'Corporate Account/ Cheque Payment';
+                    if($this->session->data['payment_method']['code']=='wallet' || $this->session->data['payment_method']['code']=='mod')
+                    {
+                        $order_data[$store_id]['payment_method'] = $this->session->data['payment_method']['title'];
+                   
+                    }
+                    else {
+                        $order_data[$store_id]['payment_method'] = 'Corporate Account/ Cheque Payment';
+                    }
                 } else {
                     $order_data[$store_id]['payment_method'] = '';
                 }
@@ -964,7 +971,14 @@ class ControllerCheckoutConfirm extends Controller {
                 if (isset($this->session->data['payment_method']['code']) && $store_id == 75) {
                     $order_data[$store_id]['payment_code'] = $this->session->data['payment_method']['code'];
                 } elseif (isset($this->session->data['payment_method']['code']) && $store_id != 75) {
-                    $order_data[$store_id]['payment_code'] = 'cod';
+                    if($this->session->data['payment_method']['code']=='wallet' || $this->session->data['payment_method']['code']=='mod')
+                    {
+                        $order_data[$store_id]['payment_code'] = $this->session->data['payment_method']['code'];
+                   
+                    }
+                    else {
+                        $order_data[$store_id]['payment_code'] = 'cod';
+                    }
                 } else {
                     $order_data[$store_id]['payment_code'] = '';
                 }
@@ -1254,6 +1268,7 @@ class ControllerCheckoutConfirm extends Controller {
         if (isset($this->session->data['accept_vendor_terms']) && $this->session->data['accept_vendor_terms'] == TRUE) {
             $json['modal_open'] = FALSE;
         } else {
+            $json['product_list'] =null;
             foreach ($this->cart->getProducts() as $store_products) {
                 /* FOR KWIKBASKET ORDERS */
                 $log->write('CheckOtherVendorOrderExists');
@@ -1261,6 +1276,12 @@ class ControllerCheckoutConfirm extends Controller {
                 $log->write('CheckOtherVendorOrderExists');
                 if ($store_products['store_id'] > 75 && $this->customer->getPaymentTerms() != 'Payment On Delivery') {
                     $json['modal_open'] = TRUE;
+                    if($json['product_list']==null){
+                    $json['product_list'] = $store_products['name'];
+                    }
+                    else {
+                        $json['product_list'] = $json['product_list'].' ,'.$store_products['name'];
+                    }
                 }
             }
         }

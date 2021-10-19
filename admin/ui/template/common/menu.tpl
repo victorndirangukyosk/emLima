@@ -575,6 +575,11 @@
                     <li><a href="<?php echo $report_customer_unordered; ?>"><?php echo $text_report_customer_unordered; ?></a></li>
                     <?php } ?>
 
+
+                       <?php if($preturn_customer_wallet) { ?>
+                    <li><a href="<?php echo $report_customer_wallet; ?>"><?php echo $text_report_customer_wallet; ?></a></li>
+                    <?php } ?>
+
                 </ul>
             </li>
             <?php }?>

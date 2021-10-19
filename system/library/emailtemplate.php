@@ -94,10 +94,13 @@ class Emailtemplate {
             // print_r($template['description']);
             // die;
             //$log->write($find);
+             //$log->write($replace);
+             //$log->write('finddddddddddd');
             /* $log->write("replace");
               $log->write($template['description']);
               $log->write($replace);
               $log->write($find); */
+              
             $message = trim(str_replace($find, $replace, $template['description']));
             //$log->write($message);
         } else {
@@ -426,7 +429,7 @@ class Emailtemplate {
 
     // Customer
     public function getCustomerFind() {
-        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{deliveryexecutivename}', '{deliveryexecutivephone}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}'];
+        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{deliveryexecutivename}', '{deliveryexecutivephone}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}', '{order_id}', '{status}'];
 
         return $result;
     }
@@ -435,22 +438,22 @@ class Emailtemplate {
         $result = [
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
-            'branchname' => $data['branchname'],
-            'subuserfirstname' => $data['subuserfirstname'],
-            'subuserlastname' => $data['subuserlastname'],
-            'subuserorderid' => $data['subuserorderid'],
-            'drivername' => $data['drivername'],
-            'driverphone' => $data['driverphone'],
-            'vehicle' => $data['vehicle'],
-            'deliveryexecutivename' => $data['deliveryexecutivename'],
-            'deliveryexecutivephone' => $data['deliveryexecutivephone'],
+            'branchname' => isset($data['branchname']) ? $data['branchname'] : '',
+            'subuserfirstname' => isset($data['subuserfirstname']) ? $data['subuserfirstname'] : '',
+            'subuserlastname' => isset($data['subuserlastname']) ? $data['subuserlastname'] : '', 
+            'subuserorderid' => isset($data['subuserorderid']) ? $data['subuserorderid'] : '',
+            'drivername' => isset($data['drivername']) ? $data['drivername'] : '',
+            'driverphone' => isset($data['driverphone']) ? $data['driverphone'] : '',
+            'vehicle' => isset($data['vehicle']) ? $data['vehicle'] : '',
+            'deliveryexecutivename' => isset($data['deliveryexecutivename']) ? $data['deliveryexecutivename'] : '',
+            'deliveryexecutivephone' => isset($data['deliveryexecutivephone']) ? $data['deliveryexecutivephone'] : '',
             'date' => date($this->language->get('date_format_short'), strtotime(date('Y-m-d H:i:s'))),
             'store_name' => $this->config->get('config_name'),
             'email' => $data['email'],
             'password' => $data['password'],
             'account_href' => HTTP_CATALOG . 'index.php?path=account/login',
             'activate_href' => (!empty($data['confirm_code'])) ? $this->url->link('account/activate', 'token=' . $data['confirm_code'], 'SSL') : '',
-            'order_link' => $data['order_link'],
+            'order_link' => isset($data['order_link']) ? $data['order_link'] : '',
             //common replace
             'site_url' => HTTPS_CATALOG,
             //'logo'=> HTTPS_CATALOG.'image/' . $this->config->get('config_logo'),
@@ -467,7 +470,9 @@ class Emailtemplate {
             'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
             'amount' => isset($data['amount']) ? $data['amount'] : '',
             'transfer_type' => isset($data['transfer_type']) ? $data['transfer_type'] : '',
-            'ip_address' => $data['ip_address'],
+            'ip_address' => isset($data['ip_address']) ? $data['ip_address'] : '',
+            'order_id' => $data['order_id'],
+            'status' => $data['status'],
         ];
 
         return $result;
@@ -972,7 +977,7 @@ class Emailtemplate {
             '{firstname}', '{lastname}', '{delivery_address}', '{shipping_address}', '{payment_address}', '{order_date}', '{product:start}', '{product:stop}',
             '{total:start}', '{total:stop}', '{voucher:start}', '{voucher:stop}', '{special}', '{date}', '{payment}', '{shipment}', '{order_id}', '{total}', '{invoice_number}',
             '{order_href}', '{store_url}', '{status_name}', '{store_name}', '{ip}', '{comment:start}', '{comment:stop}', '{sub_total}', '{shipping_cost}',
-            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}', '{order_pdf_href}', '{delivery_date}', '{delivery_time}', '{customer_notes}', '{customer_cpf}', '{store_address}', '{store_telephone}', '{store_tax_number}', '{shipping_contact_number}', '{shipping_flat_number}', '{shipping_street_address}', '{shipping_landmark}', '{shipping_zipcode}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{customer_company_name}',
+            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}', '{order_pdf_href}', '{delivery_date}', '{delivery_time}', '{customer_notes}', '{customer_cpf}', '{customer_company_name}', '{store_address}', '{store_telephone}', '{store_tax_number}', '{shipping_contact_number}', '{shipping_flat_number}', '{shipping_street_address}', '{shipping_landmark}', '{shipping_zipcode}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}',
         ];
 
         return $result;
@@ -1141,6 +1146,9 @@ class Emailtemplate {
         ];
 
         /* $log->write($result);
+        $log->write("MAIL DATA");
+        $log->write($this->config->get('config_logo'));
+
           $log->write($this->language->get('full_datetime_format')); */
 
         return $result;
