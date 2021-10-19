@@ -8900,26 +8900,3 @@ button#detect_location {
 .checkout {
      margin-bottom:0px !important; 
 }
-#items-ul li {float:left;}
-#cartCountMobo {display:none;}
-#cartCountPC {display:inline;}
-#cartCountPC .cartBadge {top: -10px !important;padding:4px 7px;}
-.headerCol {margin-top: 25px;}
-#userNMPC {display:none;}
-
-@media only screen and (max-width: 375px){
-
-._1xvs1 {margin-top: 0px!important;}
-.featured-categories__header {margin: 20px 0px;}
-.headerCol {margin-top:0px;min-height:50px;}
-.rightPnl {margin-top:15px;}
-
-#cartCountPC {display:none;}
-#cartCountMobo {display:inline;}
-#cartCountMobo .cartBadge {top: -1px !important;padding: 6px 11px;background: #ea7128;color: #fff;border-radius: 50px;}
-#userNMmobo .btn {display:inline;padding: 6px 9px;border-radius: 50px;}
-
-
-
-
-}
