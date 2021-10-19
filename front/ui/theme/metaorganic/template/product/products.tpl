@@ -138,7 +138,7 @@
                                                     <?=$product['name']?>
                                                     <br/>
                                                     <div style="color:#6dbd46">
-                                                     <?= $product['variations'][0]['special'];?>    <?php  echo '/ ' . $product['variations'][0]['weight'] . ' ' . $product['variations'][0]['unit']; ?>
+                                                     <?= $product['variations'][0]['special'];?>    <?php  echo '/ ' .'Per'./*. $product['variations'][0]['weight'] .*/ ' ' . $product['variations'][0]['unit']; ?>
                                                      </div>
   <span id="flag-qty-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>" style="padding:5px;display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>"><?php echo $product['qty_in_cart']?> items in cart <i class="fas fa-flag"></i></span>
 
