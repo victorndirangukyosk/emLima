@@ -133,8 +133,7 @@
                                                      <div class="JHf2a">
                                                         
                                                         </div>
-
-                                                          <!-- <a class="_2Pk9X" tabindex="0">-->
+                                                    <!-- <a class="_2Pk9X" tabindex="0">-->
                                                     <?=$product['name']?>
                                                     <br/>
                                                     <div style="color:#6dbd46">
