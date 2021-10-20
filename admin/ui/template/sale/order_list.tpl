@@ -1802,6 +1802,40 @@ function downloadOrdersonsolidated() {
                 url += '&selected_order_id=' + encodeURIComponent(selected_order_id);
             }
             
+
+              if((filter_order_from_id==''||filter_order_to_id=='') && filter_delivery_date=='' && filter_order_id=='' && selected_order_id=='')
+            {
+                if((filter_date_added=='' || filter_date_added_end=='') && filter_delivery_date=='')
+                {
+                    alert("Please select  date filters or other ");
+                    return;
+                }
+           
+                // alert(filter_date_added_end);
+
+                    if(filter_date_added_end!='' && filter_date_added!='')
+                    {
+                        
+                        const date1 = new Date(filter_date_added);
+                        const date2 = new Date(filter_date_added_end);
+                        const diffTime = Math.abs(date2 - date1);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                        console.log(diffTime + " milliseconds");
+                        console.log(diffDays + " days");
+                        if(diffDays<0)
+                        {
+                        alert("Please select proper start & end date filters");
+                                        return;
+                        }
+                        if(diffDays>60)
+                        {
+                            alert("Duration between start & end date filters should be less than 60 days");
+                                        return;
+                        }
+                    }
+            }
+
+
             location = url;
             
 }
