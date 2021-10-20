@@ -1708,7 +1708,9 @@ console.log($(this).attr("data-order-id"));
 });
 
 function downloadOrdersonsolidated() {
-          
+
+
+             
             //const deliveryDate = $("#consolidated-order-sheet-datepicker").val();
                 url = 'index.php?path=report/vendor_orders/consolidatedOrderSheetForOrders&token=<?php echo $token; ?>';
               var filter_order_status = $('select[name=\'filter_order_status\']').val();
