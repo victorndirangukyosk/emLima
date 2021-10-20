@@ -130,6 +130,15 @@ class ControllerApiCustomerMpesa extends Controller {
         if (empty($data['order_reference_number'])) {
             $this->error['order_reference_number'] = 'Order reference number required!';
         }
+        
+        if (empty($data['merchant_request_id'])) {
+            $this->error['merchant_request_id'] = 'Merchant request id required!';
+        }
+        
+        if (empty($data['checkout_request_id'])) {
+            $this->error['checkout_request_id'] = 'Checkout request id required!';
+        }
+        
         $amount = $this->cart->getTotalForKwikBasket();
         if ($amount <= 0) {
             $this->error['kwikbasket_order_total'] = 'KwikBasket Store Order Total Cant Be Less Or Equal To Zero!';
