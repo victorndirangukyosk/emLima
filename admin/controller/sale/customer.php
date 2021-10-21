@@ -40,6 +40,104 @@ class ControllerSaleCustomer extends Controller {
         $data = [];
         $this->load->model('report/excel');
 
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
+
+        if (isset($this->request->get['filter_email'])) {
+            $filter_email = $this->request->get['filter_email'];
+        } else {
+            $filter_email = null;
+        }
+
+        if (isset($this->request->get['filter_telephone'])) {
+            $filter_telephone = $this->request->get['filter_telephone'];
+        } else {
+            $filter_telephone = null;
+        }
+
+        if (isset($this->request->get['filter_customer_group_id'])) {
+            $filter_customer_group_id = $this->request->get['filter_customer_group_id'];
+        } else {
+            $filter_customer_group_id = null;
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $filter_status = $this->request->get['filter_status'];
+        } else {
+            $filter_status = null;
+        }
+
+        if (isset($this->request->get['filter_approved'])) {
+            $filter_approved = $this->request->get['filter_approved'];
+        } else {
+            $filter_approved = null;
+        }
+
+        if (isset($this->request->get['filter_ip'])) {
+            $filter_ip = $this->request->get['filter_ip'];
+        } else {
+            $filter_ip = null;
+        }
+
+        if (isset($this->request->get['filter_parent_customer'])) {
+            $filter_parent_customer = $this->request->get['filter_parent_customer'];
+        } else {
+            $filter_parent_customer = null;
+        }
+
+        if (isset($this->request->get['filter_parent_customer_id'])) {
+            $filter_parent_customer_id = $this->request->get['filter_parent_customer_id'];
+        } else {
+            $filter_parent_customer_id = null;
+        }
+
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $filter_account_manager_name = $this->request->get['filter_account_manager_name'];
+        } else {
+            $filter_account_manager_name = null;
+        }
+
+        if (isset($this->request->get['filter_account_manager_id'])) {
+            $filter_account_manager_id = $this->request->get['filter_account_manager_id'];
+        } else {
+            $filter_account_manager_id = null;
+        }
+
+        if (isset($this->request->get['filter_sub_customer_show'])) {
+            $filter_sub_customer_show = $this->request->get['filter_sub_customer_show'];
+        } else {
+            $filter_sub_customer_show = null;
+        }
+
+        if (isset($this->request->get['filter_sub_customer_show'])) {
+            $filter_sub_customer_show = $this->request->get['filter_sub_customer_show'];
+        } else {
+            $filter_sub_customer_show = null;
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+
+
+        if (isset($this->request->get['filter_date_added_to'])) {
+            $filter_date_added_to = $this->request->get['filter_date_added_to'];
+        } else {
+            $filter_date_added_to = null;
+        }
+
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -55,9 +153,31 @@ class ControllerSaleCustomer extends Controller {
 
 
         $filter_data = [
+            'filter_company' => $filter_company,
+            'filter_name' => $filter_name,
+            'filter_email' => $filter_email,
+            'filter_telephone' => $filter_telephone,
+            'filter_customer_group_id' => $filter_customer_group_id,
+            'filter_status' => $filter_status,
+            'filter_approved' => $filter_approved,
+            'filter_date_added' => $filter_date_added,
+            'filter_date_added_to' => $filter_date_added_to,
+            'filter_ip' => $filter_ip,
+            'filter_parent_customer' => $filter_parent_customer,
+            'filter_parent_customer_id' => $filter_parent_customer_id,
+            'filter_account_manager_name' => $filter_account_manager_name,
+            'filter_account_manager_id' => $filter_account_manager_id,
+            'filter_sub_customer_show' => $filter_sub_customer_show,
+            'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
             'order' => $order,
+            
         ];
+
+        // $filter_data = [
+        //     'sort' => $sort,
+        //     'order' => $order,
+        // ];
 
         $this->model_report_excel->download_customer_excel($filter_data);
     }
