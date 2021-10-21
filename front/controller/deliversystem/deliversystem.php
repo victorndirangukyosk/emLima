@@ -953,6 +953,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         if ('MpesaReceiptNumber' == $value->Name) {
                             $MpesaReceiptNumber = $value->Value;
                             $this->model_payment_mpesa->insertOrderTransactionId($manifest_ids['order_id'], $value->Value);
+                            $this->model_payment_mpesa->updateMpesaOrderByMerchant($manifest_ids['order_id'], $value->Value, $stkCallback->stkCallback->CheckoutRequestID);
                         }
                     }
                 }

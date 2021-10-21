@@ -563,6 +563,7 @@ class ControllerPaymentMpesa extends Controller {
                         $order_info = $this->model_checkout_order->getOrder($order_id);
                         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
                         //SKIPPNG HERE UPDATING CheckoutRequestID..BUT WE NEED TO UPDATE RECEIPT NUMBER
+                        $this->model_payment_mpesa->updateMpesaOrderByMerchant(4070, 'PJL4K7RRUS', 'ws_CO_21102021230555281510');
                         //$this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
                         $this->model_payment_mpesa->addOrderHistoryTransaction($order_id, $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
                         $json['status'] = true;
