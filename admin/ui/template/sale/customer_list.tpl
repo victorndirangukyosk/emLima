@@ -48,14 +48,10 @@
                                 <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
                             </div>
 
-                             <div class="form-group">
-                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
-                <div class="input-group date" style="max-width: 321px;">
-                  <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
-                  <span class="input-group-btn">
-                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                  </span></div>
-              </div>
+                        <div class="form-group">
+                      <label class="control-label" for="input-parent-customer">Parent Customer Name</label>
+                      <input type="text" name="filter_parent_customer" value="<?php if($filter_parent_customer != NULL && $filter_parent_customer_id != NULL) { echo $filter_parent_customer; } ?>" placeholder="<?php echo $entry_parent_customer; ?>" id="input-parent-customer" class="form-control" data-parent-customer-id="<?php if($filter_parent_customer != NULL && $filter_parent_customer_id != NULL) { echo $filter_parent_customer_id; } ?>" />
+                  </div>     
            </div>
             <div class="col-sm-3">
               <div class="form-group">
@@ -131,22 +127,45 @@
               </div>
             </div>
               <div class="col-sm-3">
-                  <div class="form-group">
-                      <label class="control-label" for="input-parent-customer">Parent Customer Name</label>
-                      <input type="text" name="filter_parent_customer" value="<?php if($filter_parent_customer != NULL && $filter_parent_customer_id != NULL) { echo $filter_parent_customer; } ?>" placeholder="<?php echo $entry_parent_customer; ?>" id="input-parent-customer" class="form-control" data-parent-customer-id="<?php if($filter_parent_customer != NULL && $filter_parent_customer_id != NULL) { echo $filter_parent_customer_id; } ?>" />
-                  </div>
-              </div>
-             <div class="col-sm-3">
-             <div class="form-group">
+
+              
+  <div class="form-group">
                       <label class="control-label" for="input-account-manager-name">Account Manager Name</label>
                       <input type="text" name="filter_account_manager_name" value="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_name; } ?>" placeholder="<?php echo $entry_account_manager_name; ?>" id="input-account-manager-name" class="form-control" data-account-manager-id="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_id; } ?>" />
               </div>
+                 
+              </div>
+             <div class="col-sm-3">
+           
+ <div class="form-group">
+                <label class="control-label" for="input-date-added">Date Added From</label>
+                <div class="input-group date" style="max-width: 321px;">
+                  <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="Date Added From" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                  <span class="input-group-btn">
+                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                  </span></div>
+              </div>
+
+
              </div>
-              <div class="col-sm-3" style="margin-top:25px;">
-                  <label><input type="checkbox" name="filter_sub_customer_show[]" value="<?php echo $filter_sub_customer_show; ?>" <?php if($filter_sub_customer_show == 1) { ?> checked="" <?php } ?>> Show Sub Customer </label>
+
+             
+              <div class="col-sm-3">
+
+               <div class="form-group">
+                <label class="control-label" for="input-date-added-to">Date Added To</label>
+                <div class="input-group date" style="max-width: 321px;">
+                  <input type="text" name="filter_date_added_to" value="<?php echo $filter_date_added_to; ?>" placeholder="Date Added To" data-date-format="YYYY-MM-DD" id="input-date-added-to" class="form-control" />
+                  <span class="input-group-btn">
+                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                  </span></div>
+              </div>
+
               </div>
               <div class="col-sm-3" style="margin-top:25px;">
               <div class="form-group">
+                  <label><input type="checkbox" name="filter_sub_customer_show[]" value="<?php echo $filter_sub_customer_show; ?>" <?php if($filter_sub_customer_show == 1) { ?> checked="" <?php } ?>> Show Sub Customer </label>
+
                   <label class="control-label"></label>
                   <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
               </div>
@@ -342,6 +361,13 @@ $('#button-filter').on('click', function() {
   if (filter_date_added) {
     url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
   }
+
+
+   var filter_date_added_to = $('input[name=\'filter_date_added_to\']').val();
+  
+  if (filter_date_added_to) {
+    url += '&filter_date_added_to=' + encodeURIComponent(filter_date_added_to);
+  }
   
   location = url;
 });
@@ -466,6 +492,102 @@ function excel() {
             
     url = 'index.php?path=sale/customer/export_excel&token=<?php echo $token; ?>';
     
+
+
+
+    
+   var filter_company = $('input[name=\'filter_company\']').val();
+
+   if (filter_company) {
+     url += '&filter_company=' + encodeURIComponent(filter_company);
+   }
+   
+   var filter_account_manager_name = $('input[name=\'filter_account_manager_name\']').val();
+
+   if (filter_account_manager_name) {
+     url += '&filter_account_manager_name=' + encodeURIComponent(filter_account_manager_name);
+   }
+   
+  var filter_account_manager_id = $('input[name=\'filter_account_manager_name\']').attr("data-account-manager-id");
+  //alert(filter_account_manager_id);
+  
+  if (filter_account_manager_id) {
+    url += '&filter_account_manager_id=' + encodeURIComponent(filter_account_manager_id);
+  }
+  
+  var filter_sub_customer_show = 0;
+  
+  if ($('input[name=\'filter_sub_customer_show[]\']').is(':checked')) {
+    filter_sub_customer_show = 1;
+    url += '&filter_sub_customer_show=' + encodeURIComponent(filter_sub_customer_show);
+  } else {
+  url += '&filter_sub_customer_show=' + encodeURIComponent(filter_sub_customer_show);    
+  }
+  
+  var filter_name = $('input[name=\'filter_name\']').val();
+  
+  if (filter_name) {
+    url += '&filter_name=' + encodeURIComponent(filter_name);
+  }
+  
+  var filter_email = $('input[name=\'filter_email\']').val();
+  
+  if (filter_email) {
+    url += '&filter_email=' + encodeURIComponent(filter_email);
+  }
+  
+  var filter_customer_group_id = $('select[name=\'filter_customer_group_id\']').val();
+  
+  if (filter_customer_group_id != '*') {
+    url += '&filter_customer_group_id=' + encodeURIComponent(filter_customer_group_id);
+  } 
+  
+  var filter_status = $('select[name=\'filter_status\']').val();
+  
+  if (filter_status != '*') {
+    url += '&filter_status=' + encodeURIComponent(filter_status); 
+  } 
+  
+  var filter_telephone = $('input[name=\'filter_telephone\']').val();
+  
+  if (filter_telephone != '*') {
+    url += '&filter_telephone=' + encodeURIComponent(filter_telephone);
+  } 
+  
+  var filter_ip = $('input[name=\'filter_ip\']').val();
+  
+  if (filter_ip) {
+    url += '&filter_ip=' + encodeURIComponent(filter_ip);
+  }
+  
+  var filter_parent_customer = $('input[name=\'filter_parent_customer\']').val();
+  
+  if (filter_parent_customer) {
+    url += '&filter_parent_customer=' + encodeURIComponent(filter_parent_customer);
+  }
+  
+  var filter_parent_customer_id = $('input[name=\'filter_parent_customer\']').attr("data-parent-customer-id");
+  //alert(filter_parent_customer_id);
+  
+  if (filter_parent_customer_id) {
+    url += '&filter_parent_customer_id=' + encodeURIComponent(filter_parent_customer_id);
+  }
+    
+  var filter_date_added = $('input[name=\'filter_date_added\']').val();
+  
+  if (filter_date_added) {
+    url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+  }
+
+
+   var filter_date_added_to = $('input[name=\'filter_date_added_to\']').val();
+  
+  if (filter_date_added_to) {
+    url += '&filter_date_added_to=' + encodeURIComponent(filter_date_added_to);
+  }
+  
+
+  
     location = url;
 }
 $('a.customer_verified').bind("click", function (e) {
