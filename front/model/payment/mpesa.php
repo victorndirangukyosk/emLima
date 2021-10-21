@@ -144,6 +144,8 @@ class ModelPaymentMpesa extends Model {
         $notify = 1;
         $comment = 'mPesa Transaction Completed Successfully!';
 
+        $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = '" . $payment_method . "', payment_code = '" . $payment_code . "', amount_partialy_paid = '0',  paid = 'Y', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+
         if (($present_order_status_id == 9 || $present_order_status_id == 14) && ($order_status_id == 1)) {
             $log->write('UPDATING ORDER AS Y');
             $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', payment_method = '" . $payment_method . "', payment_code = '" . $payment_code . "', amount_partialy_paid = '0',  paid = 'Y', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
