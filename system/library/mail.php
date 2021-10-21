@@ -210,8 +210,8 @@ class mail
               'from' => $this->from,
               'to' => $this->to,
               'cc' => $this->cc,
-             // 'bcc'     => BCC_MAILS,
-             'bcc' => 'email.kbtest@gmail.com',
+              'bcc'     => BCC_MAILS,
+              //'bcc' => 'email.kbtest@gmail.com',
               'subject' => $this->subject,
                'html' => $this->html,
                'attachment' => [
@@ -225,8 +225,8 @@ class mail
                     'from' => $this->from,
                     'to' => $this->to,
                     'cc' => $this->cc,
-                   // 'bcc'     => BCC_MAILS,
-                   'bcc' => 'email.kbtest@gmail.com',
+                    'bcc'     => BCC_MAILS,
+                    //'bcc' => 'email.kbtest@gmail.com',
                     'subject' => $this->subject,
                      'html' => $this->html,                      
                   ] );

@@ -1239,6 +1239,7 @@ class ControllerPaymentMpesa extends Controller {
                 $customer_info['status'] = $stkCallback->ResultCode == 0 ? 'Successful' : 'Failed';
                 $customer_info['amount'] = $this->currency->format($order_info['total'] - $order_info['amount_partialy_paid']);
                 $customer_info['email'] = $customer_info['email'];
+                $customer_info['mpesa_receipt_number'] = $MpesaReceiptNumber;
 
                 if ($customer_info['email_notification'] == 1) {
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_93', $customer_info);
