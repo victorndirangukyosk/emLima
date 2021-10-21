@@ -341,13 +341,37 @@ var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
                 url += '&filter_date_modified=' + encodeURIComponent(filter_date_modified);
             }
 
-
-             if((filter_customer==0 && filter_company==0 ) && (filter_date_modified=='' || filter_date_added==''))
+    if(filter_date_order=='' && filter_date_delivery=='' && filter_order_id=='' && filter_transaction_id=='')
+    {
+             if((filter_date_modified=='' || filter_date_added==''))
             {
-                alert("Please select either customer or company or start & end date filters");
+                alert("Please select start & end date filters");
                 return;
             }
+           
+          // alert(filter_date_modified);
 
+             if(filter_date_modified!='' && filter_date_added!='')
+            {
+                
+                const date1 = new Date(filter_date_added);
+                const date2 = new Date(filter_date_modified);
+                const diffTime = Math.abs(date2 - date1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                console.log(diffTime + " milliseconds");
+                console.log(diffDays + " days");
+                if(diffDays<0)
+                {
+                alert("Please select proper start & end date filters");
+                                return;
+                }
+                if(diffDays>60)
+                {
+                    alert("Duration between start & end date filters should be less than 60 days");
+                                return;
+                }
+            }
+    }
 
             location = url;
         });
@@ -505,11 +529,38 @@ var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
         if (filter_date_modified) {
             url += '&filter_date_modified=' + encodeURIComponent(filter_date_modified);
         }
-    if((filter_customer==0 && filter_company==0 ) && (filter_date_modified=='' || filter_date_added==''))
+   
+   if(filter_date_order=='' && filter_date_delivery=='' && filter_order_id=='' && filter_transaction_id=='')
+    {
+             if((filter_date_modified=='' || filter_date_added==''))
             {
-                alert("Please select either customer or company or start & end date filters");
+                alert("Please select start & end date filters");
                 return;
             }
+           
+          // alert(filter_date_modified);
+
+             if(filter_date_modified!='' && filter_date_added!='')
+            {
+                
+                const date1 = new Date(filter_date_added);
+                const date2 = new Date(filter_date_modified);
+                const diffTime = Math.abs(date2 - date1);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                console.log(diffTime + " milliseconds");
+                console.log(diffDays + " days");
+                if(diffDays<0)
+                {
+                alert("Please select proper start & end date filters");
+                                return;
+                }
+                if(diffDays>60)
+                {
+                    alert("Duration between start & end date filters should be less than 60 days");
+                                return;
+                }
+            }
+    }
 
 
     location = url;

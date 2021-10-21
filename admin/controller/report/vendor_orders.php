@@ -516,7 +516,7 @@ class ControllerReportVendorOrders extends Controller {
         if (isset($this->request->get['filter_delivery_date'])) {
             $deliveryDate = $this->request->get['filter_delivery_date'];
         } else {//consolidated orders data should not be more , so get delivery date
-            $deliveryDate = date("Y-m-d");
+            // $deliveryDate = date("Y-m-d");
         }
         
 
