@@ -140,14 +140,17 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function addOrderHistoryTransaction($order_id, $order_status_id, $added_by = '', $added_by_role = '', $present_order_status_id, $payment_method, $payment_code) {
+        $log = new Log('error.log');
         $notify = 1;
         $comment = 'mPesa Transaction Completed Successfully!';
 
         if (($present_order_status_id == 9 || $present_order_status_id == 14) && ($order_status_id == 1)) {
+            $log->write('UPDATING ORDER AS Y');
             $this->db->query('UPDATE `' . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', payment_method = '" . $payment_method . "', payment_code = '" . $payment_code . "', amount_partialy_paid = '0',  paid = 'Y', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
         }
 
         if ($present_order_status_id != 9 && $present_order_status_id != 14 && $order_status_id == 1) {
+            $log->write('UPDATING ORDER AS Y 2');
             $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = '" . $payment_method . "', payment_code = '" . $payment_code . "', amount_partialy_paid = '0', paid = 'Y', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
         }
 
@@ -174,10 +177,12 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function addOrderHistoryTransactionFailed($order_id, $order_status_id, $added_by = '', $added_by_role = '', $present_order_status_id, $payment_method, $payment_code, $paid) {
+        $log = new Log('error.log');
         $notify = 1;
         $comment = 'mPesa Transaction Failed!';
 
         if ($paid == 'Y') {
+            $log->write('UPDATING ORDER AS N');
             $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = '" . $payment_method . "', payment_code = '" . $payment_code . "', paid = 'N', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
         }
 
