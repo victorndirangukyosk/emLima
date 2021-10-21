@@ -111,6 +111,8 @@ class ControllerSaleCustomerFeedback extends Controller
             'href' => $this->url->link('sale/customer_feedback', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];        
         $data['customer_feedbacks'] = [];
+        $isaccountmanager=$this->user->isAccountManager();
+
  
         $filter_data = [
             
@@ -123,8 +125,9 @@ class ControllerSaleCustomerFeedback extends Controller
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
-        ];
+            'isaccountmanager' => $isaccountmanager,
 
+        ];
         $customer_feedback_total = $this->model_sale_customer_feedback->getTotalCustomerFeedbacks($filter_data);
 
         $results = $this->model_sale_customer_feedback->getCustomerFeedbacks($filter_data);
