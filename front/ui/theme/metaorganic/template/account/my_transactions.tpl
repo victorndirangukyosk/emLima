@@ -116,7 +116,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="radio">
-                        <label><input class="option_pay" onchange="payOptionSelected()" type="radio" name="pay_with">PesaPal</label>
+                        <label><input class="option_pay" onchange="payOptionSelected()" type="radio" name="pay_with">Credit/Debit Card Payment</label>
                     </div>
                 </div>
                 <div class="col-md-6">
