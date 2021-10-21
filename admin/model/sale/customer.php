@@ -186,9 +186,20 @@ class ModelSaleCustomer extends Model {
             $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
         }
 
-        if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        // if (!empty($data['filter_date_added'])) {
+        //     $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        // }
+
+
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_to'])) {
+            $implode[] = " DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
+
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_to'])) {
+            $implode[] = " DATE(c.date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_to']) . "')";
+        }
+
+
 
         if (isset($data['filter_parent']) && !is_null($data['filter_parent'])) {
             $implode[] = "c.parent = '" . (int) $data['filter_parent'] . "'";
@@ -532,7 +543,8 @@ class ModelSaleCustomer extends Model {
 
         if (!empty($data['filter_date_added'])) {
             $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
-        }
+        }       
+
 
         if (isset($data['filter_parent']) && !is_null($data['filter_parent'])) {
             $implode[] = "c.parent = '" . (int) $data['filter_parent'] . "'";
@@ -809,9 +821,19 @@ class ModelSaleCustomer extends Model {
             $implode[] = "approved = '" . (int) $data['filter_approved'] . "'";
         }
 
-        if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        // if (!empty($data['filter_date_added'])) {
+        //     $implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        // }
+
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_to'])) {
+            $implode[] = " DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
+
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_to'])) {
+            $implode[] = " DATE(date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_to']) . "')";
+        }
+
+
 
         if ($this->user->isAccountManager()) {
             $implode[] = "account_manager_id = '" . (int) $this->user->getId() . "'";
