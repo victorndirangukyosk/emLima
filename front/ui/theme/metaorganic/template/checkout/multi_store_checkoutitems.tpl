@@ -310,6 +310,10 @@
                                     </div>
                                      <?php } ?>
                 </li>
+                <li>
+                <label for="po_number">PO Number</label>
+                <input type="text" id="po_number" name="po_number" class="form-control" value="" placeholder="PO Number">
+                </li>
             </ul>
            
         </form>
