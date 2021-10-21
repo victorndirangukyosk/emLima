@@ -429,7 +429,7 @@ class Emailtemplate {
 
     // Customer
     public function getCustomerFind() {
-        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{deliveryexecutivename}', '{deliveryexecutivephone}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}', '{order_id}', '{status}'];
+        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{deliveryexecutivename}', '{deliveryexecutivephone}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}', '{order_id}', '{status}', '{mpesa_receipt_number}'];
 
         return $result;
     }
@@ -473,6 +473,7 @@ class Emailtemplate {
             'ip_address' => isset($data['ip_address']) ? $data['ip_address'] : '',
             'order_id' => $data['order_id'],
             'status' => $data['status'],
+            'mpesa_receipt_number' => $data['mpesa_receipt_number'],
         ];
 
         return $result;
