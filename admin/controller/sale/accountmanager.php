@@ -23,7 +23,87 @@ class ControllerSaleAccountManager extends Controller {
     public function export_excel() {
         $data = [];
         $this->load->model('report/excel');
-        $this->model_report_excel->download_accountmanager_excel($data);
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
+
+        if (isset($this->request->get['filter_email'])) {
+            $filter_email = $this->request->get['filter_email'];
+        } else {
+            $filter_email = null;
+        }
+
+        if (isset($this->request->get['filter_telephone'])) {
+            $filter_telephone = $this->request->get['filter_telephone'];
+        } else {
+            $filter_telephone = null;
+        }
+
+        if (isset($this->request->get['filter_customer_group_id'])) {
+            $filter_customer_group_id = $this->request->get['filter_customer_group_id'];
+        } else {
+            $filter_customer_group_id = null;
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $filter_status = $this->request->get['filter_status'];
+        } else {
+            $filter_status = null;
+        }
+
+        if (isset($this->request->get['filter_approved'])) {
+            $filter_approved = $this->request->get['filter_approved'];
+        } else {
+            $filter_approved = null;
+        }
+
+        if (isset($this->request->get['filter_ip'])) {
+            $filter_ip = $this->request->get['filter_ip'];
+        } else {
+            $filter_ip = null;
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'name';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
+
+
+        $filter_data = [
+            'filter_company' => $filter_company,
+            'filter_name' => $filter_name,
+            'filter_email' => $filter_email,
+            'filter_telephone' => $filter_telephone,
+            'filter_status' => $filter_status,
+            'filter_date_added' => $filter_date_added,
+            'filter_ip' => $filter_ip,
+            'sort' => $sort,
+            'order' => $order,
+           
+        ];
+
+        $this->model_report_excel->download_accountmanager_excel($filter_data);
     }
 
     public function add() {

@@ -12,7 +12,7 @@ class ModelSaleCustomerFeedback extends Model
 
     public function getCustomerFeedbacks($data = [])
     {
-       
+        $logged_userid=$this->user->getId();
        
         $sql = "SELECT CONCAT(c.firstname, ' ', c.lastname) AS name,CONCAT(u.firstname, ' ', u.lastname) AS accepted_user, feedback_id,rating,feedback_type,comments,order_id, company_name,issue_type,date(created_date) as created_date,f.status,accepted_by,closed_date,closed_comments FROM ".DB_PREFIX.'feedback f join '.DB_PREFIX."customer c on c.customer_id= f.customer_id left outer join ".DB_PREFIX."user u on u.user_id= f.accepted_by ";
     
@@ -24,6 +24,12 @@ class ModelSaleCustomerFeedback extends Model
         if (!empty($data['filter_company'])) {
             if ('' != $data['filter_company']) {
                 $implode[] = "c.company_name = '" . $this->db->escape($data['filter_company']) . "'";
+            }
+        }
+
+        if (!empty($data['isaccountmanager'])) {
+            if (true== $data['isaccountmanager']) {
+                $implode[] = "c.account_manager_id = '" . $logged_userid . "'";
             }
         }
 
