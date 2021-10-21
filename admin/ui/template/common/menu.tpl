@@ -253,6 +253,15 @@
             <?php if($preturn_account_manager_customers) { ?>
             <li><a href="<?php echo $accountmanager_customers; ?>"><?php echo $text_account_managers_customers; ?></a></li>
             <?php } ?>
+
+
+              <?php if($preturn_customer_feedback) { ?>
+            <li><a href="<?php echo $customer_feedback; ?>"><?php echo $text_customer_feedback; ?></a></li>
+            <?php } ?>
+
+            <?php if($preturn_customer_otp) { ?>
+            <li><a href="<?php echo $customer_otp; ?>">Customer OTP</a></li>
+             <?php } ?>
         </ul>
     </li>
     <?php } ?>
