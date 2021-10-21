@@ -274,7 +274,6 @@ class ControllerPaymentMpesa extends Controller {
             }
 
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
-                $this->model_payment_mpesa->updateMpesaOrderByMerchant(4070, 'PJL4K7RRUS', 'ws_CO_21102021230555281510');
                 if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 1) {
                     $pendingOrdersIds = explode('--', $this->request->post['pending_order_ids']);
                 }
