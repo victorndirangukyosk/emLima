@@ -352,6 +352,44 @@
 
             url = 'index.php?path=sale/accountmanager/export_excel&token=<?php echo $token; ?>';
 
+
+  var filter_name = $('input[name=\'filter_name\']').val();
+
+            if (filter_name) {
+                url += '&filter_name=' + encodeURIComponent(filter_name);
+            }
+
+            var filter_email = $('input[name=\'filter_email\']').val();
+
+            if (filter_email) {
+                url += '&filter_email=' + encodeURIComponent(filter_email);
+            }
+
+            var filter_status = $('select[name=\'filter_status\']').val();
+
+            if (filter_status != '*') {
+                url += '&filter_status=' + encodeURIComponent(filter_status);
+            }
+
+            var filter_telephone = $('input[name=\'filter_telephone\']').val();
+
+            if (filter_telephone != '*') {
+                url += '&filter_telephone=' + encodeURIComponent(filter_telephone);
+            }
+
+            var filter_ip = $('input[name=\'filter_ip\']').val();
+
+            if (filter_ip) {
+                url += '&filter_ip=' + encodeURIComponent(filter_ip);
+            }
+
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added) {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+
+
             location = url;
         }
 
