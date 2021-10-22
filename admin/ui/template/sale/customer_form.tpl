@@ -181,28 +181,7 @@
 
  
 
-                      <!-- <div class="form-group required">
-                       <label class="col-sm-2 control-label" for="input-city-id">City</label>
-                               <div class="col-sm-10">      
-                                        <select class="form-control" id="input-city-id" name="input-city-id">
-                                            <option value="">City</option>
-                                            <?php foreach($cities as $city){?>
-                                         <?php if ($city['city_id'] == $customer_city_id) { ?>
-
-                                           
-
-                                             <option value="<?php echo $city['city_id']; ?>" selected="selected"><?php echo $city['name']; ?></option>
-                            <?php } else { ?>
-                            <option value="<?php echo $city['city_id']; ?>"><?php echo $city['name']; ?></option>
-                            <?php } ?>
-
-                                        <?php } ?>
-                                        </select>
-                                         <?php if ($error_telephone) { ?>
-                          <div class="text-danger"><?php echo $error_telephone; ?></div>
-                          <?php  } ?>
-                                    </div>
-                                </div>-->
+                      
 
                 
                       
@@ -439,7 +418,7 @@
                             <label class="col-sm-2 control-label" for="Locality"><?= $text_locality?></label>
                             <div class="col-md-10">
                                 <input type="text" name="address[<?php echo $address_row; ?>][landmark]" value="<?php echo $address['landmark']; ?>" placeholder="" id="input-landmark<?php echo $address_row; ?>" class="form-control" />
-                                <input type="hidden" name="address[<?php echo $address_row; ?>][city_id]" value="32" placeholder="" id="input-city-id<?php echo $address_row; ?>" class="form-control" />
+                                <input type="hidden" name="address[<?php echo $address_row; ?>][city_id]" value="<?php echo $address['city_id']; ?>" placeholder="" id="input-city-id<?php echo $address_row; ?>" class="form-control" />
                                 <input type="hidden" name="address[<?php echo $address_row; ?>][latitude]" value="<?php echo $address['latitude']; ?>" placeholder="" id="input-latitude<?php echo $address_row; ?>" class="form-control" />
                                 <input type="hidden" name="address[<?php echo $address_row; ?>][longitude]" value="<?php echo $address['longitude']; ?>" placeholder="" id="input-longitude<?php echo $address_row; ?>" class="form-control" />
                           <?php if (isset($error_address[$address_row]['landmark'])) { ?>
@@ -474,11 +453,13 @@
                               <div class="text-danger"><?php echo $error_address[$address_row]['address']; ?></div>
                             <?php } ?>
                         </div>
-                      </div>
-                      <div class="form-group required disabled">
+                      </div>-->
+                      <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-city<?php echo $address_row; ?>"><?php echo $entry_city; ?></label>
                         <div class="col-sm-10">
-                            <select name="address[<?php echo $address_row; ?>][city_id]" class="form-control" disabled>
+                            <select name="address[<?php echo $address_row; ?>][city_id]" class="form-control">
+                                <option value="">City</option>
+                               
                                 <?php foreach($cities as $city){ ?>
                                 <?php if($city['city_id'] == $address['city_id']){ ?>
                                 <option selected="" value="<?= $city['city_id'] ?>"><?= $city['name'] ?></option>
@@ -487,8 +468,12 @@
                                 <?php } ?>
                                 <?php } ?>
                             </select> 
+                            <?php if (isset($error_address[$address_row]['city_id'])) { ?>
+                          <div class="text-danger"><?php echo $error_address[$address_row]['city_id']; ?></div>
+                          <?php } ?>
+
                         </div>
-                      </div> -->
+                      </div> 
                       <div class="form-group">
                         <label class="col-sm-2 control-label"><?php echo $entry_default; ?></label>
                         <div class="col-sm-10">
@@ -1017,16 +1002,18 @@ function addAddress() {
         html += '  </div>';
         html += '  </div>';*/
         
-        /*html += '  <div class="form-group required">';
+        html += '  <div class="form-group required">';
         html += '  <label class="col-sm-2 control-label" for="input-city' + address_row + '"><?php echo $entry_city; ?></label>';
         html += '  <div class="col-sm-10">';
         html += '      <select name="address[' + address_row + '][city_id]" class="form-control">';
+               html += '                       <option value="">City</option>';
+                       
                         <?php foreach($cities as $city){ ?>
         html += '          <option value="<?= $city['city_id'] ?>"><?= $city['name'] ?></option>';
                         <?php } ?>
         html += '      </select>';
         html += '  </div>';
-        html += '  </div>';*/
+        html += '  </div>';
 
         html += '  <div class="form-group">';
   html += '    <label class="col-sm-2 control-label"><?php echo $entry_default; ?></label>';

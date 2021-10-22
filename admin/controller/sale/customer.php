@@ -2468,6 +2468,10 @@ class ControllerSaleCustomer extends Controller {
                 // if (empty($value['landmark'])) {
                 //     $this->error['address'][$key]['landmark'] = $this->language->get('error_landmark');
                 // }
+
+                 if (empty($value['city_id'])) {
+                    $this->error['address'][$key]['city_id'] = $this->language->get('error_city_id');
+                }
             }
         }
 
