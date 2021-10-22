@@ -48,6 +48,7 @@
             <li><a href="#tab-configuration" data-toggle="tab">Configuration</a></li>
             <li><a href="#tab-otp" data-toggle="tab">OTP</a></li>
             <li><a href="#tab-activity" data-toggle="tab">Activities</a></li>
+            <li><a href="#tab-password" data-toggle="tab">Password</a></li>
            
             <?php } ?>
           </ul>
@@ -221,7 +222,7 @@
                           <input type="text" name="fax" value="<?php echo $fax; ?>" placeholder="<?php echo $entry_fax; ?>" id="input-fax" class="form-control" />
                         </div>
                       </div>                        
-                    <!--  <div class="form-group required">
+                    <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-password"><?php echo $entry_password; ?></label>
                         <div class="col-sm-10">
                           <input type="password" name="password" value="<?php echo $password; ?>" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control" autocomplete="off" />
@@ -238,7 +239,7 @@
                           <div class="text-danger"><?php echo $error_confirm; ?></div>
                           <?php  } ?>
                         </div>
-                      </div>-->
+                      </div>
                       <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-newsletter"><?php echo $entry_newsletter; ?></label>
                         <div class="col-sm-10">
@@ -636,6 +637,39 @@
               </div>
             </div>
             
+
+            <div class="tab-pane" id="tab-password">                  
+                    
+                     
+
+                       <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-password-1"><?php echo $entry_password; ?></label>
+                        <div class="col-sm-10">
+                          <input type="password" name="password-1" value="<?php echo $password; ?>" placeholder="<?php echo $entry_password; ?>" id="input-password-1" class="form-control" autocomplete="off" />
+                          <?php if ($error_password) { ?>
+                          <div class="text-danger"><?php echo $error_password; ?></div>
+                          <?php  } ?>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-confirm-1"><?php echo $entry_confirm; ?></label>
+                        <div class="col-sm-10">
+                          <input type="password" name="confirm-1" value="<?php echo $confirm; ?>" placeholder="<?php echo $entry_confirm; ?>" autocomplete="off" id="input-confirm-1" class="form-control" />
+                          <?php if ($error_confirm) { ?>
+                          <div class="text-danger"><?php echo $error_confirm; ?></div>
+                          <?php  } ?>
+                        </div>
+                      </div>
+
+                    
+                                    
+                         
+                  <div class="text-right">
+                      <button type="button" id="button-password" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-save"></i> Save Password </button>
+                  </div>                
+            </div>
+
+
             <div class="tab-pane" id="tab-configuration">
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-price-category">Price Category</label>
@@ -2081,6 +2115,28 @@ $.ajax({
             });
         
     });
+
+
+
+    $('#button-password').on('click', function(e) {
+e.preventDefault();
+
+$.ajax({
+    url: 'index.php?path=sale/customer/password&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
+    type: 'post',
+    dataType: 'json',
+    data: 'password=' + encodeURIComponent($('#tab-password select[name=\'password-1\']').val()) + '&confirm=' + encodeURIComponent($('#tab-password select[name=\'confirm-1\']').val())+ '&customer_id=<?php echo $customer_id; ?>',
+    beforeSend: function() {
+      $('#button-password').button('loading');
+         },
+    complete: function() {
+      $('#button-password').button('reset');
+    },
+    success: function(json) {
+        alert(json.message);
+    }
+  });
+});
 
 </script>
 </body>
