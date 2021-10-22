@@ -222,7 +222,7 @@
                           <input type="text" name="fax" value="<?php echo $fax; ?>" placeholder="<?php echo $entry_fax; ?>" id="input-fax" class="form-control" />
                         </div>
                       </div>                        
-                    <div class="form-group required">
+                    <!--<div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-password"><?php echo $entry_password; ?></label>
                         <div class="col-sm-10">
                           <input type="password" name="password" value="<?php echo $password; ?>" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control" autocomplete="off" />
@@ -239,7 +239,7 @@
                           <div class="text-danger"><?php echo $error_confirm; ?></div>
                           <?php  } ?>
                         </div>
-                      </div>
+                      </div>-->
                       <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-newsletter"><?php echo $entry_newsletter; ?></label>
                         <div class="col-sm-10">
@@ -2125,7 +2125,7 @@ $.ajax({
     url: 'index.php?path=sale/customer/password&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
     type: 'post',
     dataType: 'json',
-    data: 'password=' + encodeURIComponent($('#tab-password select[name=\'password-1\']').val()) + '&confirm=' + encodeURIComponent($('#tab-password select[name=\'confirm-1\']').val())+ '&customer_id=<?php echo $customer_id; ?>',
+    data: 'password=' + encodeURIComponent($('#tab-password input[name=\'password-1\']').val()) + '&confirm=' + encodeURIComponent($('#tab-password input[name=\'confirm-1\']').val())+ '&customer_id=<?php echo $customer_id; ?>',
     beforeSend: function() {
       $('#button-password').button('loading');
          },

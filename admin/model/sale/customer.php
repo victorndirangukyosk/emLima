@@ -2219,4 +2219,21 @@ class ModelSaleCustomer extends Model {
         
     }
 
+
+    public function editCustomerPassword($customer_id, $data) {
+        
+        //   echo "<pre>";print_r($data);die;
+
+       
+        if ($data['password'] && 'default' != $data['password']) {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', tempPassword = '" . (int) 1 . "' WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+
+ 
+        $this->savepassword($customer_id, $data['password']);
+        $this->deleteoldpassword($customer_id);
+
+       
+    }
+
 }
