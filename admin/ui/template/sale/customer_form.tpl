@@ -2125,7 +2125,7 @@ $.ajax({
     url: 'index.php?path=sale/customer/password&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
     type: 'post',
     dataType: 'json',
-    data: 'password=' + encodeURIComponent($('#tab-password input[name=\'password-1\']').val()) + '&confirm=' + encodeURIComponent($('#tab-password input[name=\'confirm-1\']').val())+ '&customer_id=<?php echo $customer_id; ?>',
+    data: 'password-1=' + encodeURIComponent($('#tab-password input[name=\'password-1\']').val()) + '&confirm-1=' + encodeURIComponent($('#tab-password input[name=\'confirm-1\']').val())+ '&customer_id=<?php echo $customer_id; ?>',
     beforeSend: function() {
       $('#button-password').button('loading');
          },
