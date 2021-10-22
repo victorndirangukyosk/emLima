@@ -2933,4 +2933,13 @@ class ModelAssetsProduct extends Model {
         return $ret;
     }
 
+    public function GetProductByProductDeliveryDays($product_id, $product_store_id, $store_id) {
+        $log = new Log('error.log');
+        $sql = 'select ps.product_store_id, ps.product_id, ps.store_id, ps.monday, ps.tuesday, ps.wednesday, ps.thursday, ps.friday, ps.saturday, ps.sunday, ps.sunday, ps.sunday, p.name, p.unit from `' . DB_PREFIX . 'product_to_store` as ps inner join ' . DB_PREFIX . 'product p on ps.product_id = p.product_id';
+        $sql .= ' WHERE ps.product_store_id = ' . $product_store_id . ' AND ps.product_id = ' . $product_id . ' AND ps.store_id =' . $store_id;
+
+        $log->write($sql);
+        return $this->db->query($sql)->row;
+    }
+
 }

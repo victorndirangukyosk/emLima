@@ -956,12 +956,9 @@ class ControllerCheckoutConfirm extends Controller {
                 if (isset($this->session->data['payment_method']['title']) && $store_id == 75) {
                     $order_data[$store_id]['payment_method'] = $this->session->data['payment_method']['title'];
                 } elseif (isset($this->session->data['payment_method']['title']) && $store_id != 75) {
-                    if($this->session->data['payment_method']['code']=='wallet' || $this->session->data['payment_method']['code']=='mod')
-                    {
+                    if ($this->session->data['payment_method']['code'] == 'wallet' || $this->session->data['payment_method']['code'] == 'mod') {
                         $order_data[$store_id]['payment_method'] = $this->session->data['payment_method']['title'];
-                   
-                    }
-                    else {
+                    } else {
                         $order_data[$store_id]['payment_method'] = 'Corporate Account/ Cheque Payment';
                     }
                 } else {
@@ -971,12 +968,9 @@ class ControllerCheckoutConfirm extends Controller {
                 if (isset($this->session->data['payment_method']['code']) && $store_id == 75) {
                     $order_data[$store_id]['payment_code'] = $this->session->data['payment_method']['code'];
                 } elseif (isset($this->session->data['payment_method']['code']) && $store_id != 75) {
-                    if($this->session->data['payment_method']['code']=='wallet' || $this->session->data['payment_method']['code']=='mod')
-                    {
+                    if ($this->session->data['payment_method']['code'] == 'wallet' || $this->session->data['payment_method']['code'] == 'mod') {
                         $order_data[$store_id]['payment_code'] = $this->session->data['payment_method']['code'];
-                   
-                    }
-                    else {
+                    } else {
                         $order_data[$store_id]['payment_code'] = 'cod';
                     }
                 } else {
@@ -1268,7 +1262,7 @@ class ControllerCheckoutConfirm extends Controller {
         if (isset($this->session->data['accept_vendor_terms']) && $this->session->data['accept_vendor_terms'] == TRUE) {
             $json['modal_open'] = FALSE;
         } else {
-            $json['product_list'] =null;
+            $json['product_list'] = null;
             foreach ($this->cart->getProducts() as $store_products) {
                 /* FOR KWIKBASKET ORDERS */
                 $log->write('CheckOtherVendorOrderExists');
@@ -1276,11 +1270,10 @@ class ControllerCheckoutConfirm extends Controller {
                 $log->write('CheckOtherVendorOrderExists');
                 if ($store_products['store_id'] > 75 && $this->customer->getPaymentTerms() != 'Payment On Delivery') {
                     $json['modal_open'] = TRUE;
-                    if($json['product_list']==null){
-                    $json['product_list'] = $store_products['name'];
-                    }
-                    else {
-                        $json['product_list'] = $json['product_list'].' ,'.$store_products['name'];
+                    if ($json['product_list'] == null) {
+                        $json['product_list'] = $store_products['name'];
+                    } else {
+                        $json['product_list'] = $json['product_list'] . ' ,' . $store_products['name'];
                     }
                 }
             }
@@ -1294,6 +1287,31 @@ class ControllerCheckoutConfirm extends Controller {
         $log = new Log('error.log');
         $json['vendor_terms'] = $this->request->post['accept_terms'];
         $this->session->data['accept_vendor_terms'] = $this->request->post['accept_terms'];
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function GetProductDeliveryDays() {
+
+        $log = new Log('error.log');
+        $this->load->model('assets/product');
+        $results = NULL;
+        foreach ($this->cart->getProducts() as $product) {
+
+            $product_store_id = $product['product_store_id'];
+            $store_id = $product['store_id'];
+            $product_id = $product['product_id'];
+
+            $product_delivery_days = $this->model_assets_product->GetProductByProductDeliveryDays($product_id, $product_store_id, $store_id);
+            if (is_array($product_delivery_days) && count($product_delivery_days) > 0 && ($product_delivery_days['monday'] == 0 || $product_delivery_days['tuesday'] == 0 || $product_delivery_days['wednesday'] == 0 || $product_delivery_days['thursday'] == 0 || $product_delivery_days['friday'] == 0 || $product_delivery_days['saturday'] == 0 || $product_delivery_days['sunday'] == 0)) {
+                $results[] = $product_delivery_days;
+            }
+            $log->write('results');
+            $log->write($results);
+            $log->write('results');
+        }
+
+        $json['data'] = $results;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
