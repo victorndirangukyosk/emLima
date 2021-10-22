@@ -123,6 +123,7 @@
                                 <div class="col-sm-10">
                                     <select name="delivery_time" id="input-delivery-time" class="form-control">
                                         <option value="0">Select Delivery Time</option>
+                                        <option value="24" <?php if($delivery_time == 24) { ?> selected="selected" <?php } ?> >12</option>
                                         <option value="24" <?php if($delivery_time == 24) { ?> selected="selected" <?php } ?> >24</option>
                                         <option value="48" <?php if($delivery_time == 48) { ?> selected="selected" <?php } ?> >48</option>
                                         <option value="72" <?php if($delivery_time == 72) { ?> selected="selected" <?php } ?> >72</option>
