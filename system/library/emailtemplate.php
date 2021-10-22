@@ -2287,9 +2287,9 @@ class Emailtemplate {
                 if (isset($deviceId) && isset($to)) {
                     $log->write('api key');
 
-                    $apiKey = $this->config->get('config_seller_api_key');
+                    //$apiKey = $this->config->get('config_seller_api_key');
                     //$apiKey = 'AIzaSyAK3VgDt_MTGRaTMfs_9v_YdsK6tjFRsoo';
-                    //$apiKey = 'AIzaSyAkp28U1t0cYlWeInQHOSkqveCCMltspmk';
+                    $apiKey = 'AAAAW7sakrE:APA91bEcVKG8cwpR_Rbko_uZFVl6S43rfyAY8Ui9rfYrDNgm0SAJWKfoRFtJS_dZLhiaVPcj4ZOBKNPB_HI0Tl0t5V0TuN0Xenrxa9d5WiBde8lRQrQaKFVD6MiNapd0H5qIuzqksW5I';
 
                     $log->write($apiKey);
                     $client = new FCMClient();
