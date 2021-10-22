@@ -69,9 +69,10 @@
                 <div class="col-sm-10">
                   <div class="tab-content">
                     <div class="tab-pane active" id="tab-customer">
+                        <input type="hidden" id="selected_address" name="selected_address" value="">
+
                       <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-customer-group"><?php echo $entry_customer_group; ?></label>
-                        <input type="hidden" id="selected_address" name="selected_address" value="">
                         <div class="col-sm-10">
                           <select name="customer_group_id" id="input-customer-group" class="form-control">
                             <?php foreach ($customer_groups as $customer_group) { ?>
@@ -84,6 +85,7 @@
                           </select>
                         </div>
                       </div>
+
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-firstname"><?php echo $entry_firstname; ?></label>
                         <div class="col-sm-10">
