@@ -2289,7 +2289,7 @@ class Emailtemplate {
 
                     //$apiKey = $this->config->get('config_seller_api_key');
                     //$apiKey = 'AIzaSyAK3VgDt_MTGRaTMfs_9v_YdsK6tjFRsoo';
-                    $apiKey = 'AIzaSyB1oIypAqDhYW7iECyxxIY9BgmtGdOtQPo';
+                    $apiKey = 'AIzaSyAkp28U1t0cYlWeInQHOSkqveCCMltspmk';
 
                     $log->write($apiKey);
                     $client = new FCMClient();
