@@ -851,31 +851,31 @@ $(function() {
             $.each(json.data, function(key, value) {
             var deliverydays = [];  
             if(value.monday == "1") {    
-            deliverydays.push('Mon');
+            deliverydays.push('Mon'+' ('+ value.monday_date +')');
             }
     
             if(value.tuesday == "1") {    
-            deliverydays.push('Tue');
+            deliverydays.push('Tue'+' ('+ value.tuesday_date +')');
             }
     
             if(value.wednesday == "1") {    
-            deliverydays.push('Wed');
+            deliverydays.push('Wed'+' ('+ value.wednesday_date +')');
             }
             
             if(value.thursday == "1") {    
-            deliverydays.push('Thu');
+            deliverydays.push('Thu'+' ('+ value.thursday_date +')');
             }
     
             if(value.friday == "1") {    
-            deliverydays.push('Fri');
+            deliverydays.push('Fri'+' ('+ value.friday_date +')');
             }
     
             if(value.saturday == "1") {    
-            deliverydays.push('Sat');
+            deliverydays.push('Sat'+' ('+ value.saturday_date +')');
             }
     
             if(value.sunday == "1") {    
-            deliverydays.push('Sun');
+            deliverydays.push('Sun'+' ('+ value.sunday_date +')');
             }
     
             html += '<div class="row"><div class="col-md-6">' + value.name +' ('+ value.unit +') '+ '</div><div class="col-md-6">' + deliverydays  + '</div></div>'
