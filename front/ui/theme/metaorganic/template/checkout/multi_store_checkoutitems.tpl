@@ -804,6 +804,20 @@
             }
         });
 });*/
+$(function() {
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/GetProductDeliveryDays',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                console.log(json);
+            }
+        });
+});    
 $('#pay_pending_amount').on('click', function(){
 window.location.href = "<?= $continue.'/index.php?path=account/transactions'; ?>";
 });
@@ -988,13 +1002,12 @@ $.ajax({
                 if (json['modal_open']) {
                 $('#exampleModal').modal('show');
                  //alert(json['product_list']);
-                       
-                         $('#products_list').text(json['product_list']);
+                $('#products_list').text(json['product_list']);
 
                 return false;
                 }else{
                 $('#exampleModal').modal('hide'); 
-                         $('#products_list').text('');
+                $('#products_list').text('');
 
                 window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";     
                 }
