@@ -732,6 +732,35 @@
             </div>
         </div>
     </div>
+    
+    <div class="addressModal">
+        <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <div class="row">
+                                <div class="col-md-12">
+                                <h2>BELOW LISTED PRODUCTS DELIVARABLE IN MENTIONED DAYS ONLY</h2>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container-fluid" id="vendor_product_days">
+                                    </div>
+                                </div>
+                            <div class="addnews-address-form">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button id="remove_vendor_products" name="remove_vendor_products" type="button" class="btn btn-primary">REMOVE</button>
+                                        <button id="cancel_products_vendor_terms" name="cancel_products_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">CANCEL</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- CSS Style -->
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
@@ -804,6 +833,63 @@
             }
         });
 });*/
+$(function() {
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/GetProductDeliveryDays',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+            console.log(json);
+            if(json.count > 0) {
+            var html = [];
+            var deliverydays = '';
+            html += '<div class="row"><div class="col-md-6">PRODUCT</div><div class="col-md-6">DELIVERY DAYS</div></div>';
+            $.each(json.data, function(key, value) {
+            var deliverydays = [];  
+            if(value.monday == "1") {    
+            deliverydays.push('Mon');
+            }
+    
+            if(value.tuesday == "1") {    
+            deliverydays.push('Tue');
+            }
+    
+            if(value.wednesday == "1") {    
+            deliverydays.push('Wed');
+            }
+            
+            if(value.thursday == "1") {    
+            deliverydays.push('Thu');
+            }
+    
+            if(value.friday == "1") {    
+            deliverydays.push('Fri');
+            }
+    
+            if(value.saturday == "1") {    
+            deliverydays.push('Sat');
+            }
+    
+            if(value.sunday == "1") {    
+            deliverydays.push('Sun');
+            }
+    
+            html += '<div class="row"><div class="col-md-6">' + value.name +' ('+ value.unit +') '+ '</div><div class="col-md-6">' + deliverydays  + '</div></div>'
+            });
+            console.log(html);
+            console.log(deliverydays);
+            $('#vendor_product_days').html(html);
+            $('#exampleModal4').modal('show');
+            } else {
+            $('#exampleModal4').modal('hide');
+            }
+            }
+        });
+});    
 $('#pay_pending_amount').on('click', function(){
 window.location.href = "<?= $continue.'/index.php?path=account/transactions'; ?>";
 });
@@ -988,13 +1074,12 @@ $.ajax({
                 if (json['modal_open']) {
                 $('#exampleModal').modal('show');
                  //alert(json['product_list']);
-                       
-                         $('#products_list').text(json['product_list']);
+                $('#products_list').text(json['product_list']);
 
                 return false;
                 }else{
                 $('#exampleModal').modal('hide'); 
-                         $('#products_list').text('');
+                $('#products_list').text('');
 
                 window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";     
                 }
