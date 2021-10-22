@@ -176,6 +176,33 @@
                            
                         </div>
                       </div>-->
+ 
+
+ 
+
+                      <!-- <div class="form-group required">
+                       <label class="col-sm-2 control-label" for="input-city-id">City</label>
+                               <div class="col-sm-10">      
+                                        <select class="form-control" id="input-city-id" name="input-city-id">
+                                            <option value="">City</option>
+                                            <?php foreach($cities as $city){?>
+                                         <?php if ($city['city_id'] == $customer_city_id) { ?>
+
+                                           
+
+                                             <option value="<?php echo $city['city_id']; ?>" selected="selected"><?php echo $city['name']; ?></option>
+                            <?php } else { ?>
+                            <option value="<?php echo $city['city_id']; ?>"><?php echo $city['name']; ?></option>
+                            <?php } ?>
+
+                                        <?php } ?>
+                                        </select>
+                                         <?php if ($error_telephone) { ?>
+                          <div class="text-danger"><?php echo $error_telephone; ?></div>
+                          <?php  } ?>
+                                    </div>
+                                </div>-->
+
                 
                       
 
