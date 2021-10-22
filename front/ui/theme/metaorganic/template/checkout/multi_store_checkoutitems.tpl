@@ -732,6 +732,35 @@
             </div>
         </div>
     </div>
+    
+    <div class="addressModal">
+        <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <div class="row">
+                                <div class="col-md-12">
+                                <h2>BELOW LISTED PRODUCTS DELIVARABLE IN MENTIONED DAYS ONLY</h2>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container-fluid" id="vendor_product_days">
+                                    </div>
+                                </div>
+                            <div class="addnews-address-form">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button id="remove_vendor_products" name="remove_vendor_products" type="button" class="btn btn-primary">REMOVE</button>
+                                        <button id="cancel_products_vendor_terms" name="cancel_products_vendor_terms" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">CANCEL</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- CSS Style -->
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
@@ -814,7 +843,19 @@ $(function() {
             complete: function() {
             },
             success: function(json) {
-                console.log(json);
+            console.log(json);
+            if(json.count > 0) {
+            var html = [];
+            html += '<div class="row"><div class="col-md-6">PRODUCT</div><div class="col-md-6">DELIVERY DAYS</div></div>';
+            $.each(json.data, function(key, value) {
+            html += '<div class="row"><div class="col-md-6">' + value.name +' ('+ value.unit +') '+ '</div><div class="col-md-6">' + value.name + '</div></div>'
+            });
+            console.log(html);
+            $('#vendor_product_days').html(html);
+            $('#exampleModal4').modal('show');
+            } else {
+            $('#exampleModal4').modal('hide');
+            }
             }
         });
 });    

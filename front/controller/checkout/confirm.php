@@ -1312,6 +1312,7 @@ class ControllerCheckoutConfirm extends Controller {
         }
 
         $json['data'] = $results;
+        $json['count'] = count($results);
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
