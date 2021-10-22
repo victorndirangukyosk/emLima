@@ -848,7 +848,36 @@ $(function() {
             var html = [];
             html += '<div class="row"><div class="col-md-6">PRODUCT</div><div class="col-md-6">DELIVERY DAYS</div></div>';
             $.each(json.data, function(key, value) {
-            html += '<div class="row"><div class="col-md-6">' + value.name +' ('+ value.unit +') '+ '</div><div class="col-md-6">' + value.name + '</div></div>'
+            var deliverydays = [];  
+            if(value.monday == "1") {    
+            deliverydays += 'Mon';
+            }
+    
+            if(value.tuesday == "1") {    
+            deliverydays += ', Tue';
+            }
+    
+            if(value.wednesday == "1") {    
+            deliverydays += ', Wed';
+            }
+            
+            if(value.thursday == "1") {    
+            deliverydays += ', Thu';
+            }
+    
+            if(value.friday == "1") {    
+            deliverydays += ', Fri';
+            }
+    
+            if(value.saturday == "1") {    
+            deliverydays += ', Sat'
+            }
+    
+            if(value.sunday == "1") {    
+            deliverydays += ', Sun'
+            }
+    
+            html += '<div class="row"><div class="col-md-6">' + value.name +' ('+ value.unit +') '+ '</div><div class="col-md-6">' + deliverydays  + '</div></div>'
             });
             console.log(html);
             $('#vendor_product_days').html(html);
