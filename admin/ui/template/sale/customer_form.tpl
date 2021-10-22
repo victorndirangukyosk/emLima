@@ -148,34 +148,34 @@
                         </div>
                       </div>  -->
 
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label class="col-sm-2 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>
                         <div class="col-sm-10">
-                          <!-- <label class="radio-inline">  -->
+                           
                             <?php if($gender == 'male') {?> 
                                 <input type="radio" name="sex" data-id="8" value="male" checked="checked" /> <?= $text_male ?> 
                             <?php } else {?>
                             <input type="radio" name="sex" data-id="8" value="male" checked="checked"/> <?= $text_male ?> 
                             <?php } ?>
-                          <!-- </label> -->
+                         
 
-                           <!-- <label class="radio-inline"> -->
+                          
                             <?php if($gender == 'female') {?> 
                                 <input type="radio" name="sex" data-id="9" value="female" checked="checked"/> <?= $text_female ?>
                             <?php } else {?>
                             <input type="radio" name="sex" data-id="9" value="female"/> <?= $text_female ?> 
                             <?php } ?>
-                             <!-- </label> -->
+                           
 
-                           <!-- <label class="radio-inline"> -->
+                          
                             <?php if($gender == 'other') {?> 
                                 <input type="radio" name="sex" data-id="10" value="other" checked="checked"/> <?= $text_other ?>
                             <?php } else {?>
                             <input type="radio" name="sex" data-id="10" value="other"/> <?= $text_other ?> 
                             <?php } ?>
-                           <!-- </label> -->
+                           
                         </div>
-                      </div>
+                      </div>-->
                 
                       
 
