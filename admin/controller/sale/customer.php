@@ -4843,4 +4843,45 @@ class ControllerSaleCustomer extends Controller {
         $this->response->setOutput($this->load->view('sale/customer_activity.tpl', $data));
     }
 
+
+    public function password() {
+
+        $json = [];
+        $data = [];
+        $this->load->model('sale/customer');
+
+        if ($this->request->post['password-1'] || (!isset($this->request->get['customer_id'])) && $this->request->post['password-1'] !='default') {
+            if ((utf8_strlen($this->request->post['password-1']) < 4) || (utf8_strlen($this->request->post['password-1']) > 20)) {
+                $this->error['password'] = $this->language->get('error_password');
+            }
+
+            /* if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
+              $this->error['password'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
+              } */
+
+            if ($this->request->post['password-1'] != $this->request->post['confirm-1']) {
+                $this->error['confirm'] = $this->language->get('error_confirm');
+            }
+
+            if (isset($this->request->get['customer_id'])) {
+                $this->load->model('sale/customer');
+                $change_pass_count = $this->model_sale_customer->check_customer_previous_password($this->request->get['customer_id'], $this->request->post['password-1']);
+                $change_current_pass_count = $this->model_sale_customer->check_customer_current_password($this->request->get['customer_id'], $this->request->post['password-1']);
+
+                if ($change_pass_count > 0 || $change_current_pass_count > 0) {
+                    $this->error['password'] = 'New password must not match previous 3 passwords';
+                }
+            }
+        }
+
+
+        $data['password'] = $this->request->post['password-1'];
+       
+        $data['customer_id'] = $this->request->post['customer_id'];
+        $this->model_sale_customer->editCustomerPassword($this->request->post['customer_id'], $data);
+        $json['success'] = true;
+        $json['message'] = 'Customer Password Changed!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
