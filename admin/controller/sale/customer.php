@@ -4849,7 +4849,7 @@ class ControllerSaleCustomer extends Controller {
         $json = [];
         $data = [];
         $this->load->model('sale/customer');
-
+        $this->error['password'] = $this->error['confirm'] = "";
         if ($this->request->post['password-1'] || (!isset($this->request->get['customer_id'])) && $this->request->post['password-1'] !='default') {
             if ((utf8_strlen($this->request->post['password-1']) < 4) || (utf8_strlen($this->request->post['password-1']) > 20)) {
                 $this->error['password'] = $this->language->get('error_password');
@@ -4874,14 +4874,31 @@ class ControllerSaleCustomer extends Controller {
             }
         }
 
+        if($this->error['confirm']!="")
+        {
+            $json['success'] = true;
+            $json['message'] = $this->error['confirm'];
+        }
+        else if($this->error['password']!="")
+        {  $json['success'] = true;
+            $json['message'] = $this->error['password'];
 
+        }
+        else if($this->request->post['password-1']=='default')
+        {  $json['success'] = true;
+            $json['message'] = 'Same as previous password';
+
+        }
+        else{
         $data['password'] = $this->request->post['password-1'];
        
         $data['customer_id'] = $this->request->post['customer_id'];
         $this->model_sale_customer->editCustomerPassword($this->request->post['customer_id'], $data);
         $json['success'] = true;
         $json['message'] = 'Customer Password Changed!';
+        }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+    
 }
