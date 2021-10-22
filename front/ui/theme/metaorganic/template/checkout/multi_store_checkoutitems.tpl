@@ -846,40 +846,42 @@ $(function() {
             console.log(json);
             if(json.count > 0) {
             var html = [];
+            var deliverydays = '';
             html += '<div class="row"><div class="col-md-6">PRODUCT</div><div class="col-md-6">DELIVERY DAYS</div></div>';
             $.each(json.data, function(key, value) {
             var deliverydays = [];  
             if(value.monday == "1") {    
-            deliverydays += 'Mon';
+            deliverydays.push('Mon');
             }
     
             if(value.tuesday == "1") {    
-            deliverydays += ', Tue';
+            deliverydays.push('Tue');
             }
     
             if(value.wednesday == "1") {    
-            deliverydays += ', Wed';
+            deliverydays.push('Wed');
             }
             
             if(value.thursday == "1") {    
-            deliverydays += ', Thu';
+            deliverydays.push('Thu');
             }
     
             if(value.friday == "1") {    
-            deliverydays += ', Fri';
+            deliverydays.push('Fri');
             }
     
             if(value.saturday == "1") {    
-            deliverydays += ', Sat'
+            deliverydays.push('Sat');
             }
     
             if(value.sunday == "1") {    
-            deliverydays += ', Sun'
+            deliverydays.push('Sun');
             }
     
             html += '<div class="row"><div class="col-md-6">' + value.name +' ('+ value.unit +') '+ '</div><div class="col-md-6">' + deliverydays  + '</div></div>'
             });
             console.log(html);
+            console.log(deliverydays);
             $('#vendor_product_days').html(html);
             $('#exampleModal4').modal('show');
             } else {
