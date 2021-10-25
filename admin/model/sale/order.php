@@ -1829,6 +1829,12 @@ class ModelSaleOrder extends Model {
         }
 
 
+
+        if (isset($data['filter_orders'])) {      
+     
+            $sql .= ' and  o.order_id in ("'.$data['filter_orders'].'")';        
+        } 
+
         //below if condition added for fast orders
         if (!empty($data['filter_order_day'])) {
             $current_date = date('Y-m-d');
