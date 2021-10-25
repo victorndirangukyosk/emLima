@@ -7,7 +7,7 @@ $_['column_sub_total'] = 'Sub Total';
 // Heading
 $_['heading_title'] = 'Orders';
 
-$_['heading_title_fastorders'] = 'Fast Orders';
+$_['heading_title_fastorders'] = 'Same Day Deliveries';
 
 // Text
 $_['text_replacable'] = 'Replacable';
