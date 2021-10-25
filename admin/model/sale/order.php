@@ -1705,6 +1705,15 @@ class ModelSaleOrder extends Model {
 
         }
 
+
+
+        if (isset($data['filter_orders'])) {   
+     
+     
+                $sql .= ' and  o.order_id in ("'.$data['filter_orders'].'")';
+            
+            } 
+
         if ($this->user->isVendor()) {
             $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
         }
