@@ -424,9 +424,18 @@ class ControllerReportVendorOrders extends Controller {
                 $filter_order_status = null;
             }
 
+
+            if (isset($this->request->get['selected_order_id'])) {
+                $orders = $this->request->get['selected_order_id'];
+            } else
+            {
+                $orders =null;  
+            }
+            
             $filter_data = [
                 'filter_order_day' => $filter_order_day,
                 'filter_order_status' => $filter_order_status,
+                'filter_orders' => $orders
             ];
             $this->load->model('sale/order');
 
