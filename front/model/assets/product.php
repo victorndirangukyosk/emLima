@@ -616,6 +616,56 @@ class ModelAssetsProduct extends Model {
         return $ret;
     }
 
+    public function getProductWithCategoryPricing($product_store_id, $is_admin = false, $store_id = null) {
+        if ($store_id == NULL) {
+            if (isset($this->session->data['config_store_id'])) {
+                $store_id = $this->session->data['config_store_id'];
+            } else {
+                $store_id = ACTIVE_STORE_ID;
+            }
+        }
+
+        
+
+        $log = new Log('error.log');
+        $log->write($store_id);
+        $this->db->select('product_to_store.*,product_description.*,product.unit,product.model,product.image,product.produce_type,store.name as store_name', false);
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+        $this->db->join('store', 'product_to_store.store_id = store.store_id', 'left');
+        $this->db->group_by('product_to_store.product_store_id');
+        //$this->db->where('product_to_store.store_id', $store_id);
+        $this->db->where('product_to_store.status', 1);
+        //$this->db->where('product.status',1);
+        $this->db->where('product_to_store.product_store_id', $product_store_id);
+        $ret = $this->db->get('product_to_store')->row;
+
+        $cachePrice_data = $this->cache->get('category_price_data');
+
+        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$r['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) {
+            //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+            $s_price = $cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
+            $o_price = $cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
+            $ret['special_price'] = $s_price;
+            $ret['price'] = $o_price;
+        }
+        $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
+        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) {
+            //  echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+            $s_price = $cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
+            $o_price = $cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
+            $ret['special_price'] = $s_price;
+            $ret['price'] = $o_price;
+        }
+        $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
+        
+        $ret['price'] = strval($ret['price']);
+        $ret['special_price'] = strval($ret['special_price']);
+
+        return $ret;
+    }
+
     public function getProductStoreId($product_id, $store_id) {
         $query = $this->db->query('SELECT * from  ' . DB_PREFIX . 'product_to_store where store_id = ' . (int) $store_id . ' and product_id = ' . $product_id);
 

@@ -440,7 +440,7 @@ class ControllerApiCart extends Controller {
             $product = unserialize(base64_decode($keys));
             $product_store_id = $product['product_store_id'];
             $this->load->model('assets/product');
-            $product_info = $this->model_assets_product->getProduct($product_store_id, true);
+            $product_info = $this->model_assets_product->getProductWithCategoryPricing($product_store_id, true);
             $tax_info = $this->tax->getRateNameByTaxClassId($product_info['tax_class_id']);
             $tax_name = is_array($tax_info) && $tax_info != NULL && count($tax_info) > 0 ? $tax_info['name'] : NULL;
             $tax_percentage = is_array($tax_info) && $tax_info != NULL && count($tax_info) > 0 ? $tax_info['rate'] : NULL;
