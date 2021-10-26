@@ -643,14 +643,7 @@ class ModelAssetsProduct extends Model {
 
         $cachePrice_data = $this->cache->get('category_price_data');
 
-        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$r['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) {
-            //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
-            $s_price = $cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
-            $o_price = $cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
-            $ret['special_price'] = $s_price;
-            $ret['price'] = $o_price;
-        }
-        $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
+        
         if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) {
             //  echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
             $s_price = $cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
@@ -658,7 +651,7 @@ class ModelAssetsProduct extends Model {
             $ret['special_price'] = $s_price;
             $ret['price'] = $o_price;
         }
-        $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
+        $category_price_data = $this->getCategoryPriceStatusByProductStoreId($ret['product_store_id']);
         
         $ret['price'] = strval($ret['price']);
         $ret['special_price'] = strval($ret['special_price']);
