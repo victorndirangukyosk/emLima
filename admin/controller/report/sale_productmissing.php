@@ -190,74 +190,77 @@ class ControllerReportSaleProductMissing extends Controller
 
         $order_total = 0;
 
-        $results = $this->model_report_sale->getstockoutOrders($filter_data);
+        // $results = $this->model_report_sale->getstockoutOrders($filter_data);
+
+        $OrignalProducts= $this->model_report_sale->getstockoutOrdersAndProducts($filter_data);
 
         //  echo "<pre>";print_r($results);die;
-        foreach ($results as $result) {
-            $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
+        // foreach ($results as $result) {
+        //     $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
 
-            if ($is_edited) {
-                //continue;
-                $OrignalProducts = $EditedProducts = $this->model_sale_order->getRealOrderProductsStockOut($result['order_id'], $filter_store_id, $filter_name);
-            } else {
-                $OrignalProducts = $this->model_sale_order->getOrderProductsStockOut($result['order_id'], $filter_store_id, $filter_name);
-            }
+        //     if ($is_edited) {
+        //         //continue;
+        //         $OrignalProducts = $EditedProducts = $this->model_sale_order->getRealOrderProductsStockOut($result['order_id'], $filter_store_id, $filter_name);
+        //     } else {
+        //         $OrignalProducts = $this->model_sale_order->getOrderProductsStockOut($result['order_id'], $filter_store_id, $filter_name);
+        //     }
 
             /*echo "<pre>";print_r($OrignalProducts);
             echo "<pre>";print_r($EditedProducts);die;*/
             //as per the today discussion, stock out means total stock ordered or out after deliverty
 
-            foreach ($OrignalProducts as $OrignalProduct) {
-                // $present = false;
+             foreach ($OrignalProducts as $OrignalProduct) {
+            //     // $present = false;
 
-                // foreach ($EditedProducts as $EditedProduct) {
-                //     if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
-                //         $present = true;
-                //     }
-                // }!$present &&
+            //     // foreach ($EditedProducts as $EditedProduct) {
+            //     //     if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
+            //     //         $present = true;
+            //     //     }
+            //     // }!$present &&
 
-                if ( !empty($OrignalProduct['name'])) {
+            //     if ( !empty($OrignalProduct['name'])) {
                     $data['torders'][] = [
-                        'store' => $result['store_name'],
-                        'model' => $OrignalProduct['model'],
-
+                        'store' => $OrignalProduct['store_name'],
+                        'model' => $OrignalProduct['product_id'],
                         'product_name' => $OrignalProduct['name'],
                         'unit' => $OrignalProduct['unit'],
+                        'product_id' => $OrignalProduct['product_id'],
                         'product_qty' => (float) $OrignalProduct['quantity'],
                     ];
-                }
-            }
-        }
+                    ++$order_total;
+            //     }
+             }
+        // }
 
         //  echo "<pre>";print_r($data['torders']);die;
-        foreach ($data['torders'] as $torders1) {
-            $ex = false;
+        // foreach ($data['torders'] as $torders1) {
+        //     $ex = false;
 
-            foreach ($data['orders'] as $value1) {
-                if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store'] &&  $value1['unit'] == $torders1['unit']) {
-                    $ex = true;
-                }
-            }
+        //     foreach ($data['orders'] as $value1) {
+        //         if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store'] &&  $value1['unit'] == $torders1['unit']) {
+        //             $ex = true;
+        //         }
+        //     }
 
-            if (!$ex) {
-                $sum = (float) 0.0;
+        //     if (!$ex) {
+        //         $sum = (float) 0.0;
 
-                foreach ($data['torders'] as $key => $torders2) {
-                    if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store'] && $torders1['unit'] == $torders2['unit']) {
-                        $sum += (float) $torders2['product_qty'];
+        //         foreach ($data['torders'] as $key => $torders2) {
+        //             if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store'] && $torders1['unit'] == $torders2['unit']) {
+        //                 $sum += (float) $torders2['product_qty'];
 
-                        unset($data['torders'][$key]);
-                    }
-                }
+        //                 unset($data['torders'][$key]);
+        //             }
+        //         }
 
-                $torders1['product_qty'] = (float) $sum;
+        //         $torders1['product_qty'] = (float) $sum;
 
-                ++$order_total;
+                // ++$order_total;
 
-                array_push($data['orders'], $torders1);
-            }
-        }
-
+        //         array_push($data['orders'], $torders1);
+        //     }
+        // }
+        $data['orders']=$data['torders'];
         if (isset($this->request->get['download_excel']) && (true == $this->request->get['download_excel'])) {
             $this->load->model('report/excel');
             $this->model_report_excel->download_saleorderproductmissingNew($data);
