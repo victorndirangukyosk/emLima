@@ -674,7 +674,7 @@ class ModelCheckoutOrder extends Model {
                 if($paid!='')
                 {
                 $log->write($paid.'PAID VALUE-3');    
-            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', paid ='" .  $paid . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");    
+                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', paid ='" .  $paid . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");    
             
             }
             else {
