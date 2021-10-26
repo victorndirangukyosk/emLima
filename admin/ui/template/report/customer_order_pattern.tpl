@@ -43,6 +43,14 @@
                   <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                   </span></div>
               </div>
+
+
+              <div class="form-group">
+                <label><input type="checkbox" name="filter_sub_customer_show[]" value="<?php echo $filter_sub_customer_show; ?>" <?php if($filter_sub_customer_show == 1) { ?> checked="" <?php } ?>> Show Sub Customer </label>
+
+                  <label class="control-label"></label>
+              </div>
+
             </div>
             
            <div class="col-sm-4">
@@ -160,6 +168,17 @@ $('#button-filter').on('click', function() {
 		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
 	}
 	
+
+   var filter_sub_customer_show = 0;
+  
+  if ($('input[name=\'filter_sub_customer_show[]\']').is(':checked')) {
+    filter_sub_customer_show = 1;
+    url += '&filter_sub_customer_show=' + encodeURIComponent(filter_sub_customer_show);
+  } else {
+  url += '&filter_sub_customer_show=' + encodeURIComponent(filter_sub_customer_show);    
+  }
+
+ 
 	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
 	
 
@@ -311,6 +330,18 @@ function excel() {
 	if (filter_order_status_id != 0) {
 		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
 	}	
+
+  
+   var filter_sub_customer_show = 0;
+  
+  if ($('input[name=\'filter_sub_customer_show[]\']').is(':checked')) {
+    filter_sub_customer_show = 1;
+    url += '&filter_sub_customer_show=' + encodeURIComponent(filter_sub_customer_show);
+  } else {
+  url += '&filter_sub_customer_show=' + encodeURIComponent(filter_sub_customer_show);    
+  }
+
+
   if(filter_date_end=="" || filter_date_start=="")
   {
     alert("Please select Start and End Dates");

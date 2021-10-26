@@ -865,14 +865,41 @@ class ModelReportCustomer extends Model {
     public function getValidCompanies($data = []) {
         $log = new Log('error.log');
         $log->write($data);
-        $sql = "SELECT c.company_name  as company  from hf7_customer c ";
+        $sql = "SELECT c.company_name  as company ,c.customer_id from hf7_customer c ";
         $implode = [];
-        if (!empty($data['filter_company'])) {
+        
+
+        if (!empty($data['filter_company']) && $data['filter_sub_customer_show'] == 0) {
             $implode[] = "c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
+        if (!empty($data['filter_company']) && $data['filter_sub_customer_show'] == 1) {
+
+        $sub_users_query = $this->db->query("SELECT customer_id  FROM " . DB_PREFIX . "customer WHERE company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+        $sub_users_od = implode(',', $s_users);
+
+        //  echo  ($sub_users_od);die;
+
+        if(isset($sub_users_od))
+        {
+            $implode[] = " (c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%' || c.parent in ('" .  $sub_users_od . "'))";
+        }
+
+        else {
+            $implode[] = " (c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%' )";
+            
+        }
+        }
+
+
         if (!empty($data['filter_account_manager_id']) && $data['filter_account_manager_id'] > 0) {
             $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
+        }
+
+        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !isset($data['filter_parent_customer_id'])) {//!array_key_exists('filter_parent_customer_id', $data)
+            $implode[] = "(parent = 0 OR parent IS NULL)";
         }
 
         if ($implode) {
@@ -903,18 +930,43 @@ class ModelReportCustomer extends Model {
         $sql = "SELECT count( distinct (c.company_name) ) as companycount  from hf7_customer c ";
         $implode = [];
 
-        if (!empty($data['filter_company'])) {
+        if (!empty($data['filter_company']) && $data['filter_sub_customer_show'] == 0) {
             $implode[] = "c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_company']) && $data['filter_sub_customer_show'] == 1) {
+
+        $sub_users_query = $this->db->query("SELECT customer_id  FROM " . DB_PREFIX . "customer WHERE company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'");
+        $sub_users = $sub_users_query->rows;
+        $s_users = array_column($sub_users, 'customer_id');
+        $sub_users_od = implode(',', $s_users);
+
+        //  echo  ($sub_users_od);die;
+
+        if(isset($sub_users_od))
+        {
+            $implode[] = " (c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%' || c.parent in ('" .  $sub_users_od . "'))";
+        }
+
+        else {
+            $implode[] = " (c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%' )";
+            
+        }
         }
 
         if (!empty($data['filter_account_manager_id']) && $data['filter_account_manager_id'] > 0) {
             $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
 
+        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) ) {
+            $implode[] = "(parent = 0 OR parent IS NULL)";
+        }
+
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
         //$sql .= "group by  c.company_name ORDER BY c.company_name asc"; 
+        //  echo  ($sql);die;
 
         $query = $this->db->query($sql);
         // echo  ($query->row['companycount']);die;
@@ -922,7 +974,7 @@ class ModelReportCustomer extends Model {
         return $query->row['companycount'];
     }
 
-    public function getCompanyTotal($data = [], $month, $company) {
+    public function getCompanyTotal($data = [], $month, $company,$customer_id='') {
         $sql = "SELECT c.company_name  as company  , sum(ot.value) as Total,count(o.order_id) as TotalOrders,  extract(MONTH from o.date_added) as month    FROM `" . DB_PREFIX . 'order` o LEFT JOIN `' . DB_PREFIX . 'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `' . DB_PREFIX . "order_total` ot ON (o.order_id = ot.order_id) WHERE ot.code ='total' ";
         //$sql = "SELECT  c.company_name,  sum(ot.value) as Total,extract(MONTH from o.date_added) as month  FROM `".DB_PREFIX.'order` o JOIN `'.DB_PREFIX.'customer` c  ON c.customer_id = o.customer_id join `'.DB_PREFIX.'order_total` ot on ot.order_id =o.order_id'";
         //$sql .= " WHERE ot.code='total' ";
@@ -953,9 +1005,19 @@ class ModelReportCustomer extends Model {
         // }
         // if (!empty($data['filter_company'])) {
         // $sql .= " AND c.company_name   LIKE '%".$this->db->escape($data['filter_company'])."%'";
-        $sql .= " AND c.company_name   = '" . $company . "'";
+        // $sql .= " AND c.company_name   = '" . $company . "'";
         // }
-        $sql .= "group by month( o.date_added),c.company_name ORDER BY c.company_name asc";
+
+        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !isset($data['filter_parent_customer_id'])) {//!array_key_exists('filter_parent_customer_id', $data)
+            // $implode[] = "(parent = 0 OR parent IS NULL)";
+            $sql .= " AND (c.company_name   = '" . $company . "' || c.parent='" . $customer_id . "' ) ";
+        }
+        else {
+            $sql .= " AND c.company_name   = '" . $company . "'";
+
+        }
+
+        $sql .= "group by month( o.date_added) ";
 
         // if (isset($data['start']) || isset($data['limit'])) {
         //     if ($data['start'] < 0) {
@@ -968,7 +1030,7 @@ class ModelReportCustomer extends Model {
         // }
 
         $query = $this->db->query($sql);
-        //   echo  ($sql);die;
+        //    echo  ($sql);die;
         //echo "<pre>";print_r($query->rows);die;
 
 

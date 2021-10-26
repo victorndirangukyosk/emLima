@@ -140,7 +140,7 @@
             <?php } ?>
             
             <?php if($preturn_fast_order) { ?>
-            <li><a href="<?php echo $fast_order; ?>"><?php echo $text_fast_order; ?></a></li>
+            <li><a href="<?php echo $fast_order; ?>">Same Day Deliveries</a></li>
             <?php } ?>
 
             <?php if($preturn_return) { ?> 

@@ -34,7 +34,7 @@ class ModelSaleCustomer extends Model {
         if (!isset($data['custom_field'])) {
             $data['custom_field'] = [];
         }
-        // echo "<pre>";print_r($data);die;
+        //   echo "<pre>";print_r($data);die;
 
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['sex']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "',company_name = '" . $this->db->escape($data['company_name']) . "',company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', newsletter = '" . (int) $data['newsletter'] . "', status = '" . (int) $data['status'] . "', approved = '" . (int) $data['approved'] . "', safe = '" . (int) $data['safe'] . "', customer_category = '" . $data['customer_category'] . "', account_manager_id = '" . $data['account_manager'] . "', customer_experience_id = '" . $data['customer_experience'] . "',  modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', payment_terms = '" . $data['payment_terms'] . "',statement_duration = '" . $data['statement_duration'] . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
 
@@ -209,7 +209,7 @@ class ModelSaleCustomer extends Model {
             $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
 
-        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !array_key_exists('filter_parent_customer_id', $data)) {
+        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !isset($data['filter_parent_customer_id'])) {//!array_key_exists('filter_parent_customer_id', $data)
             $implode[] = "(parent = 0 OR parent IS NULL)";
         }
 
@@ -805,7 +805,7 @@ class ModelSaleCustomer extends Model {
             $implode[] = "account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
         }
 
-        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !array_key_exists('filter_parent_customer_id', $data)) {
+        if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !isset($data['filter_parent_customer_id'])) {//!array_key_exists('filter_parent_customer_id', $data)
             $implode[] = "(parent = 0 OR parent IS NULL)";
         }
 
@@ -847,6 +847,9 @@ class ModelSaleCustomer extends Model {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
 
+
+            // echo "<pre>";print_r($sql);die;
+        
         $query = $this->db->query($sql);
 
         return $query->row['total'];
@@ -2217,6 +2220,23 @@ class ModelSaleCustomer extends Model {
 
  
         
+    }
+
+
+    public function editCustomerPassword($customer_id, $data) {
+        
+        //   echo "<pre>";print_r($data);die;
+
+       
+        if ($data['password'] && 'default' != $data['password']) {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', tempPassword = '" . (int) 1 . "' WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+
+ 
+        $this->savepassword($customer_id, $data['password']);
+        $this->deleteoldpassword($customer_id);
+
+       
     }
 
 }
