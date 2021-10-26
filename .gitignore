@@ -8,6 +8,7 @@ access.log
 .idea/
 config.php
 define.php
+admin/define.php
 robots.txt
 .php_cs.cache
 
