@@ -81,7 +81,7 @@
             <thead>
               <tr>
                 <td class="text-left"><?php echo $column_store; ?></td>
-                <td class="text-left"><?php echo $column_barcode; ?></td>
+                <td class="text-left">Product ID</td>
                 <td class="text-left"><?php echo $column_product; ?></td>
                 <td class="text-left"><?php echo $column_unit; ?></td>
                 <td class="text-left"><?php echo $column_ordered_qty; ?></td
