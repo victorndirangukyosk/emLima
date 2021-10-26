@@ -2689,12 +2689,13 @@ class ModelReportExcel extends Model {
         $this->load->language('report/income');
         $this->load->model('report/sale');
         //$rows = $this->model_report_sale->getOrdersCommission($data);
-        //echo "<pre>";print_r($data);die;
+        // //echo "<pre>";print_r($data);die;
 
-        $results = $this->model_report_sale->getstockoutOrders($data);
+        // $results = $this->model_report_sale->getstockoutOrders($data);
+        $OrignalProducts= $this->model_report_sale->getstockoutOrdersAndProducts($data);
 
         $data['orders'] = [];
-        $data['torders'] = [];
+        // $data['torders'] = [];
 
         //echo "<pre>";print_r($results);die;
         /* foreach ($results as $result) {
@@ -2772,69 +2773,83 @@ class ModelReportExcel extends Model {
           }
          */
 
-        foreach ($results as $result) {
-            $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
+        // foreach ($results as $result) {
+        //     $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
 
-            if ($is_edited) {
-                //continue;
-                //$OrignalProducts  = $this->model_sale_order->getRealOrderProducts($result['order_id']);
-                $OrignalProducts = $this->model_sale_order->getRealOrderProductsStockOut($result['order_id'], $data['filter_store'], $data['filter_name']);
-            } else {
-                //$OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
-                $OrignalProducts = $this->model_sale_order->getOrderProductsStockOut($result['order_id'], $data['filter_store'], $data['filter_name']);
-            }
-            // $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
-            // $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+        //     if ($is_edited) {
+        //         //continue;
+        //         //$OrignalProducts  = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+        //         $OrignalProducts = $this->model_sale_order->getRealOrderProductsStockOut($result['order_id'], $data['filter_store'], $data['filter_name']);
+        //     } else {
+        //         //$OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
+        //         $OrignalProducts = $this->model_sale_order->getOrderProductsStockOut($result['order_id'], $data['filter_store'], $data['filter_name']);
+        //     }
+        //     // $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
+        //     // $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
 
-            /* echo "<pre>";print_r($OrignalProducts);
-              echo "<pre>";print_r($EditedProducts);die; */
+        //     /* echo "<pre>";print_r($OrignalProducts);
+        //       echo "<pre>";print_r($EditedProducts);die; */
 
-            foreach ($OrignalProducts as $OrignalProduct) {
-                // $present = false;
-                // foreach ($EditedProducts as $EditedProduct) {
-                //     if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
-                //         $present = true;
-                //     }
-                // }!$present &&
+        //     foreach ($OrignalProducts as $OrignalProduct) {
+        //         // $present = false;
+        //         // foreach ($EditedProducts as $EditedProduct) {
+        //         //     if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
+        //         //         $present = true;
+        //         //     }
+        //         // }!$present &&
 
-                if (!empty($OrignalProduct['name'])) {
-                    $data['torders'][] = [
-                        'store' => $result['store_name'],
-                        'model' => $OrignalProduct['model'],
-                        'product_name' => $OrignalProduct['name'],
-                        'unit' => $OrignalProduct['unit'],
-                        'product_qty' => (float) ($OrignalProduct['quantity']),
-                    ];
-                }
-            }
-        }
+        //         if (!empty($OrignalProduct['name'])) {
+        //             $data['torders'][] = [
+        //                 'store' => $result['store_name'],
+        //                 'model' => $OrignalProduct['model'],
+        //                 'product_name' => $OrignalProduct['name'],
+        //                 'unit' => $OrignalProduct['unit'],
+        //                 'product_qty' => (float) ($OrignalProduct['quantity']),
+        //             ];
+        //         }
+        //     }
+        // }
 
-        //echo "<pre>";print_r($data['torders']);die;
-        foreach ($data['torders'] as $torders1) {
-            $ex = false;
+        // //echo "<pre>";print_r($data['torders']);die;
+        // foreach ($data['torders'] as $torders1) {
+        //     $ex = false;
 
-            foreach ($data['orders'] as $value1) {
-                if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store'] && $value1['unit'] == $torders1['unit']) {
-                    $ex = true;
-                }
-            }
+        //     foreach ($data['orders'] as $value1) {
+        //         if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store'] && $value1['unit'] == $torders1['unit']) {
+        //             $ex = true;
+        //         }
+        //     }
 
-            if (!$ex) {
-                $sum = (float) 0.00;
+        //     if (!$ex) {
+        //         $sum = (float) 0.00;
 
-                foreach ($data['torders'] as $key => $torders2) {
-                    if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store'] && $torders1['unit'] == $torders2['unit']) {
-                        $sum += (float) $torders2['product_qty'];
-                        unset($data['torders'][$key]);
-                    }
-                }
-                $torders1['product_qty'] = (float) $sum;
-                ++$order_total;
-                array_push($data['orders'], $torders1);
-            }
-        }
+        //         foreach ($data['torders'] as $key => $torders2) {
+        //             if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store'] && $torders1['unit'] == $torders2['unit']) {
+        //                 $sum += (float) $torders2['product_qty'];
+        //                 unset($data['torders'][$key]);
+        //             }
+        //         }
+        //         $torders1['product_qty'] = (float) $sum;
+        //         ++$order_total;
+        //         array_push($data['orders'], $torders1);
+        //     }
+        // }
 
-        $rows = $data['orders'];
+
+        foreach ($OrignalProducts as $OrignalProduct) {
+            $data['torders'][] = [
+                'store' => $OrignalProduct['store_name'],
+                'model' => $OrignalProduct['product_id'],
+                'product_name' => $OrignalProduct['name'],
+                'unit' => $OrignalProduct['unit'],
+                'product_id' => $OrignalProduct['product_id'],
+                'product_qty' => (float) $OrignalProduct['quantity'],
+            ];
+            ++$order_total;
+     
+     }
+        // $rows = $data['orders'];
+        $rows = $data['torders'];
 
         //echo "<pre>";print_r($rows);die;
 
@@ -2900,7 +2915,7 @@ class ModelReportExcel extends Model {
             }
 
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 6, 'Store Name');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 6, 'Barcode');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 6, 'Product ID');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 6, 'Product Name');
 
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 6, 'Unit');
