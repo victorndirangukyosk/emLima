@@ -119,11 +119,11 @@ class ControllerSaleCustomer extends Controller {
             $filter_sub_customer_show = null;
         }
 
-        if (isset($this->request->get['filter_sub_customer_show'])) {
-            $filter_sub_customer_show = $this->request->get['filter_sub_customer_show'];
-        } else {
-            $filter_sub_customer_show = null;
-        }
+        // if (isset($this->request->get['filter_sub_customer_show'])) {
+        //     $filter_sub_customer_show = $this->request->get['filter_sub_customer_show'];
+        // } else {
+        //     $filter_sub_customer_show = null;
+        // }
 
         if (isset($this->request->get['filter_date_added'])) {
             $filter_date_added = $this->request->get['filter_date_added'];
