@@ -2282,6 +2282,7 @@ class Emailtemplate {
             $log->write('STORE ID :' . $store_id);
             $log->write('MESSAGE:' . $message);
             $log->write('TITLE:' . $title);
+            $log->write('ACTION:' . $app_action);
 
             if (isset($to)) {
                 if (isset($deviceId) && isset($to)) {
