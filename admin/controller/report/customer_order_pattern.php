@@ -51,6 +51,10 @@ class ControllerReportCustomerOrderPattern extends Controller {
         if (isset($this->request->get['filter_date_end'])) {
             $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
+
+        if (isset($this->request->get['filter_sub_customer_show'])) {
+            $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
+        }
         if (isset($this->request->get['filter_order_status_id'])) {
             $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
         }
@@ -95,6 +99,13 @@ class ControllerReportCustomerOrderPattern extends Controller {
             }
         }
 
+        
+        if (isset($this->request->get['filter_sub_customer_show'])) {
+            $filter_sub_customer_show = $this->request->get['filter_sub_customer_show'];
+        } else {
+            $filter_sub_customer_show = null;
+        }
+
         $filter_data = [
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
@@ -105,6 +116,7 @@ class ControllerReportCustomerOrderPattern extends Controller {
             'filter_account_manager_id' => $filter_account_manager_id,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
+            'filter_sub_customer_show' => $filter_sub_customer_show,
         ];
 
         if ('' != $filter_date_start && '' != $filter_date_end) {
@@ -117,7 +129,7 @@ class ControllerReportCustomerOrderPattern extends Controller {
             //    echo "<pre>";print_r($months);die;
         } else {
             $company_total = 0;
-            $customerresults = null;
+            $customerresults = null; 
         }
 
 
@@ -134,7 +146,7 @@ class ControllerReportCustomerOrderPattern extends Controller {
                 $totalOrders = 0;
                 $OrdersValue = 0;
                 foreach ($months as $month) {
-                    $totalpermonth = $this->model_report_customer->getCompanyTotal($filter_data, $month['month'], $result['company']);
+                    $totalpermonth = $this->model_report_customer->getCompanyTotal($filter_data, $month['month'], $result['company'], $result['customer_id']);
                     $monthname = $this->getmonthname($month['month']);
                     $totalOrders = $totalOrders + $totalpermonth['TotalOrders'];
                     $OrdersValue = $OrdersValue + $totalpermonth['Total'];
@@ -190,6 +202,10 @@ class ControllerReportCustomerOrderPattern extends Controller {
         if (isset($this->request->get['filter_date_end'])) {
             $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
+
+        if (isset($this->request->get['filter_sub_customer_show'])) {
+            $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
+        }
         if (isset($this->request->get['filter_order_status_id'])) {
             $url .= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
         }
@@ -210,6 +226,7 @@ class ControllerReportCustomerOrderPattern extends Controller {
 
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
+        $data['filter_sub_customer_show'] = $filter_sub_customer_show;
         $data['filter_order_status_id'] = $filter_order_status_id;
         // $data['filter_customer'] = $filter_customer;
         $data['filter_company'] = $filter_company;
@@ -304,6 +321,12 @@ class ControllerReportCustomerOrderPattern extends Controller {
             }
         }
 
+        if (isset($this->request->get['filter_sub_customer_show'])) {
+            $filter_sub_customer_show = $this->request->get['filter_sub_customer_show'];
+        } else {
+            $filter_sub_customer_show = null;
+        }
+
         $filter_data = [
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
@@ -312,6 +335,7 @@ class ControllerReportCustomerOrderPattern extends Controller {
             'filter_company' => $filter_company,
             'filter_account_manager_id' => $filter_account_manager_id,
             'filter_account_manager_name' => $filter_account_manager_name,
+            'filter_sub_customer_show' => $filter_sub_customer_show,
         ];
 
         if ('' != $filter_date_start && '' != $filter_date_end) {
