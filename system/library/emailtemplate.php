@@ -2317,7 +2317,7 @@ class Emailtemplate {
                     $response = $client->send($message);
 
                     $log->write('FCM');
-                    $log->write($client->getBody());
+                    //$log->write($client->getBody());
                     $log->write($response);
                     $log->write('FCM');
                     //var_dump($response);die;
