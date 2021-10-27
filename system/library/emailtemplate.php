@@ -2283,7 +2283,8 @@ class Emailtemplate {
             $log->write('MESSAGE:' . $message);
             $log->write('TITLE:' . $title);
             $log->write('ACTION:' . $app_action);
-
+            $log->write('transaction:' . $transaction);
+            
             if (isset($to)) {
                 if (isset($deviceId) && isset($to)) {
                     $log->write('api key');
