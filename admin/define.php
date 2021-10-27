@@ -48,6 +48,7 @@ define('DIR_MODIFICATION', DIR_SYSTEM.'modification/');
 define('DIR_LANGUAGE', DIR_APPLICATION.'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION.'ui/template/');
 define('BUCKET_PREFIX', 'local-');
+define('BCC_MAILS', 'email.kbtest@yopmail.com');
 
 
 // Installation check, and check on removal of the install directory.

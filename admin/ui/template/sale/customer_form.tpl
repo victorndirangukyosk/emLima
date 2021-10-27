@@ -48,6 +48,7 @@
             <li><a href="#tab-configuration" data-toggle="tab">Configuration</a></li>
             <li><a href="#tab-otp" data-toggle="tab">OTP</a></li>
             <li><a href="#tab-activity" data-toggle="tab">Activities</a></li>
+            <li><a href="#tab-password" data-toggle="tab">Password</a></li>
            
             <?php } ?>
           </ul>
@@ -68,9 +69,10 @@
                 <div class="col-sm-10">
                   <div class="tab-content">
                     <div class="tab-pane active" id="tab-customer">
+                        <input type="hidden" id="selected_address" name="selected_address" value="">
+
                       <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-customer-group"><?php echo $entry_customer_group; ?></label>
-                        <input type="hidden" id="selected_address" name="selected_address" value="">
                         <div class="col-sm-10">
                           <select name="customer_group_id" id="input-customer-group" class="form-control">
                             <?php foreach ($customer_groups as $customer_group) { ?>
@@ -83,6 +85,7 @@
                           </select>
                         </div>
                       </div>
+
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-firstname"><?php echo $entry_firstname; ?></label>
                         <div class="col-sm-10">
@@ -148,34 +151,40 @@
                         </div>
                       </div>  -->
 
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label class="col-sm-2 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>
                         <div class="col-sm-10">
-                          <!-- <label class="radio-inline">  -->
+                           
                             <?php if($gender == 'male') {?> 
                                 <input type="radio" name="sex" data-id="8" value="male" checked="checked" /> <?= $text_male ?> 
                             <?php } else {?>
                             <input type="radio" name="sex" data-id="8" value="male" checked="checked"/> <?= $text_male ?> 
                             <?php } ?>
-                          <!-- </label> -->
+                         
 
-                           <!-- <label class="radio-inline"> -->
+                          
                             <?php if($gender == 'female') {?> 
                                 <input type="radio" name="sex" data-id="9" value="female" checked="checked"/> <?= $text_female ?>
                             <?php } else {?>
                             <input type="radio" name="sex" data-id="9" value="female"/> <?= $text_female ?> 
                             <?php } ?>
-                             <!-- </label> -->
+                           
 
-                           <!-- <label class="radio-inline"> -->
+                          
                             <?php if($gender == 'other') {?> 
                                 <input type="radio" name="sex" data-id="10" value="other" checked="checked"/> <?= $text_other ?>
                             <?php } else {?>
                             <input type="radio" name="sex" data-id="10" value="other"/> <?= $text_other ?> 
                             <?php } ?>
-                           <!-- </label> -->
+                           
                         </div>
-                      </div>
+                      </div>-->
+ 
+
+ 
+
+                      
+
                 
                       
 
@@ -194,7 +203,7 @@
                           <input type="text" name="fax" value="<?php echo $fax; ?>" placeholder="<?php echo $entry_fax; ?>" id="input-fax" class="form-control" />
                         </div>
                       </div>                        
-                      <div class="form-group required">
+                    <!--<div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-password"><?php echo $entry_password; ?></label>
                         <div class="col-sm-10">
                           <input type="password" name="password" value="<?php echo $password; ?>" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control" autocomplete="off" />
@@ -211,7 +220,7 @@
                           <div class="text-danger"><?php echo $error_confirm; ?></div>
                           <?php  } ?>
                         </div>
-                      </div>
+                      </div>-->
                       <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-newsletter"><?php echo $entry_newsletter; ?></label>
                         <div class="col-sm-10">
@@ -411,7 +420,7 @@
                             <label class="col-sm-2 control-label" for="Locality"><?= $text_locality?></label>
                             <div class="col-md-10">
                                 <input type="text" name="address[<?php echo $address_row; ?>][landmark]" value="<?php echo $address['landmark']; ?>" placeholder="" id="input-landmark<?php echo $address_row; ?>" class="form-control" />
-                                <input type="hidden" name="address[<?php echo $address_row; ?>][city_id]" value="32" placeholder="" id="input-city-id<?php echo $address_row; ?>" class="form-control" />
+                                <input type="hidden" name="address[<?php echo $address_row; ?>][city_id]" value="<?php echo $address['city_id']; ?>" placeholder="" id="input-city-id<?php echo $address_row; ?>" class="form-control" />
                                 <input type="hidden" name="address[<?php echo $address_row; ?>][latitude]" value="<?php echo $address['latitude']; ?>" placeholder="" id="input-latitude<?php echo $address_row; ?>" class="form-control" />
                                 <input type="hidden" name="address[<?php echo $address_row; ?>][longitude]" value="<?php echo $address['longitude']; ?>" placeholder="" id="input-longitude<?php echo $address_row; ?>" class="form-control" />
                           <?php if (isset($error_address[$address_row]['landmark'])) { ?>
@@ -446,11 +455,13 @@
                               <div class="text-danger"><?php echo $error_address[$address_row]['address']; ?></div>
                             <?php } ?>
                         </div>
-                      </div>
-                      <div class="form-group required disabled">
+                      </div>-->
+                      <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-city<?php echo $address_row; ?>"><?php echo $entry_city; ?></label>
                         <div class="col-sm-10">
-                            <select name="address[<?php echo $address_row; ?>][city_id]" class="form-control" disabled>
+                            <select name="address[<?php echo $address_row; ?>][city_id]" class="form-control">
+                                <option value="">City</option>
+                               
                                 <?php foreach($cities as $city){ ?>
                                 <?php if($city['city_id'] == $address['city_id']){ ?>
                                 <option selected="" value="<?= $city['city_id'] ?>"><?= $city['name'] ?></option>
@@ -459,8 +470,12 @@
                                 <?php } ?>
                                 <?php } ?>
                             </select> 
+                            <?php if (isset($error_address[$address_row]['city_id'])) { ?>
+                          <div class="text-danger"><?php echo $error_address[$address_row]['city_id']; ?></div>
+                          <?php } ?>
+
                         </div>
-                      </div> -->
+                      </div> 
                       <div class="form-group">
                         <label class="col-sm-2 control-label"><?php echo $entry_default; ?></label>
                         <div class="col-sm-10">
@@ -609,6 +624,39 @@
               </div>
             </div>
             
+
+            <div class="tab-pane" id="tab-password">                  
+                    
+                     
+
+                       <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-password-1"><?php echo $entry_password; ?></label>
+                        <div class="col-sm-10">
+                          <input type="password" name="password-1" value="<?php echo $password; ?>" placeholder="<?php echo $entry_password; ?>" id="input-password-1" class="form-control" autocomplete="off" />
+                          <?php if ($error_password) { ?>
+                          <div class="text-danger"><?php echo $error_password; ?></div>
+                          <?php  } ?>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-confirm-1"><?php echo $entry_confirm; ?></label>
+                        <div class="col-sm-10">
+                          <input type="password" name="confirm-1" value="<?php echo $confirm; ?>" placeholder="<?php echo $entry_confirm; ?>" autocomplete="off" id="input-confirm-1" class="form-control" />
+                          <?php if ($error_confirm) { ?>
+                          <div class="text-danger"><?php echo $error_confirm; ?></div>
+                          <?php  } ?>
+                        </div>
+                      </div>
+
+                    
+                                    
+                         
+                  <div class="text-right">
+                      <button type="button" id="button-password" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-save"></i> Save Password </button>
+                  </div>                
+            </div>
+
+
             <div class="tab-pane" id="tab-configuration">
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-price-category">Price Category</label>
@@ -956,16 +1004,18 @@ function addAddress() {
         html += '  </div>';
         html += '  </div>';*/
         
-        /*html += '  <div class="form-group required">';
+        html += '  <div class="form-group required">';
         html += '  <label class="col-sm-2 control-label" for="input-city' + address_row + '"><?php echo $entry_city; ?></label>';
         html += '  <div class="col-sm-10">';
         html += '      <select name="address[' + address_row + '][city_id]" class="form-control">';
+               html += '                       <option value="">City</option>';
+                       
                         <?php foreach($cities as $city){ ?>
         html += '          <option value="<?= $city['city_id'] ?>"><?= $city['name'] ?></option>';
                         <?php } ?>
         html += '      </select>';
         html += '  </div>';
-        html += '  </div>';*/
+        html += '  </div>';
 
         html += '  <div class="form-group">';
   html += '    <label class="col-sm-2 control-label"><?php echo $entry_default; ?></label>';
@@ -2054,6 +2104,28 @@ $.ajax({
             });
         
     });
+
+
+
+    $('#button-password').on('click', function(e) {
+e.preventDefault();
+
+$.ajax({
+    url: 'index.php?path=sale/customer/password&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
+    type: 'post',
+    dataType: 'json',
+    data: 'password-1=' + encodeURIComponent($('#tab-password input[name=\'password-1\']').val()) + '&confirm-1=' + encodeURIComponent($('#tab-password input[name=\'confirm-1\']').val())+ '&customer_id=<?php echo $customer_id; ?>',
+    beforeSend: function() {
+      $('#button-password').button('loading');
+         },
+    complete: function() {
+      $('#button-password').button('reset');
+    },
+    success: function(json) {
+        alert(json.message);
+    }
+  });
+});
 
 </script>
 </body>

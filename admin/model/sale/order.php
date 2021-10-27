@@ -1705,6 +1705,15 @@ class ModelSaleOrder extends Model {
 
         }
 
+
+
+        if (isset($data['filter_orders'])) {   
+     
+     
+                $sql .= ' and  o.order_id in ("'.$data['filter_orders'].'")';
+            
+            } 
+
         if ($this->user->isVendor()) {
             $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
         }
@@ -1819,6 +1828,12 @@ class ModelSaleOrder extends Model {
             $sql .= " WHERE o.order_status_id > '0'";
         }
 
+
+
+        if (isset($data['filter_orders'])) {      
+     
+            $sql .= ' and  o.order_id in ("'.$data['filter_orders'].'")';        
+        } 
 
         //below if condition added for fast orders
         if (!empty($data['filter_order_day'])) {
@@ -4385,7 +4400,7 @@ class ModelSaleOrder extends Model {
             //as of now, we are checking payment for wallet only
             //if cod no need to update
             //so placing payment method='wallet' condition,for mpesa online and other payment options only restrict order
-        $this->db->query('update ' . DB_PREFIX . 'order SET paid="P",amount_partialy_paid ="'. $old_total.'" where  order_id = "' . $order_id . '" and paid=="Y" and payment_code="wallet"');
+        $this->db->query('update ' . DB_PREFIX . 'order SET paid="P",amount_partialy_paid ="'. $old_total.'" where  order_id = "' . $order_id . '" and paid="Y" and payment_code="wallet"');
     
         }
         // else if($final_amount<$old_total)//commented as multiple edits may add more amount to customer wallet

@@ -70,6 +70,8 @@ class ControllerReportVendorOrders extends Controller {
     }
 
     public function index() {
+        ini_set('display_errors', "on");
+        ini_set('error_reporting', E_ALL);
         $this->language->load('report/vendor_orders');
 
         $this->document->setTitle($this->language->get('heading_title'));
@@ -424,9 +426,18 @@ class ControllerReportVendorOrders extends Controller {
                 $filter_order_status = null;
             }
 
+
+            if (isset($this->request->get['selected_order_id'])) {
+                $orders = $this->request->get['selected_order_id'];
+            } else
+            {
+                $orders =null;  
+            }
+            
             $filter_data = [
                 'filter_order_day' => $filter_order_day,
                 'filter_order_status' => $filter_order_status,
+                'filter_orders' => $orders
             ];
             $this->load->model('sale/order');
 
@@ -592,6 +603,12 @@ class ControllerReportVendorOrders extends Controller {
             $order_id = null;
         }
 
+        if (isset($this->request->get['selected_order_id'])) {
+            $orders = $this->request->get['selected_order_id'];
+        } else
+        {
+            $orders =null;  
+        }
         $filter_data = [
             'filter_delivery_date' => $deliveryDate,
             'filter_order_status' => $order_status,
@@ -606,8 +623,12 @@ class ControllerReportVendorOrders extends Controller {
             'filter_order_to_id' => $order_to_id,
             'filter_date_added' => $date_added,
             'filter_date_added_end' => $date_added_end,
-            'filter_order_id' => $order_id
+            'filter_order_id' => $order_id,
+            'filter_orders' => $orders
         ];
+
+
+        // echo "<pre>";print_r($filter_data);die;
 
         $this->load->model('sale/order');
         // $results = $this->model_sale_order->getOrders($filter_data);

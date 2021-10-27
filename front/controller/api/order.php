@@ -742,7 +742,13 @@ class ControllerApiOrder extends Controller
             $log->write($order_id);
 
             if ($order_info) {
-                $this->model_checkout_order->addOrderHistory($order_id, $this->request->get['order_status_id'], $this->request->get['comment'], $this->request->get['notify'], $this->request->get['paid']);
+                /* FOR NON KWIKBASKET ORDERS */
+            $other_vendor_terms = FALSE;
+            if (isset($this->session->data['accept_vendor_terms']) && $this->session->data['accept_vendor_terms'] == TRUE) {
+                $other_vendor_terms = TRUE;
+            }
+            
+                $this->model_checkout_order->addOrderHistory($order_id, $this->request->get['order_status_id'], $this->request->get['comment'], $this->request->get['notify'], '', '', $other_vendor_terms, $this->request->get['paid']);
 
                 $json['success'] = $this->language->get('text_success');
             } else {

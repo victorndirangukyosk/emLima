@@ -2765,6 +2765,153 @@ class ModelReportSale extends Model {
     }
 
 
+    public function getstockoutOnlyOrders($data = []) {
+        //echo "<pre>";print_r($data);die;
+        $sql = "SELECT  o.order_id,o.store_name FROM `" . DB_PREFIX . 'order` o ';
+
+        // $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
+        $sql .= '  JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
+
+        //$sql .= ' LEFT JOIN ' . DB_PREFIX . 'real_order_product on(' . DB_PREFIX . 'real_order_product.order_id = o.order_id) ';
+
+       // $sql .= ' WHERE ' . DB_PREFIX . 'real_order_product.order_product_id is not null';
+
+        if ($this->user->isVendor()) {
+            $sql .= ' AND st.vendor_id = "' . $this->user->getId() . '"';
+        }
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        } else {
+            $sql .= " AND o.order_status_id > '0'";
+        }
+        $sql .= " AND o.order_status_id NOT IN (0,6,8,16)";
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        //echo "<pre>";print_r($sql);die;
+        if (!empty($data['filter_store'])) {
+            $sql .= " AND o.store_id = '" . $data['filter_store'] . "'";
+        }
+
+        $sort_data = [
+            'o.order_id',
+            'customer',
+            'status',
+            'o.date_added',
+            'o.date_modified',
+            'o.total',
+            'c.name',
+        ];
+
+        $sql .= ' GROUP BY o.order_id';
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY o.order_id';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order']) || true) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        // echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+
+    public function getstockoutOrdersAndProducts($data = []) {
+        //echo "<pre>";print_r($data);die;
+        $sql1 = "SELECT op.product_id, op.name,op.unit,sum(op.quantity) as quantity ,o.store_name FROM `" . DB_PREFIX . 'order` o ';
+        $sql2 = "SELECT op.product_id, op.name,op.unit,sum(op.quantity) as quantity ,o.store_name FROM `" . DB_PREFIX . 'order` o ';
+
+        // $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
+        $sql1 .= '  JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
+        $sql2 .= '  JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
+
+        $sql1 .= ' JOIN ' . DB_PREFIX . 'order_product op on(op.order_id = o.order_id) ';
+        $sql2 .= ' JOIN ' . DB_PREFIX . 'real_order_product op on(op.order_id = o.order_id) ';
+
+       // $sql .= ' WHERE ' . DB_PREFIX . 'real_order_product.order_product_id is not null';
+
+        if ($this->user->isVendor()) {
+            $sql1 .= ' AND st.vendor_id = "' . $this->user->getId() . '"';
+            $sql2 .= ' AND st.vendor_id = "' . $this->user->getId() . '"';
+        }
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql1 .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+            $sql2 .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        }  
+
+        if (!empty($data['filter_name'])) {
+            $sql1 .= " AND op.name LIKE '" .  $data['filter_name'] . "%'";
+            $sql2 .= " AND op.name LIKE '" .  $data['filter_name'] . "%'";
+        }  
+
+        $sql1 .= " AND o.order_status_id NOT IN (0,6,8,16)";
+        $sql2 .= " AND o.order_status_id NOT IN (0,6,8,16)";
+        if (!empty($data['filter_date_start'])) {
+            $sql1 .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql2 .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql1 .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql2 .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        //echo "<pre>";print_r($sql);die;
+        if (!empty($data['filter_store'])) {
+            $sql1 .= " AND o.store_id = '" . $data['filter_store'] . "'";
+            $sql2 .= " AND o.store_id = '" . $data['filter_store'] . "'";
+        }
+
+        $sql1 .= " AND o.order_id not in (select orp.order_id from hf7_real_order_product orp) GROUP BY op.product_id ,op.name,op.unit,o.store_name";
+        $sql2 .= " GROUP BY op.product_id ,op.name,op.unit,o.store_name";
+
+        // $sort_data = [
+        //     'o.order_id',
+        //     'customer',
+        //     'status',
+        //     'o.date_added',
+        //     'o.date_modified',
+        //     'o.total',
+        //     'c.name',
+        // ];
+
+        // $sql .= ' GROUP BY o.order_id';
+
+        // if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+        //     $sql .= ' ORDER BY ' . $data['sort'];
+        // } else {
+        //     $sql .= ' ORDER BY o.order_id';
+        // }
+
+        // if (isset($data['order']) && ('DESC' == $data['order']) || true) {
+        //     $sql .= ' DESC';
+        // } else {
+        //     $sql .= ' ASC';
+        // }
+
+        $sql = "SELECT t.product_id, name,unit,sum(quantity) as quantity,t.store_name from (" .$sql1." union all ".$sql2." )as t GROUP BY product_id ,name,unit ,store_name ORDER BY name ASC"; 
+        // echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+
     public function getNonCancelledOrdersbyDeliveryDate($data = []) {
         $sql = "SELECT o.order_id, o.delivery_date, o.order_status_id,o.store_name,o.comment,  o.date_added,o.shipping_address, o.date_modified FROM `" . DB_PREFIX . 'order` o ';
          

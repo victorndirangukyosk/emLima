@@ -3009,7 +3009,3 @@ $carousel.on('slid.bs.carousel', function() {
 
 
 </script>
-
-
-
-

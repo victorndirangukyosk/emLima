@@ -74,10 +74,10 @@
                                       <th>Company Address</th>
                                       <td><?php echo $company_address; ?></td>
                                   </tr>
-                                  <tr>
+                                  <!--<tr>
                                       <th>Gender</th>
                                       <td><?php echo $gender; ?></td>
-                                  </tr>
+                                  </tr>-->
                                   <tr>
                                       <th>Phone No.</th>
                                       <td><?php echo '+254 '.$telephone; ?></td>

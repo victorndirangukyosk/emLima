@@ -402,7 +402,8 @@ class ControllerPaymentMpesa extends Controller {
                     $dataAddHisory['notify'] = 0;
                     $dataAddHisory['append'] = 0;
                     $dataAddHisory['comment'] = '';
-
+                    $dataAddHisory['paid'] = 'Y';
+                    
                     $url = HTTPS_SERVER;
                     $api = 'api/order/addHistory';
 
@@ -976,6 +977,7 @@ class ControllerPaymentMpesa extends Controller {
                         $dataAddHisory['notify'] = 0;
                         $dataAddHisory['append'] = 0;
                         $dataAddHisory['comment'] = '';
+                        $dataAddHisory['paid'] = 'Y';
 
                         $url = HTTPS_SERVER;
                         $api = 'api/order/addHistory';
@@ -1095,6 +1097,7 @@ class ControllerPaymentMpesa extends Controller {
                             $dataAddHisory['notify'] = 0;
                             $dataAddHisory['append'] = 0;
                             $dataAddHisory['comment'] = '';
+                            $dataAddHisory['paid'] = 'Y';
 
                             $url = HTTPS_SERVER;
                             $api = 'api/order/addHistory';
@@ -1203,7 +1206,7 @@ class ControllerPaymentMpesa extends Controller {
                         $log->write($mobile_notification_title);
                         if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
                             $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
-                            $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                            $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'false');
                         } else {
                             $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
                         }
@@ -1272,7 +1275,7 @@ class ControllerPaymentMpesa extends Controller {
                         $log->write($mobile_notification_title);
                         if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
                             $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
-                            $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                            $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
                         } else {
                             $log->write('customer device id set FRONT.CONTROLLER.PAYMENT.MPESA');
                         }
