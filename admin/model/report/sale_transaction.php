@@ -623,6 +623,132 @@ class ModelReportSaleTransaction extends Model
         return $query->rows;
     }
 
+    public function getOrdersNew($data = [])
+    {
+        $sql = "SELECT cus.company_name as company, oti.transaction_id, o.order_id, o.shipping_method, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM ".DB_PREFIX."order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '".(int) $this->config->get('config_language_id')."') AS status, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.delivery_date FROM `".DB_PREFIX.'order` o ';
+
+        // $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id';
+        $sql .= ' left join `'.DB_PREFIX.'customer` cus on cus.customer_id = o.customer_id';
+        $sql .= ' LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = o.store_id) ';
+        $sql .= ' LEFT JOIN '.DB_PREFIX.'order_transaction_id oti on oti.order_id = o.order_id';
+
+        if (isset($data['filter_order_status'])) {
+            $implode = [];
+
+            $order_statuses = explode(',', $data['filter_order_status']);
+
+            foreach ($order_statuses as $order_status_id) {
+                $implode[] = "o.order_status_id = '".(int) $order_status_id."'";
+            }
+
+            if ($implode) {
+                $sql .= ' WHERE ('.implode(' OR ', $implode).')';
+            } else {
+            }
+        } else {
+            $sql .= " WHERE o.order_status_id > '0'";
+        }
+
+        if ($this->user->isVendor()) {
+            $sql .= ' AND '.DB_PREFIX.'store.vendor_id="'.$this->user->getId().'"';
+        }
+
+        // echo "<pre>";print_r($sql);die;
+        // if (!empty($data['filter_city'])) {
+        //     $sql .= " AND c.name LIKE '".$data['filter_city']."%'";
+        // }
+
+        if (!empty($data['filter_order_id'])) {
+            $sql .= " AND o.order_id = '".(int) $data['filter_order_id']."'";
+        }
+
+        if (!empty($data['filter_transaction_id'])) {
+            $sql .= " AND oti.transaction_id = '".$data['filter_transaction_id']."'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND cus.company_name LIKE '%".$this->db->escape($data['filter_company'])."%'";
+        }
+
+        if (!empty($data['filter_vendor'])) {
+            $sql .= ' AND vendor_id="'.$data['filter_vendor'].'"';
+        }
+
+        if (!empty($data['filter_store_name'])) {
+            $sql .= " AND o.store_name = '".$data['filter_store_name']."'";
+        }
+
+        if (!empty($data['filter_payment'])) {
+            $sql .= " AND o.payment_method LIKE '%".$data['filter_payment']."%'";
+        }
+
+        if (!empty($data['filter_delivery_method'])) {
+            $sql .= " AND o.shipping_method LIKE '%".$data['filter_delivery_method']."%'";
+        }
+
+        if (!empty($data['filter_date_added'])) {
+            $sql .= " AND DATE(o.date_added) >= DATE('".$this->db->escape($data['filter_date_added'])."')";
+        }
+
+        if (!empty($data['filter_date_order'])) {
+            $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_order'])."')";
+        }
+
+        if (!empty($data['filter_date_delivery'])) {
+            $sql .= " AND DATE(o.delivery_date) = DATE('".$this->db->escape($data['filter_date_delivery'])."')";
+        }
+
+        if (!empty($data['filter_date_modified'])) {
+            $sql .= " AND DATE(o.date_modified) <= DATE('".$this->db->escape($data['filter_date_modified'])."')";
+        }
+
+        if (!empty($data['filter_total'])) {
+            $sql .= " AND o.total = '".(float) $data['filter_total']."'";
+        }
+
+        $sort_data = [
+            'o.order_id',
+            'customer',
+            'status',
+            'o.date_added',
+            'o.date_modified',
+            'o.total',
+            // 'c.name',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY '.$data['sort'];
+        } else {
+            $sql .= ' ORDER BY o.order_id';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+        //    echo "<pre>";print_r($sql);die;
+        return $query->rows;
+    }
+
     public function getOrderProducts($order_id, $store_id = 0)
     {
         $sql = 'SELECT * FROM '.DB_PREFIX."order_product WHERE order_id = '".(int) $order_id."'";
@@ -761,6 +887,13 @@ class ModelReportSaleTransaction extends Model
         $query = $this->db->query('SELECT * FROM '.DB_PREFIX."order_total WHERE order_id = '".(int) $order_id."' ORDER BY sort_order");
 
         return $query->rows;
+    }
+
+    public function getOrderExactTotal($order_id)
+    {
+        $query = $this->db->query('SELECT value FROM '.DB_PREFIX."order_total WHERE order_id = '".(int) $order_id."' and code='total' ORDER BY sort_order");
+
+        return $query->row['value'];
     }
 
     public function getTotalOrders($data = [])

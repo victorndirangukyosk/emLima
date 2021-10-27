@@ -365,9 +365,9 @@ var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
                 alert("Please select proper start & end date filters");
                                 return;
                 }
-                if(diffDays>60)
+                if(diffDays>30)
                 {
-                    alert("Duration between start & end date filters should be less than 60 days");
+                    alert("Duration between start & end date filters should be less than 30 days");
                                 return;
                 }
             }
@@ -554,9 +554,9 @@ var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
                 alert("Please select proper start & end date filters");
                                 return;
                 }
-                if(diffDays>60)
+                if(diffDays>30)
                 {
-                    alert("Duration between start & end date filters should be less than 60 days");
+                    alert("Duration between start & end date filters should be less than 30 days");
                                 return;
                 }
             }

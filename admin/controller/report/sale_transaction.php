@@ -349,9 +349,9 @@ class ControllerReportSaleTransaction extends Controller
 
         if ('' != $filter_date_delivery || '' != $filter_order_id|| '' != $filter_date_order || '' != $filter_transaction_id || ('' != $filter_date_added || '' != $filter_date_modified) ) 
         {
-        $order_total = $this->model_report_sale_transaction->getTotalOrders($filter_data);
+         $order_total = $this->model_report_sale_transaction->getTotalOrders($filter_data);
 
-        $results = $this->model_report_sale_transaction->getOrders($filter_data); 
+        $results = $this->model_report_sale_transaction->getOrdersNew($filter_data); 
         }
         else {
             $order_total =0;
@@ -362,28 +362,30 @@ class ControllerReportSaleTransaction extends Controller
         foreach ($results as $result) {
             $sub_total = 0;
             $latest_total = 0;
+            // $latest_total = $result['total'];
+            $latest_total =  $this->model_report_sale_transaction->getOrderExactTotal($result['order_id']);
 
-            $totals = $this->model_report_sale_transaction->getOrderTotals($result['order_id']);
+            // $totals = $this->model_report_sale_transaction->getOrderTotals($result['order_id']);
 
-            //echo "<pre>";print_r($totals);die;
-            foreach ($totals as $total) {
-                if ('sub_total' == $total['code']) {
-                    $sub_total = $total['value'];
-                    //break;
-                }
-                if ('total' == $total['code']) {
-                    $latest_total = $total['value'];
-                    //break;
-                }
-            }
+            // //echo "<pre>";print_r($totals);die;
+            // foreach ($totals as $total) {
+            //     // if ('sub_total' == $total['code']) {
+            //     //     $sub_total = $total['value'];
+            //     //     //break;
+            //     // }
+            //     if ('total' == $total['code']) {
+            //         $latest_total = $total['value'];
+            //        break;
+            //     }
+            // }
 
-            $transaction_id = '';
+            // $transaction_id = '';
 
-            $order_transaction_data = $this->model_report_sale_transaction->getOrderTransactionId($result['order_id']);
+            // $order_transaction_data = $this->model_report_sale_transaction->getOrderTransactionId($result['order_id']);
 
-            if (count($order_transaction_data) > 0) {
-                $transaction_id = trim($order_transaction_data['transaction_id']);
-            }
+            // if (count($order_transaction_data) > 0) {
+            //     $transaction_id = trim($order_transaction_data['transaction_id']);
+            // }
 
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
@@ -392,28 +394,28 @@ class ControllerReportSaleTransaction extends Controller
                 'status' => $result['status'],
 
                 'payment_method' => $result['payment_method'],
-                'shipping_method' => $result['shipping_method'],
-                'subtotal' => $this->currency->format($sub_total),
+                // 'shipping_method' => $result['shipping_method'],
+                // 'subtotal' => $this->currency->format($sub_total),
                 'total' => $this->currency->format($latest_total),
                 'store' => $result['store_name'],
-                'order_status_id' => $result['order_status_id'],
+                // 'order_status_id' => $result['order_status_id'],
 
-                'order_status_color' => $result['color'],
-                'city' => $result['city'],
+                // 'order_status_color' => $result['color'],
+                // 'city' => $result['city'],
 
                 //'transaction_id' => $transaction_id,
                 'transaction_id' => $result['transaction_id'],
 
                 //'total' => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
-                'sub_total' => $this->currency->format($sub_total, $result['currency_code'], $result['currency_value']),
+                // 'sub_total' => $this->currency->format($sub_total, $result['currency_code'], $result['currency_value']),
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 //'order_date' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])),
-                'date_modified' => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
-                'shipping_code' => $result['shipping_code'],
-                'view' => $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id='.$result['order_id'].$url, 'SSL'),
-                'edit' => $this->url->link('sale/order/EditInvoice', 'token='.$this->session->data['token'].'&order_id='.$result['order_id'].$url, 'SSL'),
-                'delete' => $this->url->link('sale/order/delete', 'token='.$this->session->data['token'].'&order_id='.$result['order_id'].$url, 'SSL'),
+                // 'date_modified' => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
+                // 'shipping_code' => $result['shipping_code'],
+                // 'view' => $this->url->link('sale/order/info', 'token='.$this->session->data['token'].'&order_id='.$result['order_id'].$url, 'SSL'),
+                // 'edit' => $this->url->link('sale/order/EditInvoice', 'token='.$this->session->data['token'].'&order_id='.$result['order_id'].$url, 'SSL'),
+                // 'delete' => $this->url->link('sale/order/delete', 'token='.$this->session->data['token'].'&order_id='.$result['order_id'].$url, 'SSL'),
             ];
         }
 
