@@ -22,7 +22,7 @@ class ControllerApiCustomerMpesa extends Controller {
 
             $log->write($data);
             /* start */
-
+            $amount = 0;
             foreach ($orders as $order_id) {
                 $order_id = $order_id;
 
