@@ -248,7 +248,7 @@ class ControllerPaymentMpesa extends Controller {
 
                 $PhoneNumber = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
                 //$AccountReference = 'GPK'; //$this->config->get('config_name');
-                $AccountReference = implode('#', $this->request->post['pending_order_ids']); //$this->config->get('config_name');
+                $AccountReference = implode(',', $this->request->post['pending_order_ids']); //$this->config->get('config_name');
 
                 $TransactionDesc = '#' . $this->request->post['pending_order_ids'] . '##' . $this->customer->getId();
             }
