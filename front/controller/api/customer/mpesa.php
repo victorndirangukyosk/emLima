@@ -48,7 +48,8 @@ class ControllerApiCustomerMpesa extends Controller {
             $PartyB = $this->config->get('mpesa_business_short_code');
 
             $PhoneNumber = $this->config->get('config_telephone_code') . '' . $number;
-            $AccountReference = 'GPK'; //$this->config->get('config_name');
+            //$AccountReference = 'GPK'; //$this->config->get('config_name');
+            $AccountReference = implode('#', $orders);
             $TransactionDesc = implode(" #", $orders);
             $Remarks = 'PAYMENT';
 
