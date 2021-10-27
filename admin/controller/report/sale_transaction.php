@@ -347,16 +347,16 @@ class ControllerReportSaleTransaction extends Controller
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        // if ('' != $filter_customer || '' != $filter_company || ('' != $filter_date_added || '' != $filter_date_modified) ) 
-        // {
+        if ('' != $filter_date_delivery || '' != $filter_order_id|| '' != $filter_date_order || '' != $filter_transaction_id || ('' != $filter_date_added || '' != $filter_date_modified) ) 
+        {
         $order_total = $this->model_report_sale_transaction->getTotalOrders($filter_data);
 
         $results = $this->model_report_sale_transaction->getOrders($filter_data); 
-        // }
-        // else {
-        //     $order_total =0;
-        //     $results =null;
-        // }
+        }
+        else {
+            $order_total =0;
+            $results =null;
+        }
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
