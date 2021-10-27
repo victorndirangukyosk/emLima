@@ -2271,7 +2271,7 @@ class Emailtemplate {
         }
     }
 
-    public function sendPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder') {
+    public function sendPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder', $transaction = '') {
         try {
             $log = new Log('error.log');
             $log->write('sendPushNotification');
@@ -2311,7 +2311,7 @@ class Emailtemplate {
                     //$log->write($dataSend);
                     $message->setNotification($note)
                             //$message->setData( $dataSend );
-                            ->setData(['order_id' => $order_id, 'store_id' => $store_id]);
+                            ->setData(['order_id' => $order_id, 'store_id' => $store_id, 'transaction' => $transaction]);
 
                     $response = $client->send($message);
 
