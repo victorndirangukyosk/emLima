@@ -732,36 +732,6 @@
             </div>
         </div>
     </div>
-    
-    <div class="addressModal">
-        <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <p id="exampleModal4_text" style="font-weight: bold; font-size: 12px;"></p>
-                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-                        <div class="row">
-                                <div class="col-md-12">
-                                <h2>BELOW LISTED PRODUCTS DELIVARABLE IN MENTIONED DAYS ONLY</h2>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="container-fluid" id="vendor_product_days">
-                                    </div>
-                                </div>
-                            <div class="addnews-address-form">
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        <button id="remove_vendor_day_products" name="remove_vendor_day_products" type="button" class="btn btn-primary">REMOVE</button>
-                                        <button id="cancel_products_vendor_day_products" name="cancel_products_vendor_day_products" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">PROCEED</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- CSS Style -->
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
 <!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
@@ -800,13 +770,13 @@
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     <style>
-    #agree_vendor_terms, #pay_pending_amount, #remove_vendor_day_products {
+    #agree_vendor_terms, #pay_pending_amount {
     width: 49%;
     float: left;
     margin-top: 10px;
     margin-right: 5px;
     }
-    #remove_vendor_products, #pay_clear_cart, #cancel_products_vendor_day_products {
+    #remove_vendor_products, #pay_clear_cart {
     width: 49%;
     float: left;
     margin-top: 10px;
@@ -834,63 +804,6 @@
             }
         });
 });*/
-/*$(function() {
-        $.ajax({
-            url: 'index.php?path=checkout/confirm/GetProductDeliveryDays',
-            type: 'post',
-            dataType: 'json',
-            beforeSend: function() {
-            },
-            complete: function() {
-            },
-            success: function(json) {
-            console.log(json);
-            if(json.count > 0) {
-            var html = [];
-            var deliverydays = '';
-            html += '<div class="row"><div class="col-md-6">PRODUCT</div><div class="col-md-6">DELIVERY DAYS</div></div>';
-            $.each(json.data, function(key, value) {
-            var deliverydays = [];  
-            if(value.monday == "1") {    
-            deliverydays.push('Mon'+' ('+ value.monday_date +')');
-            }
-    
-            if(value.tuesday == "1") {    
-            deliverydays.push('Tue'+' ('+ value.tuesday_date +')');
-            }
-    
-            if(value.wednesday == "1") {    
-            deliverydays.push('Wed'+' ('+ value.wednesday_date +')');
-            }
-            
-            if(value.thursday == "1") {    
-            deliverydays.push('Thu'+' ('+ value.thursday_date +')');
-            }
-    
-            if(value.friday == "1") {    
-            deliverydays.push('Fri'+' ('+ value.friday_date +')');
-            }
-    
-            if(value.saturday == "1") {    
-            deliverydays.push('Sat'+' ('+ value.saturday_date +')');
-            }
-    
-            if(value.sunday == "1") {    
-            deliverydays.push('Sun'+' ('+ value.sunday_date +')');
-            }
-    
-            html += '<div class="row"><div class="col-md-6">' + value.name +' ('+ value.unit +') '+ '</div><div class="col-md-6">' + deliverydays  + '</div></div>'
-            });
-            console.log(html);
-            console.log(deliverydays);
-            $('#vendor_product_days').html(html);
-            $('#exampleModal4').modal('show');
-            } else {
-            $('#exampleModal4').modal('hide');
-            }
-            }
-        });
-});*/    
 $('#pay_pending_amount').on('click', function(){
 window.location.href = "<?= $continue.'/index.php?path=account/transactions'; ?>";
 });
@@ -949,54 +862,6 @@ window.location.href = "<?= $continue.'/index.php?path=common/home'; ?>";
             }
         });  
         });
-        $('#remove_vendor_day_products').on('click', function(){
-          $.ajax({
-            url: 'index.php?path=checkout/confirm/RemoveProductDeliveryDays',
-            type: 'post',
-            dataType: 'json',
-            beforeSend: function() {
-            $('#exampleModal4_text').text('Your Cart Updating!');
-            },
-            complete: function() {
-            },
-            success: function(json) {
-            if(json.count == 0) {
-            $('#exampleModal4_text').text('Your Cart Updated!');
-            setTimeout(function(){ 
-            $('#exampleModal4').modal('hide');
-            window.location.href = "<?= $continue.'/index.php?path=checkout/checkoutitems'; ?>";
-            },3000);
-            }    
-            }
-        });  
-        });
-        
-        $('#cancel_products_vendor_day_products').on('click', function(){
-        $.ajax({
-            url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
-            type: 'post',
-            dataType: 'json',
-            beforeSend: function() {
-            },
-            complete: function() {
-            },
-            success: function(json) {
-                if (json['modal_open']) {
-                $('#exampleModal').modal('show');
-                 //alert(json['product_list']);
-                $('#products_list').text(json['product_list']);
-
-                return false;
-                }else{
-                $('#exampleModal').modal('hide'); 
-                $('#products_list').text('');
-
-                window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";     
-                }
-            }
-        });    
-        });
-        
   //as in header page , clear cart funtionality is already mentioned.Commented here
      /* $(document).delegate('#clearcart', 'click', function(){
         var choice = confirm($(this).attr('data-confirm'));
@@ -1051,7 +916,7 @@ window.location.href = "<?= $continue.'/index.php?path=common/home'; ?>";
             });
         }
     });
-$("#shopping-cart-table tbody").find("stop").click(function (){
+ $("#shopping-cart-table tbody").find("stop").click(function (){
 
       
    
@@ -1061,7 +926,7 @@ console.log("cart["+key+"][qty]");
 $("cart["+key+"][qty]").removeAttr('disabled');
  document.getElementById("cart["+key+"][qty]").disabled = false;
 
-});
+ });
 
 
   //$("#shopping-cart-table tbody").find("p").click(function (){
@@ -1110,59 +975,8 @@ e.preventDefault();
 var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
 document.cookie = "dropoff_notes="+dropoff_notes;
 //$('#exampleModal').modal('toggle');
+
 $.ajax({
-            url: 'index.php?path=checkout/confirm/GetProductDeliveryDays',
-            type: 'post',
-            dataType: 'json',
-            beforeSend: function() {
-            },
-            complete: function() {
-            },
-            success: function(json) {
-            console.log(json);
-            if(json.count > 0) {
-            var html = [];
-            var deliverydays = '';
-            html += '<div class="row"><div class="col-md-6">PRODUCT</div><div class="col-md-6">DELIVERY DAYS</div></div>';
-            $.each(json.data, function(key, value) {
-            var deliverydays = [];  
-            if(value.monday == "1") {    
-            deliverydays.push('Mon'+' ('+ value.monday_date +')');
-            }
-    
-            if(value.tuesday == "1") {    
-            deliverydays.push('Tue'+' ('+ value.tuesday_date +')');
-            }
-    
-            if(value.wednesday == "1") {    
-            deliverydays.push('Wed'+' ('+ value.wednesday_date +')');
-            }
-            
-            if(value.thursday == "1") {    
-            deliverydays.push('Thu'+' ('+ value.thursday_date +')');
-            }
-    
-            if(value.friday == "1") {    
-            deliverydays.push('Fri'+' ('+ value.friday_date +')');
-            }
-    
-            if(value.saturday == "1") {    
-            deliverydays.push('Sat'+' ('+ value.saturday_date +')');
-            }
-    
-            if(value.sunday == "1") {    
-            deliverydays.push('Sun'+' ('+ value.sunday_date +')');
-            }
-    
-            html += '<div class="row"><div class="col-md-6">' + value.name +' ('+ value.unit +') '+ '</div><div class="col-md-6">' + deliverydays  + '</div></div>'
-            });
-            console.log(html);
-            console.log(deliverydays);
-            $('#vendor_product_days').html(html);
-            $('#exampleModal4').modal('show');
-            } else {
-            $('#exampleModal4').modal('hide');
-            $.ajax({
             url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
             type: 'post',
             dataType: 'json',
@@ -1174,21 +988,18 @@ $.ajax({
                 if (json['modal_open']) {
                 $('#exampleModal').modal('show');
                  //alert(json['product_list']);
-                $('#products_list').text(json['product_list']);
+                       
+                         $('#products_list').text(json['product_list']);
 
                 return false;
                 }else{
                 $('#exampleModal').modal('hide'); 
-                $('#products_list').text('');
+                         $('#products_list').text('');
 
                 window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";     
                 }
             }
 });
-            }
-            }
-});
-
 
 });
 
@@ -3198,7 +3009,3 @@ $carousel.on('slid.bs.carousel', function() {
 
 
 </script>
-
-
-
-
