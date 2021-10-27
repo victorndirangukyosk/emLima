@@ -70,6 +70,8 @@ class ControllerReportVendorOrders extends Controller {
     }
 
     public function index() {
+        ini_set('display_errors', "on");
+        ini_set('error_reporting', E_ALL);
         $this->language->load('report/vendor_orders');
 
         $this->document->setTitle($this->language->get('heading_title'));
