@@ -2271,7 +2271,7 @@ class Emailtemplate {
         }
     }
 
-    public function sendPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder') {
+    public function sendPushNotification($to, $deviceId, $order_id, $store_id, $message, $title, $app_action = 'com.instagolocal.showorder', $transaction = '') {
         try {
             $log = new Log('error.log');
             $log->write('sendPushNotification');
@@ -2282,7 +2282,9 @@ class Emailtemplate {
             $log->write('STORE ID :' . $store_id);
             $log->write('MESSAGE:' . $message);
             $log->write('TITLE:' . $title);
-
+            $log->write('ACTION:' . $app_action);
+            $log->write('transaction:' . $transaction);
+            
             if (isset($to)) {
                 if (isset($deviceId) && isset($to)) {
                     $log->write('api key');
@@ -2310,11 +2312,12 @@ class Emailtemplate {
                     //$log->write($dataSend);
                     $message->setNotification($note)
                             //$message->setData( $dataSend );
-                            ->setData(['order_id' => $order_id, 'store_id' => $store_id]);
+                            ->setData(['order_id' => $order_id, 'store_id' => $store_id, 'transaction' => $transaction]);
 
                     $response = $client->send($message);
 
                     $log->write('FCM');
+                    //$log->write($client->getBody());
                     $log->write($response);
                     $log->write('FCM');
                     //var_dump($response);die;

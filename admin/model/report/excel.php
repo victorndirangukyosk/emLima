@@ -486,24 +486,26 @@ class ModelReportExcel extends Model {
         $this->load->model('report/sale_transaction');
         $this->load->model('report/product');
 
-        $rows = $this->model_report_sale_transaction->getOrders($data);
+        $rows = $this->model_report_sale_transaction->getOrdersNew($data);
 
         $i = 0;
         foreach ($rows as $result) {
             $sub_total = 0;
             $latest_total = 0;
-            $totals = $this->model_report_sale_transaction->getOrderTotals($result['order_id']);
-            //echo "<pre>";print_r($totals);die;
-            foreach ($totals as $total) {
-                if ('sub_total' == $total['code']) {
-                    $sub_total = $total['value'];
-                    //break;
-                }
-                if ('total' == $total['code']) {
-                    $latest_total = $total['value'];
-                    //break;
-                }
-            }
+            $latest_total =  $this->model_report_sale_transaction->getOrderExactTotal($result['order_id']);
+
+            // $totals = $this->model_report_sale_transaction->getOrderTotals($result['order_id']);
+            // //echo "<pre>";print_r($totals);die;
+            // foreach ($totals as $total) {
+            //     if ('sub_total' == $total['code']) {
+            //         $sub_total = $total['value'];
+            //         //break;
+            //     }
+            //     if ('total' == $total['code']) {
+            //         $latest_total = $total['value'];
+            //         //break;
+            //     }
+            // }
 
             // $transaction_id = '';
             // $order_transaction_data = $this->model_report_sale_transaction->getOrderTransactionId($result['order_id']);
@@ -511,7 +513,7 @@ class ModelReportExcel extends Model {
             //     $transaction_id = trim($order_transaction_data['transaction_id']);
             // }
 
-            $rows[$i]['subtotal'] = $this->currency->format($sub_total);
+            // $rows[$i]['subtotal'] = $this->currency->format($sub_total);
             $rows[$i]['total'] = $this->currency->format($latest_total);
             ++$i;
         }
