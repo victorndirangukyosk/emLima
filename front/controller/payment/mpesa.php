@@ -104,7 +104,8 @@ class ControllerPaymentMpesa extends Controller {
                 $PartyB = $this->config->get('mpesa_business_short_code');
 
                 $PhoneNumber = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
-                $AccountReference = 'GPK'; //$this->config->get('config_name');
+                //$AccountReference = 'GPK'; //$this->config->get('config_name');
+                $AccountReference = '#' . $order_id; //$this->config->get('config_name');
                 $TransactionDesc = '#' . $order_id;
 
                 if (empty($order_id)) {
@@ -246,7 +247,13 @@ class ControllerPaymentMpesa extends Controller {
                 $PartyB = $this->config->get('mpesa_business_short_code');
 
                 $PhoneNumber = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
-                $AccountReference = 'GPK'; //$this->config->get('config_name');
+                //$AccountReference = 'GPK'; //$this->config->get('config_name');
+                if (count($this->request->post['pending_order_ids']) > 0) {
+                    $AccountReference = implode('#', $this->request->post['pending_order_ids']);
+                }
+                if (count($this->request->post['order_id']) > 0) {
+                    $AccountReference = implode('#', $this->request->post['order_id']);
+                }
 
                 $TransactionDesc = '#' . $this->request->post['pending_order_ids'] . '##' . $this->customer->getId();
             }
@@ -403,7 +410,7 @@ class ControllerPaymentMpesa extends Controller {
                     $dataAddHisory['append'] = 0;
                     $dataAddHisory['comment'] = '';
                     $dataAddHisory['paid'] = 'Y';
-                    
+
                     $url = HTTPS_SERVER;
                     $api = 'api/order/addHistory';
 
