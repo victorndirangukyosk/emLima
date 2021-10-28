@@ -943,6 +943,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             foreach ($manifest_id as $manifest_ids) {
 
                 $log->write($manifest_ids['order_id']);
+                $log->write($manifest_ids);
                 // Store
                 //save CallbackMetadata MpesaReceiptNumber
 
