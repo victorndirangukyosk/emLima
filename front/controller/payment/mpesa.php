@@ -248,10 +248,10 @@ class ControllerPaymentMpesa extends Controller {
 
                 $PhoneNumber = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
                 $AccountReference = $this->customer->getId().'WALLET_TOPUP'; //$this->config->get('config_name');
-                if (count($this->request->post['pending_order_ids']) > 0) {
+                if (is_array($this->request->post['pending_order_ids']) && count($this->request->post['pending_order_ids']) > 0) {
                     $AccountReference = implode('#', $this->request->post['pending_order_ids']);
                 }
-                if (count($this->request->post['order_id']) > 0) {
+                if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
                     $AccountReference = implode('#', $this->request->post['order_id']);
                 }
 
