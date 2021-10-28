@@ -733,7 +733,13 @@
                         </div>
                     </div>        
             <div class="text-right">
+
+             <?php if ($this->user->hasPermission('modify', 'sale/customer_configuration')) {?>
                 <button type="button" id="button-configuration" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-save"></i> Save Configuration </button>
+             <?php }  else {?>
+                <button disabled type="button"  data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-save"></i> Save Configuration </button>
+             <?php } ?>
+
             </div>                
             </div>
 
