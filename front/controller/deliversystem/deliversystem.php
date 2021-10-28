@@ -976,6 +976,79 @@ class ControllerDeliversystemDeliversystem extends Controller {
         return $response;
     }
 
+    public function mpesamobileOrderStatusTransactions() {
+        $MpesaReceiptNumber = NULL;
+        $response['status'] = false;
+
+        $this->load->model('payment/mpesa');
+        $this->load->model('account/order');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+
+        $postData = file_get_contents('php://input');
+
+        $log = new Log('error.log');
+        $log->write('updateMpesamobileOrderStatus_Transactions');
+        $log->write($postData);
+
+        $file = fopen('system/log/mpesa_mobile_transactions_log.txt', 'w+'); //url fopen should be allowed for this to occur
+        if (false === fwrite($file, $postData)) {
+            fwrite('Error: no data written');
+        }
+        fclose($file);
+
+        $postData = json_decode($postData);
+
+        $stkCallback = $postData->Body;
+
+        $log->write($stkCallback);
+
+        $log->write($stkCallback->stkCallback->MerchantRequestID);
+        $this->load->controller('payment/mpesa/mpesacallbackupdate', $stkCallback->stkCallback);
+
+        $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->stkCallback->MerchantRequestID);
+
+        $log->write('order_id');
+        $log->write($manifest_id);
+        $log->write('order_id');
+
+        if (is_array($manifest_id) && count($manifest_id) > 0) {
+            foreach ($manifest_id as $manifest_ids) {
+
+                $log->write($manifest_ids['order_id']);
+                // Store
+                //save CallbackMetadata MpesaReceiptNumber
+
+                if (isset($stkCallback->stkCallback->CallbackMetadata->Item)) {
+                    foreach ($stkCallback->stkCallback->CallbackMetadata->Item as $key => $value) {
+                        $log->write($value);
+
+                        if ('MpesaReceiptNumber' == $value->Name) {
+                            $MpesaReceiptNumber = $value->Value;
+                            $this->model_payment_mpesa->insertOrderTransactionId($manifest_ids['order_id'], $value->Value);
+                            $this->model_payment_mpesa->updateMpesaOrderByMerchant($manifest_ids['order_id'], $value->Value, $stkCallback->stkCallback->CheckoutRequestID);
+                        }
+                    }
+                }
+
+                $order_info = $this->model_checkout_order->getOrder($manifest_ids['order_id']);
+                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $order_info != NULL && $customer_info != NULL) {
+                    $this->model_payment_mpesa->addOrderHistoryTransaction($order_info['order_id'], $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
+                    $this->load->controller('payment/mpesa/mpesacallbackupdatemail', $stkCallback->stkCallback);
+                    $log->write('updateMpesaOrderStatus_Transactions SUCCESS');
+                }
+                if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 != $stkCallback->stkCallback->ResultCode && $order_info != NULL && $customer_info != NULL) {
+                    $this->model_payment_mpesa->addOrderHistoryTransactionFailed($order_info['order_id'], $this->config->get('mpesa_failed_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa', $order_info['paid']);
+                    $this->load->controller('payment/mpesa/mpesacallbackupdatemailfail', $stkCallback->stkCallback);
+                    $log->write('updateMpesaOrderStatus_Transactions FAILED');
+                }
+            }
+        }
+
+        return $response;
+    }
+
     public function mpesaMobileCheckoutOrderStatusTransactions() {
         $MpesaReceiptNumber = NULL;
         $response['status'] = false;
