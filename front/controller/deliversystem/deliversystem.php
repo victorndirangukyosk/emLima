@@ -963,17 +963,49 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
                 if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $order_info != NULL && $customer_info != NULL) {
                     $this->model_payment_mpesa->addOrderHistoryTransaction($order_info['order_id'], $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
-                    $this->load->controller('payment/mpesa/mpesacallbackupdatemail', $stkCallback->stkCallback);
+                    //REMOVED FOR EXCEPTION
+                    //$this->load->controller('payment/mpesa/mpesacallbackupdatemail', $stkCallback->stkCallback);
                     $log->write('updateMpesaOrderStatus_Transactions SUCCESS');
                 }
                 if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 != $stkCallback->stkCallback->ResultCode && $order_info != NULL && $customer_info != NULL) {
                     $this->model_payment_mpesa->addOrderHistoryTransactionFailed($order_info['order_id'], $this->config->get('mpesa_failed_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa', $order_info['paid']);
-                    $this->load->controller('payment/mpesa/mpesacallbackupdatemailfail', $stkCallback->stkCallback);
+                    //REMOVED FOR EXCEPTION
+                    //$this->load->controller('payment/mpesa/mpesacallbackupdatemailfail', $stkCallback->stkCallback);
                     $log->write('updateMpesaOrderStatus_Transactions FAILED');
                 }
             }
         }
 
+        if (is_array($manifest_id) && count($manifest_id) > 0) {
+            foreach ($manifest_id as $manifest_ids) {
+
+                $log->write($manifest_ids['order_id']);
+                $log->write($manifest_ids);
+                // Store
+                //save CallbackMetadata MpesaReceiptNumber
+
+                if (isset($stkCallback->stkCallback->CallbackMetadata->Item)) {
+                    foreach ($stkCallback->stkCallback->CallbackMetadata->Item as $key => $value) {
+                        $log->write($value);
+
+                        if ('MpesaReceiptNumber' == $value->Name) {
+                            $MpesaReceiptNumber = $value->Value;
+                        }
+                    }
+                }
+
+                $order_info = $this->model_checkout_order->getOrder($manifest_ids['order_id']);
+                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $order_info != NULL && $customer_info != NULL) {
+                    $this->load->controller('payment/mpesa/mpesacallbackupdatemail', $stkCallback->stkCallback);
+                    $log->write('updateMpesaOrderStatus_Transactions SUCCESS');
+                }
+                if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 != $stkCallback->stkCallback->ResultCode && $order_info != NULL && $customer_info != NULL) {
+                    $this->load->controller('payment/mpesa/mpesacallbackupdatemailfail', $stkCallback->stkCallback);
+                    $log->write('updateMpesaOrderStatus_Transactions FAILED');
+                }
+            }
+        }
         return $response;
     }
 
