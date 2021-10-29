@@ -343,11 +343,11 @@ class ControllerApiCustomerMpesa extends Controller {
                 $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
 
                 // Void the order first
-                $log->write('STKPushSimulation');
+                $log->write('COMPLETE STKPushSimulation');
                 $log->write($stkPushSimulation);
 
                 $stkPushSimulation = json_decode($stkPushSimulation);
-                $log->write('STKPushSimulation JSON ARRAY');
+                $log->write('COMPLETE STKPushSimulation JSON ARRAY');
                 $log->write($stkPushSimulation);
                 if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
                     $json['error'] = $stkPushSimulation->ResultDesc;
