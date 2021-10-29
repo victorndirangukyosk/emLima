@@ -1463,7 +1463,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $log->write('updateMpesamobileOrderStatus_Transactions_test');
         $log->write($postData);
 
-        $file = fopen('system/log/mpesa_mobile_transactions_log.txt', 'w+'); //url fopen should be allowed for this to occur
+        $file = fopen('system/log/mpesa_mobile_test_transactions_log.txt', 'w+'); //url fopen should be allowed for this to occur
         if (false === fwrite($file, $postData)) {
             fwrite('Error: no data written');
         }
