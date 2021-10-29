@@ -1137,6 +1137,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 }
 
                 if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode) {
+                    $response['status'] = true;
                     $log->write('MOBILE CHECKOUT SUCCESS');
                 }
                 if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 != $stkCallback->stkCallback->ResultCode) {
