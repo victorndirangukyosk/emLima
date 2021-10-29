@@ -5,11 +5,14 @@ class ControllerAmitruckAmitruck extends Controller {
     private $error = [];
 
     public function createDelivery() {
+        $log = new Log('error.log');       
         $this->load->model('amitruck/amitruck');
-        $this->load->model('sale/order');
+        $this->load->model('sale/order');        
+
         $order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
+        // $log->write($order_info);
+       
         if (is_array($order_info) && count($order_info) > 0 && $order_info['delivery_id'] == NULL) {
-            $log = new Log('error.log');
             //$log->write($order_info);
 
             $response['status'] = false;
@@ -20,18 +23,29 @@ class ControllerAmitruckAmitruck extends Controller {
             $start_point = array('latitude' => '-1.2911133', 'longitude' => '36.7943673');
             $end_point = array('latitude' => $order_info['latitude'], 'longitude' => $order_info['longitude']);
             $stops = array($start_point, $end_point);
-            $vehicleCategories = array("OPEN");
+            // $vehicleCategories = array("OPEN");
+            $vehicleCategories = array("CLOSED");
 
-            $body = array('orderId' => $this->request->post['order_id'], 'stops' => $stops, 'vehicleType' => 1, 'vehicleCategories' => $vehicleCategories, 'paymentTerm' => 'PAY_LATER', 'declaredValueOfGoods' => $this->request->post['order_total'], 'pickUpDateAndTime' => $pickup_time, 'paymentDueDate' => $payment_date, "description" => "Household goods");
+            // $body = array('orderId' => $this->request->post['order_id'], 'stops' => $stops, 'vehicleType' => 1, 'vehicleCategories' => $vehicleCategories, 'paymentTerm' => 'PAY_LATER', 'declaredValueOfGoods' => $this->request->post['order_total'], 'pickUpDateAndTime' => $pickup_time, 'paymentDueDate' => $payment_date, "description" => "Household goods");
+            $body = array('orderId' => $this->request->post['order_id'], 'stops' => $stops, 'vehicleType' => 1, 'vehicleCategories' => $vehicleCategories, 'paymentTerm' => 'UPFRONT', 'declaredValueOfGoods' => $this->request->post['order_total'], 'pickUpDateAndTime' => $pickup_time, 'customerRequestedPrice' => 200,'wantInsurance'=>true, "description" => "Household goods");
             //$log->write($body);
             $body = json_encode($body);
             //$log->write($body);
             $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/request');
+            if(ENV=='production')
+            {
+                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/request');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
+               
+            }
+            else {
+                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/request');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
+                  
+            }
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
             $result = curl_exec($curl);
