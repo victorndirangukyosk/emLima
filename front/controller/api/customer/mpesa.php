@@ -237,8 +237,6 @@ class ControllerApiCustomerMpesa extends Controller {
         if ($this->validatecheckout($data)) {
             $order_reference_number = $data['order_reference_number'];
             $number = $data['mpesa_phonenumber'];
-            $merchant_request_id = $data['merchant_request_id'];
-            $checkout_request_id = $data['checkout_request_id'];
 
             $log = new Log('error.log');
 
