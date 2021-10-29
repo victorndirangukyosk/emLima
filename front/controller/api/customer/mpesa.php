@@ -255,14 +255,14 @@ class ControllerApiCustomerMpesa extends Controller {
                 $BusinessShortCode = $this->config->get('mpesa_business_short_code');
                 $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
                 $TransactionType = 'CustomerBuyGoodsOnline';
-                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaMobileCheckoutOrder', '', 'SSL');
+                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesamobilecheckoutcallback', '', 'SSL');
 
                 $Amount = $amount;
 
                 $PartyB = $this->config->get('mpesa_business_short_code');
 
                 $PhoneNumber = $this->config->get('config_telephone_code') . '' . $number;
-                $AccountReference = 'GPK'; //$this->config->get('config_name');
+                $AccountReference = "#" . $order_reference_number; //$this->config->get('config_name');
                 $TransactionDesc = "#" . $order_reference_number;
                 $Remarks = 'PAYMENT';
 
