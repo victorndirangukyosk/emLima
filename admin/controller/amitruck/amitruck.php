@@ -251,4 +251,48 @@ class ControllerAmitruckAmitruck extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+    //For Fetching Trips/Delivaries List
+    public function getDeliveries() {
+        $this->load->model('amitruck/amitruck');
+        // $this->load->model('sale/order');
+        $log = new Log('error.log');
+            //$log->write($order_info);
+
+            $curl = curl_init();
+            if(ENV=='production')
+            {
+                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
+               
+            }
+            else {
+                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
+                  
+            }
+            
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_POST, 0);
+            // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            $result = curl_exec($curl);
+
+            $log->write($result);
+            curl_close($curl);
+            $result = json_decode($result, true);
+            $json = $result;
+            //In Response "completedByDriver": true
+
+            if ($result['status'] == 200) {
+               
+                $log->write($result);
+                
+            }
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        
+    }
 }
