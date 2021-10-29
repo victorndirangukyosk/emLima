@@ -246,8 +246,8 @@ class ControllerApiCustomerMpesa extends Controller {
             /* start */
 
             $amount = $this->cart->getTotalForKwikBasket();
-
-            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'));
+            $live = true;
+            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
 
             $PartyA = $this->config->get('config_telephone_code') . '' . $number;
 
