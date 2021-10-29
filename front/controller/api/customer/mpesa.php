@@ -244,37 +244,32 @@ class ControllerApiCustomerMpesa extends Controller {
             /* start */
 
             $amount = $this->cart->getTotalForKwikBasket();
-            $live = true;
+            $live = 'true';
             $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
             $sta = false;
+
+            $log->write('STKPushSimulation confirm');
+            $log->write($sta);
             if (!$sta) {
                 $PartyA = $this->config->get('config_telephone_code') . '' . $number;
 
                 $BusinessShortCode = $this->config->get('mpesa_business_short_code');
                 $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
-                $TransactionType = 'CustomerBuyGoodsOnline';
-                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesamobilecheckoutcallback', '', 'SSL');
-
+                $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';    
+                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesamobileOrderStatusTransactions', '', 'SSL');
                 $Amount = $amount;
-
                 $PartyB = $this->config->get('mpesa_business_short_code');
-
                 $PhoneNumber = $this->config->get('config_telephone_code') . '' . $number;
+                //$AccountReference = 'GPK'; //$this->config->get('config_name');
                 $AccountReference = "#" . $order_reference_number; //$this->config->get('config_name');
-                $TransactionDesc = "#" . $order_reference_number;
+                $TransactionDesc = implode(" #", $order_reference_number);
                 $Remarks = 'PAYMENT';
-
                 $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
-
                 $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
-                // Void the order first
                 $log->write('STKPushSimulation');
                 $log->write($stkPushSimulation);
-
                 $stkPushSimulation = json_decode($stkPushSimulation);
-
                 $json['response'] = $stkPushSimulation;
-                $json['order_reference_number'] = $order_reference_number;
             }
 
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
