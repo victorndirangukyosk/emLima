@@ -1149,7 +1149,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         return $response;
     }
 
-    public function mpesamobilecheckoutcallback() {
+    public function mpesamobileOrderStatusTransactionss() {
         $MpesaReceiptNumber = NULL;
         $response['status'] = false;
 
