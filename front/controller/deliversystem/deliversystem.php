@@ -1455,4 +1455,22 @@ class ControllerDeliversystemDeliversystem extends Controller {
         }
     }
 
+    public function mpesamobileOrderStatusTransactionsTest() {
+
+        $postData = file_get_contents('php://input');
+
+        $log = new Log('error.log');
+        $log->write('updateMpesamobileOrderStatus_Transactions_test');
+        $log->write($postData);
+
+        $file = fopen('system/log/mpesa_mobile_transactions_log.txt', 'w+'); //url fopen should be allowed for this to occur
+        if (false === fwrite($file, $postData)) {
+            fwrite('Error: no data written');
+        }
+        fclose($file);
+
+        $postData = json_decode($postData);
+        $log->write($postData);
+    }
+
 }
