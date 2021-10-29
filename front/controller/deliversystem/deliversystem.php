@@ -1161,7 +1161,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $postData = file_get_contents('php://input');
 
         $log = new Log('error.log');
-        $log->write('MPESA MOBILE CHECKOUT');
+        $log->write('CALLBACK MPESA MOBILE CHECKOUT');
         $log->write($postData);
 
         $file = fopen('system/log/mpesa_mobile_checkout_log.txt', 'w+'); //url fopen should be allowed for this to occur
@@ -1181,9 +1181,9 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->stkCallback->MerchantRequestID);
 
-        $log->write('order_reference_number');
+        $log->write('CALLBACK order_reference_number');
         $log->write($manifest_id);
-        $log->write('order_reference_number');
+        $log->write('CALLBACK order_reference_number');
 
         if (is_array($manifest_id) && count($manifest_id) > 0) {
             foreach ($manifest_id as $manifest_ids) {
@@ -1205,7 +1205,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                 if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode) {
                     $response['status'] = true;
-                    $log->write('MOBILE CHECKOUT SUCCESS');
+                    $log->write('CALLBACK MOBILE CHECKOUT SUCCESS');
                 }
                 if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 != $stkCallback->stkCallback->ResultCode) {
                     $log->write('MOBILE CHECKOUT FAILED');
