@@ -52,7 +52,7 @@ class ModelPaymentMpesa extends Model {
     public function insertOrderTransactionId($order_id, $transaction_id) {
         $log = new Log('error.log');
         $log->write('order_id_transaction_id');
-        $log->write($order_id.' '.$transaction_id);
+        $log->write($order_id . ' ' . $transaction_id);
         $log->write('order_id_transaction_id');
         $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
 
@@ -64,7 +64,7 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function insertMobileCheckoutOrderTransactionId($order_reference_number, $mpesa_receipt_number) {
-        $this->db->query('UPDATE `' . DB_PREFIX . 'mpesa_order` SET `mpesa_receipt_number` = ' . $this->db->escape($mpesa_receipt_number) . ' where order_reference_number=' . $order_reference_number);
+        $this->db->query('UPDATE `' . DB_PREFIX . 'mpesa_order` SET `mpesa_receipt_number` = "' . $this->db->escape($mpesa_receipt_number) . '" where order_reference_number=' . $order_reference_number);
     }
 
     public function updateMpesaOrder($order_id, $mpesa_receipt_number) {
