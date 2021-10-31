@@ -1367,6 +1367,7 @@ class ControllerCheckoutConfirm extends Controller {
                 $log->write($vendor_details);
                 $log->write('vendor_details');
                 $product_delivery_days['key'] = $product['key'];
+                $product_delivery_days['quantity'] = $product['quantity'];
                 $product_delivery_days['delivery_dates'] = $delivery_dates;
                 $oldDate = min($delivery_dates);
                 $log->write('oldDate');
@@ -1467,6 +1468,7 @@ class ControllerCheckoutConfirm extends Controller {
                 $log->write($vendor_details);
                 $log->write('vendor_details');
                 $product_delivery_days['key'] = $product['key'];
+                $product_delivery_days['quantity'] = $product['quantity'];
                 $product_delivery_days['delivery_dates'] = $delivery_dates;
                 $oldDate = min($delivery_dates);
                 $log->write('oldDate');
@@ -1545,6 +1547,7 @@ class ControllerCheckoutConfirm extends Controller {
                 $log->write($vendor_details);
                 $log->write('vendor_details');
                 $product_delivery_days['key'] = $product['key'];
+                $product_delivery_days['quantity'] = $product['quantity'];
                 $product_delivery_days['delivery_dates'] = $delivery_dates;
                 $oldDate = min($delivery_dates);
                 $log->write('oldDate');
