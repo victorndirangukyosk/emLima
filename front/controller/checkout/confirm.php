@@ -1380,7 +1380,13 @@ class ControllerCheckoutConfirm extends Controller {
             $log->write('results');
         }
 
+        $modified_result = NULL;
+        foreach ($results as $result) {
+            $modified_result[$result['earlist_date']][] = $result;
+        }
+
         $json['data'] = $results;
+        $json['modified_result'] = $modified_result;
         $json['count'] = count($results);
         $this->response->addHeader('Content-Type: application/json');
 
@@ -1551,7 +1557,14 @@ class ControllerCheckoutConfirm extends Controller {
             $log->write($results);
             $log->write('results');
         }
+
+        $modified_result = NULL;
+        foreach ($results as $result) {
+            $modified_result[$result['earlist_date']][] = $result;
+        }
+
         $json['data'] = $results;
+        $json['modified_result'] = $modified_result;
         $json['count'] = count($results);
         $this->response->addHeader('Content-Type: application/json');
 
