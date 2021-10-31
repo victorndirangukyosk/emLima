@@ -1368,6 +1368,12 @@ class ControllerCheckoutConfirm extends Controller {
                 $log->write('vendor_details');
                 $product_delivery_days['key'] = $product['key'];
                 $product_delivery_days['quantity'] = $product['quantity'];
+                $product_delivery_days['options'] = $product['options'];
+                $product_delivery_days['recurring_id'] = $product['recurring_id'];
+                $product_delivery_days['store_product_variation_id'] = $product['store_product_variation_id'];
+                $product_delivery_days['product_type'] = $product['product_type'];
+                $product_delivery_days['product_note'] = $product['product_note'];
+                $product_delivery_days['produce_type'] = $product['produce_type'];
                 $product_delivery_days['delivery_dates'] = $delivery_dates;
                 $oldDate = min($delivery_dates);
                 $log->write('oldDate');
@@ -1469,6 +1475,12 @@ class ControllerCheckoutConfirm extends Controller {
                 $log->write('vendor_details');
                 $product_delivery_days['key'] = $product['key'];
                 $product_delivery_days['quantity'] = $product['quantity'];
+                $product_delivery_days['options'] = $product['options'];
+                $product_delivery_days['recurring_id'] = $product['recurring_id'];
+                $product_delivery_days['store_product_variation_id'] = $product['store_product_variation_id'];
+                $product_delivery_days['product_type'] = $product['product_type'];
+                $product_delivery_days['product_note'] = $product['product_note'];
+                $product_delivery_days['produce_type'] = $product['produce_type'];
                 $product_delivery_days['delivery_dates'] = $delivery_dates;
                 $oldDate = min($delivery_dates);
                 $log->write('oldDate');
@@ -1548,6 +1560,12 @@ class ControllerCheckoutConfirm extends Controller {
                 $log->write('vendor_details');
                 $product_delivery_days['key'] = $product['key'];
                 $product_delivery_days['quantity'] = $product['quantity'];
+                $product_delivery_days['options'] = $product['options'];
+                $product_delivery_days['recurring_id'] = $product['recurring_id'];
+                $product_delivery_days['store_product_variation_id'] = $product['store_product_variation_id'];
+                $product_delivery_days['product_type'] = $product['product_type'];
+                $product_delivery_days['product_note'] = $product['product_note'];
+                $product_delivery_days['produce_type'] = $product['produce_type'];
                 $product_delivery_days['delivery_dates'] = $delivery_dates;
                 $oldDate = min($delivery_dates);
                 $log->write('oldDate');
