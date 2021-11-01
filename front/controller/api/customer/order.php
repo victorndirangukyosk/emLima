@@ -4037,7 +4037,7 @@ class ControllerApiCustomerOrder extends Controller {
                             $log->write('MOBILE transaction_details');
                             if (is_array($mpesaDetails) && count($mpesaDetails) > 0) {
 
-                                $mpesa_order_details = $this->model_account_order->getOrderByReferenceIdApi($kwikbasket_order_reference_number, $order_details['store_id']);
+                                $mpesa_order_details = $this->model_account_order->getOrderByReferenceIdStoreIdApi($kwikbasket_order_reference_number, $order_details['store_id']);
                                 $log->write($mpesa_order_details);
 
                                 if (is_array($transaction_details) && count($transaction_details) > 0) {
@@ -4049,7 +4049,7 @@ class ControllerApiCustomerOrder extends Controller {
                             }
                         }
                     } else {
-                        $cod_order_details = $this->model_account_order->getOrderByReferenceIdApi($order_details['order_reference_number'], $order_details['store_id']);
+                        $cod_order_details = $this->model_account_order->getOrderByReferenceIdStoreIdApi($order_details['order_reference_number'], $order_details['store_id']);
                         $cod_order_ids[] = $cod_order_details['order_id'];
                     }
                 }
