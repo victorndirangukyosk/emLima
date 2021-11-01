@@ -50,9 +50,14 @@ class ModelAccountCredit extends Model
 
     public function getTotalAmount()
     {
+
+
         $query = $this->db->query('SELECT SUM(amount) AS total FROM `'.DB_PREFIX."customer_credit` WHERE customer_id = '".(int) $this->customer->getId()."' GROUP BY customer_id");
+        // echo "<pre>";print_r('SELECT SUM(amount) AS total FROM `'.DB_PREFIX."customer_credit` WHERE customer_id = '".(int) $this->customer->getId()."' GROUP BY customer_id");die;
 
         if ($query->num_rows) {
+        //   echo "<pre>";print_r($query->row['total']);die;
+
             return $query->row['total'];
         } else {
             return 0;

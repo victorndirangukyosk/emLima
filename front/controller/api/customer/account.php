@@ -720,4 +720,28 @@ class ControllerApiCustomerAccount extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function getWalletTotal() {
+        $total = 0;
+        // if (!$this->customer->isLogged()) {
+        //     $this->session->data['redirect'] = $this->url->link('account/credit', '', 'SSL');
+
+        //     $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+        // } 
+        $this->load->model('account/credit');         
+
+        $result = $this->model_account_credit->getTotalAmount();       
+        $total=$this->currency->format($result, $this->config->get('config_currency'));
+       
+        // echo "<pre>";print_r($total);die; 
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] =  $total;
+        $json['message'] = [];
+       
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
