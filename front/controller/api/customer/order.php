@@ -4038,7 +4038,7 @@ class ControllerApiCustomerOrder extends Controller {
                         $log->write($mpesa_order_details);
 
                         if (is_array($transaction_details) && count($transaction_details) > 0) {
-                            $this->model_payment_mpesa->updateMpesaOrderTransaction($mpesa_order_details['order_id'], $kwikbasket_order_reference_number, $MpesaReceiptNumber);
+                            $this->model_payment_mpesa->updateMpesaOrderTransactionWithOrderId($mpesa_order_details['order_id'], $kwikbasket_order_reference_number);
                         }
 
                         $this->model_checkout_order->addOrderHistory($mpesa_order_details['order_id'], $this->config->get('mpesa_order_status_id'), 'MPESA ORDER', true, $this->customer->getId(), 'customer', null, 'Y');

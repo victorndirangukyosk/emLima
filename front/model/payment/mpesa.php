@@ -290,4 +290,8 @@ class ModelPaymentMpesa extends Model {
         return $result;
     }
 
+    public function updateMpesaOrderTransactionWithOrderId($order_id, $order_reference_number) {
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order_transaction_id` SET `order_id` = "' . $this->db->escape($order_id) . '" where order_reference_number="' . $order_reference_number . '"');
+    }
+
 }
