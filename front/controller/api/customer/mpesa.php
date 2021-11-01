@@ -348,6 +348,12 @@ class ControllerApiCustomerMpesa extends Controller {
                 }
 
                 if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
+                    $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($mpesaDetails['order_reference_number']);
+
+                    if (is_array($transaction_details) && count($transaction_details) <= 0) {
+                        $this->model_payment_mpesa->insertMpesaOrderTransaction($mpesaDetails['order_id'], $mpesaDetails['order_reference_number'], $stkPushSimulation->CheckoutRequestID);
+                    }
+
                     $json['status'] = true;
                     $json['message'] = 'Payment Successfull.';
                     $json['mpesa_response'] = $stkPushSimulation;

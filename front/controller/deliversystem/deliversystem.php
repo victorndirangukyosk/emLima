@@ -1189,7 +1189,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             foreach ($manifest_id as $manifest_ids) {
 
                 $log->write($manifest_ids['order_reference_number']);
-                $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($manifest_ids['order_id'], $manifest_ids['order_reference_number']);
+                $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($manifest_ids['order_reference_number']);
                 $log->write('CALLBACK TRANSACTION DETAILS');
                 $log->write($transaction_details);
                 $log->write('CALLBACK TRANSACTION DETAILS');
@@ -1202,6 +1202,12 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                         if ('MpesaReceiptNumber' == $value->Name) {
                             $MpesaReceiptNumber = $value->Value;
+                            if (is_array($transaction_details) && count($transaction_details) <= 0) {
+                                $this->model_payment_mpesa->insertMpesaOrderTransaction($manifest_ids['order_id'], $manifest_ids['order_reference_number'], $MpesaReceiptNumber);
+                            }
+                            if (is_array($transaction_details) && count($transaction_details) > 0) {
+                                $this->model_payment_mpesa->updateMpesaOrderTransaction($manifest_ids['order_id'], $manifest_ids['order_reference_number'], $MpesaReceiptNumber);
+                            }
                             //$this->model_payment_mpesa->insertMobileCheckoutOrderTransactionId($manifest_ids['order_reference_number'], $value->Value);
                             $this->model_payment_mpesa->updateMpesaOrderByMerchant($manifest_ids['order_id'], $value->Value, $stkCallback->stkCallback->CheckoutRequestID);
                         }
