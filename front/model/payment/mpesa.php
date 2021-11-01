@@ -76,7 +76,7 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function updateOrderIdMpesaOrder($order_id, $mpesa_receipt_number) {
-        $this->db->query('UPDATE `' . DB_PREFIX . 'mpesa_order` SET `order_id` = ' . $this->db->escape($order_id) . " where mpesa_receipt_number='" . $mpesa_receipt_number . "'");
+        $this->db->query('UPDATE `' . DB_PREFIX . 'mpesa_order` SET `order_id` = ' . $this->db->escape($order_id) . " where order_reference_number='" . $mpesa_receipt_number . "'");
     }
 
     public function getMpesaOrder($request_id) {
