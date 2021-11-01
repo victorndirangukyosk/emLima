@@ -286,7 +286,7 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function getOrderTransactionDetails($order_id, $order_reference_number) {
-        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_transaction_id` WHERE `order_id` = '" . $this->db->escape($order_id) . "' OR `order_reference_number` = '" . $this->db->escape($order_reference_number) . "'")->rows;
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_transaction_id` WHERE `order_id` = '" . $this->db->escape($order_id) . "' AND `order_reference_number` = '" . $this->db->escape($order_reference_number) . "'")->rows;
         return $result;
     }
 
