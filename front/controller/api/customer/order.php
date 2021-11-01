@@ -4017,34 +4017,43 @@ class ControllerApiCustomerOrder extends Controller {
             } elseif ('mpesa' == $args['payment_method_code']) {
                 //save for refrence id correct order id
                 $log = new Log('error.log');
+                $cod_order_ids = NULL;
+                foreach ($order_ids as $order_id) {
+                    $order_details = $this->model_account_order->getOrderDetailsById($order_id);
+                    if ($order_details['store_id'] == 75) {
+                        $kwikbasket_order_reference_number = $order_data[$order_details['store_id']]['order_reference_number'];
+                        $log->write($kwikbasket_order_reference_number);
 
-                $kwikbasket_order_reference_number = $order_data[75]['order_reference_number'];
-                $log->write($kwikbasket_order_reference_number);
+                        if ($kwikbasket_order_reference_number != NULL) {
+                            $this->load->model('payment/mpesa');
+                            $this->load->model('account/order');
+                            $this->load->model('checkout/order');
 
-                if ($kwikbasket_order_reference_number != NULL) {
-                    $this->load->model('payment/mpesa');
-                    $this->load->model('account/order');
-                    $this->load->model('checkout/order');
+                            $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($kwikbasket_order_reference_number);
+                            $log->write($mpesaDetails);
+                            $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($kwikbasket_order_reference_number);
+                            $log->write('MOBILE transaction_details');
+                            $log->write($transaction_details);
+                            $log->write('MOBILE transaction_details');
+                            if (is_array($mpesaDetails) && count($mpesaDetails) > 0) {
 
-                    $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($kwikbasket_order_reference_number);
-                    $log->write($mpesaDetails);
-                    $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($kwikbasket_order_reference_number);
-                    $log->write('MOBILE transaction_details');
-                    $log->write($transaction_details);
-                    $log->write('MOBILE transaction_details');
-                    if (is_array($mpesaDetails) && count($mpesaDetails) > 0) {
+                                $mpesa_order_details = $this->model_account_order->getOrderByReferenceIdApi($kwikbasket_order_reference_number, $order_details['store_id']);
+                                $log->write($mpesa_order_details);
 
-                        $mpesa_order_details = $this->model_account_order->getOrderByReferenceIdApi($kwikbasket_order_reference_number);
-                        $log->write($mpesa_order_details);
+                                if (is_array($transaction_details) && count($transaction_details) > 0) {
+                                    $this->model_payment_mpesa->updateMpesaOrderTransactionWithOrderId($mpesa_order_details['order_id'], $kwikbasket_order_reference_number);
+                                }
 
-                        if (is_array($transaction_details) && count($transaction_details) > 0) {
-                            $this->model_payment_mpesa->updateMpesaOrderTransactionWithOrderId($mpesa_order_details['order_id'], $kwikbasket_order_reference_number);
+                                $this->model_checkout_order->addOrderHistory($mpesa_order_details['order_id'], $this->config->get('mpesa_order_status_id'), 'MPESA ORDER', true, $this->customer->getId(), 'customer', null, 'Y');
+                                $this->model_payment_mpesa->updateMpesaOrder($mpesa_order_details['order_id'], $mpesaDetails['mpesa_receipt_number']);
+                            }
                         }
-
-                        $this->model_checkout_order->addOrderHistory($mpesa_order_details['order_id'], $this->config->get('mpesa_order_status_id'), 'MPESA ORDER', true, $this->customer->getId(), 'customer', null, 'Y');
-                        $this->model_payment_mpesa->updateMpesaOrder($mpesa_order_details['order_id'], $mpesaDetails['mpesa_receipt_number']);
+                    } else {
+                        $cod_order_details = $this->model_account_order->getOrderByReferenceIdApi($order_details['order_reference_number'], $order_details['store_id']);
+                        $cod_order_ids[] = $cod_order_details['order_id'];
                     }
                 }
+                $this->load->controller('payment/cod/apiConfirm', $cod_order_ids);
             } elseif ('interswitch' == $args['payment_method_code']) {
                 $log = new Log('error.log');
                 $log->write('args');
