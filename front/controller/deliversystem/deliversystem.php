@@ -1203,7 +1203,6 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         if ('MpesaReceiptNumber' == $value->Name) {
                             $MpesaReceiptNumber = $value->Value;
                             //$this->model_payment_mpesa->insertMobileCheckoutOrderTransactionId($manifest_ids['order_reference_number'], $value->Value);
-                            $this->model_payment_mpesa->insertupdateMpesaOrderTransaction($manifest_ids['order_id'], $value->Value, $manifest_ids['order_reference_number']);
                             $this->model_payment_mpesa->updateMpesaOrderByMerchant($manifest_ids['order_id'], $value->Value, $stkCallback->stkCallback->CheckoutRequestID);
                         }
                     }
