@@ -1594,6 +1594,7 @@ class ModelReportExcel extends Model {
 
             // Individual customer orders
             $sheetIndex = 1;
+            $delivery_charge=0;$delivery_charge_vat=0;
             foreach ($data['orders'] as $order) {
                 $objPHPExcel->createSheet($sheetIndex);
                 $objPHPExcel->setActiveSheetIndex($sheetIndex);
@@ -1604,7 +1605,8 @@ class ModelReportExcel extends Model {
                 if (strlen($worksheetName) > 30) {
                     $worksheetName = substr($worksheetName, 0, 27) . '...';
                 }
-
+                $delivery_charge=$order['delivery_charge'];
+                $delivery_charge_vat=$order['delivery_charge_vat'];
                 $objPHPExcel->getActiveSheet()->setTitle($worksheetName);
 
                 $sheet_title = $worksheetName . ' Order #' . $order['order_id'];
@@ -1667,18 +1669,47 @@ class ModelReportExcel extends Model {
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $product['quantity_updated']);
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $product['unit_updated']);
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $product['price']);
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $product['total_updated']);
+                    // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $product['total_updated']);
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $product['total']);
 
-                    $totalOrderAmount += $product['total_updatedvalue'];
+                    // $totalOrderAmount += $product['total_updatedvalue'];
+                    $totalOrderAmount += $product['total_value'];
 
                     ++$row;
                 }
+                if(isset($delivery_charge))
+                {
+                    $totalOrderAmountFull = $totalOrderAmount +$delivery_charge_vat+$delivery_charge;
+
+                }
+                else {
+                    $totalOrderAmountFull = $totalOrderAmount;
+                    
+                }
                 $totalOrderAmount = $this->currency->format($totalOrderAmount);
-                $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, $row)->applyFromArray($title);
-                $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, $row)->applyFromArray($title);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, 'Total');
+                $totalOrderAmountFull = $this->currency->format($totalOrderAmountFull);
+                $delivery_charge = $this->currency->format($delivery_charge);
+                $delivery_charge_vat = $this->currency->format($delivery_charge_vat);
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, 'Sub-Total ');
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $totalOrderAmount);
 
+                // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, $row)->applyFromArray('');
+                // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, $row)->applyFromArray('');
+                ++$row;
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, 'Standard Delivery ');
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $delivery_charge);
+
+                ++$row;
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, 'VAT on Standard Delivery ');
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $delivery_charge_vat);
+
+                ++$row;
+                $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, $row)->applyFromArray($title);
+                $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, $row)->applyFromArray($title);
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, 'Total ');
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $totalOrderAmountFull);
                 ++$sheetIndex;
             }
 
