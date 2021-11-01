@@ -4034,8 +4034,6 @@ class ControllerApiCustomerOrder extends Controller {
                     $log->write('MOBILE transaction_details');
                     if (is_array($mpesaDetails) && count($mpesaDetails) > 0) {
 
-
-
                         $mpesa_order_details = $this->model_account_order->getOrderByReferenceIdApi($kwikbasket_order_reference_number);
                         $log->write($mpesa_order_details);
 
