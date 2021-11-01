@@ -282,7 +282,7 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function updateMpesaOrderTransaction($order_id, $order_reference_number, $receipt_number) {
-        $this->db->query('UPDATE `' . DB_PREFIX . 'order_transaction_id` SET `transaction_id` = "' . $this->db->escape($receipt_number) . '" where order_reference_number="' . $order_reference_number . '" AND order_id ="' . (int) $order_id . '"');
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order_transaction_id` SET `transaction_id` = "' . $this->db->escape($receipt_number) . '" where order_reference_number="' . $order_reference_number . '" AND order_id =' . (int) $order_id);
     }
 
     public function getOrderTransactionDetails($order_reference_number) {
