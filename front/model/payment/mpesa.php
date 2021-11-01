@@ -285,8 +285,8 @@ class ModelPaymentMpesa extends Model {
         $this->db->query('UPDATE `' . DB_PREFIX . 'order_transaction_id` SET `transaction_id` = "' . $this->db->escape($receipt_number) . '" where order_reference_number="' . $order_reference_number . '" AND order_id ="' . $order_id . "'");
     }
 
-    public function getOrderTransactionDetails($order_id, $order_reference_number) {
-        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_transaction_id` WHERE `order_id` = '" . $this->db->escape($order_id) . "' AND `order_reference_number` = '" . $this->db->escape($order_reference_number) . "'")->rows;
+    public function getOrderTransactionDetails($order_reference_number) {
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_transaction_id` WHERE `order_reference_number` = '" . $this->db->escape($order_reference_number) . "'")->rows;
         return $result;
     }
 
