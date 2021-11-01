@@ -68,7 +68,7 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function updateMpesaOrder($order_id, $mpesa_receipt_number) {
-        $this->db->query('UPDATE `' . DB_PREFIX . 'mpesa_order` SET `mpesa_receipt_number` = ' . $this->db->escape($mpesa_receipt_number) . ' where order_id=' . $order_id);
+        $this->db->query('UPDATE `' . DB_PREFIX . 'mpesa_order` SET `mpesa_receipt_number` = "' . $this->db->escape($mpesa_receipt_number) . '" where order_id=' . $order_id);
     }
 
     public function updateMpesaOrderByMerchant($order_id, $mpesa_receipt_number, $checkout_request_id) {
@@ -282,7 +282,7 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function updateMpesaOrderTransaction($order_id, $order_reference_number, $receipt_number) {
-        $this->db->query('UPDATE `' . DB_PREFIX . 'order_transaction_id` SET `transaction_id` = "' . $this->db->escape($receipt_number) . '" where order_reference_number="' . $order_reference_number . '" AND order_id ="' . (int) $order_id . '"');
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order_transaction_id` SET `transaction_id` = "' . $this->db->escape($receipt_number) . '" where order_reference_number="' . $order_reference_number . '" AND order_id =' . (int) $order_id);
     }
 
     public function getOrderTransactionDetails($order_reference_number) {
