@@ -5215,7 +5215,7 @@ class ControllerSaleOrder extends Controller {
 
         //$this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
-
+    //modified to add delivery charge ,tax,VAT on delivery
     public function consolidatedCalculationSheet() {
         $deliveryDate = $this->request->get['filter_delivery_date'];
 
@@ -5237,6 +5237,8 @@ class ControllerSaleOrder extends Controller {
 
             $sub_total = 0;
             $total = 0;
+            $delivery_charge = 0;
+            $delivery_charge_vat = 0;
 
             $totals = $this->model_sale_order->getOrderTotals($order['order_id']);
 
@@ -5245,26 +5247,41 @@ class ControllerSaleOrder extends Controller {
                 if ('sub_total' == $total['code']) {
                     $sub_total = $total['value'];
                     //break;
+                }           
+                if ('shipping' == $total['code']) {
+                    $delivery_charge = $total['value'];
+                    
                 }
                 if ('total' == $total['code']) {
-                    $total = $total['value'];
-                    break;
+                    $total_full = $total['value'];
+                    
+                }
+                if ('delivery_vat' == $total['code']) {
+                    $delivery_charge_vat = $total['value'];
+                    
                 }
             }
+            // echo "<pre>";print_r($total);die;
 
             $data['consolidation'][] = [
                 'delivery_date' => date("d-m-Y", strtotime($order['delivery_date'])),
                 'customer' => $order['customer'], //. ' Order#' . $order['order_id'],
                 'company_name' => $order['company_name'],
                 //'amount' => $order['total'],
-                'amount' => $total,
+                'amount' => $total_full,
+                'delivery_charge' => $delivery_charge,
+                'delivery_charge_vat' => $delivery_charge_vat,
                 'SAP_customer_no' => $order['SAP_customer_no'],
                 'invoice_no' => 'KB' . $order['order_id'],
                 'SAP_document_no' => '',
                 'order_status' => $order['status'],
             ];
             // $totalOrdersAmount += $order['total'];
+
+
         }
+        // echo "<pre>";print_r($data['consolidation']);die;
+
         // $data['consolidation']['total'] = $totalOrdersAmount; 
 
         foreach ($results as $index => $order) {
@@ -5273,27 +5290,33 @@ class ControllerSaleOrder extends Controller {
             $data['orders'][$index] = $order;
             $orderProducts = $this->getOrderProductsWithVariancesNew($data['orders'][$index]['order_id']);
 
-            $transaction_fee = $this->model_sale_order->getOrderTransactionFee($data['orders'][$index]['order_id']);
-            if (is_array($transaction_fee) && count($transaction_fee) > 0 && $transaction_fee['order_id'] == $data['orders'][$index]['order_id']) {
-                $tran_fee = $transaction_fee['value'];
+            // $transaction_fee = $this->model_sale_order->getOrderTransactionFee($data['orders'][$index]['order_id']);
+            // if (is_array($transaction_fee) && count($transaction_fee) > 0 && $transaction_fee['order_id'] == $data['orders'][$index]['order_id']) {
+            //     $tran_fee = $transaction_fee['value'];
 
-                /* $log = new Log('error.log');
-                  $log->write('transaction_fee');
-                  $log->write($tran_fee);
-                  $log->write($transaction_fee);
-                  $log->write('transaction_fee'); */
-            }
+            //     /* $log = new Log('error.log');
+            //       $log->write('transaction_fee');
+            //       $log->write($tran_fee);
+            //       $log->write($transaction_fee);
+            //       $log->write('transaction_fee'); */
+            // }
 
 
             $data['orders'][$index]['products'] = $orderProducts;
+                /*
+            // foreach ($orderProducts as $item) {
+            //     $sum += $item['total_updatedvalue'];
+            // }
+            // $data['consolidation'][$index]['amount'] = $sum + $tran_fee;
+            // $totalOrdersAmount += $sum + $tran_fee;
+            */ //these lines commented to add delivery charge and no transaction fee
+            $totalOrdersAmount +=$data['consolidation'][$index]['amount'];
 
-            foreach ($orderProducts as $item) {
-                $sum += $item['total_updatedvalue'];
-            }
-            $data['consolidation'][$index]['amount'] = $sum + $tran_fee;
-            $totalOrdersAmount += $sum + $tran_fee;
+           $data['orders'][$index]['delivery_charge']=$data['consolidation'][$index]['delivery_charge'];
+           $data['orders'][$index]['delivery_charge_vat']=$data['consolidation'][$index]['delivery_charge_vat'];
         }
         $data['consolidation']['total'] = $totalOrdersAmount;
+
         //   echo "<pre>";print_r($data);die;
 
         $this->load->model('report/excel');
@@ -5429,6 +5452,7 @@ class ControllerSaleOrder extends Controller {
                 'total_updated_currency' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[0]),
                 'total_updated_value' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[1]),
                 'total_updatedvalue' => $totalUpdated,
+                'total_value' => $originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0),
             ];
         }
 
