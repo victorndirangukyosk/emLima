@@ -252,9 +252,10 @@ class ControllerApiCustomerWallet extends Controller
 
         $json = [];
 
-        if (!isset($this->session->data['api_id'])) {
-            $json['error'] = $this->language->get('error_permission');
-        } else {
+        // if (!isset($this->session->data['api_id'])) {
+        //     $json['error'] = $this->language->get('error_permission');
+        // } else 
+        {
             $this->load->model('tool/image');
             $this->load->model('api/wallet');
 

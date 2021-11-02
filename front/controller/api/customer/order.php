@@ -2770,7 +2770,7 @@ class ControllerApiCustomerOrder extends Controller {
                         //         $product_info['special_price'] = false;
                         //     }
                         // } else
-                         {
+                        {
                             $s_price = $product_info['special_price'];
                             $o_price = $product_info['price'];
                             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -2936,14 +2936,12 @@ class ControllerApiCustomerOrder extends Controller {
                         //     //get price html
                         //     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                         //         $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
-
                         //         $o_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
                         //     } else {
                         //         $product_info['price'] = false;
                         //     }
                         //     if ((float) $product_info['special_price']) {
                         //         $product_info['special_price'] = $this->currency->format($this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
-
                         //         $s_price = $this->tax->calculate($product_info['special_price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
                         //     } else {
                         //         $product_info['special_price'] = false;
@@ -3888,8 +3886,14 @@ class ControllerApiCustomerOrder extends Controller {
                     $order_data[$store_id]['forwarded_ip'] = '';
                 }
 
-                if (isset($args['order_reference_number'])) {
-                    $order_data[$store_id]['order_reference_number'] = $args['order_reference_number'];
+                /* if (isset($args['order_reference_number'])) {
+                  $order_data[$store_id]['order_reference_number'] = $args['order_reference_number'];
+                  } else {
+                  $order_data[$store_id]['order_reference_number'] = '';
+                  } */
+
+                if (isset($args['stores'][$store_id]['order_reference_number']) && strlen($args['stores'][$store_id]['order_reference_number']) > 0) {
+                    $order_data[$store_id]['order_reference_number'] = $args['stores'][$store_id]['order_reference_number'];
                 } else {
                     $order_data[$store_id]['order_reference_number'] = '';
                 }
@@ -4019,26 +4023,49 @@ class ControllerApiCustomerOrder extends Controller {
             } elseif ('mpesa' == $args['payment_method_code']) {
                 //save for refrence id correct order id
                 $log = new Log('error.log');
+                $cod_order_ids = NULL;
+                foreach ($order_ids as $order_id) {
+                    $order_details = $this->model_account_order->getOrderDetailsById($order_id);
+                    if ($order_details['store_id'] == 75) {
+                        $kwikbasket_order_reference_number = $order_data[$order_details['store_id']]['order_reference_number'];
+                        $log->write($kwikbasket_order_reference_number);
 
-                $kwikbasket_order_reference_number = $order_data[75]['order_reference_number'];
-                $log->write($kwikbasket_order_reference_number);
+                        if ($kwikbasket_order_reference_number != NULL) {
+                            $this->load->model('payment/mpesa');
+                            $this->load->model('account/order');
+                            $this->load->model('checkout/order');
 
-                if ($kwikbasket_order_reference_number != NULL) {
-                    $this->load->model('payment/mpesa');
-                    $this->load->model('account/order');
-                    $this->load->model('checkout/order');
+                            $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($kwikbasket_order_reference_number);
+                            $log->write('add order new mpesaDetails');
+                            $log->write($mpesaDetails);
+                            $log->write('add order new mpesaDetails');
+                            $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($kwikbasket_order_reference_number);
+                            $log->write('MOBILE transaction_details');
+                            $log->write($transaction_details);
+                            $log->write('MOBILE transaction_details');
+                            if (is_array($mpesaDetails) && count($mpesaDetails) > 0) {
 
-                    $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($kwikbasket_order_reference_number);
-                    $log->write($mpesaDetails);
+                                $mpesa_order_details = $this->model_account_order->getOrderByReferenceIdStoreIdApi($kwikbasket_order_reference_number, $order_details['store_id']);
+                                $log->write($mpesa_order_details);
 
-                    if (is_array($mpesaDetails) && count($mpesaDetails) > 0) {
-                        $mpesa_order_details = $this->model_account_order->getOrderByReferenceIdApi($kwikbasket_order_reference_number);
-                        $log->write($mpesa_order_details);
+                                if (is_array($transaction_details) && count($transaction_details) > 0) {
+                                    $this->model_payment_mpesa->updateMpesaOrderTransactionWithOrderId($mpesa_order_details['order_id'], $kwikbasket_order_reference_number);
+                                }
 
-                        $this->model_checkout_order->addOrderHistory($mpesa_order_details['order_id'], $this->config->get('mpesa_order_status_id'));
-                        $this->model_payment_mpesa->updateMpesaOrder($mpesa_order_details['order_id'], $mpesaDetails['mpesa_receipt_number']);
+                                $this->model_checkout_order->addOrderHistory($mpesa_order_details['order_id'], $this->config->get('mpesa_order_status_id'), 'MPESA ORDER', true, $this->customer->getId(), 'customer', null, 'Y');
+                                $this->model_payment_mpesa->updateMpesaOrder($mpesa_order_details['order_id'], $mpesaDetails['mpesa_receipt_number']);
+                            }
+                        }
+                    } else {
+                        $cod_order_details = $this->model_account_order->getOrderByReferenceIdStoreIdApi($order_details['order_reference_number'], $order_details['store_id']);
+                        $cod_order_ids[] = $cod_order_details['order_id'];
                     }
                 }
+                $this->load->controller('payment/cod/apiConfirm', $cod_order_ids);
+                $json['status'] = 200;
+                $json['msg'] = 'Order placed Successfully';
+                unset($this->session->data['accept_vendor_terms']);
+                $this->cart->clear();
             } elseif ('interswitch' == $args['payment_method_code']) {
                 $log = new Log('error.log');
                 $log->write('args');
@@ -4064,11 +4091,16 @@ class ControllerApiCustomerOrder extends Controller {
                         }
                     }
                 }
+                $json['status'] = 200;
+                $json['msg'] = 'Order placed Successfully';
+                unset($this->session->data['accept_vendor_terms']);
+                $this->cart->clear();
             } else {
                 $data['payment'] = $this->load->controller('payment/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
                 unset($this->session->data['accept_vendor_terms']);
+                $this->cart->clear();
             }
 
             foreach ($order_ids as $key => $value) {
@@ -4090,6 +4122,9 @@ class ControllerApiCustomerOrder extends Controller {
             $json['data']['status'] = false;
         }
 
+        $log->write('ordernew json');
+        $log->write($json);
+        $log->write('ordernew json');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
