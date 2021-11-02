@@ -247,12 +247,12 @@ class ControllerPaymentMpesa extends Controller {
                 $PartyB = $this->config->get('mpesa_business_short_code');
 
                 $PhoneNumber = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
-                $AccountReference = $this->customer->getId().'WALLET_TOPUP'; //$this->config->get('config_name');
+                $AccountReference = $this->customer->getId() . 'WALLET_TOPUP'; //$this->config->get('config_name');
                 if (is_array($this->request->post['pending_order_ids']) && count($this->request->post['pending_order_ids']) > 0) {
-                    $AccountReference = "#".implode('#', $this->request->post['pending_order_ids']);
+                    $AccountReference = "#" . implode('#', $this->request->post['pending_order_ids']);
                 }
                 if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
-                    $AccountReference = "#".implode('#', $this->request->post['order_id']);
+                    $AccountReference = "#" . implode('#', $this->request->post['order_id']);
                 }
 
                 $TransactionDesc = '#' . $this->request->post['pending_order_ids'] . '##' . $this->customer->getId();
@@ -395,6 +395,10 @@ class ControllerPaymentMpesa extends Controller {
                  */
 
                 if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
+                    $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($order_id);
+                    if ($transaction_details == NULL) {
+                        $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
+                    }
                     //success pending to processing
                     $order_status_id = $this->config->get('mpesa_order_status_id');
 
@@ -570,7 +574,10 @@ class ControllerPaymentMpesa extends Controller {
                         $order_info = $this->model_checkout_order->getOrder($order_id);
                         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
                         //SKIPPNG HERE UPDATING CheckoutRequestID..BUT WE NEED TO UPDATE RECEIPT NUMBER
-                        //$this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
+                        $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($order_id);
+                        if ($transaction_details == NULL) {
+                            $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
+                        }
                         $this->model_payment_mpesa->addOrderHistoryTransaction($order_id, $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
                         $json['status'] = true;
                         $json['redirect'] = $this->url->link('account/transactions');
