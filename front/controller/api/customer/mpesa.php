@@ -375,9 +375,11 @@ class ControllerApiCustomerMpesa extends Controller {
 
 
     protected function validatetopup($data) {
+        // ['payment_type'] == 'topup'
         if (empty($data['payment_method'])) {
             $this->error['payment_method'] = 'Payment method required!';
         }
+
 
         if (empty($data['payment_method_code'])) {
             $this->error['payment_method_code'] = 'Payment method code required!';
@@ -389,6 +391,10 @@ class ControllerApiCustomerMpesa extends Controller {
 
         if (empty($data['customer_id'])) {
             $this->error['customer_id'] = 'Customer ID required!';
+        }
+
+        if (empty($data['customer_reference_number'])) {
+            $this->error['customer_reference_number'] = 'Customer reference number required!';
         }
 
         if (empty($data['amount'])) {
@@ -419,7 +425,7 @@ class ControllerApiCustomerMpesa extends Controller {
             $customer_id = $data['customer_id'];
             $number = $data['mpesa_phonenumber'];
             $amount = $data['amount'];
-
+            $order_reference_number= $data['customer_reference_number'];//order_reference_number
             $log = new Log('error.log');
 
             $log->write($data);
@@ -436,12 +442,15 @@ class ControllerApiCustomerMpesa extends Controller {
                 $BusinessShortCode = $this->config->get('mpesa_business_short_code');
                 $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
                 $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';    
-                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesamobileOrderStatusTransactionss', '', 'SSL');
+                // $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesamobileOrderStatusTransactionss', '', 'SSL');mpesaOrderStatus
+                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesamobileTopupStatus', '', 'SSL');
                 $Amount = $amount;
                 $PartyB = $this->config->get('mpesa_business_short_code');
                 $PhoneNumber = $this->config->get('config_telephone_code') . '' . $number;
                 //$AccountReference = 'GPK'; //$this->config->get('config_name');
-                $AccountReference = "#" . $customer_id; //$this->config->get('config_name');
+                
+                $AccountReference = $this->customer->getId().'WALLET_TOPUP';
+                // $AccountReference = "#" . $order_reference_number; //$this->config->get('config_name');
                 $TransactionDesc = "#" . $customer_id;
                 $Remarks = 'Wallet TOPUP';
                 $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
@@ -455,7 +464,9 @@ class ControllerApiCustomerMpesa extends Controller {
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
                 //save in
                 $order_info['order_id'] = 0;
-                $this->model_payment_mpesa->addOrderMobile($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), 0, $order_reference_number);
+                $this->model_payment_mpesa->addOrderMobile($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), $Amount, $order_reference_number);
+                // $this->model_payment_mpesa->addOrder(0, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), $amount);
+                
                 $json['status'] = true;
                 $json['message'] = sprintf($this->language->get('text_sms_sent'), $number);
             } else {
@@ -486,9 +497,10 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
 
-        if ($this->validatecheckout($data)) {
+        if ($this->validatetopup($data)) {
             $customer_id = $data['customer_id'];
             $number = $data['mpesa_phonenumber'];
+            $order_reference_number = $data['customer_reference_number'];
             $log = new Log('error.log');
             $log->write($data);
 
@@ -528,6 +540,12 @@ class ControllerApiCustomerMpesa extends Controller {
                         $this->model_payment_mpesa->insertMpesaOrderTransaction($mpesaDetails['order_id'], $mpesaDetails['order_reference_number'], $stkPushSimulation->CheckoutRequestID);
                     }
 
+
+                    // $this->model_payment_mpesa->insertCustomerTransactionId($customer_id, $stkPushSimulation->CheckoutRequestID);
+                    // // $this->model_payment_mpesa->addOrderHistoryTransaction($order_id, $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
+                    // $this->model_payment_mpesa->addCustomerHistoryTransaction($customer_id, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $stkPushSimulation->MerchantRequestID);
+                   
+
                     $json['status'] = true;
                     $json['message'] = 'Topup Successfull.';
                     $json['mpesa_response'] = $stkPushSimulation;
@@ -547,5 +565,7 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+ 
 
 }
