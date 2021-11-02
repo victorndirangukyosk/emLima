@@ -242,6 +242,9 @@ class ControllerApiCustomerMpesa extends Controller {
                 $log->write('key' . ' ' . 'order_reference_number');
 
                 if ($key == 75) {
+                    $log->write('key' . ' ' . 'order_reference_number');
+                    $log->write($key . ' ' . $order_reference_number);
+                    $log->write('key' . ' ' . 'order_reference_number');
                     $order_reference_number = $order_reference_number;
                     $number = $data['mpesa_phonenumber'];
 
@@ -322,9 +325,9 @@ class ControllerApiCustomerMpesa extends Controller {
         if ($this->validatecheckout($data)) {
             foreach ($data['order_reference_number'] as $key => $order_reference_number) {
                 $log = new Log('error.log');
-                $log->write('key' . ' ' . 'order_reference_number');
+                $log->write('COMPLETE key' . ' ' . 'order_reference_number');
                 $log->write($key . ' ' . $order_reference_number);
-                $log->write('key' . ' ' . 'order_reference_number');
+                $log->write('COMPLETE key' . ' ' . 'order_reference_number');
 
                 if ($key == 75) {
                     $order_reference_number = $order_reference_number;
