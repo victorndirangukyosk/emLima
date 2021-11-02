@@ -4031,7 +4031,9 @@ class ControllerApiCustomerOrder extends Controller {
                             $this->load->model('checkout/order');
 
                             $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($kwikbasket_order_reference_number);
+                            $log->write('add order new mpesaDetails');
                             $log->write($mpesaDetails);
+                            $log->write('add order new mpesaDetails');
                             $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($kwikbasket_order_reference_number);
                             $log->write('MOBILE transaction_details');
                             $log->write($transaction_details);
