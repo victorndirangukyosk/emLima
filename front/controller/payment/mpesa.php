@@ -396,6 +396,9 @@ class ControllerPaymentMpesa extends Controller {
 
                 if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
                     $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($order_id);
+                    $log->write('transaction_details');
+                    $log->write($transaction_details);
+                    $log->write('transaction_details');
                     if ($transaction_details == NULL) {
                         $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
                     }
