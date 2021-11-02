@@ -3887,7 +3887,8 @@ class ControllerApiCustomerOrder extends Controller {
                 }
 
                 if (isset($args['order_reference_number'])) {
-                    $order_data[$store_id]['order_reference_number'] = $args['order_reference_number'];
+                    //$order_data[$store_id]['order_reference_number'] = $args['order_reference_number'];
+                    $order_data[$store_id]['order_reference_number'] = $args['stores'][$store_id]['order_reference_number'];
                 } else {
                     $order_data[$store_id]['order_reference_number'] = '';
                 }
