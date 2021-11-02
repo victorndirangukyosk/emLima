@@ -105,7 +105,7 @@ class ControllerApiCustomerMpesa extends Controller {
             $this->error['mpesa_phonenumber'] = 'Phone number required!';
         }
 
-        if (empty($data['orders'])) {
+        if (empty($data['orders']) || !is_array($data['orders'])) {
             $this->error['error_orders'] = 'Order(s) required!';
         }
         return !$this->error;
