@@ -204,7 +204,10 @@ class ControllerApiCustomerMpesa extends Controller {
 
                         $order_info = $this->model_checkout_order->getOrder($order_id);
                         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-                        $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
+                        $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($order_id);
+                        if ($transaction_details == NULL) {
+                            $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
+                        }
                         $this->model_payment_mpesa->addOrderHistoryTransaction($order_id, $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
                         $json['status'] = true;
                         $json['message'] = 'Payment Successfull.';
