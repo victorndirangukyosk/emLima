@@ -320,50 +320,59 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->load->model('account/customer');
 
         if ($this->validatecheckout($data)) {
-            $order_reference_number = $data['order_reference_number'];
-            $number = $data['mpesa_phonenumber'];
-            $log = new Log('error.log');
-            $log->write($data);
+            foreach ($data['order_reference_number'] as $key => $order_reference_number) {
+                $log = new Log('error.log');
+                $log->write('key' . ' ' . 'order_reference_number');
+                $log->write($key . ' ' . $order_reference_number);
+                $log->write('key' . ' ' . 'order_reference_number');
 
-            $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($order_reference_number);
+                if ($key == 75) {
+                    $order_reference_number = $order_reference_number;
+                    $number = $data['mpesa_phonenumber'];
+                    $log = new Log('error.log');
+                    $log->write($data);
 
-            $live = true;
+                    $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($order_reference_number);
 
-            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+                    $live = true;
 
-            if ($mpesaDetails) {
+                    $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
 
-                $BusinessShortCode = $this->config->get('mpesa_business_short_code');
-                $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+                    if ($mpesaDetails) {
 
-                $checkoutRequestID = $mpesaDetails['checkout_request_id']; //'ws_CO_28032018142406660';
-                $timestamp = '20' . date('ymdhis');
-                $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+                        $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+                        $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
 
-                $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
+                        $checkoutRequestID = $mpesaDetails['checkout_request_id']; //'ws_CO_28032018142406660';
+                        $timestamp = '20' . date('ymdhis');
+                        $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
 
-                // Void the order first
-                $log->write('COMPLETE STKPushSimulation');
-                $log->write($stkPushSimulation);
+                        $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
 
-                $stkPushSimulation = json_decode($stkPushSimulation);
-                $log->write('COMPLETE STKPushSimulation JSON ARRAY');
-                $log->write($stkPushSimulation);
-                if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
-                    $json['error'] = $stkPushSimulation->ResultDesc;
-                    $json['mpesa_response'] = $stkPushSimulation;
-                }
+                        // Void the order first
+                        $log->write('COMPLETE STKPushSimulation');
+                        $log->write($stkPushSimulation);
 
-                if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
-                    $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($mpesaDetails['order_reference_number']);
+                        $stkPushSimulation = json_decode($stkPushSimulation);
+                        $log->write('COMPLETE STKPushSimulation JSON ARRAY');
+                        $log->write($stkPushSimulation);
+                        if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
+                            $json['error'] = $stkPushSimulation->ResultDesc;
+                            $json['mpesa_response'] = $stkPushSimulation;
+                        }
 
-                    if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                        $this->model_payment_mpesa->insertMpesaOrderTransaction($mpesaDetails['order_id'], $mpesaDetails['order_reference_number'], $stkPushSimulation->CheckoutRequestID);
+                        if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
+                            $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($mpesaDetails['order_reference_number']);
+
+                            if (is_array($transaction_details) && count($transaction_details) <= 0) {
+                                $this->model_payment_mpesa->insertMpesaOrderTransaction($mpesaDetails['order_id'], $mpesaDetails['order_reference_number'], $stkPushSimulation->CheckoutRequestID);
+                            }
+
+                            $json['status'] = true;
+                            $json['message'] = 'Payment Successfull.';
+                            $json['mpesa_response'] = $stkPushSimulation;
+                        }
                     }
-
-                    $json['status'] = true;
-                    $json['message'] = 'Payment Successfull.';
-                    $json['mpesa_response'] = $stkPushSimulation;
                 }
             }
         } else {
