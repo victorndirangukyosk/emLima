@@ -3,6 +3,8 @@
 class ModelVehiclesVehicles extends Model {
 
     public function addVehicle($data) {
+        // echo "<pre>";print_r('INSERT INTO ' . DB_PREFIX . "vehicles SET make = '" . $this->db->escape($data['make']) . "', model = '" . $this->db->escape($data['model']) . "', registration_number = '" . $this->db->escape($data['registration_number']) . "', registration_validity = '" . $this->db->escape($data['registration_validity_upto']) . "', registration_date = '" . $this->db->escape($data['registration_date']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");die;
+        
         $this->db->query('INSERT INTO ' . DB_PREFIX . "vehicles SET make = '" . $this->db->escape($data['make']) . "', model = '" . $this->db->escape($data['model']) . "', registration_number = '" . $this->db->escape($data['registration_number']) . "', registration_validity = '" . $this->db->escape($data['registration_validity_upto']) . "', registration_date = '" . $this->db->escape($data['registration_date']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");
         $vehicle_id = $this->db->getLastId();
         return $vehicle_id;
