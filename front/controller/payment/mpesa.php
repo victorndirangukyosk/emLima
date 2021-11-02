@@ -399,7 +399,7 @@ class ControllerPaymentMpesa extends Controller {
                     $log->write('transaction_details on complete');
                     $log->write($transaction_details);
                     $log->write('transaction_details on complete');
-                    if ($transaction_details == NULL) {
+                    if (is_array($transaction_details) && count($transaction_details) <= 0) {
                         $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
                     }
                     //success pending to processing
@@ -578,7 +578,7 @@ class ControllerPaymentMpesa extends Controller {
                         $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
                         //SKIPPNG HERE UPDATING CheckoutRequestID..BUT WE NEED TO UPDATE RECEIPT NUMBER
                         $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($order_id);
-                        if ($transaction_details == NULL) {
+                        if (is_array($transaction_details) && count($transaction_details) <= 0) {
                             $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
                         }
                         $this->model_payment_mpesa->addOrderHistoryTransaction($order_id, $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
