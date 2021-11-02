@@ -235,41 +235,48 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->load->model('checkout/order');
 
         if ($this->validatecheckout($data)) {
-            $order_reference_number = $data['order_reference_number'];
-            $number = $data['mpesa_phonenumber'];
+            foreach ($data['order_reference_number'] as $key => $order_reference_number) {
+                $log = new Log('error.log');
+                $log->write('key' . ' ' . 'order_reference_number');
+                $log->write($key . ' ' . $order_reference_number);
+                $log->write('key' . ' ' . 'order_reference_number');
 
-            $log = new Log('error.log');
+                if ($key == 75) {
+                    $order_reference_number = $order_reference_number;
+                    $number = $data['mpesa_phonenumber'];
 
-            $log->write($data);
-            /* start */
+                    $log->write($data);
+                    /* start */
 
-            $amount = $this->cart->getTotalForKwikBasket();
-            $live = 'true';
-            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
-            $sta = false;
+                    $amount = $this->cart->getTotalForKwikBasket();
+                    $live = 'true';
+                    $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+                    $sta = false;
 
-            $log->write('STKPushSimulation confirm');
-            $log->write($sta);
-            if (!$sta) {
-                $PartyA = $this->config->get('config_telephone_code') . '' . $number;
+                    $log->write('STKPushSimulation confirm');
+                    $log->write($sta);
+                    if (!$sta) {
+                        $PartyA = $this->config->get('config_telephone_code') . '' . $number;
 
-                $BusinessShortCode = $this->config->get('mpesa_business_short_code');
-                $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
-                $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';    
-                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesamobileOrderStatusTransactionss', '', 'SSL');
-                $Amount = $amount;
-                $PartyB = $this->config->get('mpesa_business_short_code');
-                $PhoneNumber = $this->config->get('config_telephone_code') . '' . $number;
-                //$AccountReference = 'GPK'; //$this->config->get('config_name');
-                $AccountReference = "#" . $order_reference_number; //$this->config->get('config_name');
-                $TransactionDesc = "#" . $order_reference_number;
-                $Remarks = 'PAYMENT';
-                $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
-                $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
-                $log->write('STKPushSimulation');
-                $log->write($stkPushSimulation);
-                $stkPushSimulation = json_decode($stkPushSimulation);
-                $json['response'] = $stkPushSimulation;
+                        $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+                        $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+                        $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';    
+                        $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesamobileOrderStatusTransactionss', '', 'SSL');
+                        $Amount = $amount;
+                        $PartyB = $this->config->get('mpesa_business_short_code');
+                        $PhoneNumber = $this->config->get('config_telephone_code') . '' . $number;
+                        //$AccountReference = 'GPK'; //$this->config->get('config_name');
+                        $AccountReference = "#" . $order_reference_number; //$this->config->get('config_name');
+                        $TransactionDesc = "#" . $order_reference_number;
+                        $Remarks = 'PAYMENT';
+                        $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
+                        $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
+                        $log->write('STKPushSimulation');
+                        $log->write($stkPushSimulation);
+                        $stkPushSimulation = json_decode($stkPushSimulation);
+                        $json['response'] = $stkPushSimulation;
+                    }
+                }
             }
 
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
