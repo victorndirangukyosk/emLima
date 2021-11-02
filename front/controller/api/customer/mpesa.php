@@ -435,7 +435,7 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->load->model('payment/mpesa');
         $this->load->model('checkout/order');
 
-        if ($this->validatecheckout($data)) {
+        if ($this->validatetopup($data)) {
             $customer_id = $data['customer_id'];
             $number = $data['mpesa_phonenumber'];
             $amount = $data['amount'];
