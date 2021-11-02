@@ -233,6 +233,7 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->load->model('sale/order');
         $this->load->model('payment/mpesa');
         $this->load->model('checkout/order');
+        $kb_order_reference_number = NULL;
 
         if ($this->validatecheckout($data)) {
             foreach ($data['order_reference_number'] as $key => $order_reference_number) {
@@ -246,6 +247,7 @@ class ControllerApiCustomerMpesa extends Controller {
                     $log->write($key . ' ' . $order_reference_number);
                     $log->write('key' . ' ' . 'order_reference_number');
                     $order_reference_number = $order_reference_number;
+                    $kb_order_reference_number = $order_reference_number;
                     $number = $data['mpesa_phonenumber'];
 
                     $log->write($data);
@@ -285,7 +287,7 @@ class ControllerApiCustomerMpesa extends Controller {
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
                 //save in
                 $order_info['order_id'] = 0;
-                $this->model_payment_mpesa->addOrderMobile($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), 0, $order_reference_number);
+                $this->model_payment_mpesa->addOrderMobile($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), 0, $kb_order_reference_number);
                 $json['status'] = true;
                 $json['message'] = sprintf($this->language->get('text_sms_sent'), $number);
             } else {
