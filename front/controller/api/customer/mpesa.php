@@ -427,6 +427,44 @@ class ControllerApiCustomerMpesa extends Controller {
         return !$this->error;
     }
 
+    protected function validatetopupcomplete($data) {
+        // ['payment_type'] == 'topup'
+        if (empty($data['payment_method'])) {
+            $this->error['payment_method'] = 'Payment method required!';
+        }
+
+
+        if (empty($data['payment_method_code'])) {
+            $this->error['payment_method_code'] = 'Payment method code required!';
+        }
+
+        if (empty($data['mpesa_phonenumber'])) {
+            $this->error['mpesa_phonenumber'] = 'Phone number required!';
+        }
+
+        if (empty($data['customer_id'])) {
+            $this->error['customer_id'] = 'Customer ID required!';
+        }
+
+        if (empty($data['customer_reference_number'])) {
+            $this->error['customer_reference_number'] = 'Customer reference number required!';
+        }
+
+        // if (empty($data['amount'])) {
+        //     $this->error['amount'] = 'Amount required!';
+        // }
+
+        /* if (empty($data['merchant_request_id'])) {
+          $this->error['merchant_request_id'] = 'Merchant request id required!';
+          }
+
+          if (empty($data['checkout_request_id'])) {
+          $this->error['checkout_request_id'] = 'Checkout request id required!';
+          } */
+
+        return !$this->error;
+    }
+
     public function addMpesaTopup($data = []) {
         $json['status'] = false;
 
@@ -509,7 +547,7 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('account/customer');
 
-        if ($this->validatetopup($data)) {
+        if ($this->validatetopupcomplete($data)) {
             $customer_id = $data['customer_id'];
             $number = $data['mpesa_phonenumber'];
             $order_reference_number = $data['customer_reference_number'];
