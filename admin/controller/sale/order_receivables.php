@@ -270,7 +270,7 @@ class ControllerSaleOrderReceivables extends Controller
                 'order_id' => $result_success['order_id'],
                 'customer_id' => $result_success['customer_id'],
 
-                // 'no_of_products' => $result_success['no_of_products'],
+                'transaction_id' => $result_success['transaction_id'],
                 'customer' => $result_success['firstname'].' '.$result_success['lastname'],
                 'company' => $result_success['company'],
                 'total' => $this->currency->format($result_success['total']),
@@ -741,9 +741,11 @@ class ControllerSaleOrderReceivables extends Controller
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
                 'order_id' => $this->request->post['paid_order_id'],
+                'transaction_id' => $this->request->post['transaction_id'],
+                'Partial_amount' => $this->request->post['Partial_amount'],
             ];
             
-            $this->model_user_user_activity->addActivity('order_transaction_id_reversereversed', $activity_data);
+            $this->model_user_user_activity->addActivity('order_transaction_id_reversed', $activity_data);
             
             $data['status']=true;
 
