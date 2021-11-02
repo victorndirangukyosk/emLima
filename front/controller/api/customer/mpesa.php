@@ -221,7 +221,9 @@ class ControllerApiCustomerMpesa extends Controller {
 
             http_response_code(400);
         }
-
+        $log->write('Mpesacomplete json');
+        $log->write($json);
+        $log->write('Mpesacomplete json');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
