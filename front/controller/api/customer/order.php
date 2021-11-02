@@ -4108,6 +4108,9 @@ class ControllerApiCustomerOrder extends Controller {
             $json['data']['status'] = false;
         }
 
+        $log->write('ordernew json');
+        $log->write($json);
+        $log->write('ordernew json');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

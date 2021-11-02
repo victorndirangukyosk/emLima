@@ -312,7 +312,9 @@ class ControllerApiCustomerMpesa extends Controller {
 
             http_response_code(400);
         }
-
+        $log->write('MpesaCheckout json');
+        $log->write($json);
+        $log->write('MpesaCheckout json');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -393,7 +395,9 @@ class ControllerApiCustomerMpesa extends Controller {
 
             http_response_code(400);
         }
-
+        $log->write('MpesaCheckoutComplete json');
+        $log->write($json);
+        $log->write('MpesaCheckoutComplete json');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
