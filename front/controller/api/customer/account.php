@@ -738,10 +738,76 @@ class ControllerApiCustomerAccount extends Controller
 
         $json['status'] = 200;
         $json['data'] =  $total;
-        $json['message'] = [];
+        $json['message'] = 'success';
        
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+
+    public function getWallet()
+    {
+         
+        $this->load->language('account/credit');  
+        $this->load->model('account/credit');
+
+        
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['credits'] = [];
+
+        $filter_data = [
+            'sort' => 'date_added',
+            'order' => 'DESC',
+            'start' => ($page - 1) * 10,
+            'limit' => 10,
+        ];
+
+        // $data['telephone'] = $this->customer->getTelephone();
+
+        $credit_total = $this->model_account_credit->getTotalCredits();
+
+        $results = $this->model_account_credit->getCredits($filter_data);
+
+        foreach ($results as $result) {
+            $transaction_ID="";
+            if(isset($result['transaction_id']) && $result['transaction_id']!="" )
+            {
+                $transaction_ID='#Transaction ID '.$result['transaction_id'];
+            }
+            $data['credits'][] = [
+                'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
+                'plain_amount' => $result['amount'],
+                'description' => $result['description'].' ' .$transaction_ID,
+                'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
+            ];
+        }
+
+        
+
+        
+        $data['total'] = $this->currency->format($this->customer->getBalance());
+       
+        $data['records_count'] = $credit_total;
+        $data['current_page'] = $page;
+        $data['pagination_results'] = sprintf($this->language->get('text_pagination'), ($credit_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($credit_total - 10)) ? $credit_total : ((($page - 1) * 10) + 10), $credit_total, ceil($credit_total / 10));
+        
+ 
+
+        // echo "<pre>";print_r($data['credits']);die;
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] =  $data;
+        $json['message'] = 'success';
+       
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        
     }
 
 }
