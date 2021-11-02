@@ -338,7 +338,9 @@ class ControllerApiCustomerMpesa extends Controller {
                     $log->write($data);
 
                     $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($order_reference_number);
-
+                    $log->write('mpesaDetails');
+                    $log->write($mpesaDetails);
+                    $log->write('mpesaDetails');
                     $live = true;
 
                     $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
