@@ -4057,6 +4057,10 @@ class ControllerApiCustomerOrder extends Controller {
                     }
                 }
                 $this->load->controller('payment/cod/apiConfirm', $cod_order_ids);
+                $json['status'] = 200;
+                $json['msg'] = 'Order placed Successfully';
+                unset($this->session->data['accept_vendor_terms']);
+                $this->cart->clear();
             } elseif ('interswitch' == $args['payment_method_code']) {
                 $log = new Log('error.log');
                 $log->write('args');
@@ -4082,11 +4086,16 @@ class ControllerApiCustomerOrder extends Controller {
                         }
                     }
                 }
+                $json['status'] = 200;
+                $json['msg'] = 'Order placed Successfully';
+                unset($this->session->data['accept_vendor_terms']);
+                $this->cart->clear();
             } else {
                 $data['payment'] = $this->load->controller('payment/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
                 unset($this->session->data['accept_vendor_terms']);
+                $this->cart->clear();
             }
 
             foreach ($order_ids as $key => $value) {
