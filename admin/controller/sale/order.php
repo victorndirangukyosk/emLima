@@ -1565,6 +1565,11 @@ class ControllerSaleOrder extends Controller {
         $order_processing_groups = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
         $data['order_processing_groups'] = $order_processing_groups;
 
+
+        $this->load->model('vehicles/vehicles');
+        $vehicles = $this->model_vehicles_vehicles->getAllVehicles();
+        $data['vehicles'] = $vehicles;
+
         $this->response->setOutput($this->load->view('sale/order_list.tpl', $data));
     }
 

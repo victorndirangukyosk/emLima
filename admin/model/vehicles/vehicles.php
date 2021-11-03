@@ -134,4 +134,75 @@ class ModelVehiclesVehicles extends Model {
         return $query->row['total'];
     }
 
+
+    public function getAllVehicles($data = []) {
+        $sql = "SELECT vehicle_id, registration_number as name FROM " . DB_PREFIX . 'vehicles c';
+
+        $implode = [];
+
+        if (!empty($data['filter_make'])) {
+            $implode[] = "c.make = '" . $this->db->escape($data['filter_make']) . "'";
+        }
+
+        if (!empty($data['filter_model'])) {
+            $implode[] = "c.model = '" . $this->db->escape($data['filter_model']) . "'";
+        }
+
+        if (!empty($data['filter_registration_number'])) {
+            $implode[] = "c.registration_number = '" . $this->db->escape($data['filter_registration_number']) . "'";
+        }
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
+        }
+
+        if (!empty($data['filter_date_added'])) {
+            $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $sort_data = [
+            'c.make',
+            'c.model',
+            'c.registration_number',
+            'c.registration_validity',
+            'c.registration_date',
+            'c.status',
+            'c.date_added',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY date_added';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        // echo "<pre>";print_r($sql);die;
+
+        return $query->rows;
+    }
+
 }
