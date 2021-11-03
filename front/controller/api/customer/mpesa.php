@@ -45,7 +45,7 @@ class ControllerApiCustomerMpesa extends Controller {
                 $BusinessShortCode = $this->config->get('mpesa_business_short_code');
                 $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
                 $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';    
-                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesamobileOrderStatusTransaction', '', 'SSL');
+                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesamobileOrderStatusTransactions', '', 'SSL');
                 $Amount = $amount;
                 $PartyB = $this->config->get('mpesa_business_short_code');
                 $PhoneNumber = $this->config->get('config_telephone_code') . '' . $number;
