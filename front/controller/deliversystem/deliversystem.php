@@ -867,7 +867,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     $log->write($value);
 
                     if ('MpesaReceiptNumber' == $value->Name) {
-                        $this->model_payment_mpesa->insertCustomerTransactionId($manifest_id, $value->Value);
+                        $this->model_payment_mpesa->insertCustomerTransactionId($manifest_id_customer, $value->Value);
                         // $transaction_id=$value->Value;wrong
                     }
 
@@ -885,7 +885,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 //success pending to processing
                 $order_status_id = $this->config->get('config_order_status_id');
                 $log->write('updateMpesaStatus validate');
-                $dataAddCredit['customer_id'] = $manifest_id;
+                $dataAddCredit['customer_id'] = $manifest_id_customer;
                 $dataAddCredit['order_status_id'] = $order_status_id;
                 $dataAddCredit['notify'] = 0;
                 $dataAddCredit['append'] = 0;
