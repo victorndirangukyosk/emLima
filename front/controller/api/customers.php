@@ -246,6 +246,7 @@ class ControllerApiCustomers extends Controller {
         $this->load->model('account/address');
         $json['status'] = 200;
         $json['data'] = $this->model_account_address->getAllRegions();
+
         $json['msg'] = 'Regions fetched successfully';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));

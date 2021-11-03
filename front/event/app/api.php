@@ -146,11 +146,11 @@ class EventAppApi extends Event {
                 // Authorize
                 $this->load->controller('api/customers/getCustomercities', $args);
                 }
-                elseif ('api/customers/getCustomerRegions' == $route) {
+                elseif ('api/customers/getCustomerregions' == $route) {
             // echo "<pre>";print_r($route);die;   
 
                 // Authorize
-                $this->load->controller('api/customers/getCustomerRegions', $args);
+                $this->load->controller('api/customers/getCustomerregions', $args);
                 }
                 else {
                 $groups = ['Administrator', 'API User', 'vendor'];
