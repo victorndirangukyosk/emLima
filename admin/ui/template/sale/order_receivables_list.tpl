@@ -261,11 +261,11 @@
                       <div class="btn-group" >                            
                          <div class="row">
                              <div class="col-sm-6">
-                                        <input disabled type="text" name="grand_total_reverse" value="" placeholder="No Order Selected" id="input-grand-total-reverse" class="form-control" />
+                                        <input  disabled type="hidden" name="grand_total_reverse" value="" placeholder="No Order Selected" id="input-grand-total-reverse" class="form-control" />
                              </div>  
-                             <div class="col-sm-4">
+                            <!-- <div class="col-sm-4">
                                     <button type="button" id="button-reversepayment" class="btn btn-primary" onclick="showConfirmPopup(-1,0)"  data-toggle="modal" data-dismiss="modal" data-target="#paidModal" title="Payment Confirmation">  Receive Bulk Payment</button>
-                             </div>    
+                             </div>   --> 
                          </div>                             
                             
                       </div>
@@ -347,7 +347,7 @@
                                       <!--<td class="text-left"><?php echo $order['date_added']; ?></td> -->
                                     <td>
  
-                                    <button class="btn btn-default" type="button" onclick="reverse_payment(<?= $order['order_id'] ?>);" >Reverse Payment</button>  
+                                    <button class="btn btn-default" type="button" onclick="reverse_payment(<?= $order['order_id'].",'".$order['transaction_id'] ."','".$order['amount_partialy_paid'] ."'"?>);" >Reverse Payment</button>  
                                     </td>
                                 </tr>
                                 <?php } ?>
@@ -877,13 +877,13 @@ function showConfirmPopup($order_id,$order_value) {
     }
 
 
-	function reverse_payment($order_id){
+	function reverse_payment($order_id,$transaction_id,$amount_partialy_paid){
 
 		if(confirm('Are You Sure,to reverse the payment status?')){
 			$.ajax({
             url: 'index.php?path=sale/order_receivables/reversePaymentReceived&token=<?php echo $token; ?>',
             type: 'post',
-            data: 'paid_order_id=' + $order_id ,
+            data: 'paid_order_id=' + $order_id +'&transaction_id='+$transaction_id+'&amount_partialy_paid='+$amount_partialy_paid,
             beforeSend: function() {
             },
             complete: function() {

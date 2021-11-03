@@ -270,9 +270,9 @@
                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
                                         </a>
                                         
-                                        <a href="#" id="make_payment" data-order-id="<?php echo $order['order_id']; ?>" data-order-reference-id="<?php echo $order['order_reference_id']; ?>" data-toggle="tooltip" title="Make Payment">
+                                        <!--<a href="#" id="make_payment" data-order-id="<?php echo $order['order_id']; ?>" data-order-reference-id="<?php echo $order['order_reference_id']; ?>" data-toggle="tooltip" title="Make Payment">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                                        </a>
+                                        </a>-->
                                        </div>
                                     </td>
                                         

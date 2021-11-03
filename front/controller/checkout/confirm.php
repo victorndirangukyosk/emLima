@@ -1090,6 +1090,10 @@ class ControllerCheckoutConfirm extends Controller {
                 $order_data[$store_id]['currency_code'] = $this->currency->getCode();
                 $order_data[$store_id]['currency_value'] = $this->currency->getValue($this->currency->getCode());
                 $order_data[$store_id]['ip'] = $this->request->server['REMOTE_ADDR'];
+                $log->write('po_number');
+                $log->write($_COOKIE['po_number']);
+                $log->write('po_number');
+                $order_data[$store_id]['po_number'] = $_COOKIE['po_number'];
 
                 if (!empty($this->request->server['HTTP_X_FORWARDED_FOR'])) {
                     $order_data[$store_id]['forwarded_ip'] = $this->request->server['HTTP_X_FORWARDED_FOR'];
@@ -1303,6 +1307,7 @@ class ControllerCheckoutConfirm extends Controller {
             $store_id = $product['store_id'];
             $product_id = $product['product_id'];
 
+            $delivery_dates = NULL;
             $product_delivery_days = $this->model_assets_product->GetProductByProductDeliveryDays($product_id, $product_store_id, $store_id);
             if (is_array($product_delivery_days) && count($product_delivery_days) > 0 && ($product_delivery_days['monday'] == 0 || $product_delivery_days['tuesday'] == 0 || $product_delivery_days['wednesday'] == 0 || $product_delivery_days['thursday'] == 0 || $product_delivery_days['friday'] == 0 || $product_delivery_days['saturday'] == 0 || $product_delivery_days['sunday'] == 0)) {
                 $vendor_details = $this->model_user_user->getUser($product_delivery_days['merchant_id']);
@@ -1316,42 +1321,49 @@ class ControllerCheckoutConfirm extends Controller {
                     $new_delivery_times->modify('next monday');
                     $delivarbale_week_monday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['monday_date'] = $delivarbale_week_monday;
+                    $delivery_dates[] = $delivarbale_week_monday;
                 }
 
                 if ($product_delivery_days['tuesday'] == 1) {
                     $new_delivery_times->modify('next tuesday');
                     $delivarbale_week_tuesday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['tuesday_date'] = $delivarbale_week_tuesday;
+                    $delivery_dates[] = $delivarbale_week_tuesday;
                 }
 
                 if ($product_delivery_days['wednesday'] == 1) {
                     $new_delivery_times->modify('next wednesday');
                     $delivarbale_week_wednesday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['wednesday_date'] = $delivarbale_week_wednesday;
+                    $delivery_dates[] = $delivarbale_week_wednesday;
                 }
 
                 if ($product_delivery_days['thursday'] == 1) {
                     $new_delivery_times->modify('next thursday');
                     $delivarbale_week_thursday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['thursday_date'] = $delivarbale_week_thursday;
+                    $delivery_dates[] = $delivarbale_week_thursday;
                 }
 
                 if ($product_delivery_days['friday'] == 1) {
                     $new_delivery_times->modify('next friday');
                     $delivarbale_week_friday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['friday_date'] = $delivarbale_week_friday;
+                    $delivery_dates[] = $delivarbale_week_friday;
                 }
 
                 if ($product_delivery_days['saturday'] == 1) {
                     $new_delivery_times->modify('next saturday');
                     $delivarbale_week_saturday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['saturday_date'] = $delivarbale_week_saturday;
+                    $delivery_dates[] = $delivarbale_week_saturday;
                 }
 
                 if ($product_delivery_days['sunday'] == 1) {
                     $new_delivery_times->modify('next sunday');
                     $delivarbale_week_sunday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['sunday_date'] = $delivarbale_week_sunday;
+                    $delivery_dates[] = $delivarbale_week_sunday;
                 }
 
                 $log->write('vendor_details');
@@ -1359,6 +1371,19 @@ class ControllerCheckoutConfirm extends Controller {
                 $log->write($vendor_details);
                 $log->write('vendor_details');
                 $product_delivery_days['key'] = $product['key'];
+                $product_delivery_days['quantity'] = $product['quantity'];
+                $product_delivery_days['options'] = $product['options'];
+                $product_delivery_days['recurring_id'] = $product['recurring_id'];
+                $product_delivery_days['store_product_variation_id'] = $product['store_product_variation_id'];
+                $product_delivery_days['product_type'] = $product['product_type'];
+                $product_delivery_days['product_note'] = $product['product_note'];
+                $product_delivery_days['produce_type'] = $product['produce_type'];
+                $product_delivery_days['delivery_dates'] = $delivery_dates;
+                $oldDate = min($delivery_dates);
+                $log->write('oldDate');
+                $log->write($oldDate);
+                $log->write('oldDate');
+                $product_delivery_days['earlist_date'] = $oldDate;
                 $results[] = $product_delivery_days;
             }
             $log->write('results');
@@ -1366,9 +1391,16 @@ class ControllerCheckoutConfirm extends Controller {
             $log->write('results');
         }
 
+        $modified_result = NULL;
+        foreach ($results as $result) {
+            $modified_result[$result['earlist_date']][] = $result;
+        }
+
         $json['data'] = $results;
+        $json['modified_result'] = $modified_result;
         $json['count'] = count($results);
         $this->response->addHeader('Content-Type: application/json');
+
         $this->response->setOutput(json_encode($json));
     }
 
@@ -1385,11 +1417,10 @@ class ControllerCheckoutConfirm extends Controller {
             $product_id = $product['product_id'];
 
             $product_delivery_days = $this->model_assets_product->GetProductByProductDeliveryDays($product_id, $product_store_id, $store_id);
-            if (is_array($product_delivery_days) && count($product_delivery_days) > 0 && ($product_delivery_days['monday'] == 0 || $product_delivery_days['tuesday'] == 0 || $product_delivery_days['wednesday'] == 0 || $product_delivery_days['thursday'] == 0 || $product_delivery_days['friday'] == 0 || $product_delivery_days['saturday'] == 0 || $product_delivery_days['sunday'] == 0)) {
+            if (is_array($product_delivery_days) && count($product_delivery_days) > 0 && ($product_delivery_days ['monday'] == 0 || $product_delivery_days ['tuesday'] == 0 || $product_delivery_days ['wednesday'] == 0 || $product_delivery_days ['thursday'] == 0 || $product_delivery_days ['friday'] == 0 || $product_delivery_days ['saturday'] == 0 || $product_delivery_days['sunday'] == 0)) {
                 $vendor_details = $this->model_user_user->getUser($product_delivery_days['merchant_id']);
 
                 $delivery_time = $vendor_details['delivery_time'] != NULL && $vendor_details['delivery_time'] > 0 ? $vendor_details['delivery_time'] : 0;
-
                 $new_delivery_time = date("Y-m-d H:i:s", strtotime('+' . $delivery_time . ' hours'));
                 $new_delivery_times = new DateTime($new_delivery_time);
 
@@ -1397,42 +1428,49 @@ class ControllerCheckoutConfirm extends Controller {
                     $new_delivery_times->modify('next monday');
                     $delivarbale_week_monday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['monday_date'] = $delivarbale_week_monday;
+                    $delivery_dates[] = $delivarbale_week_monday;
                 }
 
                 if ($product_delivery_days['tuesday'] == 1) {
                     $new_delivery_times->modify('next tuesday');
                     $delivarbale_week_tuesday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['tuesday_date'] = $delivarbale_week_tuesday;
+                    $delivery_dates[] = $delivarbale_week_tuesday;
                 }
 
                 if ($product_delivery_days['wednesday'] == 1) {
                     $new_delivery_times->modify('next wednesday');
                     $delivarbale_week_wednesday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['wednesday_date'] = $delivarbale_week_wednesday;
+                    $delivery_dates[] = $delivarbale_week_wednesday;
                 }
 
                 if ($product_delivery_days['thursday'] == 1) {
                     $new_delivery_times->modify('next thursday');
                     $delivarbale_week_thursday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['thursday_date'] = $delivarbale_week_thursday;
+                    $delivery_dates[] = $delivarbale_week_thursday;
                 }
 
                 if ($product_delivery_days['friday'] == 1) {
                     $new_delivery_times->modify('next friday');
                     $delivarbale_week_friday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['friday_date'] = $delivarbale_week_friday;
+                    $delivery_dates[] = $delivarbale_week_friday;
                 }
 
                 if ($product_delivery_days['saturday'] == 1) {
                     $new_delivery_times->modify('next saturday');
                     $delivarbale_week_saturday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['saturday_date'] = $delivarbale_week_saturday;
+                    $delivery_dates[] = $delivarbale_week_saturday;
                 }
 
                 if ($product_delivery_days['sunday'] == 1) {
                     $new_delivery_times->modify('next sunday');
                     $delivarbale_week_sunday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['sunday_date'] = $delivarbale_week_sunday;
+                    $delivery_dates[] = $delivarbale_week_sunday;
                 }
 
                 $log->write('vendor_details');
@@ -1440,6 +1478,19 @@ class ControllerCheckoutConfirm extends Controller {
                 $log->write($vendor_details);
                 $log->write('vendor_details');
                 $product_delivery_days['key'] = $product['key'];
+                $product_delivery_days['quantity'] = $product['quantity'];
+                $product_delivery_days['options'] = $product['options'];
+                $product_delivery_days['recurring_id'] = $product['recurring_id'];
+                $product_delivery_days['store_product_variation_id'] = $product['store_product_variation_id'];
+                $product_delivery_days['product_type'] = $product['product_type'];
+                $product_delivery_days['product_note'] = $product['product_note'];
+                $product_delivery_days['produce_type'] = $product['produce_type'];
+                $product_delivery_days['delivery_dates'] = $delivery_dates;
+                $oldDate = min($delivery_dates);
+                $log->write('oldDate');
+                $log->write($oldDate);
+                $log->write('oldDate');
+                $product_delivery_days['earlist_date'] = $oldDate;
                 $this->cart->remove($product['key']);
                 $this->cart->removeTempCart($product['key']);
             }
@@ -1452,11 +1503,10 @@ class ControllerCheckoutConfirm extends Controller {
             $product_id = $product['product_id'];
 
             $product_delivery_days = $this->model_assets_product->GetProductByProductDeliveryDays($product_id, $product_store_id, $store_id);
-            if (is_array($product_delivery_days) && count($product_delivery_days) > 0 && ($product_delivery_days['monday'] == 0 || $product_delivery_days['tuesday'] == 0 || $product_delivery_days['wednesday'] == 0 || $product_delivery_days['thursday'] == 0 || $product_delivery_days['friday'] == 0 || $product_delivery_days['saturday'] == 0 || $product_delivery_days['sunday'] == 0)) {
-                $vendor_details = $this->model_user_user->getUser($product_delivery_days['merchant_id']);
+            if (is_array($product_delivery_days) && count($product_delivery_days) > 0 && ($product_delivery_days ['monday'] == 0 || $product_delivery_days ['tuesday'] == 0 || $product_delivery_days ['wednesday'] == 0 || $product_delivery_days ['thursday'] == 0 || $product_delivery_days ['friday'] == 0 || $product_delivery_days ['saturday'] == 0 || $product_delivery_days['sunday'] == 0)) {
+                $vendor_details = $this->model_user_user->getUser($product_delivery_days ['merchant_id']);
 
                 $delivery_time = $vendor_details['delivery_time'] != NULL && $vendor_details['delivery_time'] > 0 ? $vendor_details['delivery_time'] : 0;
-
                 $new_delivery_time = date("Y-m-d H:i:s", strtotime('+' . $delivery_time . ' hours'));
                 $new_delivery_times = new DateTime($new_delivery_time);
 
@@ -1464,18 +1514,21 @@ class ControllerCheckoutConfirm extends Controller {
                     $new_delivery_times->modify('next monday');
                     $delivarbale_week_monday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['monday_date'] = $delivarbale_week_monday;
+                    $delivery_dates[] = $delivarbale_week_monday;
                 }
 
                 if ($product_delivery_days['tuesday'] == 1) {
                     $new_delivery_times->modify('next tuesday');
                     $delivarbale_week_tuesday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['tuesday_date'] = $delivarbale_week_tuesday;
+                    $delivery_dates[] = $delivarbale_week_tuesday;
                 }
 
                 if ($product_delivery_days['wednesday'] == 1) {
                     $new_delivery_times->modify('next wednesday');
                     $delivarbale_week_wednesday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['wednesday_date'] = $delivarbale_week_wednesday;
+                    $delivery_dates[] = $delivarbale_week_wednesday;
                 }
 
                 if ($product_delivery_days['thursday'] == 1) {
@@ -1488,18 +1541,21 @@ class ControllerCheckoutConfirm extends Controller {
                     $new_delivery_times->modify('next friday');
                     $delivarbale_week_friday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['friday_date'] = $delivarbale_week_friday;
+                    $delivery_dates[] = $delivarbale_week_friday;
                 }
 
                 if ($product_delivery_days['saturday'] == 1) {
                     $new_delivery_times->modify('next saturday');
                     $delivarbale_week_saturday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['saturday_date'] = $delivarbale_week_saturday;
+                    $delivery_dates[] = $delivarbale_week_saturday;
                 }
 
                 if ($product_delivery_days['sunday'] == 1) {
                     $new_delivery_times->modify('next sunday');
                     $delivarbale_week_sunday = $new_delivery_times->format('Y-m-d');
                     $product_delivery_days['sunday_date'] = $delivarbale_week_sunday;
+                    $delivery_dates[] = $delivarbale_week_sunday;
                 }
 
                 $log->write('vendor_details');
@@ -1507,15 +1563,36 @@ class ControllerCheckoutConfirm extends Controller {
                 $log->write($vendor_details);
                 $log->write('vendor_details');
                 $product_delivery_days['key'] = $product['key'];
+                $product_delivery_days['quantity'] = $product['quantity'];
+                $product_delivery_days['options'] = $product['options'];
+                $product_delivery_days['recurring_id'] = $product['recurring_id'];
+                $product_delivery_days['store_product_variation_id'] = $product['store_product_variation_id'];
+                $product_delivery_days['product_type'] = $product['product_type'];
+                $product_delivery_days['product_note'] = $product['product_note'];
+                $product_delivery_days['produce_type'] = $product['produce_type'];
+                $product_delivery_days['delivery_dates'] = $delivery_dates;
+                $oldDate = min($delivery_dates);
+                $log->write('oldDate');
+                $log->write($oldDate);
+                $log->write('oldDate');
+                $product_delivery_days['earlist_date'] = $oldDate;
                 $results[] = $product_delivery_days;
             }
             $log->write('results');
             $log->write($results);
             $log->write('results');
         }
+
+        $modified_result = NULL;
+        foreach ($results as $result) {
+            $modified_result[$result['earlist_date']][] = $result;
+        }
+
         $json['data'] = $results;
+        $json['modified_result'] = $modified_result;
         $json['count'] = count($results);
         $this->response->addHeader('Content-Type: application/json');
+
         $this->response->setOutput(json_encode($json));
     }
 

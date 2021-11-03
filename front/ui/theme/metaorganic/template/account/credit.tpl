@@ -8,7 +8,7 @@
                                             <div class="cash-block">
                                               <span class="your-cash"> <?= $total ?>  </span>
                                             </div>
-                                            <a href="<?= $home ?>" class="btn btn-primary"><?= $text_shopping?></a>
+                                            <!--<a href="<?= $home ?>" class="btn btn-primary"><?= $text_shopping?></a>-->
                                             </div>
                                      </div>
 

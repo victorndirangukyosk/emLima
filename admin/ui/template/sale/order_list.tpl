@@ -422,10 +422,10 @@
                                        </a> 
                                         <?php } ?>-->
                                         
-                                        <?php if ($order['delivery_id'] == NULL)    { ?>
-                                        <!--<a href="#" target="_blank" data-toggle="tooltip" title="Amitruck" data-orderid="<?= $order['order_id'] ?>" data-ordertotal="<?= $order['sub_total_custom'] ?>" id="assign_to_amitruck">
+                                        <?php if ($order['delivery_id'] == NULL && ($this->user->hasPermission('access', 'amitruck/amitruckquotes')) )   { ?>
+                                       <a href="#" target="_blank" data-toggle="tooltip" title="Amitruck" data-orderid="<?= $order['order_id'] ?>" data-ordertotal="<?= $order['sub_total_custom'] ?>" id="assign_to_amitruck">
                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                                        </a>-->
+                                        </a>
                                         <?php } ?>
                                        </div>
                                     </td>
@@ -900,7 +900,14 @@
                                                     <label> Vehicle Number </label>
 
                                                     <div class="col-md-12">
-                                                        <input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>
+                                                        <!--<input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>-->
+                                                    <select name="order_vehicle_number" id="order_vehicle_number" class="form-control" required="">
+                                                        <option value="0">Select Vehicle</option>
+                                                        <?php foreach ($vehicles as $vehicle) { ?>
+                                                        <option value="<?php echo $vehicle['name']; ?>"><?php echo $vehicle['name']; ?></option>
+                                                        <?php } ?>    
+                                                        </select>
+
                                                     <br/> </div>
                                                 </div>
                                             </div>
@@ -1080,12 +1087,13 @@ console.log($(this).data('ordertotal'));
                     $('.alert').html('Order assigned to delivery partner!');
                     $(".alert").attr('class', 'alert alert-success');
                     $(".alert").show();
+                    alert('Order assigned to delivery partner!');
                     if(json.status == 200) {
                     setTimeout(function(){ window.location.reload(false); }, 1500);
                     }
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
-			 
+			   console.log(xhr);
 		}
                 }); 
 
@@ -1198,7 +1206,8 @@ function savedriverdetails() {
    var invoice = $('input[name="invoice_custom"]').val();
    var driver_id = $('select[name="order_drivers"]').val();
    //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
-   var vehicle_number =  $('input[name="order_vehicle_number"]').val();
+   //var vehicle_number =  $('input[name="order_vehicle_number"]').val();
+   var vehicle_number =  $('select[name="order_vehicle_number"]').val();
    var delivery_charge =  $('input[name="order_delivery_charge"]').val();
    var delivery_executive_id =  $('select[name="order_delivery_executives"]').val();
    //var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
@@ -1208,13 +1217,13 @@ function savedriverdetails() {
     console.log(delivery_executive_id);
 
               console.log($('#driverModal-form').serialize());
- 
-                if (isNaN(delivery_executive_id) || isNaN(order_id) || isNaN(driver_id) || driver_id  < 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == '') {
+                 if (isNaN(delivery_executive_id) || isNaN(order_id) || isNaN(driver_id) || driver_id  <= 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == ''|| delivery_executive_id == '0' || driver_id == '0' || vehicle_number == '0' ) {
                    
                       $('#driverModal-message').html("Please enter data");
                        return false;
                 } 
                 else{
+                  //  return;
                 var clicked_orderid = order_id;
                 $.ajax({
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/history&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
@@ -1288,7 +1297,8 @@ function savedriverdetail() {
    var updateDeliveryDate = $('input[name="updateDeliveryDate"]').val();  
  
    //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
-   var vehicle_number =  $('input[name="order_vehicle_number"]').val();
+   //var vehicle_number =  $('input[name="order_vehicle_number"]').val();
+   var vehicle_number =  $('select[name="order_vehicle_number"]').val();
    var delivery_charge =  $('input[name="order_delivery_charge"]').val();
    var delivery_executive_id =  $('select[name="order_delivery_executives"]').val();
    //var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
@@ -1299,12 +1309,14 @@ function savedriverdetail() {
 
               console.log($('#driverModal-form').serialize());
  
-                if (isNaN(delivery_executive_id) || isNaN(order_id) || isNaN(driver_id) || driver_id  < 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == '') {
+                if (isNaN(delivery_executive_id) || isNaN(order_id) || isNaN(driver_id) || driver_id  <= 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == ''|| delivery_executive_id == '0' || driver_id == '0' || vehicle_number == '0' ) {
+
                    
                       $('#driverModal-message').html("Please enter data");
                        return false;
                 } 
                 else{
+                //return;
                 var clicked_orderid = order_id;
                 $('.alert').html('Please wait your request is processing!');
                 $(".alert").attr('class', 'alert alert-success');

@@ -82,6 +82,8 @@ class ControllerErrorPermission extends Controller
                 'common/loginAPI',
                 'amitruck/amitruckstatus',
                 'amitruck/amitruckquotes',
+                'amitruck/amitruck',
+
             ];
 
             if (!in_array($path, $ignore) && !$this->user->hasPermission('access', $path)) {

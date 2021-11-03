@@ -22,7 +22,7 @@ class ControllerVehiclesVehiclesList extends Controller {
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('vehicles/vehicles');
+        $this->load->model('vehicles/vehicles'); 
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $vehicle_id = $this->model_vehicles_vehicles->addVehicle($this->request->post);
