@@ -10,7 +10,7 @@ require_once DIR_APPLICATION . '/controller/api/settings.php';
 class ControllerCheckoutSuccess extends Controller {
 
     public function index() {
-
+        setcookie('po_number', null, -1, '/');
         // echo "<pre>";print_r("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order WHERE customer_id = '" . (int) $this->customer->getId() . "' AND order_status_id > 0");die;
 
         if (!isset($this->session->data['completed_order_products']) || !isset($this->session->data['completed_order_totals'])) {
@@ -210,8 +210,6 @@ class ControllerCheckoutSuccess extends Controller {
                 unset($this->session->data['transaction_id']);
                 unset($this->session->data['shipping_address_id']);
                 unset($this->session->data['accept_vendor_terms']);
-                unset($_COOKIE['po_number']);
-                $_COOKIE['po_number'] = '';
             }
         }
 
