@@ -312,7 +312,7 @@
                 </li>
                 <li>
                 <label for="po_number">PO Number</label>
-                <input type="text" id="po_number" name="po_number" class="form-control" value="" placeholder="PO Number">
+                <input type="text" id="po_number" name="po_number" class="form-control" value="<?php echo $_COOKIE['po_number']; ?>" placeholder="PO Number">
                 </li>
             </ul>
            
@@ -974,6 +974,8 @@ $(document).delegate('#proceed_to_checkout', 'click', function(e) {
 e.preventDefault();    
 var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
 document.cookie = "dropoff_notes="+dropoff_notes;
+var po_number = $('input[name="po_number"]').val();
+document.cookie = "po_number="+po_number;
 //$('#exampleModal').modal('toggle');
 
 $.ajax({
@@ -2170,7 +2172,6 @@ function saveOrder() {
 
 
     var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
-    
 
     //$('input[name="shipping_address_id"]').val($(this).attr('data-address-id'));
     if ($('input[name="shipping_address_id"]').val().length <= 0) {
