@@ -26,18 +26,14 @@ class ModelAccountAddress extends Model {
 
         if (!empty($data['default'])) {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $this->customer->getId() . "'");
-        }
-        else//else condition is to remove default address , if user unchecks the existing default address
-        {
-            $default_address_id=0;           
+        } else {//else condition is to remove default address , if user unchecks the existing default address
+            $default_address_id = 0;
             $default_address_query = $this->db->query('SELECT address_id FROM ' . DB_PREFIX . "customer WHERE   customer_id = '" . (int) $this->customer->getId() . "'");
             if ($default_address_query->num_rows) {
-                $default_address_id=$default_address_query->row['address_id'];
+                $default_address_id = $default_address_query->row['address_id'];
             }
-            if($default_address_id==$address_id)
-            {
+            if ($default_address_id == $address_id) {
                 $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = 0 WHERE customer_id = '" . (int) $this->customer->getId() . "'");
-
             }
         }
 
@@ -56,11 +52,11 @@ class ModelAccountAddress extends Model {
         $address_query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "address WHERE address_id = '" . (int) $address_id . "' AND customer_id = '" . (int) $this->customer->getId() . "'");
 
         //get default addresss from customer table
-        $default_address_id=0;
-        $isdefault_address=0;
+        $default_address_id = 0;
+        $isdefault_address = 0;
         $default_address_query = $this->db->query('SELECT address_id FROM ' . DB_PREFIX . "customer WHERE   customer_id = '" . (int) $this->customer->getId() . "'");
         if ($default_address_query->num_rows) {
-            $default_address_id=$default_address_query->row['address_id'];
+            $default_address_id = $default_address_query->row['address_id'];
         }
         //end default address region
 
@@ -78,9 +74,8 @@ class ModelAccountAddress extends Model {
             $log->write($address_query->row);
             $log->write('address_query');
 
-            if($address_query->row['address_id']==$default_address_id)
-            {
-                $isdefault_address=1;
+            if ($address_query->row['address_id'] == $default_address_id) {
+                $isdefault_address = 1;
             }
 
             $address_data = [
@@ -98,7 +93,6 @@ class ModelAccountAddress extends Model {
                 'latitude' => $address_query->row['latitude'],
                 'longitude' => $address_query->row['longitude'],
                 'isdefault_address' => $isdefault_address,
-
             ];
 
             return $address_data;
@@ -110,18 +104,18 @@ class ModelAccountAddress extends Model {
     public function getAddresses() {
         $address_data = [];
 
-         //get default addresss from customer table
-         $default_address_id=0;
-         $default_address_query = $this->db->query('SELECT address_id FROM ' . DB_PREFIX . "customer WHERE   customer_id = '" . (int) $this->customer->getId() . "'");
-         if ($default_address_query->num_rows) {
-             $default_address_id=$default_address_query->row['address_id'];
-         }
-         //end default address region
+        //get default addresss from customer table
+        $default_address_id = 0;
+        $default_address_query = $this->db->query('SELECT address_id FROM ' . DB_PREFIX . "customer WHERE   customer_id = '" . (int) $this->customer->getId() . "'");
+        if ($default_address_query->num_rows) {
+            $default_address_id = $default_address_query->row['address_id'];
+        }
+        //end default address region
 
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "address WHERE customer_id = '" . (int) $this->customer->getId() . "'");
 
         foreach ($query->rows as $result) {
-         $isdefault_address=0;
+            $isdefault_address = 0;
 
             $city_query = $this->db->query('select * from `' . DB_PREFIX . 'city` WHERE city_id="' . $result['city_id'] . '"');
 
@@ -130,9 +124,8 @@ class ModelAccountAddress extends Model {
             } else {
                 $city = '';
             }
-            if($result['address_id']==$default_address_id)
-            {
-                $isdefault_address=1;
+            if ($result['address_id'] == $default_address_id) {
+                $isdefault_address = 1;
             }
 
             /* if($result['address_type']) {
@@ -157,7 +150,6 @@ class ModelAccountAddress extends Model {
                 'longitude' => $result['longitude'],
                 'address_type' => ucfirst($result['address_type']),
                 'isdefault_address' => $isdefault_address,
-
             ];
         }
 
@@ -436,6 +428,11 @@ class ModelAccountAddress extends Model {
     public function getRegion($region_id) {
         $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "regions WHERE region_id = '" . (int) $region_id . "'");
         return $query->row;
+    }
+
+    public function getAllRegions() {
+        $query = $this->db->query('SELECT DISTINCT * FROM ' . DB_PREFIX . "regions");
+        return $query->rows;
     }
 
 }
