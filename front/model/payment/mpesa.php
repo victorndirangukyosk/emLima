@@ -258,7 +258,7 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function getMpesaCustomers($request_id) {
-        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "mpesa_order` WHERE `request_id` = '" . $this->db->escape($request_id) . "'")->rows;
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "mpesa_order` WHERE `request_id` = '" . $this->db->escape($request_id) . "'")->row;
         return $result;
     }
 
@@ -318,5 +318,8 @@ class ModelPaymentMpesa extends Model {
     public function updateMpesaOrderTransactionWithOrderId($order_id, $order_reference_number) {
         $this->db->query('UPDATE `' . DB_PREFIX . 'order_transaction_id` SET `order_id` = "' . $this->db->escape($order_id) . '" where order_reference_number="' . $order_reference_number . '"');
     }
+
+
+    
 
 }
