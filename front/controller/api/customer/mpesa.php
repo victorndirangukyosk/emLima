@@ -488,12 +488,14 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->load->model('sale/order');
         $this->load->model('payment/mpesa');
         $this->load->model('checkout/order');
+        $kb_order_reference_number = NULL;
 
         if ($this->validatetopup($data)) {
             $customer_id = $data['customer_id'];
             $number = $data['mpesa_phonenumber'];
             $amount = $data['amount'];
             $order_reference_number = $data['customer_reference_number']; //order_reference_number
+            $kb_order_reference_number = $order_reference_number;
             $log = new Log('error.log');
 
             $log->write($data);
@@ -532,7 +534,7 @@ class ControllerApiCustomerMpesa extends Controller {
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
                 //save in
                 $order_info['order_id'] = 0;
-                $this->model_payment_mpesa->addOrderMobile($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), $Amount, $order_reference_number);
+                $this->model_payment_mpesa->addOrderMobile($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), $Amount, $kb_order_reference_number);
                 // $this->model_payment_mpesa->addOrder(0, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), $amount);
 
                 $json['status'] = true;
@@ -603,8 +605,10 @@ class ControllerApiCustomerMpesa extends Controller {
                     $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($mpesaDetails['order_reference_number']);
 
                     if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                        $this->model_payment_mpesa->insertMpesaOrderTransaction($mpesaDetails['order_id'], $mpesaDetails['order_reference_number'], $stkPushSimulation->CheckoutRequestID);
+                        // $this->model_payment_mpesa->insertMpesaOrderTransaction($mpesaDetails['order_id'], $mpesaDetails['order_reference_number'], $stkPushSimulation->CheckoutRequestID);
+                        $this->model_payment_mpesa->insertMpesaCustomerTransaction($mpesaDetails['order_id'],$mpesaDetails['customer_id'], $mpesaDetails['order_reference_number'], $stkPushSimulation->CheckoutRequestID);
                     }
+                    // lll
 
 
                     // $this->model_payment_mpesa->insertCustomerTransactionId($customer_id, $stkPushSimulation->CheckoutRequestID);
