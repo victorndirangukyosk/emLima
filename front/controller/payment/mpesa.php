@@ -526,6 +526,10 @@ class ControllerPaymentMpesa extends Controller {
                 $order_id = $value;
                 $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderId($order_id);
 
+                $log->write('complete transaction mpesaDetails');
+                $log->write($mpesaDetails);
+                $log->write($mpesaDetails['checkout_request_id']);
+                $log->write('complete transaction mpesaDetails');
                 $live = true;
 
                 $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
@@ -669,12 +673,11 @@ class ControllerPaymentMpesa extends Controller {
                     }
 
                     if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
-                       
+
                         // $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($order_id);
                         // if ($transaction_details == NULL) {
                         //     $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
                         // }
-                       
                         //success pending to processing
                         $order_status_id = $this->config->get('mpesa_order_status_id');
 

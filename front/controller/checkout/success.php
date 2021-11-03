@@ -10,9 +10,9 @@ require_once DIR_APPLICATION . '/controller/api/settings.php';
 class ControllerCheckoutSuccess extends Controller {
 
     public function index() {
-
+        setcookie('po_number', null, -1, '/');
         // echo "<pre>";print_r("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "order WHERE customer_id = '" . (int) $this->customer->getId() . "' AND order_status_id > 0");die;
-        
+
         if (!isset($this->session->data['completed_order_products']) || !isset($this->session->data['completed_order_totals'])) {
             $this->response->redirect($this->url->link('common/home'));
         }
@@ -90,7 +90,7 @@ class ControllerCheckoutSuccess extends Controller {
             $data['text_feedback_message'] = sprintf($this->language->get('text_customer_feedback'), $this->url->link('account/feedback', '', 'SSL'));
         } elseif ($this->customer->isLogged() && (!empty($_SESSION['parent']) && ($this->session->data['order_approval_access'] == 0 && $this->session->data['order_approval_access_role'] == NULL && $sub_customer_order_approval_required == 1))) {
             $data['text_message'] = sprintf($this->language->get('text_customer_sub_user_new'), $parent_info['firstname'], $parent_info['lastname'], $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
-            $data['text_feedback_message'] = sprintf($this->language->get('text_customer_feedback'), $this->url->link('account/feedback', '', 'SSL')); 
+            $data['text_feedback_message'] = sprintf($this->language->get('text_customer_feedback'), $this->url->link('account/feedback', '', 'SSL'));
         } else {
             $data['text_message'] = sprintf($this->language->get('text_guest'), $this->url->link('information/contact'));
         }
@@ -120,27 +120,24 @@ class ControllerCheckoutSuccess extends Controller {
             $config_reward_enabled = $this->config->get('config_reward_enabled');
 
             $fixedDivide = count($this->session->data['order_id']);
-            $this->load->model('account/customer');    
-            $this->load->model('account/activity');   
-            $update_order_payment_status=false;  
-            if($this->session->data['payment_method'])   
-            {
-                if($this->session->data['payment_method']['code']=='wallet')
-                {
-                    $update_order_payment_status=true;
+            $this->load->model('account/customer');
+            $this->load->model('account/activity');
+            $update_order_payment_status = false;
+            if ($this->session->data['payment_method']) {
+                if ($this->session->data['payment_method']['code'] == 'wallet') {
+                    $update_order_payment_status = true;
                 }
             }
 
             // Add to activity log and update payment status in case of wallet
             foreach ($this->session->data['order_id'] as $order_id) {
 
-                     //region update payment status
-                     if($update_order_payment_status==true)
-                     {
-                        $this->load->model('account/order');  
-                        $this->model_account_order->updateWalletOrder($this->customer->getId(), $order_id);
-                     }
-                
+                //region update payment status
+                if ($update_order_payment_status == true) {
+                    $this->load->model('account/order');
+                    $this->model_account_order->updateWalletOrder($this->customer->getId(), $order_id);
+                }
+
 
                 if ($this->customer->isLogged()) {
                     $activity_data = [
@@ -213,30 +210,21 @@ class ControllerCheckoutSuccess extends Controller {
                 unset($this->session->data['transaction_id']);
                 unset($this->session->data['shipping_address_id']);
                 unset($this->session->data['accept_vendor_terms']);
-                unset($_COOKIE['po_number']);
             }
         }
 
         #region
         //check wallet amount , either running low or not
-
         // $results_wallet = $this->model_extension_extension->getExtensions('total');
-
         // foreach ($results_wallet as $key => $value) {
         // echo "<pre>";print_r('checkWalletRunningLow');
-           
-            if ($this->config->get('wallet' . '_status')) //$result['code']
-            {
-                $this->checkWalletRunningLow();
-        // echo "<pre>";print_r('sdfsdfsd');die;
 
-
-            }
-                // echo "<pre>";print_r('checkWalletRunningLowsdfsdf');die;
-
+        if ($this->config->get('wallet' . '_status')) { //$result['code']
+            $this->checkWalletRunningLow();
+            // echo "<pre>";print_r('sdfsdfsd');die;
+        }
+        // echo "<pre>";print_r('checkWalletRunningLowsdfsdf');die;
         // }
-
-
         #endregion 
         $data['button_continue'] = $this->language->get('button_continue');
 
@@ -511,12 +499,11 @@ class ControllerCheckoutSuccess extends Controller {
         unset($this->session->data['completed_order_ids']);
         /* ORDER SUMMARY */
         $data['feedback_modal'] = $this->load->controller('account/feedback/feedback_popup');
-       
+
         $feedback_order_count = $this->model_account_customer->getCustomerLastFeedback($this->customer->getId());
-       if(($feedback_order_count>3 ) || $feedback_order_count==0)
-       {
-        $data['load_feedback_popup'] = "true";
-       }
+        if (($feedback_order_count > 3 ) || $feedback_order_count == 0) {
+            $data['load_feedback_popup'] = "true";
+        }
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
@@ -973,7 +960,7 @@ class ControllerCheckoutSuccess extends Controller {
                     ],
                     'shopping_cart' => $present, //(required) ,
                         //'payment' => array('type' => 'credit','status' => 'approved, declined or pending' )//(required) //(required)
-        //Payment type used by the customer. We support credit, boleto, debit, transfer and voucher.
+                        //Payment type used by the customer. We support credit, boleto, debit, transfer and voucher.
                 ]);
 
                 $kondutoPrivateKey = $this->config->get('config_konduto_private_key');
@@ -1412,25 +1399,17 @@ class ControllerCheckoutSuccess extends Controller {
         return $data['products'];
     }
 
-
-
     public function checkWalletRunningLow() {
-         try
-         {
+        try {
             $log = new Log('error.log');
             $log->write('checkWalletRunningLow ');
-         $this->load->model('account/customer');
-         $this->model_account_customer->checkWalletRunningLow($this->customer->getId());
-         }
-         catch(exception $ex)
-         {
+            $this->load->model('account/customer');
+            $this->model_account_customer->checkWalletRunningLow($this->customer->getId());
+        } catch (exception $ex) {
             $log = new Log('error.log');
             $log->write('checkWalletRunningLow ');
             $log->write($ex);
-
-         }
-
-       
+        }
     }
 
 }
