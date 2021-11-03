@@ -549,13 +549,6 @@ class ControllerAccountLogin extends Controller {
     }
 
     public function customer() {
-        $this->load->model('payment/mpesa');
-        $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderId(4202);
-        $log = new Log('error.log');
-        $log->write('mpesaDetails');
-        $log->write($mpesaDetails);
-        $log->write($mpesaDetails['checkout_request_id']);
-        $log->write('mpesaDetails');
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
