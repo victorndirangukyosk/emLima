@@ -1604,7 +1604,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 $log->write('CALLBACK TRANSACTION DETAILS');
                 // Store
                 //save CallbackMetadata MpesaReceiptNumber
-                $amount_topup =0;
+                // $amount_topup =0;
                 if (isset($stkCallback->stkCallback->CallbackMetadata->Item)) {
                     
                     foreach ($stkCallback->stkCallback->CallbackMetadata->Item as $key => $value) {
@@ -1620,12 +1620,13 @@ class ControllerDeliversystemDeliversystem extends Controller {
                             if (is_array($transaction_details) && count($transaction_details) > 0) {
                                 $this->model_payment_mpesa->updateMpesaOrderTransaction($manifest_id['order_id'],$manifest_id['customer_id'], $manifest_id['order_reference_number'], $MpesaReceiptNumber);
                             }
-                            if ('Amount' == $value->Name) {
-                                $amount_topup == $value->Value;
-                                }
+                           
                             //$this->model_payment_mpesa->insertMobileCheckoutOrderTransactionId($manifest_ids['order_reference_number'], $value->Value);
                             $this->model_payment_mpesa->updateMpesaCustomerByMerchant($manifest_id['order_id'],$manifest_id['customer_id'], $value->Value, $stkCallback->stkCallback->CheckoutRequestID);
                         }
+                        if ('Amount' == $value->Name) {
+                            $amount_topup == $value->Value;
+                            }
                     }
                 }
                 $this->load->model('account/customer');
