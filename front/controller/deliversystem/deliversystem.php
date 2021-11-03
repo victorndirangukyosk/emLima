@@ -1554,6 +1554,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
 
     public function mpesamobileTopupStatus() {
+        try{
         $MpesaReceiptNumber = NULL;
         $response['status'] = false;
 
@@ -1584,24 +1585,28 @@ class ControllerDeliversystemDeliversystem extends Controller {
         //$this->load->controller('payment/mpesa/mpesacallbackupdate', $stkCallback->stkCallback);
 
         // $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->stkCallback->MerchantRequestID);
-        $manifest_id =$manifest_id_customer= $this->model_payment_mpesa->getMpesaCustomers($stkCallback->stkCallback->MerchantRequestID);
+        // $manifest_id =$manifest_id_customer= $this->model_payment_mpesa->getMpesaCustomers($stkCallback->stkCallback->MerchantRequestID);
+        $manifest_id = $this->model_payment_mpesa->getMpesaCustomers($stkCallback->stkCallback->MerchantRequestID);
+       
+        $manifest_id_customer=$manifest_id['customer_id'];
         $log->write('CALLBACK customer_reference_number');
         $log->write($manifest_id);
-        $log->write('CALLBACK order_reference_number');
+        $log->write('CALLBACK customer_reference_number');
 
-        if (is_array($manifest_id) && count($manifest_id) > 0) {
-            foreach ($manifest_id as $manifest_ids) {
+        // if (is_array($manifest_id) && count($manifest_id) > 0) {
+            if (isset($manifest_id_customer)) {
+            // foreach ($manifest_id as $manifest_ids) {
 
-                $log->write($manifest_ids['order_reference_number']);
-                $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($manifest_ids['order_reference_number']);
+                $log->write($manifest_id['order_reference_number']);
+                $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($manifest_id['order_reference_number']);
                 $log->write('CALLBACK TRANSACTION DETAILS');
                 $log->write($transaction_details);
                 $log->write('CALLBACK TRANSACTION DETAILS');
                 // Store
                 //save CallbackMetadata MpesaReceiptNumber
-
+                $amount_topup =0;
                 if (isset($stkCallback->stkCallback->CallbackMetadata->Item)) {
-                    $amount_topup =0;
+                    
                     foreach ($stkCallback->stkCallback->CallbackMetadata->Item as $key => $value) {
                         $log->write($value);
 
@@ -1610,25 +1615,26 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         // $this->model_payment_mpesa->insertCustomerTransactionId($manifest_id, $value->Value);
 
                            if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                                $this->model_payment_mpesa->insertMpesaCustomerTransaction($manifest_ids['order_id'],$manifest_ids['customer_id'], $manifest_ids['order_reference_number'], $MpesaReceiptNumber);
+                                $this->model_payment_mpesa->insertMpesaCustomerTransaction($manifest_id['order_id'],$manifest_id['customer_id'], $manifest_id['order_reference_number'], $MpesaReceiptNumber);
                             }
                             if (is_array($transaction_details) && count($transaction_details) > 0) {
-                                $this->model_payment_mpesa->updateMpesaOrderTransaction($manifest_ids['order_id'],$manifest_ids['customer_id'], $manifest_ids['order_reference_number'], $MpesaReceiptNumber);
+                                $this->model_payment_mpesa->updateMpesaOrderTransaction($manifest_id['order_id'],$manifest_id['customer_id'], $manifest_id['order_reference_number'], $MpesaReceiptNumber);
                             }
                             if ('Amount' == $value->Name) {
                                 $amount_topup == $value->Value;
-                            }
+                                }
                             //$this->model_payment_mpesa->insertMobileCheckoutOrderTransactionId($manifest_ids['order_reference_number'], $value->Value);
-                            $this->model_payment_mpesa->updateMpesaCustomerByMerchant($manifest_ids['order_id'],$manifest_ids['customer_id'], $value->Value, $stkCallback->stkCallback->CheckoutRequestID);
+                            $this->model_payment_mpesa->updateMpesaCustomerByMerchant($manifest_id['order_id'],$manifest_id['customer_id'], $value->Value, $stkCallback->stkCallback->CheckoutRequestID);
                         }
                     }
                 }
                 $this->load->model('account/customer');
                 $customer_info = $this->model_account_customer->getCustomer($manifest_id_customer);
                 $this->load->model('payment/mpesa');
+                $log->write('payment /topup added to wallet   before If condition 111');
 
-                if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode) {
-                    
+                if (isset($manifest_id_customer) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode) {
+                    $log->write('payment /topup added to wallet   before If condition 222');
                     $order_status_id = $this->config->get('config_order_status_id');
                 $log->write('updateMpesaStatus validate');
                 $dataAddCredit['customer_id'] = $manifest_id;
@@ -1637,18 +1643,30 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 $dataAddCredit['append'] = 0;
                 $dataAddCredit['comment'] = '';
                 $this->load->model('payment/mpesa');
+                // $this->model_payment_mpesa->addCustomerHistoryTransaction($manifest_id_customer, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $stkCallback->stkCallback->MerchantRequestID);
                 $this->model_payment_mpesa->addCustomerHistoryTransaction($manifest_id_customer, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $stkCallback->stkCallback->MerchantRequestID);
 
                     $response['status'] = true;
                     $log->write('CALLBACK MOBILE TOPUP SUCCESS');
+                    $log->write('payment /topup added to wallet');
                 }
                 if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 != $stkCallback->stkCallback->ResultCode) {
                     $log->write('MOBILE TOPUP FAILED');
+                    $log->write('MOBILE TOPUP FAILED');
                 }
-            }
+            // }
         }
+    }
+    catch(exception $ex)
+    {
+        $log = new Log('error.log');
+        $log->write('MOBILE TOPUP FAILED');
+        $log->write($ex);
+    }
+    finally{
 
         return $response;
+    }
     }
 
 }
