@@ -669,6 +669,12 @@ class ControllerPaymentMpesa extends Controller {
                     }
 
                     if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
+                       
+                        // $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($order_id);
+                        // if ($transaction_details == NULL) {
+                        //     $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
+                        // }
+                       
                         //success pending to processing
                         $order_status_id = $this->config->get('mpesa_order_status_id');
 
