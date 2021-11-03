@@ -549,6 +549,7 @@ class ControllerAccountLogin extends Controller {
     }
 
     public function customer() {
+        setcookie('po_number', null, -1, '/');
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
