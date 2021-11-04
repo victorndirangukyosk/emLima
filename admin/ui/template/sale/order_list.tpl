@@ -207,7 +207,16 @@
                             
                             <div class="form-group">
                                 <label class="control-label" for="input-delivery-date">Delivery Time Slot</label>
-                                    <input type="text" name="filter_delivery_time_slot" value="<?php echo $filter_delivery_time_slot; ?>" placeholder="<?php echo $column_delivery_time_slot; ?>" id="input-delivery-time-slot" class="form-control" />
+                                    <select name="filter_delivery_time_slot" id="input-delivery-time-slot" class="form-control">
+                                    <option value="">Select <?php echo $column_delivery_time_slot; ?></option>
+                                    <?php foreach ($time_slots as $time_slot) { ?>
+                                    <?php if ($time_slot['timeslot'] == $filter_delivery_time_slot) { ?>
+                                    <option value="<?php echo $time_slot['timeslot']; ?>" selected="selected"><?php echo $time_slot['timeslot']; ?></option>
+                                    <?php } else { ?>
+                                    <option value="<?php echo $time_slot['timeslot']; ?>"><?php echo $time_slot['timeslot']; ?></option>
+                                    <?php } ?>
+                                    <?php } ?>
+                                </select>
                             </div>
                             
                             <div class="form-group">
@@ -593,7 +602,7 @@
                 url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
             }
             
-            var filter_delivery_time_slot = $('input[name=\'filter_delivery_time_slot\']').val();
+            var filter_delivery_time_slot = $('select[name=\'filter_delivery_time_slot\']').val();
 
             if (filter_delivery_time_slot) {
                 url += '&filter_delivery_time_slot=' + encodeURIComponent(filter_delivery_time_slot);

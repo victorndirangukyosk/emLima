@@ -917,7 +917,7 @@ class ControllerSaleOrder extends Controller {
             if (isset($this->request->get['filter_delivery_date'])) {
                 $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
             }
-            
+
             if (isset($this->request->get['filter_delivery_time_slot'])) {
                 $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
             }
@@ -1320,7 +1320,7 @@ class ControllerSaleOrder extends Controller {
         $data['column_delivery_method'] = $this->language->get('column_delivery_method');
         $data['column_delivery_date'] = $this->language->get('column_delivery_date');
         $data['column_delivery_time_slot'] = $this->language->get('column_delivery_time_slot');
-        
+
         $data['column_sub_total'] = $this->language->get('column_sub_total');
         $data['entry_return_id'] = $this->language->get('entry_return_id');
         $data['entry_order_id'] = $this->language->get('entry_order_id');
@@ -1593,6 +1593,9 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('vehicles/vehicles');
         $vehicles = $this->model_vehicles_vehicles->getAllVehicles();
         $data['vehicles'] = $vehicles;
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $data['time_slots'] = $deliveryTimeslots;
 
         $this->response->setOutput($this->load->view('sale/order_list.tpl', $data));
     }
@@ -1752,7 +1755,7 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_delivery_date'])) {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
-        
+
         if (isset($this->request->get['filter_delivery_time_slot'])) {
             $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
         }
@@ -2348,7 +2351,7 @@ class ControllerSaleOrder extends Controller {
             if (isset($this->request->get['filter_delivery_date'])) {
                 $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
             }
-            
+
             if (isset($this->request->get['filter_delivery_time_slot'])) {
                 $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
             }
