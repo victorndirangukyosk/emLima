@@ -1753,6 +1753,10 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_delivery_date']) && $data['filter_delivery_date'] != 'undefined') {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
+        
+        if (isset($data['filter_delivery_time_slot']) && !empty($data['filter_delivery_time_slot']) && $data['filter_delivery_time_slot'] != 'undefined') {
+            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
+        }
 
         if (!empty($data['filter_date_added']) && $data['filter_date_added'] != 'undefined') {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
