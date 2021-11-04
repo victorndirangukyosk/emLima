@@ -26,6 +26,7 @@ $_['error_payable'] = 'Payable To Required!';
 $_['error_merchant_key'] = 'Merchant Key Required!';
 $_['error_client_secret'] = 'Client Secret Required!';
 $_['error_client_id'] = 'Client Id Required!';
+$_['error_channel'] = 'Channel Required!';
 $_['error_business_short_code'] = 'Business Short Code Required!';
 $_['error_lipanainterswitchpasskey'] = 'LipaNaInterswitchPasskey Required!';
 $_['error_party_a'] = 'Party A Required!';

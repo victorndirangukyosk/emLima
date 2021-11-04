@@ -62,6 +62,16 @@
                             <?php } ?>
                         </div>
                     </div>
+                    
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-payable">Channel</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="pezesha_channel" value="<?php echo $pezesha_channel; ?>" placeholder="Channel" id="input-payable" class="form-control" />
+                            <?php if ($error_channel) { ?>
+                            <div class="text-danger"><?php echo $error_channel; ?></div>
+                            <?php } ?>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-total"><span data-toggle="tooltip" title="<?php echo $help_total; ?>"><?php echo $entry_total; ?></span></label>
