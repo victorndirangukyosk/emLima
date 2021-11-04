@@ -25,7 +25,7 @@ class ControllerPaymentPezesha extends Controller {
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
 
-        $data['entry_merchant_code'] = $this->language->get('entry_merchant_code');
+        $data['entry_merchant_key'] = $this->language->get('entry_merchant_key');
         $data['entry_total'] = $this->language->get('entry_total');
         $data['entry_order_status'] = $this->language->get('entry_order_status');
         $data['entry_status'] = $this->language->get('entry_status');
@@ -49,10 +49,10 @@ class ControllerPaymentPezesha extends Controller {
             $data['success'] = '';
         }
 
-        if (isset($this->error['merchant_code'])) {
-            $data['error_merchant_code'] = $this->error['merchant_code'];
+        if (isset($this->error['merchant_key'])) {
+            $data['error_merchant_key'] = $this->error['merchant_key'];
         } else {
-            $data['error_merchant_code'] = '';
+            $data['error_merchant_key'] = '';
         }
 
         if (isset($this->error['client_secret'])) {
