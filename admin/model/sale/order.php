@@ -969,6 +969,10 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_delivery_date'])) {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
+        
+        if (!empty($data['filter_delivery_time_slot'])) {
+            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
+        }
 
         if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
@@ -1749,6 +1753,10 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_delivery_date']) && $data['filter_delivery_date'] != 'undefined') {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
+        
+        if (isset($data['filter_delivery_time']) && !empty($data['filter_delivery_time']) && $data['filter_delivery_time'] != 'undefined') {
+            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time']) . "'";
+        }
 
         if (!empty($data['filter_date_added']) && $data['filter_date_added'] != 'undefined') {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
@@ -1802,7 +1810,6 @@ class ModelSaleOrder extends Model {
 
         $query = $this->db->query($sql);
         //  echo "<pre>";print_r($sql);die;
-
         return $query->rows;
     }
 
@@ -2355,6 +2362,10 @@ class ModelSaleOrder extends Model {
 
         if (!empty($data['filter_delivery_date'])) {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
+        }
+        
+        if (!empty($data['filter_delivery_time_slot'])) {
+            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
         }
 
         if (!empty($data['filter_total'])) {
