@@ -392,6 +392,9 @@ class ControllerReportVendorOrders extends Controller {
 
         $this->load->model('localisation/order_status');
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $data['time_slots'] = $deliveryTimeslots;
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -405,10 +408,12 @@ class ControllerReportVendorOrders extends Controller {
 
         if (isset($this->request->get['filter_delivery_date'])) {
             $deliveryDate = $this->request->get['filter_delivery_date'];
+            $deliveryTime = isset($this->request->get['filter_delivery_time_slot']) && $this->request->get['filter_delivery_time_slot'] != NULL ? $this->request->get['filter_delivery_time_slot'] : '';
 
 
             $filter_data = [
                 'filter_delivery_date' => $deliveryDate,
+                'filter_delivery_time' => $deliveryTime,
             ];
             $this->load->model('sale/order');
             // $results = $this->model_sale_order->getOrders($filter_data);

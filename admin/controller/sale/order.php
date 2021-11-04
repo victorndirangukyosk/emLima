@@ -918,6 +918,10 @@ class ControllerSaleOrder extends Controller {
                 $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
             }
 
+            if (isset($this->request->get['filter_delivery_time_slot'])) {
+                $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_payment'])) {
                 $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
             }
@@ -1024,6 +1028,12 @@ class ControllerSaleOrder extends Controller {
             $filter_delivery_date = null;
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $filter_delivery_time_slot = $this->request->get['filter_delivery_time_slot'];
+        } else {
+            $filter_delivery_time_slot = null;
+        }
+
         if (isset($this->request->get['filter_payment'])) {
             $filter_payment = $this->request->get['filter_payment'];
         } else {
@@ -1127,6 +1137,10 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1198,6 +1212,7 @@ class ControllerSaleOrder extends Controller {
             'filter_store_name' => $filter_store_name,
             'filter_delivery_method' => $filter_delivery_method,
             'filter_delivery_date' => $filter_delivery_date,
+            'filter_delivery_time_slot' => $filter_delivery_time_slot,
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
             'filter_order_type' => $filter_order_type,
@@ -1304,6 +1319,7 @@ class ControllerSaleOrder extends Controller {
         $data['column_payment'] = $this->language->get('column_payment');
         $data['column_delivery_method'] = $this->language->get('column_delivery_method');
         $data['column_delivery_date'] = $this->language->get('column_delivery_date');
+        $data['column_delivery_time_slot'] = $this->language->get('column_delivery_time_slot');
 
         $data['column_sub_total'] = $this->language->get('column_sub_total');
         $data['entry_return_id'] = $this->language->get('entry_return_id');
@@ -1386,6 +1402,10 @@ class ControllerSaleOrder extends Controller {
 
         if (isset($this->request->get['filter_delivery_date'])) {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_payment'])) {
@@ -1477,6 +1497,10 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
@@ -1533,6 +1557,7 @@ class ControllerSaleOrder extends Controller {
         $data['filter_store_name'] = $filter_store_name;
         $data['filter_delivery_method'] = $filter_delivery_method;
         $data['filter_delivery_date'] = $filter_delivery_date;
+        $data['filter_delivery_time_slot'] = $filter_delivery_time_slot;
         $data['filter_payment'] = $filter_payment;
 
         $data['filter_order_status'] = $filter_order_status;
@@ -1565,10 +1590,12 @@ class ControllerSaleOrder extends Controller {
         $order_processing_groups = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
         $data['order_processing_groups'] = $order_processing_groups;
 
-
         $this->load->model('vehicles/vehicles');
         $vehicles = $this->model_vehicles_vehicles->getAllVehicles();
         $data['vehicles'] = $vehicles;
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $data['time_slots'] = $deliveryTimeslots;
 
         $this->response->setOutput($this->load->view('sale/order_list.tpl', $data));
     }
@@ -1727,6 +1754,10 @@ class ControllerSaleOrder extends Controller {
 
         if (isset($this->request->get['filter_delivery_date'])) {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_payment'])) {
@@ -2319,6 +2350,10 @@ class ControllerSaleOrder extends Controller {
 
             if (isset($this->request->get['filter_delivery_date'])) {
                 $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_delivery_time_slot'])) {
+                $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
             }
 
             if (isset($this->request->get['filter_payment'])) {
@@ -4675,29 +4710,26 @@ class ControllerSaleOrder extends Controller {
                 } else {
                     $totals = $this->model_sale_order->getOrderTotals($order_id);
                 }
-                $credit_amount=0;
+                $credit_amount = 0;
                 foreach ($totals as $total) {
-                    if ($total['value'] > 0 || $total['code'] =='credit')
-                            if($total['code'] =='credit')
-                            {
-                                $credit_amount=$total['value'];
-                            }
-                            if($total['code'] =='total')
-                            {
-                                $total['value']+=$credit_amount;
+                    if ($total['value'] > 0 || $total['code'] == 'credit')
+                        if ($total['code'] == 'credit') {
+                            $credit_amount = $total['value'];
+                        }
+                    if ($total['code'] == 'total') {
+                        $total['value'] += $credit_amount;
                         $total_data[] = [
                             'title' => $total['title'],
                             'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
                             'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
                         ];
-                        }
-                        else {
-                            $total_data[] = [
-                                'title' => $total['title'],
-                                'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                                'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
-                            ];
-                        }
+                    } else {
+                        $total_data[] = [
+                            'title' => $total['title'],
+                            'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                            'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
+                        ];
+                    }
                 }
                 // if($credit_available==1)
                 // {
@@ -5220,6 +5252,7 @@ class ControllerSaleOrder extends Controller {
 
         //$this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
+
     //modified to add delivery charge ,tax,VAT on delivery
     public function consolidatedCalculationSheet() {
         $deliveryDate = $this->request->get['filter_delivery_date'];
@@ -5252,18 +5285,15 @@ class ControllerSaleOrder extends Controller {
                 if ('sub_total' == $total['code']) {
                     $sub_total = $total['value'];
                     //break;
-                }           
+                }
                 if ('shipping' == $total['code']) {
                     $delivery_charge = $total['value'];
-                    
                 }
                 if ('total' == $total['code']) {
                     $total_full = $total['value'];
-                    
                 }
                 if ('delivery_vat' == $total['code']) {
                     $delivery_charge_vat = $total['value'];
-                    
                 }
             }
             // echo "<pre>";print_r($total);die;
@@ -5282,11 +5312,8 @@ class ControllerSaleOrder extends Controller {
                 'order_status' => $order['status'],
             ];
             // $totalOrdersAmount += $order['total'];
-
-
         }
         // echo "<pre>";print_r($data['consolidation']);die;
-
         // $data['consolidation']['total'] = $totalOrdersAmount; 
 
         foreach ($results as $index => $order) {
@@ -5298,7 +5325,6 @@ class ControllerSaleOrder extends Controller {
             // $transaction_fee = $this->model_sale_order->getOrderTransactionFee($data['orders'][$index]['order_id']);
             // if (is_array($transaction_fee) && count($transaction_fee) > 0 && $transaction_fee['order_id'] == $data['orders'][$index]['order_id']) {
             //     $tran_fee = $transaction_fee['value'];
-
             //     /* $log = new Log('error.log');
             //       $log->write('transaction_fee');
             //       $log->write($tran_fee);
@@ -5308,17 +5334,17 @@ class ControllerSaleOrder extends Controller {
 
 
             $data['orders'][$index]['products'] = $orderProducts;
-                /*
-            // foreach ($orderProducts as $item) {
-            //     $sum += $item['total_updatedvalue'];
-            // }
-            // $data['consolidation'][$index]['amount'] = $sum + $tran_fee;
-            // $totalOrdersAmount += $sum + $tran_fee;
-            */ //these lines commented to add delivery charge and no transaction fee
-            $totalOrdersAmount +=$data['consolidation'][$index]['amount'];
+            /*
+              // foreach ($orderProducts as $item) {
+              //     $sum += $item['total_updatedvalue'];
+              // }
+              // $data['consolidation'][$index]['amount'] = $sum + $tran_fee;
+              // $totalOrdersAmount += $sum + $tran_fee;
+             */ //these lines commented to add delivery charge and no transaction fee
+            $totalOrdersAmount += $data['consolidation'][$index]['amount'];
 
-           $data['orders'][$index]['delivery_charge']=$data['consolidation'][$index]['delivery_charge'];
-           $data['orders'][$index]['delivery_charge_vat']=$data['consolidation'][$index]['delivery_charge_vat'];
+            $data['orders'][$index]['delivery_charge'] = $data['consolidation'][$index]['delivery_charge'];
+            $data['orders'][$index]['delivery_charge_vat'] = $data['consolidation'][$index]['delivery_charge_vat'];
         }
         $data['consolidation']['total'] = $totalOrdersAmount;
 
@@ -6724,43 +6750,40 @@ class ControllerSaleOrder extends Controller {
             $log->write($orderTotal);
             $log->write($shipping_price);
 
+            $wallet_amount_positive = 0;
 
-            $wallet_amount_positive=0;
-            
             foreach ($datas['totals'] as $p_id_code => $tot) {
-            // echo "<pre>";print_r($tot);die;
+                // echo "<pre>";print_r($tot);die;
 
                 /* $log->write("updatetotals");
                   $log->write($tot); */
                 $tot['sort'] = $p;
                 $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
-                if($tot['code']=="credit")
-                {
-                      $wallet_amount_positive=abs($tot['value']);
-
+                if ($tot['code'] == "credit") {
+                    $wallet_amount_positive = abs($tot['value']);
                 }
-                /*if ('shipping' == $tot['code']) {
-                    if (count($shipping_price) > 0 && isset($shipping_price['cost']) && isset($shipping_price['actual_cost'])) {
-                        if ((array_key_exists('value_coming', $tot))) {
-                            $orderTotal -= $tot['value_coming'];
-                        }
+                /* if ('shipping' == $tot['code']) {
+                  if (count($shipping_price) > 0 && isset($shipping_price['cost']) && isset($shipping_price['actual_cost'])) {
+                  if ((array_key_exists('value_coming', $tot))) {
+                  $orderTotal -= $tot['value_coming'];
+                  }
 
-                        $orderTotal += $shipping_price['cost'];
-                    } else {
-                        //$orderTotal -= $tot['value'];
+                  $orderTotal += $shipping_price['cost'];
+                  } else {
+                  //$orderTotal -= $tot['value'];
 
-                        if ((array_key_exists('value_coming', $tot))) {
-                            $orderTotal -= $tot['value_coming'];
-                        }
-                    }
-                }*/
+                  if ((array_key_exists('value_coming', $tot))) {
+                  $orderTotal -= $tot['value_coming'];
+                  }
+                  }
+                  } */
 
                 ++$p;
             }
-                // if($wallet_amount_positive>0)
-                // {
-                // $orderTotal +=$wallet_amount_positive;
-                // }
+            // if($wallet_amount_positive>0)
+            // {
+            // $orderTotal +=$wallet_amount_positive;
+            // }
             $orderTotal = round($orderTotal, 2);
             $subTotal = round($subTotal, 2);
 
@@ -6771,8 +6794,8 @@ class ControllerSaleOrder extends Controller {
             $this->editDeliveryRequest($order_id);
 
             //$this->sendNewInvoice($order_id);
-        // echo "<pre>";print_r($this->request->get['settle']);die;
-            
+            // echo "<pre>";print_r($this->request->get['settle']);die;
+
 
             if ($this->request->get['settle']) {
                 //settle and  update
@@ -6786,7 +6809,7 @@ class ControllerSaleOrder extends Controller {
                 if ($final_amount != $old_total) {
 
                     //update Payment Paid status and pending amount
-                    $this->model_sale_order->updatePaymentStatus($order_id,$customer_id,$old_total,$final_amount);
+                    $this->model_sale_order->updatePaymentStatus($order_id, $customer_id, $old_total, $final_amount);
 
                     //$iuguData = $this->refundAndChargeNewTotalStripe($order_id,$customer_id,$final_amount);
                 } else {
@@ -8862,15 +8885,10 @@ class ControllerSaleOrder extends Controller {
             }
             // $currentdate= date("d/m/Y");
             // echo "<pre>";print_r( $order_delivery_date);
-
             // echo "<pre>";print_r( 'current date below');
             // echo "<pre>";print_r( $currentdate);
-
-
-
             // if($order_delivery_date > $currentdate)
-            if(isset($updateDeliveryDate) && $updateDeliveryDate==1)
-            {
+            if (isset($updateDeliveryDate) && $updateDeliveryDate == 1) {
                 //update delivery date to current date
                 $this->model_sale_order->UpdateOrderDeliveryDate($order_id);
             }
@@ -9029,7 +9047,6 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-
     public function getOrderInfo() {
         $this->load->model('sale/order');
         //echo 'date.timezone ' ;;
@@ -9040,9 +9057,7 @@ class ControllerSaleOrder extends Controller {
         if ('POST' == $this->request->server['REQUEST_METHOD']) {
             $data = $this->model_sale_order->getOrderInfo($this->request->post['order_id']);
 
-
             // $totals = $this->model_sale_order->getOrderTotals($data['order_id']);
-
             // echo "<pre>";print_r($data);die;
             // foreach ($totals as $total) {
             //     if ('sub_total' == $total['code']) {
@@ -9050,12 +9065,10 @@ class ControllerSaleOrder extends Controller {
             //         break;
             //     }
             // }
-            $data['total']=$this->currency->format($data['total']);
-            $data['date_added']= date($this->language->get('date_format_short'), strtotime($data['date_added']));
-            $data['delivery_date']= date($this->language->get('date_format_short'), strtotime($data['delivery_date']));
-            $data['paid']=($data['paid']=='N'?"Payment Pending":($data['paid']=='Y'?"Payment Done": "Partially Paid"));
-                    
-
+            $data['total'] = $this->currency->format($data['total']);
+            $data['date_added'] = date($this->language->get('date_format_short'), strtotime($data['date_added']));
+            $data['delivery_date'] = date($this->language->get('date_format_short'), strtotime($data['delivery_date']));
+            $data['paid'] = ($data['paid'] == 'N' ? "Payment Pending" : ($data['paid'] == 'Y' ? "Payment Done" : "Partially Paid"));
 
             if ($this->request->isAjax()) {
                 $this->response->addHeader('Content-Type: application/json');
@@ -9073,4 +9086,5 @@ class ControllerSaleOrder extends Controller {
 
         return true;
     }
+
 }

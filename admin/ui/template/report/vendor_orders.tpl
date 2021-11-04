@@ -101,6 +101,16 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    <select name="consolidated-order-sheet-timepicker" id="consolidated-order-sheet-timepicker" class="form-control">
+                                    <option value="">Select Delivery Time Slot</option>
+                                    <?php foreach ($time_slots as $time_slot) { ?>
+                                    <option value="<?php echo $time_slot['timeslot']; ?>"><?php echo $time_slot['timeslot']; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
                                     <div class="input-group">
                                         <input class="form-control" style="display: inline; cursor: pointer;" type="text"
                                                id="consolidated-order-sheet-datepicker" size="30"
@@ -342,11 +352,12 @@
         $("#download-consolidated-order-sheet").click(function(e) {
             e.preventDefault();
             const deliveryDate = $("#consolidated-order-sheet-datepicker").val();
+            const deliveryTime = $("#consolidated-order-sheet-timepicker").val();
 
             if (!deliveryDate.length > 0) {
                 alert("Please select delivery date");
             } else {
-                const url = 'index.php?path=report/vendor_orders/consolidatedOrderSheet&token=<?php echo $token; ?>&filter_delivery_date=' + encodeURIComponent(deliveryDate);
+                const url = 'index.php?path=report/vendor_orders/consolidatedOrderSheet&token=<?php echo $token; ?>&filter_delivery_date=' + encodeURIComponent(deliveryDate) +'&filter_delivery_time_slot=' + encodeURIComponent(deliveryTime);
                 location = url;
             }
         });
