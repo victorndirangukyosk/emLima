@@ -101,12 +101,13 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                        <input class="form-control" type="text"
-                                               id="consolidated-order-sheet-timepicker" size="30"
-                                               placeholder="Enter Delivery Time Slot">
-                                        <span class="input-group-btn">
-                                    </span>
-                                </div>
+                                    <select name="consolidated-order-sheet-timepicker" id="consolidated-order-sheet-timepicker" class="form-control">
+                                    <option value="">Select Delivery Time Slot</option>
+                                    <?php foreach ($time_slots as $time_slot) { ?>
+                                    <option value="<?php echo $time_slot['timeslot']; ?>"><?php echo $time_slot['timeslot']; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
