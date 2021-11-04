@@ -66,6 +66,12 @@ class ControllerPaymentPezesha extends Controller {
         } else {
             $data['error_client_id'] = '';
         }
+        
+        if (isset($this->error['channel'])) {
+            $data['error_channel'] = $this->error['channel'];
+        } else {
+            $data['error_channel'] = '';
+        }
 
         $data['breadcrumbs'] = [];
 
