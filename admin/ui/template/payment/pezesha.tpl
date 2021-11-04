@@ -54,11 +54,11 @@
                     </div>
                     
                     <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-payable">Data Ref</label>
+                        <label class="col-sm-2 control-label" for="input-payable">Client Id</label>
                         <div class="col-sm-10">
-                            <input type="text" name="pezesha_data_ref" value="<?php echo $pezesha_data_ref; ?>" placeholder="Data Ref" id="input-payable" class="form-control" />
-                            <?php if ($error_data_ref) { ?>
-                            <div class="text-danger"><?php echo $error_data_ref; ?></div>
+                            <input type="text" name="pezesha_client_id" value="<?php echo $pezesha_client_id; ?>" placeholder="Client Id" id="input-payable" class="form-control" />
+                            <?php if ($error_client_id) { ?>
+                            <div class="text-danger"><?php echo $error_client_id; ?></div>
                             <?php } ?>
                         </div>
                     </div>
