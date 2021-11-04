@@ -61,10 +61,10 @@ class ControllerPaymentPezesha extends Controller {
             $data['error_client_secret'] = '';
         }
 
-        if (isset($this->error['data_ref'])) {
-            $data['error_data_ref'] = $this->error['data_ref'];
+        if (isset($this->error['client_id'])) {
+            $data['error_client_id'] = $this->error['client_id'];
         } else {
-            $data['error_data_ref'] = '';
+            $data['error_client_id'] = '';
         }
 
         $data['breadcrumbs'] = [];
