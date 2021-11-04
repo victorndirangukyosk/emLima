@@ -207,9 +207,7 @@
                             
                             <div class="form-group">
                                 <label class="control-label" for="input-delivery-date">Delivery Time Slot</label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_delivery_time_slot" value="<?php echo $filter_delivery_time_slot; ?>" placeholder="<?php echo $column_delivery_time_slot; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-time-slot" class="form-control" />
-                                </div>
+                                    <input type="text" name="filter_delivery_time_slot" value="<?php echo $filter_delivery_time_slot; ?>" placeholder="<?php echo $column_delivery_time_slot; ?>" id="input-delivery-time-slot" class="form-control" />
                             </div>
                             
                             <div class="form-group">
