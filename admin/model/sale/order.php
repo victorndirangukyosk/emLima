@@ -2356,6 +2356,10 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_delivery_date'])) {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
+        
+        if (!empty($data['filter_delivery_time_slot'])) {
+            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
+        }
 
         if (!empty($data['filter_total'])) {
             $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
