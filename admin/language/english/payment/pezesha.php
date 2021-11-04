@@ -1,7 +1,7 @@
 <?php
 
 // Heading
-$_['heading_title'] = 'Interswitch';
+$_['heading_title'] = 'Pezesha';
 
 // Text
 $_['text_payment'] = 'Payment';
