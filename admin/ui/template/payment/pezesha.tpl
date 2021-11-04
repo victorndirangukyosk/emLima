@@ -44,11 +44,11 @@
                     </div>
 
                     <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-payable">Pay Item ID</label>
+                        <label class="col-sm-2 control-label" for="input-payable">Client Secret</label>
                         <div class="col-sm-10">
-                            <input type="text" name="pezesha_pay_item_id" value="<?php echo $pezesha_pay_item_id; ?>" placeholder="Pay Item ID" id="input-payable" class="form-control" />
-                            <?php if ($error_pay_item_id) { ?>
-                            <div class="text-danger"><?php echo $error_pay_item_id; ?></div>
+                            <input type="text" name="pezesha_client_secret" value="<?php echo $pezesha_client_secret; ?>" placeholder="Client Secret" id="input-payable" class="form-control" />
+                            <?php if ($error_client_secret) { ?>
+                            <div class="text-danger"><?php echo $error_client_secret; ?></div>
                             <?php } ?>
                         </div>
                     </div>
