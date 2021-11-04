@@ -185,6 +185,7 @@ $_['column_weight'] = 'Product weight';
 $_['column_payment'] = 'Payment Method';
 $_['column_delivery_method'] = 'Delivery Method';
 $_['column_delivery_date'] = 'Delivery Date';
+$_['column_delivery_time_slot'] = 'Delivery Time Slot';
 
 
 // Entry

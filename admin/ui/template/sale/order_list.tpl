@@ -206,6 +206,13 @@
                             </div>
                             
                             <div class="form-group">
+                                <label class="control-label" for="input-delivery-date">Delivery Time Slot</label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_delivery_time_slot" value="<?php echo $filter_delivery_time_slot; ?>" placeholder="<?php echo $column_delivery_time_slot; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-time-slot" class="form-control" />
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
                             <button type="button" id="button-filter" class="btn btn-primary pull-left" style="margin-top:20px;"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
                             </div>
                             
@@ -586,6 +593,12 @@
 
             if (filter_delivery_date) {
                 url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
+            }
+            
+            var filter_delivery_time_slot = $('input[name=\'filter_delivery_time_slot\']').val();
+
+            if (filter_delivery_time_slot) {
+                url += '&filter_delivery_time_slot=' + encodeURIComponent(filter_delivery_time_slot);
             }
 
             var filter_payment = $('input[name=\'filter_payment\']').val();
