@@ -392,6 +392,9 @@ class ControllerReportVendorOrders extends Controller {
 
         $this->load->model('localisation/order_status');
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $data['time_slots'] = $deliveryTimeslots;
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
