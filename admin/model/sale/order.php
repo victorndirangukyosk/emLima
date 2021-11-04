@@ -1754,8 +1754,8 @@ class ModelSaleOrder extends Model {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
         
-        if (isset($data['filter_delivery_time_slot']) && !empty($data['filter_delivery_time_slot']) && $data['filter_delivery_time_slot'] != 'undefined') {
-            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
+        if (isset($data['filter_delivery_time']) && !empty($data['filter_delivery_time']) && $data['filter_delivery_time'] != 'undefined') {
+            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time']) . "'";
         }
 
         if (!empty($data['filter_date_added']) && $data['filter_date_added'] != 'undefined') {
@@ -1810,7 +1810,6 @@ class ModelSaleOrder extends Model {
 
         $query = $this->db->query($sql);
         //  echo "<pre>";print_r($sql);die;
-
         return $query->rows;
     }
 
