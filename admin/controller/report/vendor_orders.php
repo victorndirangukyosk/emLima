@@ -405,10 +405,12 @@ class ControllerReportVendorOrders extends Controller {
 
         if (isset($this->request->get['filter_delivery_date'])) {
             $deliveryDate = $this->request->get['filter_delivery_date'];
+            $deliveryTime = isset($this->request->get['filter_delivery_time_slot']) && $this->request->get['filter_delivery_time_slot'] != NULL ? $this->request->get['filter_delivery_time_slot'] : '';
 
 
             $filter_data = [
                 'filter_delivery_date' => $deliveryDate,
+                'filter_delivery_time' => $deliveryTime,
             ];
             $this->load->model('sale/order');
             // $results = $this->model_sale_order->getOrders($filter_data);
