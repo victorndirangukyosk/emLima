@@ -177,16 +177,16 @@ class ControllerPaymentPezesha extends Controller {
         }
 
         if (!$this->request->post['pezesha_merchant_key']) {
-            $this->error['pezesha_merchant_key'] = $this->language->get('error_pezesha_merchant_key');
+            $this->error['merchant_key'] = $this->language->get('error_pezesha_merchant_key');
         }
         if (!$this->request->post['pezesha_client_secret']) {
-            $this->error['pezesha_client_secret'] = $this->language->get('error_pezesha_client_secret');
+            $this->error['client_secret'] = $this->language->get('error_pezesha_client_secret');
         }
         if (!$this->request->post['pezesha_client_id']) {
-            $this->error['pezesha_client_id'] = $this->language->get('error_pezesha_client_id');
+            $this->error['client_id'] = $this->language->get('error_pezesha_client_id');
         }
         if (!$this->request->post['pezesha_channel']) {
-            $this->error['pezesha_channel'] = $this->language->get('error_pezesha_channel');
+            $this->error['channel'] = $this->language->get('error_pezesha_channel');
         }
 
         return !$this->error;
