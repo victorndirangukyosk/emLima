@@ -34,11 +34,11 @@
                 <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-pezesha" class="form-horizontal">
 
                     <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-payable">Merchant Code</label>
+                        <label class="col-sm-2 control-label" for="input-payable">Merchant Key</label>
                         <div class="col-sm-10">
-                            <input type="text" name="pezesha_merchant_code" value="<?php echo $pezesha_merchant_code; ?>" placeholder="Merchant Code" id="input-payable" class="form-control" />
-                            <?php if ($error_merchant_code) { ?>
-                            <div class="text-danger"><?php echo $error_merchant_code; ?></div>
+                            <input type="text" name="pezesha_merchant_key" value="<?php echo $pezesha_merchant_key; ?>" placeholder="Merchant Key" id="input-payable" class="form-control" />
+                            <?php if ($error_merchant_key) { ?>
+                            <div class="text-danger"><?php echo $error_merchant_key; ?></div>
                             <?php } ?>
                         </div>
                     </div>
