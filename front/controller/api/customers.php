@@ -253,8 +253,8 @@ class ControllerApiCustomers extends Controller {
     }
 
     public function getDeliveryTimeSlots() {
-        $this->load->model('setting/store');
-        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $this->load->model('account/address');
+        $deliveryTimeslots = $this->model_account_address->getDeliveryTimeslots(75);
         $json['status'] = 200;
         $json['data'] = $deliveryTimeslots;
 

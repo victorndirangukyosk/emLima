@@ -435,4 +435,8 @@ class ModelAccountAddress extends Model {
         return $query->rows;
     }
 
+    public function getDeliveryTimeslots($store_id) {
+        return $this->db->query('select * from ' . DB_PREFIX . 'store_delivery_timeslot WHERE store_id="' . $store_id . '" GROUP BY timeslot')->rows;
+    }
+
 }
