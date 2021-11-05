@@ -607,6 +607,12 @@ class ControllerReportVendorOrders extends Controller {
         } else {
             $order_id = null;
         }
+        
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $delivery_time_slot = $this->request->get['filter_delivery_time_slot'];
+        } else {
+            $delivery_time_slot = null;
+        }
 
         if (isset($this->request->get['selected_order_id'])) {
             $orders = $this->request->get['selected_order_id'];
@@ -629,7 +635,8 @@ class ControllerReportVendorOrders extends Controller {
             'filter_date_added' => $date_added,
             'filter_date_added_end' => $date_added_end,
             'filter_order_id' => $order_id,
-            'filter_orders' => $orders
+            'filter_orders' => $orders,
+            'filter_delivery_time' => $delivery_time_slot,
         ];
 
 
