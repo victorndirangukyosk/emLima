@@ -252,6 +252,17 @@ class ControllerApiCustomers extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getDeliveryTimeSlots() {
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $json['status'] = 200;
+        $json['data'] = $deliveryTimeslots;
+
+        $json['msg'] = 'Delivery Time Slots Fetched Successfully';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function getAccountManagers($args = []) {
         try {
             $this->load->model('user/user');
