@@ -177,6 +177,10 @@
                                 <?php } ?>
                             <?php } ?>
                         </div>
+                        <div class="mt-4">
+                            <h5><strong>Order Notes </strong></h5>
+                            <p><?= $order['comment']?></p>
+                        </div>
                         
                         <table class="payment-details-table mt-4">
                             <thead>
