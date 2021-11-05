@@ -4400,6 +4400,7 @@ class ControllerSaleOrder extends Controller {
                     $product_data[] = [
                         'product_id' => $product['product_id'],
                         'name' => $product['name'],
+                        'product_note' => $product['product_note'],
                         'model' => $product['model'],
                         'unit' => $product['unit'],
                         'option' => $option_data,
@@ -4694,6 +4695,7 @@ class ControllerSaleOrder extends Controller {
                     $product_data[] = [
                         'product_id' => $product['product_id'],
                         'name' => $product['name'],
+                        'product_note' => $product['product_note'],
                         'model' => $product['model'],
                         'unit' => $product['unit'],
                         'option' => $option_data,

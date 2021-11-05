@@ -1825,6 +1825,12 @@ function downloadOrdersonsolidated() {
                 url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
             }
             
+            var filter_delivery_time_slot = $('input[name=\'filter_delivery_time_slot\']').val();
+
+            if (filter_delivery_time_slot != '') {
+                url += '&filter_delivery_time_slot=' + encodeURIComponent(filter_delivery_time_slot);
+            }
+            
             var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
             return n.value;
             }).join(',');
