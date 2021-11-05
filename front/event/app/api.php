@@ -146,11 +146,11 @@ class EventAppApi extends Event {
                 // Authorize
                 $this->load->controller('api/customers/getCustomercities', $args);
                 }
-                elseif ('api/customers/getDeliveryTimeSlots' == $route) {
+                elseif ('api/customers/getDeliverytimeslots' == $route) {
             // echo "<pre>";print_r($route);die;   
 
                 // Authorize
-                $this->load->controller('api/customers/getDeliveryTimeSlots', $args);
+                $this->load->controller('api/customers/getDeliverytimeslots', $args);
                 }
                 elseif ('api/customers/getCustomerregions' == $route) {
             // echo "<pre>";print_r($route);die;   
