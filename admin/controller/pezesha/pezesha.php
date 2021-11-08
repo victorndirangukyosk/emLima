@@ -34,7 +34,8 @@ class ControllerPezeshaPezesha extends Controller {
         $log->write($result);
         curl_close($curl);
         $result = json_decode($result, true);
-        $json = $result;
+        $json['status'] = true;
+        $json['data'] = $result;
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
