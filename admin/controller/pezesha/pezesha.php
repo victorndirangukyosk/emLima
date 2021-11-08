@@ -12,16 +12,16 @@ class ControllerPezeshaPezesha extends Controller {
 
         $log = new Log('error.log');
 
-        $log->write($this->config->get('pezesha_client_secret'));
-        $log->write($this->config->get('pezesha_client_id'));
-        $log->write($this->config->get('pezesha_merchant_key'));
-
         $body = array('grant_type' => 'client_credentials', 'provider' => 'users', 'client_secret' => $this->config->get('pezesha_client_secret'), 'client_id' => $this->config->get('pezesha_client_id'), 'merchant _key' => $this->config->get('pezesha_merchant_key'));
         $body = http_build_query($body);
         $curl = curl_init();
-
-        curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/oauth/token');
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+        if (ENV == 'production') {
+            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/oauth/token');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+        } else {
+            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/oauth/token');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+        }
 
         $log->write($body);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -42,7 +42,13 @@ class ControllerPezeshaPezesha extends Controller {
 
     public function userregistration() {
 
+        $auth_response = $this->auth();
+        $auth_response = json_decode($auth_response, true);
         $log = new Log('error.log');
+        $log->write('auth_response');
+        $log->write($auth_response);
+        $log->write('auth_response');
+        exit;
         $body = array('grant_type' => 'client_credentials', 'provider' => 'users', 'client_secret' => $this->config->get('pezesha_client_secret'), 'client_id' => $this->config->get('pezesha_client_id'), 'merchant _key' => $this->config->get('pezesha_merchant_key'));
         $curl = curl_init();
         if (ENV == 'production') {
