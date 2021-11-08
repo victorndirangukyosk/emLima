@@ -44,10 +44,13 @@ class ControllerPezeshaPezesha extends Controller {
 
     public function userregistration() {
 
+        $this->load->model('sale/customer');
+        $customer_device_info = $this->model_sale_customer->getCustomer(702);
         $auth_response = $this->auth();
         $log = new Log('error.log');
         $log->write('auth_response');
         $log->write($auth_response);
+        $log->write($customer_device_info);
         $log->write('auth_response');
         $body = array('full_names' => 'client_credentials', 'phone' => 'users', 'other_phone_nos' => $this->config->get('pezesha_client_secret'), 'national_id' => $this->config->get('pezesha_client_id'), 'dob' => $this->config->get('pezesha_merchant_key'), 'email' => '', 'merchant_id' => '', 'merchant_reg_date' => '', 'location' => '', 'geo_location' => '');
         $curl = curl_init();
