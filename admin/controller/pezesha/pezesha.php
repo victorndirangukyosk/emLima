@@ -34,11 +34,12 @@ class ControllerPezeshaPezesha extends Controller {
         $log->write($result);
         curl_close($curl);
         $result = json_decode($result, true);
-        $json['status'] = true;
-        $json['data'] = $result;
+        return $result['access_token'];
+        /* $json['status'] = true;
+          $json['data'] = $result;
 
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+          $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($json)); */
     }
 
     public function userregistration() {
