@@ -2160,7 +2160,7 @@ $.ajax({
 
 
 
-    $('#button-password').on('click', function(e) {
+$('#button-password').on('click', function(e) {
 e.preventDefault();
 
 $.ajax({
@@ -2178,6 +2178,10 @@ $.ajax({
         alert(json.message);
     }
   });
+});
+
+$('#button-pezesha').on('click', function(e) {
+console.log('button-pezesha');
 });
 
 </script>
