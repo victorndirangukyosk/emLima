@@ -1944,6 +1944,12 @@ class ControllerSaleCustomer extends Controller {
         } else {
             $data['error_dob'] = '';
         }
+        
+        if (isset($this->error['national_id'])) {
+            $data['error_national_id'] = $this->error['national_id'];
+        } else {
+            $data['error_national_id'] = '';
+        }
 
         if (isset($this->error['gender'])) {
             $data['error_gender'] = $this->error['gender'];
