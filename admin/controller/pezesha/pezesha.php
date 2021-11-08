@@ -20,7 +20,7 @@ class ControllerPezeshaPezesha extends Controller {
         $curl = curl_init();
 
         curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/oauth/token');
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded']);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
         
         $log->write($body);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
