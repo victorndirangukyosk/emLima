@@ -2191,6 +2191,7 @@ $.ajax({
     success: function(json) {
     $.each(json.errors, function (key, data) {
     alert(key);
+    alert(data);
     })
     alert(json.message);
     }
