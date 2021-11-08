@@ -2189,9 +2189,11 @@ $.ajax({
     dataType: 'json',
     data: 'customer_id=<?php echo $customer_id; ?>',
     success: function(json) {
+    if(json.status == 422) {    
     $.each(json.errors, function (key, data) {
     alert(key+' : '+data);
     })
+    }
     }
   });
 });
