@@ -104,19 +104,21 @@
                           <?php } ?>
                         </div>
                       </div>
-                      <div class="form-group required">
-                        <label class="col-sm-2 control-label" for="input-lastname">Date Of Birth</label>
+                      
+                       <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-date-added"><?php echo $entry_dob; ?></label>
                         <div class="col-sm-10">
-                          <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="Date Of Birth" id="input-dob" class="form-control" />
-                          <?php if ($error_dob) { ?>
-                          <div class="text-danger"><?php echo $error_dob; ?></div>
-                          <?php } ?>
+                            <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="<?php echo $entry_dob; ?>" id="input-date-added" class="form-control date_dob" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                            </span>
                         </div>
-                      </div>
+                      </div> 
+                        
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-lastname">National ID</label>
                         <div class="col-sm-10">
-                          <input type="text" name="national_id" value="<?php echo $national_id; ?>" placeholder="National ID" id="input-national_id" class="form-control" />
+                          <input type="text" name="national_id" value="<?php echo $national_id; ?>" placeholder="National ID" id="input-national_id" class="form-control" maxlength=10 />
                           <?php if ($error_national_id) { ?>
                           <div class="text-danger"><?php echo $error_national_id; ?></div>
                           <?php } ?>
