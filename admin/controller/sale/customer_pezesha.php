@@ -6,7 +6,7 @@ class ControllerSaleCustomerPezesha extends Controller {
 
     public function index() {
 
-        $customer_id = $this->request->get['customer_id'];
+        $customer_id = $this->request->post['customer_id'];
         $this->load->model('sale/customer');
         $log = new Log('error.log');
         $log->write($customer_id);
