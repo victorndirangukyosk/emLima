@@ -55,7 +55,7 @@
                                 </div>
                                 
  
-
+             <input type="hidden" name="mpesa_checkout_request_id" id="mpesa_checkout_request_id" value="">
 
                                 <div id="pay-confirm-order-mpesa" class="col-md-12 confirm_order_class" style="display:none; ">
                                     <p>mPesa Online</p>
@@ -364,7 +364,7 @@ __kdt.push({"post_on_load": false});
                                         //$('#success_msg').html('A payment request has been sent to the mpesa number '+$('#mpesa_phone_number').val()+'. Please wait for a few seconds then check for your phone for an MPESA PIN entry prompt.');
 
                                         $('#success_msg').html('A payment request has been sent on your above number. Please make the payment by entering mpesa PIN and click on Confirm Payment button after receiving sms from mpesa');
-		        		
+		        		$('#mpesa_checkout_request_id').val(json['response'].CheckoutRequestID);
                                         $('#success_msg').show();
 		        		
                                         $('#button-complete').show();
@@ -465,6 +465,61 @@ __kdt.push({"post_on_load": false});
             });
         });
 </script>
+
+<script type="text/javascript">
+$( document ).ready(function() { setInterval(function(){ mpesaresponse(); }, 30000 ); });
+function mpesaresponse() {
+                if($('#mpesa_checkout_request_id').val() != '') {
+                $.ajax({
+                        type: 'post',
+                        url: 'index.php?path=payment/mpesa/mpesatopupautoupdate',
+                        data: { 
+                        mpesa_checkout_request_id : encodeURIComponent($('#mpesa_checkout_request_id').val()),
+                        },
+                        dataType: 'json',
+                        cache: false,
+                        beforeSend: function() {
+                        $(".overlayed").show();
+                        $('#mpesa-button-confirm').button('loading');
+                        },
+                        complete: function() {
+                        $(".overlayed").hide();
+                        },       
+                        success: function(json) {
+                        if(json['processed'] == true) {
+                        $('#mpesa_checkout_request_id').val('');
+                        $('#success_msg').html('Payment Successfull. Wait Until Page Refresh!');
+                        $('#success_msg').show();
+                        setInterval(function(){ window.location.replace(json['redirect']); }, 10000);
+                        return false;
+                        } 
+                        if(json['processed'] == false) {
+                        $('#mpesa_checkout_request_id').val('');
+                        $('#success_msg').html('');
+                        $('#success_msg').hide();
+                        $('#error_msg').html(json['mpesa_payments_response'].description);
+                        $('#error_msg').show();
+                        $('#button-complete').hide();
+                        $('#button-retry').show();
+                        return false;
+                        }
+                        if(json['processed'] == '') {
+                        $('#mpesa_checkout_request_id').val('');
+                        $('#button-complete').show();
+                        $('#mpesa-button-confirm').hide();
+                        $('#button-retry').hide();
+                        $('#loading').hide();
+                        return false;
+                        }
+                        },
+                        error: function(json) {
+                        console.log(json);
+                        }
+                });
+                }                
+}
+</script>  
+
 
 <style>
      
