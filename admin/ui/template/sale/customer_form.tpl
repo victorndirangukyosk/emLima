@@ -2181,6 +2181,7 @@ $.ajax({
 });
 
 $('#button-pezesha').on('click', function(e) {
+e.preventDefault();
 console.log('button-pezesha');
 });
 
