@@ -767,6 +767,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         if ($manifest_id == 0 || $manifest_id == false) {
             $manifest_id_customer = $this->model_payment_mpesa->getMpesaCustomer($stkCallback->stkCallback->MerchantRequestID);
             $log->write('customer_id' . $manifest_id_customer);
+            $log->write('manifest_id_customer' . $manifest_id_customer);
             $file = fopen('system/log/mpesa_customer_log.txt', 'w+'); //url fopen should be allowed for this to occur
             if (false === fwrite($file, $postData)) {
                 fwrite('Error: no data written');
@@ -787,6 +788,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $log->write($stkCallback);
 
         $log->write($stkCallback->stkCallback->MerchantRequestID);
+        $log->write('above is merchant request');
 
         if (isset($manifest_id) && $manifest_id > 0) {
             // Store
@@ -870,6 +872,10 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     if ('MpesaReceiptNumber' == $value->Name) {
                         $this->model_payment_mpesa->insertCustomerTransactionId($manifest_id_customer, $value->Value,$stkCallback->stkCallback->MerchantRequestID);
                         // $transaction_id=$value->Value;wrong
+                        $log->write('mpesa wallet customer id not coming');
+                        $log->write($manifest_id_customer);
+
+
                     }
 
                     if ('Amount' == $value->Name) {
@@ -1594,7 +1600,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
        
         $manifest_id_customer=$manifest_id['customer_id'];
         $log->write('CALLBACK customer_reference_number');
-        $log->write($manifest_id);
+        $log->write($manifest_id_customer);
         $log->write('CALLBACK customer_reference_number');
 
         // if (is_array($manifest_id) && count($manifest_id) > 0) {

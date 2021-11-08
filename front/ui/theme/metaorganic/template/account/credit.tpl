@@ -519,7 +519,12 @@ function mpesaresponse() {
                 }                
 }
 </script>  
+<?php if($redirect_coming) { ?>
+<script type="text/javascript">
+    $('#save-button').click();
+</script>
 
+<?php } ?>
 
 <style>
      
