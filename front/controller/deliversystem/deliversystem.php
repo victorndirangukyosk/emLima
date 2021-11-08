@@ -758,7 +758,14 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $log = new Log('error.log');
         $log->write('updateMpesaOrderStatus');
         $log->write($postData);
+        $postData = json_decode($postData);
 
+        $stkCallback = $postData->Body;
+
+        $log->write($stkCallback);
+
+        $log->write($stkCallback->stkCallback->MerchantRequestID);
+        $log->write('above is merchant request');
        
 
         $manifest_id = $this->model_payment_mpesa->getMpesaOrder($stkCallback->stkCallback->MerchantRequestID);
@@ -781,14 +788,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             }
             fclose($file);
         }
-        $postData = json_decode($postData);
-
-        $stkCallback = $postData->Body;
-
-        $log->write($stkCallback);
-
-        $log->write($stkCallback->stkCallback->MerchantRequestID);
-        $log->write('above is merchant request');
+      
 
         if (isset($manifest_id) && $manifest_id > 0) {
             // Store
