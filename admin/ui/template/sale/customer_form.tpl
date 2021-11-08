@@ -2196,7 +2196,7 @@ $.ajax({
     })
     }
     
-    if(json.status == 200 && json.response_code == 200) {    
+    if(json.status == 200 && json.response_code == 0) {    
     alert(json.message);
     }
     
