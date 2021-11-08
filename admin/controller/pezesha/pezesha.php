@@ -42,11 +42,11 @@ class ControllerPezeshaPezesha extends Controller {
           $this->response->setOutput(json_encode($json)); */
     }
 
-    public function userregistration() {
+    public function userregistration($customer_id) {
 
         $this->load->model('sale/customer');
         $this->load->model('pezesha/pezesha');
-        $customer_device_info = $this->model_sale_customer->getCustomer(701);
+        $customer_device_info = $this->model_sale_customer->getCustomer($customer_id);
         $auth_response = $this->auth();
         $log = new Log('error.log');
         $log->write('auth_response');
