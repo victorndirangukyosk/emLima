@@ -50,7 +50,7 @@ class ControllerPezeshaPezesha extends Controller {
         $log->write($auth_response);
         $log->write('auth_response');
         exit;
-        $body = array('grant_type' => 'client_credentials', 'provider' => 'users', 'client_secret' => $this->config->get('pezesha_client_secret'), 'client_id' => $this->config->get('pezesha_client_id'), 'merchant _key' => $this->config->get('pezesha_merchant_key'));
+        $body = array('full_names' => 'client_credentials', 'phone' => 'users', 'other_phone_nos' => $this->config->get('pezesha_client_secret'), 'national_id' => $this->config->get('pezesha_client_id'), 'dob' => $this->config->get('pezesha_merchant_key'), 'email' => '', 'merchant_id' => '', 'merchant_reg_date' => '', 'location' => '', 'geo_location' => '');
         $curl = curl_init();
         if (ENV == 'production') {
             curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers');
@@ -70,6 +70,12 @@ class ControllerPezeshaPezesha extends Controller {
         curl_close($curl);
         $result = json_decode($result, true);
         $json = $result;
+
+        $json['status'] = true;
+        $json['data'] = $result;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
