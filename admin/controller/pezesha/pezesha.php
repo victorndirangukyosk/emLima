@@ -108,10 +108,10 @@ class ControllerPezeshaPezesha extends Controller {
         $body = json_encode($body);
         $curl = curl_init();
         if (ENV == 'production') {
-            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/borrowers/terms');
+            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/terms');
             curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded', 'Authentication:Bearer ' . $auth_response]);
         } else {
-            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/borrowers/terms');
+            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/terms');
             curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded', 'Authentication:Bearer ' . $auth_response]);
         }
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
