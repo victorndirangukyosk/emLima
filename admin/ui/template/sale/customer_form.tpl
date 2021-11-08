@@ -2183,6 +2183,15 @@ $.ajax({
 $('#button-pezesha').on('click', function(e) {
 e.preventDefault();
 console.log('button-pezesha');
+$.ajax({
+    url: 'index.php?path=sale/customer_pezesha&token=<?php echo $token; ?>',
+    type: 'post',
+    dataType: 'json',
+    data: 'customer_id=<?php echo $customer_id; ?>',
+    success: function(json) {
+        alert(json.message);
+    }
+  });
 });
 
 </script>
