@@ -82,12 +82,13 @@ class ControllerPezeshaPezesha extends Controller {
             $customer_device_info = $this->model_pezesha_pezesha->addCustomer($data);
         }
         $json = $result;
+        return $json;
 
-        $json['status'] = true;
-        $json['data'] = $result;
+        /* $json['status'] = true;
+          $json['data'] = $result;
 
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+          $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($json)); */
     }
 
 }
