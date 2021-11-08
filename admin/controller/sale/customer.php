@@ -40,7 +40,6 @@ class ControllerSaleCustomer extends Controller {
         $data = [];
         $this->load->model('report/excel');
 
-
         if (isset($this->request->get['filter_company'])) {
             $filter_company = $this->request->get['filter_company'];
         } else {
@@ -171,7 +170,6 @@ class ControllerSaleCustomer extends Controller {
             'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
             'order' => $order,
-            
         ];
 
         // $filter_data = [
@@ -928,7 +926,7 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
-         if (isset($this->request->get['filter_date_added_to'])) {
+        if (isset($this->request->get['filter_date_added_to'])) {
             $url .= '&filter_date_added_to=' . $this->request->get['filter_date_added_to'];
         }
 
@@ -983,7 +981,7 @@ class ControllerSaleCustomer extends Controller {
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
         ];
- 
+
         $customer_total = $this->model_sale_customer->getTotalCustomers($filter_data);
 
         $results = $this->model_sale_customer->getCustomers($filter_data);
@@ -2229,6 +2227,14 @@ class ControllerSaleCustomer extends Controller {
             $data['dob'] = null;
         }
 
+        if (isset($this->request->post['national_id'])) {
+            $data['national_id'] = $this->request->post['national_id'];
+        } elseif (!empty($customer_info['national_id'])) {
+            $data['national_id'] = $customer_info['dob'];
+        } else {
+            $data['national_id'] = null;
+        }
+
         //echo "<pre>";print_r($data);die;
 
         if (isset($this->request->post['send_email'])) {
@@ -2375,8 +2381,6 @@ class ControllerSaleCustomer extends Controller {
         //echo "<pre>";print_r($data);die;
         $data['cities'] = $this->model_sale_customer_group->getCities();
 
-
-
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
@@ -2396,6 +2400,14 @@ class ControllerSaleCustomer extends Controller {
 
         if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen(trim($this->request->post['lastname'])) > 32)) {
             $this->error['lastname'] = $this->language->get('error_lastname');
+        }
+
+        if ((utf8_strlen($this->request->post['national_id']) < 1)) {
+            $this->error['national_id'] = $this->language->get('error_national_id');
+        }
+
+        if ((utf8_strlen($this->request->post['dob']) < 1)) {
+            $this->error['dob'] = $this->language->get('error_dob');
         }
 
         if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
@@ -2469,7 +2481,7 @@ class ControllerSaleCustomer extends Controller {
                 //     $this->error['address'][$key]['landmark'] = $this->language->get('error_landmark');
                 // }
 
-                 if (empty($value['city_id'])) {
+                if (empty($value['city_id'])) {
                     $this->error['address'][$key]['city_id'] = $this->language->get('error_city_id');
                 }
             }
@@ -2669,7 +2681,7 @@ class ControllerSaleCustomer extends Controller {
         $this->load->model('sale/customer');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->user->hasPermission('modify', 'sale/customer')) {
-            $this->model_sale_customer->addOnlyCredit($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount'],0,1);
+            $this->model_sale_customer->addOnlyCredit($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount'], 0, 1);
 
             $data['success'] = $this->language->get('text_success');
         } else {
@@ -3574,7 +3586,7 @@ class ControllerSaleCustomer extends Controller {
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
         $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);
         $data['customer_otp_list_phone'] = $this->model_account_customer->getCustomerOTPByPhone($customer_info['telephone']);
-        
+
         $data['company_name'] = $customer_info['company_name'];
         $data['company_address'] = $customer_info['company_address'];
 
@@ -3600,39 +3612,31 @@ class ControllerSaleCustomer extends Controller {
         $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
         $data['latitude'] = $customer_info['latitude'];
         $data['longitude'] = $customer_info['longitude'];
-         $data['payment_terms'] = $customer_info['payment_terms'];
-         
+        $data['payment_terms'] = $customer_info['payment_terms'];
 
         //  echo "<pre>";print_r($customer_info);die;
-         
-            $data['statement_duration'] = $customer_info['statement_duration'];
-            $data['customer_category'] = $customer_info['customer_category'];
-            if( $data['statement_duration'] =="7")
-            {
-                $data['statement_duration'] ="Weekly";
-            }
-            else if( $data['statement_duration'] =="15")
-            {
-                $data['statement_duration'] ="Bi-Weekly";
-            }
-            else if( $data['statement_duration'] =="30")
-            {
-                $data['statement_duration'] ="Monthly";
-            }
 
-            $data['account_manager_id'] = $customer_info['account_manager_id'];
-            $data['customer_experience_id'] = $customer_info['customer_experience_id'];
-            $accountmanager = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
-            if( $accountmanager!=null)
-            {
-                $data['account_manager'] =$accountmanager['firstname'].' '.$accountmanager['lastname'];
-            }
+        $data['statement_duration'] = $customer_info['statement_duration'];
+        $data['customer_category'] = $customer_info['customer_category'];
+        if ($data['statement_duration'] == "7") {
+            $data['statement_duration'] = "Weekly";
+        } else if ($data['statement_duration'] == "15") {
+            $data['statement_duration'] = "Bi-Weekly";
+        } else if ($data['statement_duration'] == "30") {
+            $data['statement_duration'] = "Monthly";
+        }
 
-            $customerexperience = $this->model_sale_customer->getCustomerExperinceDetails($this->request->get['customer_id']);
-            if( $customerexperience!=null)
-            {
-                $data['customer_experience'] =$customerexperience['firstname'].' '.$customerexperience['lastname'];
-            }
+        $data['account_manager_id'] = $customer_info['account_manager_id'];
+        $data['customer_experience_id'] = $customer_info['customer_experience_id'];
+        $accountmanager = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
+        if ($accountmanager != null) {
+            $data['account_manager'] = $accountmanager['firstname'] . ' ' . $accountmanager['lastname'];
+        }
+
+        $customerexperience = $this->model_sale_customer->getCustomerExperinceDetails($this->request->get['customer_id']);
+        if ($customerexperience != null) {
+            $data['customer_experience'] = $customerexperience['firstname'] . ' ' . $customerexperience['lastname'];
+        }
 
         $data['addresses'] = $this->model_sale_customer->getAddresses($this->request->get['customer_id']);
         $data['address_id'] = $customer_info['address_id'];
@@ -4647,15 +4651,14 @@ class ControllerSaleCustomer extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-
     public function customerviewactivity() {
         $this->load->language('sale/customer');
 
         $this->load->model('sale/customer');
 
         $data['text_no_results'] = $this->language->get('text_no_results');
-         $data['text_loading'] = $this->language->get('text_loading');       
-         $data['token'] = $this->session->data['token'];       
+        $data['text_loading'] = $this->language->get('text_loading');
+        $data['token'] = $this->session->data['token'];
 
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
@@ -4668,21 +4671,18 @@ class ControllerSaleCustomer extends Controller {
         // $results = $this->model_sale_customer->getCustomerActivities($this->request->get['customer_id'], ($page - 1) * 10, 10);
         $results = $this->model_sale_customer->getUserActivitiesofCustomer($this->request->get['customer_id'], ($page - 1) * 10, 10);
         // echo "<pre>";print_r($results); 
-
         // $this->load->language('report/customer_activity'); 
         $this->load->language('report/user_activity');
 
         foreach ($results as $result) {
-            $comment = vsprintf($this->language->get('text_'.$result['key']), unserialize($result['data']));
+            $comment = vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
             // $comment = vsprintf($this->language->get('text1_'.$result['key']), unserialize($result['data']));
-
             // $find = [
             //     'farmer_id=',
             //     'customer_id=',
             //     'order_id=',
             //     'sub_customers_id='
             // ];
-
             //   $replace = [
             //     $this->url->link('sale/farmer/edit', 'token='.$this->session->data['token'].'&farmer_id=', 'SSL'),
             //     $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
@@ -4703,35 +4703,31 @@ class ControllerSaleCustomer extends Controller {
                 'feedback_id=',
             ];
             $replace = [
-                // $this->url->link('user/user/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
-                // $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=', 'SSL'),
-                // $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
-                // $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=', 'SSL'),
-                // $this->url->link('drivers/drivers_list/edit', 'token=' . $this->session->data['token'] . '&driver_id=', 'SSL'),
-                // $this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'token=' . $this->session->data['token'] . '&order_processing_group_id=', 'SSL'),
-                // $this->url->link('orderprocessinggroup/orderprocessor/edit', 'token=' . $this->session->data['token'] . '&order_processor_id=', 'SSL'),
-                // $this->url->link('vehicles/vehicles_list/edit', 'token=' . $this->session->data['token'] . '&vehicle_id=', 'SSL'),
-                // $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=', 'SSL'),
-                // $this->url->link('sale/customer_feedback', 'token=' . $this->session->data['token'] . '&feedback_id=', 'SSL'),
+                    // $this->url->link('user/user/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
+                    // $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=', 'SSL'),
+                    // $this->url->link('sale/accountmanager/edit', 'token=' . $this->session->data['token'] . '&user_id=', 'SSL'),
+                    // $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=', 'SSL'),
+                    // $this->url->link('drivers/drivers_list/edit', 'token=' . $this->session->data['token'] . '&driver_id=', 'SSL'),
+                    // $this->url->link('orderprocessinggroup/orderprocessinggroup_list/edit', 'token=' . $this->session->data['token'] . '&order_processing_group_id=', 'SSL'),
+                    // $this->url->link('orderprocessinggroup/orderprocessor/edit', 'token=' . $this->session->data['token'] . '&order_processor_id=', 'SSL'),
+                    // $this->url->link('vehicles/vehicles_list/edit', 'token=' . $this->session->data['token'] . '&vehicle_id=', 'SSL'),
+                    // $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=', 'SSL'),
+                    // $this->url->link('sale/customer_feedback', 'token=' . $this->session->data['token'] . '&feedback_id=', 'SSL'),
             ];
-           
-             $comment = str_replace($find, $replace, $comment);
-             $comt = preg_replace("/<\/?a( [^>]*)?>/i", "", $comment);
+
+            $comment = str_replace($find, $replace, $comment);
+            $comt = preg_replace("/<\/?a( [^>]*)?>/i", "", $comment);
             $data['activities'][] = [
-                
                 'comment' => $comt,
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
-                'order_id' => ($result['order_id']==0?'NA':$result['order_id']),
-                'user' => $result['firstname'].' '.$result['lastname'],
-
+                'order_id' => ($result['order_id'] == 0 ? 'NA' : $result['order_id']),
+                'user' => $result['firstname'] . ' ' . $result['lastname'],
             ];
-
-            
         }
 
         // echo "<pre>";print_r($data); die;
-        
+
 
         $activity_total = $this->model_sale_customer->getTotalUserActivitiesofCustomer($this->request->get['customer_id']);
 
@@ -4754,7 +4750,7 @@ class ControllerSaleCustomer extends Controller {
         $this->load->model('sale/customer');
 
         $data['text_no_results'] = $this->language->get('text_no_results');
-         $data['text_loading'] = $this->language->get('text_loading');       
+        $data['text_loading'] = $this->language->get('text_loading');
 
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
@@ -4767,21 +4763,18 @@ class ControllerSaleCustomer extends Controller {
         // $results = $this->model_sale_customer->getCustomerActivities($this->request->get['customer_id'], ($page - 1) * 10, 10);
         $results = $this->model_sale_customer->getUserActivitiesofCustomer($this->request->get['customer_id'], ($page - 1) * 10, 10);
         // echo "<pre>";print_r($results); 
-
         // $this->load->language('report/customer_activity'); 
         $this->load->language('report/user_activity');
 
         foreach ($results as $result) {
-            $comment = vsprintf($this->language->get('text_'.$result['key']), unserialize($result['data']));
+            $comment = vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
             // $comment = vsprintf($this->language->get('text1_'.$result['key']), unserialize($result['data']));
-
             // $find = [
             //     'farmer_id=',
             //     'customer_id=',
             //     'order_id=',
             //     'sub_customers_id='
             // ];
-
             //   $replace = [
             //     $this->url->link('sale/farmer/edit', 'token='.$this->session->data['token'].'&farmer_id=', 'SSL'),
             //     $this->url->link('sale/customer/view_customer', 'token='.$this->session->data['token'].'&customer_id=', 'SSL'),
@@ -4813,24 +4806,20 @@ class ControllerSaleCustomer extends Controller {
                 $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=', 'SSL'),
                 $this->url->link('sale/customer_feedback', 'token=' . $this->session->data['token'] . '&feedback_id=', 'SSL'),
             ];
-           
-             $comment = str_replace($find, $replace, $comment);
-             $comt = preg_replace("/<\/?a( [^>]*)?>/i", "", $comment);
+
+            $comment = str_replace($find, $replace, $comment);
+            $comt = preg_replace("/<\/?a( [^>]*)?>/i", "", $comment);
             $data['activities'][] = [
-                
                 'comment' => $comment,
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
-                'order_id' => ($result['order_id']==0?'NA':$result['order_id']),
-                'user' => $result['firstname'].' '.$result['lastname'],
-
+                'order_id' => ($result['order_id'] == 0 ? 'NA' : $result['order_id']),
+                'user' => $result['firstname'] . ' ' . $result['lastname'],
             ];
-
-            
         }
 
         // echo "<pre>";print_r($data); die;
-        
+
 
         $activity_total = $this->model_sale_customer->getTotalUserActivitiesofCustomer($this->request->get['customer_id']);
 
@@ -4847,14 +4836,13 @@ class ControllerSaleCustomer extends Controller {
         $this->response->setOutput($this->load->view('sale/customer_activity.tpl', $data));
     }
 
-
     public function password() {
 
         $json = [];
         $data = [];
         $this->load->model('sale/customer');
         $this->error['password'] = $this->error['confirm'] = "";
-        if ($this->request->post['password-1'] || (!isset($this->request->get['customer_id'])) && $this->request->post['password-1'] !='default') {
+        if ($this->request->post['password-1'] || (!isset($this->request->get['customer_id'])) && $this->request->post['password-1'] != 'default') {
             if ((utf8_strlen($this->request->post['password-1']) < 4) || (utf8_strlen($this->request->post['password-1']) > 20)) {
                 $this->error['password'] = $this->language->get('error_password');
             }
@@ -4878,31 +4866,25 @@ class ControllerSaleCustomer extends Controller {
             }
         }
 
-        if($this->error['confirm']!="")
-        {
+        if ($this->error['confirm'] != "") {
             $json['success'] = true;
             $json['message'] = $this->error['confirm'];
-        }
-        else if($this->error['password']!="")
-        {  $json['success'] = true;
+        } else if ($this->error['password'] != "") {
+            $json['success'] = true;
             $json['message'] = $this->error['password'];
-
-        }
-        else if($this->request->post['password-1']=='default')
-        {  $json['success'] = true;
+        } else if ($this->request->post['password-1'] == 'default') {
+            $json['success'] = true;
             $json['message'] = 'Same as previous password';
+        } else {
+            $data['password'] = $this->request->post['password-1'];
 
-        }
-        else{
-        $data['password'] = $this->request->post['password-1'];
-       
-        $data['customer_id'] = $this->request->post['customer_id'];
-        $this->model_sale_customer->editCustomerPassword($this->request->post['customer_id'], $data);
-        $json['success'] = true;
-        $json['message'] = 'Customer Password Changed!';
+            $data['customer_id'] = $this->request->post['customer_id'];
+            $this->model_sale_customer->editCustomerPassword($this->request->post['customer_id'], $data);
+            $json['success'] = true;
+            $json['message'] = 'Customer Password Changed!';
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
 }

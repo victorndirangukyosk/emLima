@@ -105,6 +105,24 @@
                         </div>
                       </div>
                       <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-lastname">Date Of Birth</label>
+                        <div class="col-sm-10">
+                          <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="Date Of Birth" id="input-dob" class="form-control" />
+                          <?php if ($error_dob) { ?>
+                          <div class="text-danger"><?php echo $error_dob; ?></div>
+                          <?php } ?>
+                        </div>
+                      </div>
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-lastname">National ID</label>
+                        <div class="col-sm-10">
+                          <input type="text" name="national_id" value="<?php echo $national_id; ?>" placeholder="National ID" id="input-national_id" class="form-control" />
+                          <?php if ($error_national_id) { ?>
+                          <div class="text-danger"><?php echo $error_national_id; ?></div>
+                          <?php } ?>
+                        </div>
+                      </div>  
+                      <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-email"><?php echo $entry_email; ?></label>
                         <div class="col-sm-10">
                           <input type="text" name="email" value="<?php echo $email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
