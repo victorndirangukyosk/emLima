@@ -105,7 +105,7 @@
                         </div>
                       </div>
                       
-                       <div class="form-group">
+                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-date-added"><?php echo $entry_dob; ?></label>
                         <div class="col-sm-10">
                             <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="<?php echo $entry_dob; ?>" id="input-date-added" class="form-control date_dob" />
