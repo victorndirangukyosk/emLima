@@ -1944,7 +1944,7 @@ class ControllerSaleCustomer extends Controller {
         } else {
             $data['error_dob'] = '';
         }
-        
+
         if (isset($this->error['national_id'])) {
             $data['error_national_id'] = $this->error['national_id'];
         } else {
@@ -2225,7 +2225,7 @@ class ControllerSaleCustomer extends Controller {
             $data['gender'] = '';
         }
 
-        if (isset($this->request->post['dob'])) {
+        if (isset($this->request->post['dob']) && $this->request->post['dob'] != NULL) {
             $data['dob'] = date('d/m/Y', strtotime($this->request->post['dob']));
         } elseif (!empty($customer_info['dob'])) {
             $data['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
