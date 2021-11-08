@@ -53,7 +53,8 @@ class ControllerPezeshaPezesha extends Controller {
         $log->write($customer_device_info);
         $log->write('auth_response');
         $body = array('full_names' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'], 'phone' => '254' . '' . $customer_device_info['telephone'], 'other_phone_nos' => $this->config->get('pezesha_client_secret'), 'national_id' => $this->config->get('pezesha_client_id'), 'dob' => $this->config->get('pezesha_merchant_key'), 'email' => '', 'merchant_id' => '', 'merchant_reg_date' => '', 'location' => '', 'geo_location' => '');
-        $body = http_build_query($body);
+        //$body = http_build_query($body);
+        $body = json_encode($body);
         $curl = curl_init();
         if (ENV == 'production') {
             curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers');
