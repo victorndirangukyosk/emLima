@@ -103,7 +103,7 @@ class ControllerPezeshaPezesha extends Controller {
         $log->write($auth_response);
         $log->write($customer_device_info);
         $log->write('auth_response');
-        $body = array('channel' => $this->config->get('config_pezesha_channel'), 'identifier' => $customer_device_info['national_id'], 'terms' => TRUE);
+        $body = array('channel' => $this->config->get('pezesha_channel'), 'identifier' => $customer_device_info['national_id'], 'terms' => TRUE);
         $body = http_build_query($body);
         //$body = json_encode($body);
         $curl = curl_init();
