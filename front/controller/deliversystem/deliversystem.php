@@ -879,7 +879,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     }
 
                     if ('Amount' == $value->Name) {
-                        $amount_topup == $value->Value;
+                        $amount_topup = $value->Value;
                     }
                 }
             }
