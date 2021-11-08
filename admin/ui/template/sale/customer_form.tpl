@@ -2243,6 +2243,30 @@ $.ajax({
     }
   });
 });
+
+$('#button-pezesha-opt-out').on('click', function(e) {
+e.preventDefault();
+console.log('button-pezesha-opt-out');
+$.ajax({
+    url: 'index.php?path=sale/customer_pezesha/optout&token=<?php echo $token; ?>',
+    type: 'post',
+    dataType: 'json',
+    data: 'customer_id=<?php echo $customer_id; ?>',
+    success: function(json) {
+        
+    if(json.status == 422) {    
+    $.each(json.errors, function (key, data) {
+    alert(key+' : '+data);
+    })
+    }
+    
+    if(json.status == 200 && json.response_code == 0) {    
+    alert(json.message);
+    }
+    
+    }
+  });
+});
 </script>
 </body>
 
