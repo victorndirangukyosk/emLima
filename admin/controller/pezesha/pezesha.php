@@ -75,7 +75,7 @@ class ControllerPezeshaPezesha extends Controller {
         curl_close($curl);
         $result = json_decode($result, true);
         $log->write($result);
-        if (is_array($result) && array_key_exists('status', $result) && array_key_exists('response_code', $result) && array_key_exists('data', $result) && $result['response_code'] == 200) {
+        if (is_array($result) && array_key_exists('status', $result) && array_key_exists('response_code', $result) && array_key_exists('data', $result) && $result['response_code'] == 0) {
             $data['customer_id'] = $result['merchant_id'];
             $data['pezesha_customer_id'] = $result['customer_id'];
             $data['customer_uuid'] = $result['customer_uuid'];
