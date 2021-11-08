@@ -2236,7 +2236,7 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->post['national_id'])) {
             $data['national_id'] = $this->request->post['national_id'];
         } elseif (!empty($customer_info['national_id'])) {
-            $data['national_id'] = $customer_info['dob'];
+            $data['national_id'] = $customer_info['national_id'];
         } else {
             $data['national_id'] = null;
         }
