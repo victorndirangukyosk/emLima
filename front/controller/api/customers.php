@@ -264,6 +264,7 @@ class ControllerApiCustomers extends Controller {
     }
 
     public function getProducts($args = []) {
+        $args['store_id'] = 75;
         $this->load->language('api/products');
 
         $json = [];
