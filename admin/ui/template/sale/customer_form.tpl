@@ -49,6 +49,7 @@
             <li><a href="#tab-otp" data-toggle="tab">OTP</a></li>
             <li><a href="#tab-activity" data-toggle="tab">Activities</a></li>
             <li><a href="#tab-password" data-toggle="tab">Password</a></li>
+            <li><a href="#tab-pezesha" data-toggle="tab">Pezesha</a></li>
            
             <?php } ?>
           </ul>
@@ -681,7 +682,9 @@
                       <button type="button" id="button-password" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-save"></i> Save Password </button>
                   </div>                
             </div>
-
+            
+            <div class="tab-pane" id="tab-pezesha">                  
+            </div>
 
             <div class="tab-pane" id="tab-configuration">
                     <div class="form-group">
