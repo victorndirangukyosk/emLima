@@ -1357,4 +1357,28 @@ class ControllerPaymentMpesa extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function mpesatopupautoupdate() {
+        $mpesa_payments_response = '';
+        $json['processed'] = NULL;
+        $log = new Log('error.log');
+        $log->write('mpesa_payments_response');
+        $log->write($this->cache->get('mpesa_payments_response'));
+        $log->write('mpesa_payments_response');
+        $mpesa_payments_request = $this->session->data['mpesa_payments_request'];
+        $mpesa_payments_response = $this->cache->get('mpesa_payments_response');
+        //$json['mpesa_payments_request'] = $mpesa_payments_request;
+        $json['mpesa_payments_response'] = $mpesa_payments_response;
+        $log->write($mpesa_payments_request);
+        if (is_array($mpesa_payments_response) && $mpesa_payments_response['checkout_request_id'] == $this->request->post['mpesa_checkout_request_id'] && $mpesa_payments_response['result'] == 0) {
+            $json['processed'] = true;
+            $json['redirect'] = $this->url->link('account/credit');
+        }
+        if (is_array($mpesa_payments_response) && $mpesa_payments_response['checkout_request_id'] == $this->request->post['mpesa_checkout_request_id'] && $mpesa_payments_response['result'] != 0) {
+            $json['processed'] = false;
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
