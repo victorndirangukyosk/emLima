@@ -46,7 +46,7 @@ class ControllerPezeshaPezesha extends Controller {
 
         $this->load->model('sale/customer');
         $this->load->model('pezesha/pezesha');
-        $customer_device_info = $this->model_sale_customer->getCustomer(702);
+        $customer_device_info = $this->model_sale_customer->getCustomer(701);
         $auth_response = $this->auth();
         $log = new Log('error.log');
         $log->write('auth_response');
