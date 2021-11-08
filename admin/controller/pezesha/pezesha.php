@@ -45,6 +45,7 @@ class ControllerPezeshaPezesha extends Controller {
     public function userregistration() {
 
         $this->load->model('sale/customer');
+        $this->load->model('pezesha/pezesha');
         $customer_device_info = $this->model_sale_customer->getCustomer(702);
         $auth_response = $this->auth();
         $log = new Log('error.log');
@@ -73,6 +74,12 @@ class ControllerPezeshaPezesha extends Controller {
         $log->write($result);
         curl_close($curl);
         $result = json_decode($result, true);
+        if (is_array($result) && array_key_exists('status', $result) && array_key_exists('response_code', $result) && array_key_exists('data', $result) && $result['response_code'] == 200) {
+            $data['customer_id'] = $result['merchant_id'];
+            $data['pezesha_customer_id'] = $result['customer_id'];
+            $data['customer_uuid'] = $result['customer_uuid'];
+            $customer_device_info = $this->model_pezesha_pezesha->addCustomer($data);
+        }
         $json = $result;
 
         $json['status'] = true;
