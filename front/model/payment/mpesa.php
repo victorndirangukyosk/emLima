@@ -303,8 +303,8 @@ class ModelPaymentMpesa extends Model {
         $query = $this->db->query($sql);
     }
 
-    public function insertMpesaCustomerTransaction($order_id, $customer_id, $order_reference_number, $receipt_number) {
-        $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $order_id . "',customer_id = '" . $customer_id . "', order_reference_number = '" . $order_reference_number . "', transaction_id = '" . $receipt_number . "'";
+    public function insertMpesaCustomerTransaction($order_id, $customer_id, $order_reference_number, $receipt_number,$merchant_requestid) {
+        $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $order_id . "',customer_id = '" . $customer_id . "', order_reference_number = '" . $order_reference_number . "', transaction_id = '" . $receipt_number . "', merchant_request_id = '" . $merchant_requestid . "'";
         // $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = 0 ,customer_id='" . $customer_id . "', transaction_id = '" . $transaction_id . "'";
 
         $query = $this->db->query($sql);
