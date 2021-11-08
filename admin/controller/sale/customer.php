@@ -2145,6 +2145,7 @@ class ControllerSaleCustomer extends Controller {
         $data['account_managers_list'] = $this->model_user_accountmanager->getAccountManagers();
         $data['customer_experience_list'] = $this->model_user_customerexperience->getCustomerExperience();
         $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);
+        $data['customer_pezesha_data'] = $this->model_pezesha_pezesha->getCustomer($this->request->get['customer_id']);
         $data['customer_otp_list_phone'] = $this->model_account_customer->getCustomerOTPByPhone($customer_info['telephone']);
 
         if (isset($this->request->post['company_name'])) {
