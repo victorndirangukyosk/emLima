@@ -23,7 +23,7 @@ class ControllerPezeshaPezesha extends Controller {
         curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded']);
         
         $log->write($body);
-        //curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
