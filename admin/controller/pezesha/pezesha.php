@@ -49,7 +49,6 @@ class ControllerPezeshaPezesha extends Controller {
         $log->write('auth_response');
         $log->write($auth_response);
         $log->write('auth_response');
-        exit;
         $body = array('full_names' => 'client_credentials', 'phone' => 'users', 'other_phone_nos' => $this->config->get('pezesha_client_secret'), 'national_id' => $this->config->get('pezesha_client_id'), 'dob' => $this->config->get('pezesha_merchant_key'), 'email' => '', 'merchant_id' => '', 'merchant_reg_date' => '', 'location' => '', 'geo_location' => '');
         $curl = curl_init();
         if (ENV == 'production') {
