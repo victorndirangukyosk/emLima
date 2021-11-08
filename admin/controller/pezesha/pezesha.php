@@ -76,9 +76,9 @@ class ControllerPezeshaPezesha extends Controller {
         $result = json_decode($result, true);
         $log->write($result);
         if (is_array($result) && array_key_exists('status', $result) && array_key_exists('response_code', $result) && array_key_exists('data', $result) && $result['response_code'] == 0) {
-            $data['customer_id'] = $result['merchant_id'];
-            $data['pezesha_customer_id'] = $result['customer_id'];
-            $data['customer_uuid'] = $result['customer_uuid'];
+            $data['customer_id'] = $result['data']['merchant_id'];
+            $data['pezesha_customer_id'] = $result['data']['customer_id'];
+            $data['customer_uuid'] = $result['data']['customer_uuid'];
             $customer_device_info = $this->model_pezesha_pezesha->addCustomer($data);
         }
         $json = $result;
