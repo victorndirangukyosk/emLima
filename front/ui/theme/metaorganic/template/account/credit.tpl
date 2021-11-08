@@ -467,7 +467,7 @@ __kdt.push({"post_on_load": false});
 </script>
 
 <script type="text/javascript">
-$( document ).ready(function() { setInterval(function(){ mpesaresponse(); }, 30000 ); });
+$( document ).ready(function() { setInterval(function(){ mpesaresponse(); }, 60000 ); });
 function mpesaresponse() {
                 if($('#mpesa_checkout_request_id').val() != '') {
                 $.ajax({
@@ -497,7 +497,7 @@ function mpesaresponse() {
                         $('#mpesa_checkout_request_id').val('');
                         $('#success_msg').html('');
                         $('#success_msg').hide();
-                        $('#error_msg').html(json['mpesa_payments_response'].description);
+                        $('#error_msg').html('Unable to process the request.Please try again,after some time ');
                         $('#error_msg').show();
                         $('#button-complete').hide();
                         $('#button-retry').show();
