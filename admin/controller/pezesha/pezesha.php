@@ -23,7 +23,7 @@ class ControllerPezeshaPezesha extends Controller {
             curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
         }
 
-        $log->write($body);
+        //$log->write($body);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
@@ -31,7 +31,7 @@ class ControllerPezeshaPezesha extends Controller {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $result = curl_exec($curl);
 
-        $log->write($result);
+        //$log->write($result);
         curl_close($curl);
         $result = json_decode($result, true);
         return $result['access_token'];
