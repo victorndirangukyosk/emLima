@@ -759,18 +759,12 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $log->write('updateMpesaOrderStatus');
         $log->write($postData);
 
-        $postData = json_decode($postData);
-
-        $stkCallback = $postData->Body;
-
-        $log->write($stkCallback);
-
-        $log->write($stkCallback->stkCallback->MerchantRequestID);
+       
 
         $manifest_id = $this->model_payment_mpesa->getMpesaOrder($stkCallback->stkCallback->MerchantRequestID);
         $log->write('order_id' . $manifest_id);
 
-        if ($manifest_id == 0) {
+        if ($manifest_id == 0 || $manifest_id == false) {
             $manifest_id_customer = $this->model_payment_mpesa->getMpesaCustomer($stkCallback->stkCallback->MerchantRequestID);
             $log->write('customer_id' . $manifest_id_customer);
             $file = fopen('system/log/mpesa_customer_log.txt', 'w+'); //url fopen should be allowed for this to occur
@@ -786,9 +780,15 @@ class ControllerDeliversystemDeliversystem extends Controller {
             }
             fclose($file);
         }
+        $postData = json_decode($postData);
 
+        $stkCallback = $postData->Body;
 
-        if (isset($manifest_id)) {
+        $log->write($stkCallback);
+
+        $log->write($stkCallback->stkCallback->MerchantRequestID);
+
+        if (isset($manifest_id) && $manifest_id > 0) {
             // Store
             //save CallbackMetadata MpesaReceiptNumber
 
@@ -861,13 +861,14 @@ class ControllerDeliversystemDeliversystem extends Controller {
             }
         } else if (isset($manifest_id_customer)) {
             //save CallbackMetadata MpesaReceiptNumber
+            $log->write("callback url called in mpesa top up");
             $amount_topup = 0;
             if (isset($stkCallback->stkCallback->CallbackMetadata->Item)) {
                 foreach ($stkCallback->stkCallback->CallbackMetadata->Item as $key => $value) {
                     $log->write($value);
 
                     if ('MpesaReceiptNumber' == $value->Name) {
-                        $this->model_payment_mpesa->insertCustomerTransactionId($manifest_id_customer, $value->Value);
+                        $this->model_payment_mpesa->insertCustomerTransactionId($manifest_id_customer, $value->Value,$stkCallback->stkCallback->MerchantRequestID);
                         // $transaction_id=$value->Value;wrong
                     }
 
@@ -876,13 +877,16 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     }
                 }
             }
+            $log->write("callback url called in mpesa top up1");
 
             // $order_info = $this->model_account_order->getAdminOrder($manifest_id);
             $this->load->model('account/customer');
             $customer_info = $this->model_account_customer->getCustomer($manifest_id_customer);
             $this->load->model('payment/mpesa');
-            if (isset($manifest_id_customer) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $customer_info) {
+            if (isset($manifest_id_customer) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode ) {//&& $customer_info
                 //success pending to processing
+            $log->write("callback url called in mpesa top up2");
+
                 $order_status_id = $this->config->get('config_order_status_id');
                 $log->write('updateMpesaStatus validate');
                 $dataAddCredit['customer_id'] = $manifest_id_customer;
