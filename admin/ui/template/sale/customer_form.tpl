@@ -2189,6 +2189,7 @@ $.ajax({
     dataType: 'json',
     data: 'customer_id=<?php echo $customer_id; ?>',
     success: function(json) {
+        alert(json.errors[0]);
         alert(json.message);
     }
   });
