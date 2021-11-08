@@ -366,14 +366,14 @@
                         </div>
                         
                          <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-pezesha-customer-id">Pezesha Customer ID</label>
+                                <label class="col-sm-2 control-label" for="input-pezesha-customer-id">Pezesha ID</label>
                                 <div class="col-sm-10">
                                   <?php echo $customer_pezesha_data['pezesha_customer_id']; ?>  
                                 </div>
                         </div>
                             
                         <div class="form-group">
-                                <label class="col-sm-2 control-label" for="input-pezesha-customer-uuid">Pezesha Customer UUID</label>
+                                <label class="col-sm-2 control-label" for="input-pezesha-customer-uuid">Pezesha UUID</label>
                                 <div class="col-sm-10">
                                 <?php echo $customer_pezesha_data['customer_uuid']; ?>     
                                 </div>
