@@ -265,6 +265,13 @@ class ControllerApiCustomers extends Controller {
 
     public function getProducts($args = []) {
         $args['store_id'] = 75;
+
+        if (isset($args['search'])) {
+            $search = $args['search'];
+        } else {
+            $search = '';
+        }
+
         $this->load->language('api/products');
 
         $json = [];
