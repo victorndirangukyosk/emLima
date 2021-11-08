@@ -1619,7 +1619,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         // $this->model_payment_mpesa->insertCustomerTransactionId($manifest_id, $value->Value);
 
                            if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                                $this->model_payment_mpesa->insertMpesaCustomerTransaction($manifest_id['order_id'],$manifest_id['customer_id'], $manifest_id['order_reference_number'], $MpesaReceiptNumber);
+                                $this->model_payment_mpesa->insertMpesaCustomerTransaction($manifest_id['order_id'],$manifest_id['customer_id'], $manifest_id['order_reference_number'], $MpesaReceiptNumber,$stkCallback->stkCallback->MerchantRequestID);
                             }
                             if (is_array($transaction_details) && count($transaction_details) > 0) {
                                 $this->model_payment_mpesa->updateMpesaOrderTransaction($manifest_id['order_id'],$manifest_id['customer_id'], $manifest_id['order_reference_number'], $MpesaReceiptNumber);
