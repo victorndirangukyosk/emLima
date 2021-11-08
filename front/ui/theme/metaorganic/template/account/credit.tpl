@@ -495,12 +495,12 @@ function mpesaresponse() {
                         } 
                         if(json['processed'] == false) {
                         $('#mpesa_checkout_request_id').val('');
-                        $('#success_msg').html('');
+                        $('#success_msg').html('Processing ,Please wait');
                         $('#success_msg').hide();
-                        $('#error_msg').html('Unable to process the request.Please try again,after some time ');
-                        $('#error_msg').show();
-                        $('#button-complete').hide();
-                        $('#button-retry').show();
+                        //$('#error_msg').html(' ');
+                        //$('#error_msg').show();
+                        //$('#button-complete').hide();
+                        //$('#button-retry').show();
                         return false;
                         }
                         if(json['processed'] == '') {
