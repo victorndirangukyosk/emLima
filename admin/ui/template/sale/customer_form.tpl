@@ -2190,10 +2190,9 @@ $.ajax({
     data: 'customer_id=<?php echo $customer_id; ?>',
     success: function(json) {
     $.each(json.errors, function (key, data) {
-    alert(key);
+    alert(key+ : +data);
     alert(data);
     })
-    alert(json.message);
     }
   });
 });
