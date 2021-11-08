@@ -2133,6 +2133,7 @@ class ControllerSaleCustomer extends Controller {
         $this->load->model('user/accountmanager');
         $this->load->model('user/customerexperience');
         $this->load->model('account/customer');
+        $this->load->model('pezesha/pezesha');
         $filter_data = [
             'filter_parent' => $this->request->get['customer_id'],
             'order' => 'DESC',
