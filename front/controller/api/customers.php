@@ -264,6 +264,7 @@ class ControllerApiCustomers extends Controller {
     }
 
     public function getProducts($args = []) {
+        $args['limit'] = 50;
         $args['store_id'] = 75;
 
         if (isset($args['search'])) {
