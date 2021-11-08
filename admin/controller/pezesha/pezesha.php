@@ -11,6 +11,11 @@ class ControllerPezeshaPezesha extends Controller {
     public function auth() {
 
         $log = new Log('error.log');
+
+        $log->write($this->config->get('pezesha_client_secret'));
+        $log->write($this->config->get('pezesha_client_id'));
+        $log->write($this->config->get('pezesha_merchant_key'));
+
         $body = array('grant_type' => 'client_credentials', 'provider' => 'users', 'client_secret' => $this->config->get('pezesha_client_secret'), 'client_id' => $this->config->get('pezesha_client_id'), 'merchant _key' => $this->config->get('pezesha_merchant_key'));
         $curl = curl_init();
         if (ENV == 'production') {
