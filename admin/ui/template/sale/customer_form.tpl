@@ -365,7 +365,7 @@
                         </div>
                         <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-apply-pezesha">Pezesha</label>
-                                <div class="col-sm-10"><button id="button-pezesha" class="btn btn-success btn-xs"><i class="fa fa-cog"></i>Apply For Pezesha</button></div>
+                                <div class="col-sm-10"><button id="button-pezesha" class="btn btn-success"><i class="fa fa-cog"></i>Apply For Pezesha</button></div>
                         </div>    
 
                       <?php if(count($referee) > 0) { ?>
