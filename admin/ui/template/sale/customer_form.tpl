@@ -363,10 +363,12 @@
                                     <input type="text" maxlength=30  name="SAP_customer_no" value="<?php echo $SAP_customer_no; ?>"  placeholder="SAP Custumer Number"  id="input-SAP_customer_no" class="form-control" />
                                 </div>
                         </div>
+                        <?php if ($customer_id) { ?>    
                         <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-apply-pezesha">Pezesha</label>
                                 <div class="col-sm-10"><button id="button-pezesha" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Apply For Pezesha</button></div>
-                        </div>    
+                        </div>
+                        <?php } ?>
 
                       <?php if(count($referee) > 0) { ?>
                           <div class="form-group">
