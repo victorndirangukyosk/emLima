@@ -43,7 +43,6 @@ class ControllerPezeshaPezesha extends Controller {
     public function userregistration() {
 
         $auth_response = $this->auth();
-        $auth_response = json_decode($auth_response, true);
         $log = new Log('error.log');
         $log->write('auth_response');
         $log->write($auth_response);
