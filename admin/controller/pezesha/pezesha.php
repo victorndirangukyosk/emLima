@@ -105,7 +105,7 @@ class ControllerPezeshaPezesha extends Controller {
         $log->write('auth_response');
         $body = array('channel' => $this->config->get('config_pezesha_channel'), 'identifier' => $customer_device_info['national_id'], 'terms' => TRUE);
         $body = http_build_query($body);
-        $body = json_encode($body);
+        //$body = json_encode($body);
         $curl = curl_init();
         if (ENV == 'production') {
             curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/terms');
