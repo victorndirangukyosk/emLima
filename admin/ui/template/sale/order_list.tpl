@@ -230,6 +230,23 @@
                 </div>
                 <form method="post" enctype="multipart/form-data" target="_blank" id="form-order">
                     <div class="table-responsive">
+
+                       <?php if ($this->user->hasPermission('access', 'amitruck/amitruckquotes'))    { ?>
+                     <div class="btn-group" >                            
+                         <div class="row">
+                             <div class="col-sm-8">
+                                        <input disabled type="text" name="order_delivery_count" value="" placeholder="No Order Selected" id="input-grand-total" class="form-control" />
+                             </div>  
+                             <div class="col-sm-2">
+                                    <button type="button" id="button-bulkdeliveryrequest" class="btn btn-primary" onclick="createDeliveryRequest()"  data-toggle="modal" data-dismiss="modal" data-target="" title="Request Delivery">  Request Bulk Delivery</button>
+                             </div>    
+                         </div>                             
+                            
+                      </div>
+                       <?php } ?>
+                      <br>
+                      <br>
+
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -321,6 +338,8 @@
                                         <input type="checkbox" name="selected[]" value="<?php echo $order['order_id']; ?>" />
                                         <?php } ?>
                                         <input type="hidden" name="shipping_code[]" value="<?php echo $order['shipping_code']; ?>" />
+                                        <input type="hidden" name="order_status1[]" value="<?php echo $order['order_status_id']; ?>" />
+                                        <input type="hidden" name="order_delivery_ids[]" value="<?php echo $order['delivery_id']; ?>" />
                                     </td>
                                     <td class="text-left"><?php echo $order['order_prefix'].''.$order['order_id']; ?></td>
                                     <?php if (!$this->user->isVendor()): ?>
@@ -436,7 +455,7 @@
                                        </a> 
                                         <?php } ?>-->
                                         
-                                        <?php if ($order['delivery_id'] == NULL && ($order['order_status_id'] == 14 || $order['order_status_id'] == 4) && ($this->user->hasPermission('access', 'amitruck/amitruckquotes')) )   { ?>
+                                        <?php if ($order['delivery_id'] == NULL && ($order['order_status_id'] == 1 || $order['order_status_id'] == 4) && ($this->user->hasPermission('access', 'amitruck/amitruckquotes')) )   { ?>
                                        <a href="#" target="_blank" data-toggle="tooltip" title="Amitruck" data-orderid="<?= $order['order_id'] ?>" data-ordertotal="<?= $order['sub_total_custom'] ?>" id="assign_to_amitruck">
                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
                                         </a>
@@ -737,21 +756,54 @@
 
             $('#button-shipping, #button-invoice').prop('disabled', true);
             $('#button-invoice-pdf').prop('disabled', true);
+              $('#button-bulkdeliveryrequest').prop('disabled', true);
 
             var selected = $('input[name^=\'selected\']:checked');
+            $('input[name=\'order_delivery_count\']').val('');
+
 
             if (selected.length) {
                 $('#button-invoice').prop('disabled', false);
                 $('#button-invoice-pdf').prop('disabled', false);
-            }
+                  $('#button-bulkdeliveryrequest').prop('disabled', false);   
+             $('input[name=\'order_delivery_count\']').val((selected.length)+' -orders selected');
 
+            }
+                    
             for (i = 0; i < selected.length; i++) {
+
+                
                 if ($(selected[i]).parent().find('input[name^=\'shipping_code\']').val()) {
                     $('#button-shipping').prop('disabled', false);
 
-                    break;
+                   // break; break is commented to continue iteration for other checks
                 }
+                 //alert($(selected[i]).parent().find('input[name^=\'order_status1\']').val());
+                $selected_order_status=$(selected[i]).parent().find('input[name^=\'order_status1\']').val();
+                $selected_order_delivery_id=$(selected[i]).parent().find('input[name^=\'order_delivery_ids\']').val();
+                
+                //alert($selected_order_delivery_id);
+               
+                   if (($selected_order_status!=1 && $selected_order_status!=4) ) {
+                    
+                    $('#button-bulkdeliveryrequest').prop('disabled', true);
+                   $('input[name=\'order_delivery_count\']').val('one or few orders not eligible');
+
+                   
+                }
+                else if($selected_order_delivery_id != ''  )
+                {
+                      $('#button-bulkdeliveryrequest').prop('disabled', true);
+                   $('input[name=\'order_delivery_count\']').val('one or few orders not eligible');
+
+                }
+                
+               
             }
+            
+            
+               
+                
 
         });
 
@@ -928,9 +980,9 @@
                                                     <div class="col-md-12" >
 
                                                       <div class="pull-right">
-                                                        <button id="new-vehicle-button" name="new-vehicle-button" type="button" data-toggle="modal" data-dismiss="modal" data-target="#vehicleModal" class="btn btn-lg btn-success"><i class="fa fa-plus"></i></button>
+                                                        <button id="new-vehicle-button" name="new-vehicle-button" type="button" data-toggle="modal" data-dismiss="modal" title="add new vehicle" data-target="#vehicleModal" class="btn btn-lg btn-success"><i class="fa fa-plus"></i></button>
                                                         </div>  
-                                                        
+
                                                         <!--<input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>-->
                                                     <div style="width:88%;margin-right:10px;" ><select  name="order_vehicle_number" id="order_vehicle_number" class="form-control" required="">
                                                         <option value="0">Select Vehicle</option>
@@ -2250,6 +2302,53 @@ function closevehicledetails() {
    $('input[name="make"]').val('');
    $('input[name="model"]').val('');
 }
+
+
+
+ function createDeliveryRequest() 
+    {   
+            
+
+             var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
+            return n.value;
+            }).join(',');
+            console.log(selected_order_id);
+            
+            if (selected_order_id == '') {
+                alert('No order selected');
+                return;
+                
+            }
+            
+            
+
+              $.ajax({
+		url: 'index.php?path=amitruck/amitruck/createMultipleOrdersDelivery&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + encodeURIComponent(selected_order_id) ,
+		beforeSend: function() {
+                // setting a timeout
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                },
+                success: function(json) {	 
+                    console.log(json.status);
+                    $('.alert').html('Order assigned to delivery partner!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    alert('Order(s) assigned to delivery partner!');
+                    if(json.status == 200) {
+                    setTimeout(function(){ window.location.reload(false); }, 1500);
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			   console.log(xhr);
+		}
+                }); 
+                
+    }
 
 
 </script></div>
