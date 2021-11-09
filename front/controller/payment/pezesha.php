@@ -60,7 +60,7 @@ class ControllerPaymentPezesha extends Controller {
 
         $customer_id = $this->customer->getId();
         $amount = $this->cart->getTotal();
-        $order_id = implode("#", $this->session->data['order_id']);
+        $order_id = '#' . implode("#", $this->session->data['order_id']);
 
         $customer_device_info = $this->model_account_customer->getCustomer($customer_id);
         $customer_pezesha_info = $this->model_account_customer->getPezeshaCustomer($customer_id);
