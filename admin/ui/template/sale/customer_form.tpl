@@ -694,15 +694,15 @@
             
             <div class="tab-pane" id="tab-pezesha">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label" for="input-pezesha-registration">Pezesha Registration</label>
+                    <label class="col-sm-2 control-label" for="input-pezesha-registration">Registration</label>
                     <div class="col-sm-10">
                         <div class="col-sm-10"><button id="button-pezesha" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Apply For Pezesha</button></div>   
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label" for="input-pezesha-terms-condtions">Accept Pezesha Terms & Conditions</label>
+                    <label class="col-sm-2 control-label" for="input-pezesha-terms-condtions">Accept Terms & Conditions</label>
                     <div class="col-sm-10">
-                        <div class="col-sm-10"><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Accept Pezesha Terms & Condtions</button></div>   
+                        <div class="col-sm-10"><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Accept Terms & Condtions</button></div>   
                     </div>
                 </div>
                 <div class="form-group">
