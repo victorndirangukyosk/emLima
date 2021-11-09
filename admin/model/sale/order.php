@@ -950,6 +950,14 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_customer'])) {
             $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
+        
+        if (!empty($data['filter_customer_id'])) {
+            $sql .= " AND o.customer_id = '" . $data['filter_customer_id'] . "'";
+        }
+        
+        if (!empty($data['filter_paid'])) {
+            $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
+        }
 
         if (!empty($data['filter_vendor'])) {
             $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';
