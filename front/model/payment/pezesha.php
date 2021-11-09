@@ -1,6 +1,6 @@
 <?php
 
-class ModelPaymentPayzesha extends Model
+class ModelPaymentPezesha extends Model
 {
     public function getMethod($total)
     {
@@ -28,10 +28,10 @@ class ModelPaymentPayzesha extends Model
 
         if ($status) {
             $method_data = [
-                'code' => 'payzesha',
+                'code' => 'pezesha',
                 'title' => $this->language->get('text_title'),
                 'terms' => $this->language->get('text_terms'),
-                'sort_order' => $this->config->get('payzesha_sort_order'),
+                'sort_order' => $this->config->get('pezesha_sort_order'),
             ];
         }
         $log->write('status');
