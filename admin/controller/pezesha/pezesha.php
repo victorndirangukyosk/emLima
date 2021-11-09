@@ -243,11 +243,16 @@ class ControllerPezeshaPezesha extends Controller {
           $this->response->setOutput(json_encode($json)); */
     }
 
-    public function applyloan($customer_id) {
+    public function applyloan($customer_info) {
 
         $log = new Log('error.log');
         $this->load->model('sale/customer');
         $this->load->model('pezesha/pezesha');
+
+        $customer_id = $customer_info['customer_id'];
+        $amount = $customer_info['amount'];
+        $order_id = $customer_info['order_id'];
+
         $customer_device_info = $this->model_sale_customer->getCustomer($customer_id);
         $customer_pezesha_info = $this->model_pezesha_pezesha->getCustomer($customer_id);
 
@@ -256,8 +261,8 @@ class ControllerPezeshaPezesha extends Controller {
         $log->write($auth_response);
         $log->write($customer_device_info);
         $log->write('auth_response');
-        $payment_details = array('type' => '', 'number' => '', 'callback_url' => '');
-        $body = array('pezesha_id' => $customer_pezesha_info['pezesha_customer_id'], 'amount' => '', 'duration' => '', 'interest' => '', 'rate' => '', 'fee' => '', 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
+        $payment_details = array('type' => 'BUY_GOODS/PAYBILL', 'number' => $order_id, 'callback_url' => $this->url->link('deliversystem/deliversystem/pezeshacallback', '', 'SSL'));
+        $body = array('pezesha_id' => $customer_pezesha_info['pezesha_customer_id'], 'amount' => $amount, 'duration' => 30, 'interest' => 50, 'rate' => 10, 'fee' => 10, 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
         //$body = http_build_query($body);
         $body = json_encode($body);
         $log->write($body);
