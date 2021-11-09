@@ -85,6 +85,8 @@ $_['text_deliversystem'] = 'Delivery System';
 
 // Entry
 $_['entry_name'] = 'Store Name';
+$_['entry_store_latitude'] = 'Store Latitude';
+$_['entry_store_longitude'] = 'Store Longitude';
 $_['entry_owner'] = 'Store Owner';
 $_['entry_address'] = 'Address';
 $_['entry_geocode'] = 'Geocode';
@@ -464,6 +466,8 @@ $_['help_product_approval'] = 'Set Vendor product Approval Method';
 $_['error_warning'] = 'Warning: Please check the form carefully for errors!';
 $_['error_permission'] = 'Warning: You do not have permission to modify settings!';
 $_['error_name'] = 'Store Name must be between 3 and 32 characters!';
+$_['error_store_latitude'] = 'Store Latitude must be added!';
+$_['error_store_longitude'] = 'Store Longitude must be added!';
 $_['error_owner'] = 'Store Owner must be between 3 and 64 characters!';
 $_['error_address'] = 'Store Address must be between 10 and 256 characters!';
 $_['error_email'] = 'E-Mail Address does not appear to be valid!';
