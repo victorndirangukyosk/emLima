@@ -71,6 +71,9 @@ class ControllerSaleCustomerPezesha extends Controller {
     public function applyloan() {
 
         $customer_id = $this->request->post['customer_id'];
+        $amount = $this->request->post['amount'];
+        $order_id = $this->request->post['order_id'];
+
         $this->load->model('sale/customer');
         $log = new Log('error.log');
         $log->write($customer_id);
