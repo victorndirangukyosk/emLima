@@ -41,6 +41,10 @@ class ControllerCheckoutPaymentMethod extends Controller {
         $recurring = $this->cart->hasRecurringProducts();
 
         foreach ($results as $result) {
+            $log = new Log('error.log');
+            $log->write('code');
+            $log->write($result['code']);
+            $log->write('code');
             if ($this->config->get($result['code'] . '_status')) {
                 $this->load->model('payment/' . $result['code']);
 
