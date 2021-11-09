@@ -57,7 +57,6 @@ class ControllerPaymentPezesha extends Controller {
 
         $log = new Log('error.log');
         $this->load->model('account/customer');
-        $this->load->model('pezesha/pezesha');
 
         $customer_id = $this->customer->getId();
         $amount = $this->cart->getTotal();

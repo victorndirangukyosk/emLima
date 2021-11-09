@@ -16,7 +16,7 @@ $('#button-confirm').on('click', function() {
 
     $.ajax({
         type: 'get',
-        url: 'index.php?path=payment/pezesha/confirm',
+        url: 'index.php?path=payment/pezesha/applyloan',
         cache: false,
         beforeSend: function() {
                 $(".overlayed").show();
