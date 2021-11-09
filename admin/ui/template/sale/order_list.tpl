@@ -921,20 +921,24 @@
 
   
                                                         
-                                    <div class="pull-right">
-                                                        <button id="new-vehicle-button" name="new-vehicle-button" type="button" data-toggle="modal" data-dismiss="modal" data-target="#vehicleModal" class="btn btn-lg btn-success"><i class="fa fa-plus"></i></button>
+                                   
                                    
                                     
-                                    </div> 
-                                                    <div class="col-md-12">
+                                   
+                                                    <div class="col-md-12" >
+
+                                                      <div class="pull-right">
+                                                        <button id="new-vehicle-button" name="new-vehicle-button" type="button" data-toggle="modal" data-dismiss="modal" data-target="#vehicleModal" class="btn btn-lg btn-success"><i class="fa fa-plus"></i></button>
+                                                        </div>  
+                                                        
                                                         <!--<input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>-->
-                                                    <select name="order_vehicle_number" id="order_vehicle_number" class="form-control" required="">
+                                                    <div style="width:88%;margin-right:10px;" ><select  name="order_vehicle_number" id="order_vehicle_number" class="form-control" required="">
                                                         <option value="0">Select Vehicle</option>
                                                         <?php foreach ($vehicles as $vehicle) { ?>
                                                         <option value="<?php echo $vehicle['name']; ?>"><?php echo $vehicle['name']; ?></option>
                                                         <?php } ?>    
-                                                        </select>
-
+                                                        </select> </div>
+                                                       
                                                     <br/> </div>
                                                 </div>
                                             </div>
