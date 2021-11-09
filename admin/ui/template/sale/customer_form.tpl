@@ -717,6 +717,12 @@
                         <div class="col-sm-10"><button id="button-pezesha-data-ingestion" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Data Ingestion</button></div>   
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-pezesha-apply-loan">Apply Loan</label>
+                    <div class="col-sm-10">
+                        <div class="col-sm-10"><button id="button-pezesha-apply-loan" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Apply Loan</button></div>   
+                    </div>
+                </div>
             </div>
 
             <div class="tab-pane" id="tab-configuration">
