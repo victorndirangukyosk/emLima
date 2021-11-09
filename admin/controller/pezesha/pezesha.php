@@ -211,15 +211,15 @@ class ControllerPezeshaPezesha extends Controller {
         $log->write($customer_device_info);
         $log->write('auth_response');
         $body = array('channel' => $this->config->get('pezesha_channel'), 'transactions' => $transactions_details);
-        $body = http_build_query($body);
-        //$body = json_encode($body);
+        //$body = http_build_query($body);
+        $body = json_encode($body);
         $curl = curl_init();
         if (ENV == 'production') {
             curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1.1/data');
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded', 'Authentication:Bearer ' . $auth_response]);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authentication:Bearer ' . $auth_response]);
         } else {
             curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1.1/data');
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded', 'Authentication:Bearer ' . $auth_response]);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authentication:Bearer ' . $auth_response]);
         }
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_POST, 1);
