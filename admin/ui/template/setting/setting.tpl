@@ -610,6 +610,28 @@
                                 </div>
                             </div>
 
+
+                             <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-store-latitude"><?php echo $entry_store_latitude; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_store_latitude" value="<?php echo $config_store_latitude; ?>" placeholder="<?php echo $entry_store_latitude; ?>" id="input-store-latitude" class="form-control" />
+                                    <?php if ($error_store_latitude) { ?>
+                                    <div class="text-danger"><?php echo $error_store_latitude; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-store-longitude"><?php echo $entry_store_longitude; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_store_longitude" value="<?php echo $config_store_longitude; ?>" placeholder="<?php echo $entry_store_longitude; ?>" id="input-store-longitude" class="form-control" />
+                                    <?php if ($error_store_longitude) { ?>
+                                    <div class="text-danger"><?php echo $error_store_longitude; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
                             <!-- <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-package">
                                     <span data-toggle="tooltip" data-container="#tab-general" title="Only for payu package id prefix">
