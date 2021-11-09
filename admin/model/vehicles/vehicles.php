@@ -155,6 +155,10 @@ class ModelVehiclesVehicles extends Model {
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
         }
+        else {
+            $implode[] = "c.status = 1";
+
+        }
 
         if (!empty($data['filter_date_added'])) {
             $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";

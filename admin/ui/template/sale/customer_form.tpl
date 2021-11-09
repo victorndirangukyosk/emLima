@@ -49,6 +49,7 @@
             <li><a href="#tab-otp" data-toggle="tab">OTP</a></li>
             <li><a href="#tab-activity" data-toggle="tab">Activities</a></li>
             <li><a href="#tab-password" data-toggle="tab">Password</a></li>
+            <li><a href="#tab-pezesha" data-toggle="tab">Pezesha</a></li>
            
             <?php } ?>
           </ul>
@@ -104,6 +105,26 @@
                           <?php } ?>
                         </div>
                       </div>
+                      
+                       <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-date-added"><?php echo $entry_dob; ?></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="<?php echo $entry_dob; ?>" id="input-date-added" class="form-control date_dob" />
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                            </span>
+                        </div>
+                      </div> 
+                        
+                      <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-lastname">National ID</label>
+                        <div class="col-sm-10">
+                          <input type="text" name="national_id" value="<?php echo $national_id; ?>" placeholder="National ID" id="input-national_id" class="form-control" maxlength=10 />
+                          <?php if ($error_national_id) { ?>
+                          <div class="text-danger"><?php echo $error_national_id; ?></div>
+                          <?php } ?>
+                        </div>
+                      </div>  
                       <div class="form-group required">
                         <label class="col-sm-2 control-label" for="input-email"><?php echo $entry_email; ?></label>
                         <div class="col-sm-10">
@@ -343,6 +364,21 @@
                                     <input type="text" maxlength=30  name="SAP_customer_no" value="<?php echo $SAP_customer_no; ?>"  placeholder="SAP Custumer Number"  id="input-SAP_customer_no" class="form-control" />
                                 </div>
                         </div>
+                        
+                         <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-pezesha-customer-id">Pezesha ID</label>
+                                <div class="col-sm-10">
+                                  <?php echo $customer_pezesha_data['pezesha_customer_id']; ?>  
+                                </div>
+                        </div>
+                            
+                        <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-pezesha-customer-uuid">Pezesha UUID</label>
+                                <div class="col-sm-10">
+                                <?php echo $customer_pezesha_data['customer_uuid']; ?>     
+                                </div>
+                        </div>
+                            
 
                       <?php if(count($referee) > 0) { ?>
                           <div class="form-group">
@@ -655,7 +691,33 @@
                       <button type="button" id="button-password" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-save"></i> Save Password </button>
                   </div>                
             </div>
-
+            
+            <div class="tab-pane" id="tab-pezesha">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-pezesha-registration">Pezesha Registration</label>
+                    <div class="col-sm-10">
+                        <div class="col-sm-10"><button id="button-pezesha" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Apply For Pezesha</button></div>   
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-pezesha-terms-condtions">Accept Pezesha Terms & Conditions</label>
+                    <div class="col-sm-10">
+                        <div class="col-sm-10"><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Accept Pezesha Terms & Condtions</button></div>   
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-pezesha-opt-out">Accept Opt Out</label>
+                    <div class="col-sm-10">
+                        <div class="col-sm-10"><button id="button-pezesha-opt-out" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Accept Opt Out</button></div>   
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-pezesha-data-ingestion">Data Ingestion</label>
+                    <div class="col-sm-10">
+                        <div class="col-sm-10"><button id="button-pezesha-data-ingestion" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Data Ingestion</button></div>   
+                    </div>
+                </div>
+            </div>
 
             <div class="tab-pane" id="tab-configuration">
                     <div class="form-group">
@@ -2113,7 +2175,7 @@ $.ajax({
 
 
 
-    $('#button-password').on('click', function(e) {
+$('#button-password').on('click', function(e) {
 e.preventDefault();
 
 $.ajax({
@@ -2133,6 +2195,78 @@ $.ajax({
   });
 });
 
+$('#button-pezesha').on('click', function(e) {
+e.preventDefault();
+console.log('button-pezesha');
+$.ajax({
+    url: 'index.php?path=sale/customer_pezesha&token=<?php echo $token; ?>',
+    type: 'post',
+    dataType: 'json',
+    data: 'customer_id=<?php echo $customer_id; ?>',
+    success: function(json) {
+        
+    if(json.status == 422) {    
+    $.each(json.errors, function (key, data) {
+    alert(key+' : '+data);
+    })
+    }
+    
+    if(json.status == 200 && json.response_code == 0) {    
+    alert(json.message);
+    }
+    
+    }
+  });
+});
+
+
+$('#button-pezesha-terms-condtions').on('click', function(e) {
+e.preventDefault();
+console.log('button-pezesha-terms-condtions');
+$.ajax({
+    url: 'index.php?path=sale/customer_pezesha/accrptterms&token=<?php echo $token; ?>',
+    type: 'post',
+    dataType: 'json',
+    data: 'customer_id=<?php echo $customer_id; ?>',
+    success: function(json) {
+        
+    if(json.status == 422) {    
+    $.each(json.errors, function (key, data) {
+    alert(key+' : '+data);
+    })
+    }
+    
+    if(json.status == 200 && json.response_code == 0) {    
+    alert(json.message);
+    }
+    
+    }
+  });
+});
+
+$('#button-pezesha-opt-out').on('click', function(e) {
+e.preventDefault();
+console.log('button-pezesha-opt-out');
+$.ajax({
+    url: 'index.php?path=sale/customer_pezesha/optout&token=<?php echo $token; ?>',
+    type: 'post',
+    dataType: 'json',
+    data: 'customer_id=<?php echo $customer_id; ?>',
+    success: function(json) {
+        
+    if(json.status == 422) {    
+    $.each(json.errors, function (key, data) {
+    alert(key+' : '+data);
+    })
+    }
+    
+    if(json.status == 200 && json.response_code == 0) {    
+    alert(json.message);
+    }
+    
+    }
+  });
+});
 </script>
 </body>
 
