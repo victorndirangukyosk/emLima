@@ -181,6 +181,7 @@ class ControllerPezeshaPezesha extends Controller {
 
     public function dataingestion($customer_id) {
 
+        $log = new Log('error.log');
         $this->load->model('sale/customer');
         $this->load->model('sale/order');
         $this->load->model('pezesha/pezesha');
@@ -200,9 +201,10 @@ class ControllerPezeshaPezesha extends Controller {
             $transactions['face_amount'] = $order_info['total'];
             $transactions['transaction_time'] = $order_info['date_added'];
         }
+        $log->write($transactions);
+        exit;
 
         $auth_response = $this->auth();
-        $log = new Log('error.log');
         $log->write('auth_response');
         $log->write($auth_response);
         $log->write($customer_device_info);
