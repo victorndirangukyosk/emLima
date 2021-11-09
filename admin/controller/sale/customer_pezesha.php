@@ -71,8 +71,8 @@ class ControllerSaleCustomerPezesha extends Controller {
     public function applyloan() {
 
         $customer_id = $this->request->post['customer_id'];
-        $amount = $this->request->post['amount'];
-        $order_id = $this->request->post['order_id'];
+        $amount = isset($this->request->post['amount']) && $this->request->post['amount'] > 0 ? $this->request->post['amount'] : 241.00;
+        $order_id = isset($this->request->post['order_id']) && $this->request->post['order_id'] > 0 ? $this->request->post['order_id'] : 4207;
 
         $customer_info['customer_id'] = $customer_id;
         $customer_info['amount'] = $amount;
