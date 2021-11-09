@@ -147,7 +147,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
             $log->write($this->customer->getPaymentTerms());
             if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
                 foreach ($data['payment_methods'] as $payment_method) {
-                    if ($payment_method['code'] != 'cod' &&  $payment_method['code'] != 'wallet' && $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa') {
+                    if ($payment_method['code'] != 'cod' &&  $payment_method['code'] != 'wallet' && $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa' && $payment_method['code'] != 'pezesha') {
                         unset($data['payment_methods'][$payment_method['code']]);
                     }
                 }
