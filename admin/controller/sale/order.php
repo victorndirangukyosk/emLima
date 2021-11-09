@@ -1596,6 +1596,17 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('setting/store');
         $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
         $data['time_slots'] = $deliveryTimeslots;
+        $this->load->language('vehicles/vehicles');
+
+        $data['entry_make'] = $this->language->get('entry_make');
+        $data['entry_model'] = $this->language->get('entry_model');
+        $data['entry_registration_number'] = $this->language->get('entry_registration_number');
+        $data['entry_registration_date'] = $this->language->get('entry_registration_date');
+
+
+        $data['entry_registration_validity_upto'] = $this->language->get('entry_registration_validity_upto');
+        $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_date_added'] = $this->language->get('entry_date_added');
 
         $this->response->setOutput($this->load->view('sale/order_list.tpl', $data));
     }
