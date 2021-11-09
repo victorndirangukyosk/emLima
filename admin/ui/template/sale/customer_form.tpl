@@ -368,14 +368,14 @@
                          <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-pezesha-customer-id">Pezesha ID</label>
                                 <div class="col-sm-10">
-                                  <?php echo $customer_pezesha_data['pezesha_customer_id']; ?>  
+                                  <input type="text" maxlength=30  name="pezesha_customer_id" value="<?php echo $customer_pezesha_data['pezesha_customer_id']; ?>" placeholder="Pezesha Customer ID"  id="input-pezesha-customer-id" class="form-control" readonly="" />
                                 </div>
                         </div>
                             
                         <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-pezesha-customer-uuid">Pezesha UUID</label>
                                 <div class="col-sm-10">
-                                <?php echo $customer_pezesha_data['customer_uuid']; ?>     
+                                <input type="text" maxlength=30  name="pezesha_customer_uuid" value="<?php echo $customer_pezesha_data['customer_uuid']; ?>" placeholder="Pezesha Customer UUID"  id="input-pezesha-customer-uuid" class="form-control" readonly="" />     
                                 </div>
                         </div>
                             
