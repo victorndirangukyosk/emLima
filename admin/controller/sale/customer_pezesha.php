@@ -74,13 +74,17 @@ class ControllerSaleCustomerPezesha extends Controller {
         $amount = $this->request->post['amount'];
         $order_id = $this->request->post['order_id'];
 
+        $customer_info['customer_id'] = $customer_id;
+        $customer_info['amount'] = $amount;
+        $customer_info['order_id'] = $order_id;
+
         $this->load->model('sale/customer');
         $log = new Log('error.log');
         $log->write($customer_id);
         $customer_device_info = $this->model_sale_customer->getCustomer($customer_id);
         $response = NULL;
         if (is_array($customer_device_info) && count($customer_device_info) > 0) {
-            $response = $this->load->controller('pezesha/pezesha/applyloan', $customer_device_info['customer_id']);
+            $response = $this->load->controller('pezesha/pezesha/applyloan', $customer_info);
         }
 
         $this->response->addHeader('Content-Type: application/json');
