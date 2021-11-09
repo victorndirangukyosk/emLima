@@ -191,7 +191,7 @@ class ControllerPezeshaPezesha extends Controller {
         $data['filter_paid'] = 'Y';
 
         $customer_order_info = $this->model_sale_order->getOrders($data);
-        $transactions = NULL;
+        $transactions = array();
 
         foreach ($customer_order_info as $order_info) {
             $order_transaction_info = $this->model_sale_order->getOrderTransactionId($order_info['order_id']);
