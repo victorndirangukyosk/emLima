@@ -67,8 +67,8 @@ class ControllerSaleCustomerPezesha extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($response));
     }
-    
-        public function applyloan() {
+
+    public function applyloan() {
 
         $customer_id = $this->request->post['customer_id'];
         $this->load->model('sale/customer');
