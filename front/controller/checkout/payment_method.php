@@ -63,13 +63,12 @@ class ControllerCheckoutPaymentMethod extends Controller {
         }
         $sort_order = [];
 
-
         foreach ($method_data as $key => $value) {
             $sort_order[$key] = $value['sort_order'];
         }
 
         array_multisort($sort_order, SORT_ASC, $method_data);
-    //    echo "<pre>";print_r($method_data);die;
+        //    echo "<pre>";print_r($method_data);die;
 
 
         $this->session->data['payment_methods'] = $method_data;
@@ -147,13 +146,16 @@ class ControllerCheckoutPaymentMethod extends Controller {
             $log->write($this->customer->getPaymentTerms());
             if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
                 foreach ($data['payment_methods'] as $payment_method) {
-                    if ($payment_method['code'] != 'cod' &&  $payment_method['code'] != 'wallet' && $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa' && $payment_method['code'] != 'pezesha') {
+                    if ($payment_method['code'] != 'cod' && $payment_method['code'] != 'wallet' && $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa' && $payment_method['code'] != 'pezesha') {
                         unset($data['payment_methods'][$payment_method['code']]);
+                    }
+                    if ($this->customer->getCustomerPezeshaId() == NULL || $this->customer->getCustomerPezeshauuId() == NULL) {
+                        unset($data['payment_methods']['pezesha']);
                     }
                 }
             } if ($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') {
                 foreach ($data['payment_methods'] as $payment_method) {
-                    if ($payment_method['code'] != 'cod' &&  $payment_method['code'] != 'wallet') {
+                    if ($payment_method['code'] != 'cod' && $payment_method['code'] != 'wallet') {
                         unset($data['payment_methods'][$payment_method['code']]);
                     }
                 }
