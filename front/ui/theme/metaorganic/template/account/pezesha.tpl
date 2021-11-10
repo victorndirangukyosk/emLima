@@ -122,10 +122,19 @@
 </script>
 <?php } ?>
 <script type="text/javascript">
-    $('#pezesha-button-loan').on('click', function () {
+$('#pezesha-button-loan').on('click', function () {
+$.ajax({
+                        type: 'post',
+                        url: 'index.php?path=payment/pezesha/loanoffers',
+                        dataType: 'json',
+                        cache: false,
+                        success: function(json) {
+                        console.log(json);
+                        }
+                        
+});        
 
-
-    });
+});
 </script>
 
 
