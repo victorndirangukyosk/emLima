@@ -356,10 +356,12 @@ $(document).ready(function() {
                                                 </li>
                                             <?php } ?>
                                             
+                                            <?php if($this->config->get('config_pezesha_enabled')) { ?>
                                             <li role="presentation">
                                                     <a href="">
                                                     <i class="fa fa-bank"></i>Pezesha</a>
                                             </li>
+                                            <?php } ?>
                                             <!--<li role="presentation">
 
                                                 <?php if(strpos( $user_product_notes,$_SERVER["REQUEST_URI"]) !== false) { ?>
