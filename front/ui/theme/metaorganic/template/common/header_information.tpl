@@ -356,7 +356,7 @@ $(document).ready(function() {
                                                 </li>
                                             <?php } ?>
                                             
-                                            <?php if($this->config->get('config_pezesha_enabled')) { ?>
+                                            <?php if($this->config->get('pezesha_status')) { ?>
                                             <li role="presentation">
                                                     <a href="">
                                                     <i class="fa fa-bank"></i>Pezesha</a>
