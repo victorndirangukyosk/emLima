@@ -10,24 +10,12 @@
 
 
                                       <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
-                                    <div class="col-md-9" id="pay_with" >
+                                    <div class="col-md-6" id="pay_with" >
                                     Pezesha Customer ID
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <?php echo $this->customer->getCustomerPezeshaId(); ?>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="radio">
-                                                <label><input class="option_pay" onchange="payWithmPesa()" type="radio" name="pay_with">mPesa Online</label>
-                                            </div>
-                                        </div>
-                                        <!--<div class="col-md-6">
-                                            <div class="radio">
-                                                <label><input class="option_pay" onchange="LoadInterSwitch()" type="radio" name="pay_with">Interswitch</label>
-                                            </div>
-                                        </div>-->
                                     </div>
-                                </div>
+                                    <div class="col-md-6" id="pay_with" >
+                                    <?php echo $this->customer->getCustomerPezeshaId(); ?>
+                                    </div> 
 
                                  <input type="hidden" name="customer_id" value="<?php echo $_SESSION['customer_id'];?>">
                                  
