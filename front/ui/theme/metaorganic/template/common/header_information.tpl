@@ -348,9 +348,9 @@ $(document).ready(function() {
                                                 <li role="presentation">
 
                                                     <?php if(strpos( $credit,$_SERVER["REQUEST_URI"]) !== false) { ?>
-                                                        <a href="<?php echo $pezesha; ?>" class="active">
+                                                        <a href="<?php echo $credit; ?>" class="active">
                                                     <?php } else { ?>
-                                                        <a href="<?php echo $pezesha; ?>">
+                                                        <a href="<?php echo $credit; ?>">
                                                     <?php } ?>
                                                     <i class="fa fa-money"></i><?= $text_cash ?> </a>
                                                 </li>
