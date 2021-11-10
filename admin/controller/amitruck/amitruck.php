@@ -54,6 +54,7 @@ class ControllerAmitruckAmitruck extends Controller {
             $log->write($result);
             curl_close($curl);
             $result = json_decode($result, true);
+            $result['token'] = $this->session->data['token'];
             $json = $result;
 
             if ($result['status'] == 200) {
@@ -162,6 +163,8 @@ class ControllerAmitruckAmitruck extends Controller {
                 $this->model_amitruck_amitruck->addDeliveryStatus($this->request->post['order_id'], json_encode($json));
                 $this->model_amitruck_amitruck->updateOrderDelivery($this->request->post['order_id'], json_encode($json));
             }
+            $result['token'] = $this->session->data['token'];
+
 
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
