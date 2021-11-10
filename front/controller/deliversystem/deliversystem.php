@@ -1630,7 +1630,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                             $this->model_payment_mpesa->updateMpesaCustomerByMerchant($manifest_id['order_id'], $manifest_id['customer_id'], $value->Value, $stkCallback->stkCallback->CheckoutRequestID);
                         }
                         if ('Amount' == $value->Name) {
-                            $amount_topup == $value->Value;
+                            $amount_topup = $value->Value;
                         }
                     }
                 }
