@@ -31,7 +31,33 @@
 
         </div>
 
-        
+        <div class="credit-details">
+            <div class="my-order"><!-- 25 Dec 2015 -->
+                <div class="list-group my-order-group">
+                    <li class="list-group-item my-order-list-head"><i class="fa fa-clock-o"></i> Activity on <span><strong>30th October 2021</strong></span><span>
+
+                            <!-- <a href="#" data-toggle="modal" data-target="#contactusModal" class="btn btn-default btn-xs">Report an issue </a> -->
+
+                        </span></li>
+                    <li class="list-group-item">
+                        <div class="my-order-block">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="my-order-delivery">
+                                        <!--                                                                 <h3 class="my-order-title">Credit</h3>
+                                        -->
+                                        <span class="my-order-date">Advance Received # Transaction ID - abcdefgh1235 </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="color: green">KES 99.00</div>
+
+                            </div>
+                        </div>
+                    </li>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 <?php echo $footer; ?>
