@@ -15,7 +15,7 @@ class ControllerAccountUserProductNotes extends Controller {
         $this->document->addScript('https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
         $this->document->addScript('https://www.js-tutorials.com/demos/jquery_bootstrap_pagination_example_demo/jquery.twbsPagination.min.js');
         $this->document->addStyle('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.css');
-        
+
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/account', '', 'SSL');
 
@@ -36,6 +36,7 @@ class ControllerAccountUserProductNotes extends Controller {
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['return'] = $this->url->link('account/return', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');

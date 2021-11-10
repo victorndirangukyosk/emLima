@@ -130,6 +130,7 @@ class Controlleraccountsubusers extends Controller {
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['return'] = $this->url->link('account/return', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
@@ -290,6 +291,7 @@ class Controlleraccountsubusers extends Controller {
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['return'] = $this->url->link('account/return', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
@@ -587,7 +589,7 @@ class Controlleraccountsubusers extends Controller {
         $log->write($user_id . 'USER ID');
         $this->load->model('account/customer');
         $this->model_account_customer->approvecustom($user_id, $this->request->post['active_status']);
-        
+
         // Add to activity log
         $this->load->model('account/activity');
 
@@ -596,13 +598,13 @@ class Controlleraccountsubusers extends Controller {
             'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             'sub_customers_id' => $this->request->post['user_id']
         ];
-        
-        if($this->request->post['active_status'] == 1) {
-        $this->model_account_activity->addActivity('sub_user_activated', $activity_data);
+
+        if ($this->request->post['active_status'] == 1) {
+            $this->model_account_activity->addActivity('sub_user_activated', $activity_data);
         }
-        
-        if($this->request->post['active_status'] == 0) {
-        $this->model_account_activity->addActivity('sub_user_deactivated', $activity_data);
+
+        if ($this->request->post['active_status'] == 0) {
+            $this->model_account_activity->addActivity('sub_user_deactivated', $activity_data);
         }
 
 
@@ -618,7 +620,7 @@ class Controlleraccountsubusers extends Controller {
         $log->write($user_id . 'USER ID');
         $this->load->model('account/customer');
         $this->model_account_customer->deletecustom($user_id);
-        
+
         // Add to activity log
         $this->load->model('account/activity');
 
@@ -680,7 +682,7 @@ class Controlleraccountsubusers extends Controller {
 
         if ($this->request->post['button'] == 'assign_procurement_person') {
             $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['procurement_person'], 1, 'procurement_person');
-            
+
             $this->load->model('account/activity');
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
@@ -693,52 +695,53 @@ class Controlleraccountsubusers extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
     public function assignsubcustomerorderapproval() {
         $log = new Log('error.log');
         $json['success'] = true;
         $this->load->model('account/customer');
-        
+
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-        
-        if(isset($customer_info) && $customer_info != NULL) {
-        $this->model_account_customer->UpdateCustomerOrderApproval($this->customer->getId(), $this->request->post['sub_customer_order_approval']);
+
+        if (isset($customer_info) && $customer_info != NULL) {
+            $this->model_account_customer->UpdateCustomerOrderApproval($this->customer->getId(), $this->request->post['sub_customer_order_approval']);
         }
-        
+
         $log->write($this->request->post['sub_customer_order_approval']);
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
     public function assignsubcustomerorderapprovalbysubcustomerid() {
         $log = new Log('error.log');
         $json['success'] = true;
         $this->load->model('account/customer');
-        
+
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         $sub_customer_info = $this->model_account_customer->getCustomer($this->request->post['sub_customer_id']);
-        
-        if(isset($customer_info) && $customer_info != NULL && isset($sub_customer_info) && $sub_customer_info != NULL) {
-        $this->model_account_customer->UpdateCustomerOrderApprovalBySubCustomerId($this->customer->getId(), $this->request->post['sub_customer_id'], $this->request->post['status']);
+
+        if (isset($customer_info) && $customer_info != NULL && isset($sub_customer_info) && $sub_customer_info != NULL) {
+            $this->model_account_customer->UpdateCustomerOrderApprovalBySubCustomerId($this->customer->getId(), $this->request->post['sub_customer_id'], $this->request->post['status']);
         }
-    
+
         $this->load->model('account/activity');
         $activity_data = [
             'customer_id' => $this->customer->getId(),
             'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             'sub_customers_id' => $this->request->post['sub_customer_id']
         ];
-        
-        if($this->request->post['status'] == 1) {
-        $this->model_account_activity->addActivity('sub_customer_order_approval_required', $activity_data);
-        } 
-        
-        if($this->request->post['status'] == 0) {
-        $this->model_account_activity->addActivity('sub_customer_order_approval_not_required', $activity_data);    
+
+        if ($this->request->post['status'] == 1) {
+            $this->model_account_activity->addActivity('sub_customer_order_approval_required', $activity_data);
+        }
+
+        if ($this->request->post['status'] == 0) {
+            $this->model_account_activity->addActivity('sub_customer_order_approval_not_required', $activity_data);
         }
 
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
 }

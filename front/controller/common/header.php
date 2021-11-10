@@ -178,6 +178,7 @@ class ControllerCommonHeader extends Controller {
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['user_product_notes'] = $this->url->link('account/user_product_notes', '', 'SSL');
         $data['user_notification_settings'] = $this->url->link('account/user_notification_settings', '', 'SSL');
         $data['download'] = $this->url->link('account/download', '', 'SSL');
@@ -196,6 +197,7 @@ class ControllerCommonHeader extends Controller {
         $data['forget_modal'] = $this->load->controller('common/forget_modal');
 
         $data['wallet_url'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['wallet_amount'] = $this->load->controller('account/credit/getWalletTotal');
 
         $data['language'] = $this->load->controller('common/language/dropdown');
@@ -413,6 +415,7 @@ class ControllerCommonHeader extends Controller {
         $data['order'] = $this->url->link('account/order', '', 'SSL');
         $data['return'] = $this->url->link('account/return', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['user_product_notes'] = $this->url->link('account/user_product_notes', '', 'SSL');
         $data['user_notification_settings'] = $this->url->link('account/user_notification_settings', '', 'SSL');
         $data['download'] = $this->url->link('account/download', '', 'SSL');
@@ -471,6 +474,7 @@ class ControllerCommonHeader extends Controller {
         $data['contactus_modal'] = $this->load->controller('information/contact');
         $data['reportissue_modal'] = $this->load->controller('information/reportissue');
         $data['wallet_url'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['wallet_amount'] = $this->load->controller('account/credit/getWalletTotal');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header_information.tpl')) {
@@ -646,6 +650,7 @@ class ControllerCommonHeader extends Controller {
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['shopping_cart'] = $this->url->link('checkout/cart');
@@ -666,7 +671,7 @@ class ControllerCommonHeader extends Controller {
 
         $data['address'] = $this->url->link('account/address', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
-
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         //echo "<pre>";print_r($data['checkout']);die;
         $status = true;
 
@@ -883,6 +888,7 @@ class ControllerCommonHeader extends Controller {
         $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
 
         $data['wallet_url'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['wallet_amount'] = $this->load->controller('account/credit/getWalletTotal');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header.tpl')) {
@@ -1153,6 +1159,7 @@ class ControllerCommonHeader extends Controller {
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['shopping_cart'] = $this->url->link('checkout/cart');
@@ -1227,6 +1234,7 @@ class ControllerCommonHeader extends Controller {
         $data['multi_store_checkoutitems_css'] = $param;
 
         $data['wallet_url'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['wallet_amount'] = $this->load->controller('account/credit/getWalletTotal');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/only_header_information.tpl')) {
@@ -1428,6 +1436,7 @@ class ControllerCommonHeader extends Controller {
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['shopping_cart'] = $this->url->link('checkout/cart');
@@ -1697,6 +1706,7 @@ class ControllerCommonHeader extends Controller {
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['shopping_cart'] = $this->url->link('checkout/cart');
@@ -1950,6 +1960,7 @@ class ControllerCommonHeader extends Controller {
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['shopping_cart'] = $this->url->link('checkout/cart');

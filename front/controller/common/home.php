@@ -144,6 +144,7 @@ class ControllerCommonHome extends Controller {
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['shopping_cart'] = $this->url->link('checkout/cart');
@@ -889,6 +890,7 @@ class ControllerCommonHome extends Controller {
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['shopping_cart'] = $this->url->link('checkout/cart');
@@ -1156,6 +1158,7 @@ class ControllerCommonHome extends Controller {
         $data['mostboughtproducts_url'] = $this->url->link('product/store/featuredproducts', '', 'SSL');
         $data['cartproducts'] = $this->cart->getProducts();
         $data['wallet_url'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['wallet_amount'] = $this->load->controller('account/credit/getWalletTotal');
         /* $log->write('mostboughtproducts');
           $log->write($this->cart->getProducts());
@@ -1190,6 +1193,7 @@ class ControllerCommonHome extends Controller {
             $data['login'] = $this->url->link('account/login', '', 'SSL');
             $data['order'] = $this->url->link('account/order', '', 'SSL');
             $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+            $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
             $data['download'] = $this->url->link('account/download', '', 'SSL');
             $data['logout'] = $this->url->link('account/logout', '', 'SSL');
             $data['shopping_cart'] = $this->url->link('checkout/cart');
@@ -1767,9 +1771,9 @@ class ControllerCommonHome extends Controller {
         }
         // echo "<pre>";print_r($data['products']);die;
         $log = new Log('error.log');
-        /*$log->write('filter_data');
-        $log->write($filter_data);
-        $log->write('filter_data');*/
+        /* $log->write('filter_data');
+          $log->write($filter_data);
+          $log->write('filter_data'); */
         if (isset($filter_data['filter_sort']) && $filter_data['filter_sort'] != NULL && $filter_data['filter_sort'] == 'nasc') {
             $new_arry = $this->multisort($data['products'], 'name', 'nasc');
             $log = new Log('error.log');
@@ -2074,6 +2078,7 @@ class ControllerCommonHome extends Controller {
                 $data['login'] = $this->url->link('account/login', '', 'SSL');
                 $data['order'] = $this->url->link('account/order', '', 'SSL');
                 $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+                $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
                 $data['download'] = $this->url->link('account/download', '', 'SSL');
                 $data['logout'] = $this->url->link('account/logout', '', 'SSL');
                 $data['shopping_cart'] = $this->url->link('checkout/cart');
