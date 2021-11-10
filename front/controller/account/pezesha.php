@@ -57,40 +57,6 @@ class ControllerAccountPezesha extends Controller {
 
         $data['button_continue'] = $this->language->get('button_continue');
 
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
-        } else {
-            $page = 1;
-        }
-
-        $data['credits'] = [];
-
-        $filter_data = [
-            'sort' => 'date_added',
-            'order' => 'DESC',
-            'start' => ($page - 1) * 10,
-            'limit' => 10,
-        ];
-
-        $data['telephone'] = $this->customer->getTelephone();
-
-        $credit_total = $this->model_account_credit->getTotalCredits();
-
-        $results = $this->model_account_credit->getCredits($filter_data);
-
-        foreach ($results as $result) {
-            $transaction_ID = "";
-            if (isset($result['transaction_id']) && $result['transaction_id'] != "") {
-                $transaction_ID = '#Transaction ID ' . $result['transaction_id'];
-            }
-            $data['credits'][] = [
-                'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
-                'plain_amount' => $result['amount'],
-                'description' => $result['description'] . ' ' . $transaction_ID,
-                'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
-            ];
-        }
-
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
         } else {
@@ -98,17 +64,6 @@ class ControllerAccountPezesha extends Controller {
         }
 
         $data['base'] = $server;
-
-        $pagination = new Pagination();
-        $pagination->total = $credit_total;
-        $pagination->page = $page;
-        $pagination->limit = 10;
-        $pagination->url = $this->url->link('account/credit', 'page={page}', 'SSL');
-
-        $data['pagination'] = $pagination->render();
-
-        $data['results'] = sprintf($this->language->get('text_pagination'), ($credit_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($credit_total - 10)) ? $credit_total : ((($page - 1) * 10) + 10), $credit_total, ceil($credit_total / 10));
-
         $data['total'] = $this->currency->format($this->customer->getBalance());
         $data['text_signout'] = $this->language->get('text_signout');
         $data['text_shopping'] = $this->language->get('text_shopping');
