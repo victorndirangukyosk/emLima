@@ -5,23 +5,17 @@
                                 <div class="row">
                                      <div class="col-md-12">
                                             <div class="cash-info" style="padding-bottom: 50px;padding-top: 50px;"><h1><?= $text_balance ?></h1>
-                                            <div class="cash-block">
-                                              <span class="your-cash"> <?= $total ?>  </span>
-                                            </div>
-                                            <!--<a href="<?= $home ?>" class="btn btn-primary"><?= $text_shopping?></a>-->
                                             </div>
                                      </div>
 
 
                                       <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
                                     <div class="col-md-9" id="pay_with" >
-                                    Top Up With
+                                    Pezesha Customer ID
                                     <div class="row">
-                                        <!--<div class="col-md-4">
-                                            <div class="radio">
-                                                <label><input class="option_pay" onchange="payOptionSelected()" type="radio" name="pay_with">PesaPal</label>
-                                            </div>
-                                        </div>-->
+                                        <div class="col-md-4">
+                                            <?php echo $this->customer->getCustomerPezeshaId(); ?>
+                                        </div>
                                         <div class="col-md-6">
                                             <div class="radio">
                                                 <label><input class="option_pay" onchange="payWithmPesa()" type="radio" name="pay_with">mPesa Online</label>
