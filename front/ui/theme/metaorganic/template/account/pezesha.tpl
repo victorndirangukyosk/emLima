@@ -129,7 +129,7 @@ $.ajax({
                         dataType: 'json',
                         cache: false,
                         success: function(json) {
-                        console.log(json);
+                        console.log(json.message);
                         }
                         
 });        
