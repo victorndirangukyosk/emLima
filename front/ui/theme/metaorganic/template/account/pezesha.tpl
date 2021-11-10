@@ -129,6 +129,7 @@ $.ajax({
                         dataType: 'json',
                         cache: false,
                         success: function(json) {
+                        alert(json.message);
                         console.log(json.message);
                         }
                         
