@@ -15,7 +15,7 @@ class ControllerAccountPezesha extends Controller {
 
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
-        $this->load->language('account/credit');
+        $this->load->language('account/pezesha');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
