@@ -34,7 +34,7 @@
         <div class="credit-details">
             <div class="my-order"><!-- 25 Dec 2015 -->
                 <div class="list-group my-order-group">
-                    <li class="list-group-item my-order-list-head align-items-left"><i class="fa fa-cloud-download"></i> Fetch Loan Offers <span class="badge badge-primary badge-pill"><button type="button" class="btn btn-primary">Primary</button></span></li>
+                    <li class="list-group-item my-order-list-head align-items-left"><i class="fa fa-cloud-download"></i> Fetch Loan Offers <span class="badge badge-primary badge-pill"><button type="button" class="list-group-item list-group-item-action active" aria-current="true">The current button</button></span></li>
                     <li class="list-group-item">
                         <div class="my-order-block">
                             <div class="row">
