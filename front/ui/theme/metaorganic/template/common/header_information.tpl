@@ -358,7 +358,7 @@ $(document).ready(function() {
                                             
                                             <?php if($this->config->get('pezesha_status') && $this->customer->getCustomerPezeshaId() > 0 && $this->customer->getCustomerPezeshauuId() != NULL) { ?>
                                             <li role="presentation">
-                                                    <a href="">
+                                                    <a href="<?php echo $pezesha; ?>">
                                                     <i class="fa fa-bank"></i>Pezesha</a>
                                             </li>
                                             <?php } ?>
