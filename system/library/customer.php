@@ -17,6 +17,8 @@ class Customer {
     private $email_notification;
     private $payment_terms;
     private $customer_category;
+    private $pezesha_customer_id;
+    private $pezesha_customer_uuid;
 
     public function __construct($registry) {
         $this->config = $registry->get('config');
@@ -43,6 +45,17 @@ class Customer {
                     $this->customer_category = $customer_query->row['customer_category'];
                 }
                 /* SET CUSTOMER CATEGORY */
+
+                /* SET CUSTOMER PEZESHA */
+                $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $this->session->data['customer_id'] . "'");
+                if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
+                    $this->pezesha_customer_id = $pezesha_customer_query->row['pezesha_customer_id'];
+                    $this->pezesha_customer_uuid = $pezesha_customer_query->row['customer_uuid'];
+                } else {
+                    $this->pezesha_customer_id = NULL;
+                    $this->pezesha_customer_uuid = NULL;
+                }
+                /* SET CUSTOMER PEZESHA */
 
                 $this->customer_id = $customer_query->row['customer_id'];
                 $this->firstname = $customer_query->row['firstname'];
@@ -99,6 +112,18 @@ class Customer {
                 $this->customer_category = $customer_query->row['customer_category'];
             }
             /* SET CUSTOMER CATEGORY */
+
+            /* SET CUSTOMER PEZESHA */
+            $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $this->session->data['customer_id'] . "'");
+            if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
+                $this->pezesha_customer_id = $pezesha_customer_query->row['pezesha_customer_id'];
+                $this->pezesha_customer_uuid = $pezesha_customer_query->row['customer_uuid'];
+            } else {
+                $this->pezesha_customer_id = NULL;
+                $this->pezesha_customer_uuid = NULL;
+            }
+            /* SET CUSTOMER PEZESHA */
+
             /* if ($customer_query->row['cart'] && is_string($customer_query->row['cart'])) {
               $cart = unserialize($customer_query->row['cart']);
 
@@ -175,6 +200,17 @@ class Customer {
             }
             /* SET CUSTOMER CATEGORY */
             $log->write('FROM HERE PARENT CUSTOMER SESSION ASSIGN system_library_customer.php loginByPhone');
+
+            /* SET CUSTOMER PEZESHA */
+            $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $this->session->data['customer_id'] . "'");
+            if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
+                $this->pezesha_customer_id = $pezesha_customer_query->row['pezesha_customer_id'];
+                $this->pezesha_customer_uuid = $pezesha_customer_query->row['customer_uuid'];
+            } else {
+                $this->pezesha_customer_id = NULL;
+                $this->pezesha_customer_uuid = NULL;
+            }
+            /* SET CUSTOMER PEZESHA */
             /* if ($customer_query->row['cart'] && is_string($customer_query->row['cart'])) {
               $cart = unserialize($customer_query->row['cart']);
 
@@ -242,6 +278,8 @@ class Customer {
         $this->email_notification = '';
         $this->payment_terms = '';
         $this->customer_category = '';
+        $this->pezesha_customer_id = '';
+        $this->pezesha_customer_uuid = '';
     }
 
     public function isLogged() {
@@ -320,6 +358,14 @@ class Customer {
         return $this->customer_category;
     }
 
+    public function getCustomerPezeshaId() {
+        return $this->pezesha_customer_id;
+    }
+
+    public function getCustomerPezeshauuId() {
+        return $this->pezesha_customer_uuid;
+    }
+
     public function setVariables($data) {
         $this->customer_id = $data['customer_id'];
         $this->firstname = $data['firstname'];
@@ -336,6 +382,8 @@ class Customer {
         $this->email_notification = $data['email_notification'];
         $this->payment_terms = $data['payment_terms'];
         $this->customer_category = $data['customer_category'];
+        $this->pezesha_customer_id = $data['pezesha_customer_id'];
+        $this->pezesha_customer_uuid = $data['pezesha_customer_uuid'];
     }
 
 }
