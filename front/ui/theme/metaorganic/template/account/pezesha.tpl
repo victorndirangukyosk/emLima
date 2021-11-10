@@ -1,42 +1,36 @@
 <?php echo $header; ?>
-                        <div class="col-md-9 nopl">
-                            <div class="dashboard-cash-content">
-                                 
-                                <div class="row">
-                                     <div class="col-md-12">
-                                            <div class="cash-info" style="padding-bottom: 50px;padding-top: 50px;"><h1><?= $text_balance ?></h1>
-                                            </div>
-                                     </div>
+<div class="col-md-9 nopl">
+    <div class="dashboard-cash-content">
 
-
-                                      <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
-                                    <div class="col-md-6" id="pay_with" >
-                                    Pezesha Customer ID
-                                    </div>
-                                    <div class="col-md-6" id="pay_with" >
-                                    <?php echo $this->customer->getCustomerPezeshaId(); ?>
-                                    </div>                                  
-                               
-                                </div>
-                                    
-                                    <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
-                                    <div class="col-md-6" id="pay_with" >
-                                    Pezesha Customer UU-ID
-                                    </div>
-                                    <div class="col-md-6" id="pay_with" >
-                                    <?php echo $this->customer->getCustomerPezeshauuId(); ?>
-                                    </div>                                  
-                               
-                                </div>
-                                
-                                </div>
-                               
-                            </div>
-                        </div>
-                    </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="cash-info" style="padding-bottom: 50px;padding-top: 50px;"><h1><?= $text_balance ?></h1>
                 </div>
             </div>
+
+
+            <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
+                <div class="col-md-6" id="pay_with" >
+                    Pezesha Customer ID
+                </div>
+                <div class="col-md-6" id="pay_with" >
+                    <?php echo $this->customer->getCustomerPezeshaId(); ?>
+                </div>                                  
+
+            </div>
+
+            <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
+                <div class="col-md-6" id="pay_with" >
+                    Pezesha Customer UU-ID
+                </div>
+                <div class="col-md-6" id="pay_with" >
+                    <?php echo $this->customer->getCustomerPezeshauuId(); ?>
+                </div>                                  
+
+            </div>
+
         </div>
+
     </div>
 </div>
     <?php echo $footer; ?>
