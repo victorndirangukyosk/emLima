@@ -34,7 +34,19 @@
         <div class="credit-details">
             <div class="my-order"><!-- 25 Dec 2015 -->
                 <div class="list-group my-order-group">
-                    <li class="list-group-item my-order-list-head"><i class="fa fa-cloud-download"></i> Fetch Loan Offers <span></span><span></span></li>
+                    <li class="list-group-item my-order-list-head">
+                        <div class="my-order-block">
+                            <div class="row">
+                                <div class="col-md-6">
+                                  <i class="fa fa-cloud-download"></i> Fetch Loan Offers <span></span><span></span>  
+                                </div>
+                                <div class="col-md-6">
+                                  <i class="fa fa-cloud-download"></i> Fetch Loan Offers <span></span><span></span>  
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </li>
                     <li class="list-group-item">
                         <div class="my-order-block">
                             <div class="row">
