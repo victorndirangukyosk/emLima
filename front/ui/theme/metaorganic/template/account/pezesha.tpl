@@ -31,44 +31,7 @@
 
         </div>
 
-        <div class="credit-details">
-            <?php foreach ($credits  as $credit) { ?>
-            <div class="my-order"><!-- 25 Dec 2015 -->
-                <div class="list-group my-order-group">
-                    <li class="list-group-item my-order-list-head"><i class="fa fa-clock-o"></i> <?= $text_activity?> <span><strong><?php echo $credit['date_added']; ?></strong></span><span>
-
-                            <!-- <a href="#" data-toggle="modal" data-target="#contactusModal" class="btn btn-default btn-xs"><?= $text_report_issue ?> </a> -->
-
-                        </span></li>
-                    <li class="list-group-item">
-                        <div class="my-order-block">
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <div class="my-order-delivery">
-                                        <!-- <?php if($credit['amount'] >= 0) { ?>
-                                          <h3 class="my-order-title">Credit</h3>
-                                        <?php } else { ?>
-                                              <h3 class="my-order-title">Debit</h3>
-                                        <?php } ?> -->
-                                        <span class="my-order-date"><?php echo $credit['description']; ?></span>
-                                    </div>
-                                </div>
-                                <?php if($credit['plain_amount'] >= 0) { ?>
-                                <div class="col-md-2" style="color: green"><?php echo $credit['amount']; ?></div>
-                                <?php } else { ?>
-                                <div class="col-md-2" style="color: red"><?php echo $credit['amount']; ?></div>
-                                <?php } ?>
-
-                            </div>
-                        </div>
-                    </li>
-                </div>
-            </div>
-            <?php } ?>
-            <?php } else { ?>
-            <center class="text-center" colspan="5"><?php echo $text_empty; ?></center>
-            <?php } ?>
-        </div>
+        
     </div>
 </div>
 <?php echo $footer; ?>
