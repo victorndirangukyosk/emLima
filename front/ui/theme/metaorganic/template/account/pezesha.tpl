@@ -15,127 +15,22 @@
                                     </div>
                                     <div class="col-md-6" id="pay_with" >
                                     <?php echo $this->customer->getCustomerPezeshaId(); ?>
-                                    </div> 
-
-                                 <input type="hidden" name="customer_id" value="<?php echo $_SESSION['customer_id'];?>">
-                                 
-                                 
-
-                                   <div id="pay-amount" class="col-md-12 confirm_order_class" style="display:none; ">
-                                    <p>Amount</p>
-                                    <div class="row">
-                                        <div class="col-md-9">
-                                            <span class="input-group-btn" style="padding-bottom: 5px;">
-                                                
-
-                                                <input id="amount_topup" name="amount_topup" type="text" value="" class="form-control input-md" required="" placeholder="Amount" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 50%;" >
-
-                                            </span>
-                                        </div>   
-                                    </div>
+                                    </div>                                  
+                               
+                                </div>
                                     
-                                </div>
-                                
- 
-             <input type="hidden" name="mpesa_checkout_request_id" id="mpesa_checkout_request_id" value="">
-
-                                <div id="pay-confirm-order-mpesa" class="col-md-12 confirm_order_class" style="display:none; ">
-                                    <p>mPesa Online</p>
-                                    <div class="row">
-                                        <div class="col-md-7">
-                                            <span class="input-group-btn" style="padding-bottom: 10px;">
-                                                <p id="button-reward" class="" style="padding: 13px 14px;    margin-top: -9px;border-radius: 2px;font-size: 15px;font-weight: 600;color: #fff;background-color: #522e5b;border-color: #522e5b;display: inline-block;margin-bottom: 0;line-height: 1.42857143;vertical-align: middle;-ms-touch-action: manipulation;touch-action: manipulation;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;background-image: none;margin-right: -1px;">
-                                                    <font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">+254</font></font></font></font>
-                                                </p>
-
-                                                <input id="mpesa_phone_number" name="telephone" type="text" value="<?php echo $this->customer->getTelephone(); ?>" class="form-control input-md" required="" placeholder="Mobile number" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 50%;" >
-
-                                            </span>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <button type="button" id="mpesa-button-confirm" data-toggle="collapse" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button>
-                                            
-                                            <button type="button" id="button-retry" class="btn btn-default"> Retry</button>
-
-                                            <button type="button" id="button-complete" data-toggle="collapse" data-loading-text="checking payment..." class="btn btn-default">Confirm Payment</button>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="alert alert-danger" id="error_msg" style="margin-bottom: 7px;">
-                                            </div>
-                                            <div class="alert alert-success" style="font-size: 14px;" id="success_msg" style="margin-bottom: 7px;">
-                                            </div>
-                                        </div>    
+                                    <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
+                                    <div class="col-md-6" id="pay_with" >
+                                    Pezesha Customer UU-ID
                                     </div>
-                                    <!--MPESA REMOVED FROM HERE-->
+                                    <div class="col-md-6" id="pay_with" >
+                                    <?php echo $this->customer->getCustomerPezeshauuId(); ?>
+                                    </div>                                  
+                               
                                 </div>
                                 
                                 </div>
-                                
-                                </div>
-                            
-
-
-                                <?php if ($credits) { ?>
-                                 <div class="credit-details">
-                                    <?php foreach ($credits  as $credit) { ?>
-                                    <div class="my-order"><!-- 25 Dec 2015 -->
-                                      <div class="list-group my-order-group">
-                                          <li class="list-group-item my-order-list-head"><i class="fa fa-clock-o"></i> <?= $text_activity?> <span><strong><?php echo $credit['date_added']; ?></strong></span><span>
-
-                                          <!-- <a href="#" data-toggle="modal" data-target="#contactusModal" class="btn btn-default btn-xs"><?= $text_report_issue ?> </a> -->
-
-                                          </span></li>
-                                          <li class="list-group-item">
-                                              <div class="my-order-block">
-                                                  <div class="row">
-                                                      <div class="col-md-10">
-                                                          <div class="my-order-delivery">
-                                                              <!-- <?php if($credit['amount'] >= 0) { ?>
-                                                                <h3 class="my-order-title">Credit</h3>
-                                                              <?php } else { ?>
-                                                                    <h3 class="my-order-title">Debit</h3>
-                                                              <?php } ?> -->
-                                                              <span class="my-order-date"><?php echo $credit['description']; ?></span>
-                                                          </div>
-                                                      </div>
-                                                     <?php if($credit['plain_amount'] >= 0) { ?>
-                                                                <div class="col-md-2" style="color: green"><?php echo $credit['amount']; ?></div>
-                                                              <?php } else { ?>
-                                                                    <div class="col-md-2" style="color: red"><?php echo $credit['amount']; ?></div>
-                                                              <?php } ?>
-                                                      
-                                                  </div>
-                                              </div>
-                                          </li>
-                                      </div>
-                                  </div>
-                                    <?php } ?>
-                                    <?php } else { ?>
-                                      <center class="text-center" colspan="5"><?php echo $text_empty; ?></center>
-                                <?php } ?>
-                                 </div>
-                                    
-
-                                <div class="text-right" style='display: none;'>
-                                    <?php echo $pagination; ?>
-                                </div>
-
-                                <?php if(!empty($pagination)) { ?>
-                                    <div id="button-area">
-                                        <button class="load_more btn btn-default center-block" type="button">
-                                            <span class="load-more-text"><?= $text_load_more?></span>
-                                            <div class="load-more-loader" style="display: none;"></div>
-                                        </button>    
-                                    </div>
-                                <?php } ?>
-
-                                <!-- <div class="row">
-                                    <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
-                                    <div class="col-sm-6 text-right"><?php echo $results; ?></div>
-                                </div>
-                                  <br />
-                                  <?php echo $content_bottom; ?> -->
-                                
+                               
                             </div>
                         </div>
                     </div>
