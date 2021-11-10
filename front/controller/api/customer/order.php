@@ -1310,7 +1310,7 @@ class ControllerApiCustomerOrder extends Controller {
             $customer_parent_info = $this->model_account_customer->getCustomerParentEmail($result['customer_id']);
 
             $data['orders'][] = [
-                'order_id' => $result['order_id'],
+                'order_id' => $result['order_id'],               
                 'name' => $result['firstname'] . ' ' . $result['lastname'],
                 'shipping_name' => $result['shipping_name'],
                 'payment_method' => $result['payment_method'],
@@ -1355,6 +1355,7 @@ class ControllerApiCustomerOrder extends Controller {
                 'parent_details' => $customer_parent_info != NULL && $customer_parent_info['email'] != NULL ? $customer_parent_info['email'] : NULL,
                 'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) && $result['paid'] =='N'? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
+                'paid' => $result['paid'],
             ];
         }
 
