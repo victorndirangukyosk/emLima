@@ -175,8 +175,11 @@ class ControllerAmitruckAmitruck extends Controller {
         $json = array();
         $this->load->model('amitruck/amitruck');
         $this->load->model('sale/order');
-        $order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
-        if (is_array($order_info) && count($order_info) > 0 && $order_info['delivery_id'] != NULL) {
+            // echo "<pre>";print_r($this->request->post);die;
+        
+        // $order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
+        // if (is_array($order_info) && count($order_info) > 0 && $order_info['delivery_id'] != NULL) {
+        if ($this->request->post['delivery_id'] != NULL) {
             $log = new Log('error.log');
             //$log->write($order_info);
 
@@ -184,12 +187,12 @@ class ControllerAmitruckAmitruck extends Controller {
             
             if(ENV=='production')
             {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/driver_location?id=' . $order_info['delivery_id']);
+                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/driver_location?id=' . $this->request->post['delivery_id']);
                 curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
                
             }
             else {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/driver_location?id=' . $order_info['delivery_id']);
+                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/driver_location?id=' . $this->request->post['delivery_id']);
                 curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
                   
             }
@@ -206,11 +209,11 @@ class ControllerAmitruckAmitruck extends Controller {
             $json = $result;
 
             if ($result['status'] == 200) {
-                $driver_details = $this->model_amitruck_amitruck->fetchOrderDeliveryInfo($this->request->post['order_id']);
-                $log->write($driver_details['driver_phone']);
-                $log->write($driver_details['vehicle_number']);
-                $log->write($driver_details['driver_name']);
-                $json['driver_details'] = array('driver_phone' => $driver_details['driver_phone'], 'vehicle_number' => $driver_details['vehicle_number'], 'driver_name' => $driver_details['driver_name']);
+                // $driver_details = $this->model_amitruck_amitruck->fetchOrderDeliveryInfo($this->request->post['order_id']);
+                // $log->write($driver_details['driver_phone']);
+                // $log->write($driver_details['vehicle_number']);
+                // $log->write($driver_details['driver_name']);
+                // $json['driver_details'] = array('driver_phone' => $driver_details['driver_phone'], 'vehicle_number' => $driver_details['vehicle_number'], 'driver_name' => $driver_details['driver_name']);
 
                 $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'FETCH_DRIVER_LOCATION');
                 $log->write($result);
