@@ -31,7 +31,21 @@
 
         </div>
 
-        
+        <div class="credit-details">
+            <div class="my-order"><!-- 25 Dec 2015 -->
+                <div class="list-group my-order-group">
+                    <li class="list-group-item my-order-list-head align-items-center"><i class="fa fa-cloud-download"></i> Pezesha Loan Offers <span></span><span></span></li>
+                    <li class="list-group-item">
+                        <div class="my-order-block">
+                            <div class="row">
+                                <div class="col-md-6">Fetch Pezesha Details</div>
+                                <div class="col-md-6"><button type="button" id="mpesa-button-confirm" data-toggle="collapse" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button></div>
+                            </div>
+                        </div>
+                    </li>
+                </div>
+            </div>
+        </div>
 
     </div>
 </div>
