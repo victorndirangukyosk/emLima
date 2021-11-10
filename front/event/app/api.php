@@ -52,7 +52,7 @@ class EventAppApi extends Event {
             //echo "<pre>";print_r($args);die;
             //unset($this->session->data['customer_id']);die;
             //$this->response->addHeader('Cookie:' . 'PHPSESSID=' . $this->session->getId() . ';currency=KES; language=en');
-            if ('api/customer/address/getAlladdress' == $route || 'api/customer/address/deleteaddress' == $route || 'api/customer/address/deleteAddress' == $route || 'api/customer/address/addAddress' == $route || 'api/customer/address/getAddress' == $route || 'api/customer/address/editAddress' == $route || 'api/customer/account/getUserdetails' == $route || 'api/customer/account/editUserdetail' == $route || 'api/customer/account/editUserDetail' == $route || 'api/customer/order/addMissingOrder' == $route || 'api/customer/order/addOrder' == $route || 'api/customer/order/getOrders' == $route || 'api/customer/checkout/addApplycoupon' == $route || 'api/customer/checkout/addApplyreward' == $route || 'api/customer/address/addMakedefaultaddress' == $route || 'api/customer/order/getOrder' == $route || 'api/customer/account/getUserRewards' == $route || 'api/customer/return/getUserReturns' == $route || 'api/customer/wishlist/getUserList' == $route || 'api/customer/refer/getUserRefers' == $route || 'api/customer/account/getUserCash' == $route || 'api/customer/wishlist/addCreateWishlist' == $route || 'api/customer/wishlist/addProductToWishlist' == $route || 'api/customer/wishlist/editWishlistProduct' == $route || 'api/customer/wishlist/editDeleteWishlist' == $route || 'api/customer/wishlist/editDeleteWishlistProduct' == $route || 'api/customer/wishlist/addCreateWishlistWithProduct' == $route || 'api/customer/return/getReturnDetail' == $route || 'api/customer/return/addReturnProduct' == $route || 'api/customer/wishlist/getUserListProduct' == $route || 'api/customer/payment/getStripeCustomerId' == $route || 'api/customer/order/addOrdercancel' == $route || 'api/customer/payment/addStripeEphemeralKey' == $route || 'api/customer/account/addStripeUser' == $route || 'api/customer/settings/addDeviceIdToCustomer' == $route || 'api/customer/stores/getStoreShippingMethods' == $route || 'api/customer/stores/getStoreshippingmethods' == $route || 'api/customer/login/addNewAccessToken' == $route || 'api/customer/payment/addMpesaConfirm' == $route || 'api/customer/payment/addMpesaComplete' == $route || 'api/customer/products/getProducts' == $route || 'api/customer/products/getProductSearch' == $route || 'api/customer/account/addSendNewDeviceotp' == $route || 'api/customer/account/addVerifyNewDeviceotp' == $route || 'api/customer/products/getProductAutocomplete' == $route || 'api/customer/user_notification_settings/addCustomerNotificationSetting' == $route | 'api/customer/user_notification_settings/getCustomerNotificationSettings' == $route || 'api/customer/order/addEditOrderWithNewitemAndQuantity' == $route || 'api/customer/order/addMaxOfProduct' == $route || 'api/customer/wishlist/getAvailableOrderProducts' == $route || 'api/customer/dashboard/getDashboardDetails' == $route || 'api/customer/dashboard/getDashboardData' == $route || 'api/customer/dashboard/getValueofbasket' == $route || 'api/customer/dashboard/addCustomerstatement' == $route || 'api/customer/dashboard/addPurchaseHistory' == $route || 'api/customer/dashboard/addStatementexcel' == $route || 'api/customer/dashboard/addConsolidatedOrderProduct' == $route || 'api/customer/dashboard/getCustomerMostBoughtProducts' == $route || 'api/customer/dashboard/getRecentActivities' == $route || 'api/customer/dashboard/getRecentOrders' == $route || 'api/customer/dashboard/getRecentOrdersList' == $route || 'api/customer/dashboard/getRecentOrdersProductsList' == $route || 'api/customer/dashboard/getMostPurchasedProductsExcel' == $route || 'api/customer/dashboard/getPurchaseHistoryByProductID' == $route || 'api/customer/dashboard/getProductPurchaseHistory' == $route || 'api/customer/subusers/getSubUsers' == $route || 'api/customer/subusers/addNewSubUser' == $route || 'api/customer/order/getPendingorders' == $route || 'api/customer/Feedback/addFeedback' == $route || 'api/customer/Feedback/getFeedback' == $route || 'api/orders/export_products_excel/getExport_products_excel' == $route || 'api/customer/order/addReorder'== $route || 'api/customer/transactions/getAllTransactions'== $route || 'api/customer/account/getWalletTotal'==$route ||'api/customer/account/getWallet' ==$route) {
+            if ('api/customer/address/getAlladdress' == $route || 'api/customer/address/deleteaddress' == $route || 'api/customer/address/deleteAddress' == $route || 'api/customer/address/addAddress' == $route || 'api/customer/address/getAddress' == $route || 'api/customer/address/editAddress' == $route || 'api/customer/account/getUserdetails' == $route || 'api/customer/account/editUserdetail' == $route || 'api/customer/account/editUserDetail' == $route || 'api/customer/order/addMissingOrder' == $route || 'api/customer/order/addOrder' == $route || 'api/customer/order/getOrders' == $route || 'api/customer/checkout/addApplycoupon' == $route || 'api/customer/checkout/addApplyreward' == $route || 'api/customer/address/addMakedefaultaddress' == $route || 'api/customer/order/getOrder' == $route || 'api/customer/account/getUserRewards' == $route || 'api/customer/return/getUserReturns' == $route || 'api/customer/wishlist/getUserList' == $route || 'api/customer/refer/getUserRefers' == $route || 'api/customer/account/getUserCash' == $route || 'api/customer/wishlist/addCreateWishlist' == $route || 'api/customer/wishlist/addProductToWishlist' == $route || 'api/customer/wishlist/editWishlistProduct' == $route || 'api/customer/wishlist/editDeleteWishlist' == $route || 'api/customer/wishlist/editDeleteWishlistProduct' == $route || 'api/customer/wishlist/addCreateWishlistWithProduct' == $route || 'api/customer/return/getReturnDetail' == $route || 'api/customer/return/addReturnProduct' == $route || 'api/customer/wishlist/getUserListProduct' == $route || 'api/customer/payment/getStripeCustomerId' == $route || 'api/customer/order/addOrdercancel' == $route || 'api/customer/payment/addStripeEphemeralKey' == $route || 'api/customer/account/addStripeUser' == $route || 'api/customer/settings/addDeviceIdToCustomer' == $route || 'api/customer/stores/getStoreShippingMethods' == $route || 'api/customer/stores/getStoreshippingmethods' == $route || 'api/customer/login/addNewAccessToken' == $route || 'api/customer/payment/addMpesaConfirm' == $route || 'api/customer/payment/addMpesaComplete' == $route || 'api/customer/products/getProducts' == $route || 'api/customer/products/getProductSearch' == $route || 'api/customer/account/addSendNewDeviceotp' == $route || 'api/customer/account/addVerifyNewDeviceotp' == $route || 'api/customer/products/getProductAutocomplete' == $route || 'api/customer/user_notification_settings/addCustomerNotificationSetting' == $route | 'api/customer/user_notification_settings/getCustomerNotificationSettings' == $route || 'api/customer/order/addEditOrderWithNewitemAndQuantity' == $route || 'api/customer/order/addMaxOfProduct' == $route || 'api/customer/wishlist/getAvailableOrderProducts' == $route || 'api/customer/dashboard/getDashboardDetails' == $route || 'api/customer/dashboard/getDashboardData' == $route || 'api/customer/dashboard/getValueofbasket' == $route || 'api/customer/dashboard/addCustomerstatement' == $route || 'api/customer/dashboard/addPurchaseHistory' == $route || 'api/customer/dashboard/addStatementexcel' == $route || 'api/customer/dashboard/addConsolidatedOrderProduct' == $route || 'api/customer/dashboard/getCustomerMostBoughtProducts' == $route || 'api/customer/dashboard/getRecentActivities' == $route || 'api/customer/dashboard/getRecentOrders' == $route || 'api/customer/dashboard/getRecentOrdersList' == $route || 'api/customer/dashboard/getRecentOrdersProductsList' == $route || 'api/customer/dashboard/getMostPurchasedProductsExcel' == $route || 'api/customer/dashboard/getPurchaseHistoryByProductID' == $route || 'api/customer/dashboard/getProductPurchaseHistory' == $route || 'api/customer/subusers/getSubUsers' == $route || 'api/customer/subusers/addNewSubUser' == $route || 'api/customer/order/getPendingorders' == $route || 'api/customer/Feedback/addFeedback' == $route || 'api/customer/Feedback/getFeedback' == $route || 'api/orders/export_products_excel/getExport_products_excel' == $route || 'api/customer/order/addReorder' == $route || 'api/customer/transactions/getAllTransactions' == $route || 'api/customer/account/getWalletTotal' == $route || 'api/customer/account/getWallet' == $route) {
                 //  echo "<pre>";print_r("ER");die;
                 // loogin required for above routes
                 $resp = $this->customer_token_authenticate();
@@ -127,44 +127,30 @@ class EventAppApi extends Event {
             } elseif ('api/customer/login/getloginbyadmin' == $route) {
                 // Authorize
                 $this->load->controller('api/customer/login/getloginbyadmin', $args);
-            }
-            
-         elseif ('api/categories/getCategories' == $route) {
-            // Authorize
-            $this->load->controller('api/categories/getCategories', $args);
-            } 
-            
-            elseif ('api/customers/getCustomergroups' == $route) {
+            } elseif ('api/categories/getCategories' == $route) {
                 // Authorize
-                 $this->load->controller('api/customers/getcustomergroups', $args);
-            // echo "<pre>";print_r($route);die;   
-            } 
-
-                 elseif ('api/customers/getCustomercities' == $route) {
-            // echo "<pre>";print_r($route);die;   
-
+                $this->load->controller('api/categories/getCategories', $args);
+            } elseif ('api/customers/getCustomergroups' == $route) {
+                // Authorize
+                $this->load->controller('api/customers/getcustomergroups', $args);
+                // echo "<pre>";print_r($route);die;   
+            } elseif ('api/customers/getCustomercities' == $route) {
+                // echo "<pre>";print_r($route);die;   
                 // Authorize
                 $this->load->controller('api/customers/getCustomercities', $args);
-                }
-                elseif ('api/customers/getDeliverytimeslots' == $route) {
-            // echo "<pre>";print_r($route);die;   
-
+            } elseif ('api/customers/getDeliverytimeslots' == $route) {
+                // echo "<pre>";print_r($route);die;   
                 // Authorize
                 $this->load->controller('api/customers/getDeliverytimeslots', $args);
-                }
-                elseif ('api/customers/getProducts' == $route) {
-            // echo "<pre>";print_r($route);die;   
-
+            } elseif ('api/customers/getProducts' == $route) {
+                // echo "<pre>";print_r($route);die;   
                 // Authorize
                 $this->load->controller('api/customers/getProducts', $args);
-                }
-                elseif ('api/customers/getCustomerregions' == $route) {
-            // echo "<pre>";print_r($route);die;   
-
+            } elseif ('api/customers/getCustomerregions' == $route) {
+                // echo "<pre>";print_r($route);die;   
                 // Authorize
                 $this->load->controller('api/customers/getCustomerregions', $args);
-                }
-                else {
+            } else {
                 $groups = ['Administrator', 'API User', 'vendor'];
                 if (!$this->authenticateByGroup($groups)) {
                     return;
@@ -552,6 +538,17 @@ class EventAppApi extends Event {
                         $customer_query->row['customer_category'] = $data['customer_category'];
                         //$this->customer->setVariables($data['customer_category']);
                         /* SET CUSTOMER CATEGORY */
+
+                        /* SET CUSTOMER PEZESHA */
+                        $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_query->row['customer_id'] . "'");
+                        if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
+                            $customer_query->row['pezesha_customer_id'] = $pezesha_customer_query->row['pezesha_customer_id'];
+                            $customer_query->row['pezesha_customer_uuid'] = $pezesha_customer_query->row['customer_uuid'];
+                        } else {
+                            $customer_query->row['pezesha_customer_id'] = NULL;
+                            $customer_query->row['pezesha_customer_uuid'] = NULL;
+                        }
+                        /* SET CUSTOMER PEZESHA */
 
                         $this->customer->setVariables($customer_query->row);
                     } else {
