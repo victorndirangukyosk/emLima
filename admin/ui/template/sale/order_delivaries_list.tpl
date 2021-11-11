@@ -814,7 +814,6 @@ console.log($(this).data('order-id'));
 //var delivery_longitude = $(this).data('delivery_longitude');
 var delivery_location = $(this).data('delivery_latitide')+','+$(this).data('delivery_longitude');
 console.log(delivery_location);
-$('#driver_modal').modal('toggle');
 
                 $.ajax({
 		url: 'index.php?path=amitruck/amitruck/getDriverLocation&token=<?php echo $token; ?>',
@@ -827,6 +826,8 @@ $('#driver_modal').modal('toggle');
                 success: function(json) {
                     if(json.status == 200) {
                     console.log(json.driverLocation.latitude);
+                    $('#driver_modal').modal('toggle');
+
                     var present_location = json.driverLocation.latitude+','+json.driverLocation.longitude;
                     initMapLoads(present_location,delivery_location,json.driver_details);
                     } else {
