@@ -149,6 +149,12 @@ class ControllerPaymentPezesha extends Controller {
         $log->write($result);
         $json = $result;
         //return $json;
+        if ($result['status'] == 200 && $result['response_code'] == 0 && !$result['error']) {
+            foreach ($this->session->data['order_id'] as $key => $value) {
+                $order_id = $value;
+                $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, $result['data']['loan_id']);
+            }
+        }
 
         $json['status'] = true;
         $json['data'] = $result;
