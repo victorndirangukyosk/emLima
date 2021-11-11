@@ -1843,7 +1843,7 @@ class ControllerApiCustomerOrder extends Controller {
                 // $data['edit_order'] = ((15 == $order_info['order_status_id'] ) && (empty($_SESSION['parent']) || $order_appoval_access) )? true : false;
                 $data['order_company'] = isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null;
 
-                $data['edit_own_order'] = (($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours < 5 && $order_info['paid'] =='N' && ($order_info['payment_code'] == 'cod' || $order_info['payment_code'] == 'mod')) ? true : false;
+                $data['edit_own_order'] = (($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours < 2 && $order_info['paid'] =='N' && ($order_info['payment_code'] == 'cod' || $order_info['payment_code'] == 'mod')) ? true : false;
 
                 $data['driver'] = $this->model_account_order->getDriverName($order_info['driver_id']);
                 $data['executive'] = $this->model_account_order->getExecutiveName($order_info['delivery_executive_id']);
