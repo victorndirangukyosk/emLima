@@ -17,6 +17,7 @@ $('#button-pezesha-confirm').on('click', function() {
     $.ajax({
         type: 'get',
         url: 'index.php?path=payment/pezesha/applyloan',
+        dataType: 'json',
         cache: false,
         beforeSend: function() {
                 $(".overlayed").show();
@@ -27,8 +28,9 @@ $('#button-pezesha-confirm').on('click', function() {
                 $('#button-confirm').button('reset');
                 $('#loading').hide();
         },      
-        success: function() {
-                location = '<?php echo $continue; ?>';
+        success: function(json) {
+           console.log(json); 
+         //location = '<?php echo $continue; ?>';
         }       
     });
 });
