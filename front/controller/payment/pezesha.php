@@ -92,13 +92,22 @@ class ControllerPaymentPezesha extends Controller {
         $result = json_decode($result, true);
         $log->write($result);
         $json = $result;
+        $html = "<div class='col-md-12' id='pay_with'></div>";
+        if ($result['data']['status'] == 200 && $result['data']['response_code'] == 0 && $result['data']['error'] == false) {
+            $html = "<div class='col-md-12' id='pay_with'>" . $result['message'] . "</div>";
+        }
+        if ($result['data']['status'] == 200 && $result['data']['response_code'] == 0 && $result['data']['error'] == true) {
+            $html = "<div class='col-md-12' id='pay_with'>" . $result['message'] . "</div>";
+        }
+
+        return $html;
         //return $json;
 
-        $json['status'] = true;
-        $json['data'] = $result;
+        /* $json['status'] = true;
+          $json['data'] = $result;
 
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+          $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($json)); */
     }
 
     public function applyloan() {
