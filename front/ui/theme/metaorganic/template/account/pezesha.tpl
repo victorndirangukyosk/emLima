@@ -126,7 +126,7 @@
 <script type="text/javascript">
     $('#pezesha-button-loan').on('click', function () {
         $.ajax({
-            type: 'post',
+            type: 'get',
             url: 'index.php?path=payment/pezesha/loanoffers',
             dataType: 'html',
             cache: false,
