@@ -30,7 +30,7 @@ $('#button-pezesha-confirm').on('click', function() {
         },      
         success: function(json) {
            console.log(json); 
-           location = '<?php echo $continue; ?>';
+           //location = '<?php echo $continue; ?>';
         }       
     });
 });
