@@ -9,12 +9,13 @@
         </tr>
     </thead>
     <tbody>
+
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><?php echo $json['message']; ?></td>
+            <td><?php echo $json['message']; ?></td>
+            <td><?php echo $json['message']; ?></td>
+            <td><?php echo $json['message']; ?></td>
+            <td><?php echo $json['message']; ?></td>
         </tr>
     </tbody>
 </table>
