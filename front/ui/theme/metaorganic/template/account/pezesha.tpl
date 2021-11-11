@@ -36,7 +36,9 @@
                 <div class="col-md-6" id="pay_with" >
                     <button type="button" id="pezesha-button-loan" class="btn btn-default">FETCH LOAN OFFERS</button>
                 </div>                                  
-
+                <div class="row" id="loan_offers">
+                    
+                </div>
             </div>
 
         </div>
@@ -122,20 +124,19 @@
 </script>
 <?php } ?>
 <script type="text/javascript">
-$('#pezesha-button-loan').on('click', function () {
-$.ajax({
-                        type: 'post',
-                        url: 'index.php?path=payment/pezesha/loanoffers',
-                        dataType: 'json',
-                        cache: false,
-                        success: function(json) {
-                        alert(json.message);
-                        console.log(json.message);
-                        }
-                        
-});        
+    $('#pezesha-button-loan').on('click', function () {
+        $.ajax({
+            type: 'post',
+            url: 'index.php?path=payment/pezesha/loanoffers',
+            dataType: 'html',
+            cache: false,
+            success: function (html) {
+            $('#loan_offers').html(html);    
+            }
 
-});
+        });
+
+    });
 </script>
 
 
