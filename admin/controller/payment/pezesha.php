@@ -72,6 +72,12 @@ class ControllerPaymentPezesha extends Controller {
         } else {
             $data['error_channel'] = '';
         }
+        
+        if (isset($this->error['interest'])) {
+            $data['error_interest'] = $this->error['interest'];
+        } else {
+            $data['error_interest'] = '';
+        }
 
         $data['breadcrumbs'] = [];
 
@@ -116,6 +122,12 @@ class ControllerPaymentPezesha extends Controller {
             $data['pezesha_channel'] = $this->request->post['pezesha_channel'];
         } else {
             $data['pezesha_channel'] = $this->config->get('pezesha_channel');
+        }
+        
+        if (isset($this->request->post['pezesha_interest'])) {
+            $data['pezesha_interest'] = $this->request->post['pezesha_interest'];
+        } else {
+            $data['pezesha_interest'] = $this->config->get('pezesha_interest');
         }
 
         if (isset($this->request->post['pezesha_environment'])) {
@@ -187,6 +199,9 @@ class ControllerPaymentPezesha extends Controller {
         }
         if (!$this->request->post['pezesha_channel']) {
             $this->error['channel'] = $this->language->get('error_channel');
+        }
+        if (!$this->request->post['pezesha_interest']) {
+            $this->error['interest'] = $this->language->get('error_interest');
         }
 
         return !$this->error;
