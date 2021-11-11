@@ -950,6 +950,14 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_customer'])) {
             $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
+        
+        if (!empty($data['filter_customer_id'])) {
+            $sql .= " AND o.customer_id = '" . $data['filter_customer_id'] . "'";
+        }
+        
+        if (!empty($data['filter_paid'])) {
+            $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
+        }
 
         if (!empty($data['filter_vendor'])) {
             $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';
@@ -1040,13 +1048,15 @@ class ModelSaleOrder extends Model {
     }
 
     public function getOrdersDelivaries($data = []) {
-        $sql = "SELECT od.order_reference_id, od.delivery_partner, od.delivery_status, od.drop_latitude, od.drop_longitude, od.created_at, od.updated_at, c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, o.latitude, o.longitude,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
+        $sql = "SELECT * FROM `" . DB_PREFIX . 'order_delivery` o ';
+
+        // $sql = "SELECT od.order_reference_id, od.delivery_partner, od.delivery_status, od.drop_latitude, od.drop_longitude, od.created_at, od.updated_at, c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, o.latitude, o.longitude,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
         //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
 
-        $sql .= ' JOIN `' . DB_PREFIX . 'order_delivery` od on od.order_id = o.order_id ';
-        $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
-        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
-        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
+        // $sql .= ' JOIN `' . DB_PREFIX . 'order_delivery` od on od.order_id = o.order_id ';
+        // $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
+        // $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
+        // $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
 
         if (isset($data['filter_order_status'])) {
             $implode = [];
@@ -1063,7 +1073,7 @@ class ModelSaleOrder extends Model {
                 
             }
         } else {
-            $sql .= " WHERE o.order_status_id > '0'";
+            // $sql .= " WHERE o.order_status_id > '0'";
         }
 
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
@@ -1103,16 +1113,16 @@ class ModelSaleOrder extends Model {
         }
 
         if (!empty($data['filter_order_id'])) {
-            $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
+            $sql .= " AND o.order_id in (" .  $data['filter_order_id'] . ")";
         }
 
-        if (!empty($data['filter_order_from_id'])) {
-            $sql .= " AND o.order_id >= '" . (int) $data['filter_order_from_id'] . "'";
-        }
+        // if (!empty($data['filter_order_from_id'])) {
+        //     $sql .= " AND o.order_id >= '" . (int) $data['filter_order_from_id'] . "'";
+        // }
 
-        if (!empty($data['filter_order_to_id'])) {
-            $sql .= " AND o.order_id <= '" . (int) $data['filter_order_to_id'] . "'";
-        }
+        // if (!empty($data['filter_order_to_id'])) {
+        //     $sql .= " AND o.order_id <= '" . (int) $data['filter_order_to_id'] . "'";
+        // }
 
 
         if (!empty($data['filter_company'])) {
@@ -2380,12 +2390,12 @@ class ModelSaleOrder extends Model {
     public function getTotalOrdersDelivaries($data = []) {
         $log = new Log('error.log');
         $log->write('Check For Orders');
-        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'order` o ';
+        $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'order_delivery` o ';
 
-        $sql .= ' JOIN `' . DB_PREFIX . 'order_delivery` od on od.order_id = o.order_id ';
-        $sql .= ' left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id ';
-        $sql .= 'LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id)';
-        $sql .= 'LEFT JOIN ' . DB_PREFIX . 'customer cust on(cust.customer_id = o.customer_id)';
+        // $sql .= ' JOIN `' . DB_PREFIX . 'order_delivery` od on od.order_id = o.order_id ';
+        // $sql .= ' left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id ';
+        // $sql .= 'LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id)';
+        // $sql .= 'LEFT JOIN ' . DB_PREFIX . 'customer cust on(cust.customer_id = o.customer_id)';
         if (!empty($data['filter_order_status'])) {
             $implode = [];
 
@@ -2398,9 +2408,10 @@ class ModelSaleOrder extends Model {
             if ($implode) {
                 $sql .= ' WHERE (' . implode(' OR ', $implode) . ')';
             }
-        } else {
-            $sql .= " WHERE o.order_status_id > '0'";
-        }
+        } 
+        // else {
+        //     $sql .= " WHERE o.order_status_id > '0'";
+        // }
 
         if (isset($data['filter_order_type'])) {
             $sql .= ' AND isadmin_login="' . $data['filter_order_type'] . '"';
@@ -2432,18 +2443,18 @@ class ModelSaleOrder extends Model {
         }
 
         if (!empty($data['filter_order_id'])) {
-            $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
+            $sql .= " AND o.order_id in ( " .  $data['filter_order_id'] . ")";
         }
 
+        //not correct ,as orders have comma seperated values
+        // if (!empty($data['filter_order_from_id'])) {
+        //     $sql .= " AND o.order_id >= '" .  $data['filter_order_from_id'] . "'";
+        // }
 
-        if (!empty($data['filter_order_from_id'])) {
-            $sql .= " AND o.order_id >= '" . (int) $data['filter_order_from_id'] . "'";
-        }
 
-
-        if (!empty($data['filter_order_to_id'])) {
-            $sql .= " AND o.order_id <= '" . (int) $data['filter_order_to_id'] . "'";
-        }
+        // if (!empty($data['filter_order_to_id'])) {
+        //     $sql .= " AND o.order_id <= '" . (int) $data['filter_order_to_id'] . "'";
+        // }
 
         if (!empty($data['filter_vendor'])) {
             $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';

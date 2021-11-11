@@ -3,7 +3,7 @@
 class ModelAmitruckAmitruck extends Model {
 
     public function addDelivery($order_id, $data, $request_type) {
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "amitruck_delivery_response` SET `order_id` = '" . (int) $order_id . "', `response` = '" . $data . "', `request_type` = '" . $request_type . "', `created_at` = NOW()");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "amitruck_delivery_response` SET `order_id` = '" .  $order_id . "', `response` = '" . $data . "', `request_type` = '" . $request_type . "', `created_at` = NOW()");
     }
 
     public function addDeliveryStatus($order_id, $data) {
@@ -11,7 +11,7 @@ class ModelAmitruckAmitruck extends Model {
         $data = json_decode($data, true);
         $log->write($data);
         $pickup = date('Y-m-d H:i:s', strtotime($data['delivery']['pickUpDateAndTime']));
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "order_delivery` SET `order_id` = '" . (int) $order_id . "', `order_reference_id` = '" . $data['delivery']['id'] . "', `delivery_status` = '" . $data['delivery']['status'] . "', `pickup_latitude` = '" . $data['delivery']['stops'][0]['latitude'] . "', `pickup_longitude` = '" . $data['delivery']['stops'][0]['longitude'] . "', `pickup_location` = '" . $data['delivery']['stops'][0]['name'] . "', `drop_latitude` = '" . $data['delivery']['stops'][1]['latitude'] . "', `drop_longitude` = '" . $data['delivery']['stops'][1]['longitude'] . "', `drop_location` = '" . $data['delivery']['stops'][1]['name'] . "', `distance` = '" . $data['delivery']['totalDistance'] . "', `pickup_datetime` = '" . $pickup . "', `created_at` = NOW()");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "order_delivery` SET `order_id` = '" .  $order_id . "', `order_reference_id` = '" . $data['delivery']['id'] . "', `delivery_status` = '" . $data['delivery']['status'] . "', `pickup_latitude` = '" . $data['delivery']['stops'][0]['latitude'] . "', `pickup_longitude` = '" . $data['delivery']['stops'][0]['longitude'] . "', `pickup_location` = '" . $data['delivery']['stops'][0]['name'] . "', `drop_latitude` = '" . $data['delivery']['stops'][1]['latitude'] . "', `drop_longitude` = '" . $data['delivery']['stops'][1]['longitude'] . "', `drop_location` = '" . $data['delivery']['stops'][1]['name'] . "', `distance` = '" . $data['delivery']['totalDistance'] . "', `pickup_datetime` = '" . $pickup . "', `created_at` = NOW()");
     }
 
     public function updateDeliveryStatus($order_id, $data) {
@@ -54,7 +54,7 @@ class ModelAmitruckAmitruck extends Model {
     }
 
     public function fetchOrderDeliveryInfo($order_id) {
-        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_delivery` WHERE `order_id` = '" . (int) $order_id . "'");
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_delivery` WHERE `order_id` = '" .  $order_id . "'");
         return $query->row;
     }
 
@@ -63,4 +63,6 @@ class ModelAmitruckAmitruck extends Model {
         return $query->row;
     }
 
+
+    
 }

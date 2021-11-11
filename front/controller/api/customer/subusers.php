@@ -1,22 +1,21 @@
 <?php
 
-require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
+require_once DIR_SYSTEM . '/vendor/konduto/vendor/autoload.php';
 
 use Konduto\Core\Konduto;
 use paragraph1\phpFCM\Message;
 
-require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
+require_once DIR_SYSTEM . '/vendor/fcp-php/autoload.php';
 
-require DIR_SYSTEM.'vendor/Facebook/autoload.php';
+require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
 
-require_once DIR_APPLICATION.'/controller/api/settings.php';
+require_once DIR_APPLICATION . '/controller/api/settings.php';
 
-class ControllerApiCustomerSubusers extends Controller
-{
+class ControllerApiCustomerSubusers extends Controller {
+
     private $error = [];
 
-    public function index($args = [])
-    {
+    public function index($args = []) {
         $json = [];
 
         $json['status'] = 200;
@@ -53,7 +52,7 @@ class ControllerApiCustomerSubusers extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             ];
             $log = new Log('error.log');
             $log->write('account profileinfo');
@@ -66,12 +65,10 @@ class ControllerApiCustomerSubusers extends Controller
         }
 
         // $data['breadcrumbs'] = array();
-
         // $data['breadcrumbs'][] = array(
         //     'text' => $this->language->get('text_home'),
         //     'href' => $this->url->link('common/home')
         // );
-
         // $data['breadcrumbs'][] = array(
         //     'text' => $this->language->get('text_account'),
         //     'href' => $this->url->link('account/account', '', 'SSL')
@@ -135,6 +132,7 @@ class ControllerApiCustomerSubusers extends Controller
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['return'] = $this->url->link('account/return', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
@@ -218,7 +216,7 @@ class ControllerApiCustomerSubusers extends Controller
 
         $data['orders'] = [];
         $filter_data = [
-           'filter_parent' => $_SESSION['customer_id'],
+            'filter_parent' => $_SESSION['customer_id'],
             'order' => 'DESC',
             'start' => 0,
             'limit' => 1000,
@@ -294,6 +292,7 @@ class ControllerApiCustomerSubusers extends Controller
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['return'] = $this->url->link('account/return', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
@@ -514,49 +513,48 @@ class ControllerApiCustomerSubusers extends Controller
         $data['contactus'] = $this->language->get('contactus');
         $data['text_cash'] = $this->language->get('text_cash');
         //echo '<pre>'; print_r($result_customers);exit;
-        /*$this->load->model('account/order');
-        $order_total = $this->model_account_order->getTotalOrders();
+        /* $this->load->model('account/order');
+          $order_total = $this->model_account_order->getTotalOrders();
 
-        $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10,$NoLimit=true);
-        $PaymentFilter = array('mPesa On Delivery','Cash On Delivery','mPesa Online');
-        $statusCancelledFilter  = array('Cancelled');
-        $statusSucessFilter  =  array('Delivered','Partially Delivered');
-        $statusPendingFilter  = array('Cancelled','Delivered','Refunded','Returned','Partially Delivered');
-        //$results_pending = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=false);
-        //$results_success = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=true);
-        //$results_cancelled = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusCancelledFilter,$In=true);
-        $data['pending_transactions'] = array();
-        $data['success_transactions'] = array();
-        $data['cancelled_transactions'] = array();
-        //echo "<pre>";print_r($results_orders);die;
-        $totalPendingAmount = 0;
-        if(count($results_orders)>0){
-            foreach($results_orders as $order){
-                $this->load->model('sale/order');
-                $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
-                //echo "<pre>";print_r($order);die;
-                if(in_array($order['payment_method'],$PaymentFilter)){
-                 if(!empty($order['transcation_id'])){
-                 //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
-                    $data['success_transactions'][] = $order;
-                 }else if(in_array($order['status'],$statusCancelledFilter)){
-                    $data['cancelled_transactions'][] = $order;
-                 }else  if(!in_array($order['status'],$statusCancelledFilter)){
-                    $totalPendingAmount = $totalPendingAmount + $order['total'];
-                    $data['pending_order_id'][] = $order['order_id'];
-                    $data['pending_transactions'][] = $order;
-                 }
+          $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10,$NoLimit=true);
+          $PaymentFilter = array('mPesa On Delivery','Cash On Delivery','mPesa Online');
+          $statusCancelledFilter  = array('Cancelled');
+          $statusSucessFilter  =  array('Delivered','Partially Delivered');
+          $statusPendingFilter  = array('Cancelled','Delivered','Refunded','Returned','Partially Delivered');
+          //$results_pending = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=false);
+          //$results_success = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusPendingFilter,$In=true);
+          //$results_cancelled = $this->model_account_order->getOrders(($page - 1) * 10, 10,$PaymentFilter,$statusCancelledFilter,$In=true);
+          $data['pending_transactions'] = array();
+          $data['success_transactions'] = array();
+          $data['cancelled_transactions'] = array();
+          //echo "<pre>";print_r($results_orders);die;
+          $totalPendingAmount = 0;
+          if(count($results_orders)>0){
+          foreach($results_orders as $order){
+          $this->load->model('sale/order');
+          $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+          //echo "<pre>";print_r($order);die;
+          if(in_array($order['payment_method'],$PaymentFilter)){
+          if(!empty($order['transcation_id'])){
+          //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
+          $data['success_transactions'][] = $order;
+          }else if(in_array($order['status'],$statusCancelledFilter)){
+          $data['cancelled_transactions'][] = $order;
+          }else  if(!in_array($order['status'],$statusCancelledFilter)){
+          $totalPendingAmount = $totalPendingAmount + $order['total'];
+          $data['pending_order_id'][] = $order['order_id'];
+          $data['pending_transactions'][] = $order;
+          }
 
-               }
-            }
-        }
-        //echo "<pre>";print_r($data);die;
-        $data['total_pending_amount'] = $totalPendingAmount;
-        $data['pending_order_id'] = implode('--',$data['pending_order_id']);*/
+          }
+          }
+          }
+          //echo "<pre>";print_r($data);die;
+          $data['total_pending_amount'] = $totalPendingAmount;
+          $data['pending_order_id'] = implode('--',$data['pending_order_id']); */
         $data['sub_users'] = $result_customers;
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         $data['sub_customer_order_approval'] = $customer_info['sub_customer_order_approval'];
-        
 
         $json['success'] = $this->language->get('text_success');
 
@@ -568,8 +566,7 @@ class ControllerApiCustomerSubusers extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    protected function validate($args)
-    {
+    protected function validate($args) {
         $this->load->language('account/edit');
 
         if ((utf8_strlen(trim($args['location'])) < 1) || (utf8_strlen(trim($args['location'])) > 32)) {
@@ -587,12 +584,11 @@ class ControllerApiCustomerSubusers extends Controller
         return !$this->error;
     }
 
-    public function addActivateSubUser($args = [])
-    {
+    public function addActivateSubUser($args = []) {
         $log = new Log('error.log');
         $log->write($args);
         $user_id = $args['user_id'];
-        $log->write($user_id.'USER ID');
+        $log->write($user_id . 'USER ID');
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
@@ -600,22 +596,16 @@ class ControllerApiCustomerSubusers extends Controller
 
         $this->load->model('account/customer');
         $this->model_account_customer->approvecustom($user_id, $args['active_status']);
-        if($args['active_status']=="0")
-        {
+        if ($args['active_status'] == "0") {
             $json['message'][] = ['type' => '', 'body' => 'User de-activated!'];
 
-                $json['success'] = 'User de-activated!';
-        }
-        else if($args['active_status']=="1")
-        {
+            $json['success'] = 'User de-activated!';
+        } else if ($args['active_status'] == "1") {
             $json['message'][] = ['type' => '', 'body' => 'User activated!'];
 
-                $json['success'] = 'User activated!';
-
+            $json['success'] = 'User activated!';
         }
-        if(isset($this->request->post['logged_customer_id']))// $this->request->post['parent_customer_id'];
-        
-        {// Add to activity log
+        if (isset($this->request->post['logged_customer_id'])) {// $this->request->post['parent_customer_id'];// Add to activity log
             $this->load->model('account/activity');
 
             $activity_data = [
@@ -623,22 +613,22 @@ class ControllerApiCustomerSubusers extends Controller
                 'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],
                 'sub_customers_id' => $this->request->post['user_id']
             ];
-            
-            if($this->request->post['active_status'] == 1) {
-            $this->model_account_activity->addActivity('sub_user_activated', $activity_data);
+
+            if ($this->request->post['active_status'] == 1) {
+                $this->model_account_activity->addActivity('sub_user_activated', $activity_data);
             }
-            
-            if($this->request->post['active_status'] == 0) {
-            $this->model_account_activity->addActivity('sub_user_deactivated', $activity_data);
+
+            if ($this->request->post['active_status'] == 0) {
+                $this->model_account_activity->addActivity('sub_user_deactivated', $activity_data);
             }
         }
-                
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
     //mobile API,Skip once new developer
-    public function addSubuser($args = [])
-    {
+    public function addSubuser($args = []) {
         $json = [];
 
         $json['status'] = 200;
@@ -654,59 +644,55 @@ class ControllerApiCustomerSubusers extends Controller
         //echo "<pre>";print_r($args);die;
         // if (!$this->validate()) {
         //     $json['status'] = 10014;
-
         //     foreach ($this->error as $key => $value) {
         //         $json['message'][] = ['type' => '', 'body' => $value];
         //     }
         //     http_response_code(400);
         // } else 
         //{
-         $this->request->post['dob'] = null;
-         $this->request->post['source'] = 'Mobile';
-         $this->request->post['parent'] = $this->request->post['parent_customer_id'];//$this->customer->getId();           
-         $parentcustomer_info = $this->model_account_customer->getCustomer($this->request->post['parent']);
-         if($parentcustomer_info!=null)
-         {$this->request->post['customer_group_id']=$parentcustomer_info['customer_group_id'];
-         }
-         $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
-            // Clear any previous login attempts for unregistered accounts.
+        $this->request->post['dob'] = null;
+        $this->request->post['source'] = 'Mobile';
+        $this->request->post['parent'] = $this->request->post['parent_customer_id']; //$this->customer->getId();           
+        $parentcustomer_info = $this->model_account_customer->getCustomer($this->request->post['parent']);
+        if ($parentcustomer_info != null) {
+            $this->request->post['customer_group_id'] = $parentcustomer_info['customer_group_id'];
+        }
+        $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
+        // Clear any previous login attempts for unregistered accounts.
         $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
         //$logged_in = $this->customer->login($this->request->post['email'], $this->request->post['password']);
-         //  $json['message'] ='User added successfully!'
+        //  $json['message'] ='User added successfully!'
         // Add to activity log
-            $this->load->model('account/activity');
+        $this->load->model('account/activity');
 
-            $activity_data = [
-                'customer_id' => $this->request->post['logged_customer_id'],
-                'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],                
-                'sub_customers_id' => $sub_customer_id,
-            ];
+        $activity_data = [
+            'customer_id' => $this->request->post['logged_customer_id'],
+            'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],
+            'sub_customers_id' => $sub_customer_id,
+        ];
 
-            // $this->model_account_activity->addActivity('register', $activity_data);
-            $this->model_account_activity->addActivity('sub_customer_created', $activity_data);
+        // $this->model_account_activity->addActivity('register', $activity_data);
+        $this->model_account_activity->addActivity('sub_customer_created', $activity_data);
 
-            /* If not able to login*/
-            $data['status'] = true;
+        /* If not able to login */
+        $data['status'] = true;
 
-            // if (!$logged_in) {
-            //     $data['status'] = false;
-            // }
-            // $data['text_new_signup_reward'] = $this->language->get('text_new_signup_reward');
-            // $data['text_new_signup_credit'] = $this->language->get('text_new_signup_credit');
+        // if (!$logged_in) {
+        //     $data['status'] = false;
+        // }
+        // $data['text_new_signup_reward'] = $this->language->get('text_new_signup_reward');
+        // $data['text_new_signup_credit'] = $this->language->get('text_new_signup_credit');
+        //$data['message'] = $this->language->get( 'verify_mail_sent' );
 
-            //$data['message'] = $this->language->get( 'verify_mail_sent' );
+        $json['message'][] = ['type' => $this->language->get('text_success_registered'), 'body' => $this->language->get('verify_mail_sent')];
 
-            $json['message'][] = ['type' => $this->language->get('text_success_registered'), 'body' => $this->language->get('verify_mail_sent')];
-
-            
         // }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function editEmailUnique($args = [])
-    {
+    public function editEmailUnique($args = []) {
         $log = new Log('error.log');
         $log->write($args['email']);
         $json = [];
@@ -716,7 +702,7 @@ class ControllerApiCustomerSubusers extends Controller
 
         $this->load->model('account/customer');
         $count = $this->model_account_customer->getTotalCustomersByEmail($args['email']);
-        $log->write($count.'Email Count');
+        $log->write($count . 'Email Count');
         if (0 == $count || null == $count) {
             $json['message'][] = ['type' => '', 'body' => 'TRUE'];
         } else {
@@ -727,7 +713,6 @@ class ControllerApiCustomerSubusers extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-
 
     public function addDeleteSubUser($args = []) {
         $log = new Log('error.log');
@@ -744,28 +729,25 @@ class ControllerApiCustomerSubusers extends Controller
 
         $json['success'] = 'User deleted!';
 
-        if(isset($this->request->post['logged_customer_id']))// $this->request->post['parent_customer_id'];
-        
-        {// Add to activity log
+        if (isset($this->request->post['logged_customer_id'])) {// $this->request->post['parent_customer_id'];// Add to activity log
             $this->load->model('account/activity');
 
             $activity_data = [
                 'customer_id' => $this->request->post['logged_customer_id'],
                 'name' => $this->request->post['logged_customer_firstname'] . ' ' . $this->request->post['logged_customer_lastname'],
                 'sub_customers_id' => $this->request->post['user_id']
-            ]; 
+            ];
 
-        $this->model_account_activity->addActivity('sub_user_deleted', $activity_data);
+            $this->model_account_activity->addActivity('sub_user_deleted', $activity_data);
         }
 
-        
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
     //use this only for Admin/authorizatioin not available , used in mobile
-    public function getAllSubUsers($args = [])
-    {
+    public function getAllSubUsers($args = []) {
         $json = [];
 
         $log = new Log('error.log');
@@ -773,7 +755,7 @@ class ControllerApiCustomerSubusers extends Controller
         $parentuser_id = $args['parent_user_id'];
         $log->write($this->request->get);
 
-       // $this->load->language('information/locations');
+        // $this->load->language('information/locations');
 
         $json['status'] = 200;
         $json['data'] = [];
@@ -789,22 +771,20 @@ class ControllerApiCustomerSubusers extends Controller
         $customer_total = $this->model_sale_order->getTotalCustomers($filter_data);
         $result_customers = $this->model_sale_order->getCustomers($filter_data);
 
-
         //if( $this->customer->isLogged() )         
-             
-            // foreach ($results as $result) {
-            //     $data['delivery_addresses'][] = [
-            //     'address_id' => $result['address_id'],
-            //     'name' => $result['name'],
-            //       ];           
+        // foreach ($results as $result) {
+        //     $data['delivery_addresses'][] = [
+        //     'address_id' => $result['address_id'],
+        //     'name' => $result['name'],
+        //       ];           
 
-            $json['data'] =$result_customers;// $data;
-            
+        $json['data'] = $result_customers; // $data;
         // }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
     //Same method copied from web
     public function addAssignorderapproval() {
 
@@ -821,7 +801,7 @@ class ControllerApiCustomerSubusers extends Controller
         if ($this->request->post['button'] == 'assign_head_chef') {
             // $this->model_account_customer->UpdateOrderApprovalAccess($this->customer->getId(), $this->request->post['head_chef'], 1, 'head_chef');
             $this->model_account_customer->UpdateOrderApprovalAccess($this->request->post['customer_id'], $this->request->post['head_chef'], 1, 'head_chef');
-        
+
             $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
             // echo '<pre>';print_r($customer_info);exit;
             $this->load->model('account/activity');
@@ -832,14 +812,12 @@ class ControllerApiCustomerSubusers extends Controller
             ];
 
             $this->model_account_activity->addActivity('assign_head_chef', $activity_data);
-
-        
         }
 
         if ($this->request->post['button'] == 'assign_procurement_person') {
             $this->model_account_customer->UpdateOrderApprovalAccess($this->request->post['customer_id'], $this->request->post['procurement_person'], 1, 'procurement_person');
             $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
-           
+
             $this->load->model('account/activity');
             $activity_data = [
                 'customer_id' => $customer_info['customer_id'],
@@ -848,67 +826,65 @@ class ControllerApiCustomerSubusers extends Controller
             ];
 
             $this->model_account_activity->addActivity('assign_procurement_person', $activity_data);
-       
-        
-        
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
     //not using
     public function addassignsubcustomerorderapproval() {
         $log = new Log('error.log');
         $json['success'] = true;
         $this->load->model('account/customer');
-        
+
         $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
-        
-        if(isset($customer_info) && $customer_info != NULL) {
-        $this->model_account_customer->UpdateCustomerOrderApproval($this->request->post['customer_id'], $this->request->post['sub_customer_order_approval']);
+
+        if (isset($customer_info) && $customer_info != NULL) {
+            $this->model_account_customer->UpdateCustomerOrderApproval($this->request->post['customer_id'], $this->request->post['sub_customer_order_approval']);
         }
-        
+
         $log->write($this->request->post['sub_customer_order_approval']);
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
     //Approval required or not required.
-    public function addassignsubcustomerorderapprovalbysubcustomerid($args = [])
-    {
+    public function addassignsubcustomerorderapprovalbysubcustomerid($args = []) {
         $log = new Log('error.log');
         $log->write($args);
         $customer_id = $args['customer_id'];
-        $log->write($customer_id.'Login customer_id');
+        $log->write($customer_id . 'Login customer_id');
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
 
         $this->load->model('account/customer');
-                  
+
         $customer_info = $this->model_account_customer->getCustomer($customer_id);
         $sub_customer_info = $this->model_account_customer->getCustomer($this->request->post['sub_customer_id']);
-        
-        if(isset($customer_info) && $customer_info != NULL && isset($sub_customer_info) && $sub_customer_info != NULL) {
-        $this->model_account_customer->UpdateCustomerOrderApprovalBySubCustomerId($customer_id, $this->request->post['sub_customer_id'], $this->request->post['status']);
-        $json['message'][] = ['type' => '', 'body' => 'success'];
-        $json['success'] = 'success'; 
+
+        if (isset($customer_info) && $customer_info != NULL && isset($sub_customer_info) && $sub_customer_info != NULL) {
+            $this->model_account_customer->UpdateCustomerOrderApprovalBySubCustomerId($customer_id, $this->request->post['sub_customer_id'], $this->request->post['status']);
+            $json['message'][] = ['type' => '', 'body' => 'success'];
+            $json['success'] = 'success';
         }
-                
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
     //add assign order approval need change
-    public function getSubUsers($args = [])
-    {
+    public function getSubUsers($args = []) {
         $json = [];
 
         $log = new Log('error.log');
         $log->write('getSubUsers');
         // $parentuser_id = $args['parent_user_id'];
-        $parentuser_id =$this->customer->getId();
+        $parentuser_id = $this->customer->getId();
         $log->write($parentuser_id);
 
-       // $this->load->language('information/locations');
+        // $this->load->language('information/locations');
 
         $json['status'] = 200;
         $json['data'] = [];
@@ -924,78 +900,73 @@ class ControllerApiCustomerSubusers extends Controller
         $customer_total = $this->model_sale_order->getTotalCustomers($filter_data);
         $result_customers = $this->model_sale_order->getCustomers($filter_data);
 
-
         //if( $this->customer->isLogged() )         
-             
-            // foreach ($results as $result) {
-            //     $data['delivery_addresses'][] = [
-            //     'address_id' => $result['address_id'],
-            //     'name' => $result['name'],
-            //       ];           
+        // foreach ($results as $result) {
+        //     $data['delivery_addresses'][] = [
+        //     'address_id' => $result['address_id'],
+        //     'name' => $result['name'],
+        //       ];           
 
-            $json['data'] =$result_customers;// $data;
-            
+        $json['data'] = $result_customers; // $data;
         // }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addNewSubUser($args = [])
-    {
+    public function addNewSubUser($args = []) {
         $json = [];
 
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
-        try{
+        try {
 
-        $this->load->language('api/general');
-        // $this->load->model('api/approval');
+            $this->load->language('api/general');
+            // $this->load->model('api/approval');
 
-        $log = new Log('error.log');
+            $log = new Log('error.log');
 
-        $this->load->model('account/customer');
-        // echo "<pre>";print_r($this->customer->getFirstName());die;
-        // if (!$this->validate()) {
-        //     $json['status'] = 10014;
+            $this->load->model('account/customer');
+            // echo "<pre>";print_r($this->customer->getFirstName());die;
+            // if (!$this->validate()) {
+            //     $json['status'] = 10014;
+            //     foreach ($this->error as $key => $value) {
+            //         $json['message'][] = ['type' => '', 'body' => $value];
+            //     }
+            //     http_response_code(400);
+            // } else 
+            //{
+            $this->request->post['dob'] = null;
+            $this->request->post['source'] = 'Mobile';
+            $this->request->post['parent'] = $this->customer->getId();
+            $parentcustomer_info = $this->model_account_customer->getCustomer($this->request->post['parent']);
+            if ($parentcustomer_info != null) {
+                $this->request->post['customer_group_id'] = $parentcustomer_info['customer_group_id'];
+            }
 
-        //     foreach ($this->error as $key => $value) {
-        //         $json['message'][] = ['type' => '', 'body' => $value];
-        //     }
-        //     http_response_code(400);
-        // } else 
-        //{
-         $this->request->post['dob'] = null;
-         $this->request->post['source'] = 'Mobile';
-         $this->request->post['parent'] =$this->customer->getId();           
-         $parentcustomer_info = $this->model_account_customer->getCustomer($this->request->post['parent']);
-         if($parentcustomer_info!=null)
-         {$this->request->post['customer_group_id']=$parentcustomer_info['customer_group_id'];
-         }
+            //  $log = new Log('error.log');
+            $log->write('before add customer');
+            $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
 
-        //  $log = new Log('error.log');
-         $log->write('before add customer');
-         $sub_customer_id = $this->model_account_customer->addCustomer($this->request->post, true);
-           
-         $log->write('before add customer');
-         // Clear any previous login attempts for unregistered accounts.
-        $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
-        //$logged_in = $this->customer->login($this->request->post['email'], $this->request->post['password']);
-         //  $json['message'] ='User added successfully!'
-        // Add to activity log
+            $log->write('before add customer');
+            // Clear any previous login attempts for unregistered accounts.
+            $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
+            //$logged_in = $this->customer->login($this->request->post['email'], $this->request->post['password']);
+            //  $json['message'] ='User added successfully!'
+            // Add to activity log
             $this->load->model('account/activity');
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
                 'sub_customers_id' => $sub_customer_id,
             ];
 
             // $this->model_account_activity->addActivity('register', $activity_data);
             $this->model_account_activity->addActivity('sub_customer_created', $activity_data);
 
-            /* If not able to login*/
+            /* If not able to login */
             // $data['status'] = true;
             // $data['customer_id'] = $sub_customer_id;
             // $json['data'] =$data;
@@ -1006,23 +977,18 @@ class ControllerApiCustomerSubusers extends Controller
             // }
             // $data['text_new_signup_reward'] = $this->language->get('text_new_signup_reward');
             // $data['text_new_signup_credit'] = $this->language->get('text_new_signup_credit');
-
             //$data['message'] = $this->language->get( 'verify_mail_sent' );
 
-            $json['message'] =  $this->language->get('text_success_registered');
+            $json['message'] = $this->language->get('text_success_registered');
 
-            
-        // }
-            }
-            catch(exception $ex)
-            {
-                $json['message'] = 'Something went wrong';
-            }
-            finally{
+            // }
+        } catch (exception $ex) {
+            $json['message'] = 'Something went wrong';
+        } finally {
 
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-            }
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
     }
 
 }

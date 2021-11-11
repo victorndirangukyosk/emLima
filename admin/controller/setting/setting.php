@@ -123,6 +123,21 @@ class ControllerSettingSetting extends Controller
             $data['error_name'] = '';
         }
 
+
+        if (isset($this->error['store_latitude'])) {
+            $data['error_store_latitude'] = $this->error['store_latitude'];
+        } else {
+            $data['error_store_latitude'] = '';
+        }
+
+
+        if (isset($this->error['store_longitude'])) {
+            $data['error_store_longitude'] = $this->error['store_longitude'];
+        } else {
+            $data['error_store_longitude'] = '';
+        }
+
+
         if (isset($this->error['shopper_group_ids'])) {
             $data['error_shopper_group_ids'] = $this->error['shopper_group_ids'];
         } else {
@@ -537,6 +552,19 @@ class ControllerSettingSetting extends Controller
             $data['config_vendor_group_ids'] = $this->request->post['config_vendor_group_ids'];
         } else {
             $data['config_vendor_group_ids'] = $this->config->get('config_vendor_group_ids');
+        }
+
+
+        if (isset($this->request->post['config_store_latitude'])) {
+            $data['config_store_latitude'] = $this->request->post['config_store_latitude'];
+        } else {
+            $data['config_store_latitude'] = $this->config->get('config_store_latitude');
+        }
+
+        if (isset($this->request->post['config_store_longitude'])) {
+            $data['config_store_longitude'] = $this->request->post['config_store_longitude'];
+        } else {
+            $data['config_store_longitude'] = $this->config->get('config_store_longitude');
         }
         
         if (isset($this->request->post['config_account_namager_group_id'])) {
@@ -2211,6 +2239,17 @@ class ControllerSettingSetting extends Controller
         if (!$this->request->post['config_vendor_group_ids']) {
             $this->error['vendor_group_ids'] = $this->language->get('error_vendor_group_ids');
         }
+
+
+        if (!$this->request->post['config_store_latitude']) {
+            $this->error['store_latitude'] = $this->language->get('error_store_latitude');
+        }
+
+        if (!$this->request->post['config_store_longitude']) {
+            $this->error['store_longitude'] = $this->language->get('error_store_longitude');
+        }
+
+
         
         if (!$this->request->post['config_account_manager_group_id']) {
             $this->error['account_manager_group_id'] = $this->language->get('error_account_manager_group_id');

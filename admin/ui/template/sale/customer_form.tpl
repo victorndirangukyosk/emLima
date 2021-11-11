@@ -49,7 +49,9 @@
             <li><a href="#tab-otp" data-toggle="tab">OTP</a></li>
             <li><a href="#tab-activity" data-toggle="tab">Activities</a></li>
             <li><a href="#tab-password" data-toggle="tab">Password</a></li>
+            <?php if($this->config->get('pezesha_status')) { ?>
             <li><a href="#tab-pezesha" data-toggle="tab">Pezesha</a></li>
+            <?php } ?>
            
             <?php } ?>
           </ul>
@@ -364,21 +366,21 @@
                                     <input type="text" maxlength=30  name="SAP_customer_no" value="<?php echo $SAP_customer_no; ?>"  placeholder="SAP Custumer Number"  id="input-SAP_customer_no" class="form-control" />
                                 </div>
                         </div>
-                        
+                        <?php if($this->config->get('pezesha_status')) { ?>
                          <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-pezesha-customer-id">Pezesha ID</label>
                                 <div class="col-sm-10">
-                                  <?php echo $customer_pezesha_data['pezesha_customer_id']; ?>  
+                                  <input type="text" maxlength=30  name="pezesha_customer_id" value="<?php echo $customer_pezesha_data['pezesha_customer_id']; ?>" placeholder="Pezesha Customer ID"  id="input-pezesha-customer-id" class="form-control" readonly="" />
                                 </div>
                         </div>
                             
                         <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-pezesha-customer-uuid">Pezesha UUID</label>
                                 <div class="col-sm-10">
-                                <?php echo $customer_pezesha_data['customer_uuid']; ?>     
+                                <input type="text" maxlength=30  name="pezesha_customer_uuid" value="<?php echo $customer_pezesha_data['customer_uuid']; ?>" placeholder="Pezesha Customer UUID"  id="input-pezesha-customer-uuid" class="form-control" readonly="" />     
                                 </div>
                         </div>
-                            
+                        <?php } ?>  
 
                       <?php if(count($referee) > 0) { ?>
                           <div class="form-group">
@@ -694,19 +696,19 @@
             
             <div class="tab-pane" id="tab-pezesha">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label" for="input-pezesha-registration">Pezesha Registration</label>
+                    <label class="col-sm-2 control-label" for="input-pezesha-registration">Registration</label>
                     <div class="col-sm-10">
                         <div class="col-sm-10"><button id="button-pezesha" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Apply For Pezesha</button></div>   
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label" for="input-pezesha-terms-condtions">Accept Pezesha Terms & Conditions</label>
+                    <label class="col-sm-2 control-label" for="input-pezesha-terms-condtions">Terms & Conditions</label>
                     <div class="col-sm-10">
-                        <div class="col-sm-10"><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Accept Pezesha Terms & Condtions</button></div>   
+                        <div class="col-sm-10"><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Accept Terms & Condtions</button></div>   
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label" for="input-pezesha-opt-out">Accept Opt Out</label>
+                    <label class="col-sm-2 control-label" for="input-pezesha-opt-out">Opt Out</label>
                     <div class="col-sm-10">
                         <div class="col-sm-10"><button id="button-pezesha-opt-out" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Accept Opt Out</button></div>   
                     </div>
@@ -717,6 +719,12 @@
                         <div class="col-sm-10"><button id="button-pezesha-data-ingestion" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Data Ingestion</button></div>   
                     </div>
                 </div>
+                <!--<div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-pezesha-apply-loan">Apply Loan</label>
+                    <div class="col-sm-10">
+                        <div class="col-sm-10"><button id="button-pezesha-apply-loan" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Apply Loan</button></div>   
+                    </div>
+                </div>-->
             </div>
 
             <div class="tab-pane" id="tab-configuration">
@@ -1484,6 +1492,10 @@ $('.time').datetimepicker({
                             <div id="us1" style="width: 100%; height: 400px;"></div> 
                             <div id="us2" style="width: 100%; height: 400px;display: none"></div>
                            
+
+                            <input type="hidden" name="latitude" value="<?= $latitude ?>" />
+                                    <input type="hidden" name="longitude" value="<?= $longitude ?>" />
+                                    
                            <div id="over_map">
 
                                 <div class="input-group">
@@ -1543,8 +1555,8 @@ $('.time').datetimepicker({
             
             $('#us1').locationpicker({
                 location: {
-                    latitude: <?= $latitude?$latitude: 0.0236 ?>,
-                    longitude: <?= $longitude?$longitude:37.9062 ?>
+                    latitude: <?= $latitude?$latitude: 0 ?>,
+                    longitude: <?= $longitude?$longitude:0 ?>
                 },  
                 radius: 0,
                 inputBinding: {
@@ -2249,6 +2261,55 @@ e.preventDefault();
 console.log('button-pezesha-opt-out');
 $.ajax({
     url: 'index.php?path=sale/customer_pezesha/optout&token=<?php echo $token; ?>',
+    type: 'post',
+    dataType: 'json',
+    data: 'customer_id=<?php echo $customer_id; ?>',
+    success: function(json) {
+        
+    if(json.status == 422) {    
+    $.each(json.errors, function (key, data) {
+    alert(key+' : '+data);
+    })
+    }
+    
+    if(json.status == 200 && json.response_code == 0) {    
+    alert(json.message);
+    }
+    
+    }
+  });
+});
+
+
+$('#button-pezesha-data-ingestion').on('click', function(e) {
+e.preventDefault();
+console.log('button-pezesha-data-ingestion');
+$.ajax({
+    url: 'index.php?path=sale/customer_pezesha/dataingestion&token=<?php echo $token; ?>',
+    type: 'post',
+    dataType: 'json',
+    data: 'customer_id=<?php echo $customer_id; ?>',
+    success: function(json) {
+        
+    if(json.status == 422) {    
+    $.each(json.errors, function (key, data) {
+    alert(key+' : '+data);
+    })
+    }
+    
+    if(json.status == 200 && json.response_code == 0) {    
+    alert(json.message);
+    }
+    
+    }
+  });
+});
+
+$('#button-pezesha-apply-loan').on('click', function(e) {
+e.preventDefault();
+console.log('button-pezesha-apply-loan');
+$.ajax({
+    url: 'index.php?path=sale/customer_pezesha/applyloan&token=<?php echo $token; ?>',
     type: 'post',
     dataType: 'json',
     data: 'customer_id=<?php echo $customer_id; ?>',

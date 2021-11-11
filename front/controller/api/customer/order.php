@@ -1310,7 +1310,7 @@ class ControllerApiCustomerOrder extends Controller {
             $customer_parent_info = $this->model_account_customer->getCustomerParentEmail($result['customer_id']);
 
             $data['orders'][] = [
-                'order_id' => $result['order_id'],
+                'order_id' => $result['order_id'],               
                 'name' => $result['firstname'] . ' ' . $result['lastname'],
                 'shipping_name' => $result['shipping_name'],
                 'payment_method' => $result['payment_method'],
@@ -1353,8 +1353,9 @@ class ControllerApiCustomerOrder extends Controller {
                 'head_chef_email' => $head_chef,
                 'order_approval_access_role' => $this->session->data['order_approval_access_role'],
                 'parent_details' => $customer_parent_info != NULL && $customer_parent_info['email'] != NULL ? $customer_parent_info['email'] : NULL,
-                'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
+                'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) && $result['paid'] =='N'? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
+                'paid' => $result['paid'],
             ];
         }
 
@@ -1819,6 +1820,7 @@ class ControllerApiCustomerOrder extends Controller {
                 }
 
                 $data['payment_text'] = $payment_text;
+                $data['paid'] = $order_info['paid'];
 
                 $data['comment'] = nl2br($order_info['comment']);
 
@@ -1841,7 +1843,7 @@ class ControllerApiCustomerOrder extends Controller {
                 // $data['edit_order'] = ((15 == $order_info['order_status_id'] ) && (empty($_SESSION['parent']) || $order_appoval_access) )? true : false;
                 $data['order_company'] = isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null;
 
-                $data['edit_own_order'] = (($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours < 5 && ($order_info['payment_code'] == 'cod' || $order_info['payment_code'] == 'mod')) ? true : false;
+                $data['edit_own_order'] = (($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours < 2 && $order_info['paid'] =='N' && ($order_info['payment_code'] == 'cod' || $order_info['payment_code'] == 'mod')) ? true : false;
 
                 $data['driver'] = $this->model_account_order->getDriverName($order_info['driver_id']);
                 $data['executive'] = $this->model_account_order->getExecutiveName($order_info['delivery_executive_id']);

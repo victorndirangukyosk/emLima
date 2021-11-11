@@ -5,9 +5,9 @@ $_['heading_title'] = 'Pezesha';
 
 // Text
 $_['text_payment'] = 'Payment';
-$_['text_interswitch'] = '<img src="ui/image/payment/interswitch.jpg" alt="Interswitch" title="Interswitch" style="border: 1px solid #EEEEEE;" />';
-$_['text_success'] = 'Success: You have modified Interswitch / money order account details!';
-$_['text_edit'] = 'Edit Interswitch';
+$_['text_pezesha'] = '<img src="ui/image/payment/pezesha.jpg" alt="Pezesha" title="Pezesha" style="border: 1px solid #EEEEEE;" />';
+$_['text_success'] = 'Success: You have modified Pezesha account details!';
+$_['text_edit'] = 'Edit Pezesha';
 
 // Entry
 $_['entry_payable'] = 'Payable To';
@@ -21,7 +21,7 @@ $_['entry_sort_order'] = 'Sort Order';
 $_['help_total'] = 'The checkout total the order must reach before this payment method becomes active.';
 
 // Error
-$_['error_permission'] = 'Warning: You do not have permission to modify payment Interswitch / money order!';
+$_['error_permission'] = 'Warning: You do not have permission to modify payment Pezesha!';
 $_['error_payable'] = 'Payable To Required!';
 $_['error_merchant_key'] = 'Merchant Key Required!';
 $_['error_client_secret'] = 'Client Secret Required!';

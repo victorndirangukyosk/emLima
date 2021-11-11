@@ -469,6 +469,7 @@ class ModelAccountOrder extends Model {
                 'driver_id' => $order_query->row['driver_id'],
                 'vehicle_number' => $order_query->row['vehicle_number'],
                 'delivery_executive_id' => $order_query->row['delivery_executive_id'],
+                'paid' => $order_query->row['paid'],
             ];
         } else {
             return false;
