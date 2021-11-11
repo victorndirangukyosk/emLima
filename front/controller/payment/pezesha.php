@@ -92,6 +92,12 @@ class ControllerPaymentPezesha extends Controller {
         $result = json_decode($result, true);
         $log->write($result);
         $json = $result;
+        if ($result['status'] == 200 && $result['response_code'] == 0 && $result['error'] == false) {
+            $this->session->data['pezesha_amount_limit'] = $result['data']['amount'];
+            $log->write('pezesha_amount_limit');
+            $log->write($result['data']['amount']);
+            $log->write('pezesha_amount_limit');
+        }
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/loan_offers.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/loan_offers.tpl', $result));
