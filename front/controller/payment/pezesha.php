@@ -110,6 +110,7 @@ class ControllerPaymentPezesha extends Controller {
 
         $log = new Log('error.log');
         $this->load->model('account/customer');
+        $this->load->model('checkout/order');
 
         $customer_id = $this->customer->getId();
         $amount = $this->cart->getTotal();
@@ -153,6 +154,7 @@ class ControllerPaymentPezesha extends Controller {
             foreach ($this->session->data['order_id'] as $key => $value) {
                 $order_id = $value;
                 $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, $result['data']['loan_id']);
+                $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pezesha_order_status_id'), 'Paid With Pezesha', true, $this->customer->getId(), 'customer', '', 'Y');
             }
         }
 
