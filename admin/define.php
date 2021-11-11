@@ -1,7 +1,7 @@
 <?php
 
 defined('MVG') or die;
-
+define('ENV', 'testing');//testing for test environment and production for Live,
 // Version
 define('VERSION', '2.0.0');
 
