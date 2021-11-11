@@ -49,7 +49,9 @@
             <li><a href="#tab-otp" data-toggle="tab">OTP</a></li>
             <li><a href="#tab-activity" data-toggle="tab">Activities</a></li>
             <li><a href="#tab-password" data-toggle="tab">Password</a></li>
+            <?php if($this->config->get('pezesha_status')) { ?>
             <li><a href="#tab-pezesha" data-toggle="tab">Pezesha</a></li>
+            <?php } ?>
            
             <?php } ?>
           </ul>
@@ -364,7 +366,7 @@
                                     <input type="text" maxlength=30  name="SAP_customer_no" value="<?php echo $SAP_customer_no; ?>"  placeholder="SAP Custumer Number"  id="input-SAP_customer_no" class="form-control" />
                                 </div>
                         </div>
-                        
+                        <?php if($this->config->get('pezesha_status')) { ?>
                          <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-pezesha-customer-id">Pezesha ID</label>
                                 <div class="col-sm-10">
@@ -378,7 +380,7 @@
                                 <input type="text" maxlength=30  name="pezesha_customer_uuid" value="<?php echo $customer_pezesha_data['customer_uuid']; ?>" placeholder="Pezesha Customer UUID"  id="input-pezesha-customer-uuid" class="form-control" readonly="" />     
                                 </div>
                         </div>
-                            
+                        <?php } ?>  
 
                       <?php if(count($referee) > 0) { ?>
                           <div class="form-group">
