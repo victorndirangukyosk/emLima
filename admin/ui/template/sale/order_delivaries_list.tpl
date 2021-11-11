@@ -565,6 +565,7 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     <h4 class="modal-title">Driver Location</h4>
                                 </div>
+                                <div id="dvDistance"></div>
                                 <div class="" id="drivermap" style="height: 100%; min-height: 400px;">
                                 <input type="hidden" name="single_delivery_map_ui" id="single_delivery_map_ui" value="<?= $map_s ?>">
                                 <div class="modal-footer">

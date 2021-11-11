@@ -192,9 +192,9 @@ function callback(response, status) {
             }
         }
 
-        console.log(distance);
-        console.log(duration);
-        console.log('duration');
+        // console.log(distance);
+        // console.log(duration);
+        // console.log('duration');
         //$("#distance").html(distance); $("#duration").html(duration);
     }
 }
@@ -212,6 +212,7 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, 
         if (status == google.maps.DirectionsStatus.OK) {
 
             directionsDisplay.setDirections(response);
+            computeTotalDistance(response);
 
             //google.maps.event.trigger(MapInstance,'resize')
 
@@ -222,5 +223,19 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay, pointA, 
         }
     });
 }
+
+//added to calculate total distance and time
+function computeTotalDistance(result) {
+    var totalDist = 0;
+    var totalTime = 0;
+    var myroute = result.routes[0];
+    for (i = 0; i < myroute.legs.length; i++) {
+        totalDist += myroute.legs[i].distance.value;
+        totalTime += myroute.legs[i].duration.value;
+    }
+    totalDist = totalDist / 1000;
+    document.getElementById("dvDistance").innerHTML = "total distance is: " + totalDist + " km<br>total time is: " + (totalTime / 60).toFixed(2) + " minutes";
+}
+
 
 //initMap();
