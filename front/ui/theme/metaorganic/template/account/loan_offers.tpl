@@ -11,11 +11,11 @@
     <tbody>
 
         <tr>
-            <td><?php echo $json['message']; ?></td>
-            <td><?php echo $json['message']; ?></td>
-            <td><?php echo $json['message']; ?></td>
-            <td><?php echo $json['message']; ?></td>
-            <td><?php echo $json['message']; ?></td>
+            <td><?php echo $data['amount']; ?></td>
+            <td><?php echo $data['interest']; ?></td>
+            <td><?php echo $data['rate']; ?></td>
+            <td><?php echo $data['fee']; ?></td>
+            <td><?php echo $data['duration']; ?></td>
         </tr>
     </tbody>
 </table>
