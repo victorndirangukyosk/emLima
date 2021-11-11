@@ -16,7 +16,7 @@ class ControllerAccountLogout extends Controller {
             ];
 
             $this->model_account_activity->addActivity('logout', $activity_data);
-            
+
             $this->trigger->fire('pre.customer.logout');
 
             $this->customer->logout();
@@ -44,7 +44,7 @@ class ControllerAccountLogout extends Controller {
             unset($this->session->data['order_approval_access_role']);
             unset($this->session->data['adminlogin']);
             unset($this->session->data['accept_vendor_terms']);
-            
+            unset($this->session->data['pezesha_amount_limit']);
 
             setcookie('zipcode', null, time() - 3600, '/');
 
