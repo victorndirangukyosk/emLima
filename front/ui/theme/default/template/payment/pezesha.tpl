@@ -1,7 +1,7 @@
-<button type="button" id="button-confirm" data-toggle="collapse" data-loading-text="<?= $text_loading ?>" class="btn btn-default"><?= $button_confirm?></button>
+<button type="button" id="button-pezesha-confirm" data-toggle="collapse" data-loading-text="<?= $text_loading ?>" class="btn btn-default"><?= $button_confirm?></button>
 
 <script type="text/javascript"><!--
-$('#button-confirm').on('click', function() {
+$('#button-pezesha-confirm').on('click', function() {
     
     //location = '<?php echo $continue; ?>';
 
