@@ -107,59 +107,63 @@ class ControllerPaymentPezesha extends Controller {
     }
 
     public function applyloan() {
+        $json['status'] = false;
+        if ('pezesha' == $this->session->data['payment_method']['code']) {
+            $log = new Log('error.log');
+            $this->load->model('account/customer');
+            $this->load->model('checkout/order');
+            $this->load->model('payment/pezesha');
 
-        $log = new Log('error.log');
-        $this->load->model('account/customer');
-        $this->load->model('checkout/order');
+            $customer_id = $this->customer->getId();
+            $amount = $this->cart->getTotal();
+            $order_id = '#' . implode("#", $this->session->data['order_id']);
 
-        $customer_id = $this->customer->getId();
-        $amount = $this->cart->getTotal();
-        $order_id = '#' . implode("#", $this->session->data['order_id']);
+            $customer_device_info = $this->model_account_customer->getCustomer($customer_id);
+            $customer_pezesha_info = $this->model_account_customer->getPezeshaCustomer($customer_id);
 
-        $customer_device_info = $this->model_account_customer->getCustomer($customer_id);
-        $customer_pezesha_info = $this->model_account_customer->getPezeshaCustomer($customer_id);
-
-        $auth_response = $this->auth();
-        $log->write('auth_response');
-        $log->write($auth_response);
-        $log->write($customer_device_info);
-        $log->write('auth_response');
-        $payment_details = array('type' => 'BUY_GOODS/PAYBILL', 'number' => $order_id, 'callback_url' => $this->url->link('deliversystem/deliversystem/pezeshacallback', '', 'SSL'));
-        $body = array('pezesha_id' => $customer_pezesha_info['pezesha_customer_id'], 'amount' => $amount, 'duration' => 30, 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => 0, 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
-        //$body = http_build_query($body);
-        $body = json_encode($body);
-        $log->write($body);
-        $curl = curl_init();
-        if (ENV == 'production') {
-            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/loans');
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
-        } else {
-            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/loans');
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
-        }
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-        $result = curl_exec($curl);
-
-        $log->write($result);
-        curl_close($curl);
-        $result = json_decode($result, true);
-        $log->write($result);
-        $json = $result;
-        //return $json;
-        if ($result['status'] == 200 && $result['response_code'] == 0 && !$result['error']) {
-            foreach ($this->session->data['order_id'] as $key => $value) {
-                $order_id = $value;
-                $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, $result['data']['loan_id']);
-                $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pezesha_order_status_id'), 'Paid With Pezesha', true, $this->customer->getId(), 'customer', '', 'Y');
+            $auth_response = $this->auth();
+            $log->write('auth_response');
+            $log->write($auth_response);
+            $log->write($customer_device_info);
+            $log->write('auth_response');
+            $payment_details = array('type' => 'BUY_GOODS/PAYBILL', 'number' => $order_id, 'callback_url' => $this->url->link('deliversystem/deliversystem/pezeshacallback', '', 'SSL'));
+            $body = array('pezesha_id' => $customer_pezesha_info['pezesha_customer_id'], 'amount' => $amount, 'duration' => 30, 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => 0, 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
+            //$body = http_build_query($body);
+            $body = json_encode($body);
+            $log->write($body);
+            $curl = curl_init();
+            if (ENV == 'production') {
+                curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/loans');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+            } else {
+                curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/loans');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
             }
-        }
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            $result = curl_exec($curl);
 
-        $json['status'] = true;
-        $json['data'] = $result;
+            $log->write($result);
+            curl_close($curl);
+            $result = json_decode($result, true);
+            $log->write($result);
+            $json = $result;
+            //return $json;
+            if ($result['status'] == 200 && $result['response_code'] == 0 && !$result['error']) {
+                foreach ($this->session->data['order_id'] as $key => $value) {
+                    $order_id = $value;
+                    $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, $result['data']['loan_id']);
+                    $this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id']);
+                    $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pezesha_order_status_id'), 'Paid With Pezesha', true, $this->customer->getId(), 'customer', '', 'Y');
+                }
+            }
+
+            $json['status'] = true;
+            $json['data'] = $result;
+        }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
