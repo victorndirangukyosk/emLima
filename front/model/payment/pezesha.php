@@ -38,4 +38,18 @@ class ModelPaymentPezesha extends Model {
         return $method_data;
     }
 
+    public function insertOrderTransactionId($order_id, $transaction_id) {
+        $log = new Log('error.log');
+        $log->write('order_id_transaction_id');
+        $log->write($order_id . ' ' . $transaction_id);
+        $log->write('order_id_transaction_id');
+        $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
+
+        $query = $this->db->query($sql);
+
+        $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $order_id . "', transaction_id = '" . $transaction_id . "', created_at = NOW()";
+
+        $query = $this->db->query($sql);
+    }
+
 }

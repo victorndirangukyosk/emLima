@@ -1425,7 +1425,7 @@ class ModelAccountCustomer extends Model {
     }
 
     public function SaveCustomerLoans($customer_id, $order_id, $loan_id) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_pezesha_loans SET customer_id = '" . (int) $customer_id . "', loan_id = '" . (int) $loan_id . "', order_id = '" . (int) $order_id . "', date_added = NOW()");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_pezesha_loans SET customer_id = '" . (int) $customer_id . "', loan_id = '" . (int) $loan_id . "', order_id = '" . (int) $order_id . "', created_at = NOW()");
     }
 
 }
