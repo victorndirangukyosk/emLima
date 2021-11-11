@@ -124,7 +124,7 @@ class ControllerPaymentPezesha extends Controller {
         $log->write($customer_device_info);
         $log->write('auth_response');
         $payment_details = array('type' => 'BUY_GOODS/PAYBILL', 'number' => $order_id, 'callback_url' => $this->url->link('deliversystem/deliversystem/pezeshacallback', '', 'SSL'));
-        $body = array('pezesha_id' => $customer_pezesha_info['pezesha_customer_id'], 'amount' => $amount, 'duration' => 30, 'interest' => ($this->config->get('pezesha_interest')/100*$amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => 0, 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
+        $body = array('pezesha_id' => $customer_pezesha_info['pezesha_customer_id'], 'amount' => $amount, 'duration' => 30, 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => 0, 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
         //$body = http_build_query($body);
         $body = json_encode($body);
         $log->write($body);
@@ -148,13 +148,13 @@ class ControllerPaymentPezesha extends Controller {
         $result = json_decode($result, true);
         $log->write($result);
         $json = $result;
-        return $json;
+        //return $json;
 
-        /* $json['status'] = true;
-          $json['data'] = $result;
+        $json['status'] = true;
+        $json['data'] = $result;
 
-          $this->response->addHeader('Content-Type: application/json');
-          $this->response->setOutput(json_encode($json)); */
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
