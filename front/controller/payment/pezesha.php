@@ -93,7 +93,7 @@ class ControllerPaymentPezesha extends Controller {
         $log->write($result);
         $json = $result;
         if ($result['status'] == 200 && $result['response_code'] == 0 && $result['error'] == false) {
-            $this->session->data['pezesha_amount_limit'] = $result['data']['amount'];
+            $this->session->data['pezesha_amount_limit'] = $this->currency->format($result['data']['amount'], $this->config->get('config_currency'));
             $log->write('pezesha_amount_limit');
             $log->write($result['data']['amount']);
             $log->write('pezesha_amount_limit');
