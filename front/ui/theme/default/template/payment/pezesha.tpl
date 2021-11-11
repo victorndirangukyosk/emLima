@@ -21,12 +21,9 @@ $('#button-confirm').on('click', function() {
         beforeSend: function() {
                 $(".overlayed").show();
                 $('#button-confirm').button('loading');
-                //$('#button-confirm').attr('disabled',true);
-                //$(this).css('background-color','#b2d025');
         },
         complete: function() {
                 $(".overlayed").hide();
-                //$('#button-confirm').removeAttr('disabled');
                 $('#button-confirm').button('reset');
                 $('#loading').hide();
         },      
