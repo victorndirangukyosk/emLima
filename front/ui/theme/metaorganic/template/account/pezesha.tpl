@@ -36,9 +36,10 @@
                 <div class="col-md-6" id="pay_with" >
                     <button type="button" id="pezesha-button-loan" class="btn btn-default">FETCH LOAN OFFERS</button>
                 </div>                                  
-                <div class="row" id="loan_offers">
-                    
-                </div>
+            </div>
+
+            <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;" id="loan_offers">
+
             </div>
 
         </div>
@@ -131,7 +132,7 @@
             dataType: 'html',
             cache: false,
             success: function (html) {
-            $('#loan_offers').html(html);    
+                $('#loan_offers').html(html);
             }
 
         });

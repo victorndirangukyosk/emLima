@@ -1,6 +1,9 @@
-<div class="col-md-6" id="pay_with" >
-    Fetch Pezesha Laon Offers
+<div class="container">
+    <div class="row">
+        <div class="col">Column</div>
+        <div class="col">Column</div>
+        <div class="w-100"></div>
+        <div class="col">Column</div>
+        <div class="col">Column</div>
+    </div>
 </div>
-<div class="col-md-6" id="pay_with" >
-    <button type="button" id="pezesha-button-loan" class="btn btn-default">FETCH LOAN OFFERS</button>
-</div> 
