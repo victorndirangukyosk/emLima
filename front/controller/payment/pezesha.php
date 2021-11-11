@@ -99,7 +99,9 @@ class ControllerPaymentPezesha extends Controller {
         if ($result['data']['status'] == 200 && $result['data']['response_code'] == 0 && $result['data']['error'] == true) {
             $html = "<div class='col-md-12' id='pay_with'>" . $result['message'] . "</div>";
         }
-
+        $log->write('html');
+        $log->write($html);
+        $log->write('html');
         return $html;
         //return $json;
 
