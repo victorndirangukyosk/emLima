@@ -1494,10 +1494,6 @@ $('.time').datetimepicker({
                             <div id="us1" style="width: 100%; height: 400px;"></div> 
                             <div id="us2" style="width: 100%; height: 400px;display: none"></div>
                            
-
-                            <input type="hidden" name="latitude" value="<?= $latitude ?>" />
-                                    <input type="hidden" name="longitude" value="<?= $longitude ?>" />
-                                    
                            <div id="over_map">
 
                                 <div class="input-group">
@@ -1557,8 +1553,8 @@ $('.time').datetimepicker({
             
             $('#us1').locationpicker({
                 location: {
-                    latitude: <?= $latitude?$latitude: 0 ?>,
-                    longitude: <?= $longitude?$longitude:0 ?>
+                    latitude: <?= $latitude?$latitude: 0.0236 ?>,
+                    longitude: <?= $longitude?$longitude:37.9062 ?>
                 },  
                 radius: 0,
                 inputBinding: {
