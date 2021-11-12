@@ -94,6 +94,7 @@ class ControllerPaymentPezesha extends Controller {
         $json = $result;
         if ($result['status'] == 200 && $result['response_code'] == 0 && $result['error'] == false) {
             $this->session->data['pezesha_amount_limit'] = $this->currency->format($result['data']['amount'], $this->config->get('config_currency'));
+            $this->session->data['pezesha_customer_amount_limit'] = $result['data']['amount'];
             $log->write('pezesha_amount_limit');
             $log->write($result['data']['amount']);
             $log->write('pezesha_amount_limit');
@@ -108,7 +109,12 @@ class ControllerPaymentPezesha extends Controller {
 
     public function applyloan() {
         $json['status'] = false;
-        if ('pezesha' == $this->session->data['payment_method']['code']) {
+        $this->loanoffers();
+        if ('pezesha' == $this->session->data['payment_method']['code'] && $this->cart->getTotal() > $this->session->data['pezesha_customer_amount_limit']) {
+            $json['status'] = false;
+            $json['message'] = 'Plese Check Your Pezesha Amount Limit!(' . $this->session->data['pezesha_amount_limit'] . ',' . $this->cart->getTotal() . ')';
+        }
+        if ('pezesha' == $this->session->data['payment_method']['code'] && $this->cart->getTotal() <= $this->session->data['pezesha_customer_amount_limit']) {
             $log = new Log('error.log');
             $this->load->model('account/customer');
             $this->load->model('checkout/order');
@@ -159,10 +165,14 @@ class ControllerPaymentPezesha extends Controller {
                     $this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $this->customer->getId());
                     $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pezesha_order_status_id'), 'Paid With Pezesha', true, $this->customer->getId(), 'customer', '', 'Y');
                 }
+                $json['status'] = true;
+                $json['message'] = 'Pezesha Loan Applied Successfully!';
+                $json['data'] = $result;
+            } else {
+                $json['status'] = false;
+                $json['message'] = 'Please Select Other Payment Option!';
+                $json['data'] = $result;
             }
-
-            $json['status'] = true;
-            $json['data'] = $result;
         }
 
         $this->response->addHeader('Content-Type: application/json');
