@@ -111,7 +111,7 @@ class ControllerPaymentPezesha extends Controller {
         $this->loanoffers();
         if ('pezesha' == $this->session->data['payment_method']['code'] && $this->cart->getTotal() > $this->session->data['pezesha_amount_limit']) {
             $json['status'] = false;
-            $json['message'] = 'Plese Check Your Pezesha Amount Limit!';
+            $json['message'] = 'Plese Check Your Pezesha Amount Limit!(' . $this->session->data['pezesha_amount_limit'] . ',' . $this->cart->getTotal() . ')';
         }
         if ('pezesha' == $this->session->data['payment_method']['code'] && $this->cart->getTotal() <= $this->session->data['pezesha_amount_limit']) {
             $log = new Log('error.log');
