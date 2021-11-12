@@ -565,6 +565,7 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     <h4 class="modal-title">Driver Location</h4>
                                 </div>
+                                <div id="dvDistance"></div>
                                 <div class="" id="drivermap" style="height: 100%; min-height: 400px;">
                                 <input type="hidden" name="single_delivery_map_ui" id="single_delivery_map_ui" value="<?= $map_s ?>">
                                 <div class="modal-footer">
@@ -814,7 +815,6 @@ console.log($(this).data('order-id'));
 //var delivery_longitude = $(this).data('delivery_longitude');
 var delivery_location = $(this).data('delivery_latitide')+','+$(this).data('delivery_longitude');
 console.log(delivery_location);
-$('#driver_modal').modal('toggle');
 
                 $.ajax({
 		url: 'index.php?path=amitruck/amitruck/getDriverLocation&token=<?php echo $token; ?>',
@@ -827,6 +827,8 @@ $('#driver_modal').modal('toggle');
                 success: function(json) {
                     if(json.status == 200) {
                     console.log(json.driverLocation.latitude);
+                    $('#driver_modal').modal('toggle');
+
                     var present_location = json.driverLocation.latitude+','+json.driverLocation.longitude;
                     initMapLoads(present_location,delivery_location,json.driver_details);
                     } else {

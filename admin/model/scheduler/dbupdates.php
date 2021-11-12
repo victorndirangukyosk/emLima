@@ -97,4 +97,95 @@ class ModelSchedulerDbupdates extends Model {
 
      }
 
+     public function getWalletRunningLowCustomers() {
+
+        $sql = "SELECT distinct c.customer_id FROM " . DB_PREFIX . "customer_credit c where c.customer_id>0 order by c.customer_id ASC";
+         
+        $query = $this->db->query($sql);
+
+        //  echo "<pre>";print_r($sql);die;
+
+        return $query->rows;
+     }
+
+     public function checkWalletRunningLow($customer_id) {
+        $log = new Log('error.log');
+        //check the customer wallet and send mail, if wallet is low
+        $query = $this->db->query('SELECT SUM(amount) AS total FROM `' . DB_PREFIX . "customer_credit` WHERE customer_id = '" . (int) $customer_id . "' GROUP BY customer_id");
+        // $customer_wallet_amount = 0;
+        $customer_order_average = 0;
+        if ($query->num_rows) {
+            $customer_wallet_amount = $query->row['total'];
+        }
+        //get average order value of customer
+        //SELECT AVG(total) AS total FROM (select total,order_id from `hf7_order` WHERE customer_id = '273'   ORDER BY order_id DESC   LIMIT 0, 3) as t
+        $query1 = $this->db->query('SELECT AVG(total) AS total FROM (select total,order_id FROM `' . DB_PREFIX . "order` WHERE total>0 and customer_id = '" . (int) $customer_id . "' ORDER BY order_id DESC LIMIT 0, 5) as t");
+        // echo '<pre>';print_r('SELECT AVG(total) AS total FROM (select total,order_id FROM `'.DB_PREFIX."order` WHERE customer_id = '".(int) $customer_id."' ORDER BY order_id DESC LIMIT 0, 3) as t");exit;
+        if ($query1->num_rows) {
+            $customer_order_average = $query1->row['total'];
+        }
+        // echo '<pre>';print_r( $customer_order_average);die;
+        $log = new Log('error.log');
+        $log->write($customer_wallet_amount);
+        $log->write('Above wallet, below average order');
+        $log->write($customer_order_average);
+        if (isset($customer_wallet_amount) && $customer_wallet_amount <= $customer_order_average) {
+           
+            $log->write("average value of wallet order ");  
+             $log->write($customer_id);
+           
+            //then send mail to customer
+        $this->load->model('account/customer');
+
+            $data = $this->model_account_customer->getCustomerById($customer_id);
+            $data = $data[0];
+            //    echo '<pre>'; print_r($data);die;
+            // $log->write($data['email']);
+
+            try {
+                if ($data['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('Customer', 'customer_19')) {
+                    $log->write('low wallet mail sending');
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_19', $data);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_19', $data);
+                    $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_19', $data);
+                    // echo '<pre>'; print_r($subject);die;
+
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($data['email']);
+                    $mail->setFrom($this->config->get('config_from_email'));
+                    $mail->setSender($this->config->get('config_name'));
+                    $mail->setSubject($subject);
+                    $mail->setHTML($message);
+                     $mail->send();
+
+                    $log->write("Wallet low mail send to -".$customer_id."mail ID".$data['email']);
+
+                    //   return;
+                }
+
+
+
+                if ($data['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_19')) {
+
+                    $ret = $this->emailtemplate->sendmessage($data['telephone'], $sms_message);
+                }
+
+                // if ($this->emailtemplate->getNotificationEnabled('Customer', 'customer_19')) {
+                //     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_19', $data);
+                //     //$log->write($mobile_notification_template);
+                //     $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_19' , $data);
+                //     //$log->write($mobile_notification_title);
+                //     if (isset($data) && isset($data['device_id']) && $data['mobile_notification'] == 1 && strlen($data['device_id']) > 0) {
+                //         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                //         $ret = $this->emailtemplate->sendPushNotification($data['customer_id'], $data['device_id'], '', '', $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                //     } else {
+                //         $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+                //     }
+                // }
+            } catch (Exception $e) {
+                //   echo '<pre>';print_r( $data);die;
+            }
+        }
+    }
+
 }

@@ -1,10 +1,13 @@
-<button type="button" id="button-confirm" data-toggle="collapse" data-loading-text="<?= $text_loading ?>" class="btn btn-default"><?= $button_confirm?></button>
+<div class="alert alert-danger" id="error_msg" style="margin-bottom: 7px;"></div>
+<div class="alert alert-success" style="font-size: 14px;" id="success_msg" style="margin-bottom: 7px;"></div>
+<button type="button" id="button-pezesha-confirm" data-toggle="collapse" data-loading-text="<?= $text_loading ?>" class="btn btn-default"><?= $button_confirm?></button>
 
 <script type="text/javascript"><!--
-$('#button-confirm').on('click', function() {
+$('#button-pezesha-confirm').on('click', function() {
     
     //location = '<?php echo $continue; ?>';
-
+    $('#error_msg').hide();
+    $('#success_msg').hide();
     
     $('#loading').show();
 
@@ -17,21 +20,29 @@ $('#button-confirm').on('click', function() {
     $.ajax({
         type: 'get',
         url: 'index.php?path=payment/pezesha/applyloan',
+        dataType: 'json',
         cache: false,
         beforeSend: function() {
                 $(".overlayed").show();
                 $('#button-confirm').button('loading');
-                //$('#button-confirm').attr('disabled',true);
-                //$(this).css('background-color','#b2d025');
         },
         complete: function() {
                 $(".overlayed").hide();
-                //$('#button-confirm').removeAttr('disabled');
                 $('#button-confirm').button('reset');
                 $('#loading').hide();
         },      
-        success: function() {
-                location = '<?php echo $continue; ?>';
+        success: function(json) {
+           console.log(json); 
+           if(json.status) {
+           location = '<?php echo $continue; ?>';
+           }
+           
+           if(!json.status) {
+           $('#error_msg').html(json.message);
+           $('#error_msg').show();    
+           console.log(json);     
+           }
+
         }       
     });
 });

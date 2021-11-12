@@ -1687,10 +1687,22 @@ function saveNewTimeSlot(store_id,timeslot,date) {
     return false;
 }
 
-function saveOrder() {
+function getpezeshalimit() {
+$.ajax({
+            type: 'get',
+            url: 'index.php?path=payment/pezesha/loanoffers',
+            dataType: 'json',
+            cache: false,
+            success: function (json) {
+            }
 
-    console.log("saveOrder");
-    console.log("sri ");
+});
+}
+
+function saveOrder() {
+getpezeshalimit();
+console.log("saveOrder");
+console.log("sri ");
 
 var name="dropoff_notes";
 

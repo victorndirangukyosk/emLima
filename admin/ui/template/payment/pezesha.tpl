@@ -72,6 +72,16 @@
                             <?php } ?>
                         </div>
                     </div>
+                    
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-payable">Interest</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="pezesha_interest" value="<?php echo $pezesha_interest; ?>" placeholder="Interest" id="input-payable" class="form-control" />
+                            <?php if ($error_interest) { ?>
+                            <div class="text-danger"><?php echo $error_interest; ?></div>
+                            <?php } ?>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-total"><span data-toggle="tooltip" title="<?php echo $help_total; ?>"><?php echo $entry_total; ?></span></label>
