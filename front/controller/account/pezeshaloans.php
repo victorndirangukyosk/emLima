@@ -88,10 +88,10 @@ class ControllerAccountPezeshaloans extends Controller {
         $data['header'] = $this->load->controller('common/header/information');
 
         // echo "<pre>";print_r($data['credits']);die;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/pezesha.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/pezesha.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/pezeshaloans.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/pezeshaloans.tpl', $data));
         } else {
-            $this->response->setOutput($this->load->view('default/template/account/pezesha.tpl', $data));
+            $this->response->setOutput($this->load->view('default/template/account/pezeshaloans.tpl', $data));
         }
     }
 
