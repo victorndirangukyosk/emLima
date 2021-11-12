@@ -16,11 +16,11 @@
                             <th class="order_id">Loan Type</th>
                         </tr>
                     </thead>
-                    <tbody id="emp_body">
+                    <tbody id="loans_body">
                     </tbody>
                 </table>
                 <div id="pager">
-                    <ul id="paginationpending" class="pagination-sm"></ul>
+                    <ul id="paginationpezeshaloans" class="pagination-sm"></ul>
                 </div>        
             </div>
         </div>
@@ -129,5 +129,56 @@
         vertical-align: middle;
     }
 </style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        console.log('pagination');
+        var $pagination = $('#paginationpezeshaloans'),
+                totalRecords = 0,
+                records = [],
+                displayRecords = [],
+                recPerPage = 5,
+                page = 1,
+                totalPages = 0;
+        $.ajax({
+            url: "index.php?path=account/pezeshaloans/getpezeshaloans",
+            async: true,
+            dataType: 'json',
+            success: function (data) {
+                records = data.orders;
+                console.log(records);
+                totalRecords = records.length;
+                totalPages = Math.ceil(totalRecords / recPerPage);
+                apply_pagination();
+            }
+        });
+        function generate_table() {
+            var tr;
+            $('#loans_body').html('');
+            for (var i = 0; i < displayRecords.length; i++) {
+                tr = $('<tr/>');
+                tr.append("<td><input type='checkbox' id='order_id_selected' data-id='" + displayRecords[i].order_id + "' data-amount='" + displayRecords[i].order_id + "' name='order_id_selected' value='" + displayRecords[i].order_id + "'></td>");
+                tr.append("<td class='order_id'>" + displayRecords[i].order_id + "</td>");
+                tr.append("<td>" + displayRecords[i].order_id + "</td>");
+                tr.append("<td class='amount'>" + displayRecords[i].order_id + "</td>");
+                tr.append("<td class='amount'>" + displayRecords[i].order_id + "</td>");
+                tr.append("<td>" + displayRecords[i].order_id + "</td>");
+                $('#loans_body').append(tr);
+            }
+        }
+        function apply_pagination() {
+            $pagination.twbsPagination({
+                totalPages: totalPages,
+                visiblePages: 6,
+                onPageClick: function (event, page) {
+                    displayRecordsIndex = Math.max(page - 1, 0) * recPerPage;
+                    endRec = (displayRecordsIndex) + recPerPage;
+                    console.log(displayRecordsIndex + 'PAGINATION' + endRec);
+                    displayRecords = records.slice(displayRecordsIndex, endRec);
+                    generate_table();
+                }
+            });
+        }
+});
+</script>
 </body>
 </html>

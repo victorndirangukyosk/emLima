@@ -36,11 +36,6 @@ class ControllerAccountPezeshaloans extends Controller {
             'href' => $this->url->link('account/pezeshaloans', '', 'SSL'),
         ];
 
-        $this->load->model('account/order');
-        $pezesha_loans = $this->model_account_order->getPezeshaloans();
-        $log = new Log('error.log');
-        $log->write($pezesha_loans);
-
         $data['label_address'] = $this->language->get('label_address');
         $data['heading_title'] = $this->language->get('heading_title');
         $data['text_order'] = $this->language->get('text_order');
@@ -89,6 +84,15 @@ class ControllerAccountPezeshaloans extends Controller {
         } else {
             $this->response->setOutput($this->load->view('default/template/account/pezeshaloans.tpl', $data));
         }
+    }
+
+    public function getPezeshaLoans() {
+        $data['orders'] = NULL;
+        $this->load->model('account/order');
+        $pezesha_loans = $this->model_account_order->getPezeshaloans();
+        $data['orders'] = $pezesha_loans;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($data));
     }
 
 }
