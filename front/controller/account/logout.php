@@ -45,6 +45,7 @@ class ControllerAccountLogout extends Controller {
             unset($this->session->data['adminlogin']);
             unset($this->session->data['accept_vendor_terms']);
             unset($this->session->data['pezesha_amount_limit']);
+            unset($this->session->data['pezesha_customer_amount_limit']);
 
             setcookie('zipcode', null, time() - 3600, '/');
 

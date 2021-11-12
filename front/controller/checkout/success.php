@@ -211,18 +211,17 @@ class ControllerCheckoutSuccess extends Controller {
                 unset($this->session->data['shipping_address_id']);
                 unset($this->session->data['accept_vendor_terms']);
                 unset($this->session->data['pezesha_amount_limit']);
+                unset($this->session->data['pezesha_customer_amount_limit']);
             }
         }
 
         #region
         //check wallet amount , either running low or not
-        
         //low wallet running mails are sending @9AM ,so commented here
         // if ($this->config->get('wallet' . '_status')) { //$result['code']
         //     $this->checkWalletRunningLow();
         //     // echo "<pre>";print_r('sdfsdfsd');die;
         // }
-        
         #endregion 
         $data['button_continue'] = $this->language->get('button_continue');
 
