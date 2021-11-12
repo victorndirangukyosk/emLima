@@ -4,6 +4,7 @@ class ControllerAccountPezeshaloans extends Controller {
 
     public function index() {
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
+        $this->document->addScript('https://www.js-tutorials.com/demos/jquery_bootstrap_pagination_example_demo/jquery.twbsPagination.min.js');
 
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/pezeshaloans', '', 'SSL');
