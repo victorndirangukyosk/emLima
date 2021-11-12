@@ -5,25 +5,24 @@
     <?php } ?>
     <div class="row">
         <div class="col-md-9">
-                <div id="pending" class="tab-pane fade in active">
-                    <table id="employee" class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th class="order_id">Order Id </th>
-                                <th class="order_id">Order Date</th>
-                                <th class="order_id">Order Total</th>
-                                <th class="order_id">Amount Payable</th>
-                                <th class="order_id">Payment Method</th>
-                            </tr>
-                        </thead>
-                        <tbody id="emp_body">
-                        </tbody>
-                    </table>
-                    <div id="pager">
-                        <ul id="paginationpending" class="pagination-sm"></ul>
-                    </div>        
-                </div>
+            <div id="pending" class="tab-pane fade in active">
+                <table id="employee" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Loan ID</th>
+                            <th class="order_id">Order ID</th>
+                            <th class="order_id">Order Date</th>
+                            <th class="order_id">Order Total</th>
+                            <th class="order_id">Loan Type</th>
+                        </tr>
+                    </thead>
+                    <tbody id="emp_body">
+                    </tbody>
+                </table>
+                <div id="pager">
+                    <ul id="paginationpending" class="pagination-sm"></ul>
+                </div>        
+            </div>
         </div>
     </div>                        
 </div>
@@ -43,58 +42,58 @@
 
 <script type="text/javascript">
 
-                    var __kdt = __kdt || [];
-                    var public_key = '<?php echo $konduto_public_key ?>';
-                    console.log("public_key");
-                    console.log(public_key);
-                    __kdt.push({"public_key": public_key}); // The public key identifies your store
-                    __kdt.push({"post_on_load": false});
-                    (function () {
-                        var kdt = document.createElement('script');
-                        kdt.id = 'kdtjs';
-                        kdt.type = 'text/javascript';
-                        kdt.async = true;
-                        kdt.src = 'https://i.k-analytix.com/k.js';
-                        var s = document.getElementsByTagName('body')[0];
-                        console.log(s);
-                        s.parentNode.insertBefore(kdt, s);
-                    })();
-                    var visitorID;
-                    (function () {
-                        var period = 300;
-                        var limit = 20 * 1e3;
-                        var nTry = 0;
-                        var intervalID = setInterval(function () {
-                            var clear = limit / period <= ++nTry;
-                            console.log("visitorID trssy");
-                            if (typeof (Konduto.getVisitorID) !== "undefined") {
-                                visitorID = window.Konduto.getVisitorID();
-                                clear = true;
-                            }
-                            console.log("visitorID clear");
-                            if (clear) {
-                                clearInterval(intervalID);
-                            }
-                        }, period);
-                    })(visitorID);
-                    var page_category = 'my-transactions-page';
-                    (function () {
-                        var period = 300;
-                        var limit = 20 * 1e3;
-                        var nTry = 0;
-                        var intervalID = setInterval(function () {
-                            var clear = limit / period <= ++nTry;
-                            if (typeof (Konduto.sendEvent) !== "undefined") {
+    var __kdt = __kdt || [];
+    var public_key = '<?php echo $konduto_public_key ?>';
+    console.log("public_key");
+    console.log(public_key);
+    __kdt.push({"public_key": public_key}); // The public key identifies your store
+    __kdt.push({"post_on_load": false});
+    (function () {
+        var kdt = document.createElement('script');
+        kdt.id = 'kdtjs';
+        kdt.type = 'text/javascript';
+        kdt.async = true;
+        kdt.src = 'https://i.k-analytix.com/k.js';
+        var s = document.getElementsByTagName('body')[0];
+        console.log(s);
+        s.parentNode.insertBefore(kdt, s);
+    })();
+    var visitorID;
+    (function () {
+        var period = 300;
+        var limit = 20 * 1e3;
+        var nTry = 0;
+        var intervalID = setInterval(function () {
+            var clear = limit / period <= ++nTry;
+            console.log("visitorID trssy");
+            if (typeof (Konduto.getVisitorID) !== "undefined") {
+                visitorID = window.Konduto.getVisitorID();
+                clear = true;
+            }
+            console.log("visitorID clear");
+            if (clear) {
+                clearInterval(intervalID);
+            }
+        }, period);
+    })(visitorID);
+    var page_category = 'my-transactions-page';
+    (function () {
+        var period = 300;
+        var limit = 20 * 1e3;
+        var nTry = 0;
+        var intervalID = setInterval(function () {
+            var clear = limit / period <= ++nTry;
+            if (typeof (Konduto.sendEvent) !== "undefined") {
 
-                                Konduto.sendEvent(' page ', page_category); //Programmatic trigger event
-                                clear = true;
-                            }
-                            if (clear) {
-                                clearInterval(intervalID);
-                            }
-                        },
-                                period);
-                    })(page_category);</script>
+                Konduto.sendEvent(' page ', page_category); //Programmatic trigger event
+                clear = true;
+            }
+            if (clear) {
+                clearInterval(intervalID);
+            }
+        },
+                period);
+    })(page_category);</script>
 
 <?php } ?>
 <!--  jQuery -->

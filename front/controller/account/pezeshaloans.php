@@ -32,11 +32,12 @@ class ControllerAccountPezeshaloans extends Controller {
         ];
 
         $data['breadcrumbs'][] = [
-            'text' => $this->language->get('text_credit'),
-            'href' => $this->url->link('account/credit', '', 'SSL'),
+            'text' => $this->language->get('text_pezesha'),
+            'href' => $this->url->link('account/pezeshaloans', '', 'SSL'),
         ];
 
-        $this->load->model('account/credit');
+        $this->load->model('account/order');
+        $this->model_account_order->getPezeshaloans();
 
         $data['label_address'] = $this->language->get('label_address');
         $data['heading_title'] = $this->language->get('heading_title');
@@ -73,13 +74,7 @@ class ControllerAccountPezeshaloans extends Controller {
         } else {
             $server = $this->config->get('config_url');
         }
-
-        $data['continue'] = $this->url->link('account/account', '', 'SSL');
-        $data['order'] = $this->url->link('account/order', '', 'SSL');
-        $data['credit'] = $this->url->link('account/credit', '', 'SSL');
-        $data['address'] = $this->url->link('account/address', '', 'SSL');
         $data['home'] = $server;
-
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['column_right'] = $this->load->controller('common/column_right');
         $data['content_top'] = $this->load->controller('common/content_top');
@@ -87,7 +82,6 @@ class ControllerAccountPezeshaloans extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/information');
 
-        // echo "<pre>";print_r($data['credits']);die;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/pezeshaloans.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/pezeshaloans.tpl', $data));
         } else {
