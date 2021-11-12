@@ -36,6 +36,8 @@ $('#button-pezesha-confirm').on('click', function() {
         success: function(json) {
            console.log(json); 
            if(json.status) {
+           $(".overlayed").show();
+           $('#button-pezesha-confirm').button('loading');    
            location = '<?php echo $continue; ?>';
            }
            
