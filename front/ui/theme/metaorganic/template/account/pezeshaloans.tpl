@@ -156,7 +156,6 @@
             $('#loans_body').html('');
             for (var i = 0; i < displayRecords.length; i++) {
                 tr = $('<tr/>');
-                tr.append("<td><input type='checkbox' id='order_id_selected' data-id='" + displayRecords[i].order_id + "' data-amount='" + displayRecords[i].order_id + "' name='order_id_selected' value='" + displayRecords[i].order_id + "'></td>");
                 tr.append("<td class='order_id'>" + displayRecords[i].order_id + "</td>");
                 tr.append("<td>" + displayRecords[i].order_id + "</td>");
                 tr.append("<td class='amount'>" + displayRecords[i].order_id + "</td>");
