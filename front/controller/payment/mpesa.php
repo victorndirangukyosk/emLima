@@ -22,7 +22,7 @@ class ControllerPaymentMpesa extends Controller {
         $data['customer_number'] = $this->customer->getTelephone();
 
         $this->load->model('checkout/order');
-
+       
         $order_ids = array();
         foreach ($this->session->data['order_id'] as $key => $value) {
             /* FOR KWIKBASKET ORDERS */
@@ -256,8 +256,7 @@ class ControllerPaymentMpesa extends Controller {
                     $AccountReference = "#" . implode('#', $this->request->post['order_id']);
                 }
 
-                $TransactionDesc = '#' . $this->customer->getId() . '##';
-                //$TransactionDesc = '#' . $this->request->post['pending_order_ids'] . '##' . $this->customer->getId();
+                $TransactionDesc = '#' . $this->request->post['pending_order_ids'] . '##' . $this->customer->getId();
             }
 
             $Remarks = 'PAYMENT';
@@ -301,7 +300,7 @@ class ControllerPaymentMpesa extends Controller {
                 } else {
 
                     $this->model_payment_mpesa->addOrder(0, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), $amount);
-                    $this->session->data['mpesa_topups_request'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID, 'merchant_request_id' => $stkPushSimulation->MerchantRequestID);
+                    $this->session->data['mpesa_topups_request'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID,'merchant_request_id' => $stkPushSimulation->MerchantRequestID);
                     // $this->session->data['mpesa_topups_response'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID);
                 }
                 /* foreach ($this->session->data['order_id'] as $order_id) {
@@ -680,6 +679,8 @@ class ControllerPaymentMpesa extends Controller {
 
                         // $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
                         //SKIPPNG HERE UPDATING CheckoutRequestID..BUT WE NEED TO UPDATE RECEIPT NUMBER
+                        
+                        
                         //success pending to processing
                         $order_status_id = $this->config->get('mpesa_order_status_id');
                         $log->write('Merchant request ID previous');
@@ -693,13 +694,14 @@ class ControllerPaymentMpesa extends Controller {
 
                         $log->write('Checkout request ID after confirm');
                         $log->write($stkPushSimulation->CheckoutRequestID);
+                     
 
                         // $this->load->model('localisation/order_status');
                         // $order_status = $this->model_localisation_order_status->getOrderStatuses();
                         // $order_info = $this->model_checkout_order->getOrder($order_id);
                         // $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-                        $transaction_details = $this->model_payment_mpesa->getCustomerTransactionDetailsByMerchantRequestId($mpesaDetails['request_id']);
-                        if (is_array($transaction_details) && count($transaction_details) <= 0) {
+                         $transaction_details = $this->model_payment_mpesa->getCustomerTransactionDetailsByMerchantRequestId($mpesaDetails['request_id']);
+                         if (is_array($transaction_details) && count($transaction_details) <= 0) {
                             $this->model_payment_mpesa->insertCustomerTransactionId($mpesaDetails['customer_id'], $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID);
                         }
                         // $this->model_payment_mpesa->insertCustomerTransactionId($mpesaDetails['customer_id'], $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID);
@@ -1372,6 +1374,7 @@ class ControllerPaymentMpesa extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
     public function mpesatopupautoupdate() {
         $mpesa_payments_response = '';
         $json['processed'] = NULL;
@@ -1387,6 +1390,7 @@ class ControllerPaymentMpesa extends Controller {
         $log->write('mpesa_payments_response');
         $log->write($mpesa_payments_response);
 
+
         // if (is_array($mpesa_payments_response) && $mpesa_payments_response['checkout_request_id'] == $this->request->post['mpesa_checkout_request_id'] ) {//&& $mpesa_payments_response['result'] == 0
         //     $json['processed'] = true;
         //     $json['redirect'] = $this->url->link('account/credit');
@@ -1399,15 +1403,18 @@ class ControllerPaymentMpesa extends Controller {
         //     $json['processed'] = false;
         // }
 
-        if ($mpesa_payments_response == 1) {
+        if($mpesa_payments_response==1)
+        {
             $json['processed'] = true;
             $json['redirect'] = $this->url->link('account/credit');
-        } else {
+        }
+        else {
             $json['processed'] = false;
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
 
     public function mpesaTopupcallbackupdate($stkCallback) {
         $log = new Log('error.log');
@@ -1415,12 +1422,13 @@ class ControllerPaymentMpesa extends Controller {
         $this->load->model('payment/mpesa');
         $manifest_id = $this->model_payment_mpesa->getMpesaTopup($stkCallback->MerchantRequestID);
         if (is_array($manifest_id) && count($manifest_id) > 0) {
-            return 1;
-        } else {
+        return 1;
+             
+        }
+        else {
             return 0;
         }
         // $this->cache->set('mpesa_payments_response', array('result' => $stkCallback->ResultCode, 'merchant_request_id' => $stkCallback->MerchantRequestID, 'checkout_request_id' => $stkCallback->CheckoutRequestID, 'mpesa_receipt_number' => $MpesaReceiptNumber, 'description' => $stkCallback->ResultDesc));
         //  $log->write($this->cache->get('mpesa_payments_response'));
     }
-
 }
