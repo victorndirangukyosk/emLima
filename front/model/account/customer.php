@@ -1350,7 +1350,7 @@ class ModelAccountCustomer extends Model {
     public function checkWalletRunningLow($customer_id) {
         //check the customer wallet and send mail, if wallet is low
         $query = $this->db->query('SELECT SUM(amount) AS total FROM `' . DB_PREFIX . "customer_credit` WHERE customer_id = '" . (int) $customer_id . "' GROUP BY customer_id");
-        $customer_wallet_amount = 0;
+        // $customer_wallet_amount = 0;
         $customer_order_average = 0;
         if ($query->num_rows) {
             $customer_wallet_amount = $query->row['total'];
@@ -1367,7 +1367,7 @@ class ModelAccountCustomer extends Model {
         $log->write($customer_wallet_amount);
         $log->write('Above wallet, below average order');
         $log->write($customer_order_average);
-        if ($customer_wallet_amount > 0 && $customer_wallet_amount <= $customer_order_average) {
+        if (isset($customer_wallet_amount) && $customer_wallet_amount <= $customer_order_average) {
             //then send mail to customer
             $data = $this->model_account_customer->getCustomerById($customer_id);
             $data = $data[0];
