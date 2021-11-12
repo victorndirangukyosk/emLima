@@ -369,9 +369,9 @@ $(document).ready(function() {
                                             <?php if($this->config->get('pezesha_status') && $this->customer->getCustomerPezeshaId() > 0 && $this->customer->getCustomerPezeshauuId() != NULL) { ?>
                                             <li role="presentation">
                                                     <?php if(strpos( $pezesha,$_SERVER["REQUEST_URI"]) !== false) { ?>
-                                                        <a href="<?php echo $pezesha; ?>" class="active">
+                                                        <a href="<?php echo $pezesha_loans; ?>" class="active">
                                                     <?php } else { ?>
-                                                        <a href="<?php echo $pezesha; ?>">
+                                                        <a href="<?php echo $pezesha_loans; ?>">
                                                     <?php } ?>
                                                     <i class="fa fa-bank"></i>Pezesha Loans</a>
                                             </li>
