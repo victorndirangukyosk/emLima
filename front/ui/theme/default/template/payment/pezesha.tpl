@@ -1,10 +1,13 @@
+<div class="alert alert-danger" id="error_msg" style="margin-bottom: 7px;"></div>
+<div class="alert alert-success" style="font-size: 14px;" id="success_msg" style="margin-bottom: 7px;"></div>
 <button type="button" id="button-pezesha-confirm" data-toggle="collapse" data-loading-text="<?= $text_loading ?>" class="btn btn-default"><?= $button_confirm?></button>
 
 <script type="text/javascript"><!--
 $('#button-pezesha-confirm').on('click', function() {
     
     //location = '<?php echo $continue; ?>';
-
+    $('#error_msg').hide();
+    $('#success_msg').hide();
     
     $('#loading').show();
 
@@ -35,6 +38,8 @@ $('#button-pezesha-confirm').on('click', function() {
            }
            
            if(!json.status) {
+           $('#error_msg').html(json.message);
+           $('#error_msg').show();    
            console.log(json);     
            }
 
