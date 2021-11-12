@@ -684,6 +684,25 @@ class ControllerCommonScheduler extends Controller {
         //    echo "<pre>";print_r($file);die;
     }
 
+    public function walletRunningLow() {
+         
+        $this->load->model('scheduler/dbupdates');
+        // $results = $this->model_sale_order->getOrders($filter_data);
+        $results = $this->model_scheduler_dbupdates->getWalletRunningLowCustomers();
+         
+        $log = new Log('error.log');
+        $log->write("Wallet Amount Running low");
+
+        // echo "<pre>";print_r($results);die;      
+        //   echo "<pre>";print_r($data);die;
+        if ($results != null) {
+            foreach ($results as $result) {
+                $log->write($result['customer_id']);
+                $this->model_scheduler_dbupdates->checkWalletRunningLow($result['customer_id']);
+                  
+            }
+        }
+    }
 
     
 }
