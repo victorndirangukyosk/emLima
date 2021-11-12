@@ -68,7 +68,7 @@ class ModelPaymentMpesa extends Model {
 
         $query = $this->db->query($sql);
 
-        $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $order_id . "', transaction_id = '" . $transaction_id . "'";
+        $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $order_id . "', transaction_id = '" . $transaction_id . "', created_at = NOW()";
 
         $query = $this->db->query($sql);
     }

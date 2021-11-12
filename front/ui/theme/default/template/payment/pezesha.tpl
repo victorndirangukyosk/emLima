@@ -26,16 +26,18 @@ $('#button-pezesha-confirm').on('click', function() {
         cache: false,
         beforeSend: function() {
                 $(".overlayed").show();
-                $('#button-confirm').button('loading');
+                $('#button-pezesha-confirm').button('loading');
         },
         complete: function() {
                 $(".overlayed").hide();
-                $('#button-confirm').button('reset');
+                $('#button-pezesha-confirm').button('reset');
                 $('#loading').hide();
         },      
         success: function(json) {
            console.log(json); 
            if(json.status) {
+           $(".overlayed").show();
+           $('#button-pezesha-confirm').button('loading');    
            location = '<?php echo $continue; ?>';
            }
            

@@ -387,7 +387,7 @@
                                 <?php if($min_order_amount_reached == TRUE) { ?>
                                 <div class="checkout-promocode-form"  >
                                  <div class="form-group">
-                                        <span class="input-group-btn" id="proceed_to_checkout"  onclick="setOrderNotes()">
+                                        <span class="input-group-btn" id="proceed_to_checkout"  onclick="setOrderNotes(); getpezeshalimit();">
                                             <a id="button-reward" href="#" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">Proceed to Check out
                                             </a>
                                         </span>
@@ -968,6 +968,18 @@ function setOrderNotes()
 {    
 var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
 document.cookie = "dropoff_notes="+dropoff_notes;
+}
+
+function getpezeshalimit() {
+$.ajax({
+            type: 'get',
+            url: 'index.php?path=payment/pezesha/loanoffers',
+            dataType: 'json',
+            cache: false,
+            success: function (json) {
+            }
+
+});
 }
 
 $(document).delegate('#proceed_to_checkout', 'click', function(e) {
