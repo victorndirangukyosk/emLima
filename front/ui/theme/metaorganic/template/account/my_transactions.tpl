@@ -129,6 +129,12 @@
                         <label><input class="option_pay" onchange="LoadInterSwitch()" type="radio" name="pay_with">Interswitch</label>
                     </div>
                 </div>//-->
+
+                 <div class="col-md-6">
+                    <div class="radio">
+                        <label><input class="option_pay" onchange="payWithWallet()" type="radio" name="pay_with">Wallet <text style="font-size:12px;font-weight:5px;"> - (<?php echo $this->currency->format($total_wallet_amount);?> )</p></label>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -140,6 +146,7 @@
         <input type="hidden" name="order_id" value="<?php echo $this->request->get['order_id'];?>">
         <input type="hidden" name="customer_id" value="<?php echo $_SESSION['customer_id'];?>">
         <input type="hidden" name="total_pending_amount" value="<?php echo $total_pending_amount;?>">
+        <input type="hidden" name="total_wallet_amount" value="<?php echo $total_wallet_amount;?>">
         <input type="hidden" name="pending_order_id" value="<?php echo $pending_order_id;?>">
         <input type="hidden" name="mpesa_checkout_request_id" id="mpesa_checkout_request_id" value="">
 
@@ -179,6 +186,11 @@
         
         <div id="pay-confirm-order-interswitch" class="col-md-9 confirm_order_class" style="display:none; padding:35px;">
         </div>
+
+        <div id="pay-confirm-order-wallet" class="col-md-9 confirm_order_class" style="display:none; padding:35px;">
+        </div>
+
+
     </div>                        
 </div>
 
@@ -493,6 +505,110 @@
         $("#pay-confirm-order").html('');
         $("#pay-confirm-order").hide();
         $("#pay-confirm-order-mpesa").show();
+    }
+
+
+    function payWithWallet() {
+
+
+   $("#pay-confirm-order").html('');
+        $("#pay-confirm-order").hide();
+        $("#pay-confirm-order-mpesa").hide();
+        //$("#pay-confirm-order-wallet").show();
+
+       var radioValue = $("input[name='pay_option']:checked").val();
+            var total_pending_amount = $("input[name='total_pending_amount']").val();
+            var total_wallet_amount = $("input[name='total_wallet_amount']").val();
+            console.log(total_pending_amount);
+
+            if (radioValue == 'pay_full') {
+
+                var val = $("input[name=pending_order_id]").val();
+            var total = $("input[name=total_pending_amount]").val();
+            if(total>total_wallet_amount)
+            {
+                    alert("Insufficient wallet balance.Please try other options");
+                    return false;
+            }
+            }else if (radioValue == 'pay_selected_order') {
+                
+            var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
+            console.log(checkedNum);
+            var val = [];
+            var amount = [];
+            if (!checkedNum) {
+                $(':checkbox:checked').each(function (i) {
+                    val[i] = $(this).data("id");
+                    amount[i] = $(this).data("amount");
+                });
+                console.log(val);
+                console.log(amount);
+                var total = 0;
+                for (var i = 0; i < amount.length; i++) {
+                    total += amount[i] << 0;
+                }
+                console.log(total);
+            }
+            if (val.length == 0 || amount.length == 0) {
+                $("input:radio").removeAttr("checked");
+                alert('Please select atleast one order!');
+                return false;
+            }
+            else
+            {
+                        if(total>total_wallet_amount)
+                    {
+                            alert("Insufficient wallet balance.Please try other options");
+                            return false;
+                
+                    }
+            }
+            } 
+
+            var walletDeductionConfirm = confirm("Are you sure to pay from wallet ?");
+            if (walletDeductionConfirm == true) {
+            
+                $.ajax({
+                url: 'index.php?path=account/transactions/wallet',
+                type: 'post',
+                data: {
+                    order_id: val,
+                    amount: total,
+                    payment_type: radioValue
+                },
+                dataType: 'json',
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                $('#pay-confirm-order-wallet').html('Loading Please Wait....');
+                },
+                complete: function () {
+                },
+                success: function (json) {
+                    console.log(json);
+                     if (json['error']) {
+                         alert(json['error']);
+                         return false;
+                     }
+                     else
+                     {
+                          alert(json['success']);
+                     }
+                    $('#pay-confirm-order-wallet').html('');
+                   
+                    location=location;
+                }, error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    return false;
+                }
+            });
+
+            } else {
+            //txt = "You pressed Cancel!";
+            //alert('');
+            }
+         
+
     }
     
     function payWithInterswitch() {
