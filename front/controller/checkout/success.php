@@ -216,16 +216,13 @@ class ControllerCheckoutSuccess extends Controller {
 
         #region
         //check wallet amount , either running low or not
-        // $results_wallet = $this->model_extension_extension->getExtensions('total');
-        // foreach ($results_wallet as $key => $value) {
-        // echo "<pre>";print_r('checkWalletRunningLow');
-
-        if ($this->config->get('wallet' . '_status')) { //$result['code']
-            $this->checkWalletRunningLow();
-            // echo "<pre>";print_r('sdfsdfsd');die;
-        }
-        // echo "<pre>";print_r('checkWalletRunningLowsdfsdf');die;
+        
+        //low wallet running mails are sending @9AM ,so commented here
+        // if ($this->config->get('wallet' . '_status')) { //$result['code']
+        //     $this->checkWalletRunningLow();
+        //     // echo "<pre>";print_r('sdfsdfsd');die;
         // }
+        
         #endregion 
         $data['button_continue'] = $this->language->get('button_continue');
 
