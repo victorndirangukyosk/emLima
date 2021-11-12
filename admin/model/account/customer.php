@@ -103,6 +103,13 @@ class ModelAccountCustomer extends Model {
         $this->trigger->fire('post.customer.edit', $customer_id);
     }
 
+
+    
+    public function getCustomerById($customer_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'");
+
+        return $query->rows;
+    }
     public function editPassword($email, $password) {
         $this->trigger->fire('pre.customer.edit.password');
 
