@@ -35,6 +35,7 @@ class ControllerProductStore extends Controller {
                 $data['order'] = $this->url->link('account/order', '', 'SSL');
                 $data['credit'] = $this->url->link('account/credit', '', 'SSL');
                 $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
+                $data['pezesha_loans'] = $this->url->link('account/pezeshaloans', '', 'SSL');
                 $data['download'] = $this->url->link('account/download', '', 'SSL');
                 $data['logout'] = $this->url->link('account/logout', '', 'SSL');
                 $data['shopping_cart'] = $this->url->link('checkout/cart');
@@ -1166,6 +1167,7 @@ class ControllerProductStore extends Controller {
                 $data['order'] = $this->url->link('account/order', '', 'SSL');
                 $data['credit'] = $this->url->link('account/credit', '', 'SSL');
                 $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
+                $data['pezesha_loans'] = $this->url->link('account/pezeshaloans', '', 'SSL');
                 $data['download'] = $this->url->link('account/download', '', 'SSL');
                 $data['logout'] = $this->url->link('account/logout', '', 'SSL');
                 $data['shopping_cart'] = $this->url->link('checkout/cart');
