@@ -112,7 +112,7 @@ class ControllerPaymentPezesha extends Controller {
         $this->loanoffers();
         if ('pezesha' == $this->session->data['payment_method']['code'] && $this->cart->getTotal() > $this->session->data['pezesha_customer_amount_limit']) {
             $json['status'] = false;
-            $json['message'] = 'Plese Check Your Pezesha Amount Limit!(' . $this->session->data['pezesha_amount_limit'] . ',' . $this->cart->getTotal() . ')';
+            $json['message'] = 'Plese Check Your Pezesha Amount Limit!(' . $this->session->data['pezesha_amount_limit'] . ')';
         }
         if ('pezesha' == $this->session->data['payment_method']['code'] && $this->cart->getTotal() <= $this->session->data['pezesha_customer_amount_limit']) {
             $log = new Log('error.log');
@@ -157,11 +157,15 @@ class ControllerPaymentPezesha extends Controller {
             $result = json_decode($result, true);
             $log->write($result);
             $json = $result;
+            $loan_type = strtoupper(str_replace(' ', '_', $result['message']));
+            $log->write('loan_type');
+            $log->write($loan_type);
+            $log->write('loan_type');
             //return $json;
             if ($result['status'] == 200 && $result['response_code'] == 0 && !$result['error']) {
                 foreach ($this->session->data['order_id'] as $key => $value) {
                     $order_id = $value;
-                    $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, $result['data']['loan_id']);
+                    $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, $result['data']['loan_id'], $loan_type);
                     $this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $this->customer->getId());
                     $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pezesha_order_status_id'), 'Paid With Pezesha', true, $this->customer->getId(), 'customer', '', 'Y');
                 }

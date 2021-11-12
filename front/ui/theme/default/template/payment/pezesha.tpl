@@ -2,7 +2,9 @@
 <div class="alert alert-success" style="font-size: 14px;" id="success_msg" style="margin-bottom: 7px;"></div>
 <button type="button" id="button-pezesha-confirm" data-toggle="collapse" data-loading-text="<?= $text_loading ?>" class="btn btn-default"><?= $button_confirm?></button>
 
-<script type="text/javascript"><!--
+<script type="text/javascript">
+$('#error_msg').hide();
+$('#success_msg').hide();
 $('#button-pezesha-confirm').on('click', function() {
     
     //location = '<?php echo $continue; ?>';
@@ -46,4 +48,4 @@ $('#button-pezesha-confirm').on('click', function() {
         }       
     });
 });
-//--></script> 
+</script> 

@@ -1424,8 +1424,12 @@ class ModelAccountCustomer extends Model {
         $this->db->query('INSERT INTO ' . DB_PREFIX . "password_resets SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', customer_id = '" . $customer_id . "', created_at = NOW()");
     }
 
-    public function SaveCustomerLoans($customer_id, $order_id, $loan_id) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_pezesha_loans SET customer_id = '" . (int) $customer_id . "', loan_id = '" . (int) $loan_id . "', order_id = '" . (int) $order_id . "', created_at = NOW()");
+    public function SaveCustomerLoans($customer_id, $order_id, $loan_id, $loan_type) {
+        $log = new Log('error.log');
+        $log->write('loan_type');
+        $log->write($loan_type);
+        $log->write('loan_type');
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_pezesha_loans SET customer_id = '" . (int) $customer_id . "', loan_id = '" . (int) $loan_id . "', order_id = '" . (int) $order_id . "', loan_type = '" . $loan_type . "', created_at = NOW()");
     }
 
 }
