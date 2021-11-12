@@ -1,11 +1,11 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Amount</th>
-            <th>Intesrest</th>
-            <th>Rate</th>
-            <th>Fee</th>
-            <th>Duration</th>
+            <th>Amount(KES)</th>
+            <th>Intesrest(KES)</th>
+            <th>Rate(%)</th>
+            <th>Fee(KES)</th>
+            <th>Duration(Days)</th>
         </tr>
     </thead>
     <tbody>
