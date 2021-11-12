@@ -156,11 +156,11 @@
             $('#loans_body').html('');
             for (var i = 0; i < displayRecords.length; i++) {
                 tr = $('<tr/>');
-                tr.append("<td class='order_id'>" + displayRecords[i].order_id + "</td>");
+                tr.append("<td class='order_id'>" + displayRecords[i].loan_id + "</td>");
                 tr.append("<td>" + displayRecords[i].order_id + "</td>");
-                tr.append("<td class='amount'>" + displayRecords[i].order_id + "</td>");
-                tr.append("<td class='amount'>" + displayRecords[i].order_id + "</td>");
-                tr.append("<td>" + displayRecords[i].order_id + "</td>");
+                tr.append("<td class='amount'>" + displayRecords[i].total + "</td>");
+                tr.append("<td class='amount'>" + displayRecords[i].loan_type + "</td>");
+                tr.append("<td>" + displayRecords[i].created_at + "</td>");
                 $('#loans_body').append(tr);
             }
         }
