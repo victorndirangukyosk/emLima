@@ -37,7 +37,9 @@ class ControllerAccountPezeshaloans extends Controller {
         ];
 
         $this->load->model('account/order');
-        $this->model_account_order->getPezeshaloans();
+        $pezesha_loans = $this->model_account_order->getPezeshaloans();
+        $log = new Log('error.log');
+        $log->write($pezesha_loans);
 
         $data['label_address'] = $this->language->get('label_address');
         $data['heading_title'] = $this->language->get('heading_title');
