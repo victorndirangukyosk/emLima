@@ -11,9 +11,9 @@
                         <tr>
                             <th>Loan ID</th>
                             <th class="order_id">Order ID</th>
-                            <th class="order_id">Order Date</th>
                             <th class="order_id">Order Total</th>
                             <th class="order_id">Loan Type</th>
+                            <th class="order_id">Order Date</th>
                         </tr>
                     </thead>
                     <tbody id="loans_body">
