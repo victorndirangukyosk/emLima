@@ -659,6 +659,7 @@
 
 					  <td class="text-left"><?php echo $column_model; ?></td>
 					  <td class="text-left"><?php echo $column_name; ?></td>
+                                          <td class="text-left">Product Notes</td>
 					  <td class="text-right"><?php echo trim($column_quantity,"( Ordered )!") ; ?></td>
 					  <td class="text-right"><?php echo $column_unit; ?></td>
 
@@ -726,7 +727,7 @@
 						<br>						
 							<?php echo $product['produce_type']; ?>
 						</td>
-					  
+					  <td class="text-left"><?php echo $product['product_note']; ?></td>
 					  <td class="text-right"><?php echo $product['quantity']; ?></td>
 						<td class="text-right"><?php echo $product['unit']; ?></td>
 
@@ -744,7 +745,7 @@
 
 							
 								<tr>
-									<td colspan="4"></td>
+									<td colspan="5"></td>
 									<td class="text-right"><b><?php echo $total['title']; ?>:</b></td>
 									<td class="text-right"><?php echo $total['text']; ?></td>
 									
@@ -795,7 +796,7 @@
 					<tr>
 						<td class="text-left"><?php echo $column_model; ?></td>
 					  <td class="text-left"><?php echo $column_name; ?></td>
-					  
+                                          <td class="text-left">Product Notes</td>
 					  <td class="text-right"><?php echo $column_quantity; ?></td>
 					  <td class="text-right"><?php echo $column_unit.'( Ordered )'; ?></td>
 
@@ -831,7 +832,7 @@
 							<?php echo $original_product['produce_type']; ?>
 							
 						</td>
-					  
+	                                  <td class="text-left"><?php echo $original_product['product_note']; ?></td>
 					  <td class="text-right"><?php echo $original_product['quantity']; ?></td>
 						<td class="text-right"><?php echo $original_product['unit']; ?></td>
 

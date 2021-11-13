@@ -4,7 +4,7 @@ class ControllerAmitruckAmitruck extends Controller {
 
     private $error = [];
 
-    public function createDelivery() {
+    public function createDelivery() { 
         $log = new Log('error.log');       
         $this->load->model('amitruck/amitruck');
         $this->load->model('sale/order');        
@@ -20,7 +20,7 @@ class ControllerAmitruckAmitruck extends Controller {
             $pickup_time = date("d/m/Y H:i", strtotime('+3 hours'));
             $payment_date = date("d/m/Y", strtotime('+5 days'));
 
-            $start_point = array('latitude' => '-1.2911133', 'longitude' => '36.7943673');
+            $start_point = array('latitude' => $this->config->get('config_store_latitude'), 'longitude' => $this->config->get('config_store_longitude'));
             $end_point = array('latitude' => $order_info['latitude'], 'longitude' => $order_info['longitude']);
             $stops = array($start_point, $end_point);
             // $vehicleCategories = array("OPEN");
@@ -54,6 +54,7 @@ class ControllerAmitruckAmitruck extends Controller {
             $log->write($result);
             curl_close($curl);
             $result = json_decode($result, true);
+            $result['token'] = $this->session->data['token'];
             $json = $result;
 
             if ($result['status'] == 200) {
@@ -67,12 +68,118 @@ class ControllerAmitruckAmitruck extends Controller {
         }
     }
 
+
+    public function createMultipleOrdersDelivery() { 
+        $log = new Log('error.log');       
+        $this->load->model('amitruck/amitruck');
+        $this->load->model('sale/order');        
+
+        $orders = [];
+
+
+
+        // if (isset($this->request->post['selected'])) {
+        //     $orders = $this->request->post['selected'];
+        // }
+        //  else
+         if (isset($this->request->post['order_id'])) {
+            $orders[] = $this->request->post['order_id'];
+            $data['order_id'] = $this->request->post['order_id'];
+        }
+
+            // echo "<pre>";print_r($orders);die;
+
+        $start_point = array('latitude' => $this->config->get('config_store_latitude'), 'longitude' => $this->config->get('config_store_longitude'));
+       
+        // $stops = array($start_point, $end_point);
+        $stops = array($start_point);
+        $log->write($orders);
+        $order_total=0;
+        foreach ($orders as $order_id) {
+
+
+            $log->write($order_id);
+            $log->write("$order_id");
+        $order_info = $this->model_sale_order->getOrder($order_id);
+       
+        if (is_array($order_info) && count($order_info) > 0 && $order_info['delivery_id'] == NULL) {
+        
+            $end_point = array('latitude' => $order_info['latitude'], 'longitude' => $order_info['longitude']);
+            // $stops = array($end_point);
+            $log->write($end_point);
+            $order_total.=$order_info['total'];
+
+            array_push($stops, $end_point);
+        }
+
+        }
+            // echo "<pre>";print_r($stops);die;
+
+
+         $log->write($stops);
+         
+       
+        if (is_array($stops) && count($stops) >1  ) {
+            //$log->write($order_info);
+
+            $response['status'] = false;
+            $pickup_time = date("d/m/Y H:i", strtotime('+3 hours'));
+            $payment_date = date("d/m/Y", strtotime('+5 days'));           
+            // $vehicleCategories = array("OPEN");
+            $vehicleCategories = array("CLOSED");
+
+            // $body = array('orderId' => $this->request->post['order_id'], 'stops' => $stops, 'vehicleType' => 1, 'vehicleCategories' => $vehicleCategories, 'paymentTerm' => 'PAY_LATER', 'declaredValueOfGoods' => $this->request->post['order_total'], 'pickUpDateAndTime' => $pickup_time, 'paymentDueDate' => $payment_date, "description" => "Household goods");
+            $body = array('orderId' => $this->request->post['order_id'], 'stops' => $stops, 'vehicleType' => 1, 'vehicleCategories' => $vehicleCategories, 'paymentTerm' => 'UPFRONT', 'declaredValueOfGoods' => $order_total, 'pickUpDateAndTime' => $pickup_time, 'customerRequestedPrice' => 200,'wantInsurance'=>true, "description" => "Household goods");
+             $log->write($body);
+            $body = json_encode($body);
+            //$log->write($body);
+            $curl = curl_init();
+            if(ENV=='production')
+            {
+                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/request');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
+               
+            }
+            else {
+                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/request');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
+                  
+            }
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            $result = curl_exec($curl);
+
+            //$log->write('createDelivery log');
+            $log->write($result);
+            curl_close($curl);
+            $result = json_decode($result, true);
+            $json = $result;
+
+            if ($result['status'] == 200) {//need to check these three methods
+                $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'CREATE_DELIVERY');
+                $this->model_amitruck_amitruck->addDeliveryStatus($this->request->post['order_id'], json_encode($json));
+                $this->model_amitruck_amitruck->updateOrderDelivery($this->request->post['order_id'], json_encode($json));
+            }
+            $result['token'] = $this->session->data['token'];
+
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
+    }
+
     public function getDriverLocation() {
         $json = array();
         $this->load->model('amitruck/amitruck');
         $this->load->model('sale/order');
-        $order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
-        if (is_array($order_info) && count($order_info) > 0 && $order_info['delivery_id'] != NULL) {
+            // echo "<pre>";print_r($this->request->post);die;
+        
+        // $order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
+        // if (is_array($order_info) && count($order_info) > 0 && $order_info['delivery_id'] != NULL) {
+        if ($this->request->post['delivery_id'] != NULL) {
             $log = new Log('error.log');
             //$log->write($order_info);
 
@@ -80,12 +187,12 @@ class ControllerAmitruckAmitruck extends Controller {
             
             if(ENV=='production')
             {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/driver_location?id=' . $order_info['delivery_id']);
+                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/driver_location?id=' . $this->request->post['delivery_id']);
                 curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
                
             }
             else {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/driver_location?id=' . $order_info['delivery_id']);
+                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/driver_location?id=' . $this->request->post['delivery_id']);
                 curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
                   
             }

@@ -1,9 +1,8 @@
 <?php
 
-class ControllerModuleAccount extends Controller
-{
-    public function index()
-    {
+class ControllerModuleAccount extends Controller {
+
+    public function index() {
         $this->load->language('module/account');
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -41,6 +40,8 @@ class ControllerModuleAccount extends Controller
         $data['reward'] = $this->url->link('account/reward', '', 'SSL');
         $data['return'] = $this->url->link('account/return', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
+        $data['pezesha_loans'] = $this->url->link('account/pezeshaloans', '', 'SSL');
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
 
@@ -53,10 +54,11 @@ class ControllerModuleAccount extends Controller
             $data['member_account'] = false;
         }
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/module/account.tpl')) {
-            return $this->load->view($this->config->get('config_template').'/template/module/account.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/account.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/module/account.tpl', $data);
         } else {
             return $this->load->view('default/template/module/account.tpl', $data);
         }
     }
+
 }

@@ -102,6 +102,51 @@ class ControllerVehiclesVehiclesList extends Controller {
         $this->getForm();
     }
 
+    public function addVehicle() {
+        $this->load->language('vehicles/vehicles');
+        $this->load->model('vehicles/vehicles'); 
+
+        $json = [];
+        $json['success']='';
+        $json['error']='';
+
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
+            $vehicle_id = $this->model_vehicles_vehicles->addVehicle($this->request->post);
+
+            //$this->session->data['success'] = $this->language->get('text_success');
+            $json['success'] = 'Success : Vehicle created successfully!';
+
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+            $json['token'] = $this->session->data['token'];
+            $data['token'] = $this->session->data['token'];
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'vehicle_id' => $vehicle_id,
+            ];
+            $log->write('vehicle add');
+
+            $this->model_user_user_activity->addActivity('vehicle_add', $activity_data);
+
+            $log->write('vehicle add');
+
+         }
+         elseif(!$this->validateForm()){
+            $json['error'] = 'Warning : Please fill all the data!';
+         }
+         else {
+            $json['error'] = 'Please try again.';
+         }
+
+        // $this->getForm();
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     protected function getList() {
         $this->load->language('vehicles/vehicles');
 

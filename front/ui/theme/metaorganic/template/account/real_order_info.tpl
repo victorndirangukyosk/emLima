@@ -38,6 +38,8 @@
                                                             <h3> <?php echo $product['name']; ?> </h3>
                                                             <p class="product-info"><span class="small-info"><?php echo $product['unit']; ?></span>
                                                             </p>
+                                                            <p class="product-info"><span class="small-info"><?php echo $product['product_note']; ?></span>
+                                                            </p>
                                                             <!-- <?php if($product['product_type'] == 'replacable') { ?>
                                                                 <span class="badge badge-success replacable"   data-value="replacable" data-toggle="tooltip" data-placement="left" title="<?= $text_replacable_title ?>">
                                                                  <?= $text_replacable ?>

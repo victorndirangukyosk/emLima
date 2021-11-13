@@ -252,6 +252,109 @@ class ControllerApiCustomers extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getDeliveryTimeSlots() {
+        $this->load->model('account/address');
+        $deliveryTimeslots = $this->model_account_address->getDeliveryTimeslots(75);
+        $json['status'] = 200;
+        $json['data'] = $deliveryTimeslots;
+
+        $json['msg'] = 'Delivery Time Slots Fetched Successfully';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getProducts($args = []) {
+        $args['limit'] = 50;
+        $args['store_id'] = 75;
+
+        if (isset($args['search'])) {
+            $search = $args['search'];
+        } else {
+            $search = '';
+        }
+
+        $this->load->language('api/products');
+
+        $json = [];
+
+        $this->load->model('api/products');
+
+        $product_data = [];
+
+        $results = $this->model_api_products->getProducts($args);
+
+        $product_total = $this->model_api_products->getTotalProducts($args);
+
+        $product_data['product_total'] = $product_total;
+        $product_data['products'] = [];
+
+        $product_data['categories'] = $this->model_api_products->getCategories(0);
+
+        if (!empty($results)) {
+            $this->load->model('tool/image');
+
+            foreach ($results as $result) {
+                $product = $this->model_api_products->getProduct($result['product_id'], $args['store_id']);
+
+                if (is_array($product) && count($product) > 0) {
+                    $product['name'] = html_entity_decode($product['name'], ENT_QUOTES, 'UTF-8');
+                    $product['description'] = html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8');
+
+                    $product['model'] = $result['model'];
+
+                    $currency_value = false;
+
+                    if (isset($args['currency_code'])) {
+                        $currency_code = $args['currency_code'];
+                    } else {
+                        $currency_code = $this->config->get('config_currency');
+                    }
+
+                    $product['nice_price'] = $this->currency->format($product['price'], $currency_code, $currency_value);
+
+                    if (0 == $product['special_price'] || 0.00 == $product['special_price'] || is_null($product['special_price'])) {
+                        $product['special_price'] = $product['price'];
+                        $product['nice_special_price'] = $this->currency->format($product['special_price'], $currency_code, $currency_value);
+                    } else {
+                        $product['nice_special_price'] = $this->currency->format($product['special_price'], $currency_code, $currency_value);
+                    }
+
+                    $images = [];
+                    $product['images'] = [];
+
+                    $thumb_width = $this->config->get('config_image_thumb_width', 300);
+                    $thumb_height = $this->config->get('config_image_thumb_height', 300);
+
+                    if (!empty($product['image'])) {
+                        $images[] = $this->model_tool_image->resize($product['image'], $thumb_width, $thumb_height);
+                    } else {
+                        $images[] = $this->model_tool_image->resize('placeholder.png', $thumb_width, $thumb_height);
+                    }
+                    unset($product['image']);
+
+                    $extra_images = $this->model_api_products->getProductImages($result['product_id']);
+
+                    if (!empty($extra_images)) {
+                        foreach ($extra_images as $extra_image) {
+                            $images[] = $this->model_tool_image->resize($extra_image['image'], $thumb_width, $thumb_height);
+                        }
+                    }
+
+                    foreach ($images as $image) {
+                        $product['images'][] = $image;
+                    }
+
+                    $product_data['products'][] = $product;
+                }
+            }
+        }
+
+        $json = $product_data;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function getAccountManagers($args = []) {
         try {
             $this->load->model('user/user');

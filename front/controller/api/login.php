@@ -33,6 +33,10 @@ class ControllerApiLogin extends Controller {
         $api_info = $this->model_account_api->login($this->request->post['username'], $this->request->post['password']);
         if ($api_info['user_id']) {
             $user_info = $this->model_user_user->getUser($api_info['user_id']);
+            $log = new Log('error.log');
+            $log->write('user_info');
+            $log->write($user_info);
+            $log->write('user_info');
         }
         // echo $this->request->post['username'], $this->request->post['password'];
 

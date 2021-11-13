@@ -328,6 +328,11 @@ class ModelAccountCustomer extends Model {
         return $query->row;
     }
 
+    public function getPezeshaCustomer($customer_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_id . "'");
+        return $query->row;
+    }
+
     public function getCustomerDeliverychargeFlag($customer_id) {
         $query = $this->db->query('SELECT delivery_charge FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'");
 
@@ -1345,7 +1350,7 @@ class ModelAccountCustomer extends Model {
     public function checkWalletRunningLow($customer_id) {
         //check the customer wallet and send mail, if wallet is low
         $query = $this->db->query('SELECT SUM(amount) AS total FROM `' . DB_PREFIX . "customer_credit` WHERE customer_id = '" . (int) $customer_id . "' GROUP BY customer_id");
-        $customer_wallet_amount = 0;
+        // $customer_wallet_amount = 0;
         $customer_order_average = 0;
         if ($query->num_rows) {
             $customer_wallet_amount = $query->row['total'];
@@ -1362,7 +1367,7 @@ class ModelAccountCustomer extends Model {
         $log->write($customer_wallet_amount);
         $log->write('Above wallet, below average order');
         $log->write($customer_order_average);
-        if ($customer_wallet_amount > 0 && $customer_wallet_amount <= $customer_order_average) {
+        if (isset($customer_wallet_amount) && $customer_wallet_amount <= $customer_order_average) {
             //then send mail to customer
             $data = $this->model_account_customer->getCustomerById($customer_id);
             $data = $data[0];
@@ -1417,6 +1422,14 @@ class ModelAccountCustomer extends Model {
         $this->db->query("SET time_zone='$tz';");
         /* TIME ZONE ISSUE */
         $this->db->query('INSERT INTO ' . DB_PREFIX . "password_resets SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', customer_id = '" . $customer_id . "', created_at = NOW()");
+    }
+
+    public function SaveCustomerLoans($customer_id, $order_id, $loan_id, $loan_type) {
+        $log = new Log('error.log');
+        $log->write('loan_type');
+        $log->write($loan_type);
+        $log->write('loan_type');
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_pezesha_loans SET customer_id = '" . (int) $customer_id . "', loan_id = '" . (int) $loan_id . "', order_id = '" . (int) $order_id . "', loan_type = '" . $loan_type . "', created_at = NOW()");
     }
 
 }

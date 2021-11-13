@@ -177,7 +177,7 @@ $(document).ready(function() {
                                     </a>
                                      </div>
 
-                                       <?php if($this->config->get('wallet' . '_status')){?>
+                                       <?php if($this->config->get('wallet' . '_status')) { ?>
                      <div class="butn setui" style="position:relative;z-index:-1000; padding-right:0px;">
                     <a href=<?= $wallet_url ?>>
                       <div class="btn mini-wallet-button" role="button"  
@@ -193,7 +193,7 @@ $(document).ready(function() {
                       </a>
                     </div>
 
-                  <?php }?>
+                  <?php } ?>
 
                                     </div>
                                     </div>
@@ -356,6 +356,26 @@ $(document).ready(function() {
                                                 </li>
                                             <?php } ?>
                                             
+                                            <?php if($this->config->get('pezesha_status') && $this->customer->getCustomerPezeshaId() > 0 && $this->customer->getCustomerPezeshauuId() != NULL) { ?>
+                                            <li role="presentation">
+                                                    <?php if(strpos( $pezesha,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                        <a href="<?php echo $pezesha; ?>" class="active">
+                                                    <?php } else { ?>
+                                                        <a href="<?php echo $pezesha; ?>">
+                                                    <?php } ?>
+                                                    <i class="fa fa-bank"></i>Pezesha</a>
+                                            </li>
+                                            <?php } ?>
+                                            <?php if($this->config->get('pezesha_status') && $this->customer->getCustomerPezeshaId() > 0 && $this->customer->getCustomerPezeshauuId() != NULL) { ?>
+                                            <li role="presentation">
+                                                    <?php if(strpos( $pezesha,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                        <a href="<?php echo $pezesha_loans; ?>" class="active">
+                                                    <?php } else { ?>
+                                                        <a href="<?php echo $pezesha_loans; ?>">
+                                                    <?php } ?>
+                                                    <i class="fa fa-bank"></i>Pezesha Loans</a>
+                                            </li>
+                                            <?php } ?>
                                             <!--<li role="presentation">
 
                                                 <?php if(strpos( $user_product_notes,$_SERVER["REQUEST_URI"]) !== false) { ?>

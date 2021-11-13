@@ -1,28 +1,27 @@
 <?php
 
-require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
+require_once DIR_SYSTEM . '/vendor/konduto/vendor/autoload.php';
 
 //require_once DIR_SYSTEM.'/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
-require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
+require_once DIR_SYSTEM . '/vendor/fcp-php/autoload.php';
 
-require DIR_SYSTEM.'vendor/Facebook/autoload.php';
+require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
 
-require_once DIR_APPLICATION.'/controller/api/settings.php';
+require_once DIR_APPLICATION . '/controller/api/settings.php';
 
-class ControllerAccountProfileInfo extends Controller
-{
+class ControllerAccountProfileInfo extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
+    public function index() {
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
         $data['redirect_coming'] = false;
 
-        $this->document->addStyle('/front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('/front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/profileinfo', '', 'SSL');
@@ -45,7 +44,7 @@ class ControllerAccountProfileInfo extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             ];
             $log = new Log('error.log');
             $log->write('account profileinfo');
@@ -127,6 +126,8 @@ class ControllerAccountProfileInfo extends Controller
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['return'] = $this->url->link('account/return', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
+        $data['pezesha_loans'] = $this->url->link('account/pezeshaloans', '', 'SSL');
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
@@ -209,15 +210,14 @@ class ControllerAccountProfileInfo extends Controller
         $data['text_cash'] = $this->language->get('text_cash');
 
         //echo "<pre>";print_r($data['telephone'] );die;
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/profileinfo.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/profileinfo.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/profileinfo.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/profileinfo.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/profileinfo.tpl', $data));
         }
     }
 
-    protected function validate()
-    {
+    protected function validate() {
         //print_r($this->request->post);die;
         $this->load->language('account/edit');
 
@@ -235,4 +235,5 @@ class ControllerAccountProfileInfo extends Controller
 
         return !$this->error;
     }
+
 }

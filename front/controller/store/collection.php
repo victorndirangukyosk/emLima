@@ -1,21 +1,19 @@
 <?php
 
-class ControllerStoreCollection extends Controller
-{
-    public function start()
-    {
+class ControllerStoreCollection extends Controller {
+
+    public function start() {
         $this->session->data['config_store_id'] = $this->request->post['store_id'];
 
         $json['status'] = 1;
         //$json['location'] =  $this->url->link('product/store');
 
-        $json['location'] = $this->url->link('product/store', 'store_id='.$this->session->data['config_store_id'].'');
+        $json['location'] = $this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . '');
 
         echo json_encode($json);
     }
 
-    public function getFacebookRedirectUrl()
-    {
+    public function getFacebookRedirectUrl() {
         $url = null;
         if (isset($this->request->get['category'])) {
             $url = $this->request->get['category'];
@@ -25,7 +23,7 @@ class ControllerStoreCollection extends Controller
             if (false !== ($pos = strpos($this->request->get['redirect_url'], 'path='))) {
                 $redirectPath = substr($this->request->get['redirect_url'], $pos + 5);
                 if ($url) {
-                    $redirectPath .= '&category='.$url;
+                    $redirectPath .= '&category=' . $url;
                 }
                 $this->session->data['redirect'] = $this->url->link($redirectPath);
             } else {
@@ -33,14 +31,14 @@ class ControllerStoreCollection extends Controller
             }
         }
 
-        require DIR_SYSTEM.'vendor/Facebook/autoload.php';
+        require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
 
         $fb = new Facebook\Facebook([
             'app_id' => !empty($this->config->get('config_fb_app_id')) ? $this->config->get('config_fb_app_id') : 'randomstringforappid',
             'app_secret' => !empty($this->config->get('config_fb_secret')) ? $this->config->get('config_fb_secret') : 'randomstringforappsecret',
             'default_graph_version' => 'v2.5',
-            //'default_access_token' => $this->request->get['code']//'5ce6c3df96acc19c6215f2ac62d3480e', // optional
-            ]);
+                //'default_access_token' => $this->request->get['code']//'5ce6c3df96acc19c6215f2ac62d3480e', // optional
+        ]);
 
         $helper = $fb->getRedirectLoginHelper();
 
@@ -50,13 +48,12 @@ class ControllerStoreCollection extends Controller
             $server = $this->config->get('config_url');
         }
 
-        $json['facebook'] = $helper->getLoginUrl($server.'index.php?path=account/facebook', ['email']);
+        $json['facebook'] = $helper->getLoginUrl($server . 'index.php?path=account/facebook', ['email']);
 
         echo json_encode($json);
     }
 
-    public function find_store()
-    {
+    public function find_store() {
         $html = '';
         $this->load->language('information/locations');
         if (isset($this->request->get['filter_name'])) {
@@ -101,15 +98,14 @@ class ControllerStoreCollection extends Controller
 
             $this->session->data['config_store_id'] = $stores['store_id'];
 
-            $html['redirect_url'] = $this->url->link('product/store&store_id='.$stores['store_id'].'');
+            $html['redirect_url'] = $this->url->link('product/store&store_id=' . $stores['store_id'] . '');
         } else {
             $html['store'] = false;
         }
         echo json_encode($html);
     }
 
-    public function index()
-    {
+    public function index() {
         unset($this->session->data['config_store_id']);
 
         unset($_COOKIE['zipcode']);
@@ -148,20 +144,20 @@ class ControllerStoreCollection extends Controller
 
         $log->write($this->session->data['language']);
 
-        /*if(count($_COOKIE) > 0 && isset($_COOKIE['zipcode'])) {
-            $this->response->redirect($this->url->link('information/locations/stores', 'zipcode=' . $_COOKIE['zipcode']));
-        }
+        /* if(count($_COOKIE) > 0 && isset($_COOKIE['zipcode'])) {
+          $this->response->redirect($this->url->link('information/locations/stores', 'zipcode=' . $_COOKIE['zipcode']));
+          }
 
-        if(count($_COOKIE) > 0 && isset($_COOKIE['location'])) {
-            $this->response->redirect($this->url->link('information/locations/stores', 'location=' . $_COOKIE['location']));
-        }
+          if(count($_COOKIE) > 0 && isset($_COOKIE['location'])) {
+          $this->response->redirect($this->url->link('information/locations/stores', 'location=' . $_COOKIE['location']));
+          }
 
 
-        if(isset($this->session->data['config_store_id'])){
-            //$this->response->redirect($this->url->link('product/store'));
+          if(isset($this->session->data['config_store_id'])){
+          //$this->response->redirect($this->url->link('product/store'));
 
-            $this->response->redirect($this->url->link('product/store','store_id='.$this->session->data['config_store_id'].''));
-        }*/
+          $this->response->redirect($this->url->link('product/store','store_id='.$this->session->data['config_store_id'].''));
+          } */
 
         $data['telephone_mask'] = $this->config->get('config_telephone_mask');
 
@@ -184,7 +180,7 @@ class ControllerStoreCollection extends Controller
 
         //echo "<pre>";print_r($blocks);die;
         foreach ($blocks as $block) {
-            if (is_file(DIR_IMAGE.$block['image'])) {
+            if (is_file(DIR_IMAGE . $block['image'])) {
                 $image = $this->model_tool_image->resize($block['image'], 290, 163);
             } else {
                 $image = $this->model_tool_image->resize('no_image.png', 290, 163);
@@ -328,6 +324,8 @@ class ControllerStoreCollection extends Controller
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['order'] = $this->url->link('account/order', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
+        $data['pezesha_loans'] = $this->url->link('account/pezeshaloans', '', 'SSL');
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['shopping_cart'] = $this->url->link('checkout/cart');
@@ -361,15 +359,15 @@ class ControllerStoreCollection extends Controller
             $server = $this->config->get('config_url');
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_icon'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
             //$data['icon'] = $server . 'image/' . $this->config->get('config_icon');
             $data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 100, 100);
         } else {
             $data['icon'] = '';
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_fav_icon'))) {
-            $data['fav_icon'] = $server.'image/'.$this->config->get('config_fav_icon');
+        if (is_file(DIR_IMAGE . $this->config->get('config_fav_icon'))) {
+            $data['fav_icon'] = $server . 'image/' . $this->config->get('config_fav_icon');
         } else {
             $data['fav_icon'] = '';
         }
@@ -379,7 +377,7 @@ class ControllerStoreCollection extends Controller
 
         //echo "<pre>";print_r($store_group_data);die;
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             //$data['logo'] = $server . 'image/'. $this->config->get('config_logo');
             $data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 197, 34);
         } else {
@@ -387,7 +385,7 @@ class ControllerStoreCollection extends Controller
             $data['logo'] = $this->model_tool_image->resize('no_image.png', 100, 100);
         }
 
-        if (is_file(DIR_IMAGE.$this->config->get('config_white_logo'))) {
+        if (is_file(DIR_IMAGE . $this->config->get('config_white_logo'))) {
             //$data['white_logo'] = $server . 'image/'. $this->config->get('config_white_logo');
             $data['white_logo'] = $this->model_tool_image->resize($this->config->get('config_white_logo'), 197, 34);
         } else {
@@ -395,7 +393,7 @@ class ControllerStoreCollection extends Controller
             $data['white_logo'] = $this->model_tool_image->resize('no_image.png', 100, 100);
         }
 
-        if (count($store_group_data) > 0 && is_file(DIR_IMAGE.$store_group_data['logo'])) {
+        if (count($store_group_data) > 0 && is_file(DIR_IMAGE . $store_group_data['logo'])) {
             //$data['store_collection_logo'] = $server . 'image/'. $store_group_data['logo'];
             $data['store_collection_logo'] = $this->model_tool_image->resize($store_group_data['logo'], 100, 100);
         } else {
@@ -409,7 +407,7 @@ class ControllerStoreCollection extends Controller
             $data['store_collection_name'] = '';
         }
 
-        $data['store_heading_title'] = $data['store_collection_name'].' - '.$data['heading_title'];
+        $data['store_heading_title'] = $data['store_collection_name'] . ' - ' . $data['heading_title'];
 
         if (isset($this->session->data['warning'])) {
             $data['warning'] = $this->session->data['warning'];
@@ -432,7 +430,7 @@ class ControllerStoreCollection extends Controller
 
         foreach ($rows as $row) {
             if (false === strpos($row['link'], '://')) {
-                $row['link'] = 'http://'.$row['link'];
+                $row['link'] = 'http://' . $row['link'];
             }
             $row['image'] = $this->model_tool_image->resize($row['image'], 300, 300);
             $data['banners'][] = $row;
@@ -455,15 +453,14 @@ class ControllerStoreCollection extends Controller
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/store_collection.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/common/store_collection.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/store_collection.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/store_collection.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/common/store_collection.tpl', $data));
         }
     }
 
-    public function toHome()
-    {
+    public function toHome() {
         unset($this->session->data['config_store_id']);
 
         setcookie('zipcode', null, time() - 3600, '/');
@@ -479,27 +476,25 @@ class ControllerStoreCollection extends Controller
         $this->response->redirect($server);
     }
 
-    public function toStore()
-    {
+    public function toStore() {
         unset($this->session->data['config_store_id']);
         $this->cart->clear();
         $this->response->redirect($this->url->link('common/home/index'));
     }
 
-    public function getZipcode($address)
-    {
+    public function getZipcode($address) {
         if (!empty($address)) {
             //Formatted address
             $formattedAddr = str_replace(' ', '+', $address);
             //Send request and receive json data by address
 
-            $url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
+            $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . $formattedAddr . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
 
             $headers = [
-                     'Cache-Control: no-cache',
-                    ];
+                'Cache-Control: no-cache',
+            ];
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -515,13 +510,13 @@ class ControllerStoreCollection extends Controller
             $latitude = $output1->results[0]->geometry->location->lat;
             $longitude = $output1->results[0]->geometry->location->lng;
 
-            $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$latitude.','.$longitude.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
+            $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' . $latitude . ',' . $longitude . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
 
             $headers = [
-                     'Cache-Control: no-cache',
-                    ];
+                'Cache-Control: no-cache',
+            ];
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
 
@@ -550,4 +545,5 @@ class ControllerStoreCollection extends Controller
             return false;
         }
     }
+
 }

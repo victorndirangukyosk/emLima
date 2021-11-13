@@ -130,6 +130,8 @@ class Controlleraccounttransactions extends Controller {
         $data['download'] = $this->url->link('account/download', '', 'SSL');
         $data['return'] = $this->url->link('account/return', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
+        $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
+        $data['pezesha_loans'] = $this->url->link('account/pezeshaloans', '', 'SSL');
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
@@ -217,7 +219,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch','Wallet Payment'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Wallet Payment'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -229,12 +231,13 @@ class Controlleraccounttransactions extends Controller {
         $data['cancelled_transactions'] = [];
         //echo "<pre>";print_r($results_orders);die;
         $totalPendingAmount = 0;
+        $totalWalletAmount = 0;
         if (count($results_orders) > 0) {
             foreach ($results_orders as $order) {
                 $this->load->model('sale/order');
                 $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                 if (in_array($order['payment_method'], $PaymentFilter)) {
-                //  echo "<pre>";print_r($order);die;
+                    //  echo "<pre>";print_r($order);die;
 
                     if (!empty($order['transcation_id']) && !in_array($order['status'], $statusCancelledFilter)) {
                         //if(in_array($order['status'],$statusSucessFilter) && !empty($order['transcation_id'])){
@@ -249,8 +252,13 @@ class Controlleraccounttransactions extends Controller {
                 }
             }
         }
+        $this->load->model('account/credit');
+        $totalWalletAmount = $this->model_account_credit->getTotalAmount();
         //  echo "<pre>";print_r($data['success_transactions']);die;
         $data['total_pending_amount'] = $totalPendingAmount;
+        $data['total_wallet_amount'] = $totalWalletAmount;
+        // $data['total_wallet_amount'] = $this->currency->format($totalWalletAmount);
+
         $data['pending_order_id'] = implode('--', $data['pending_order_id']);
         $data['payment_interswitch'] = $this->load->controller('payment/interswitch');
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/my_transactions.tpl')) {
@@ -287,7 +295,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch','Wallet Payment'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Wallet Payment'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -296,6 +304,7 @@ class Controlleraccounttransactions extends Controller {
         $data['cancelled_transactions'] = [];
         //echo "<pre>";print_r($results_orders);die;
         $totalPendingAmount = 0;
+        $totalWalletAmount = 0;
         if (count($results_orders) > 0) {
             foreach ($results_orders as $order) {
                 $this->load->model('sale/order');
@@ -325,12 +334,9 @@ class Controlleraccounttransactions extends Controller {
                           $log->write($order['total']);
                           $log->write('NON NUMERIC'); */
 
-                        if ($order['pending_amount'] > 0)
-                        {
+                        if ($order['pending_amount'] > 0) {
                             $totalPendingAmount = $totalPendingAmount + $order['pending_amount'];
-                        }
-                        else
-                        {
+                        } else {
                             $totalPendingAmount = $totalPendingAmount + $order['value'];
                         }
 
@@ -341,8 +347,12 @@ class Controlleraccounttransactions extends Controller {
                 }
             }
         }
+        $this->load->model('account/credit');
+        $totalWalletAmount = $this->model_account_credit->getTotalAmount();
+
         //echo "<pre>";print_r($data);die;
         $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
+        $data['total_wallet_amount'] = $this->currency->format($totalWalletAmount);
         $data['pending_order_id'] = implode('--', $data['pending_order_id']);
         $pay_other_amount = $this->model_payment_pesapal->getPesapalOtherAmount($this->customer->getId());
         $data['success_transactions_pay_other_amount'] = $pay_other_amount;
@@ -357,7 +367,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch','Wallet Payment'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Wallet Payment'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -366,6 +376,7 @@ class Controlleraccounttransactions extends Controller {
         $data['cancelled_transactions'] = [];
         //echo "<pre>";print_r($results_orders);die;
         $totalPendingAmount = 0;
+        $totalWalletAmount = 0;
         if (count($results_orders) > 0) {
             foreach ($results_orders as $order) {
                 $this->load->model('sale/order');
@@ -386,8 +397,12 @@ class Controlleraccounttransactions extends Controller {
                 }
             }
         }
+        $this->load->model('account/credit');
+        $totalWalletAmount = $this->model_account_credit->getTotalAmount();
+
         //echo "<pre>";print_r($data);die;
         $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
+        $data['total_wallet_amount'] = $this->currency->format($totalWalletAmount);
         $data['pending_order_id'] = implode('--', $data['pending_order_id']);
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
@@ -400,7 +415,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch','Wallet Payment'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Wallet Payment'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -409,6 +424,7 @@ class Controlleraccounttransactions extends Controller {
         $data['cancelled_transactions'] = [];
         //echo "<pre>";print_r($results_orders);die;
         $totalPendingAmount = 0;
+        $totalWalletAmount = 0;
         if (count($results_orders) > 0) {
             foreach ($results_orders as $order) {
                 $this->load->model('sale/order');
@@ -429,8 +445,11 @@ class Controlleraccounttransactions extends Controller {
                 }
             }
         }
+        $this->load->model('account/credit');
+        $totalWalletAmount = $this->model_account_credit->getTotalAmount();
         //echo "<pre>";print_r($data);die;
         $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
+        $data['total_wallet_amount'] = $this->currency->format($totalWalletAmount);
         $data['pending_order_id'] = implode('--', $data['pending_order_id']);
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
@@ -900,6 +919,56 @@ class Controlleraccounttransactions extends Controller {
             }
         }
         echo $status;
+    }
+
+    public function wallet() {
+        $json = [];
+        $json['success'] = "";
+        $json['error'] = "";
+        try {
+            $this->load->model('payment/wallet');
+            $this->load->model('checkout/order');
+
+            if ($this->request->post['payment_type'] == 'pay_full') {
+                $this->request->post['order_id'] = explode('--', $this->request->post['order_id']);
+            }
+            $log = new Log('error.log');
+            $log->write('Transaction screen-Wallet deduction for orders ');
+            // echo '<pre>';print_r($this->request->post['order_id']);exit;
+            //wallet amount check is doing in tpl screen itself
+            foreach ($this->request->post['order_id'] as $key => $value) {
+                $log->write($value);
+                $order_id = $value;
+                $amount = 0;
+                $order_info = $this->model_checkout_order->getOrder($value);
+                if (count($order_info) > 0) {
+                    $amount = ($order_info['total'] - $order_info['amount_partialy_paid']);
+                }
+
+                $this->model_payment_wallet->addTransactionCredit($this->customer->getId(), 'Wallet Amount Deduction #' . $order_id . ' ', $amount, $order_id);
+
+                // Add to activity log
+                $this->load->model('account/activity');
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                ];
+
+                $this->model_account_activity->addActivity('login', $activity_data);
+            }
+            $json['success'] = "Transactions successfully updated!";
+        } catch (exception $ex) {
+            $json['error'] = "Transaction Failed";
+            $log = new Log('error.log');
+            $log->write('Transaction screen-Wallet deduction for orders ');
+            $log->write($ex);
+        } finally {
+
+
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
     }
 
 }

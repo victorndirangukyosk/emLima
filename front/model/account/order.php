@@ -469,6 +469,7 @@ class ModelAccountOrder extends Model {
                 'driver_id' => $order_query->row['driver_id'],
                 'vehicle_number' => $order_query->row['vehicle_number'],
                 'delivery_executive_id' => $order_query->row['delivery_executive_id'],
+                'paid' => $order_query->row['paid'],
             ];
         } else {
             return false;
@@ -1781,6 +1782,11 @@ class ModelAccountOrder extends Model {
         } else {
             return 0;
         }
+    }
+
+    public function getPezeshaloans() {
+        $pezesha_loans = $this->db->query('SELECT p.loan_id,p.order_id,p.customer_id,o.total,p.loan_type,p.created_at FROM ' . DB_PREFIX . "customer_pezesha_loans p join " . DB_PREFIX . "order o on p.order_id = o.order_id WHERE p.customer_id = " . $this->customer->getId());
+        return $pezesha_loans->rows;
     }
 
 }

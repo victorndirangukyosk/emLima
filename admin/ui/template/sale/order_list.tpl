@@ -230,6 +230,23 @@
                 </div>
                 <form method="post" enctype="multipart/form-data" target="_blank" id="form-order">
                     <div class="table-responsive">
+
+                       <?php if ($this->user->hasPermission('access', 'amitruck/amitruckquotes'))    { ?>
+                     <div class="btn-group" >                            
+                         <div class="row">
+                             <div class="col-sm-8">
+                                        <input disabled type="text" name="order_delivery_count" value="" placeholder="No Order Selected" id="input-grand-total" class="form-control" />
+                             </div>  
+                             <div class="col-sm-2">
+                                    <button type="button" id="button-bulkdeliveryrequest" class="btn btn-primary" onclick="createDeliveryRequest()"  data-toggle="modal" data-dismiss="modal" data-target="" title="Request Delivery">  Request Bulk Delivery</button>
+                             </div>    
+                         </div>                             
+                            
+                      </div>
+                       <?php } ?>
+                      <br>
+                      <br>
+
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -321,6 +338,8 @@
                                         <input type="checkbox" name="selected[]" value="<?php echo $order['order_id']; ?>" />
                                         <?php } ?>
                                         <input type="hidden" name="shipping_code[]" value="<?php echo $order['shipping_code']; ?>" />
+                                        <input type="hidden" name="order_status1[]" value="<?php echo $order['order_status_id']; ?>" />
+                                        <input type="hidden" name="order_delivery_ids[]" value="<?php echo $order['delivery_id']; ?>" />
                                     </td>
                                     <td class="text-left"><?php echo $order['order_prefix'].''.$order['order_id']; ?></td>
                                     <?php if (!$this->user->isVendor()): ?>
@@ -436,7 +455,7 @@
                                        </a> 
                                         <?php } ?>-->
                                         
-                                        <?php if ($order['delivery_id'] == NULL && ($this->user->hasPermission('access', 'amitruck/amitruckquotes')) )   { ?>
+                                        <?php if ($order['delivery_id'] == NULL && ($order['order_status_id'] == 1 ) && ($this->user->hasPermission('access', 'amitruck/amitruckquotes')) )   { ?>
                                        <a href="#" target="_blank" data-toggle="tooltip" title="Amitruck" data-orderid="<?= $order['order_id'] ?>" data-ordertotal="<?= $order['sub_total_custom'] ?>" id="assign_to_amitruck">
                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
                                         </a>
@@ -737,21 +756,54 @@
 
             $('#button-shipping, #button-invoice').prop('disabled', true);
             $('#button-invoice-pdf').prop('disabled', true);
+              $('#button-bulkdeliveryrequest').prop('disabled', true);
 
             var selected = $('input[name^=\'selected\']:checked');
+            $('input[name=\'order_delivery_count\']').val('');
+
 
             if (selected.length) {
                 $('#button-invoice').prop('disabled', false);
                 $('#button-invoice-pdf').prop('disabled', false);
-            }
+                  $('#button-bulkdeliveryrequest').prop('disabled', false);   
+             $('input[name=\'order_delivery_count\']').val((selected.length)+' -orders selected');
 
+            }
+                    
             for (i = 0; i < selected.length; i++) {
+
+                
                 if ($(selected[i]).parent().find('input[name^=\'shipping_code\']').val()) {
                     $('#button-shipping').prop('disabled', false);
 
-                    break;
+                   // break; break is commented to continue iteration for other checks
                 }
+                 //alert($(selected[i]).parent().find('input[name^=\'order_status1\']').val());
+                $selected_order_status=$(selected[i]).parent().find('input[name^=\'order_status1\']').val();
+                $selected_order_delivery_id=$(selected[i]).parent().find('input[name^=\'order_delivery_ids\']').val();
+                
+                //alert($selected_order_delivery_id);
+               
+                   if (($selected_order_status!=1 ) ) {//&& $selected_order_status!=4
+                    
+                    $('#button-bulkdeliveryrequest').prop('disabled', true);
+                   $('input[name=\'order_delivery_count\']').val('one or few orders not eligible');
+
+                   
+                }
+                else if($selected_order_delivery_id != ''  )
+                {
+                      $('#button-bulkdeliveryrequest').prop('disabled', true);
+                   $('input[name=\'order_delivery_count\']').val('one or few orders not eligible');
+
+                }
+                
+               
             }
+            
+            
+               
+                
 
         });
 
@@ -919,15 +971,26 @@
                                                 <div class="form-group">
                                                     <label> Vehicle Number </label>
 
-                                                    <div class="col-md-12">
+  
+                                                        
+                                   
+                                   
+                                    
+                                   
+                                                    <div class="col-md-12" >
+
+                                                      <div class="pull-right">
+                                                        <button id="new-vehicle-button" name="new-vehicle-button" type="button" data-toggle="modal" data-dismiss="modal" title="add new vehicle" data-target="#vehicleModal" class="btn btn-lg btn-success"><i class="fa fa-plus"></i></button>
+                                                        </div>  
+
                                                         <!--<input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>-->
-                                                    <select name="order_vehicle_number" id="order_vehicle_number" class="form-control" required="">
+                                                    <div style="width:88%;margin-right:10px;" ><select  name="order_vehicle_number" id="order_vehicle_number" class="form-control" required="">
                                                         <option value="0">Select Vehicle</option>
                                                         <?php foreach ($vehicles as $vehicle) { ?>
                                                         <option value="<?php echo $vehicle['name']; ?>"><?php echo $vehicle['name']; ?></option>
                                                         <?php } ?>    
-                                                        </select>
-
+                                                        </select> </div>
+                                                       
                                                     <br/> </div>
                                                 </div>
                                             </div>
@@ -1084,6 +1147,138 @@
                             </div>
                         </div>
                     </div> <!-- /.modal -->
+
+
+ <!---modal popup--->
+                    <div class="phoneModal-popup">
+        <div class="modal fade" id="vehicleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"  >
+                    <div class="modal-body"  style="height:525px;">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <div class="store-find-block">
+                            <div class="mydivsss">
+                                <div class="store-find">
+                                    <div class="store-head">
+                                        <h2>  Save Vehicle     </h2>
+                                          </br> 
+                                    </div>
+                                    <div id="vehicleModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                    </div>
+                                    <div id="vehicleModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                    </div>  
+                                      </br>
+                                    <!-- Text input-->
+                                    <div class="store-form">
+                                        <form id="vehicleModal-form" action="" method="post" enctype="multipart/form-data">
+ 
+
+                                            
+                                            
+
+                                             <div class="form-group required col-md-12">
+                        <label class="col-sm-4 control-label" for="input-make"><?php echo $entry_make; ?></label>
+                        <div class="col-sm-8">
+                          <input type="text" name="make" value="<?php echo $make; ?>" placeholder="<?php echo $entry_make; ?>" id="input-make" class="form-control" />
+                          <?php if ($error_make) { ?>
+                          <div class="text-danger"><?php echo $error_make; ?></div>
+                          <?php } ?>
+                        </div>
+                      </div>
+                      <br>
+
+                      <div class="form-group required col-md-12">
+                        <label class="col-sm-4 control-label" for="input-model"><?php echo $entry_model; ?></label>
+                        <div class="col-sm-8">
+                          <input type="text" name="model" value="<?php echo $model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
+                          <?php if ($error_model) { ?>
+                          <div class="text-danger"><?php echo $error_model; ?></div>
+                          <?php } ?>
+                        </div>
+                      </div>
+                      <br>
+
+                      <div class="form-group required col-md-12">
+                        <label class="col-sm-4 control-label" for="input-registration-number"><?php echo $entry_registration_number; ?></label>
+                        <div class="col-sm-8">
+                          <input type="text" name="registration_number" value="<?php echo $registration_number; ?>" placeholder="<?php echo $entry_registration_number; ?>" id="input-registration-number" class="form-control" />
+                          <?php if ($error_registration_number) { ?>
+                          <div class="text-danger"><?php echo $error_registration_number; ?></div>
+                          <?php  } ?>
+                        </div>
+                      </div>
+                      <br>
+
+                      <div class="form-group required col-md-12">
+                        <label class="col-sm-4 control-label" for="input-registration-date"><?php echo $entry_registration_date; ?></label>
+                        <div class="col-sm-8">
+                          <div class="input-group date">  
+                          <input type="text" name="registration_date" value="<?php echo $registration_date; ?>" placeholder="<?php echo $entry_registration_date; ?>" id="input-registration-date" data-date-format="YYYY-MM-DD" class="form-control" />
+                          <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                </span></div>
+                          <?php if ($error_registration_date) { ?>
+                          <div class="text-danger"><?php echo $error_registration_date; ?></div>
+                          <?php  } ?>
+                        </div>
+                      </div>
+                      <br>
+
+                      <div class="form-group required col-md-12">
+                        <label class="col-sm-4 control-label" for="input-registration-validity-upto"><?php echo $entry_registration_validity_upto; ?></label>
+                        <div class="col-sm-8">
+                            <div class="input-group date">
+                                <input type="text" name="registration_validity_upto" value="<?php echo $registration_validity_upto; ?>" placeholder="<?php echo $entry_registration_validity_upto; ?>" data-date-format="YYYY-MM-DD" id="registration_validity_upto" class="form-control" />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                </span></div>
+                        <?php if ($error_registration_validity_upto) { ?>
+                          <div class="text-danger"><?php echo $error_registration_validity_upto; ?></div>
+                        <?php  } ?>
+                        </div>
+                      </div>
+                      <!-- start -->
+                      
+
+                      <!-- end -->
+                      <div class="form-group col-md-12">
+                        <label class="col-sm-4 control-label" for="input-status"><?php echo $entry_status; ?></label>
+                        <div class="col-md-8" style="max-width: 250px">
+                          <select name="status" id="input-status" class="form-control">
+                            <?php if (!($status)) { ?>
+                            <option value="1" selected="selected">Enabled</option>
+                            <option value="0">Disabled</option>
+                            <?php } else { ?>
+                            <option value="1">Enabled</option>
+                            <option value="0" selected="selected">Disabled</option>
+                            <?php } ?>
+                          </select>
+                        </div>
+                      </div>
+
+                       <div class="form-group">
+                                                    <div class="col-md-6"> 
+                                                        <button type="button" id="vehicle-buttons" name="vehicle-buttons" onclick="savevehicledetails()" class="btn btn-lg btn-success"  style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
+                                                    </div>
+                                                    <div class="col-md-6"> 
+                                                        <button id="vehicle-button" name="vehicle-button" onclick="closevehicledetails()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+                                                    </div>
+                                                </div>
+
+                                        </form>
+                                    </div>  
+                                </div>
+                            </div>
+                           
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--modal popup-->
 <script  type="text/javascript">
 
 $('a[id^=\'assign_to_amitruck\']').on('click', function (e) {
@@ -1670,7 +1865,7 @@ var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selec
 
  $('select[name="order_delivery_executives"]').selectpicker('val', 0);
  $('select[name="order_drivers"]').selectpicker('val', 0);
- $('input[name="order_vehicle_number"]').val('');
+ //$('input[name="order_vehicle_number"]').val('');
   $('#div_deliverycharge').hide();
  if(order_vendor=='Kwik Basket')
  { 
@@ -1823,6 +2018,12 @@ function downloadOrdersonsolidated() {
 
             if (filter_order_id != '*' && filter_order_id != '') {
                 url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
+            }
+            
+            var filter_delivery_time_slot = $('input[name=\'filter_delivery_time_slot\']').val();
+
+            if (filter_delivery_time_slot != '') {
+                url += '&filter_delivery_time_slot=' + encodeURIComponent(filter_delivery_time_slot);
             }
             
             var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
@@ -2013,6 +2214,143 @@ function validateFloatKeyPresswithVarient(el, evt, unitvarient) {
 $('a.customer_verified').bind("click", function (e) {
 e.preventDefault();
 });
+
+ 
+function savevehicledetails() { 
+ 
+    $('#vehicleModal-message').html('');
+    $('#vehicleModal-success-message').html('');
+   var optionText = $('input[name="registration_number"]').val();
+   var vehicle_enabled = $('select[name="status"]').val();
+     //console.log(optionText);
+    //console.log(vehicle_enabled); 
+    console.log($('#vehicleModal-form').serialize());
+ 
+                //if (isNaN(delivery_executive_id) || isNaN(order_id) || isNaN(driver_id) || driver_id  <= 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == ''|| delivery_executive_id == '0' || driver_id == '0' || vehicle_number == '0' ) {
+
+                   
+                   //   $('#driverModal-message').html("Please enter data");
+                   //    return false;
+               // } 
+                //else
+                {
+                //return;
+                //var clicked_orderid = order_id;
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                $.ajax({
+		url: 'index.php?path=vehicles/vehicles_list/addVehicle&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		 data:$('#vehicleModal-form').serialize(),
+		beforeSend: function() {
+                // setting a timeout
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                },
+                success: function(json) {	 
+                    console.log(json);
+                    if(json['error']!='')
+                    { $('.alert').html(json['error']);
+                    //alert(json['error']);
+                    $('#vehicleModal-message').html(json['error']);
+
+                    return;
+                    }
+                    else{
+                    $('.alert').html('Vehicle Saved successfully!') ;
+                    alert('Vehicle Saved successfully!');
+                    //alert(vehicle_enabled);
+                    if(vehicle_enabled==1){
+                    var x = document.getElementById("order_vehicle_number");
+                    var c = document.createElement("option");
+                    c.text = optionText;
+                    c.selected = "selected";
+                    x.options.add(c);
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+                    
+                   
+                    
+                    }
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                     $('#vehicleModal').modal('hide');
+    $('#driverModal').modal('show');
+   $('input[name="registration_number"]').val('');
+   $('input[name="make"]').val('');
+   $('input[name="model"]').val('');
+
+
+                    //setTimeout(function(){ window.location.reload(false); }, 1500);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 return;
+		}
+                }); 
+                    
+                }
+}
+
+ 
+function closevehicledetails() { 
+    $('#vehicleModal').modal('hide');
+    $('#driverModal').modal('show');
+    $('input[name="registration_number"]').val('');
+   $('input[name="make"]').val('');
+   $('input[name="model"]').val('');
+}
+
+
+
+ function createDeliveryRequest() 
+    {   
+            
+
+             var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
+            return n.value;
+            }).join(',');
+            console.log(selected_order_id);
+            
+            if (selected_order_id == '') {
+                alert('No order selected');
+                return;
+                
+            }
+            
+            
+
+              $.ajax({
+		url: 'index.php?path=amitruck/amitruck/createMultipleOrdersDelivery&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + encodeURIComponent(selected_order_id) ,
+		beforeSend: function() {
+                // setting a timeout
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                },
+                success: function(json) {	 
+                    console.log(json.status);
+                    $('.alert').html('Order assigned to delivery partner!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    alert('Order(s) assigned to delivery partner!');
+                    if(json.status == 200) {
+                    setTimeout(function(){ window.location.reload(false); }, 1500);
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			   console.log(xhr);
+		}
+                }); 
+                
+    }
+
+
 </script></div>
 <?php echo $footer; ?>
 

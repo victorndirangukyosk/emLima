@@ -243,7 +243,7 @@ class ControllerAccountOrder extends Controller {
                 'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
                 //'edit_own_order' => $this->url->link('checkout/edit_order/index_new', 'order_id=' . $result['order_id'], 'SSL'),
-                'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours <= 2 && $result['payment_code'] == 'cod') ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
+                'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours <= 2 && $result['paid'] =='N' && $result['payment_code'] == 'cod') ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
                 'paid' => $result['paid'],
             ];
         }
@@ -1184,6 +1184,7 @@ class ControllerAccountOrder extends Controller {
                     'product_id' => $product['product_id'],
                     'store_id' => $product['store_id'],
                     'vendor_id' => $product['vendor_id'],
+                    'product_note' => $product['product_note'],
                     'name' => $product['name'],
                     'unit' => $product['unit'],
                     'model' => $product['model'],
@@ -1684,6 +1685,7 @@ class ControllerAccountOrder extends Controller {
                     'store_id' => $product['store_id'],
                     'vendor_id' => $product['vendor_id'],
                     'name' => $product['name'],
+                    'product_note' => $product['product_note'],
                     'unit' => $product['unit'],
                     'model' => $product['model'],
                     'product_type' => $product['product_type'],

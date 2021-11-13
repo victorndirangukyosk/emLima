@@ -348,8 +348,9 @@ class ControllerReportCustomerOrderPattern extends Controller {
             //    echo "<pre>";print_r($months);die;
         } else {
             $company_total = 0;
-            $customerresults = null;
+            $customerresults = null; 
         }
+
 
         $this->load->model('sale/order');
         if (is_array($customerresults) && count($customerresults) > 0) {
@@ -364,12 +365,12 @@ class ControllerReportCustomerOrderPattern extends Controller {
                 $totalOrders = 0;
                 $OrdersValue = 0;
                 foreach ($months as $month) {
-                    $totalpermonth = $this->model_report_customer->getCompanyTotal($filter_data, $month['month'], $result['company']);
+                    $totalpermonth = $this->model_report_customer->getCompanyTotal($filter_data, $month['month'], $result['company'], $result['customer_id']);
                     $monthname = $this->getmonthname($month['month']);
                     $totalOrders = $totalOrders + $totalpermonth['TotalOrders'];
                     $OrdersValue = $OrdersValue + $totalpermonth['Total'];
                     //$data['customers'][$i][$monthname]=$this->currency->format($totalpermonth['Total'], $this->config->get('config_currency'));
-                    $data['customers'][$i][$monthname] = number_format($totalpermonth['Total'], 2);
+                    $data['customers'][$i][$monthname] = number_format($totalpermonth['Total'], 2)??0;
                 }
                 $data['customers'][$i]['Total'] = number_format($OrdersValue);
                 $data['customers'][$i]['Order Count'] = $totalOrders;
@@ -383,7 +384,7 @@ class ControllerReportCustomerOrderPattern extends Controller {
             }
         }
         //    echo "<pre>";print_r($data['customers']);die;
-        // echo "<pre>";print_r($data['customers']);die;
+        //  echo "<pre>";print_r($data['customers']);die;
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_customer_order_pattern_excel($data['customers']);

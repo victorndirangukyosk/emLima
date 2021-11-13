@@ -1596,6 +1596,17 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('setting/store');
         $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
         $data['time_slots'] = $deliveryTimeslots;
+        $this->load->language('vehicles/vehicles');
+
+        $data['entry_make'] = $this->language->get('entry_make');
+        $data['entry_model'] = $this->language->get('entry_model');
+        $data['entry_registration_number'] = $this->language->get('entry_registration_number');
+        $data['entry_registration_date'] = $this->language->get('entry_registration_date');
+
+
+        $data['entry_registration_validity_upto'] = $this->language->get('entry_registration_validity_upto');
+        $data['entry_status'] = $this->language->get('entry_status');
+        $data['entry_date_added'] = $this->language->get('entry_date_added');
 
         $this->response->setOutput($this->load->view('sale/order_list.tpl', $data));
     }
@@ -3275,6 +3286,7 @@ class ControllerSaleOrder extends Controller {
                         'vendor_id' => $original_product['vendor_id'],
                         'store_id' => $original_product['store_id'],
                         'name' => $original_product['name'],
+                        'product_note' => $original_product['product_note'],
                         'unit' => $original_product['unit'],
                         'product_type' => $original_product['product_type'],
                         'produce_type' => $original_product['produce_type'],
@@ -3296,6 +3308,7 @@ class ControllerSaleOrder extends Controller {
                             'vendor_id' => $original_product['vendor_id'],
                             'store_id' => $original_product['store_id'],
                             'name' => $original_product['name'],
+                            'product_note' => $original_product['product_note'],
                             'unit' => $original_product['unit'],
                             'product_type' => $original_product['product_type'],
                             'produce_type' => $original_product['produce_type'],
@@ -3323,6 +3336,7 @@ class ControllerSaleOrder extends Controller {
                         'vendor_id' => $original_product['vendor_id'],
                         'store_id' => $original_product['store_id'],
                         'name' => $original_product['name'],
+                        'product_note' => $original_product['product_note'],
                         'unit' => $original_product['unit'],
                         'product_type' => $original_product['product_type'],
                         'produce_type' => $original_product['produce_type'],
@@ -3370,6 +3384,7 @@ class ControllerSaleOrder extends Controller {
                     'vendor_id' => $product['vendor_id'],
                     'store_id' => $product['store_id'],
                     'name' => $product['name'],
+                    'product_note' => $product['product_note'],
                     'unit' => $product['unit'],
                     'product_type' => $product['product_type'],
                     'produce_type' => $product['produce_type'],
@@ -4400,6 +4415,7 @@ class ControllerSaleOrder extends Controller {
                     $product_data[] = [
                         'product_id' => $product['product_id'],
                         'name' => $product['name'],
+                        'product_note' => $product['product_note'],
                         'model' => $product['model'],
                         'unit' => $product['unit'],
                         'option' => $option_data,
@@ -4694,6 +4710,7 @@ class ControllerSaleOrder extends Controller {
                     $product_data[] = [
                         'product_id' => $product['product_id'],
                         'name' => $product['name'],
+                        'product_note' => $product['product_note'],
                         'model' => $product['model'],
                         'unit' => $product['unit'],
                         'option' => $option_data,
