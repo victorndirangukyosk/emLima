@@ -1685,6 +1685,7 @@ class ControllerAccountOrder extends Controller {
                     'store_id' => $product['store_id'],
                     'vendor_id' => $product['vendor_id'],
                     'name' => $product['name'],
+                    'product_note' => $product['product_note'],
                     'unit' => $product['unit'],
                     'model' => $product['model'],
                     'product_type' => $product['product_type'],
