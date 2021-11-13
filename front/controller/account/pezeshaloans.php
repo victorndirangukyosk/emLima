@@ -93,7 +93,7 @@ class ControllerAccountPezeshaloans extends Controller {
         $pezesha_loans = $this->model_account_order->getPezeshaloans();
         foreach ($pezesha_loans as $pezesha_loan) {
             $orders = array();
-            $orders['total'] = $this->currency->format($orders['total']);
+            $orders['total'] = $this->currency->format($pezesha_loan['total']);
             $orders = $pezesha_loan;
             $data['orders'][] = $orders;
         }
