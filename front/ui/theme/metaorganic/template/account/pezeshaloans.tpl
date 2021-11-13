@@ -10,6 +10,7 @@
                     <thead>
                         <tr>
                             <th class="order_id">Loan ID</th>
+                            
                             <th class="order_id">Order ID</th>
                             <th class="order_id">Order Total</th>
                             <th class="order_id">Loan Type</th>
