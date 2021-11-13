@@ -10,7 +10,7 @@ $_['column_amount'] = 'Amount (%s)';
 
 // Text
 $_['text_account'] = 'Account';
-$_['text_credit'] = 'My Wallet';
+$_['text_pezesha'] = 'Pezesha';
 $_['text_total'] = 'Your Pezesha Details:';
 $_['text_empty'] = 'You do not have balance!';
 $_['text_my_orders'] = 'My Orders';

@@ -131,6 +131,7 @@ class Controlleraccounttransactions extends Controller {
         $data['return'] = $this->url->link('account/return', '', 'SSL');
         $data['credit'] = $this->url->link('account/credit', '', 'SSL');
         $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
+        $data['pezesha_loans'] = $this->url->link('account/pezeshaloans', '', 'SSL');
         $data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
         $data['logout'] = $this->url->link('account/logout', '', 'SSL');
         $data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
@@ -252,7 +253,7 @@ class Controlleraccounttransactions extends Controller {
             }
         }
         $this->load->model('account/credit');
-        $totalWalletAmount=$this->model_account_credit->getTotalAmount();  
+        $totalWalletAmount = $this->model_account_credit->getTotalAmount();
         //  echo "<pre>";print_r($data['success_transactions']);die;
         $data['total_pending_amount'] = $totalPendingAmount;
         $data['total_wallet_amount'] = $totalWalletAmount;
@@ -347,7 +348,7 @@ class Controlleraccounttransactions extends Controller {
             }
         }
         $this->load->model('account/credit');
-        $totalWalletAmount=$this->model_account_credit->getTotalAmount();   
+        $totalWalletAmount = $this->model_account_credit->getTotalAmount();
 
         //echo "<pre>";print_r($data);die;
         $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
@@ -397,7 +398,7 @@ class Controlleraccounttransactions extends Controller {
             }
         }
         $this->load->model('account/credit');
-        $totalWalletAmount=$this->model_account_credit->getTotalAmount();  
+        $totalWalletAmount = $this->model_account_credit->getTotalAmount();
 
         //echo "<pre>";print_r($data);die;
         $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
@@ -445,7 +446,7 @@ class Controlleraccounttransactions extends Controller {
             }
         }
         $this->load->model('account/credit');
-        $totalWalletAmount=$this->model_account_credit->getTotalAmount();  
+        $totalWalletAmount = $this->model_account_credit->getTotalAmount();
         //echo "<pre>";print_r($data);die;
         $data['total_pending_amount'] = $this->currency->format($totalPendingAmount);
         $data['total_wallet_amount'] = $this->currency->format($totalWalletAmount);
@@ -920,63 +921,54 @@ class Controlleraccounttransactions extends Controller {
         echo $status;
     }
 
-
     public function wallet() {
         $json = [];
-        $json['success'] = ""; 
-        $json['error'] = ""; 
-        try{
-        $this->load->model('payment/wallet'); 
-        $this->load->model('checkout/order'); 
+        $json['success'] = "";
+        $json['error'] = "";
+        try {
+            $this->load->model('payment/wallet');
+            $this->load->model('checkout/order');
 
-        if ($this->request->post['payment_type'] == 'pay_full') {
-            $this->request->post['order_id'] = explode('--', $this->request->post['order_id']);
-        }
-        $log = new Log('error.log');
-        $log->write('Transaction screen-Wallet deduction for orders ');
-            // echo '<pre>';print_r($this->request->post['order_id']);exit;
-        //wallet amount check is doing in tpl screen itself
-        foreach ($this->request->post['order_id'] as $key => $value) {
-            $log->write($value);
-            $order_id = $value;
-            $amount = 0;
-            $order_info = $this->model_checkout_order->getOrder($value);
-            if (count($order_info) > 0) {
-                $amount =  ($order_info['total'] - $order_info['amount_partialy_paid']);
+            if ($this->request->post['payment_type'] == 'pay_full') {
+                $this->request->post['order_id'] = explode('--', $this->request->post['order_id']);
             }
-            
-            $this->model_payment_wallet->addTransactionCredit($this->customer->getId(),'Wallet Amount Deduction #'.$order_id.' ', $amount, $order_id);
-            
+            $log = new Log('error.log');
+            $log->write('Transaction screen-Wallet deduction for orders ');
+            // echo '<pre>';print_r($this->request->post['order_id']);exit;
+            //wallet amount check is doing in tpl screen itself
+            foreach ($this->request->post['order_id'] as $key => $value) {
+                $log->write($value);
+                $order_id = $value;
+                $amount = 0;
+                $order_info = $this->model_checkout_order->getOrder($value);
+                if (count($order_info) > 0) {
+                    $amount = ($order_info['total'] - $order_info['amount_partialy_paid']);
+                }
 
-             // Add to activity log
-            $this->load->model('account/activity');
-            $activity_data = [
-             'customer_id' => $this->customer->getId(),
-             'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
-            ];
+                $this->model_payment_wallet->addTransactionCredit($this->customer->getId(), 'Wallet Amount Deduction #' . $order_id . ' ', $amount, $order_id);
 
-            $this->model_account_activity->addActivity('login', $activity_data);
+                // Add to activity log
+                $this->load->model('account/activity');
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                ];
 
+                $this->model_account_activity->addActivity('login', $activity_data);
+            }
+            $json['success'] = "Transactions successfully updated!";
+        } catch (exception $ex) {
+            $json['error'] = "Transaction Failed";
+            $log = new Log('error.log');
+            $log->write('Transaction screen-Wallet deduction for orders ');
+            $log->write($ex);
+        } finally {
+
+
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
         }
-        $json['success'] = "Transactions successfully updated!"; 
-       
-    }
-    catch(exception $ex)
-    {
-        $json['error'] = "Transaction Failed"; 
-        $log = new Log('error.log');
-        $log->write('Transaction screen-Wallet deduction for orders ');
-        $log->write($ex);
-
-
-    }
-    finally{  
-        
-
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
     }
 
 }

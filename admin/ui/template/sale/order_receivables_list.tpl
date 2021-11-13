@@ -306,6 +306,10 @@
                                          <td class="text-right"> 
                                        Pending Amount 
                                         </td>
+
+                                        <td class="text-left"> 
+                                       Transaction ID
+                                        </td>
                                    <!-- <td class="text-left">
                                         <?php if ($sort == 'o.date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
@@ -344,6 +348,7 @@
                                     <td class="text-left"><?php echo $order['paid']; ?></td>
                                    <!-- <td class="text-right"><?php echo $order['amount_partialy_paid']; ?></td>-->
                                     <td class="text-right"><?php echo $order['pending_amount']; ?></td>
+                                    <td class="text-left"><?php echo $order['transaction_id']; ?></td>
                                       <!--<td class="text-left"><?php echo $order['date_added']; ?></td> -->
                                     <td>
  

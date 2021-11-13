@@ -366,6 +366,16 @@ $(document).ready(function() {
                                                     <i class="fa fa-bank"></i>Pezesha</a>
                                             </li>
                                             <?php } ?>
+                                            <?php if($this->config->get('pezesha_status') && $this->customer->getCustomerPezeshaId() > 0 && $this->customer->getCustomerPezeshauuId() != NULL) { ?>
+                                            <li role="presentation">
+                                                    <?php if(strpos( $pezesha,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                        <a href="<?php echo $pezesha_loans; ?>" class="active">
+                                                    <?php } else { ?>
+                                                        <a href="<?php echo $pezesha_loans; ?>">
+                                                    <?php } ?>
+                                                    <i class="fa fa-bank"></i>Pezesha Loans</a>
+                                            </li>
+                                            <?php } ?>
                                             <!--<li role="presentation">
 
                                                 <?php if(strpos( $user_product_notes,$_SERVER["REQUEST_URI"]) !== false) { ?>
