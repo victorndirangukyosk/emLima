@@ -745,7 +745,7 @@
 
 							
 								<tr>
-									<td colspan="4"></td>
+									<td colspan="5"></td>
 									<td class="text-right"><b><?php echo $total['title']; ?>:</b></td>
 									<td class="text-right"><?php echo $total['text']; ?></td>
 									
