@@ -6,7 +6,7 @@
       <div class="pull-right"><a href="<?php echo $add; ?>" data-toggle="tooltip" title="Add New Group"
           class="btn btn-success"><i class="fa fa-plus"></i></a>
       </div>
-      <h1>Email Groups</h1>
+      <h1>Send Notification To Bulk Customers</h1>
     </div>
   </div>
   <div class="container-fluid">
@@ -22,7 +22,7 @@
     <?php } ?>
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><i class="fa fa-list"></i> Email Groups List</h3>
+        <h3 class="panel-title"><i class="fa fa-envelope-o"></i> Send Email To Bulk Customers</h3>
       </div>
       <div class="panel-body">
         <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-email-groups">
