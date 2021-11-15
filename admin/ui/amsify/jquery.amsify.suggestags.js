@@ -741,6 +741,7 @@ var AmsifySuggestags;
 
 		printValues : function() {
 			console.info(this.tagNames, $(this.selector).val());
+                        $('#selected').val(this.tagNames, $(this.selector).val());
 		},
 
 		checkMethod : function() {

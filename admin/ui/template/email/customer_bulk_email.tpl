@@ -33,6 +33,7 @@
 									<label class="col-sm-2 control-label" for="input-subject">Company Name</label>
 									<div class="col-sm-10">
 										<input type="text" name="company_name" value="" placeholder="Type Here Company Name" id="input-company-name" class="form-control input-full-width" />
+  										<input type="hidden" name="selected" value="" id="selected"/>
 									</div>
 								</div>
 								<div class="form-group required">
@@ -155,6 +156,7 @@ function save(type){
 			console.info('beforeSend');
 			},
 			success: function(data) {
+                        console.info('success');
 		        console.info(data);
 			},
 			error: function() {
