@@ -138,6 +138,21 @@ class ControllerSettingSetting extends Controller
         }
 
 
+        if (isset($this->error['amitruck_clientId'])) {
+            $data['error_amitruck_clientId'] = $this->error['amitruck_clientId'];
+        } else {
+            $data['error_amitruck_clientId'] = '';
+        }
+
+        if (isset($this->error['amitruck_clientSecret'])) {
+            $data['error_amitruck_clientSecret'] = $this->error['amitruck_clientSecret'];
+        } else {
+            $data['error_amitruck_clientSecret'] = '';
+        }
+
+        
+
+
         if (isset($this->error['shopper_group_ids'])) {
             $data['error_shopper_group_ids'] = $this->error['shopper_group_ids'];
         } else {
@@ -565,6 +580,19 @@ class ControllerSettingSetting extends Controller
             $data['config_store_longitude'] = $this->request->post['config_store_longitude'];
         } else {
             $data['config_store_longitude'] = $this->config->get('config_store_longitude');
+        }
+
+
+        if (isset($this->request->post['config_amitruck_clientId'])) {
+            $data['config_amitruck_clientId'] = $this->request->post['config_amitruck_clientId'];
+        } else {
+            $data['config_amitruck_clientId'] = $this->config->get('config_amitruck_clientId');
+        }
+
+        if (isset($this->request->post['config_amitruck_clientSecret'])) {
+            $data['config_amitruck_clientSecret'] = $this->request->post['config_amitruck_clientSecret'];
+        } else {
+            $data['config_amitruck_clientSecret'] = $this->config->get('config_amitruck_clientSecret');
         }
         
         if (isset($this->request->post['config_account_namager_group_id'])) {
@@ -2249,7 +2277,13 @@ class ControllerSettingSetting extends Controller
             $this->error['store_longitude'] = $this->language->get('error_store_longitude');
         }
 
+        if (!$this->request->post['config_amitruck_clientId']) {
+            $this->error['amitruck_clientId'] = $this->language->get('error_amitruck_clientId');
+        }
 
+        if (!$this->request->post['config_amitruck_clientSecret']) {
+            $this->error['amitruck_clientSecret'] = $this->language->get('error_amitruck_clientSecret');
+        }
         
         if (!$this->request->post['config_account_manager_group_id']) {
             $this->error['account_manager_group_id'] = $this->language->get('error_account_manager_group_id');
