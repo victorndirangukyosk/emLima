@@ -3,14 +3,9 @@
 	<div class="page-header">
 		<div class="container-fluid">
 			<div class="pull-right">
-				<button type="submit" onclick="save('save')" form="form-email-template" data-toggle="tooltip" title="<?php echo $button_save; ?>" class="btn btn-success" data-original-title="Save"><i class="fa fa-check"></i></button>
+				<button type="button" form="form-email-template" data-toggle="tooltip" title="Send Notification" class="btn btn-success" data-original-title="Send"><i class="fa fa-check"></i></button>
 		        </div>
 			<h1>Send Notification To Bulk Customers</h1>
-			<ul class="breadcrumb">
-				<?php foreach ($breadcrumbs as $breadcrumb) { ?>
-				<li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
-				<?php } ?>
-			</ul>
 		</div>
 	</div>
 	<div class="container-fluid">
@@ -29,7 +24,7 @@
 				<h3 class="panel-title"><i class="fa fa-pencil"></i> Send Notification To Bulk Customers</h3>
 			</div>
 			<div class="panel-body">
-				<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form-email-template" class="form-horizontal">
+				<form action="" method="post" enctype="multipart/form-data" id="form-email-template" class="form-horizontal">
 					<div class="tab-pane active in" id="tab-general">
 						<ul class="nav nav-tabs" id="language">
                                                     <li><a href="#notification" data-toggle="tab">Notification</a></li>
@@ -83,9 +78,7 @@
 								</div>
 
 							</div>
-						</div>
-					</div>
-				</form>
+                                </form>
 			</div>
 		</div>
 	</div>
