@@ -172,7 +172,9 @@ function save(type){
 			complete: function(data) {
 			console.info('complete');
 			}
-		}
+		},
+        defaultTagClass : 'bg-primary',
+        whiteList: true
 	});
 </script>
 <?php echo $footer; ?>
