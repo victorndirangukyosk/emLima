@@ -154,4 +154,19 @@ function save(type){
 	form.submit();
 }
 //--></script>
+<link rel="stylesheet" type="text/css" href="ui/amsify/amsify.suggestags.css">
+<script type="text/javascript" src="ui/amsify/jquery.amsify.suggestags.js"></script>
+<script type="text/javascript">
+	$('input[name="company_name"]').amsifySuggestags({
+		suggestions: ['Apple', 'Banana', 'Cherries', 'Dates', 'Guava'],
+		classes: ['bg-primary', 'bg-success', 'bg-danger', 'bg-warning', 'bg-info'],
+		whiteList: true,
+		afterAdd : function(value) {
+	        console.info(value);
+		},
+		afterRemove : function(value) {
+		console.info(value);
+		},
+	});
+</script>
 <?php echo $footer; ?>
