@@ -31,6 +31,7 @@
 <script type="text/javascript" src="ui/javascript/jquery/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="ui/javascript/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="ui/javascript/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="ui/javascript/tinymce/tinymce.min.js"></script>
 <script type="text/javascript" src="ui/javascript/tinymce/jquery.tinymce.min.js"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.7.0/jquery.tinymce.min.js"></script> -->
 
