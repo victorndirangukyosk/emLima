@@ -20,6 +20,7 @@ $_['text_customer_group'] = 'Customer Groups';
 $_['text_customer_ban_ip'] = 'Banned IP';
 $_['text_customer_feedback'] = 'Customer Feedback';
 $_['text_customer_issue'] = 'Customer Reported Issues';
+$_['text_customer_bulk_email'] = 'Send Notification To Bulk Customers';
 $_['text_account_managers'] = 'Account Managers';
 $_['text_customer_experience'] = 'Cust. Experience';
 $_['text_account_managers_customers'] = 'Customers';
@@ -110,8 +111,6 @@ $_['text_report_customer_orderplaced'] = 'Order Placed Customers';
 $_['text_report_customer_onboarded'] = 'Customers Onboarded';
 $_['text_report_customer_wallet'] = 'Customers Wallet';
 $_['text_report_customer_unordered'] = 'Unordered Customers';
-
-
 
 $_['text_vendor'] = 'Vendor';
 $_['text_vendor_info'] = 'Information';

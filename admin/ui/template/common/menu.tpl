@@ -197,6 +197,10 @@
              <?php if($preturn_customer_issue) { ?>
             <li><a href="<?php echo $customer_issue; ?>"><?php echo $text_customer_issue; ?></a></li>
             <?php } ?>
+            
+            <?php if($preturn_customer_bulk_email) { ?>
+            <li><a href="<?php echo $customer_bulk_email; ?>"><?php echo $text_customer_bulk_email; ?></a></li>
+            <?php } ?>
         </ul>
     </li>
     <?php } ?>

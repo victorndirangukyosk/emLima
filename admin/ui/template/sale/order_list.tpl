@@ -1299,12 +1299,18 @@ console.log($(this).data('ordertotal'));
                 },
                 success: function(json) {	 
                     console.log(json.status);
+                    
+                    if(json.status == 200) {
                     $('.alert').html('Order assigned to delivery partner!');
                     $(".alert").attr('class', 'alert alert-success');
                     $(".alert").show();
                     alert('Order assigned to delivery partner!');
-                    if(json.status == 200) {
+
                     setTimeout(function(){ window.location.reload(false); }, 1500);
+                    }
+                    else{
+                        alert('Amitruck API down!');
+
                     }
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
@@ -2334,13 +2340,16 @@ function closevehicledetails() {
                 $(".alert").show();
                 },
                 success: function(json) {	 
-                    console.log(json.status);
+                    console.log(json.status);                    
+                    if(json.status == 200) {
                     $('.alert').html('Order assigned to delivery partner!');
                     $(".alert").attr('class', 'alert alert-success');
                     $(".alert").show();
                     alert('Order(s) assigned to delivery partner!');
-                    if(json.status == 200) {
                     setTimeout(function(){ window.location.reload(false); }, 1500);
+                    }
+                    else{
+                    alert('Amitruck API down!');
                     }
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
