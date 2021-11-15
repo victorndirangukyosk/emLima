@@ -3,7 +3,7 @@
 class ControllerEmailBulkEmail extends Controller {
 
     public function index() {
-        $this->document->setTitle('Bulk Email Groups');
+        $this->document->setTitle('Send Notification To Bulk Customers');
         $this->load->model('email/groups');
 
         $data = [];
