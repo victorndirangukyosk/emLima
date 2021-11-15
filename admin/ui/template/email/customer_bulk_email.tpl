@@ -159,7 +159,7 @@ function save(type){
 <script type="text/javascript">
 	$('input[name="company_name"]').amsifySuggestags({
 		suggestions: ['Apple', 'Banana', 'Cherries', 'Dates', 'Guava'],
-		classes: ['bg-primary', 'bg-success', 'bg-danger', 'bg-warning', 'bg-info'],
+		classes: ['bg-primary', 'bg-primary', 'bg-primary', 'bg-primary', 'bg-primary'],
 		whiteList: true,
 		afterAdd : function(value) {
 	        console.info(value);
