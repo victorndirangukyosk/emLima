@@ -161,16 +161,16 @@ function save(type){
 		suggestionsAction : {
 			url : 'admin/index.php?path=dropdowns/dropdowns/companynames&token=<?php echo $token; ?>',
 			beforeSend : function() {
-				console.info('beforeSend');
+			console.info('beforeSend');
 			},
 			success: function(data) {
-				console.info(data);
+		        console.info(data);
 			},
 			error: function() {
-				console.info('error');
+			console.info('error');
 			},
 			complete: function(data) {
-				console.info('complete');
+			console.info('complete');
 			}
 		}
 	});
