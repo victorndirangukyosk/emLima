@@ -118,7 +118,7 @@
                         </div>
                       </div> 
                         
-                      <div class="form-group required">
+                      <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-lastname">National ID</label>
                         <div class="col-sm-10">
                           <input type="text" name="national_id" value="<?php echo $national_id; ?>" placeholder="National ID" id="input-national_id" class="form-control" maxlength=10 />
