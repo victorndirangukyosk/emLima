@@ -1,4 +1,5 @@
-<?php echo $header; ?><?php echo $column_left; ?>
+<?php echo $header; ?>
+<?php echo $column_left; ?>
 <div id="content">
 	<div class="page-header">
 		<div class="container-fluid">
@@ -46,14 +47,14 @@
 									<label class="col-sm-2 control-label" for="input-notification-description">Description
 									</label>
 									<div class="col-sm-10">
-										<textarea name="email_template_description" placeholder="Mail Description" id="input-notification-description" class="form-control"></textarea>
+										<textarea name="email_template_description" placeholder="Mail Description" id="input-notification-description" class="form-control input-full-width"></textarea>
 									</div>
 								</div>
 								
 								<div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-sms-desctiption">SMS Description</label>
 									 <div class="col-sm-10">
-										<textarea name="sms_description" id="sms_description" placeholder="SMS Description" id="input-sms-description" class="form-control"></textarea>
+										<textarea name="sms_description" id="sms_description" placeholder="SMS Description" id="input-sms-description" class="form-control input-full-width"></textarea>
 									</div>
 								</div>
 
@@ -65,14 +66,14 @@
 								<div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-mobile-notification-title">Mobile Notification Title</label>
 									 <div class="col-sm-10">
-										<textarea name="mobile_notification_title" placeholder="Mobile Notification Title" id="mobile_notification_title" class="form-control"></textarea>
+										<textarea name="mobile_notification_title" placeholder="Mobile Notification Title" id="mobile_notification_title" class="form-control input-full-width"></textarea>
 									</div>
 								</div>
 
 								<div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-mobile-notification-message">Mobile Notification Message</label>
 									 <div class="col-sm-10">
-										<textarea name="mobile_notification_message" placeholder="Mobile Notification Message" id="mobile_notification_message" class="form-control"></textarea>
+										<textarea name="mobile_notification_message" placeholder="Mobile Notification Message" id="mobile_notification_message" class="form-control input-full-width"></textarea>
 									</div>
 								</div>
 
@@ -103,37 +104,7 @@
 
 </style>
 
-  <script type="text/javascript"><!--
-	<?php if( $text_editor == 'summernote' ) { ?>
-		$('#input-notification-description').summernote({
-			height: 300
-		});
-	<?php } else if ( $text_editor == 'tinymce' ) { ?>
-		$('#input-notification-description').tinymce({
-			script_url : 'ui/javascript/tinymce/tinymce.min.js',
-			plugins: "print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists textcolor wordcount contextmenu colorpicker textpattern code",
-			//plugins: "code",
-			theme: 'modern',
-
-  			toolbar1: "formatselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat | code",
-			  target_list: [
-			   {title: 'None', value: ''},
-			   {title: 'Same page', value: '_self'},
-			   {title: 'New page', value: '_blank'},
-			   {title: 'LIghtbox', value: '_lightbox'}
-			  ],
-			  image_advtab: true,
-			height : 500  
-			 //menubar: "file,edit,insert,view,format,table,tools"
-		});
-	<?php } ?>
-
-function shortCode(button) {
-    $(".jumbotron").slideToggle();
-}
-
-//--></script> 
-  <script type="text/javascript"><!--
+<script type="text/javascript"><!--
 $('#language a:first').tab('show');
 //--></script>
 <script type="text/javascript"><!--
@@ -176,7 +147,7 @@ $('#send_notification').on('click', function () {
                     url: 'index.php?path=email/bulk_email/sendbulknotification&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data: 'subject=' + encodeURIComponent($('#subject').val()) + '&sms_description='+ encodeURIComponent($('#sms_description').val()) + '&mobile_notification_title='+ encodeURIComponent($('#mobile_notification_title').val()) + '&mobile_notification_message='+ encodeURIComponent($('#mobile_notification_message').val()) + '&selected='+ encodeURIComponent($('#selected').val()),
+                    data: 'subject=' + encodeURIComponent($('#subject').val()) + '&sms_description='+ encodeURIComponent($('#sms_description').val()) + '&mobile_notification_title='+ encodeURIComponent($('#mobile_notification_title').val()) + '&mobile_notification_message='+ encodeURIComponent($('#mobile_notification_message').val()) + '&selected='+ encodeURIComponent($('#selected').val()) + '&email_description='+ encodeURIComponent($("#input-notification-description").val()),
                     success: function (json) {
                     console.log(json);
                     }
