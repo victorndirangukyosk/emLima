@@ -18,4 +18,16 @@ class ControllerEmailBulkEmail extends Controller {
         $this->response->setOutput($this->load->view('email/customer_bulk_email.tpl', $data));
     }
 
+    public function sendbulknotification() {
+        $subject = $this->request->post['subject'];
+        $sms_description = $this->request->post['sms_description'];
+        $mobile_notification_title = $this->request->post['mobile_notification_title'];
+        $mobile_notification_message = $this->request->post['mobile_notification_message'];
+        $log = new Log('error.log');
+        $log->write($subject);
+        $log->write($sms_description);
+        $log->write($mobile_notification_title);
+        $log->write($mobile_notification_message);
+    }
+
 }
