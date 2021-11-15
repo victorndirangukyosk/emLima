@@ -39,7 +39,7 @@
                                                                 <div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-subject">Company Name</label>
 									<div class="col-sm-10">
-										<input type="text" name="company_name" value="" placeholder="Company Name" id="input-company-name" class="form-control input-full-width" />
+										<input type="text" name="company_name" value="" placeholder="Type Here Company Name" id="input-company-name" class="form-control input-full-width" />
 									</div>
 								</div>
 								<div class="form-group required">
@@ -158,15 +158,21 @@ function save(type){
 <script type="text/javascript" src="ui/amsify/jquery.amsify.suggestags.js"></script>
 <script type="text/javascript">
 	$('input[name="company_name"]').amsifySuggestags({
-		suggestions: ['Apple', 'Banana', 'Cherries', 'Dates', 'Guava'],
-		classes: ['bg-primary', 'bg-primary', 'bg-primary', 'bg-primary', 'bg-primary'],
-		whiteList: true,
-		afterAdd : function(value) {
-	        console.info(value);
-		},
-		afterRemove : function(value) {
-		console.info(value);
-		},
+		suggestionsAction : {
+			url : 'admin/index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>',
+			beforeSend : function() {
+				console.info('beforeSend');
+			},
+			success: function(data) {
+				console.info(data);
+			},
+			error: function() {
+				console.info('error');
+			},
+			complete: function(data) {
+				console.info('complete');
+			}
+		}
 	});
 </script>
 <?php echo $footer; ?>
