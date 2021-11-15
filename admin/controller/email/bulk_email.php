@@ -5,6 +5,7 @@ class ControllerEmailBulkEmail extends Controller {
     public function index() {
         $this->document->setTitle('Send Notification To Bulk Customers');
         // Text Editor
+        $data['token'] = $this->session->data['token'];
         $data['text_editor'] = $this->config->get('config_text_editor');
 
         if (empty($data['text_editor'])) {
