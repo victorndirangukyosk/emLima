@@ -786,6 +786,29 @@
                                     <?php } ?>
                                 </div>
                             </div>
+
+
+                             <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-amitruck-clientId"><?php echo $entry_amitruck_clientId; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_amitruck_clientId" value="<?php echo $config_amitruck_clientId; ?>" placeholder="<?php echo $entry_amitruck_clientId; ?>" id="input-amitruck-clientId" class="form-control" />
+                                    <?php if ($error_amitruck_clientId) { ?>
+                                    <div class="text-danger"><?php echo $error_amitruck_clientId; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
+
+                             <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-amitruck-clientSecret"><?php echo $entry_amitruck_clientSecret; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_amitruck_clientSecret" value="<?php echo $config_amitruck_clientSecret; ?>" placeholder="<?php echo $entry_amitruck_clientSecret; ?>" id="input-amitruck_clientSecret" class="form-control" />
+                                    <?php if ($error_amitruck_clientSecret) { ?>
+                                    <div class="text-danger"><?php echo $error_amitruck_clientSecret; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-fax"><?php echo $entry_fax; ?></label>
                                 <div  class="col-sm-10 input-group" style="left: 14px;">
