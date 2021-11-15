@@ -22,7 +22,7 @@
     <?php } ?>
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><i class="fa fa-envelope-o"></i> Send Email To Bulk Customers</h3>
+        <h3 class="panel-title"><i class="fa fa-envelope-o"></i> Send Notification To Bulk Customers</h3>
       </div>
       <div class="panel-body">
         <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-email-groups">
