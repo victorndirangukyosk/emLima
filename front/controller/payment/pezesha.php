@@ -27,7 +27,7 @@ class ControllerPaymentPezesha extends Controller {
         $body = http_build_query($body);
         $curl = curl_init();
         if (ENV == 'production') {
-            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/oauth/token');
+            curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/oauth/token');
             curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
         } else {
             curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/oauth/token');
@@ -74,7 +74,7 @@ class ControllerPaymentPezesha extends Controller {
         $log->write($body);
         $curl = curl_init();
         if (ENV == 'production') {
-            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/options');
+            curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/options');
             curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
         } else {
             curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/options');
@@ -139,7 +139,7 @@ class ControllerPaymentPezesha extends Controller {
             $log->write($body);
             $curl = curl_init();
             if (ENV == 'production') {
-                curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/loans');
+                curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/loans');
                 curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
             } else {
                 curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/loans');
