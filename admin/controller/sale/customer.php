@@ -2412,11 +2412,11 @@ class ControllerSaleCustomer extends Controller {
 
         /*if ((utf8_strlen($this->request->post['national_id']) < 1)) {
             $this->error['national_id'] = $this->language->get('error_national_id');
-        }*/
+        }
 
         if ((utf8_strlen($this->request->post['dob']) < 1)) {
             $this->error['dob'] = $this->language->get('error_dob');
-        }
+        }*/
 
         if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
             $this->error['email'] = $this->language->get('error_email');
