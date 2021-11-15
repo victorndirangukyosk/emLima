@@ -176,7 +176,7 @@ $('#send_notification').on('click', function () {
                     url: 'index.php?path=email/bulk_email/sendbulknotification&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data: 'subject=' + encodeURIComponent($('#subject').val()) + '&sms_description='+ encodeURIComponent($('#sms_description').val()) + '&mobile_notification_title='+ encodeURIComponent($('#mobile_notification_title').val()) + '&mobile_notification_message='+ encodeURIComponent($('#mobile_notification_message').val()),
+                    data: 'subject=' + encodeURIComponent($('#subject').val()) + '&sms_description='+ encodeURIComponent($('#sms_description').val()) + '&mobile_notification_title='+ encodeURIComponent($('#mobile_notification_title').val()) + '&mobile_notification_message='+ encodeURIComponent($('#mobile_notification_message').val()) + '&selected='+ encodeURIComponent($('#selected').val()),
                     success: function (json) {
                     console.log(json);
                     }

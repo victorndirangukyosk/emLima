@@ -23,11 +23,13 @@ class ControllerEmailBulkEmail extends Controller {
         $sms_description = $this->request->post['sms_description'];
         $mobile_notification_title = $this->request->post['mobile_notification_title'];
         $mobile_notification_message = $this->request->post['mobile_notification_message'];
+        $selected = $this->request->post['selected'];
         $log = new Log('error.log');
         $log->write($subject);
         $log->write($sms_description);
         $log->write($mobile_notification_title);
         $log->write($mobile_notification_message);
+        $log->write($selected);
     }
 
 }
