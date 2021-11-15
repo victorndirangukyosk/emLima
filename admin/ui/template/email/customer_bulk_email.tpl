@@ -3,7 +3,7 @@
 	<div class="page-header">
 		<div class="container-fluid">
 			<div class="pull-right">
-				<button type="button" form="form-email-template" data-toggle="tooltip" title="Send Notification" class="btn btn-success" data-original-title="Send"><i class="fa fa-check"></i></button>
+                            <button type="button" id="send_notification" name="send_notification" form="form-email-template" data-toggle="tooltip" title="Send Notification" class="btn btn-success" data-original-title="Send"><i class="fa fa-envelope"></i></button>
 		        </div>
 			<h1>Send Notification To Bulk Customers</h1>
 		</div>
@@ -38,7 +38,7 @@
 								<div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-subject">Subject</label>
 									<div class="col-sm-10">
-										<input type="text" name="subject" value="" placeholder="Subject" id="input-subject" class="form-control input-full-width" />
+										<input type="text" name="subject" id="subject" value="" placeholder="Subject" id="input-subject" class="form-control input-full-width" />
 									</div>
 								</div>
 								<div class="form-group required">
@@ -52,7 +52,7 @@
 								<div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-sms-desctiption">SMS Description</label>
 									 <div class="col-sm-10">
-										<textarea name="sms_description" placeholder="SMS Description" id="input-sms-description" class="form-control"></textarea>
+										<textarea name="sms_description" id="sms_description" placeholder="SMS Description" id="input-sms-description" class="form-control"></textarea>
 									</div>
 								</div>
 
@@ -64,14 +64,14 @@
 								<div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-mobile-notification-title">Mobile Notification Title</label>
 									 <div class="col-sm-10">
-										<textarea name="mobile_notification_title" placeholder="Mobile Notification Title" id="input-mobile_notification_title" class="form-control"></textarea>
+										<textarea name="mobile_notification_title" placeholder="Mobile Notification Title" id="mobile_notification_title" class="form-control"></textarea>
 									</div>
 								</div>
 
 								<div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-mobile-notification-message">Mobile Notification Message</label>
 									 <div class="col-sm-10">
-										<textarea name="mobile_notification_message" placeholder="Mobile Notification Message" id="input-mobile_notification_message" class="form-control"></textarea>
+										<textarea name="mobile_notification_message" placeholder="Mobile Notification Message" id="mobile_notification_message" class="form-control"></textarea>
 									</div>
 								</div>
 
@@ -167,5 +167,18 @@ function save(type){
         defaultTagClass : 'bg-primary',
         whiteList: true
 	});
+</script>
+<script type="text/javascript">
+$('#send_notification').on('click', function () {
+                $.ajax({
+                    url: 'index.php?path=email/bulk_email/sendbulknotification&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data: 'subject=' + encodeURIComponent($('#subject').val()) + '&sms_description='+ encodeURIComponent($('#sms_description').val()) + '&mobile_notification_title='+ encodeURIComponent($('#mobile_notification_title').val()) + '&mobile_notification_message='+ encodeURIComponent($('#mobile_notification_message').val()),
+                    success: function (json) {
+                    console.log(json);
+                    }
+                });
+});
 </script>
 <?php echo $footer; ?>
