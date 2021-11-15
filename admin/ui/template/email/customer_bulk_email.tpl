@@ -159,7 +159,7 @@ function save(type){
 <script type="text/javascript">
 	$('input[name="company_name"]').amsifySuggestags({
 		suggestionsAction : {
-			url : 'admin/index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>',
+			url : 'admin/index.php?path=dropdowns/dropdowns/companynames&token=<?php echo $token; ?>',
 			beforeSend : function() {
 				console.info('beforeSend');
 			},

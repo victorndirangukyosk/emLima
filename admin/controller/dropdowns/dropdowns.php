@@ -1,6 +1,6 @@
 <?php
 
-class ControllerPaymentPezesha extends Controller {
+class ControllerDropdownsDropdowns extends Controller {
 
     public function companynames() {
         $json = [];
@@ -35,17 +35,8 @@ class ControllerPaymentPezesha extends Controller {
                 }
 
                 $json[] = [
-                    'customer_id' => $result['customer_id'],
-                    'customer_group_id' => $result['customer_group_id'],
-                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
-                    'customer_group' => $result['customer_group'],
-                    'firstname' => $result['firstname'],
-                    'lastname' => $result['lastname'],
-                    'email' => $result['email'],
-                    'telephone' => $result['telephone'],
-                    'fax' => $result['fax'],
-                    'custom_field' => unserialize($result['custom_field']),
-                    'address' => $this->model_sale_customer->getAddresses($result['customer_id']),
+                    'tag' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                    'value' => (int) $result['customer_id'],
                 ];
             }
         }
