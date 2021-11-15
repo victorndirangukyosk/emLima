@@ -36,6 +36,12 @@
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane" id="notification">
+                                                                <div class="form-group required">
+									<label class="col-sm-2 control-label" for="input-subject">Company Name</label>
+									<div class="col-sm-10">
+										<input type="text" name="company_name" value="" placeholder="Company Name" id="input-company-name" class="form-control input-full-width" />
+									</div>
+								</div>
 								<div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-subject">Subject</label>
 									<div class="col-sm-10">
