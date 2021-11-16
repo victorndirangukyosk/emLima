@@ -2376,7 +2376,8 @@ class ModelSaleCustomer extends Model {
 
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
-
+        /* $log = new Log('error.log');
+          $log->write($sql); */
         $query = $this->db->query($sql);
 
         return $query->rows;
