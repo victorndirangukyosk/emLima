@@ -86,6 +86,7 @@ class ControllerCommonMenu extends Controller {
         $data['customerexperience'] = $this->url->link('sale/customerexperience', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
 
         $data['bulk_email'] = $this->url->link('email/bulk_email', 'token=' . $this->session->data['token'], 'SSL');
+        $data['bulk_order_notification'] = $this->url->link('email/bulk_email/sendbulknotification', 'token=' . $this->session->data['token'], 'SSL');
         $data['email_groups'] = $this->url->link('email/groups', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['customer_fields'] = $this->url->link('sale/customer_field', 'token=' . $this->session->data['token'], 'SSL');
@@ -94,6 +95,7 @@ class ControllerCommonMenu extends Controller {
         $data['customer_feedback'] = $this->url->link('sale/customer_feedback', 'token=' . $this->session->data['token'], 'SSL');
         $data['customer_issue'] = $this->url->link('sale/customer_issue', 'token=' . $this->session->data['token'], 'SSL');
         $data['customer_bulk_email'] = $this->url->link('email/bulk_email', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_bulk_notification'] = $this->url->link('email/bulk_email/sendbulknotification', 'token=' . $this->session->data['token'], 'SSL');
         $data['custom_field'] = $this->url->link('sale/custom_field', 'token=' . $this->session->data['token'], 'SSL');
         $data['email_template'] = $this->url->link('system/email_template', 'token=' . $this->session->data['token'], 'SSL');
         $data['language_override'] = $this->url->link('system/language_override', 'token=' . $this->session->data['token'], 'SSL');
@@ -324,6 +326,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_customer_otp'] = $this->user->hasPermission('access', 'sale/customer_otp');
         $data['preturn_customer_issue'] = $this->user->hasPermission('access', 'sale/customer_issue');
         $data['preturn_customer_bulk_email'] = $this->user->hasPermission('access', 'email/bulk_email');
+        $data['preturn_order_bulk_email'] = $this->user->hasPermission('access', 'email/bulk_email/sendbulknotification');
         $data['preturn_account_manager'] = $this->user->hasPermission('access', 'sale/accountmanager');
         $data['preturn_customer_experience'] = $this->user->hasPermission('access', 'sale/customerexperience');
         $data['preturn_account_manager_customers'] = $this->user->hasPermission('access', 'sale/accountmanageruser');
