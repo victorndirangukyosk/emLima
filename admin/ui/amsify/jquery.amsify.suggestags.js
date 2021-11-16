@@ -60,7 +60,7 @@ var AmsifySuggestags;
 			inputType     : '.amsify-select-input',
 			tagItem       : '.amsify-select-tag',
 			plusItem 	  : '.amsify-plus-tag',
-			colBg         : '.col-bg',
+			colBg         : '.bg-primary',
 			removeTag     : '.amsify-remove-tag',
 			readyToRemove : '.ready-to-remove',
 			noSuggestion  : '.amsify-no-suggestion',
