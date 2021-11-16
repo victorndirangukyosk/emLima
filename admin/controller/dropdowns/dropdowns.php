@@ -5,17 +5,23 @@ class ControllerDropdownsDropdowns extends Controller {
     public function companynames() {
         $json = [];
 
-        if (isset($this->request->post['filter_name']) || isset($this->request->get['filter_email'])) {
+        if (isset($this->request->post['filter_name']) || isset($this->request->post['filter_email']) || isset($this->request->post['filter_company'])) {
             if (isset($this->request->post['filter_name'])) {
                 $filter_name = $this->request->post['filter_name'];
             } else {
                 $filter_name = '';
             }
 
-            if (isset($this->request->get['filter_email'])) {
-                $filter_email = $this->request->get['filter_email'];
+            if (isset($this->request->post['filter_email'])) {
+                $filter_email = $this->request->post['filter_email'];
             } else {
                 $filter_email = '';
+            }
+
+            if (isset($this->request->post['filter_company'])) {
+                $filter_company = $this->request->post['filter_company'];
+            } else {
+                $filter_company = '';
             }
 
             $this->load->model('sale/customer');
@@ -23,19 +29,16 @@ class ControllerDropdownsDropdowns extends Controller {
             $filter_data = [
                 'filter_name' => $filter_name,
                 'filter_email' => $filter_email,
+                'filter_company' => $filter_company,
                 'start' => 0,
                 'limit' => 5,
             ];
 
-            $results = $this->model_sale_customer->getCustomers($filter_data);
+            $results = $this->model_sale_customer->getCustomersNew($filter_data);
 
             foreach ($results as $result) {
-                if ($this->user->isVendor()) {
-                    $result['name'] = $result['firstname'];
-                }
-
                 $json[] = [
-                    'tag' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                    'tag' => strip_tags(html_entity_decode($result['company_name'], ENT_QUOTES, 'UTF-8')),
                     'value' => (int) $result['customer_id'],
                 ];
             }
@@ -44,7 +47,7 @@ class ControllerDropdownsDropdowns extends Controller {
         $sort_order = [];
 
         foreach ($json as $key => $value) {
-            $sort_order[$key] = $value['name'];
+            $sort_order[$key] = $value['tag'];
         }
 
         array_multisort($sort_order, SORT_ASC, $json);
