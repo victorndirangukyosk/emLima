@@ -56,4 +56,44 @@ class ControllerDropdownsDropdowns extends Controller {
         $this->response->setOutput(json_encode(['suggestions' => $json]));
     }
 
+    public function orderids() {
+        $json = [];
+
+        if (isset($this->request->post['filter_order_id'])) {
+            if (isset($this->request->post['filter_order_id'])) {
+                $filter_order_id = $this->request->post['filter_order_id'];
+            } else {
+                $filter_order_id = '';
+            }
+
+            $this->load->model('sale/customer');
+
+            $filter_data = [
+                'filter_order_id' => $filter_order_id,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_sale_customer->getOrdersFilterNew($filter_data);
+
+            foreach ($results as $result) {
+                $json[] = [
+                    'tag' => $result['order_id'],
+                    'value' => (int) $result['customer_id'],
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['tag'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['suggestions' => $json]));
+    }
+
 }
