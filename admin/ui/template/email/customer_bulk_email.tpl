@@ -138,7 +138,19 @@ function save(type){
 			}
 		},
         defaultTagClass : 'bg-primary',
-        whiteList: true
+        whiteList: true,
+        afterAdd : function(value) {
+        console.info('ADD');
+	console.info(value);
+	},
+	afterRemove : function(value) {
+        console.info('REMOVE');
+	console.info(value);
+        },
+        getSelected : function(value) {
+        console.info('getSelected');
+        $('#selected').val(value);
+        }        
 	});
 </script>
 <script type="text/javascript">

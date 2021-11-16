@@ -29,6 +29,7 @@ var AmsifySuggestags;
 			whiteList         : false,
 			afterAdd          : {},
 			afterRemove       : {},
+                        getSelected       : {},
 			//My changes
 			trimValue         : false,
 			dashspaces        : false,
@@ -741,7 +742,9 @@ var AmsifySuggestags;
 
 		printValues : function() {
 			console.info(this.tagNames, $(this.selector).val());
-                        $('#selected').val(this.tagNames, $(this.selector).val());
+                        if(this.settings.getSelected && typeof this.settings.getSelected == "function") {
+		        this.settings.getSelected(this.tagNames, $(this.selector).val());
+			}
 		},
 
 		checkMethod : function() {
