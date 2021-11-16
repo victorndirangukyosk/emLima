@@ -125,7 +125,7 @@ function save(type){
                         type: 'POST',
 			url : 'admin/index.php?path=dropdowns/dropdowns/companynames&token=<?php echo $token; ?>',
 			beforeSend : function(xhr, settings) {
-                        settings.data += '&'+$.param({ filter_name: $('input[class="amsify-suggestags-input"]').val() });
+                        settings.data += '&'+$.param({ filter_company: $('input[class="amsify-suggestags-input"]').val() });
 			console.info('beforeSend');
 			},
 			success: function(data) {

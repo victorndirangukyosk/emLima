@@ -265,7 +265,132 @@ class ModelSaleCustomer extends Model {
 
         return $query->rows;
     }
+    
+    public function getCustomersNew($data = []) {
+        $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.name AS customer_group FROM " . DB_PREFIX . 'customer c LEFT JOIN ' . DB_PREFIX . "customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
+        $implode = [];
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_name'])) {
+            if ($this->user->isVendor()) {
+                $implode[] = "c.firstname LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            } else {
+                $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            }
+        }
+
+        if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
+            $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
+        }
+
+        if (!empty($data['filter_email'])) {
+            $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+        }
+
+        if (!empty($data['filter_telephone'])) {
+            $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
+        }
+
+        if (isset($data['filter_newsletter']) && !is_null($data['filter_newsletter'])) {
+            $implode[] = "c.newsletter = '" . (int) $data['filter_newsletter'] . "'";
+        }
+
+        if (!empty($data['filter_customer_group_id'])) {
+            $implode[] = "c.customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
+        }
+
+        if (!empty($data['filter_ip'])) {
+            $implode[] = "c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
+        }
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
+        }
+
+        if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
+            $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
+        }
+
+        // if (!empty($data['filter_date_added'])) {
+        //     $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        // }
+
+
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_to'])) {
+            $implode[] = " DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_to'])) {
+            $implode[] = " DATE(c.date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_to']) . "')";
+        }
+
+
+
+        if (isset($data['filter_parent']) && !is_null($data['filter_parent'])) {
+            $implode[] = "c.parent = '" . (int) $data['filter_parent'] . "'";
+        }
+
+        if (isset($data['filter_account_manager_name']) && !is_null($data['filter_account_manager_id'])) {
+            $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
+        }
+
+        if (!empty($data['filter_sub_customer_show']) && !empty($data['filter_sub_customer_show']) && $data['filter_sub_customer_show'] == 1) {
+            //$implode[] = "parent > 0";
+        }
+
+        if (!empty($data['filter_monthyear_added'])) {
+            $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+        }
+
+        if ($implode) {
+            $sql .= ' AND ' . implode(' AND ', $implode);
+        }
+
+        $sort_data = [
+            'name',
+            'c.email',
+            'customer_group',
+            'c.status',
+            'c.approved',
+            'c.ip',
+            'c.date_added',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY name';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        //echo "<pre>";print_r($sql);die;
+
+        return $query->rows;
+    }
+    
     public function getCustomersOTP($data = []) {
         $sql = "SELECT c.customer_id, c.company_name, c.email, c.source, c.telephone, o.id, o.customer_id as otp_customer_id, o.otp, o.type, o.expiry_time, o.created_at as otp_created_at, o.updated_at as otp_updated_at, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'otp o LEFT JOIN ' . DB_PREFIX . "customer c ON (o.customer_id = c.customer_id)";
 
