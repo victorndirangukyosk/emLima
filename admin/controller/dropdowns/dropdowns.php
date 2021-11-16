@@ -5,9 +5,9 @@ class ControllerDropdownsDropdowns extends Controller {
     public function companynames() {
         $json = [];
 
-        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])) {
-            if (isset($this->request->get['filter_name'])) {
-                $filter_name = $this->request->get['filter_name'];
+        if (isset($this->request->post['filter_name']) || isset($this->request->get['filter_email'])) {
+            if (isset($this->request->post['filter_name'])) {
+                $filter_name = $this->request->post['filter_name'];
             } else {
                 $filter_name = '';
             }

@@ -122,8 +122,10 @@ function save(type){
 <script type="text/javascript">
 	$('input[name="company_name"]').amsifySuggestags({
 		suggestionsAction : {
+                        type: 'POST',
 			url : 'admin/index.php?path=dropdowns/dropdowns/companynames&token=<?php echo $token; ?>',
-			beforeSend : function() {
+			beforeSend : function(xhr, settings) {
+                        settings.data += '&'+$.param({ filter_name: $('input[class="amsify-suggestags-input"]').val() });
 			console.info('beforeSend');
 			},
 			success: function(data) {
@@ -139,14 +141,6 @@ function save(type){
 		},
         defaultTagClass : 'bg-primary',
         whiteList: true,
-        afterAdd : function(value) {
-        console.info('ADD');
-	console.info(value);
-	},
-	afterRemove : function(value) {
-        console.info('REMOVE');
-	console.info(value);
-        },
         getSelected : function(value) {
         console.info('getSelected');
         $('#selected').val(value);
