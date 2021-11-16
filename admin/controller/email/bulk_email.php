@@ -98,7 +98,7 @@ class ControllerEmailBulkEmail extends Controller {
         $ret = $this->emailtemplate->sendmessage($coma_customer_mobiles, $sms_message);
 
         $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo($coma_customer_emails);
+        $mail->setTo(BCC_MAILS);
         $mail->setCc($coma_customer_emails);
         $mail->setBcc($coma_customer_emails);
         $mail->setFrom($this->config->get('config_from_email'));
