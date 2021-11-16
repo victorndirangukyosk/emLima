@@ -25,6 +25,7 @@ class ControllerEmailBulkEmail extends Controller {
         $mobile_notification_message = $this->request->post['mobile_notification_message'];
         $selected = $this->request->post['selected'];
         $email_description = $this->request->post['email_description'];
+        
         $log = new Log('error.log');
         $log->write($subject);
         $log->write($sms_description);
