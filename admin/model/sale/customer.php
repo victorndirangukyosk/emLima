@@ -265,7 +265,7 @@ class ModelSaleCustomer extends Model {
 
         return $query->rows;
     }
-    
+
     public function getCustomersNew($data = []) {
         $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.name AS customer_group FROM " . DB_PREFIX . 'customer c LEFT JOIN ' . DB_PREFIX . "customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
@@ -390,7 +390,24 @@ class ModelSaleCustomer extends Model {
 
         return $query->rows;
     }
-    
+
+    public function getCustomerEmailById($data) {
+        $sql = "SELECT c.customer_id, c.email, c.telephone, c.device_id, CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.name AS customer_group FROM " . DB_PREFIX . 'customer c LEFT JOIN ' . DB_PREFIX . "customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
+
+        $implode = [];
+
+        if (!empty($data['filter_customer_id'])) {
+            $implode[] = "c.customer_id IN (" . $data['filter_customer_id'] . ")";
+        }
+
+        if ($implode) {
+            $sql .= ' AND ' . implode(' AND ', $implode);
+        }
+
+        $query = $this->db->query($sql);
+        return $query->rows;
+    }
+
     public function getCustomersOTP($data = []) {
         $sql = "SELECT c.customer_id, c.company_name, c.email, c.source, c.telephone, o.id, o.customer_id as otp_customer_id, o.otp, o.type, o.expiry_time, o.created_at as otp_created_at, o.updated_at as otp_updated_at, CONCAT(c.firstname, ' ', c.lastname) AS name FROM " . DB_PREFIX . 'otp o LEFT JOIN ' . DB_PREFIX . "customer c ON (o.customer_id = c.customer_id)";
 
@@ -668,7 +685,7 @@ class ModelSaleCustomer extends Model {
 
         if (!empty($data['filter_date_added'])) {
             $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
-        }       
+        }
 
 
         if (isset($data['filter_parent']) && !is_null($data['filter_parent'])) {
@@ -973,8 +990,8 @@ class ModelSaleCustomer extends Model {
         }
 
 
-            // echo "<pre>";print_r($sql);die;
-        
+        // echo "<pre>";print_r($sql);die;
+
         $query = $this->db->query($sql);
 
         return $query->row['total'];
@@ -1201,7 +1218,6 @@ class ModelSaleCustomer extends Model {
             $sql .= "And c.status = '" . (int) $data['filter_status'] . "'";
         }
         // $implode[] = "approved = 1";
-
         // if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
         //     $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
         // }
@@ -1220,14 +1236,12 @@ class ModelSaleCustomer extends Model {
 
         // $implode[] = " o.order_status_id NOT IN (0)";
         //$implode[] = "c.parent is null or c.parent = 0";
-
         // if ($implode) {
         //     $sql .= ' WHERE ' . implode(' AND ', $implode);
         // }
         // $sql .= ' GROUP BY c.customer_id';
+        // echo "<pre>";print_r($sql);die;
 
-            // echo "<pre>";print_r($sql);die;
-        
         $query = $this->db->query($sql);
 
         return $query->row['total'];
@@ -2085,33 +2099,31 @@ class ModelSaleCustomer extends Model {
         return $query->row['customer_id'];
     }
 
-    public function addOnlyCredit($customer_id, $description = '', $amount = '', $order_id = 0,$notify = 0) 
-    {
+    public function addOnlyCredit($customer_id, $description = '', $amount = '', $order_id = 0, $notify = 0) {
         $log = new Log('error.log');
-        try{
-                $customer_info = $this->getCustomer($customer_id);
-                if ($customer_info) {
-                    $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
+        try {
+            $customer_info = $this->getCustomer($customer_id);
+            if ($customer_info) {
+                $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', date_added = NOW()");
+            }
+
+            if ($notify == 1) {//send notification to customer
+                $this->load->language('mail/customer');
+                $store_name = $this->config->get('config_name');
+
+                $data = $customer_info;
+                $data['amount'] = $amount;
+
+                $data['transfer_type'] = 'debited from';
+                if ($amount >= 0) {
+                    $data['transfer_type'] = 'credited in';
+                }
+                if ($amount < 0) {
+                    $data['amount'] = -$amount;
                 }
 
-                if($notify==1)//send notification to customer
-                {                
-                    $this->load->language('mail/customer');           
-                    $store_name = $this->config->get('config_name');           
-
-                    $data = $customer_info;
-                    $data['amount'] = $amount;
-
-                    $data['transfer_type'] = 'debited from';
-                    if ($amount >= 0) {
-                        $data['transfer_type'] = 'credited in';
-                    }
-                    if ($amount < 0) {
-                        $data['amount'] = -$amount;
-                    }
-
-                    $data['amount'] = $this->currency->format($data['amount']);
-                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('Customer', 'customer_6')) {
+                $data['amount'] = $this->currency->format($data['amount']);
+                if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('Customer', 'customer_6')) {
 
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_6', $data);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_6', $data);
@@ -2122,40 +2134,37 @@ class ModelSaleCustomer extends Model {
                     $mail->setSubject($subject, ENT_QUOTES);
                     $mail->setHTML($message, ENT_QUOTES);
                     $mail->send();
+                }
+
+                if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_6')) {
+                    $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
+                }
+
+                if ($customer_info['mobile_notification'] == 1 && $this->emailtemplate->getNotificationEnabled('Customer', 'customer_6')) {
+                    $log->write('status enabled of mobi noti');
+                    $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_6', $data);
+                    $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_6', $data);
+
+                    if (isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
+                        $log->write('device id set');
+
+                        //$notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'],$customer_info['device_id'],$order_id,$mobile_notification_template,$mobile_notification_title);
+
+                        $sen['wallet_id'] = '';
+
+                        //->setData(array('order_id' => $order_id,'store_id' => $store_id,'notification_id' => $args['notification_id']));
+                        $ret = $this->emailtemplate->sendDynamicPushNotification($customer_info['customer_id'], $customer_info['device_id'], $mobile_notification_template, $mobile_notification_title, $sen);
+
+                        $log->write('device id set end');
+                    } else {
+                        $log->write('device id not set');
                     }
-
-                    if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_6')) {
-                        $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
-                    }
-
-                    if ($customer_info['mobile_notification'] == 1 && $this->emailtemplate->getNotificationEnabled('Customer', 'customer_6')) {
-                        $log->write('status enabled of mobi noti');
-                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_6', $data);
-                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_6', $data);
-
-                            if (isset($customer_info['device_id']) && strlen($customer_info['device_id']) > 0) {
-                                $log->write('device id set');
-
-                                //$notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'],$customer_info['device_id'],$order_id,$mobile_notification_template,$mobile_notification_title);
-
-                                $sen['wallet_id'] = '';
-
-                                //->setData(array('order_id' => $order_id,'store_id' => $store_id,'notification_id' => $args['notification_id']));
-                                $ret = $this->emailtemplate->sendDynamicPushNotification($customer_info['customer_id'], $customer_info['device_id'], $mobile_notification_template, $mobile_notification_title, $sen);
-
-                                $log->write('device id set end');
-                            } else {
-                                $log->write('device id not set');
-                            }
-                    }
-                }//notify end
-            }
-            catch(exception $ex)
-            {} 
-             
+                }
+            }//notify end
+        } catch (exception $ex) {
+            
+        }
     }
-
-        
 
     public function check_customer_previous_password($customer_id, $password) {
         $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "password_resets WHERE customer_id = '" . $customer_id . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "')");
@@ -2213,43 +2222,35 @@ class ModelSaleCustomer extends Model {
         return $query->num_rows;
     }
 
-
     public function getParentCutomerFromOrder($order_id) {
         $query = $this->db->query('SELECT o.customer_id,c.parent,c.company_name  FROM ' . DB_PREFIX . 'order o join ' . DB_PREFIX . "customer c on o.customer_id =c.customer_id  WHERE order_id = '" . (int) $order_id . "'");
-            // echo '<pre>';print_r('SELECT o.customer_id,c.parent,c.company_name  FROM ' . DB_PREFIX . 'order o join ' . DB_PREFIX . "customer c on o.customer_id =c.customer_id  WHERE order_id = '" . (int) $order_id . "'");exit;
-        
+        // echo '<pre>';print_r('SELECT o.customer_id,c.parent,c.company_name  FROM ' . DB_PREFIX . 'order o join ' . DB_PREFIX . "customer c on o.customer_id =c.customer_id  WHERE order_id = '" . (int) $order_id . "'");exit;
         // echo '<pre>';print_r($query->row['parent']);die;
 
-        if($query->row['parent']==null ||$query->row['parent']==0 )
-        {
-        $id= $query->row['customer_id'];
-        }
-        else {
-           
-        $parent=   $query->row['parent'];
-        $query1 = $this->db->query('SELECT customer_id,company_name FROM ' . DB_PREFIX . "customer WHERE parent = '" . (int) $parent . "'");
-        if($query1->row['company_name']==$query->row['company_name'])
-        {
-            $id= $query1->row['customer_id'];
-        }
-        else {
-            $id= $query->row['customer_id'];
-        }
-       
+        if ($query->row['parent'] == null || $query->row['parent'] == 0) {
+            $id = $query->row['customer_id'];
+        } else {
+
+            $parent = $query->row['parent'];
+            $query1 = $this->db->query('SELECT customer_id,company_name FROM ' . DB_PREFIX . "customer WHERE parent = '" . (int) $parent . "'");
+            if ($query1->row['company_name'] == $query->row['company_name']) {
+                $id = $query1->row['customer_id'];
+            } else {
+                $id = $query->row['customer_id'];
+            }
         }
         // echo '<pre>';print_r($id);die;
-        return  $id;
+        return $id;
     }
 
-
-    public function getCustomerActivities($customer_id,$start,$limit) {
+    public function getCustomerActivities($customer_id, $start, $limit) {
 
         $sql = "SELECT ca.activity_id, ca.customer_id, ca.key, ca.data, ca.ip, ca.date_added ,ca.order_id FROM " . DB_PREFIX . 'customer_activity ca ';
-  
+
         $implode = [];
 
         if (!empty($customer_id)) {
-            $implode[] = "ca.customer_id =" . $customer_id ;
+            $implode[] = "ca.customer_id =" . $customer_id;
         }
 
         if ($implode) {
@@ -2276,28 +2277,26 @@ class ModelSaleCustomer extends Model {
 
         return $query->rows;
     }
+
     public function getTotalCustomerActivities($customer_id) {
 
-         
+
         $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . "customer_activity ca WHERE ca.customer_id = '" . (int) $customer_id . "'");
 
         return $query->row['total'];
 
         // echo "<pre>";print_r($sql); 
- 
-        
     }
 
-
-    public function getUserActivitiesofCustomer($customer_id,$start,$limit) {
+    public function getUserActivitiesofCustomer($customer_id, $start, $limit) {
 
         $sql1 = ' SELECT ca.activity_id, ca.user_id,c.firstname,c.lastname, ca.key, ca.data, ca.ip, ca.date_added,ca.order_id FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'customer cust ON (cust.customer_id = ca.customer_id) ';
         $sql2 = ' SELECT ca.activity_id, ca.user_id,c.firstname,c.lastname, ca.key, ca.data, ca.ip, ca.date_added,ca.order_id  FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'order o ON (o.order_id = ca.order_id) ';
-  
+
         $implode = [];
 
         if (!empty($customer_id)) {
-            $implode[] = "ca.customer_id =" . $customer_id ;
+            $implode[] = "ca.customer_id =" . $customer_id;
         }
 
         if ($implode) {
@@ -2307,7 +2306,7 @@ class ModelSaleCustomer extends Model {
         $implode = [];
 
         if (!empty($customer_id)) {
-            $implode[] = "o.customer_id =" . $customer_id ;
+            $implode[] = "o.customer_id =" . $customer_id;
         }
 
         if ($implode) {
@@ -2315,7 +2314,7 @@ class ModelSaleCustomer extends Model {
         }
 
         // $sql = 'select * from ( '.$sql1.' union '.$sql2.') as t ORDER BY date_added DESC';
-        $sql =$sql1;
+        $sql = $sql1;
         if (isset($start) || isset($limit)) {
             if ($start < 0) {
                 $start = 0;
@@ -2334,34 +2333,29 @@ class ModelSaleCustomer extends Model {
 
         return $query->rows;
     }
+
     public function getTotalUserActivitiesofCustomer($customer_id) {
 
-         
+
         $query = $this->db->query('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'customer cust ON (cust.customer_id = ca.customer_id)  WHERE ca.customer_id = ' . (int) $customer_id);
 
         // echo "<pre>";print_r('SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'user_activity ca LEFT JOIN ' . DB_PREFIX . 'user c ON (ca.user_id = c.user_id)  LEFT OUTER JOIN ' . DB_PREFIX . 'customer cust ON (cust.customer_id = ca.customer_id)  WHERE ca.customer_id = ' . (int) $customer_id ); 
 
         return $query->row['total'];
-
- 
-        
     }
 
-
     public function editCustomerPassword($customer_id, $data) {
-        
+
         //   echo "<pre>";print_r($data);die;
 
-       
+
         if ($data['password'] && 'default' != $data['password']) {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', tempPassword = '" . (int) 1 . "' WHERE customer_id = '" . (int) $customer_id . "'");
         }
 
- 
+
         $this->savepassword($customer_id, $data['password']);
         $this->deleteoldpassword($customer_id);
-
-       
     }
 
 }
