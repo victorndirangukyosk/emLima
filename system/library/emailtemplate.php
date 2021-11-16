@@ -436,8 +436,8 @@ class Emailtemplate {
 
     public function getCustomerReplace($data) {
         $result = [
-            'firstname' => $data['firstname'],
-            'lastname' => $data['lastname'],
+            'firstname' => isset($data['firstname']) ? $data['firstname'] : '',
+            'lastname' => isset($data['lastname']) ? $data['lastname'] : '',
             'branchname' => isset($data['branchname']) ? $data['branchname'] : '',
             'subuserfirstname' => isset($data['subuserfirstname']) ? $data['subuserfirstname'] : '',
             'subuserlastname' => isset($data['subuserlastname']) ? $data['subuserlastname'] : '', 
@@ -449,8 +449,8 @@ class Emailtemplate {
             'deliveryexecutivephone' => isset($data['deliveryexecutivephone']) ? $data['deliveryexecutivephone'] : '',
             'date' => date($this->language->get('date_format_short'), strtotime(date('Y-m-d H:i:s'))),
             'store_name' => $this->config->get('config_name'),
-            'email' => $data['email'],
-            'password' => $data['password'],
+            'email' => isset($data['email']) ? $data['email'] : '',
+            'password' => isset($data['password']) ? $data['password'] : '',
             'account_href' => HTTP_CATALOG . 'index.php?path=account/login',
             'activate_href' => (!empty($data['confirm_code'])) ? $this->url->link('account/activate', 'token=' . $data['confirm_code'], 'SSL') : '',
             'order_link' => isset($data['order_link']) ? $data['order_link'] : '',
@@ -471,14 +471,14 @@ class Emailtemplate {
             'amount' => isset($data['amount']) ? $data['amount'] : '',
             'transfer_type' => isset($data['transfer_type']) ? $data['transfer_type'] : '',
             'ip_address' => isset($data['ip_address']) ? $data['ip_address'] : '',
-            'order_id' => $data['order_id'],
-            'status' => $data['status'],
-            'mpesa_receipt_number' => $data['mpesa_receipt_number'],
-            'bulk_notification_subject' => $data['bulk_notification_subject'],
-            'bulk_notification_email_description' => $data['bulk_notification_email_description'],
-            'bulk_notification_sms_description' => $data['bulk_notification_sms_description'],
-            'bulk_notification_mobile_title'=> $data['bulk_notification_mobile_title'],
-            'bulk_notification_mobile_message' => $data['bulk_notification_mobile_message'],
+            'order_id' => isset($data['order_id']) ? $data['order_id'] : '',
+            'status' => isset($data['status']) ? $data['status'] : '',
+            'mpesa_receipt_number' => isset($data['mpesa_receipt_number']) ? $data['mpesa_receipt_number'] : '',
+            'bulk_notification_subject' => isset($data['bulk_notification_subject']) ? $data['bulk_notification_subject'] : '',
+            'bulk_notification_email_description' => isset($data['bulk_notification_email_description']) ? $data['bulk_notification_email_description'] : '',
+            'bulk_notification_sms_description' => isset($data['bulk_notification_sms_description']) ? $data['bulk_notification_sms_description'] : '',
+            'bulk_notification_mobile_title'=> isset($data['bulk_notification_mobile_title']) ? $data['bulk_notification_mobile_title'] : '',
+            'bulk_notification_mobile_message' => isset($data['bulk_notification_mobile_message']) ? $data['bulk_notification_mobile_message'] : '',
 
         ];
 
