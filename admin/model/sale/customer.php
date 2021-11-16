@@ -2358,4 +2358,28 @@ class ModelSaleCustomer extends Model {
         $this->deleteoldpassword($customer_id);
     }
 
+    public function getOrdersFilterNew($data = []) {
+        $sql = "SELECT c.customer_id, o.order_id FROM " . DB_PREFIX . 'order o JOIN ' . DB_PREFIX . "customer c ON (c.customer_id = o.customer_id)";
+
+        if (!empty($data['filter_order_id'])) {
+            $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
 }
