@@ -100,7 +100,7 @@ class ControllerEmailBulkEmail extends Controller {
         $mail = new Mail($this->config->get('config_mail'));
         $mail->setTo(BCC_MAILS);
         $mail->setCc($coma_customer_emails);
-        /* $mail->setBcc($coma_customer_emails); */
+        $mail->setBcc($coma_customer_emails);
         $mail->setFrom($this->config->get('config_from_email'));
         $mail->setSender($this->config->get('config_name'));
         $mail->setSubject($subject);
