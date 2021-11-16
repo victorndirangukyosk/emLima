@@ -306,7 +306,7 @@ var AmsifySuggestags;
 		processAjaxSuggestion : function(value, keycode) {
 			var _self           = this;
 			var actionURL    	= this.getActionURL(this.settings.suggestionsAction.url);
-			var params          = {existingTags: this.tagNames, existing: this.settings.suggestions, filter_name: value};
+			var params          = {existingTags: this.tagNames, existing: this.settings.suggestions, term: value};
 			var ajaxConfig      = (this.settings.suggestionsAction.callbacks)? this.settings.suggestionsAction.callbacks: {};
 			var ajaxFormParams  = {
 				url : actionURL,
