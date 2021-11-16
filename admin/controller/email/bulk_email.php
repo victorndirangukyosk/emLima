@@ -95,17 +95,25 @@ class ControllerEmailBulkEmail extends Controller {
         $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_94', $notification);
         $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_94', $notification);
 
-        $ret = $this->emailtemplate->sendmessage($coma_customer_mobiles, $sms_message);
-
+        $this->sendbulksms($coma_customer_mobiles, $sms_message);
         $mail = new Mail($this->config->get('config_mail'));
         $mail->setTo(BCC_MAILS);
         $mail->setCc($coma_customer_emails);
-        $mail->setBcc($coma_customer_emails);
+        /* $mail->setBcc($coma_customer_emails); */
         $mail->setFrom($this->config->get('config_from_email'));
         $mail->setSender($this->config->get('config_name'));
         $mail->setSubject($subject);
         $mail->setHTML($message);
         $mail->send();
+    }
+
+    public function sendbulksms($coma_customer_mobiles, $sms_message) {
+        $coma_customer_mobiles = explode(",", $coma_customer_mobiles);
+        foreach ($coma_customer_mobiles as $coma_customer_mobile) {
+            $log = new Log('error.log');
+            $log->write($coma_customer_mobile);
+            $ret = $this->emailtemplate->sendmessage($coma_customer_mobile, $sms_message);
+        }
     }
 
 }
