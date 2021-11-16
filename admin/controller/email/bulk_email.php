@@ -96,6 +96,7 @@ class ControllerEmailBulkEmail extends Controller {
         $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_94', $notification);
 
         $this->sendbulksms($coma_customer_mobiles, $sms_message);
+        $this->sendbulkpushnotification($results, $mobile_notification_title, $mobile_notification_template);
         $mail = new Mail($this->config->get('config_mail'));
         $mail->setTo(BCC_MAILS);
         $mail->setCc($coma_customer_emails);
@@ -113,6 +114,12 @@ class ControllerEmailBulkEmail extends Controller {
             $log = new Log('error.log');
             $log->write($coma_customer_mobile);
             $ret = $this->emailtemplate->sendmessage($coma_customer_mobile, $sms_message);
+        }
+    }
+
+    public function sendbulkpushnotification($results, $mobile_notification_title, $mobile_notification_template) {
+        foreach ($results as $result) {
+            $ret = $this->emailtemplate->sendDynamicPushNotification($result['customer_id'], $result['device_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
         }
     }
 
