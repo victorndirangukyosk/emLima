@@ -91,6 +91,11 @@ class ControllerEmailBulkEmail extends Controller {
 
         $subject = $this->emailtemplate->getSubject('Customer', 'customer_94', $notification);
         $message = $this->emailtemplate->getMessage('Customer', 'customer_94', $notification);
+        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_94', $notification);
+        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_94', $notification);
+        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_94', $notification);
+
+        $ret = $this->emailtemplate->sendmessage($coma_customer_mobiles, $sms_message);
 
         $mail = new Mail($this->config->get('config_mail'));
         $mail->setTo($coma_customer_emails);
