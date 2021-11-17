@@ -62,8 +62,10 @@ class ControllerEmailBulkEmail extends Controller {
             $filter_data['filter_delivery_time_slot'] = $delivery_time_slot;
             $this->load->model('sale/customer');
             $delivery_date_time_orders = $this->model_sale_customer->getOrdersFilterNew($filter_data);
+            $selected = NULL;
             if (is_array($delivery_date_time_orders) && count($delivery_date_time_orders) > 0) {
                 $selected = array_column($delivery_date_time_orders, 'customer_id');
+                $selected = implode(',', $selected);
             }
         }
         $log->write($delivery_date_time_orders);
