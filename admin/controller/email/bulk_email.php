@@ -70,7 +70,7 @@ class ControllerEmailBulkEmail extends Controller {
         }
         $log->write($delivery_date_time_orders);
         $log->write($selected);
-        exit;
+
         $log->write($subject);
         $log->write($sms_description);
         $log->write($mobile_notification_title);
