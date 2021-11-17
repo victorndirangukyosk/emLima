@@ -1717,8 +1717,8 @@ class ModelToolExportImport extends Model
             if ($product_ids) {
                 $log->write('upload 5. delete');
                 $ids = rtrim($product_ids, ',');
-
-                $this->deleteProducts($ids, $exist_table_product_tag, $url_alias_ids);
+                //...
+                //// $this->deleteProducts($ids, $exist_table_product_tag, $url_alias_ids);
                 //$this->deleteVariations($ids);
             }
         }
@@ -1862,7 +1862,8 @@ class ModelToolExportImport extends Model
             $product['sort_order'] = $sort_order;
             if (!$incremental) {
                 $log->write('upload in incremental');
-                $this->deleteProduct($product_id, $exist_table_product_tag);
+                //....
+                // $this->deleteProduct($product_id, $exist_table_product_tag);
             }
             $this->moreProductCells($i, $j, $data, $product);
             $this->storeProductIntoDatabase($product, $languages, $product_fields, $exist_table_product_tag, $exist_meta_title, $layout_ids, $available_store_ids, $manufacturers, $weight_class_ids, $length_class_ids, $url_alias_ids, $incremental);
@@ -2025,8 +2026,9 @@ class ModelToolExportImport extends Model
 
         // generate and execute SQL for inserting the product
 
-        $exists = $this->db->query('select * from '.DB_PREFIX.'product where model="'.$model.'"');
-
+        // $exists = $this->db->query('select * from '.DB_PREFIX.'product where model="'.$model.'"');
+        $exists = $this->db->query('select * from '.DB_PREFIX.'product where product_id="'.$product_id.'"');
+        
         if ($exists->num_rows) {
             $exists = true;
         } else {
@@ -2063,7 +2065,8 @@ class ModelToolExportImport extends Model
                 ."status='".$status."', "
                 .'date_added = NOW(), '
                 .'date_modified = NOW(), '
-                ."sort_order='".$sort_order."' Where model=".$model;
+                // ."sort_order='".$sort_order."' Where model=".$model;
+                ."sort_order='".$sort_order."' Where product_id==".$product_id;
 
             $this->db->query($sql);
 
