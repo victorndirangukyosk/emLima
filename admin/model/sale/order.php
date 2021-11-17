@@ -375,7 +375,7 @@ class ModelSaleOrder extends Model {
                     'category_price_status' => $category_price_status,
                     'category_price_variant' => $category_price > 0 && $category_price_status == 0 ? 'disabled' : '',
                     'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
-                    'qty_in_cart' => $r['qty_in_cart'],
+                    'qty_in_cart' => isset($r['qty_in_cart']) ? $r['qty_in_cart'] : NULL,
                     'key' => $key,
                     'model' => $r['model']
                 ];
