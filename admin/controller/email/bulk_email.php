@@ -11,6 +11,11 @@ class ControllerEmailBulkEmail extends Controller {
         if (empty($data['text_editor'])) {
             $data['text_editor'] = 'tinymce';
         }
+
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $data['time_slots'] = $deliveryTimeslots;
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
@@ -27,6 +32,11 @@ class ControllerEmailBulkEmail extends Controller {
         if (empty($data['text_editor'])) {
             $data['text_editor'] = 'tinymce';
         }
+
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $data['time_slots'] = $deliveryTimeslots;
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
@@ -35,14 +45,32 @@ class ControllerEmailBulkEmail extends Controller {
     }
 
     public function sendbulknotification() {
+        $log = new Log('error.log');
         $subject = $this->request->post['subject'];
         $sms_description = $this->request->post['sms_description'];
         $mobile_notification_title = $this->request->post['mobile_notification_title'];
         $mobile_notification_message = $this->request->post['mobile_notification_message'];
         $selected = $this->request->post['selected'];
         $email_description = $this->request->post['email_description'];
+        $delivery_date = isset($this->request->post['delivery_date']) ? $this->request->post['delivery_date'] : NULL;
+        $delivery_time_slot = isset($this->request->post['delivery_time_slot']) ? $this->request->post['delivery_time_slot'] : NULL;
 
-        $log = new Log('error.log');
+        $delivery_date_time_orders = NULL;
+        if ($delivery_date != NULL && $delivery_time_slot != NULL) {
+
+            $filter_data['filter_delivery_date'] = $delivery_date;
+            $filter_data['filter_delivery_time_slot'] = $delivery_time_slot;
+            $this->load->model('sale/customer');
+            $delivery_date_time_orders = $this->model_sale_customer->getOrdersFilterNew($filter_data);
+            $selected = NULL;
+            if (is_array($delivery_date_time_orders) && count($delivery_date_time_orders) > 0) {
+                $selected = array_column($delivery_date_time_orders, 'customer_id');
+                $selected = implode(',', $selected);
+            }
+        }
+        $log->write($delivery_date_time_orders);
+        $log->write($selected);
+
         $log->write($subject);
         $log->write($sms_description);
         $log->write($mobile_notification_title);

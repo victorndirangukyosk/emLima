@@ -6,7 +6,7 @@
 			<div class="pull-right">
                             <button type="button" id="send_notification" name="send_notification" form="form-email-template" data-toggle="tooltip" title="Send Notification" class="btn btn-success" data-original-title="Send"><i class="fa fa-envelope"></i></button>
 		        </div>
-			<h1>Send Notification To Bulk Customers</h1>
+			<h1>Send Notification To Bulk Orders</h1>
 		</div>
 	</div>
 	<div class="container-fluid">
@@ -31,12 +31,34 @@
 						<div class="tab-content">
 							<div class="tab-pane" id="notification">
                                                                 <div class="form-group required">
-									<label class="col-sm-2 control-label" for="input-subject">Company Name</label>
+									<label class="col-sm-2 control-label" for="input-subject">Order ID's</label>
 									<div class="col-sm-10">
-										<input type="text" name="order_id" value="" placeholder="Type Here Order IDs" id="input-order-id" class="form-control input-full-width" />
+										<input type="text" name="order_id" value="" placeholder="Type Here Order ID's" id="input-order-id" class="form-control input-full-width" />
   										<input type="hidden" name="selected" value="" id="selected"/>
 									</div>
 								</div>
+                                                            <div class="form-group required">
+                                                                <label class="col-sm-2 control-label" for="input-delivery-date">Delivery Date</label>
+                                                                <div class="col-sm-5">
+                                                                    <div class="input-group date">
+                                                                        <input type="text" name="filter_delivery_date" value="" placeholder="Delivery Date" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
+                                                                        <span class="input-group-btn">
+                                                                            <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                                                        </span>
+                                                                    </div>	
+                                                                </div>
+                                                            </div>
+                                                                <div class="form-group required">
+                                                               <label class="col-sm-2 control-label" for="input-delivery-time-slot">Delivery Time Slot</label>
+									<div class="col-sm-5">
+										<select name="filter_delivery_time_slot" id="input-delivery-time-slot" class="form-control">
+                                                                                <option value="">Select Delivery Time Slot</option>
+                                                                                <?php foreach ($time_slots as $time_slot) { ?>
+                                                                                <option value="<?php echo $time_slot['timeslot']; ?>"><?php echo $time_slot['timeslot']; ?></option>
+                                                                                <?php } ?>
+                                                                                </select>
+									</div>  
+                                                                </div>
 								<div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-subject">Subject</label>
 									<div class="col-sm-10">
@@ -105,6 +127,11 @@
 </style>
 
 <script type="text/javascript"><!--
+$('.date').datetimepicker({
+            pickTime: false,
+              widgetParent: 'body'
+});
+
 $('#language a:first').tab('show');
 //--></script>
 <script type="text/javascript"><!--
@@ -153,7 +180,7 @@ $('#send_notification').on('click', function () {
                     url: 'index.php?path=email/bulk_email/sendbulknotification&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data: 'subject=' + encodeURIComponent($('#subject').val()) + '&sms_description='+ encodeURIComponent($('#sms_description').val()) + '&mobile_notification_title='+ encodeURIComponent($('#mobile_notification_title').val()) + '&mobile_notification_message='+ encodeURIComponent($('#mobile_notification_message').val()) + '&selected='+ encodeURIComponent($('#selected').val()) + '&email_description='+ encodeURIComponent($("#input-notification-description").val()),
+                    data: 'subject=' + encodeURIComponent($('#subject').val()) + '&sms_description='+ encodeURIComponent($('#sms_description').val()) + '&mobile_notification_title='+ encodeURIComponent($('#mobile_notification_title').val()) + '&mobile_notification_message='+ encodeURIComponent($('#mobile_notification_message').val()) + '&selected='+ encodeURIComponent($('#selected').val()) + '&email_description='+ encodeURIComponent($("#input-notification-description").val()) + '&delivery_date='+ encodeURIComponent($("#input-delivery-date").val()) + '&delivery_time_slot='+ encodeURIComponent($("#input-delivery-time-slot").val()),
                     success: function (json) {
                     console.log(json);
                     }
