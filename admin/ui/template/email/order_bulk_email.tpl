@@ -14,9 +14,7 @@
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 		</div>
             
-		<div class="alert alert-danger" style="display:none;"><i class="fa fa-exclamation-circle"></i><div class="errmsg"></div>
-			<button type="button" class="close" data-dismiss="alert">&times;</button>
-		</div>
+		<div class="alert alert-danger" style="display:none;"></div>
             
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -184,15 +182,15 @@ var email_description = $('#input-notification-description').val();
 
 if(subject.length <= 0) {
 $('.alert-danger').show();
-$('.errmsg').html("");
-$('.errmsg').html("Mail Subject Required!");    
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i>Mail Subject Required!<button type="button" class="close" data-dismiss="alert">&times;</button>');
 return false;
 }
 
 if(email_description.length <= 0) {
 $('.alert-danger').show();
-$('.errmsg').html("");
-$('.errmsg').html("Mail Description Required!");    
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i>Mail Description Required!<button type="button" class="close" data-dismiss="alert">&times;</button>');
 return false;
 }
 
@@ -205,15 +203,15 @@ return false;
 
 if(mobile_notification_title.length <= 0) {
 $('.alert-danger').show();
-$('.errmsg').html("");
-$('.errmsg').html("Mobile Notification Title Required!");    
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i>Mobile Notification Title Required!<button type="button" class="close" data-dismiss="alert">&times;</button>');
 return false;
 }
 
 if(mobile_notification_message.length <= 0) {
 $('.alert-danger').show();
-$('.errmsg').html("");
-$('.errmsg').html("Mobile Notification Message Required!");   
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i>Mobile Notification Message Required!<button type="button" class="close" data-dismiss="alert">&times;</button>');
 return false;
 }
                 $.ajax({
