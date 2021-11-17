@@ -103,10 +103,11 @@
       <thead>
         <tr>
           <td style="width: 15%;" ><b><?php echo $column_product; ?></b></td>
-          <td style="width: 15%;" ><b><?php echo $column_produce_type; ?></b></td> 
+          <!--<td style="width: 15%;" ><b><?php echo $column_produce_type; ?></b></td>--> 
+          <td style="width: 15%;" ><b>Product Notes</b></td>
           <td style="width: 15%;"><b><?php echo $column_unit; ?></b></td>
           <td class="text-right"><b><?php echo $column_quantity; ?></b></td>
-		   <td style="width: 15%;"><b><?php echo $column_unit_update; ?></b></td>
+          <td style="width: 15%;"><b><?php echo $column_unit_update; ?></b></td>
           <td class="text-right"><b><?php echo $column_quantity_update; ?></b></td>
           <td class="text-right"><b><?php echo $column_price; ?> (<?php echo $this->currency->getSymbolLeft() ?>)</b></td>
           <td class="text-right"><b><?php echo $column_total; ?></b></td>
@@ -116,8 +117,9 @@
       <tbody>
         <?php foreach ($order['product'] as $product) { ?>
         <tr>
-          <td class="text-right" ><input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][name]" value="<?php echo $product['name']; ?>"/></td>
-          <td class="text-right"><input type="text" class="form-control"  disabled name="products[<?php echo $product['product_id']?>][produce_type]" placeholder='-' value="<?php if($product['produce_type']<>null){echo $product['produce_type'];}?>"/></td> 
+          <td class="text-right"><input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][name]" value="<?php echo $product['name']; ?>"/></td>
+          <!--<td class="text-right"><input type="text" class="form-control"  disabled name="products[<?php echo $product['product_id']?>][produce_type]" placeholder='-' value="<?php if($product['produce_type']<>null){echo $product['produce_type'];}?>"/></td>-->
+          <td class="text-right"><input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][product_note]" placeholder='Product Notes' value="<?php if($product['product_note']<>null){echo $product['product_note'];}?>"/></td>
           <td class="text-right"><input type="text" class="form-control"  disabled name="products[<?php echo $product['product_id']?>][unit]" value="<?php echo $product['unit']; ?>"/></td>
           <td class="text-right">
 
@@ -150,7 +152,7 @@
             <input type="hidden" name="products[<?php echo $product['product_id']?>][product_id]" value="<?php echo $product['product_id']?>"/>
 
             <input type="hidden" name="products[<?php echo $product['product_id']?>][model]" value="<?php echo $product['model']?>"/>
-            <input type="hidden" name="products[<?php echo $product['product_id']?>][product_note]" value="<?php echo $product['product_note']?>"/>
+            <!--<input type="hidden" name="products[<?php echo $product['product_id']?>][product_note]" value="<?php echo $product['product_note']?>"/>-->
             <input type="hidden" name="products[<?php echo $product['product_id']?>][produce_type]" value="<?php echo $product['produce_type']?>"/>
 
             <!-- <a class="remove" style="color:red;cursor: pointer;"> X </a>  -->
@@ -406,7 +408,8 @@ $(document).delegate('.changeUnit','change', function() {
   
   
   $(this).parent().parent().children().eq(0).children('input[name="products['+old_product_id+'][name]"]').attr('name', 'products['+new_product_id+'][name]');
-  $(this).parent().parent().children().eq(1).children('input[name="products['+old_product_id+'][produce_type]"]').attr('name', 'products['+new_product_id+'][produce_type]');
+  /*$(this).parent().parent().children().eq(1).children('input[name="products['+old_product_id+'][produce_type]"]').attr('name', 'products['+new_product_id+'][produce_type]');*/
+  $(this).parent().parent().children().eq(1).children('input[name="products['+old_product_id+'][product_note]"]').attr('name', 'products['+new_product_id+'][product_note]');
   $(this).parent().parent().children().eq(2).children('input[name="products['+old_product_id+'][unit]"]').attr('name', 'products['+new_product_id+'][unit]');
   $(this).parent().parent().children().eq(3).children('input[name="products['+old_product_id+'][quantity]"]').attr('name', 'products['+new_product_id+'][quantity]');
   $(this).parent().parent().children().eq(4).children('select[name="products['+old_product_id+'][unit]"]').attr('name', 'products['+new_product_id+'][unit]');
@@ -416,7 +419,9 @@ $(document).delegate('.changeUnit','change', function() {
   $(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][product_id]"]').attr('name', 'products['+new_product_id+'][product_id]');
   $(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][model]"]').attr('name', 'products['+new_product_id+'][model]');
   $(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][product_note]"]').attr('name', 'products['+new_product_id+'][product_note]');
-  $(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][produce_type]"]').attr('name', 'products['+new_product_id+'][produce_type]');
+  /*$(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][produce_type]"]').attr('name', 'products['+new_product_id+'][produce_type]');*/
+  $(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][product_note]"]').attr('name', 'products['+new_product_id+'][product_note]');
+
   
   console.log($(this).parent().parent().children().eq(8).children('input[name="products['+old_product_id+'][product_id]"]').val($(this).find(':selected').attr('data-product_id')));
 
@@ -696,11 +701,17 @@ function add() {
   $html += '<td class="text-right">';
   $html += '<input type="text" class="form-control" name="products['+noProduct+'][name]" value=""/>';
   
-  $html += '</td>';
+  /*$html += '</td>';
    $html += '<td class="text-right">';
   $html += '<input type="text" class="form-control" disabled  name="products['+noProduct+'][produce_type]" value="-"/>';
   
+  $html += '</td>';*/
+  
   $html += '</td>';
+  $html += '<td class="text-right">';
+  $html += '<input type="text" class="form-control"  name="products['+noProduct+'][product_note]" value="" placeholder="Product Notes"/>';
+  
+  $html += '</td>';      
 
   $html += '<td class="text-right">';
   $html += '<input type="text" class="form-control" disabled name="products['+noProduct+'][unit]" value=""/>';
