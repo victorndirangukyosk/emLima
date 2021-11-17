@@ -6,7 +6,7 @@
 			<div class="pull-right">
                             <button type="button" id="send_notification" name="send_notification" form="form-email-template" data-toggle="tooltip" title="Send Notification" class="btn btn-success" data-original-title="Send"><i class="fa fa-envelope"></i></button>
 		        </div>
-			<h1>Send Notification To Bulk Customers</h1>
+			<h1>Send Notification To Bulk Orders</h1>
 		</div>
 	</div>
 	<div class="container-fluid">
@@ -31,9 +31,9 @@
 						<div class="tab-content">
 							<div class="tab-pane" id="notification">
                                                                 <div class="form-group required">
-									<label class="col-sm-2 control-label" for="input-subject">Company Name</label>
+									<label class="col-sm-2 control-label" for="input-subject">Order ID's</label>
 									<div class="col-sm-10">
-										<input type="text" name="order_id" value="" placeholder="Type Here Order IDs" id="input-order-id" class="form-control input-full-width" />
+										<input type="text" name="order_id" value="" placeholder="Type Here Order ID's" id="input-order-id" class="form-control input-full-width" />
   										<input type="hidden" name="selected" value="" id="selected"/>
 									</div>
 								</div>
