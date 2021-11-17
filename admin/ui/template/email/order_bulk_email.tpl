@@ -176,6 +176,46 @@ function save(type){
 </script>
 <script type="text/javascript">
 $('#send_notification').on('click', function () {
+var sms_description = $('#sms_description').val();
+var mobile_notification_title = $('#mobile_notification_title').val();
+var mobile_notification_message = $('#mobile_notification_message').val();
+var subject = $('#subject').val();
+var email_description = $('#input-notification-description').val();
+
+if(sms_description.length <= 0) {
+$('.alert-danger').show();
+$('.alert-danger').html("");
+$('.alert-danger').html("SMS Description Required!");    
+return false;
+}
+
+if(mobile_notification_title.length <= 0) {
+$('.alert-danger').show();
+$('.alert-danger').html("");
+$('.alert-danger').html("Mobile Notification Title Required!");    
+return false;
+}
+
+if(mobile_notification_message.length <= 0) {
+$('.alert-danger').show();
+$('.alert-danger').html("");
+$('.alert-danger').html("Mobile Notification Message Required!");   
+return false;
+}
+
+if(subject.length <= 0) {
+$('.alert-danger').show();
+$('.alert-danger').html("");
+$('.alert-danger').html("Mail Subject Required!");    
+return false;
+}
+
+if(email_description.length <= 0) {
+$('.alert-danger').show();
+$('.alert-danger').html("");
+$('.alert-danger').html("Mail Description Required!");    
+return false;
+}
                 $.ajax({
                     url: 'index.php?path=email/bulk_email/sendbulknotification&token=<?php echo $token; ?>',
                     type: 'post',
