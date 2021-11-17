@@ -37,6 +37,18 @@
   										<input type="hidden" name="selected" value="" id="selected"/>
 									</div>
 								</div>
+                                                                <div class="form-group required">
+									<label class="col-sm-2 control-label" for="input-delivery-date">Delivery Date</label>
+									<div class="col-sm-5">
+										<input type="text" name="order_id" value="" placeholder="Type Here Order ID's" id="input-order-id" class="form-control input-full-width" />
+  										<input type="hidden" name="selected" value="" id="selected"/>
+									</div>
+                                                                        <label class="col-sm-2 control-label" for="input-delivery-time-slot">Delivery Time Slot</label>
+									<div class="col-sm-5">
+										<input type="text" name="order_id" value="" placeholder="Type Here Order ID's" id="input-order-id" class="form-control input-full-width" />
+  										<input type="hidden" name="selected" value="" id="selected"/>
+									</div>
+								</div>
 								<div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-subject">Subject</label>
 									<div class="col-sm-10">
