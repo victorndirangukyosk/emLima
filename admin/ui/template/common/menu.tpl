@@ -163,7 +163,10 @@
             <?php if($preturn_order_receivables) { ?>
             <li><a href="<?php echo $order_receivables; ?>">Payment Receivables</a></li>
             <?php } ?>
-
+            
+            <?php if($preturn_order_bulk_email) { ?>
+            <li><a href="<?php echo $order_bulk_notification; ?>">Send Notification To Bulk Orders</a></li>
+            <?php } ?>
 
         </ul>
     </li>
