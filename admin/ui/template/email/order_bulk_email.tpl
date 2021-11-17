@@ -184,12 +184,14 @@ if($("#input-delivery-date").val() != '' && $("#input-delivery-time-slot").val()
 $('.alert-danger').show();
 $('.alert-danger').html("");    
 $('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Delivery Time Slot Required!');
+return false;
 }
 
 if($("#input-delivery-date").val() == '' && $("#input-delivery-time-slot").val() != '') {
 $('.alert-danger').show();
 $('.alert-danger').html("");    
 $('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Delivery Date Required!');
+return false;
 }
 
 if($("#input-delivery-date").val() == '' && $("#input-delivery-time-slot").val() == '' && $("#selected").val() == '')
@@ -197,6 +199,7 @@ if($("#input-delivery-date").val() == '' && $("#input-delivery-time-slot").val()
 $('.alert-danger').show();
 $('.alert-danger').html("");    
 $('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Select Atleaset One Dropdown!');
+return false;
 }
 
 if(subject.length <= 0) {

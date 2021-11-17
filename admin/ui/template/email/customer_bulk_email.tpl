@@ -159,6 +159,7 @@ if($("#selected").val() == '')
 $('.alert-danger').show();
 $('.alert-danger').html("");    
 $('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Select Atleaset One Comapny!');
+return false;
 }
 
 if(subject.length <= 0) {
