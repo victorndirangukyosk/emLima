@@ -39,10 +39,13 @@
 								</div>
                                                                 <div class="form-group required">
                                                                     <div class="row">
+                                                                        <div class="col-sm-6">
 									<label class="col-sm-2 control-label" for="input-delivery-date">Delivery Date</label>
 									<div class="col-sm-5">
 										
 									</div>
+                                                                        </div>
+                                                                        <div class="col-sm-6">
                                                                         <label class="col-sm-2 control-label" for="input-delivery-time-slot">Delivery Time Slot</label>
 									<div class="col-sm-5">
 										<select name="filter_delivery_time_slot" id="input-delivery-time-slot" class="form-control">
@@ -56,6 +59,7 @@
                                                                                 <?php } ?>
                                                                                 </select>
 									</div>
+                                                                        </div>
                                                                     </div>
 								</div>
 								<div class="form-group required">
