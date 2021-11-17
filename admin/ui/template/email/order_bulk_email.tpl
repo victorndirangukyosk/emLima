@@ -37,13 +37,18 @@
   										<input type="hidden" name="selected" value="" id="selected"/>
 									</div>
 								</div>
-                                                                <div class="form-group required">
-									<label class="col-sm-2 control-label" for="input-delivery-date">Delivery Date</label>
-									<div class="col-sm-5">
-										
-									</div>
-								</div>
                                                             <div class="form-group required">
+                                                                <label class="col-sm-2 control-label" for="input-delivery-date">Delivery Date</label>
+                                                                <div class="col-sm-5">
+                                                                    <div class="input-group date">
+                                                                        <input type="text" name="filter_delivery_date" value="" placeholder="Delivery Date" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
+                                                                        <span class="input-group-btn">
+                                                                            <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                                                        </span>
+                                                                    </div>	
+                                                                </div>
+                                                            </div>
+                                                                <div class="form-group required">
                                                                <label class="col-sm-2 control-label" for="input-delivery-time-slot">Delivery Time Slot</label>
 									<div class="col-sm-5">
 										<select name="filter_delivery_time_slot" id="input-delivery-time-slot" class="form-control">
@@ -57,7 +62,7 @@
                                                                                 <?php } ?>
                                                                                 </select>
 									</div>  
-                                                            </div>
+                                                                </div>
 								<div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-subject">Subject</label>
 									<div class="col-sm-10">
@@ -126,6 +131,11 @@
 </style>
 
 <script type="text/javascript"><!--
+$('.date').datetimepicker({
+            pickTime: false,
+              widgetParent: 'body'
+});
+
 $('#language a:first').tab('show');
 //--></script>
 <script type="text/javascript"><!--
