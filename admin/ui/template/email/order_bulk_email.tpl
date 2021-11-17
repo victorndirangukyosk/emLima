@@ -10,11 +10,11 @@
 		</div>
 	</div>
 	<div class="container-fluid">
-            <div class="alert alert-success" style="display:none;"><i class="fa fa-check-circle"></i>
+            <div class="alert alert-success" style="display:none;"><i class="fa fa-check-circle"></i><div class="sucmsg"></div>
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 		</div>
             
-		<div class="alert alert-danger" style="display:none;"><i class="fa fa-exclamation-circle"></i>
+		<div class="alert alert-danger" style="display:none;"><i class="fa fa-exclamation-circle"></i><div class="errmsg"></div>
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
 		</div>
             
@@ -182,38 +182,38 @@ var mobile_notification_message = $('#mobile_notification_message').val();
 var subject = $('#subject').val();
 var email_description = $('#input-notification-description').val();
 
-if(sms_description.length <= 0) {
-$('.alert-danger').show();
-$('.alert-danger').html("");
-$('.alert-danger').html("SMS Description Required!");    
-return false;
-}
-
-if(mobile_notification_title.length <= 0) {
-$('.alert-danger').show();
-$('.alert-danger').html("");
-$('.alert-danger').html("Mobile Notification Title Required!");    
-return false;
-}
-
-if(mobile_notification_message.length <= 0) {
-$('.alert-danger').show();
-$('.alert-danger').html("");
-$('.alert-danger').html("Mobile Notification Message Required!");   
-return false;
-}
-
 if(subject.length <= 0) {
 $('.alert-danger').show();
-$('.alert-danger').html("");
-$('.alert-danger').html("Mail Subject Required!");    
+$('#errmsg').html("");
+$('#errmsg').html("Mail Subject Required!");    
 return false;
 }
 
 if(email_description.length <= 0) {
 $('.alert-danger').show();
-$('.alert-danger').html("");
-$('.alert-danger').html("Mail Description Required!");    
+$('#errmsg').html("");
+$('#errmsg').html("Mail Description Required!");    
+return false;
+}
+
+if(sms_description.length <= 0) {
+$('.alert-danger').show();
+$('#errmsg').html("");
+$('#errmsg').html("SMS Description Required!");    
+return false;
+}
+
+if(mobile_notification_title.length <= 0) {
+$('.alert-danger').show();
+$('#errmsg').html("");
+$('#errmsg').html("Mobile Notification Title Required!");    
+return false;
+}
+
+if(mobile_notification_message.length <= 0) {
+$('.alert-danger').show();
+$('#errmsg').html("");
+$('#errmsg').html("Mobile Notification Message Required!");   
 return false;
 }
                 $.ajax({
