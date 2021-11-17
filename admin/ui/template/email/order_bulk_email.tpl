@@ -10,11 +10,8 @@
 		</div>
 	</div>
 	<div class="container-fluid">
-            <div class="alert alert-success" style="display:none;"><i class="fa fa-check-circle"></i><div class="sucmsg"></div>
-			<button type="button" class="close" data-dismiss="alert">&times;</button>
-		</div>
-            
-		<div class="alert alert-danger" style="display:none;"></div>
+            <div class="alert alert-success" style="display:none;"></div>
+	    <div class="alert alert-danger" style="display:none;"></div>
             
 		<div class="panel panel-default">
 			<div class="panel-heading">
