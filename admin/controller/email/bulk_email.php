@@ -45,14 +45,26 @@ class ControllerEmailBulkEmail extends Controller {
     }
 
     public function sendbulknotification() {
+        $log = new Log('error.log');
         $subject = $this->request->post['subject'];
         $sms_description = $this->request->post['sms_description'];
         $mobile_notification_title = $this->request->post['mobile_notification_title'];
         $mobile_notification_message = $this->request->post['mobile_notification_message'];
         $selected = $this->request->post['selected'];
         $email_description = $this->request->post['email_description'];
+        $delivery_date = isset($this->request->post['delivery_date']) ? $this->request->post['delivery_date'] : NULL;
+        $delivery_time_slot = isset($this->request->post['delivery_time_slot']) ? $this->request->post['delivery_time_slot'] : NULL;
 
-        $log = new Log('error.log');
+        $delivery_date_time_orders = NULL;
+        if ($delivery_date != NULL && $delivery_time_slot != NULL) {
+
+            $filter_data['filter_delivery_date'] = $delivery_date;
+            $filter_data['filter_delivery_time_slot'] = $delivery_time_slot;
+
+            $delivery_date_time_orders = $this->model_sale_customer->getOrdersFilterNew($filter_data);
+        }
+        $log->write($delivery_date_time_orders);
+        exit;
         $log->write($subject);
         $log->write($sms_description);
         $log->write($mobile_notification_title);
