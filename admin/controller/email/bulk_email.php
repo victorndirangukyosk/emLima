@@ -11,6 +11,11 @@ class ControllerEmailBulkEmail extends Controller {
         if (empty($data['text_editor'])) {
             $data['text_editor'] = 'tinymce';
         }
+
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $data['time_slots'] = $deliveryTimeslots;
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
@@ -27,6 +32,11 @@ class ControllerEmailBulkEmail extends Controller {
         if (empty($data['text_editor'])) {
             $data['text_editor'] = 'tinymce';
         }
+
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $data['time_slots'] = $deliveryTimeslots;
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');

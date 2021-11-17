@@ -40,13 +40,20 @@
                                                                 <div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-delivery-date">Delivery Date</label>
 									<div class="col-sm-5">
-										<input type="text" name="order_id" value="" placeholder="Type Here Order ID's" id="input-order-id" class="form-control input-full-width" />
-  										<input type="hidden" name="selected" value="" id="selected"/>
+										
 									</div>
                                                                         <label class="col-sm-2 control-label" for="input-delivery-time-slot">Delivery Time Slot</label>
 									<div class="col-sm-5">
-										<input type="text" name="order_id" value="" placeholder="Type Here Order ID's" id="input-order-id" class="form-control input-full-width" />
-  										<input type="hidden" name="selected" value="" id="selected"/>
+										<select name="filter_delivery_time_slot" id="input-delivery-time-slot" class="form-control">
+                                                                                <option value="">Select <?php echo $column_delivery_time_slot; ?></option>
+                                                                                <?php foreach ($time_slots as $time_slot) { ?>
+                                                                                <?php if ($time_slot['timeslot'] == $filter_delivery_time_slot) { ?>
+                                                                                <option value="<?php echo $time_slot['timeslot']; ?>" selected="selected"><?php echo $time_slot['timeslot']; ?></option>
+                                                                                <?php } else { ?>
+                                                                                <option value="<?php echo $time_slot['timeslot']; ?>"><?php echo $time_slot['timeslot']; ?></option>
+                                                                                <?php } ?>
+                                                                                <?php } ?>
+                                                                                </select>
 									</div>
 								</div>
 								<div class="form-group required">
