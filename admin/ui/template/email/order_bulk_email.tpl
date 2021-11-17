@@ -183,35 +183,35 @@ var email_description = $('#input-notification-description').val();
 if(subject.length <= 0) {
 $('.alert-danger').show();
 $('.alert-danger').html("");    
-$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i>Mail Subject Required!<button type="button" class="close" data-dismiss="alert">&times;</button>');
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Mail Subject Required!');
 return false;
 }
 
 if(email_description.length <= 0) {
 $('.alert-danger').show();
 $('.alert-danger').html("");    
-$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i>Mail Description Required!<button type="button" class="close" data-dismiss="alert">&times;</button>');
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Mail Description Required!');
 return false;
 }
 
 if(sms_description.length <= 0) {
 $('.alert-danger').show();
-$('.errmsg').html("");
-$('.errmsg').html("SMS Description Required!");    
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> SMS Description Required!');
 return false;
 }
 
 if(mobile_notification_title.length <= 0) {
 $('.alert-danger').show();
 $('.alert-danger').html("");    
-$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i>Mobile Notification Title Required!<button type="button" class="close" data-dismiss="alert">&times;</button>');
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i>Mobile Notification Title Required!');
 return false;
 }
 
 if(mobile_notification_message.length <= 0) {
 $('.alert-danger').show();
 $('.alert-danger').html("");    
-$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i>Mobile Notification Message Required!<button type="button" class="close" data-dismiss="alert">&times;</button>');
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i>Mobile Notification Message Required!');
 return false;
 }
                 $.ajax({
