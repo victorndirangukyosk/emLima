@@ -55,85 +55,87 @@ class ControllerEmailBulkEmail extends Controller {
         $delivery_date = isset($this->request->post['delivery_date']) ? $this->request->post['delivery_date'] : NULL;
         $delivery_time_slot = isset($this->request->post['delivery_time_slot']) ? $this->request->post['delivery_time_slot'] : NULL;
 
-        $delivery_date_time_orders = NULL;
-        if ($delivery_date != NULL && $delivery_time_slot != NULL) {
+        if (($delivery_date != NULL && $delivery_time_slot != NULL) || $selected != NULL) {
+            $delivery_date_time_orders = NULL;
+            if ($delivery_date != NULL && $delivery_time_slot != NULL) {
 
-            $filter_data['filter_delivery_date'] = $delivery_date;
-            $filter_data['filter_delivery_time_slot'] = $delivery_time_slot;
-            $this->load->model('sale/customer');
-            $delivery_date_time_orders = $this->model_sale_customer->getOrdersFilterNew($filter_data);
-            $selected = NULL;
-            if (is_array($delivery_date_time_orders) && count($delivery_date_time_orders) > 0) {
-                $selected = array_column($delivery_date_time_orders, 'customer_id');
-                $selected = implode(',', $selected);
+                $filter_data['filter_delivery_date'] = $delivery_date;
+                $filter_data['filter_delivery_time_slot'] = $delivery_time_slot;
+                $this->load->model('sale/customer');
+                $delivery_date_time_orders = $this->model_sale_customer->getOrdersFilterNew($filter_data);
+                $selected = NULL;
+                if (is_array($delivery_date_time_orders) && count($delivery_date_time_orders) > 0) {
+                    $selected = array_column($delivery_date_time_orders, 'customer_id');
+                    $selected = implode(',', $selected);
+                }
             }
+            $log->write($delivery_date_time_orders);
+            $log->write($selected);
+
+            $log->write($subject);
+            $log->write($sms_description);
+            $log->write($mobile_notification_title);
+            $log->write($mobile_notification_message);
+            $log->write($selected);
+            $log->write($email_description);
+
+            $this->load->model('sale/customer');
+            $data['filter_customer_id'] = $selected;
+            $results = $this->model_sale_customer->getCustomerEmailById($data);
+            $customer_emails = array_column($results, 'email');
+            $customer_emails = array_filter($customer_emails);
+            $customer_mobiles = array_column($results, 'telephone');
+            $customer_mobiles = array_filter($customer_mobiles);
+            $customer_devices = array_column($results, 'device_id');
+            $customer_devices = array_filter($customer_devices);
+
+            $log->write($customer_emails);
+            $log->write($customer_mobiles);
+            $log->write($customer_devices);
+
+            $coma_customer_emails = NULL;
+            $coma_customer_mobiles = NULL;
+            $coma_customer_devices = NULL;
+            if (is_array($customer_emails) && count($customer_emails) > 0) {
+                $coma_customer_emails = implode(',', $customer_emails);
+            }
+
+            if (is_array($customer_mobiles) && count($customer_mobiles) > 0) {
+                $coma_customer_mobiles = implode(',', $customer_mobiles);
+            }
+
+            if (is_array($customer_devices) && count($customer_devices) > 0) {
+                $coma_customer_devices = implode(',', $customer_devices);
+            }
+
+            $log->write($coma_customer_emails);
+            $log->write($coma_customer_mobiles);
+            $log->write($coma_customer_devices);
+
+            $notification['bulk_notification_subject'] = $subject;
+            $notification['bulk_notification_email_description'] = $email_description;
+            $notification['bulk_notification_sms_description'] = $sms_description;
+            $notification['bulk_notification_mobile_title'] = $mobile_notification_title;
+            $notification['bulk_notification_mobile_message'] = $mobile_notification_message;
+
+            $subject = $this->emailtemplate->getSubject('Customer', 'customer_94', $notification);
+            $message = $this->emailtemplate->getMessage('Customer', 'customer_94', $notification);
+            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_94', $notification);
+            $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_94', $notification);
+            $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_94', $notification);
+
+            $this->sendbulksms($coma_customer_mobiles, $sms_message);
+            //$this->sendbulkpushnotification($results, $mobile_notification_title, $mobile_notification_template);
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo(BCC_MAILS);
+            $mail->setCc($coma_customer_emails);
+            $mail->setBcc($coma_customer_emails);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->send();
         }
-        $log->write($delivery_date_time_orders);
-        $log->write($selected);
-
-        $log->write($subject);
-        $log->write($sms_description);
-        $log->write($mobile_notification_title);
-        $log->write($mobile_notification_message);
-        $log->write($selected);
-        $log->write($email_description);
-
-        $this->load->model('sale/customer');
-        $data['filter_customer_id'] = $selected;
-        $results = $this->model_sale_customer->getCustomerEmailById($data);
-        $customer_emails = array_column($results, 'email');
-        $customer_emails = array_filter($customer_emails);
-        $customer_mobiles = array_column($results, 'telephone');
-        $customer_mobiles = array_filter($customer_mobiles);
-        $customer_devices = array_column($results, 'device_id');
-        $customer_devices = array_filter($customer_devices);
-
-        $log->write($customer_emails);
-        $log->write($customer_mobiles);
-        $log->write($customer_devices);
-
-        $coma_customer_emails = NULL;
-        $coma_customer_mobiles = NULL;
-        $coma_customer_devices = NULL;
-        if (is_array($customer_emails) && count($customer_emails) > 0) {
-            $coma_customer_emails = implode(',', $customer_emails);
-        }
-
-        if (is_array($customer_mobiles) && count($customer_mobiles) > 0) {
-            $coma_customer_mobiles = implode(',', $customer_mobiles);
-        }
-
-        if (is_array($customer_devices) && count($customer_devices) > 0) {
-            $coma_customer_devices = implode(',', $customer_devices);
-        }
-
-        $log->write($coma_customer_emails);
-        $log->write($coma_customer_mobiles);
-        $log->write($coma_customer_devices);
-
-        $notification['bulk_notification_subject'] = $subject;
-        $notification['bulk_notification_email_description'] = $email_description;
-        $notification['bulk_notification_sms_description'] = $sms_description;
-        $notification['bulk_notification_mobile_title'] = $mobile_notification_title;
-        $notification['bulk_notification_mobile_message'] = $mobile_notification_message;
-
-        $subject = $this->emailtemplate->getSubject('Customer', 'customer_94', $notification);
-        $message = $this->emailtemplate->getMessage('Customer', 'customer_94', $notification);
-        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_94', $notification);
-        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_94', $notification);
-        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_94', $notification);
-
-        $this->sendbulksms($coma_customer_mobiles, $sms_message);
-        //$this->sendbulkpushnotification($results, $mobile_notification_title, $mobile_notification_template);
-        $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo(BCC_MAILS);
-        $mail->setCc($coma_customer_emails);
-        $mail->setBcc($coma_customer_emails);
-        $mail->setFrom($this->config->get('config_from_email'));
-        $mail->setSender($this->config->get('config_name'));
-        $mail->setSubject($subject);
-        $mail->setHTML($message);
-        $mail->send();
     }
 
     public function sendbulksms($coma_customer_mobiles, $sms_message) {
