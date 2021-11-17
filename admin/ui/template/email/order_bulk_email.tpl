@@ -38,6 +38,7 @@
 									</div>
 								</div>
                                                                 <div class="form-group required">
+                                                                    <div class="row">
 									<label class="col-sm-2 control-label" for="input-delivery-date">Delivery Date</label>
 									<div class="col-sm-5">
 										
@@ -55,6 +56,7 @@
                                                                                 <?php } ?>
                                                                                 </select>
 									</div>
+                                                                    </div>
 								</div>
 								<div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-subject">Subject</label>
