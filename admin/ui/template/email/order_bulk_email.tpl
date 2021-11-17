@@ -180,6 +180,28 @@ var mobile_notification_message = $('#mobile_notification_message').val();
 var subject = $('#subject').val();
 var email_description = $('#input-notification-description').val();
 
+$('.alert-danger').hide();
+$('.alert-success').hide();
+
+if($("#input-delivery-date").val() != '' && $("#input-delivery-time-slot").val() == '') {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Delivery Time Slot Required!');
+}
+
+if($("#input-delivery-date").val() == '' && $("#input-delivery-time-slot").val() != '') {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Delivery Date Required!');
+}
+
+if($("#input-delivery-date").val() == '' && $("#input-delivery-time-slot").val() == '' && $("#selected").val() == '')
+{
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Select Atleaset One Dropdown!');
+}
+
 if(subject.length <= 0) {
 $('.alert-danger').show();
 $('.alert-danger').html("");    
