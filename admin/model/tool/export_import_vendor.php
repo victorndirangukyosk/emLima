@@ -1338,6 +1338,8 @@ class ModelToolExportImportVendor extends Model
 
             // read the various worksheets and load them to the database
             if (!$this->validateUpload($reader)) {
+
+
                 return false;
             }
 
@@ -1559,10 +1561,10 @@ class ModelToolExportImportVendor extends Model
         }
 
         //echo "<pre>";print_r("er");die;
-        /*$log = new Log('error.log');
-        $log->write("storeProductIntoDatabase product");
-        $log->write($data);
-        die;*/
+        $log = new Log('error.log');
+        $log->write("storeProductIntoDatabase product -Excel upload");
+        // $log->write($data);
+        
         $available_product_ids = [];
 
         if ($incremental) {
@@ -1579,6 +1581,9 @@ class ModelToolExportImportVendor extends Model
             if ($product_store_id) {
                 $ids = rtrim($product_store_id, ',');
                 //print_r($ids);die;
+                $log->write($ids);
+
+                
                 $this->deleteProducts($ids);
                 //$this->deleteVariations($ids);
             }
