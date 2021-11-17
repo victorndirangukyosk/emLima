@@ -184,36 +184,36 @@ var email_description = $('#input-notification-description').val();
 
 if(subject.length <= 0) {
 $('.alert-danger').show();
-$('#errmsg').html("");
-$('#errmsg').html("Mail Subject Required!");    
+$('.errmsg').html("");
+$('.errmsg').html("Mail Subject Required!");    
 return false;
 }
 
 if(email_description.length <= 0) {
 $('.alert-danger').show();
-$('#errmsg').html("");
-$('#errmsg').html("Mail Description Required!");    
+$('.errmsg').html("");
+$('.errmsg').html("Mail Description Required!");    
 return false;
 }
 
 if(sms_description.length <= 0) {
 $('.alert-danger').show();
-$('#errmsg').html("");
-$('#errmsg').html("SMS Description Required!");    
+$('.errmsg').html("");
+$('.errmsg').html("SMS Description Required!");    
 return false;
 }
 
 if(mobile_notification_title.length <= 0) {
 $('.alert-danger').show();
-$('#errmsg').html("");
-$('#errmsg').html("Mobile Notification Title Required!");    
+$('.errmsg').html("");
+$('.errmsg').html("Mobile Notification Title Required!");    
 return false;
 }
 
 if(mobile_notification_message.length <= 0) {
 $('.alert-danger').show();
-$('#errmsg').html("");
-$('#errmsg').html("Mobile Notification Message Required!");   
+$('.errmsg').html("");
+$('.errmsg').html("Mobile Notification Message Required!");   
 return false;
 }
                 $.ajax({
