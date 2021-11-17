@@ -20,7 +20,7 @@
             
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title"><i class="fa fa-pencil"></i> Send Notification To Bulk Customers</h3>
+				<h3 class="panel-title"><i class="fa fa-pencil"></i> Send Notification To Bulk Orders</h3>
 			</div>
 			<div class="panel-body">
 				<form action="" method="post" enctype="multipart/form-data" id="form-email-template" class="form-horizontal">
@@ -33,7 +33,7 @@
                                                                 <div class="form-group required">
 									<label class="col-sm-2 control-label" for="input-subject">Company Name</label>
 									<div class="col-sm-10">
-										<input type="text" name="company_name" value="" placeholder="Type Here Company Name" id="input-company-name" class="form-control input-full-width" />
+										<input type="text" name="order_id" value="" placeholder="Type Here Order IDs" id="input-order-id" class="form-control input-full-width" />
   										<input type="hidden" name="selected" value="" id="selected"/>
 									</div>
 								</div>
@@ -120,12 +120,12 @@ function save(type){
 <link rel="stylesheet" type="text/css" href="ui/amsify/amsify.suggestags.css">
 <script type="text/javascript" src="ui/amsify/jquery.amsify.suggestags.js"></script>
 <script type="text/javascript">
-	$('input[name="company_name"]').amsifySuggestags({
+	$('input[name="order_id"]').amsifySuggestags({
 		suggestionsAction : {
                         type: 'POST',
-			url : 'admin/index.php?path=dropdowns/dropdowns/companynames&token=<?php echo $token; ?>',
+			url : 'admin/index.php?path=dropdowns/dropdowns/orderids&token=<?php echo $token; ?>',
 			beforeSend : function(xhr, settings) {
-                        settings.data += '&'+$.param({ filter_company: $('input[class="amsify-suggestags-input"]').val() });
+                        settings.data += '&'+$.param({ filter_order_id: $('input[class="amsify-suggestags-input"]').val() });
 			console.info('beforeSend');
 			},
 			success: function(data) {
