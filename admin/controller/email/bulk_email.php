@@ -60,7 +60,7 @@ class ControllerEmailBulkEmail extends Controller {
 
             $filter_data['filter_delivery_date'] = $delivery_date;
             $filter_data['filter_delivery_time_slot'] = $delivery_time_slot;
-
+            $this->load->model('sale/customer');
             $delivery_date_time_orders = $this->model_sale_customer->getOrdersFilterNew($filter_data);
         }
         $log->write($delivery_date_time_orders);
