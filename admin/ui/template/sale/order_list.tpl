@@ -2027,7 +2027,7 @@ function downloadOrdersonsolidated() {
                 url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
             }
             
-            var filter_delivery_time_slot = $('input[name=\'filter_delivery_time_slot\']').val();
+            var filter_delivery_time_slot = $('select[name=\'filter_delivery_time_slot\']').val();
 
             if (filter_delivery_time_slot != '') {
                 url += '&filter_delivery_time_slot=' + encodeURIComponent(filter_delivery_time_slot);
@@ -2165,8 +2165,8 @@ function downloadOrders() {
                 url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
             }
             
-            var filter_delivery_time_slot = $('input[name=\'filter_delivery_time_slot\']').val();
-
+            var filter_delivery_time_slot = $('select[name=\'filter_delivery_time_slot\']').val();
+            
             if (filter_delivery_time_slot != '') {
                 url += '&filter_delivery_time_slot=' + encodeURIComponent(filter_delivery_time_slot);
             }
