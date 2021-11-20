@@ -21,7 +21,7 @@ $_['text_retry'] = 'Retry';
 $_['text_p'] = 'Download Sample Excel For Upload Product Data';
 
 // Entry
-$_['entry_import'] = 'Import from a XLS, XLSX or ODS spreadsheet file';
+$_['entry_import'] = 'Import from a XLS, XLSX file';
 $_['entry_export'] = 'Export requested data to a XLSX spreadsheet file.';
 $_['entry_export_type'] = 'Select what data you want to export:';
 $_['entry_range_type'] = 'Please select the data range you want to export:';
@@ -139,5 +139,6 @@ $_['button_export_page'] = 'By batches';
 $_['help_range_type'] = '(Optional, leave empty if not needed)';
 $_['help_incremental_yes'] = '(Update and/or add data)';
 $_['help_incremental_no'] = '(Delete all old data before Import)';
-$_['help_import'] = 'Spreadsheet can have categories, products, attribute definitions or option definitions. ';
+$_['help_import1'] = 'Spreadsheet can have categories, products, attribute definitions or option definitions. ';
+$_['help_import'] = 'Spreadsheet can have products. ';
 $_['help_format'] = 'Do an Export first to see the exact format of the worksheets!';

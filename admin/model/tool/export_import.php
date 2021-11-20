@@ -1222,7 +1222,7 @@ class ModelToolExportImport extends Model
                 $cacheSettings = [' memoryCacheSize ' => '16MB'];
                 PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
             }
-
+            $log->write('upload 2.1');
             // parse uploaded spreadsheet file
             $inputFileType = PHPExcel_IOFactory::identify($filename);
             $objReader = PHPExcel_IOFactory::createReader($inputFileType);
@@ -1231,6 +1231,8 @@ class ModelToolExportImport extends Model
 
             // read the various worksheets and load them to the database
             if (!$this->validateUpload($reader)) {
+                $log->write('upload 2.2');
+                $log->write('products validation failed');
                 return false;
             }
             $this->clearCache();
@@ -1683,6 +1685,10 @@ class ModelToolExportImport extends Model
 
         // save product view counts
         $view_counts = $this->getProductViewCounts();
+        $log->write('view_counts');
+
+        $log->write($view_counts);
+
 
         // save old url_alias_ids
         $url_alias_ids = $this->getProductUrlAliasIds();
@@ -1700,6 +1706,9 @@ class ModelToolExportImport extends Model
         // if incremental then find current product IDs else delete all old products
         $available_product_ids = [];
         $log->write('upload 5');
+        $log->write('Incremental');
+
+        $log->write($incremental);
         if ($incremental) {
             $log->write('upload 5.if');
             $available_product_ids = $this->getAvailableProductIds($data);
@@ -1717,8 +1726,8 @@ class ModelToolExportImport extends Model
             if ($product_ids) {
                 $log->write('upload 5. delete');
                 $ids = rtrim($product_ids, ',');
-
-                $this->deleteProducts($ids, $exist_table_product_tag, $url_alias_ids);
+                //...
+                //// $this->deleteProducts($ids, $exist_table_product_tag, $url_alias_ids);
                 //$this->deleteVariations($ids);
             }
         }
@@ -1862,9 +1871,15 @@ class ModelToolExportImport extends Model
             $product['sort_order'] = $sort_order;
             if (!$incremental) {
                 $log->write('upload in incremental');
-                $this->deleteProduct($product_id, $exist_table_product_tag);
+                //....
+                // $this->deleteProduct($product_id, $exist_table_product_tag);
             }
+            $log->write('More product Cells 1');
+
             $this->moreProductCells($i, $j, $data, $product);
+            $log->write('More product Cells 2');
+
+
             $this->storeProductIntoDatabase($product, $languages, $product_fields, $exist_table_product_tag, $exist_meta_title, $layout_ids, $available_store_ids, $manufacturers, $weight_class_ids, $length_class_ids, $url_alias_ids, $incremental);
         }
     }
@@ -2024,15 +2039,23 @@ class ModelToolExportImport extends Model
         $sort_order = $product['sort_order'];
 
         // generate and execute SQL for inserting the product
+        $log = new Log('error.log');
+        
+        $log->write('Excel upload Exists or not');
 
-        $exists = $this->db->query('select * from '.DB_PREFIX.'product where model="'.$model.'"');
+        // $exists = $this->db->query('select * from '.DB_PREFIX.'product where model="'.$model.'"');
+        $exists = $this->db->query('select * from '.DB_PREFIX.'product where product_id="'.$product_id.'"');
+        
+        $log->write($exists);
+        $log->write($product_id);
 
         if ($exists->num_rows) {
             $exists = true;
         } else {
             $exists = false;
         }
-
+        $log->write("exists ");
+        $log->write("incremental");
         if ($exists && $incremental) {
             //delete product_description product_tag product_to_category
 
@@ -2063,7 +2086,8 @@ class ModelToolExportImport extends Model
                 ."status='".$status."', "
                 .'date_added = NOW(), '
                 .'date_modified = NOW(), '
-                ."sort_order='".$sort_order."' Where model=".$model;
+                // ."sort_order='".$sort_order."' Where model=".$model;
+                ."sort_order='".$sort_order."' Where product_id==".$product_id;
 
             $this->db->query($sql);
 
@@ -2141,7 +2165,7 @@ class ModelToolExportImport extends Model
             $existsByModel = $this->db->query('select * from '.DB_PREFIX.'product where model="'.$model.'"');
 
             if ($existsByModel->num_rows) {
-                return 0;
+                // return 0;
             }
 
             $sql = 'INSERT INTO `'.DB_PREFIX.'product` SET '

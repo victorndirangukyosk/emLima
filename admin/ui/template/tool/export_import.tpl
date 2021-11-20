@@ -175,11 +175,23 @@
 									<td>
 										<?php echo $entry_import; ?>
 										<span class="help"><?php echo $help_import; ?></span>
-										<span class="help"><?php echo $help_format; ?></span>
+										<!--<span class="help"><?php echo $help_format; ?></span>-->
 									</td>
 								</tr>
+
+
 								<tr>
 									<td>
+										<a href="ui/template/tool/products.xlsx">Download Sample Template</a>
+										<br>
+										<span class="help"><?php echo $help_import; ?></span>
+										<span class="help"></span>
+									</td>
+								</tr>
+
+
+								<tr>
+									<td style="display:none">
 										<?php echo $entry_incremental; ?><br />
 
 										<?php if($this->user->isVendor()) { ?>

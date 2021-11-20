@@ -29,6 +29,10 @@ class ControllerToolExportImport extends Controller
                 $file = $this->request->files['upload']['tmp_name'];
                 $incremental = ($this->request->post['incremental']) ? true : false;
 
+                
+                    // echo "<pre>dd";print_r($file);
+                    // echo "<pre>dd";print_r($incremental);die;
+
                 if (!$this->user->isVendor()) {
                     if (true === $this->model_tool_export_import->upload($file, $this->request->post['incremental'])) {
                         $this->session->data['success'] = $this->language->get('text_success');

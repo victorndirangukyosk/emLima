@@ -10,13 +10,8 @@
 		</div>
 	</div>
 	<div class="container-fluid">
-            <div class="alert alert-success" style="display:none;"><i class="fa fa-check-circle"></i>
-			<button type="button" class="close" data-dismiss="alert">&times;</button>
-		</div>
-            
-		<div class="alert alert-danger" style="display:none;"><i class="fa fa-exclamation-circle"></i>
-			<button type="button" class="close" data-dismiss="alert">&times;</button>
-		</div>
+            <div class="alert alert-success" style="display:none;"></div>
+	    <div class="alert alert-danger" style="display:none;"></div>
             
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -176,6 +171,99 @@ function save(type){
 </script>
 <script type="text/javascript">
 $('#send_notification').on('click', function () {
+var sms_description = $('#sms_description').val();
+var mobile_notification_title = $('#mobile_notification_title').val();
+var mobile_notification_message = $('#mobile_notification_message').val();
+var subject = $('#subject').val();
+var email_description = $('#input-notification-description').val();
+
+$('.alert-danger').hide();
+$('.alert-success').hide();
+
+if($("#input-delivery-date").val() != '' && $("#input-delivery-time-slot").val() == '') {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Delivery Time Slot Required!');
+return false;
+}
+
+if($("#input-delivery-date").val() == '' && $("#input-delivery-time-slot").val() != '') {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Delivery Date Required!');
+return false;
+}
+
+if($("#input-delivery-date").val() == '' && $("#input-delivery-time-slot").val() == '' && $("#selected").val() == '')
+{
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Select Atleaset One Dropdown!');
+return false;
+}
+
+if(subject.length <= 0) {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Mail Subject Required!');
+return false;
+}
+
+if(subject.length > 30) {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Mail Subject Must Be Between 1 And 30 Characters!');
+return false;
+}
+
+if(email_description.length <= 0) {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Mail Description Required!');
+return false;
+}
+
+if(sms_description.length <= 0) {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> SMS Description Required!');
+return false;
+}
+
+if(sms_description.length > 160) {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> SMS Description Must Be Between 1 And 160 Characters!');
+return false;
+}
+
+if(mobile_notification_title.length <= 0) {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Mobile Notification Title Required!');
+return false;
+}
+
+if(mobile_notification_title.length > 50) {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Mobile Notification Title Must Be 1 And 50 Characters!');
+return false;
+}
+
+if(mobile_notification_message.length <= 0) {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Mobile Notification Message Required!');
+return false;
+}
+
+if(mobile_notification_message.length > 50) {
+$('.alert-danger').show();
+$('.alert-danger').html("");    
+$('.alert-danger').html('<i class="fa fa-exclamation-circle"></i> Mobile Notification Message Must Be 1 And 50 Characters!');
+return false;
+}
                 $.ajax({
                     url: 'index.php?path=email/bulk_email/sendbulknotification&token=<?php echo $token; ?>',
                     type: 'post',
