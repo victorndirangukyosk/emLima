@@ -2365,6 +2365,14 @@ class ModelSaleCustomer extends Model {
             $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
         }
 
+        if (!empty($data['filter_delivery_date'])) {
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
+        }
+
+        if (!empty($data['filter_delivery_time_slot'])) {
+            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
+        }
+
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
                 $data['start'] = 0;

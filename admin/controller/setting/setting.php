@@ -2849,6 +2849,14 @@ class ControllerSettingSetting extends Controller
             $data['config_financeteam'] = '';
         }
 
+        if (isset($this->request->post['config_meatcheckingteam'])) {
+            $data['config_meatcheckingteam'] = $this->request->post['config_meatcheckingteam'];
+        } elseif (isset($email_info[5]['value'])) {
+            $data['config_meatcheckingteam'] =$email_info[5]['value'];
+        } else {
+            $data['config_meatcheckingteam'] = '';
+        }
+
 
         $this->document->setTitle("Email Settings");
         $this->load->model('setting/setting');
@@ -2905,6 +2913,11 @@ class ControllerSettingSetting extends Controller
  
 
         if ((strpos( $this->request->post['config_financeteam'],"@")==false) ) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+
+
+        if ((strpos( $this->request->post['config_meatcheckingteam'],"@")==false) ) {
             $this->error['email'] = "Please enter correct Email";
         }
  

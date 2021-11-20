@@ -88,6 +88,17 @@
                             </div> 
 
 
+                              <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-meatcheckingteam">Meat Checking Team</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_meatcheckingteam" value="<?php echo $config_meatcheckingteam; ?>" placeholder="Email ID" id="input-meatcheckingteam" class="form-control" />
+                                    <?php if ($error_meatcheckingteam) { ?>
+                                    <div class="text-danger"><?php echo $error_meatcheckingteam; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div> 
+
+
                       </div>
                        
                     </div>
