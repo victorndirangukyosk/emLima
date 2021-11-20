@@ -69,6 +69,164 @@ class ControllerReportVendorOrders extends Controller {
         $this->model_report_excel->download_report_vendor_orders_excel($data);
     }
 
+    public function downloadorders() {
+        if (isset($this->request->get['filter_city'])) {
+            $filter_city = $this->request->get['filter_city'];
+        } else {
+            $filter_city = null;
+        }
+
+        if (isset($this->request->get['filter_order_id'])) {
+            $filter_order_id = $this->request->get['filter_order_id'];
+        } else {
+            $filter_order_id = null;
+        }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $filter_order_from_id = $this->request->get['filter_order_from_id'];
+        } else {
+            $filter_order_from_id = null;
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $filter_order_to_id = $this->request->get['filter_order_to_id'];
+        } else {
+            $filter_order_to_id = null;
+        }
+
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
+        } else {
+            $filter_customer = null;
+        }
+
+        if (isset($this->request->get['filter_vendor'])) {
+            $filter_vendor = $this->request->get['filter_vendor'];
+        } else {
+            $filter_vendor = null;
+        }
+
+        if (isset($this->request->get['filter_store_name'])) {
+            $filter_store_name = $this->request->get['filter_store_name'];
+        } else {
+            $filter_store_name = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_method'])) {
+            $filter_delivery_method = $this->request->get['filter_delivery_method'];
+        } else {
+            $filter_delivery_method = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $filter_delivery_date = $this->request->get['filter_delivery_date'];
+        } else {
+            $filter_delivery_date = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $filter_delivery_time_slot = $this->request->get['filter_delivery_time_slot'];
+        } else {
+            $filter_delivery_time_slot = null;
+        }
+
+        if (isset($this->request->get['filter_payment'])) {
+            $filter_payment = $this->request->get['filter_payment'];
+        } else {
+            $filter_payment = null;
+        }
+
+        if (isset($this->request->get['filter_order_status'])) {
+            $filter_order_status = $this->request->get['filter_order_status'];
+        } else {
+            $filter_order_status = null;
+        }
+
+        if (isset($this->request->get['filter_order_type'])) {
+            $filter_order_type = $this->request->get['filter_order_type'];
+        } else {
+            $filter_order_type = null;
+        }
+
+        if (isset($this->request->get['filter_total'])) {
+            $filter_total = $this->request->get['filter_total'];
+        } else {
+            $filter_total = null;
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $filter_date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $filter_date_added_end = null;
+        }
+
+        if (isset($this->request->get['filter_date_modified'])) {
+            $filter_date_modified = $this->request->get['filter_date_modified'];
+        } else {
+            $filter_date_modified = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'o.order_id';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'DESC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $filter_data = [
+            'filter_city' => $filter_city,
+            'filter_order_id' => $filter_order_id,
+            'filter_order_from_id' => $filter_order_from_id,
+            'filter_order_to_id' => $filter_order_to_id,
+            'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
+            'filter_vendor' => $this->getUserByName($filter_vendor),
+            'filter_store_name' => $filter_store_name,
+            'filter_delivery_method' => $filter_delivery_method,
+            'filter_delivery_date' => $filter_delivery_date,
+            'filter_delivery_time_slot' => $filter_delivery_time_slot,
+            'filter_payment' => $filter_payment,
+            'filter_order_status' => $filter_order_status,
+            'filter_order_type' => $filter_order_type,
+            'filter_total' => $filter_total,
+            'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
+            'filter_date_modified' => $filter_date_modified,
+            'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
+            'sort' => $sort,
+            'order' => $order,
+            /*'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin'),*/
+        ];
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_orders_excel($filter_data);
+    }
+
     public function index() {
         ini_set('display_errors', "on");
         ini_set('error_reporting', E_ALL);
@@ -403,13 +561,12 @@ class ControllerReportVendorOrders extends Controller {
         $this->response->setOutput($this->load->view('report/vendor_orders.tpl', $data));
     }
 
-    public function consolidatedOrderSheet() { 
+    public function consolidatedOrderSheet() {
 
 
         if (isset($this->request->get['filter_delivery_date'])) {
             $deliveryDate = $this->request->get['filter_delivery_date'];
             $deliveryTime = isset($this->request->get['filter_delivery_time_slot']) && $this->request->get['filter_delivery_time_slot'] != NULL ? $this->request->get['filter_delivery_time_slot'] : '';
-
 
             $filter_data = [
                 'filter_delivery_date' => $deliveryDate,
@@ -418,8 +575,8 @@ class ControllerReportVendorOrders extends Controller {
             $this->load->model('sale/order');
             // $results = $this->model_sale_order->getOrders($filter_data);
             // $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
-        $results = $this->model_sale_order->getOrderswithProcessing($filter_data);
-    } else {
+            $results = $this->model_sale_order->getOrderswithProcessing($filter_data);
+        } else {
             $deliveryDate = null;
         }
         //below if ondition for fast orders, not required in sheduler
@@ -434,11 +591,10 @@ class ControllerReportVendorOrders extends Controller {
 
             if (isset($this->request->get['selected_order_id'])) {
                 $orders = $this->request->get['selected_order_id'];
-            } else
-            {
-                $orders =null;  
+            } else {
+                $orders = null;
             }
-            
+
             $filter_data = [
                 'filter_order_day' => $filter_order_day,
                 'filter_order_status' => $filter_order_status,
@@ -526,7 +682,7 @@ class ControllerReportVendorOrders extends Controller {
         $this->model_report_excel->download_consolidated_order_sheet_excel($data);
     }
 
-    public function consolidatedOrderSheetForOrders() { 
+    public function consolidatedOrderSheetForOrders() {
 
 
         if (isset($this->request->get['filter_delivery_date'])) {
@@ -534,80 +690,80 @@ class ControllerReportVendorOrders extends Controller {
         } else {//consolidated orders data should not be more , so get delivery date
             // $deliveryDate = date("Y-m-d");
         }
-        
+
 
         if (isset($this->request->get['filter_order_status'])) {
             $order_status = $this->request->get['filter_order_status'];
         } else {
             $order_status = null;
         }
-        
+
         if (isset($this->request->get['filter_company'])) {
             $company = $this->request->get['filter_company'];
         } else {
             $company = null;
         }
-        
+
         if (isset($this->request->get['filter_customer'])) {
             $customer = $this->request->get['filter_customer'];
         } else {
             $customer = null;
         }
-        
+
         if (isset($this->request->get['filter_total'])) {
             $total = $this->request->get['filter_total'];
         } else {
             $total = null;
         }
-        
+
         if (isset($this->request->get['filter_delivery_method'])) {
             $delivery_method = $this->request->get['filter_delivery_method'];
         } else {
             $delivery_method = null;
         }
-        
+
         if (isset($this->request->get['filter_payment'])) {
             $payment = $this->request->get['filter_payment'];
         } else {
             $payment = null;
         }
-        
+
         if (isset($this->request->get['filter_order_type'])) {
             $order_type = $this->request->get['filter_order_type'];
         } else {
             $order_type = null;
         }
-        
+
         if (isset($this->request->get['filter_order_from_id'])) {
             $order_from_id = $this->request->get['filter_order_from_id'];
         } else {
             $order_from_id = null;
         }
-        
+
         if (isset($this->request->get['filter_order_to_id'])) {
             $order_to_id = $this->request->get['filter_order_to_id'];
         } else {
             $order_to_id = null;
         }
-        
+
         if (isset($this->request->get['filter_date_added'])) {
             $date_added = $this->request->get['filter_date_added'];
         } else {
             $date_added = null;
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $date_added_end = $this->request->get['filter_date_added_end'];
         } else {
             $date_added_end = null;
         }
-        
+
         if (isset($this->request->get['filter_order_id'])) {
             $order_id = $this->request->get['filter_order_id'];
         } else {
             $order_id = null;
         }
-        
+
         if (isset($this->request->get['filter_delivery_time_slot'])) {
             $delivery_time_slot = $this->request->get['filter_delivery_time_slot'];
         } else {
@@ -616,9 +772,8 @@ class ControllerReportVendorOrders extends Controller {
 
         if (isset($this->request->get['selected_order_id'])) {
             $orders = $this->request->get['selected_order_id'];
-        } else
-        {
-            $orders =null;  
+        } else {
+            $orders = null;
         }
         $filter_data = [
             'filter_delivery_date' => $deliveryDate,
@@ -639,15 +794,12 @@ class ControllerReportVendorOrders extends Controller {
             'filter_delivery_time' => $delivery_time_slot,
         ];
 
-
         // echo "<pre>";print_r($filter_data);die;
 
         $this->load->model('sale/order');
         // $results = $this->model_sale_order->getOrders($filter_data);
         // $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
         $results = $this->model_sale_order->getOrderswithProcessing($filter_data);
-
-        
 
         // echo "<pre>";print_r($results);die;
 
