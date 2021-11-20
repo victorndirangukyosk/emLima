@@ -970,7 +970,7 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
         }
 
-        if (!empty($data['filter_delivery_method'])) {
+        if (!empty($data['filter_delivery_method']) && $data['filter_delivery_method'] != 'undefined') {
             $sql .= " AND o.shipping_method LIKE '%" . $data['filter_delivery_method'] . "%'";
         }
 
@@ -978,7 +978,7 @@ class ModelSaleOrder extends Model {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
         
-        if (!empty($data['filter_delivery_time_slot'])) {
+        if (!empty($data['filter_delivery_time_slot']) && $data['filter_delivery_time_slot'] != 'undefined') {
             $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
         }
 
@@ -998,7 +998,7 @@ class ModelSaleOrder extends Model {
             $sql .= " AND DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
         }
 
-        if (!empty($data['filter_total'])) {
+        if (!empty($data['filter_total']) && $data['filter_total'] > 0) {
             $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
         }
 
@@ -1041,7 +1041,6 @@ class ModelSaleOrder extends Model {
         }
 
         //   echo "<pre>";print_r($sql);die;
-
         $query = $this->db->query($sql);
 
         return $query->rows;
