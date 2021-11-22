@@ -268,6 +268,9 @@ class ControllerExecutivesExecutivesList extends Controller {
 
         $data['entry_name'] = $this->language->get('entry_name');
         $data['entry_email'] = $this->language->get('entry_email');
+        $data['entry_password'] = $this->language->get('entry_password');
+        $data['entry_confirm'] = $this->language->get('entry_confirm');
+
         /* $data['entry_driving_licence'] = $this->language->get('entry_driving_licence'); */
 
 
@@ -426,7 +429,8 @@ class ControllerExecutivesExecutivesList extends Controller {
         $data['entry_telephone'] = $this->language->get('entry_telephone');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_name'] = $this->language->get('entry_name');
-
+        $data['entry_password'] = $this->language->get('entry_password');
+        $data['entry_confirm'] = $this->language->get('entry_confirm');
         $data['button_save'] = $this->language->get('button_save');
         $data['button_savenew'] = $this->language->get('button_savenew');
         $data['button_saveclose'] = $this->language->get('button_saveclose');
@@ -573,6 +577,18 @@ class ControllerExecutivesExecutivesList extends Controller {
             $data['email'] = '';
         }
 
+
+        if (isset($this->request->post['password'])) {
+            $data['password'] = $this->request->post['password'];
+            $data['confirm'] = $this->request->post['confirm'];
+        } elseif (!empty($executive_info)) {
+            $data['password'] = 'default';
+            $data['confirm'] = 'default';
+        } else {
+            $data['password'] = '';
+            $data['confirm'] = '';
+        }
+
         /* if (isset($this->request->post['driving_licence'])) {
           $data['driving_licence'] = $this->request->post['driving_licence'];
           } elseif (!empty($executive_info)) {
@@ -624,6 +640,16 @@ class ControllerExecutivesExecutivesList extends Controller {
             $this->error['email'] = $this->language->get('error_email');
         }
 
+        if (isset($this->request->post['password'])  && ((utf8_strlen($this->request->post['password']) > 10) || (utf8_strlen($this->request->post['password']) < 4) )) {
+            $this->error['password'] = $this->language->get('error_password');
+        }
+        // echo "<pre>";print_r($this->request->post);die;
+
+        if (isset($this->request->post['password'] ) ) {
+           if($this->request->post['password'] != $this->request->post['confirm'])
+            $this->error['password'] = $this->language->get('error_confirm');
+        }
+
         /* if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
           $this->error['driving_licence'] = $this->language->get('error_driving_licence');
           } */
@@ -647,6 +673,7 @@ class ControllerExecutivesExecutivesList extends Controller {
         if ($this->error && !isset($this->error['warning'])) {
             $this->error['warning'] = $this->language->get('error_warning');
         }
+        // echo "<pre>";print_r($this->error);die;
 
         return !$this->error;
     }
