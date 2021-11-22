@@ -82,6 +82,26 @@
                             <?php } ?>
                         </div>
                     </div>
+                    
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-payable">Processing Fee</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="pezesha_processing_fee" value="<?php echo $pezesha_processing_fee; ?>" placeholder="Processing Fee" id="input-payable" class="form-control" />
+                            <?php if ($error_processing_fee) { ?>
+                            <div class="text-danger"><?php echo $error_processing_fee; ?></div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-payable">Loan Duration</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="pezesha_loan_duration" value="<?php echo $pezesha_loan_duration; ?>" placeholder="Laon Duration" id="input-payable" class="form-control" />
+                            <?php if ($error_loan_duration) { ?>
+                            <div class="text-danger"><?php echo $error_loan_duration; ?></div>
+                            <?php } ?>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-total"><span data-toggle="tooltip" title="<?php echo $help_total; ?>"><?php echo $entry_total; ?></span></label>
