@@ -635,17 +635,17 @@ class ControllerDriversDriversList extends Controller {
             $this->error['lastname'] = $this->language->get('error_lastname');
         }
 
-        if (isset($this->request->post['email']) && $this->request->post['email'] != NULL && ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL))) {
+        /*if (isset($this->request->post['email']) && $this->request->post['email'] != NULL && ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL))) {
             $this->error['email'] = $this->language->get('error_email');
-        }
+        }*/
 
-        if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
+        /*if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
             $this->error['driving_licence'] = $this->language->get('error_driving_licence');
-        }
+        }*/
         
-        if ((utf8_strlen($this->request->post['driving_licence_expire_date']) < 1) || (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$this->request->post['driving_licence_expire_date'])) || $this->request->post['driving_licence_expire_date'] == '0000-00-00') {
+        /*if ((utf8_strlen($this->request->post['driving_licence_expire_date']) < 1) || (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$this->request->post['driving_licence_expire_date'])) || $this->request->post['driving_licence_expire_date'] == '0000-00-00') {
             $this->error['driving_licence_expire_date'] = 'Driving Licence Expire Date filed required';
-        }
+        }*/
 
         $driver_info = $this->model_drivers_drivers->getDriverByEmail($this->request->post['email']);
 
