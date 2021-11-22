@@ -78,6 +78,18 @@ class ControllerPaymentPezesha extends Controller {
         } else {
             $data['error_interest'] = '';
         }
+        
+        if (isset($this->error['processing_fee'])) {
+            $data['error_processing_fee'] = $this->error['processing_fee'];
+        } else {
+            $data['error_processing_fee'] = '';
+        }
+        
+        if (isset($this->error['loan_duration'])) {
+            $data['error_loan_duration'] = $this->error['loan_duration'];
+        } else {
+            $data['error_loan_duration'] = '';
+        }
 
         $data['breadcrumbs'] = [];
 
@@ -128,6 +140,18 @@ class ControllerPaymentPezesha extends Controller {
             $data['pezesha_interest'] = $this->request->post['pezesha_interest'];
         } else {
             $data['pezesha_interest'] = $this->config->get('pezesha_interest');
+        }
+        
+        if (isset($this->request->post['pezesha_processing_fee'])) {
+            $data['pezesha_processing_fee'] = $this->request->post['pezesha_processing_fee'];
+        } else {
+            $data['pezesha_processing_fee'] = $this->config->get('pezesha_processing_fee');
+        }
+        
+        if (isset($this->request->post['pezesha_loan_duration'])) {
+            $data['pezesha_loan_duration'] = $this->request->post['pezesha_loan_duration'];
+        } else {
+            $data['pezesha_loan_duration'] = $this->config->get('pezesha_loan_duration');
         }
 
         if (isset($this->request->post['pezesha_environment'])) {
@@ -203,7 +227,12 @@ class ControllerPaymentPezesha extends Controller {
         if (!$this->request->post['pezesha_interest']) {
             $this->error['interest'] = $this->language->get('error_interest');
         }
-
+        if (!$this->request->post['pezesha_processing_fee']) {
+            $this->error['processing_fee'] = $this->language->get('error_processing_fee');
+        }
+        if (!$this->request->post['pezesha_loan_duration']) {
+            $this->error['loan_duration'] = $this->language->get('error_loan_duration');
+        }
         return !$this->error;
     }
 
