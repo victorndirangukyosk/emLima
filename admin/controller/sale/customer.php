@@ -2418,7 +2418,7 @@ class ControllerSaleCustomer extends Controller {
           $this->error['dob'] = $this->language->get('error_dob');
           } */
 
-        if ((utf8_strlen($this->request->post['dob']) != NULL) && !preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $this->request->post['dob'])) {
+        if ((utf8_strlen($this->request->post['dob']) != NULL) && !preg_match("/^([0-9]{1,2})\\/([0-9]{1,2})\\/([0-9]{4})$/",$this->request->post['dob'])) {
             $this->error['dob'] = 'Please Check DOB Format!';
         }
 
