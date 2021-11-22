@@ -68,6 +68,28 @@
                                 <input  style ="width:48%;margin-left:3px;" type="text" name="filter_order_to_id" value="<?php echo $filter_order_to_id; ?>" placeholder="Order ID To" id="input-order-to-id" class="form-control" />
                                     
                                 </div>
+
+
+                                 <br>
+                                <div class="form-group">
+                                   <label class="control-label" for="input-accept-reject-status">Product Status</label>
+                                <select name="filter_accept_reject_status" id="input-accept-reject-status" class="form-control">
+                                    <option value="*" selected></option> 
+                                    <?php if ($filter_accept_reject_status=='A') { ?>
+                                    <option value="A" selected="selected">Accepted</option>
+                                    <?php } else { ?>
+                                    <option value="A">Accepted</option>
+                                    <?php } ?>
+                                     <?php if ($filter_accept_reject_status=='R') { ?>
+                                    <option value="R" selected="selected">Rejected</option>
+                                    <?php } else { ?>
+                                    <option value="R">Rejected</option>
+                                    <?php } ?>
+                                     
+                                </select>
+                                 </div>
+                            
+
                             </div>
 
 
@@ -81,6 +103,7 @@
                                 <label class="control-label" for="input-company">Company Name</label>
                                 <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
                             </div> 
+                            <br>
                             
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
 
@@ -110,9 +133,8 @@
                                    <!-- <td class="text-right">Product Vendor ID</td>-->
                                     <td class="text-left">Product Name</td>
                                     <td class="text-left">Unit</td>
-                                    <td class="text-right">Missing Quantity</td>
-                                   <!-- <td class="text-right">Price</td>
-                                    <td class="text-right">Total</td>-->
+                                    <td class="text-right">Accepted/Rejected Status</td>
+                                  
                                 </tr>
                             </thead>
                             <tbody>
@@ -136,9 +158,8 @@
                                     <!--<td class="text-right"><?php echo $order['product_id']; ?></td>-->
                                     <td class="text-left"><?php echo $order['name']; ?></td>
                                     <td class="text-left"><?php echo $order['unit']; ?></td>
-                                    <td class="text-right"><?php echo $order['quantity_required']; ?></td>
-                                    <!--<td class="text-right"><?php echo $order['price']; ?></td>
-                                    <td class="text-right"><?php echo $order['total']; ?></td>-->
+                                    <td class="text-left"><?php echo $order['status']; ?></td>
+                                    
                                         
                                 </tr>
                                 <?php } ?>
@@ -163,7 +184,7 @@
                </div>
                
 
-               <div class="tab-pane" id="tab-missing-product">
+               <div class="tab-pane" id="tab-accept-reject-product">
 				<table class="table table-bordered">
 				   
 
@@ -176,7 +197,7 @@
     <script type="text/javascript">  
 
    $('#button-filter').on('click', function () {
-            url = 'index.php?path=sale/order_product_missing_products&token=<?php echo $token; ?>';
+            url = 'index.php?path=sale/order_product_accept_reject_products&token=<?php echo $token; ?>';
 
              var filter_company = $('input[name=\'filter_company\']').val();
 
@@ -184,7 +205,11 @@
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
   
- 
+            var filter_accept_reject_status = $('select[name=\'filter_accept_reject_status\']').val();
+
+            if (filter_accept_reject_status != '*') {
+                url += '&filter_accept_reject_status=' + encodeURIComponent(filter_accept_reject_status);
+            }
             
             var filter_order_id = $('input[name=\'filter_order_id\']').val();
 
