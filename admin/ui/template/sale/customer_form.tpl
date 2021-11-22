@@ -115,6 +115,9 @@
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                             </span>
+                            <?php if ($error_dob) { ?>
+                          <div class="text-danger"><?php echo $error_dob; ?></div>
+                          <?php } ?>
                         </div>
                       </div> 
                         
