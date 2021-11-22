@@ -492,7 +492,7 @@ class ModelReportExcel extends Model {
         foreach ($rows as $result) {
             $sub_total = 0;
             $latest_total = 0;
-            $latest_total =  $this->model_report_sale_transaction->getOrderExactTotal($result['order_id']);
+            $latest_total = $this->model_report_sale_transaction->getOrderExactTotal($result['order_id']);
 
             // $totals = $this->model_report_sale_transaction->getOrderTotals($result['order_id']);
             // //echo "<pre>";print_r($totals);die;
@@ -506,13 +506,11 @@ class ModelReportExcel extends Model {
             //         //break;
             //     }
             // }
-
             // $transaction_id = '';
             // $order_transaction_data = $this->model_report_sale_transaction->getOrderTransactionId($result['order_id']);
             // if (count($order_transaction_data) > 0) {
             //     $transaction_id = trim($order_transaction_data['transaction_id']);
             // }
-
             // $rows[$i]['subtotal'] = $this->currency->format($sub_total);
             $rows[$i]['total'] = $this->currency->format($latest_total);
             ++$i;
@@ -1177,7 +1175,7 @@ class ModelReportExcel extends Model {
         }
     }
 
-    public function mail_consolidated_order_sheet_excel($data,$name='') {
+    public function mail_consolidated_order_sheet_excel($data, $name = '') {
         //	    echo "<pre>";print_r($data);die;
 
         $this->load->library('excel');
@@ -1446,8 +1444,7 @@ class ModelReportExcel extends Model {
             $files = glob($folder_path . '/*');
             // Deleting all the files in the list 
             foreach ($files as $file) {
-                if (is_file($file))
-                {
+                if (is_file($file)) {
                     unlink($file); // Delete the given file  
                 }
             }
@@ -1459,9 +1456,8 @@ class ModelReportExcel extends Model {
             $subject = $this->emailtemplate->getSubject('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
             $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
 
-            if($name !="")
-            {
-                $subject=$subject.' evening'; 
+            if ($name != "") {
+                $subject = $subject . ' evening';
             }
             // $subject = "Consolidated Order Sheet";                 
             // $message = "Please find the attachment.  <br>";
@@ -1594,7 +1590,8 @@ class ModelReportExcel extends Model {
 
             // Individual customer orders
             $sheetIndex = 1;
-            $delivery_charge=0;$delivery_charge_vat=0;
+            $delivery_charge = 0;
+            $delivery_charge_vat = 0;
             foreach ($data['orders'] as $order) {
                 $objPHPExcel->createSheet($sheetIndex);
                 $objPHPExcel->setActiveSheetIndex($sheetIndex);
@@ -1605,8 +1602,8 @@ class ModelReportExcel extends Model {
                 if (strlen($worksheetName) > 30) {
                     $worksheetName = substr($worksheetName, 0, 27) . '...';
                 }
-                $delivery_charge=$order['delivery_charge'];
-                $delivery_charge_vat=$order['delivery_charge_vat'];
+                $delivery_charge = $order['delivery_charge'];
+                $delivery_charge_vat = $order['delivery_charge_vat'];
                 $objPHPExcel->getActiveSheet()->setTitle($worksheetName);
 
                 $sheet_title = $worksheetName . ' Order #' . $order['order_id'];
@@ -1677,14 +1674,10 @@ class ModelReportExcel extends Model {
 
                     ++$row;
                 }
-                if(isset($delivery_charge))
-                {
-                    $totalOrderAmountFull = $totalOrderAmount +$delivery_charge_vat+$delivery_charge;
-
-                }
-                else {
+                if (isset($delivery_charge)) {
+                    $totalOrderAmountFull = $totalOrderAmount + $delivery_charge_vat + $delivery_charge;
+                } else {
                     $totalOrderAmountFull = $totalOrderAmount;
-                    
                 }
                 $totalOrderAmount = $this->currency->format($totalOrderAmount);
                 $totalOrderAmountFull = $this->currency->format($totalOrderAmountFull);
@@ -1829,6 +1822,117 @@ class ModelReportExcel extends Model {
             exit;
         } catch (Exception $e) {
             //            echo "<pre>";print_r($e);
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
+    public function download_orders_excel($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        $this->load->language('report/vendor_order');
+        $this->load->model('report/sale');
+        $this->load->model('sale/order');
+        $rows = $this->model_sale_order->getOrders($data);
+        //echo "<pre>";print_r($rows);
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Orders Report')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:E2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Orders Report');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+
+            $vendor = $data['filter_vendor'];
+
+            if (empty($data['filter_vendor'])) {
+                $vendor = 'Combined';
+            }
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A4:E4');
+
+            $objPHPExcel->getActiveSheet()->setCellValue('A4', 'Vendor : ' . $vendor);
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 6, 'Order ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 6, 'Company Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 6, 'Delivery Date');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 6, 'Delivery Time Slot');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 6, 'Order Status');
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 6)->applyFromArray($title);
+
+            // Fetching the table data
+            $row = 7;
+
+            //echo "<pre>";print_r($data['filter_date_end']."er".$data['filter_date_start']);
+
+            foreach ($rows as $result) {
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['order_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['company_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['delivery_date']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['delivery_timeslot']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['status']);
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+            header('Content-Disposition: attachment;filename="orders_report.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
@@ -2723,13 +2827,11 @@ class ModelReportExcel extends Model {
         $this->load->model('report/sale');
         //$rows = $this->model_report_sale->getOrdersCommission($data);
         // //echo "<pre>";print_r($data);die;
-
         // $results = $this->model_report_sale->getstockoutOrders($data);
-        $OrignalProducts= $this->model_report_sale->getstockoutOrdersAndProducts($data);
+        $OrignalProducts = $this->model_report_sale->getstockoutOrdersAndProducts($data);
 
         $data['orders'] = [];
         // $data['torders'] = [];
-
         //echo "<pre>";print_r($results);die;
         /* foreach ($results as $result) {
 
@@ -2808,7 +2910,6 @@ class ModelReportExcel extends Model {
 
         // foreach ($results as $result) {
         //     $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
-
         //     if ($is_edited) {
         //         //continue;
         //         //$OrignalProducts  = $this->model_sale_order->getRealOrderProducts($result['order_id']);
@@ -2819,10 +2920,8 @@ class ModelReportExcel extends Model {
         //     }
         //     // $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
         //     // $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
-
         //     /* echo "<pre>";print_r($OrignalProducts);
         //       echo "<pre>";print_r($EditedProducts);die; */
-
         //     foreach ($OrignalProducts as $OrignalProduct) {
         //         // $present = false;
         //         // foreach ($EditedProducts as $EditedProduct) {
@@ -2830,7 +2929,6 @@ class ModelReportExcel extends Model {
         //         //         $present = true;
         //         //     }
         //         // }!$present &&
-
         //         if (!empty($OrignalProduct['name'])) {
         //             $data['torders'][] = [
         //                 'store' => $result['store_name'],
@@ -2842,20 +2940,16 @@ class ModelReportExcel extends Model {
         //         }
         //     }
         // }
-
         // //echo "<pre>";print_r($data['torders']);die;
         // foreach ($data['torders'] as $torders1) {
         //     $ex = false;
-
         //     foreach ($data['orders'] as $value1) {
         //         if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store'] && $value1['unit'] == $torders1['unit']) {
         //             $ex = true;
         //         }
         //     }
-
         //     if (!$ex) {
         //         $sum = (float) 0.00;
-
         //         foreach ($data['torders'] as $key => $torders2) {
         //             if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store'] && $torders1['unit'] == $torders2['unit']) {
         //                 $sum += (float) $torders2['product_qty'];
@@ -2879,8 +2973,7 @@ class ModelReportExcel extends Model {
                 'product_qty' => (float) $OrignalProduct['quantity'],
             ];
             ++$order_total;
-     
-     }
+        }
         // $rows = $data['orders'];
         $rows = $data['torders'];
 
@@ -4095,16 +4188,16 @@ class ModelReportExcel extends Model {
             // Fetching the table data
             $row = 5;
             foreach ($rows as $result) {
-                
+
 
                 if ($result['company_name']) {
                     $result['company_name'] = ' (' . $result['company_name'] . ')';
-                } 
+                }
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer_id']);
-                if ($result['company_name']) 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['name']. PHP_EOL . $result['company_name']);
+                if ($result['company_name'])
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['name'] . PHP_EOL . $result['company_name']);
                 else
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['name']);
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['name']);
 
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['email']);
 
@@ -7129,7 +7222,6 @@ class ModelReportExcel extends Model {
                 'ip' => $result['ip'],
                 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
                 'order_id' => $result['order_id'],
-          
             ];
         }
         // echo "<pre>";print_r($data['customers']);die;
@@ -7558,92 +7650,59 @@ class ModelReportExcel extends Model {
         $this->load->model('report/sale');
         //$rows = $this->model_report_sale->getOrdersCommission($data);
         //echo "<pre>";print_r($data);die;
-
         // $results = $this->model_report_sale->getstockoutOrders($data);
-        $OrignalProducts= $this->model_report_sale->getstockoutOrdersAndProducts($data);
+        $OrignalProducts = $this->model_report_sale->getstockoutOrdersAndProducts($data);
 
         $data['orders'] = [];
         // $data['torders'] = [];
-
         //echo "<pre>";print_r($results);die;
         // /* foreach ($results as $result) {
-
-
-
         //   $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
-
         //   if(!$is_edited) {
         //   continue;
         //   }
-
         //   $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
-
         //   $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
-
         //   foreach ($OrignalProducts as $OrignalProduct) {
-
         //   $present = false;
-
         //   foreach ($EditedProducts as $EditedProduct) {
         //   if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name']) {
         //   $present = true;
         //   }
         //   }
-
         //   if(!$present && !empty($OrignalProduct['name'])) {
-
         //   $data['torders'][] = array(
         //   'store' => $result['store_name'],
         //   'model' => $OrignalProduct['model'],
-
         //   'product_name' => $OrignalProduct['name'],
         //   'unit' => $OrignalProduct['unit'],
         //   'product_qty' => $OrignalProduct['quantity'],
         //   );
-
         //   }
         //   }
         //   }
-
         //   foreach ($data['torders'] as $torders1) {
-
         //   $ex = false;
-
         //   foreach ($data['orders'] as $value1) {
-
         //   if($value1['model'] == $torders1['model'] && $value1['store'] == $torders1['store']) {
-
         //   $ex = true;
-
         //   }
-
         //   }
-
         //   if(!$ex) {
         //   $sum = 0;
-
         //   foreach ($data['torders'] as $key => $torders2) {
-
         //   if($torders1['model'] == $torders2['model'] && $torders1['store'] == $torders2['store']) {
-
         //   $sum += $torders2['product_qty'];
-
         //   unset($data['torders'][$key]);
-
         //   }
-
         //   }
-
         //   $torders1['product_qty'] = $sum;
-
         //   array_push($data['orders'], $torders1);
         //   }
         //   }
         //  */
-
         // foreach ($results as $result) {
         //     $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
-
         //     if ($is_edited) {
         //         //continue;
         //         $OrignalProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
@@ -7652,10 +7711,8 @@ class ModelReportExcel extends Model {
         //     }
         //     // $EditedProducts = $this->model_sale_order->getRealOrderProducts($result['order_id']);
         //     // $OrignalProducts = $this->model_sale_order->getOrderProducts($result['order_id']);
-
         //     /* echo "<pre>";print_r($OrignalProducts);
         //       echo "<pre>";print_r($EditedProducts);die; */
-
         //     foreach ($OrignalProducts as $OrignalProduct) {
         //         // $present = false;
         //         // foreach ($EditedProducts as $EditedProduct) {
@@ -7663,7 +7720,6 @@ class ModelReportExcel extends Model {
         //         //         $present = true;
         //         //     }
         //         // }!$present &&
-
         //         if (!empty($OrignalProduct['name'])) {
         //             $data['torders'][] = [
         //                 'store' => $result['store_name'],
@@ -7675,20 +7731,16 @@ class ModelReportExcel extends Model {
         //         }
         //     }
         // }
-
         // //echo "<pre>";print_r($data['torders']);die;
         // foreach ($data['torders'] as $torders1) {
         //     $ex = false;
-
         //     foreach ($data['orders'] as $value1) {
         //         if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store'] && $value1['unit'] == $torders1['unit']) {
         //             $ex = true;
         //         }
         //     }
-
         //     if (!$ex) {
         //         $sum = (float) 0.00;
-
         //         foreach ($data['torders'] as $key => $torders2) {
         //             if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store'] && $torders1['unit'] == $torders2['unit']) {
         //                 $sum += (float) $torders2['product_qty'];
@@ -7700,7 +7752,6 @@ class ModelReportExcel extends Model {
         //         array_push($data['orders'], $torders1);
         //     }
         // }
-
         // $rows = $data['orders'];
 
         foreach ($OrignalProducts as $OrignalProduct) {
@@ -7713,8 +7764,7 @@ class ModelReportExcel extends Model {
                 'product_qty' => (float) $OrignalProduct['quantity'],
             ];
             ++$order_total;
-     
-     }
+        }
         $rows = $data['torders'];
 
         //echo "<pre>";print_r($rows);die;
@@ -9408,7 +9458,6 @@ class ModelReportExcel extends Model {
         }
     }
 
-
     public function download_customer_wallet_excel($data) {
 
 
@@ -9417,19 +9466,16 @@ class ModelReportExcel extends Model {
         $this->load->model('sale/customer');
 
         // echo "<pre>";print_r($data);die;
-
-        
         // if ($this->user->isAccountManager()) {
         //     $results = $this->model_report_customer->getAccountManagerOrders($data);
         // } else {
-            $results = $this->model_sale_customer->getAllCredits($data);
+        $results = $this->model_sale_customer->getAllCredits($data);
         // }
 
         foreach ($results as $result) {
-            $transaction_ID="";
-            if(isset($result['transaction_id']) && $result['transaction_id']!="" )
-            {
-                $transaction_ID='#Transaction ID '.$result['transaction_id'];
+            $transaction_ID = "";
+            if (isset($result['transaction_id']) && $result['transaction_id'] != "") {
+                $transaction_ID = '#Transaction ID ' . $result['transaction_id'];
             }
             if ($result['company_name']) {
                 $result['company_name'] = ' (' . $result['company_name'] . ')';
@@ -9440,7 +9486,7 @@ class ModelReportExcel extends Model {
                 'company' => $result['company_name'],
                 // 'email' => $result['email'],
                 'amount' => $result['amount'],
-                'description' => $result['description'].' ' .$transaction_ID,
+                'description' => $result['description'] . ' ' . $transaction_ID,
                 // 'transaction_id' => $result['transaction_id'],
                 'order_id' => $result['order_id'],
                 'customer_credit_id' => $result['customer_credit_id'],
@@ -9460,7 +9506,6 @@ class ModelReportExcel extends Model {
 
             //PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
             $objPHPExcel->getActiveSheet()->getStyle('B')->getAlignment()->setWrapText(true);
-
 
             $objPHPExcel->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
 
@@ -9498,10 +9543,6 @@ class ModelReportExcel extends Model {
             ]]);
 
             //subtitle
-            
-            
-            
-
             // $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
             $objPHPExcel->getActiveSheet()->getStyle('A1:F2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
@@ -9515,9 +9556,9 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 3, 'Customer Name');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 3, 'Amount');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 3, 'Type');
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 3, 'Description');
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 3, 'Order ID');
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 3, 'Date Added');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 3, 'Description');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 3, 'Order ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 3, 'Date Added');
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 3)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 3)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 3)->applyFromArray($title);
@@ -9530,16 +9571,14 @@ class ModelReportExcel extends Model {
             $Amount = 0;
             foreach ($data['customers'] as $result) {
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['name']. PHP_EOL . $result['company']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['name'] . PHP_EOL . $result['company']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['amount']);
-                 if($result['amount'] > 0) {  
-                     
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, 'Credit');
+                if ($result['amount'] > 0) {
 
-                  } else {  
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, 'Debit');
-
-                  } 
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, 'Credit');
+                } else {
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, 'Debit');
+                }
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['description']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['date_added']);
