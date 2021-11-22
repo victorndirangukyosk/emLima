@@ -93,6 +93,15 @@ class ControllerSaleOrderProductAcceptRejectProducts extends Controller {
             $filter_order_type = null;
         }
 
+        if (isset($this->request->get['filter_accept_reject_status'])) {
+            $filter_accept_reject_status = $this->request->get['filter_accept_reject_status'];
+        } else {
+            $filter_accept_reject_status = null;
+        }
+
+
+        
+
         if (isset($this->request->get['filter_total'])) {
             $filter_total = $this->request->get['filter_total'];
         } else {
@@ -189,7 +198,10 @@ class ControllerSaleOrderProductAcceptRejectProducts extends Controller {
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
-
+        
+        if (isset($this->request->get['filter_accept_reject_status'])) {
+            $url .= '&filter_accept_reject_status=' . $this->request->get['filter_accept_reject_status'];
+        }
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total=' . $this->request->get['filter_total'];
         }
@@ -246,6 +258,7 @@ class ControllerSaleOrderProductAcceptRejectProducts extends Controller {
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
             'filter_order_type' => $filter_order_type,
+            'filter_accept_reject_status' => $filter_accept_reject_status,            
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_end' => $filter_date_added_end,
@@ -316,6 +329,15 @@ class ControllerSaleOrderProductAcceptRejectProducts extends Controller {
                 $result['company_name'] = "(NA)";
             }
 
+            if ($result['status']=="A") {
+                $result['status'] = "Accepted";
+            } else if ($result['status']=="R") {
+                $result['status'] = "Rejected/Returned";
+            }
+            else  {
+                $result['status'] = "";
+            }
+
                
                 $this->load->model('localisation/order_status');
                 $data['orders'][$result['order_id']]['orders'][] = [
@@ -330,7 +352,8 @@ class ControllerSaleOrderProductAcceptRejectProducts extends Controller {
                 'name' => $result['name'],
                 'unit' => $result['unit'],
                 'quantity' => $result['quantity'],
-                'quantity_required' => $result['quantity_required'],
+                // 'quantity_required' => $result['quantity_required'],
+                'status' => $result['status'],
                 'total' => $result['total'],
                 'price' => $result['price'],
                 'tax' => $result['tax'],
@@ -469,6 +492,10 @@ class ControllerSaleOrderProductAcceptRejectProducts extends Controller {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
 
+        if (isset($this->request->get['filter_accept_reject_status'])) {
+            $url .= '&filter_accept_reject_status=' . $this->request->get['filter_accept_reject_status'];
+        }
+
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total=' . $this->request->get['filter_total'];
         }
@@ -558,6 +585,11 @@ class ControllerSaleOrderProductAcceptRejectProducts extends Controller {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
 
+
+        if (isset($this->request->get['filter_accept_reject_status'])) {
+            $url .= '&filter_accept_reject_status=' . $this->request->get['filter_accept_reject_status'];
+        }
+
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total=' . $this->request->get['filter_total'];
         }
@@ -606,6 +638,7 @@ class ControllerSaleOrderProductAcceptRejectProducts extends Controller {
 
         $data['filter_order_status'] = $filter_order_status;
         $data['filter_order_type'] = $filter_order_type;
+        $data['filter_accept_reject_status'] = $filter_accept_reject_status;
         $data['filter_total'] = $filter_total;
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_date_added_end'] = $filter_date_added_end;
