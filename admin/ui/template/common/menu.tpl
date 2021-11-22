@@ -168,6 +168,11 @@
             <li><a href="<?php echo $order_bulk_notification; ?>">Send Notification To Bulk Orders</a></li>
             <?php } ?>
 
+
+             <?php if($preturn_order_product_accept_reject_products) { ?>  
+            <li><a href="<?php echo $order_product_accept_reject_products; ?>">Accepted / Rejected Products</a></li>
+            <?php } ?>
+
         </ul>
     </li>
     <?php } ?>

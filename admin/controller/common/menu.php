@@ -119,6 +119,7 @@ class ControllerCommonMenu extends Controller {
         $data['order_delivaries'] = $this->url->link('sale/amitruckdelivaries', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_product_missing'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_product_missing_products'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_product_accept_reject_products'] = $this->url->link('sale/order_product_accept_reject_products', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token=' . $this->session->data['token'], 'SSL');
         $data['vendor_order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -314,6 +315,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_order_delivaries'] = $this->user->hasPermission('access', 'sale/amitruckdelivaries');
         $data['preturn_order_product_missing'] = $this->user->hasPermission('access', 'sale/order_product_missing');
         $data['preturn_order_product_missing_products'] = $this->user->hasPermission('access', 'sale/order_product_missing_products');
+        $data['preturn_order_product_accept_reject_products'] = $this->user->hasPermission('access', 'sale/order_product_accept_reject_products');
         $data['preturn_order_recurring'] = $this->user->hasPermission('access', 'sale/recurring');
         $data['preturn_return'] = $this->user->hasPermission('access', 'sale/return');
         $data['preturn_customer'] = $this->user->hasPermission('access', 'sale/customer');
@@ -435,6 +437,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_sale_advanced'] = $this->user->hasPermission('access', 'report/sale_advanced');
 
         $data['preturn_sale_productmissing'] = $this->user->hasPermission('access', 'report/sale_productmissing');
+        $data['preturn_sale_productacceptreject'] = $this->user->hasPermission('access', 'report/sale_productacceptreject');
 
         $data['preturn_sale_tax'] = $this->user->hasPermission('access', 'report/sale_tax');
         $data['preturn_sale_shipping'] = $this->user->hasPermission('access', 'report/sale_shipping');
@@ -517,6 +520,7 @@ class ControllerCommonMenu extends Controller {
         $data['order_delivaries'] = $this->url->link('sale/amitruckdelivaries', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_product_missing'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_product_missing_products'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'], 'SSL');
+        $data['order_product_accept_reject_products'] = $this->url->link('sale/order_product_accept_reject_products', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['product'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'], 'SSL');
@@ -593,6 +597,7 @@ class ControllerCommonMenu extends Controller {
 
         $data['preturn_sale_advanced'] = $this->user->hasPermission('access', 'report/sale_advanced');
         $data['preturn_sale_productmissing'] = $this->user->hasPermission('access', 'report/sale_productmissing');
+        $data['preturn_sale_productacceptreject'] = $this->user->hasPermission('access', 'report/sale_productacceptreject');
 
         $data['preturn_general_products'] = $this->user->hasPermission('access', 'catalog/general');
 
@@ -621,6 +626,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_sale_advanced'] = $this->user->hasPermission('access', 'report/sale_advanced');
 
         $data['preturn_sale_productmissing'] = $this->user->hasPermission('access', 'report/sale_productmissing');
+        $data['preturn_sale_productacceptreject'] = $this->user->hasPermission('access', 'report/sale_productacceptreject');
 
         $data['preturn_sale_tax'] = $this->user->hasPermission('access', 'report/sale_tax');
         $data['preturn_sale_shipping'] = $this->user->hasPermission('access', 'report/sale_shipping');
