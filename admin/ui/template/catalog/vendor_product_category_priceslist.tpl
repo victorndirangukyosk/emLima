@@ -399,11 +399,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Product:</label>
-                        <input type="text" class="form-control">
+                        <label for="recipient-name" class="col-form-label">Product</label>
+                        <input type="text" class="form-control" id="vendor_product_name" name="vendor_product_name">
                     </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Price:</label>
+                        <label for="recipient-name" class="col-form-label">Price</label>
                         <input type="text" class="form-control">
                     </div>
                 </form>
@@ -747,6 +747,25 @@ $('input.rejected_qty').keyup(function(){
 	$('#total_qty_'+vendor_product_id).val(total);
 });
 
+$('input[name=\'vendor_product_name\']').autocomplete({
+            'source': function(request, response) {
+                $.ajax({
+                    url: 'index.php?path=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function(json) {
+                        response($.map(json, function(item) {
+                            return {
+                                label: item['name'],
+                                value: item['product_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function(item) {
+                $('input[name=\'vendor_product_name\']').val(item['label']);
+            }
+});
 //--></script>
 
 <?php echo $footer; ?>
