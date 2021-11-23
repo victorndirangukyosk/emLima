@@ -409,7 +409,7 @@
                     </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Price</label>
-                        <input type="text" class="form-control">
+                        <input type="number" class="form-control" id="vendor_product_price" name="vendor_product_price">
                     </div>
                 </form>
             </div>
@@ -788,6 +788,9 @@ $('input[name=\'vendor_product_name\']').autocomplete({
                     $select.append(option);
                     }
                     $('.selectpicker').selectpicker('refresh');
+                    var $price_input = $('#vendor_product_price');
+                    var special_price = json[0].price == null || json[0].price == 0 ? json[0].special_price : json[0].price;
+                    $price_input.val(special_price.replace(/,/g, ""));
                 }
             });
             }
