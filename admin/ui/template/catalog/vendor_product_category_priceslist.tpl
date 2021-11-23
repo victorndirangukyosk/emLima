@@ -388,7 +388,7 @@
                 <h4 class="modal-title"><strong>Add Product To Price Category </strong></h4>
             </div>
             <div class="modal-body">
-                <form>
+                <form id="vendor_product_price_category" name="vendor_product_price_category">
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Price Category</label>
                         <select class="form-select" id="select_price_category" name="select_price_category">
@@ -415,7 +415,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Add New</button>
+                <button type="button" class="btn btn-primary" id="add_vendor_product_to_price_category" name="add_vendor_product_to_price_category">Add New</button>
             </div>
         </div>
 
@@ -803,6 +803,22 @@ var special_price = $("#vendor_product_uom option:selected").attr("data-special"
 var final_price = price == null || price == 0 ? special_price : price;
 var $price_input = $('#vendor_product_price');
 $price_input.val(final_price.replace(/,/g, ""));
+});
+
+$('button[name^=\'add_vendor_product_to_price_category\']').on('click', function () {
+$.ajax({
+            url: 'index.php?path=catalog/vendor_product/addnewvendorproducttopricecategory&selected_product_store_id='+$("#vendor_product_uom option:selected").attr("data-product_id")+'&token=<?php echo $token; ?>',
+            dataType: 'json',
+            data: $("form[id^='vendor_product_price_category']").serialize(),
+            success: function(json) {
+                if (json) {
+                    $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+                }
+                else {
+                    location.reload();
+                }
+            }
+});
 });
 //--></script>
 
