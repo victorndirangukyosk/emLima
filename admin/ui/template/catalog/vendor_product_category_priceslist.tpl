@@ -390,7 +390,7 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Price Category:</label>
+                        <label for="recipient-name" class="col-form-label">Price Category</label>
                         <select class="form-select" id="select_price_category" name="select_price_category">
                             <option value="">Select Price Category</option>
                             <?php foreach ($price_categories_list as $price_category) { ?>
@@ -788,14 +788,21 @@ $('input[name=\'vendor_product_name\']').autocomplete({
                     if(json != null && json.length > 0) {
                     $select.append(option);
                     }
-                    $('.selectpicker').selectpicker('refresh');
                     var $price_input = $('#vendor_product_price');
                     var special_price = json[0].price == null || json[0].price == 0 ? json[0].special_price : json[0].price;
                     $price_input.val(special_price.replace(/,/g, ""));
+                    $('.selectpicker').selectpicker('refresh');
                 }
             }
             });
             }
+});
+$('select[name^=\'vendor_product_uom\']').on('change', function () {
+var price = $("#vendor_product_uom option:selected").attr("data-price");
+var special_price = $("#vendor_product_uom option:selected").attr("data-special");
+var final_price = price == null || price == 0 ? special_price : price;
+var $price_input = $('#vendor_product_price');
+$price_input.val(final_price.replace(/,/g, ""));
 });
 //--></script>
 
