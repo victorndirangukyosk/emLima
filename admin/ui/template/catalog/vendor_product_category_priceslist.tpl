@@ -759,8 +759,8 @@ $('input[name=\'vendor_product_name\']').autocomplete({
                     success: function(json) {
                         response($.map(json, function(item) {
                             return {
-                                label: item['name'],
-                                value: item['product_id']
+                                label: item['name']+' '+item['unit'],
+                                value: item['product_store_id']
                             }
                         }));
                     }
@@ -768,10 +768,10 @@ $('input[name=\'vendor_product_name\']').autocomplete({
             },
             'select': function(item) {
                 console.log(item['value']);
-                var selected_product_id = item['value'];
+                var selected_product_store_id = item['value'];
                 $('input[name=\'vendor_product_name\']').val(item['label']);
                 $.ajax({
-                url: 'index.php?path=sale/order/getVendorProductVariantsInfo&product_store_id='+selected_product_id+'&token=<?php echo $token; ?>',
+                url: 'index.php?path=sale/order/getVendorProductVariantsInfo&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>',
                 dataType: 'json',     
                 success: function(json) {
                     console.log(json);

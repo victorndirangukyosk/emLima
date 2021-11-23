@@ -78,7 +78,7 @@ class ControllerSaleOrder extends Controller {
         } else {
             $filter_price_category_name = '';
         }
-        
+
         $this->load->model('sale/order');
         $this->load->model('catalog/vendor_product');
 
@@ -471,10 +471,13 @@ class ControllerSaleOrder extends Controller {
     public function getVendorProductVariantsInfo() {
 
         $log = new Log('error.log');
-        $log->write($this->request->get['product_id']);
-        $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, $this->request->get['store_id']);
-        $variations = $this->model_sale_order->getProductVariationsNew($product_info['name'], $this->request->get['store_id'], $this->request->get['order_id']);
-        //$log->write($variations);
+        $log->write($this->request->get['product_store_id']);
+        $this->load->model('sale/order');
+        $this->load->model('catalog/vendor_product');
+        $product_details = $this->model_catalog_vendor_product->getProduct($this->request->get['product_store_id']);
+        $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, $product_details['store_id']);
+        $variations = $this->model_sale_order->getVendorProductVariationsNew($product_info['name'], $product_details['store_id']);
+        $log->write($variations);
         $json = $variations;
 
         $this->response->addHeader('Content-Type: application/json');

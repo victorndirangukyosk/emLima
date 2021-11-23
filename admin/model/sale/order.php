@@ -425,6 +425,58 @@ class ModelSaleOrder extends Model {
         return $returnData;
     }
 
+    public function getVendorProductVariationsNew($product_name, $store_id, $formated = false) {
+        $returnData = [];
+
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' and ps.status=1";
+
+        $result = $this->db->query($all_variations);
+
+        foreach ($result->rows as $r) {
+            if ($r['status']) {
+                $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
+
+                $r['key'] = $key;
+
+                $percent_off = null;
+                if (isset($r['special_price']) && isset($r['price']) && 0 != $r['price'] && 0 != $r['special_price']) {
+                    $percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
+                }
+
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $r['price'] = $this->currency->formatWithoutCurrency($r['price']);
+                }
+
+                if ((float) $r['special_price']) {
+                    $r['special_price'] = $this->currency->formatWithoutCurrency((float) $r['special_price']);
+                } else {
+                    $r['special_price'] = false;
+                }
+
+                $r['model'] = $r['model'];
+
+                $res = [
+                    'variation_id' => $r['product_store_id'],
+                    'unit' => $r['unit'],
+                    'weight' => floatval($r['weight']),
+                    'price' => $r['price'],
+                    'special' => $r['special_price'],
+                    'percent_off' => number_format($percent_off, 0),
+                    'key' => $key,
+                    'model' => $r['model']
+                ];
+
+                if (true == $formated) {
+                    array_push($returnData, $res);
+                } else {
+                    array_push($returnData, $r);
+                }
+            }
+        }
+
+        return $returnData;
+    }
+
     public function getProductVariationsNewFarmer($product_name, $store_id, $formated = false) {
         $returnData = [];
 
