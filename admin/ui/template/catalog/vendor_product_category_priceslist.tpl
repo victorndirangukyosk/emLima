@@ -385,17 +385,26 @@
         <div class="modal-content">
             <div style="color: white;background-color: #008db9;" class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"><strong>Add Product To Category Pricing </strong></h4>
+                <h4 class="modal-title"><strong>Add Product To Price Category </strong></h4>
             </div>
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Recipient:</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <label for="recipient-name" class="col-form-label">Price Category:</label>
+                        <select class="form-select" id="select_price_category" name="select_price_category">
+                            <option value="">Select Price Category</option>
+                            <?php foreach ($price_categories_list as $price_category) { ?>
+                            <option value="<?php echo $price_category['price_category']; ?>"><?php echo $price_category['price_category']; ?></option>
+                            <?php } ?>    
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="message-text" class="col-form-label">Message:</label>
-                        <textarea class="form-control" id="message-text"></textarea>
+                        <label for="recipient-name" class="col-form-label">Product:</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Price:</label>
+                        <input type="text" class="form-control">
                     </div>
                 </form>
             </div>
@@ -741,3 +750,8 @@ $('input.rejected_qty').keyup(function(){
 //--></script>
 
 <?php echo $footer; ?>
+<style>
+.bootstrap-select {
+width : 100% !important;    
+}
+</style>
