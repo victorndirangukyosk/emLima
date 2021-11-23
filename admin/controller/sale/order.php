@@ -472,11 +472,14 @@ class ControllerSaleOrder extends Controller {
 
         $log = new Log('error.log');
         $log->write($this->request->get['product_store_id']);
+        $log->write($this->request->get['category_pricing_name']);
+        $filter_price_category_name = $this->request->get['category_pricing_name'];
         $this->load->model('sale/order');
         $this->load->model('catalog/vendor_product');
+        $cateogry_price_products = $this->model_catalog_vendor_product->getCategoryProductsCategoryName($filter_price_category_name);
         $product_details = $this->model_catalog_vendor_product->getProduct($this->request->get['product_store_id']);
         $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, $product_details['store_id']);
-        $variations = $this->model_sale_order->getVendorProductVariationsNew($product_info['name'], $product_details['store_id']);
+        $variations = $this->model_sale_order->getVendorProductVariationsNew($product_info['name'], $product_details['store_id'], $cateogry_price_products);
         $log->write($variations);
         $json = $variations;
 

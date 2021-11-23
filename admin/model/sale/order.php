@@ -425,11 +425,15 @@ class ModelSaleOrder extends Model {
         return $returnData;
     }
 
-    public function getVendorProductVariationsNew($product_name, $store_id, $formated = false) {
+    public function getVendorProductVariationsNew($product_name, $store_id, $vendor_category_price_product, $formated = false) {
         $returnData = [];
 
-        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' and ps.status=1";
+        $disabled_products = array_column($vendor_category_price_product, 'product_store_id');
+        $disabled_products_string = implode(',', $disabled_products);
 
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' AND ps.product_store_id NOT IN (" . $disabled_products_string . ") and ps.status=1";
+        $log = new Log('error.log');
+        $log->write($all_variations);
         $result = $this->db->query($all_variations);
 
         foreach ($result->rows as $r) {
