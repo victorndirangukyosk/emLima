@@ -13,8 +13,9 @@
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_enable; ?>" class="btn btn-default" onclick="changeStatus(1)"><i class="fa fa-check-circle text-success"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="changeStatus(0)"><i class="fa fa-times-circle text-danger"></i></button>
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>-->
+            <button type="button" onclick="addnewproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add New"><i class="fa fa-plus"></i></button>
             <?php } ?>
-				<!--<span style="margin-left: 10px;" onclick="ChangeCategoryPrices()" form="form-product" data-toggle="tooltip" title="" class="btn btn-success"><i class="fa fa-check"></i></span>-->
+	    <!--<span style="margin-left: 10px;" onclick="ChangeCategoryPrices()" form="form-product" data-toggle="tooltip" title="" class="btn btn-success"><i class="fa fa-check"></i></span>-->
             </div>
             <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
@@ -377,6 +378,35 @@
             </div>
         </div>
     </div>
+<div id="addnewModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div style="color: white;background-color: #008db9;" class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><strong>Add Product To Category Pricing </strong></h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Recipient:</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Message:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Add New</button>
+            </div>
+        </div>
+
+    </div>
+</div>
     <script type="text/javascript"><!--
         
 $(document).delegate('#store-list .fa-minus-circle','click', function(){
@@ -613,6 +643,10 @@ function getProductInventoryHistory(product_store_id){
 					  $('.modal-body').html(json);
                     }
          });
+}
+
+function addnewproduct(){
+    $('#addnewModal').modal('toggle');
 }
 
 function ChangeCategoryPrices(product_store_id,product_id,product_name){
