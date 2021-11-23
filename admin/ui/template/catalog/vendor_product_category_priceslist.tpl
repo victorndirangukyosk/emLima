@@ -782,7 +782,12 @@ $('input[name=\'vendor_product_name\']').autocomplete({
                            option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-price="'+ json[i].price +'" data-special="'+ json[i].special_price +'" value="'+ json[i].unit + '">' + json[i].unit + '</option>';
                     }
                     console.log(option);
-                    $('select[name=\'vendor_product_uom\']').append(option);
+                    var $select = $('#vendor_product_uom');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
                 }
             });
             }
