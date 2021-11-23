@@ -777,6 +777,7 @@ $('input[name=\'vendor_product_name\']').autocomplete({
                 dataType: 'json',     
                 success: function(json) {
                     console.log(json);
+                    if(json != null) {
                     var option = '';
                     for (var i=0;i<json.length;i++){
                            option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-price="'+ json[i].price +'" data-special="'+ json[i].special_price +'" value="'+ json[i].unit + '">' + json[i].unit + '</option>';
@@ -792,6 +793,7 @@ $('input[name=\'vendor_product_name\']').autocomplete({
                     var special_price = json[0].price == null || json[0].price == 0 ? json[0].special_price : json[0].price;
                     $price_input.val(special_price.replace(/,/g, ""));
                 }
+            }
             });
             }
 });
