@@ -769,9 +769,10 @@ $('input[name=\'vendor_product_name\']').autocomplete({
             'select': function(item) {
                 console.log(item['value']);
                 var selected_product_store_id = item['value'];
+                var category_pricing_name = $('select[name=\'select_price_category\']').val();
                 $('input[name=\'vendor_product_name\']').val(item['label']);
                 $.ajax({
-                url: 'index.php?path=sale/order/getVendorProductVariantsInfo&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>',
+                url: 'index.php?path=sale/order/getVendorProductVariantsInfo&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>&category_pricing_name='+category_pricing_name,
                 dataType: 'json',     
                 success: function(json) {
                     console.log(json);
