@@ -1007,6 +1007,12 @@ class ModelCatalogVendorProduct extends Model {
         $res = $this->db->query($category_price);
         return $res->rows;
     }
+    
+    public function getCategoryProductsCategoryName($price_category) {
+        $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "'";
+        $res = $this->db->query($category_price);
+        return $res->rows;
+    }
 
     public function updateCategoryPricesStatus($product_store_id, $product_id, $product_name, $status) {
         $query = 'UPDATE ' . DB_PREFIX . "product_category_prices SET status = '" . $status . "' WHERE product_store_id = '" . (int) $product_store_id . "' AND product_id='" . (int) $product_id . "' AND product_name='" . $product_name . "' AND store_id=75";

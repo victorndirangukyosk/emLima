@@ -65,6 +65,44 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
+    public function product_autocomplete_category() {
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        if (isset($this->request->get['filter_price_category_name'])) {
+            $filter_price_category_name = $this->request->get['filter_price_category_name'];
+        } else {
+            $filter_price_category_name = '';
+        }
+        
+        $this->load->model('sale/order');
+        $this->load->model('catalog/vendor_product');
+
+        $cateogry_price_products = $this->model_catalog_vendor_product->getCategoryProductsCategoryName($filter_price_category_name);
+        $send = [];
+
+        $json = $this->model_sale_order->getProductsForCategory($filter_name, $cateogry_price_products);
+        $log = new Log('error.log');
+
+        foreach ($json as $j) {
+            if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
+                $j['price'] = $j['special_price'];
+            }
+
+            $j['name'] = htmlspecialchars_decode($j['name']);
+
+            $send[] = $j;
+        }
+
+        //echo "<pre>";print_r($json);die;
+
+        echo json_encode($send);
+    }
+
     public function add() {
         $this->load->language('sale/order');
 
@@ -423,6 +461,19 @@ class ControllerSaleOrder extends Controller {
         $log->write($this->request->get['product_store_id']);
         $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, $order_info['store_id']);
         $variations = $this->model_sale_order->getProductVariationsNew($product_info['name'], $order_info['store_id'], $this->request->get['order_id']);
+        //$log->write($variations);
+        $json = $variations;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getVendorProductVariantsInfo() {
+
+        $log = new Log('error.log');
+        $log->write($this->request->get['product_id']);
+        $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, $this->request->get['store_id']);
+        $variations = $this->model_sale_order->getProductVariationsNew($product_info['name'], $this->request->get['store_id'], $this->request->get['order_id']);
         //$log->write($variations);
         $json = $variations;
 
@@ -1602,7 +1653,6 @@ class ControllerSaleOrder extends Controller {
         $data['entry_model'] = $this->language->get('entry_model');
         $data['entry_registration_number'] = $this->language->get('entry_registration_number');
         $data['entry_registration_date'] = $this->language->get('entry_registration_date');
-
 
         $data['entry_registration_validity_upto'] = $this->language->get('entry_registration_validity_upto');
         $data['entry_status'] = $this->language->get('entry_status');
