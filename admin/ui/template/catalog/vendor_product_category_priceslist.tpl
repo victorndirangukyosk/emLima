@@ -403,6 +403,10 @@
                         <input type="text" class="form-control" id="vendor_product_name" name="vendor_product_name">
                     </div>
                     <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Product UOM</label>
+                        <input type="text" class="form-control" id="vendor_product_uom" name="vendor_product_uom">
+                    </div>
+                    <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Price</label>
                         <input type="text" class="form-control">
                     </div>
@@ -750,7 +754,7 @@ $('input.rejected_qty').keyup(function(){
 $('input[name=\'vendor_product_name\']').autocomplete({
             'source': function(request, response) {
                 $.ajax({
-                    url: 'index.php?path=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/order/product_autocomplete_category&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) +'&filter_price_category_name=' + encodeURIComponent($('select[name=\'select_price_category\']').val()),
                     dataType: 'json',
                     success: function(json) {
                         response($.map(json, function(item) {
@@ -763,7 +767,22 @@ $('input[name=\'vendor_product_name\']').autocomplete({
                 });
             },
             'select': function(item) {
+                console.log(item['value']);
+                var selected_product_id = item['value'];
                 $('input[name=\'vendor_product_name\']').val(item['label']);
+                $.ajax({
+                url: 'index.php?path=sale/order/getVendorProductVariantsInfo&product_store_id='+selected_product_id+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    var option = '';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-categoryprice="'+ json[i].category_price +'" data-price="'+ json[i].price +'" data-special="'+ json[i].special_price +'" value="'+ json[i].unit + '"  '+ json[i].category_price_variant + '>' + json[i].unit + '</option>';
+                    }
+                    console.log(option);
+                    $('select[name=\'products['+noProduct+'][unit]').append(option);
+                }
+            });
             }
 });
 //--></script>
