@@ -421,8 +421,13 @@
 
     </div>
 </div>
-    <script type="text/javascript"><!--
-        
+<script type="text/javascript"><!--
+$( document ).ready(function() {
+$('input[name=\'vendor_product_name\']').prop( "disabled", true );
+$('select[name=\'vendor_product_uom\']').prop( "disabled", true );  
+$('input[name=\'vendor_product_price\']').prop( "disabled", true );
+$('button[name=\'add_vendor_product_to_price_category\']').prop( "disabled", true );
+});        
 $(document).delegate('#store-list .fa-minus-circle','click', function(){
     $(this).parent().remove();
 });
@@ -803,6 +808,19 @@ var special_price = $("#vendor_product_uom option:selected").attr("data-special"
 var final_price = price == null || price == 0 ? special_price : price;
 var $price_input = $('#vendor_product_price');
 $price_input.val(final_price.replace(/,/g, ""));
+});
+$('select[name^=\'select_price_category\']').on('change', function () {
+if($('select[name=\'select_price_category\']').val() != null) {
+$('input[name=\'vendor_product_name\']').prop( "disabled", false );
+$('select[name=\'vendor_product_uom\']').prop( "disabled", false );  
+$('input[name=\'vendor_product_price\']').prop( "disabled", false );
+$('button[name=\'add_vendor_product_to_price_category\']').prop( "disabled", false );
+} else {
+$('input[name=\'vendor_product_name\']').prop( "disabled", true );
+$('select[name=\'vendor_product_uom\']').prop( "disabled", true );  
+$('input[name=\'vendor_product_price\']').prop( "disabled", true );
+$('button[name=\'add_vendor_product_to_price_category\']').prop( "disabled", true );
+}
 });
 
 $('button[name^=\'add_vendor_product_to_price_category\']').on('click', function () {
