@@ -389,7 +389,7 @@
             </div>
             <div class="modal-body">
                 <form id="vendor_product_price_category" name="vendor_product_price_category">
-                    <div class="form-group">
+                    <div class="form-group required">
                         <label for="recipient-name" class="col-form-label">Price Category</label>
                         <select class="form-select" id="select_price_category" name="select_price_category">
                             <option value="">Select Price Category</option>
@@ -398,16 +398,16 @@
                             <?php } ?>    
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group required">
                         <label for="recipient-name" class="col-form-label">Product</label>
                         <input type="text" class="form-control" id="vendor_product_name" name="vendor_product_name">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group required">
                         <label for="recipient-name" class="col-form-label">Product UOM</label>
                         <select class="form-select" id="vendor_product_uom" name="vendor_product_uom">
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group required">
                         <label for="recipient-name" class="col-form-label">Price</label>
                         <input type="number" class="form-control" id="vendor_product_price" name="vendor_product_price">
                     </div>
@@ -823,13 +823,16 @@ $('input[name=\'vendor_product_name\']').val('');
 $('select[name=\'vendor_product_uom\']').prop( "disabled", true ); 
 $('select[name=\'vendor_product_uom\']').val('');  
 $('input[name=\'vendor_product_price\']').prop( "disabled", true );
-$('input[name=\'vendor_product_price\']').val();
+$('input[name=\'vendor_product_price\']').val('');
 $('button[name=\'add_vendor_product_to_price_category\']').prop( "disabled", true );
 
 }
 });
 
 $('button[name^=\'add_vendor_product_to_price_category\']').on('click', function () {
+if($('select[name=\'select_price_category\']').val() == '' || $('input[name=\'vendor_product_name\']').val() == '' || $('select[name=\'vendor_product_uom\']').val() == '' || $('input[name=\'vendor_product_price\']').val() == '') {
+
+}
 $.ajax({
             url: 'index.php?path=catalog/vendor_product/addnewvendorproducttopricecategory&selected_product_store_id='+$("#vendor_product_uom option:selected").attr("data-product_id")+'&token=<?php echo $token; ?>',
             dataType: 'json',
