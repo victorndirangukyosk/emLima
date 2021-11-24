@@ -711,12 +711,12 @@ class ControllerSettingStore extends Controller
             $data['email'] = '';
         }
         
-        if (isset($this->request->post['email'])) {
-            $data['email'] = $this->request->post['email'];
-        } elseif (isset($store_info['email'])) {
-            $data['email'] = $store_info['email'];
+        if (isset($this->request->post['name'])) {
+            $data['name'] = $this->request->post['name'];
+        } elseif (isset($store_info['name'])) {
+            $data['name'] = $store_info['name'];
         } else {
-            $data['email'] = '';
+            $data['name'] = '';
         }
 
         if (isset($this->request->post['order_notification_emails'])) {
