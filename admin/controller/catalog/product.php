@@ -411,6 +411,7 @@ class ControllerCatalogProduct extends Controller {
          <th>Price Category</th>
          <th>Price</th>
          <th>Updation Date</th>
+         <th>Updation By</th>
        </tr>
        </thead>';
         } else {
@@ -426,6 +427,7 @@ class ControllerCatalogProduct extends Controller {
                      <th>' . $product_history['price_category'] . '</th>
                      <th>' . $product_history['price'] . '</th>
                      <th>' . $product_history['date_added'] . '</th>
+                     <th>' . $product_history['updated_by_name'] . '</th>
                 </tr>';
             }
 
