@@ -121,7 +121,10 @@ class ControllerCatalogVendorProduct extends Controller {
         $log->write($product_details);
         $data['name'] = $product_details['name'];
         $data['product_id'] = $product_details['product_id'];
-        $this->model_catalog_vendor_product->addVendorProductToCategoryPrices($data);
+        $res = $this->model_catalog_vendor_product->addVendorProductToCategoryPrices($data);
+        $json = $res;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
     public function edit() {
