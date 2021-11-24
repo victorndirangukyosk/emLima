@@ -123,6 +123,7 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['product_id'] = $product_details['product_id'];
         $res = $this->model_catalog_vendor_product->addVendorProductToCategoryPrices($data);
         $json = $res;
+        $this->load->controller('catalog/product/cacheProductPrices', 75);
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
