@@ -997,6 +997,9 @@ class ModelCheckoutOrder extends Model {
                     $log->write("vendorData");
                     $log->write($vendorData);
                     $log->write($store_details['email']);
+                    $log->write($store_details['order_notification_emails']);
+                    $log->write($vendorData['email']);
+                    $log->write($vendorData['order_notification_emails']);
                     $log->write($order_status_id);
 
                     //$text = $this->emailtemplate->getText( 'Order', 'order', $textData );
