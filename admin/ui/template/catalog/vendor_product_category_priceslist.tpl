@@ -414,6 +414,10 @@
                 </form>
             </div>
             <div class="modal-footer">
+                <div class="alert alert-danger" style="display:none;">
+                </div>
+                <div class="alert alert-success" style="display:none;">
+                </div>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="add_vendor_product_to_price_category" name="add_vendor_product_to_price_category">Add New</button>
             </div>
@@ -831,7 +835,10 @@ $('button[name=\'add_vendor_product_to_price_category\']').prop( "disabled", tru
 
 $('button[name^=\'add_vendor_product_to_price_category\']').on('click', function () {
 if($('select[name=\'select_price_category\']').val() == '' || $('input[name=\'vendor_product_name\']').val() == '' || $('select[name=\'vendor_product_uom\']').val() == '' || $('input[name=\'vendor_product_price\']').val() == '') {
-
+$('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger"></i>All Fileds Are Mandatory!');
+$('.alert.alert-danger').show();
+console.log('Validation Failed!');
+return false;
 }
 $.ajax({
             url: 'index.php?path=catalog/vendor_product/addnewvendorproducttopricecategory&selected_product_store_id='+$("#vendor_product_uom option:selected").attr("data-product_id")+'&token=<?php echo $token; ?>',
