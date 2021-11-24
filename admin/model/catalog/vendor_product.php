@@ -999,15 +999,11 @@ class ModelCatalogVendorProduct extends Model {
         } else {
             $query = 'INSERT INTO ' . DB_PREFIX . "product_category_prices SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['name'] . "', store_id = 75, price_category = '" . $category . "',price = '" . $price . "', status = 1";
         }
-        //echo $query;
-        $this->db->query($query);
-        $price = number_format((float) $data[$category], 2, '.', '');
-        //echo $res->row['price'].'===>'. $price;exit;
-        if ($res->row['price'] != $price) {
-            $this->db->query('INSERT INTO ' . DB_PREFIX . "product_category_prices_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['name'] . "',price_category = '" . $category . "',price = '" . $price . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
-        }
-
-        return $product_id;
+        $res = $this->db->query($query);
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_category_prices_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['name'] . "',price_category = '" . $category . "',price = '" . $price . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+        $log = new Log('error.log');
+        $log->write($res);
+        return $res;
     }
 
     public function productCategoryPriceHistory($store_product_id) {

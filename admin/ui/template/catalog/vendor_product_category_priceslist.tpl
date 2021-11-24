@@ -846,10 +846,12 @@ $.ajax({
             data: $("form[id^='vendor_product_price_category']").serialize(),
             success: function(json) {
                 if (json) {
-                    $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+                $('.alert.alert-danger').html('<i class="fa fa-check-circle text-success"></i> Successfully Product Added To Price Category!');
+                setTimeout(function(){ location.reload(); }, 1500);
                 }
                 else {
-                    location.reload();
+                $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger"></i> Please Try Again Later!');
+                setTimeout(function(){ location.reload(); }, 1500);
                 }
             }
 });
