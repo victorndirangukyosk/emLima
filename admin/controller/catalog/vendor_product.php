@@ -105,13 +105,23 @@ class ControllerCatalogVendorProduct extends Controller {
     }
 
     public function addnewvendorproducttopricecategory() {
+        $data = NULL;
         $log = new Log('error.log');
         $select_price_category = $this->request->get['select_price_category'];
         $vendor_product_name = $this->request->get['vendor_product_name'];
         $vendor_product_uom = $this->request->get['vendor_product_uom'];
         $vendor_product_price = $this->request->get['vendor_product_price'];
         $selected_product_store_id = $this->request->get['selected_product_store_id'];
-        $log->write($select_price_category.' '.$vendor_product_name.' '.$vendor_product_uom.' '.$vendor_product_price.' '.$selected_product_store_id);
+        $log->write($select_price_category . ' ' . $vendor_product_name . ' ' . $vendor_product_uom . ' ' . $vendor_product_price . ' ' . $selected_product_store_id);
+        $data['product_store_id'] = $this->request->get['selected_product_store_id'];
+        $data['product_price'] = $this->request->get['vendor_product_price'];
+        $data['price_category'] = $this->request->get['select_price_category'];
+        $this->load->model('catalog/vendor_product');
+        $product_details = $this->model_catalog_vendor_product->getProduct($data['product_store_id']);
+        $log->write($product_details);
+        $data['name'] = $product_details['name'];
+        $data['product_id'] = $product_details['product_id'];
+        $this->model_catalog_vendor_product->addVendorProductToCategoryPrices($data);
     }
 
     public function edit() {
