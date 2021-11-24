@@ -1064,6 +1064,8 @@ class ModelCheckoutOrder extends Model {
                         $store_email_comma_separated = str_replace(';', ',', $textData, $store_details['email']);
                         $log = new Log('error.log');
                         $log->write('store_email_comma_separated');
+                        $log->write($store_email_comma_separated);
+                        $log->write($store_details['email']);
                         $mail->setTo($store_email_comma_separated);
                         $log->write('store_email_comma_separated');
                         $mail->setFrom($this->config->get('config_from_email'));
