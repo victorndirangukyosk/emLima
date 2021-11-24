@@ -126,8 +126,8 @@ class ModelCatalogVendorProduct extends Model {
 
         if (!empty($data['filter_vendor_name'])) {
             $sql .= ' AND v.user_id="' . $this->db->escape($data['filter_vendor_name']) . '"';
-            /*$sql .= " AND v.firstname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
-            $sql .= " OR v.lastname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";*/
+            /* $sql .= " AND v.firstname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
+              $sql .= " OR v.lastname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'"; */
         }
 
         if (!empty($data['filter_model'])) {
@@ -244,8 +244,8 @@ class ModelCatalogVendorProduct extends Model {
 
         if (!empty($data['filter_vendor_name'])) {
             $sql .= ' AND v.user_id="' . $this->db->escape($data['filter_vendor_name']) . '"';
-            /*$sql .= " AND v.firstname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
-            $sql .= " OR v.lastname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";*/
+            /* $sql .= " AND v.firstname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
+              $sql .= " OR v.lastname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'"; */
         }
 
         if (!empty($data['filter_model'])) {
@@ -989,6 +989,27 @@ class ModelCatalogVendorProduct extends Model {
         return $product_id;
     }
 
+    public function addVendorProductToCategoryPrices($data) {
+        $category = $data['price_category'];
+        $price = $data['product_price'];
+        $query_exist = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE product_store_id ='" . (int) $data['product_store_id'] . "' AND price_category='$category'";
+        $res = $this->db->query($query_exist);
+        if (count($res->rows) > 0) {
+            $query = 'UPDATE ' . DB_PREFIX . "product_category_prices SET price = '" . $price . "' WHERE product_store_id ='" . (int) $data['product_store_id'] . "' AND price_category='$category'";
+        } else {
+            $query = 'INSERT INTO ' . DB_PREFIX . "product_category_prices SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['name'] . "', store_id = 75, price_category = '" . $category . "',price = '" . $price . "', status = 1";
+        }
+        //echo $query;
+        $this->db->query($query);
+        $price = number_format((float) $data[$category], 2, '.', '');
+        //echo $res->row['price'].'===>'. $price;exit;
+        if ($res->row['price'] != $price) {
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "product_category_prices_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['name'] . "',price_category = '" . $category . "',price = '" . $price . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+        }
+
+        return $product_id;
+    }
+
     public function productCategoryPriceHistory($store_product_id) {
         $query = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices_history WHERE product_store_id ='" . (int) $store_product_id . "'";
         $query = $this->db->query($query);
@@ -1007,7 +1028,7 @@ class ModelCatalogVendorProduct extends Model {
         $res = $this->db->query($category_price);
         return $res->rows;
     }
-    
+
     public function getCategoryProductsCategoryName($price_category) {
         $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "'";
         $res = $this->db->query($category_price);
