@@ -764,8 +764,8 @@ class ControllerVendorVendor extends Controller {
         
         if (isset($this->request->post['order_notification_emails'])) {
             $data['order_notification_emails'] = $this->request->post['order_notification_emails'];
-        } elseif (isset($store_info['order_notification_emails'])) {
-            $data['order_notification_emails'] = $store_info['order_notification_emails'];
+        } elseif (isset($vendor_info['order_notification_emails'])) {
+            $data['order_notification_emails'] = $vendor_info['order_notification_emails'];
         } else {
             $data['order_notification_emails'] = '';
         }
