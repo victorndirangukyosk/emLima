@@ -995,6 +995,7 @@ class ModelCheckoutOrder extends Model {
 
 
                     $log->write("vendorData");
+                    $log->write($vendorData);
                     $log->write($store_details['email']);
                     $log->write($order_status_id);
 
