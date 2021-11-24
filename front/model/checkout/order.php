@@ -1022,6 +1022,7 @@ class ModelCheckoutOrder extends Model {
 
 
                         $mail->setTo($vendorData['email']);
+                        $mail->setCc($vendorData['order_notification_emails']);
                         $mail->setFrom($this->config->get('config_from_email'));
                         $mail->setSender($this->config->get('config_name'));
                         $mail->setSubject($subject);
@@ -1062,6 +1063,7 @@ class ModelCheckoutOrder extends Model {
 
                           $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8')); */
                         $mail->setTo($store_details['email']);
+                        $mail->setCc($store_details['order_notification_emails']);
                         $mail->setFrom($this->config->get('config_from_email'));
                         $mail->setSender($this->config->get('config_name'));
                         $mail->setSubject($subject);
