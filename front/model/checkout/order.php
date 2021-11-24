@@ -1061,8 +1061,11 @@ class ModelCheckoutOrder extends Model {
 
 
                           $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8')); */
-
-                        $mail->setTo($store_details['email']);
+                        $store_email_comma_separated = str_replace(';', ',', $textData, $store_details['email']);
+                        $log = new Log('error.log');
+                        $log->write('store_email_comma_separated');
+                        $mail->setTo($store_email_comma_separated);
+                        $log->write('store_email_comma_separated');
                         $mail->setFrom($this->config->get('config_from_email'));
                         $mail->setSender($this->config->get('config_name'));
                         $mail->setSubject($subject);
