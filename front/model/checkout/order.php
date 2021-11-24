@@ -1010,7 +1010,7 @@ class ModelCheckoutOrder extends Model {
                     if (isset($vendorData['email']) && $this->emailtemplate->getEmailEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id) && (in_array($order_status_id, $this->config->get('config_processing_status')) || in_array($order_status_id, $this->config->get('config_complete_status')))) {
 
                         // 7 merchant mail
-                        $log->write('vendot if');
+                        $log->write('vendot if 1');
                         $vendorData['order_id'] = $order_id;
                         $vendorData['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
 
@@ -1039,7 +1039,7 @@ class ModelCheckoutOrder extends Model {
 
                     if (isset($store_details['email']) && $this->emailtemplate->getEmailEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id)) {
                         // 7 merchant mail
-                        $log->write('vendot if');
+                        $log->write('vendot if 2');
                         $vendorData['order_id'] = $order_id;
                         $vendorData['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
 
