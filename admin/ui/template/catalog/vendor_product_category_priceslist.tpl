@@ -846,12 +846,14 @@ $.ajax({
             data: $("form[id^='vendor_product_price_category']").serialize(),
             success: function(json) {
                 if (json) {
-                $('.alert.alert-danger').html('<i class="fa fa-check-circle text-success"></i> Successfully Product Added To Price Category!');
-                setTimeout(function(){ location.reload(); }, 1500);
+                $('.alert.alert-success').html('<i class="fa fa-check-circle text-success"></i> Successfully Product Added To Price Category!');
+                $('.alert.alert-success').show();
+                setTimeout(function(){ location.reload(); }, 2000);
                 }
                 else {
                 $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger"></i> Please Try Again Later!');
-                setTimeout(function(){ location.reload(); }, 1500);
+                $('.alert.alert-danger').show();
+                setTimeout(function(){ location.reload(); }, 2000);
                 }
             }
 });
