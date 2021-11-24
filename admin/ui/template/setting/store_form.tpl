@@ -103,8 +103,13 @@
 							<div class="form-group">
 								<label class="col-sm-2 control-label" for="input-email"><?= $entry_email ?></label>
 								<div class="col-sm-10">
-                                                                        <textarea name="email" rows="5" placeholder="Email" id="input-email" class="form-control"><?php echo $email; ?></textarea>
-									<!--<input type="text" name="email" value="<?php echo $email; ?>" placeholder="Email" id="input-email" class="form-control" />-->
+									<input type="text" name="email" value="<?php echo $email; ?>" placeholder="Email" id="input-email" class="form-control" />
+								</div>
+							</div>
+                                                        <div class="form-group">
+								<label class="col-sm-2 control-label" for="input-email">Order Notification <?= $entry_email ?></label>
+								<div class="col-sm-10">
+                                                                        <textarea name="order_notification_emails" rows="5" placeholder="Order Notification Email" id="input-email" class="form-control"><?php echo $order_notification_emails; ?></textarea>
 								</div>
 							</div>
 							<div class="form-group">
