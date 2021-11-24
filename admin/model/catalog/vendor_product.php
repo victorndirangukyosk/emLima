@@ -983,7 +983,7 @@ class ModelCatalogVendorProduct extends Model {
         $price = number_format((float) $data[$category], 2, '.', '');
         //echo $res->row['price'].'===>'. $price;exit;
         if ($res->row['price'] != $price) {
-            $this->db->query('INSERT INTO ' . DB_PREFIX . "product_category_prices_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['product_name'] . "',price_category = '" . $category . "',price = '" . $data[$category] . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "product_category_prices_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['product_name'] . "',price_category = '" . $category . "',price = '" . $data[$category] . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_by = '" . $this->db->escape($this->user->getId()) . "', updated_by_name = '" . $this->db->escape($this->user->getUserName()) . "'");
         }
 
         return $product_id;
@@ -1000,7 +1000,7 @@ class ModelCatalogVendorProduct extends Model {
             $query = 'INSERT INTO ' . DB_PREFIX . "product_category_prices SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['name'] . "', store_id = 75, price_category = '" . $category . "',price = '" . $price . "', status = 1";
         }
         $res = $this->db->query($query);
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_category_prices_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['name'] . "',price_category = '" . $category . "',price = '" . $price . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_category_prices_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['name'] . "',price_category = '" . $category . "',price = '" . $price . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_by = '" . $this->db->escape($this->user->getId()) . "', updated_by_name = '" . $this->db->escape($this->user->getUserName()) . "'");
         $log = new Log('error.log');
         $log->write($res);
         return $res;
