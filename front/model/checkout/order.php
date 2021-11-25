@@ -1042,7 +1042,10 @@ class ModelCheckoutOrder extends Model {
                         $log->write('vendot if 2');
                         $vendorData['order_id'] = $order_id;
                         $vendorData['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
-
+                        $data['order_id'] = $order_id;
+                        $data['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
+                        $data['order_href'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
+                        $data['vendor_order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
                         $log->write('1');
                         //$subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_'. (int) $order_status_id, $vendorData);
                         $subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
