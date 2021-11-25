@@ -94,13 +94,13 @@ class Emailtemplate {
             // print_r($template['description']);
             // die;
             //$log->write($find);
-             //$log->write($replace);
-             //$log->write('finddddddddddd');
+            //$log->write($replace);
+            //$log->write('finddddddddddd');
             /* $log->write("replace");
               $log->write($template['description']);
               $log->write($replace);
               $log->write($find); */
-              
+
             $message = trim(str_replace($find, $replace, $template['description']));
             //$log->write($message);
         } else {
@@ -440,7 +440,7 @@ class Emailtemplate {
             'lastname' => isset($data['lastname']) ? $data['lastname'] : '',
             'branchname' => isset($data['branchname']) ? $data['branchname'] : '',
             'subuserfirstname' => isset($data['subuserfirstname']) ? $data['subuserfirstname'] : '',
-            'subuserlastname' => isset($data['subuserlastname']) ? $data['subuserlastname'] : '', 
+            'subuserlastname' => isset($data['subuserlastname']) ? $data['subuserlastname'] : '',
             'subuserorderid' => isset($data['subuserorderid']) ? $data['subuserorderid'] : '',
             'drivername' => isset($data['drivername']) ? $data['drivername'] : '',
             'driverphone' => isset($data['driverphone']) ? $data['driverphone'] : '',
@@ -477,9 +477,8 @@ class Emailtemplate {
             'bulk_notification_subject' => isset($data['bulk_notification_subject']) ? $data['bulk_notification_subject'] : '',
             'bulk_notification_email_description' => isset($data['bulk_notification_email_description']) ? $data['bulk_notification_email_description'] : '',
             'bulk_notification_sms_description' => isset($data['bulk_notification_sms_description']) ? $data['bulk_notification_sms_description'] : '',
-            'bulk_notification_mobile_title'=> isset($data['bulk_notification_mobile_title']) ? $data['bulk_notification_mobile_title'] : '',
+            'bulk_notification_mobile_title' => isset($data['bulk_notification_mobile_title']) ? $data['bulk_notification_mobile_title'] : '',
             'bulk_notification_mobile_message' => isset($data['bulk_notification_mobile_message']) ? $data['bulk_notification_mobile_message'] : '',
-
         ];
 
         return $result;
@@ -671,7 +670,7 @@ class Emailtemplate {
 
     public function getVendorOrderReplace($data) {
         $emailTemplate = $this->getEmailTemplate($data['template_id']);
-        $data['order_href'] = $this->maskingOrderDetailUrl($data['order_href']);
+        $data['order_href'] = $this->maskingVendorOrderDetailUrl($data['order_href']);
         $log = new Log('error.log');
 
         $log->write('in getVendorOrderReplace');
@@ -1154,8 +1153,8 @@ class Emailtemplate {
         ];
 
         /* $log->write($result);
-        $log->write("MAIL DATA");
-        $log->write($this->config->get('config_logo'));
+          $log->write("MAIL DATA");
+          $log->write($this->config->get('config_logo'));
 
           $log->write($this->language->get('full_datetime_format')); */
 
@@ -2291,7 +2290,7 @@ class Emailtemplate {
             $log->write('TITLE:' . $title);
             $log->write('ACTION:' . $app_action);
             $log->write('transaction:' . $transaction);
-            
+
             if (isset($to)) {
                 if (isset($deviceId) && isset($to)) {
                     $log->write('api key');
@@ -2630,6 +2629,16 @@ class Emailtemplate {
         $orderId = $query['order_id'];
         $decodedOrderId = base64_encode('     ' . $query['order_id'] . '     ');
         $maskedhref = $this->url->link('account/order/info', 'order_id=' . $decodedOrderId);
+
+        return $maskedhref;
+    }
+
+    public function maskingVendorOrderDetailUrl($link) {
+        $parts = parse_url($link);
+        parse_str($parts['query'], $query);
+        $orderId = $query['order_id'];
+        $decodedOrderId = base64_encode('     ' . $query['order_id'] . '     ');
+        $maskedhref = $this->url->link('common/orderinfo', 'order_id=' . $decodedOrderId);
 
         return $maskedhref;
     }
