@@ -279,15 +279,6 @@ class ControllerCommonOrderinfo extends Controller {
             $data['tab_payment'] = $this->language->get('tab_payment');
             $data['tab_shipping'] = $this->language->get('tab_shipping');
             $data['tab_product'] = $this->language->get('tab_product');
-            $data['tab_history'] = $this->language->get('tab_history');
-            $data['tab_settlement'] = $this->language->get('tab_settlement');
-            $data['tab_fraud'] = $this->language->get('tab_fraud');
-            $data['tab_question'] = $this->language->get('tab_question');
-            $data['tab_action'] = $this->language->get('tab_action');
-
-            $data['tab_delivery'] = $this->language->get('tab_delivery');
-
-            $data['token'] = $this->session->data['token'];
 
             $url = '';
 
@@ -388,17 +379,9 @@ class ControllerCommonOrderinfo extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $data['breadcrumbs'] = [];
+            
 
-            $data['breadcrumbs'][] = [
-                'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
-            ];
-
-            $data['breadcrumbs'][] = [
-                'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'),
-            ];
+            
 
             if (isset($this->request->get['store_id'])) {
                 $store_id = $this->request->get['store_id'];
@@ -412,26 +395,12 @@ class ControllerCommonOrderinfo extends Controller {
                     $data['invoicepdf'] = $this->url->link('sale/order/invoicepdf', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
                 }
             } else {
-                $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
 
-                if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
-                    $data['invoice'] = $this->url->link('sale/order/newinvoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
-                    $data['invoicepdf'] = $this->url->link('sale/order/newinvoicepdf', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
-                } else {
-                    $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
-                    $data['invoicepdf'] = $this->url->link('sale/order/invoicepdf', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
-                }
+                
             }
 
-            //$data['edit'] = $this->url->link('sale/order/edit', 'token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
-            $data['edit'] = '';
-            if (!$this->user->isVendor()) {
-                if (!in_array($order_info['order_status_id'], $this->config->get('config_complete_status'))) {
-                    $data['edit'] = $this->url->link('sale/order/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'], 'SSL');
-                }
-            }
+            
 
-            $data['cancel'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
             $data['order_id'] = $this->request->get['order_id'];
 
@@ -470,321 +439,9 @@ class ControllerCommonOrderinfo extends Controller {
 
             $store_data = $this->model_sale_order->getStoreData($order_info['store_id']);
 
-            if ($store_data['latitude']) {
-                $data['pickup_latitude'] = $store_data['latitude'];
-            } else {
-                $data['pickup_latitude'] = '';
-            }
+            
 
-            if ($store_data['longitude']) {
-                $data['pickup_longitude'] = $store_data['longitude'];
-            } else {
-                $data['pickup_longitude'] = '';
-            }
-
-            $data['pointA'] = "'" . $data['dropoff_latitude'] . ',' . $data['dropoff_longitude'] . "'";
-            $data['pointB'] = "'" . $data['pickup_latitude'] . ',' . $data['pickup_longitude'] . "'";
-
-            /* $data['pointA'] = "'50.8505851,4.3680522'";
-              $data['pointB'] = "'50.91257,4.346170453967261'"; */
-
-            //echo "<pre>";print_r($data['pointA']);die;
-            $data['map_s'] = '[
-                {
-                    "featureType": "administrative",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "color": "#d6e2e6"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "administrative",
-                    "elementType": "geometry.stroke",
-                    "stylers": [
-                        {
-                            "color": "#cfd4d5"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "administrative",
-                    "elementType": "labels.text.fill",
-                    "stylers": [
-                        {
-                            "color": "#7492a8"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "administrative.neighborhood",
-                    "elementType": "labels.text.fill",
-                    "stylers": [
-                        {
-                            "lightness": 25
-                        }
-                    ]
-                },
-                {
-                    "featureType": "landscape.man_made",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "color": "#dde2e3"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "landscape.man_made",
-                    "elementType": "geometry.stroke",
-                    "stylers": [
-                        {
-                            "color": "#cfd4d5"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "landscape.natural",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "color": "#dde2e3"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "landscape.natural",
-                    "elementType": "labels.text.fill",
-                    "stylers": [
-                        {
-                            "color": "#7492a8"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "landscape.natural.terrain",
-                    "elementType": "all",
-                    "stylers": [
-                        {
-                            "visibility": "off"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "poi",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "color": "#dde2e3"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "poi",
-                    "elementType": "labels.text.fill",
-                    "stylers": [
-                        {
-                            "color": "#588ca4"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "poi",
-                    "elementType": "labels.icon",
-                    "stylers": [
-                        {
-                            "saturation": -100
-                        }
-                    ]
-                },
-                {
-                    "featureType": "poi.park",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "color": "#a9de83"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "poi.park",
-                    "elementType": "geometry.stroke",
-                    "stylers": [
-                        {
-                            "color": "#bae6a1"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "poi.sports_complex",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "color": "#c6e8b3"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "poi.sports_complex",
-                    "elementType": "geometry.stroke",
-                    "stylers": [
-                        {
-                            "color": "#bae6a1"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "road",
-                    "elementType": "labels.text.fill",
-                    "stylers": [
-                        {
-                            "color": "#41626b"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "road",
-                    "elementType": "labels.icon",
-                    "stylers": [
-                        {
-                            "saturation": -45
-                        },
-                        {
-                            "lightness": 10
-                        },
-                        {
-                            "visibility": "on"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "road.highway",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "color": "#c1d1d6"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "road.highway",
-                    "elementType": "geometry.stroke",
-                    "stylers": [
-                        {
-                            "color": "#a6b5bb"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "road.highway",
-                    "elementType": "labels.icon",
-                    "stylers": [
-                        {
-                            "visibility": "on"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "road.highway.controlled_access",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "color": "#9fb6bd"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "road.arterial",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "color": "#ffffff"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "road.local",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "color": "#ffffff"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "transit",
-                    "elementType": "labels.icon",
-                    "stylers": [
-                        {
-                            "saturation": -70
-                        }
-                    ]
-                },
-                {
-                    "featureType": "transit.line",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "color": "#b4cbd4"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "transit.line",
-                    "elementType": "labels.text.fill",
-                    "stylers": [
-                        {
-                            "color": "#588ca4"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "transit.station",
-                    "elementType": "all",
-                    "stylers": [
-                        {
-                            "visibility": "off"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "transit.station",
-                    "elementType": "labels.text.fill",
-                    "stylers": [
-                        {
-                            "color": "#008cb5"
-                        },
-                        {
-                            "visibility": "on"
-                        }
-                    ]
-                },
-                {
-                    "featureType": "transit.station.airport",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "saturation": -100
-                        },
-                        {
-                            "lightness": -5
-                        }
-                    ]
-                },
-                {
-                    "featureType": "water",
-                    "elementType": "geometry.fill",
-                    "stylers": [
-                        {
-                            "color": "#a6cbe3"
-                        }
-                    ]
-                }
-            ]';
-
-            //echo "<pre>";print_r($data['map_s']);die;
-            /* end */
+            
 
             $data['filter_stores'] = [];
 
@@ -864,40 +521,9 @@ class ControllerCommonOrderinfo extends Controller {
                 }
             }
 
-            /* $response = $this->load->controller('deliversystem/deliversystem/getToken',$data);
+            
 
-              if($response['status']) {
-              $data['tokens'] = $response['token'];
-              $productStatus = $this->load->controller('deliversystem/deliversystem/getProductStatus',$data);
-
-
-              $resp = $this->load->controller('deliversystem/deliversystem/getDeliveryStatus',$data);
-
-              if(!$resp['status']) {
-              $data['delivery_data'] = [];
-              } else {
-              $data['delivery_data'] = $resp['data'][0];
-              if(isset($data['delivery_data']->assigned_to)) {
-              $data['delivery_details'] = true;
-              }
-              }
-
-              if(!$productStatus['status']) {
-              $data['products_status'] = [];
-              } else {
-              $data['products_status'] = $productStatus['data']   ;
-              }
-
-              } */
-
-            if ($order_info['customer_id']) {
-                $data['customer'] = $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $order_info['customer_id'], 'SSL');
-
-                $data['customer_id'] = $order_info['customer_id'];
-            } else {
-                $data['customer_id'] = 0;
-                $data['customer'] = '';
-            }
+            
 
             $this->load->model('sale/customer_group');
 
@@ -910,7 +536,6 @@ class ControllerCommonOrderinfo extends Controller {
             }
 
             $data['email'] = $order_info['email'];
-            $data['order_customer_link'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_email=' . $order_info['email'], 'SSL');
             $this->load->model('sale/customer');
             $parent_user_info = $this->model_sale_customer->getCustomerParentDetails($order_info['customer_id']);
             if ($parent_user_info != NULL && $parent_user_info['email'] != NULL) {
@@ -1284,7 +909,6 @@ class ControllerCommonOrderinfo extends Controller {
                         'unit_updated' => $original_product['unit_updated'], //as of now unit change is not there
                         'price' => $this->currency->format($original_product['price'] + ($this->config->get('config_tax') ? $original_product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                         'total' => $this->currency->format($original_product['total'] + ($this->config->get('config_tax') ? ($original_product['tax'] * $original_product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
-                        'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $original_product['product_id'], 'SSL'),
                     ];
 
                     //echo '<pre>';print_r($original_product);exit;
@@ -1382,7 +1006,6 @@ class ControllerCommonOrderinfo extends Controller {
                     'unit_updated' => $product['unit'], //as of now unit change is not there
                     'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
-                    'href' => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL'),
                 ];
 
                 //   echo '<pre>';print_r($data['products']);exit;
@@ -1461,219 +1084,6 @@ class ControllerCommonOrderinfo extends Controller {
                         $this->session->data['cookie'] = $response['cookie'];
                     }
                 }
-            }
-
-            if (isset($response['cookie'])) {
-                $this->session->data['cookie'] = $response['cookie'];
-            } else {
-                $data['error_warning'] = $this->language->get('error_permission');
-            }
-
-            // Fraud
-            $this->load->model('sale/fraud');
-
-            $fraud_info = $this->model_sale_fraud->getFraud($order_info['order_id']);
-
-            if ($fraud_info) {
-                $data['country_match'] = $fraud_info['country_match'];
-
-                if ($fraud_info['country_code']) {
-                    $data['country_code'] = $fraud_info['country_code'];
-                } else {
-                    $data['country_code'] = '';
-                }
-
-                $data['high_risk_country'] = $fraud_info['high_risk_country'];
-                $data['distance'] = $fraud_info['distance'];
-
-                if ($fraud_info['ip_region']) {
-                    $data['ip_region'] = $fraud_info['ip_region'];
-                } else {
-                    $data['ip_region'] = '';
-                }
-
-                if ($fraud_info['ip_city']) {
-                    $data['ip_city'] = $fraud_info['ip_city'];
-                } else {
-                    $data['ip_city'] = '';
-                }
-
-                $data['ip_latitude'] = $fraud_info['ip_latitude'];
-                $data['ip_longitude'] = $fraud_info['ip_longitude'];
-
-                if ($fraud_info['ip_isp']) {
-                    $data['ip_isp'] = $fraud_info['ip_isp'];
-                } else {
-                    $data['ip_isp'] = '';
-                }
-
-                if ($fraud_info['ip_org']) {
-                    $data['ip_org'] = $fraud_info['ip_org'];
-                } else {
-                    $data['ip_org'] = '';
-                }
-
-                $data['ip_asnum'] = $fraud_info['ip_asnum'];
-
-                if ($fraud_info['ip_user_type']) {
-                    $data['ip_user_type'] = $fraud_info['ip_user_type'];
-                } else {
-                    $data['ip_user_type'] = '';
-                }
-
-                if ($fraud_info['ip_country_confidence']) {
-                    $data['ip_country_confidence'] = $fraud_info['ip_country_confidence'];
-                } else {
-                    $data['ip_country_confidence'] = '';
-                }
-
-                if ($fraud_info['ip_region_confidence']) {
-                    $data['ip_region_confidence'] = $fraud_info['ip_region_confidence'];
-                } else {
-                    $data['ip_region_confidence'] = '';
-                }
-
-                if ($fraud_info['ip_city_confidence']) {
-                    $data['ip_city_confidence'] = $fraud_info['ip_city_confidence'];
-                } else {
-                    $data['ip_city_confidence'] = '';
-                }
-
-                if ($fraud_info['ip_postal_confidence']) {
-                    $data['ip_postal_confidence'] = $fraud_info['ip_postal_confidence'];
-                } else {
-                    $data['ip_postal_confidence'] = '';
-                }
-
-                if ($fraud_info['ip_postal_code']) {
-                    $data['ip_postal_code'] = $fraud_info['ip_postal_code'];
-                } else {
-                    $data['ip_postal_code'] = '';
-                }
-
-                $data['ip_accuracy_radius'] = $fraud_info['ip_accuracy_radius'];
-
-                if ($fraud_info['ip_net_speed_cell']) {
-                    $data['ip_net_speed_cell'] = $fraud_info['ip_net_speed_cell'];
-                } else {
-                    $data['ip_net_speed_cell'] = '';
-                }
-
-                $data['ip_metro_code'] = $fraud_info['ip_metro_code'];
-                $data['ip_area_code'] = $fraud_info['ip_area_code'];
-
-                if ($fraud_info['ip_time_zone']) {
-                    $data['ip_time_zone'] = $fraud_info['ip_time_zone'];
-                } else {
-                    $data['ip_time_zone'] = '';
-                }
-
-                if ($fraud_info['ip_region_name']) {
-                    $data['ip_region_name'] = $fraud_info['ip_region_name'];
-                } else {
-                    $data['ip_region_name'] = '';
-                }
-
-                if ($fraud_info['ip_domain']) {
-                    $data['ip_domain'] = $fraud_info['ip_domain'];
-                } else {
-                    $data['ip_domain'] = '';
-                }
-
-                if ($fraud_info['ip_country_name']) {
-                    $data['ip_country_name'] = $fraud_info['ip_country_name'];
-                } else {
-                    $data['ip_country_name'] = '';
-                }
-
-                if ($fraud_info['ip_continent_code']) {
-                    $data['ip_continent_code'] = $fraud_info['ip_continent_code'];
-                } else {
-                    $data['ip_continent_code'] = '';
-                }
-
-                if ($fraud_info['ip_corporate_proxy']) {
-                    $data['ip_corporate_proxy'] = $fraud_info['ip_corporate_proxy'];
-                } else {
-                    $data['ip_corporate_proxy'] = '';
-                }
-
-                $data['anonymous_proxy'] = $fraud_info['anonymous_proxy'];
-                $data['proxy_score'] = $fraud_info['proxy_score'];
-
-                if ($fraud_info['is_trans_proxy']) {
-                    $data['is_trans_proxy'] = $fraud_info['is_trans_proxy'];
-                } else {
-                    $data['is_trans_proxy'] = '';
-                }
-
-                $data['free_mail'] = $fraud_info['free_mail'];
-                $data['carder_email'] = $fraud_info['carder_email'];
-
-                if ($fraud_info['high_risk_username']) {
-                    $data['high_risk_username'] = $fraud_info['high_risk_username'];
-                } else {
-                    $data['high_risk_username'] = '';
-                }
-
-                if ($fraud_info['high_risk_password']) {
-                    $data['high_risk_password'] = $fraud_info['high_risk_password'];
-                } else {
-                    $data['high_risk_password'] = '';
-                }
-
-                $data['bin_match'] = $fraud_info['bin_match'];
-
-                if ($fraud_info['bin_country']) {
-                    $data['bin_country'] = $fraud_info['bin_country'];
-                } else {
-                    $data['bin_country'] = '';
-                }
-
-                $data['bin_name_match'] = $fraud_info['bin_name_match'];
-
-                if ($fraud_info['bin_name']) {
-                    $data['bin_name'] = $fraud_info['bin_name'];
-                } else {
-                    $data['bin_name'] = '';
-                }
-
-                $data['bin_phone_match'] = $fraud_info['bin_phone_match'];
-
-                if ($fraud_info['bin_phone']) {
-                    $data['bin_phone'] = $fraud_info['bin_phone'];
-                } else {
-                    $data['bin_phone'] = '';
-                }
-
-                if ($fraud_info['customer_phone_in_billing_location']) {
-                    $data['customer_phone_in_billing_location'] = $fraud_info['customer_phone_in_billing_location'];
-                } else {
-                    $data['customer_phone_in_billing_location'] = '';
-                }
-
-                $data['ship_forward'] = $fraud_info['ship_forward'];
-
-                if ($fraud_info['city_postal_match']) {
-                    $data['city_postal_match'] = $fraud_info['city_postal_match'];
-                } else {
-                    $data['city_postal_match'] = '';
-                }
-
-                if ($fraud_info['ship_city_postal_match']) {
-                    $data['ship_city_postal_match'] = $fraud_info['ship_city_postal_match'];
-                } else {
-                    $data['ship_city_postal_match'] = '';
-                }
-
-                $data['score'] = $fraud_info['score'];
-                $data['explanation'] = $fraud_info['explanation'];
-                $data['risk_score'] = $fraud_info['risk_score'];
-                $data['queries_remaining'] = $fraud_info['queries_remaining'];
-                $data['maxmind_id'] = $fraud_info['maxmind_id'];
-                $data['error'] = $fraud_info['error'];
-            } else {
-                $data['maxmind_id'] = '';
             }
 
             $data['text_edit_timeslot'] = $this->language->get('text_edit_timeslot');
