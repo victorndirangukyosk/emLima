@@ -61,6 +61,7 @@ class ControllerErrorPermission extends Controller
                 'common/farmerreset',
                 'common/dashboard',
                 'common/login',
+                'common/orderinfo',
                 'api/login',
                 'common/logout',
                 'common/forgotten',
