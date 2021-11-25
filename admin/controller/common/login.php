@@ -229,6 +229,7 @@ class ControllerCommonLogin extends Controller {
                 'common/farmerforgotten',
                 'common/farmerreset',
                 'common/login',
+                'common/orderinfo',
                 'api/login',
                 'common/logout',
                 'common/forgotten',

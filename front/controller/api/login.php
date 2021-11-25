@@ -380,6 +380,7 @@ class ControllerApiLogin extends Controller {
 
         $ignore = [
             'common/login',
+            'common/orderinfo',
             'common/forgotten',
             'common/reset',
             'common/scheduler',
@@ -393,6 +394,7 @@ class ControllerApiLogin extends Controller {
         if (isset($this->request->get['path'])) {
             $ignore = [
                 'common/login',
+                'common/orderinfo',
                 'common/logout',
                 'common/forgotten',
                 'common/reset',
