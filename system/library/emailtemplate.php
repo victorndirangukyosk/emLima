@@ -663,7 +663,7 @@ class Emailtemplate {
             '{firstname}', '{lastname}', '{delivery_address}', '{shipping_address}', '{payment_address}', '{order_date}', '{product:start}', '{product:stop}',
             '{total:start}', '{total:stop}', '{voucher:start}', '{voucher:stop}', '{special}', '{date}', '{payment}', '{shipment}', '{order_id}', '{total}', '{invoice_number}',
             '{order_href}', '{store_url}', '{status_name}', '{store_name}', '{ip}', '{comment:start}', '{comment:stop}', '{sub_total}', '{shipping_cost}',
-            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}', '{order_pdf_href}', '{delivery_date}', '{delivery_time}', '{customer_notes}', '{site_url}', '{customer_cpf}', '{store_address}', '{store_telephone}', '{store_tax_number}', '{shipping_contact_number}', '{shipping_flat_number}', '{shipping_street_address}', '{shipping_landmark}', '{shipping_zipcode}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}',
+            '{client_comment}', '{tax:start}', '{tax:stop}', '{tax_amount}', '{email}', '{telephone}', '{order_pdf_href}', '{delivery_date}', '{delivery_time}', '{customer_notes}', '{site_url}', '{customer_cpf}', '{store_address}', '{store_telephone}', '{store_tax_number}', '{shipping_contact_number}', '{shipping_flat_number}', '{shipping_street_address}', '{shipping_landmark}', '{shipping_zipcode}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{vendor_order_link}',
         ];
 
         return $result;
@@ -818,6 +818,7 @@ class Emailtemplate {
             'privacy_policy' => $this->url->adminLink('information/information', 'information_id=' . $this->config->get('config_privacy_policy_id'), 'SSL'),
             'system_email' => $this->config->get('config_email'),
             'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
+            'vendor_order_link' => isset($data['vendor_order_link']) ? $data['vendor_order_link'] : '',
         ];
 
         return $result;
