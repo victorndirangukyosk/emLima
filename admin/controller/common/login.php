@@ -208,6 +208,7 @@ class ControllerCommonLogin extends Controller {
             'common/farmerforgotten',
             'common/farmerreset',
             'common/login',
+            'common/orderinfo',
             'api/login',
             'common/forgotten',
             'common/reset',
@@ -242,22 +243,18 @@ class ControllerCommonLogin extends Controller {
             ];
 
             //if for checking API methods and to return JSON
-            
+
             $apimethods = [
-                
                 'api/customer',
                 'api/catalog',
                 'api/sale',
-                
             ];
 
-
             if (in_array($path, $apimethods) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
-        //  echo "<pre>";print_r($this->session->data['token']);die;
-         
-         return new Action('api/login');
-            }
-            else if (!in_array($path, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
+                //  echo "<pre>";print_r($this->session->data['token']);die;
+
+                return new Action('api/login');
+            } else if (!in_array($path, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
                 return new Action('common/login');
             }
         } else {
@@ -267,6 +264,4 @@ class ControllerCommonLogin extends Controller {
         }
     }
 
-   
-  
 }
