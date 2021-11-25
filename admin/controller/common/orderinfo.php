@@ -349,6 +349,12 @@ class ControllerCommonOrderinfo extends Controller {
             } else {
                 $data['invoice_no'] = '';
             }
+            
+            if ($order_info['order_id']) {
+                $data['order_id'] = $order_info['order_id'];
+            } else {
+                $data['order_id'] = 0;
+            }
 
             if ($order_info['settlement_amount']) {
                 $data['settlement_amount'] = $order_info['settlement_amount'];
