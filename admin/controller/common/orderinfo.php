@@ -1701,7 +1701,7 @@ class ControllerCommonOrderinfo extends Controller {
             $data['column_left'] = $this->load->controller('common/column_left');
             $data['footer'] = $this->load->controller('common/footer');
 
-            $this->response->setOutput($this->load->view('sale/order_info.tpl', $data));
+            $this->response->setOutput($this->load->view('sale/order_infos.tpl', $data));
         } else {
             $this->load->language('error/not_found');
 
