@@ -2638,7 +2638,7 @@ class Emailtemplate {
         parse_str($parts['query'], $query);
         $orderId = $query['order_id'];
         $decodedOrderId = base64_encode('     ' . $query['order_id'] . '     ');
-        $maskedhref = $this->url->adminLink('common/orderinfo', 'order_id=' . $decodedOrderId);
+        $maskedhref = $this->url->adminLinks('common/orderinfo', 'order_id=' . $decodedOrderId);
 
         return $maskedhref;
     }
