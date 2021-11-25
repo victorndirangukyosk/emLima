@@ -466,21 +466,7 @@ class ControllerCommonOrderinfo extends Controller {
                     }
                 }
             }
-
-            
-
-            
-
-            $this->load->model('sale/customer_group');
-
-            $customer_group_info = $this->model_sale_customer_group->getCustomerGroup($order_info['customer_group_id']);
-
-            if ($customer_group_info) {
-                $data['customer_group'] = $customer_group_info['name'];
-            } else {
-                $data['customer_group'] = '';
-            }
-
+           
             $data['email'] = $order_info['email'];
             $this->load->model('sale/customer');
             $parent_user_info = $this->model_sale_customer->getCustomerParentDetails($order_info['customer_id']);
@@ -782,22 +768,6 @@ class ControllerCommonOrderinfo extends Controller {
 
             $EditedProducts = $this->model_sale_order->getRealOrderProducts($this->request->get['order_id']);
             $original_products = $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
-            $this->load->model('sale/orderlog');
-            $order_log = $products = $this->model_sale_orderlog->getOrderLog($this->request->get['order_id']);
-            $order_log_data = array();
-            foreach ($order_log as $order_lo) {
-                $order_log_data[] = [
-                    'model' => $order_lo['model'],
-                    'name' => $order_lo['name'],
-                    'unit' => $order_lo['unit'],
-                    'old_quantity' => $order_lo['old_quantity'],
-                    'quantity' => $order_lo['quantity'],
-                    'created_at' => date($this->language->get('datetime_format'), strtotime($order_lo['created_at'])),
-                ];
-            }
-            $data['order_logs'] = $order_log_data;
-            //echo '<pre>';print_r($products);exit;
-
             if ($this->model_sale_order->hasRealOrderProducts($this->request->get['order_id'])) {
                 foreach ($original_products as $original_product) {
                     $option_data = [];
