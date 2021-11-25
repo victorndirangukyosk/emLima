@@ -17,15 +17,6 @@ class ControllerCommonOrderinfo extends Controller {
             $store_id = 0;
         }
 
-        //check vendor order
-        if ($this->user->isVendor()) {
-            if (!$this->isVendorOrder($order_id)) {
-                $this->response->redirect($this->url->link('error/not_found'));
-            }
-        }
-
-        $data['order_transaction_id'] = '';
-
         $order_transaction_data = $this->model_sale_order->getOrderTransactionId($order_id);
 
         if (count($order_transaction_data) > 0) {
@@ -69,7 +60,6 @@ class ControllerCommonOrderinfo extends Controller {
             $data['text_no_delivery_alloted'] = $this->language->get('text_no_delivery_alloted');
             $data['text_driver_contact_no'] = $this->language->get('text_driver_contact_no');
             $data['text_driver_name'] = $this->language->get('text_driver_name');
-            $data['tab_location'] = $this->language->get('tab_location');
             $data['text_pickup_notes'] = $this->language->get('text_pickup_notes');
             $data['text_final_amount'] = $this->language->get('text_final_amount');
             $data['text_driver_notes'] = $this->language->get('text_driver_notes');
@@ -80,7 +70,6 @@ class ControllerCommonOrderinfo extends Controller {
             $data['text_dropoff_notes'] = $this->language->get('text_dropoff_notes');
             $data['text_original_amount'] = $this->language->get('text_original_amount');
 
-            $data['text_driver_image'] = $this->language->get('text_driver_image');
             $data['text_remaining'] = $this->language->get('text_remaining');
             $data['text_intransit'] = $this->language->get('text_intransit');
             $data['text_completed'] = $this->language->get('text_completed');
