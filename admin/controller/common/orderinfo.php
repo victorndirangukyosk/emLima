@@ -193,57 +193,6 @@ class ControllerCommonOrderinfo extends Controller {
             $data['text_delivery_date'] = $this->language->get('text_delivery_date');
             $data['text_delivery_timeslot'] = $this->language->get('text_delivery_timeslot');
 
-            $data['help_country_match'] = $this->language->get('help_country_match');
-            $data['help_country_code'] = $this->language->get('help_country_code');
-            $data['help_high_risk_country'] = $this->language->get('help_high_risk_country');
-            $data['help_distance'] = $this->language->get('help_distance');
-            $data['help_ip_region'] = $this->language->get('help_ip_region');
-            $data['help_ip_city'] = $this->language->get('help_ip_city');
-            $data['help_ip_latitude'] = $this->language->get('help_ip_latitude');
-            $data['help_ip_longitude'] = $this->language->get('help_ip_longitude');
-            $data['help_ip_isp'] = $this->language->get('help_ip_isp');
-            $data['help_ip_org'] = $this->language->get('help_ip_org');
-            $data['help_ip_asnum'] = $this->language->get('help_ip_asnum');
-            $data['help_ip_user_type'] = $this->language->get('help_ip_user_type');
-            $data['help_ip_country_confidence'] = $this->language->get('help_ip_country_confidence');
-            $data['help_ip_region_confidence'] = $this->language->get('help_ip_region_confidence');
-            $data['help_ip_city_confidence'] = $this->language->get('help_ip_city_confidence');
-            $data['help_ip_postal_confidence'] = $this->language->get('help_ip_postal_confidence');
-            $data['help_ip_postal_code'] = $this->language->get('help_ip_postal_code');
-            $data['help_ip_accuracy_radius'] = $this->language->get('help_ip_accuracy_radius');
-            $data['help_ip_net_speed_cell'] = $this->language->get('help_ip_net_speed_cell');
-            $data['help_ip_metro_code'] = $this->language->get('help_ip_metro_code');
-            $data['help_ip_area_code'] = $this->language->get('help_ip_area_code');
-            $data['help_ip_time_zone'] = $this->language->get('help_ip_time_zone');
-            $data['help_ip_region_name'] = $this->language->get('help_ip_region_name');
-            $data['help_ip_domain'] = $this->language->get('help_ip_domain');
-            $data['help_ip_country_name'] = $this->language->get('help_ip_country_name');
-            $data['help_ip_continent_code'] = $this->language->get('help_ip_continent_code');
-            $data['help_ip_corporate_proxy'] = $this->language->get('help_ip_corporate_proxy');
-            $data['help_anonymous_proxy'] = $this->language->get('help_anonymous_proxy');
-            $data['help_proxy_score'] = $this->language->get('help_proxy_score');
-            $data['help_is_trans_proxy'] = $this->language->get('help_is_trans_proxy');
-            $data['help_free_mail'] = $this->language->get('help_free_mail');
-            $data['help_carder_email'] = $this->language->get('help_carder_email');
-            $data['help_high_risk_username'] = $this->language->get('help_high_risk_username');
-            $data['help_high_risk_password'] = $this->language->get('help_high_risk_password');
-            $data['help_bin_match'] = $this->language->get('help_bin_match');
-            $data['help_bin_country'] = $this->language->get('help_bin_country');
-            $data['help_bin_name_match'] = $this->language->get('help_bin_name_match');
-            $data['help_bin_name'] = $this->language->get('help_bin_name');
-            $data['help_bin_phone_match'] = $this->language->get('help_bin_phone_match');
-            $data['help_bin_phone'] = $this->language->get('help_bin_phone');
-            $data['help_customer_phone_in_billing_location'] = $this->language->get('help_customer_phone_in_billing_location');
-            $data['help_ship_forward'] = $this->language->get('help_ship_forward');
-            $data['help_city_postal_match'] = $this->language->get('help_city_postal_match');
-            $data['help_ship_city_postal_match'] = $this->language->get('help_ship_city_postal_match');
-            $data['help_score'] = $this->language->get('help_score');
-            $data['help_explanation'] = $this->language->get('help_explanation');
-            $data['help_risk_score'] = $this->language->get('help_risk_score');
-            $data['help_queries_remaining'] = $this->language->get('help_queries_remaining');
-            $data['help_maxmind_id'] = $this->language->get('help_maxmind_id');
-            $data['help_error'] = $this->language->get('help_error');
-
             $data['column_product'] = $this->language->get('column_product');
             $data['column_produce_type'] = $this->language->get('column_produce_type');
 
@@ -1043,69 +992,6 @@ class ControllerCommonOrderinfo extends Controller {
             if (is_array($orderStatusDetail) && isset($orderStatusDetail['name'])) {
                 $data['order_status_name'] = $orderStatusDetail['name'];
             }
-
-            // Unset any past sessions this page date_added for the api to work.
-            unset($this->session->data['cookie']);
-
-            // Set up the API session
-            if ($this->user->hasPermission('modify', 'sale/order')) {
-                $this->load->model('user/api');
-
-                $api_info = $this->model_user_api->getApi($this->config->get('config_api_id'));
-
-                if ($api_info) {
-                    $curl = curl_init();
-
-                    // Set SSL if required
-                    if ('https' == substr(HTTPS_CATALOG, 0, 5)) {
-                        curl_setopt($curl, CURLOPT_PORT, 443);
-                    }
-
-                    curl_setopt($curl, CURLOPT_HEADER, false);
-                    curl_setopt($curl, CURLINFO_HEADER_OUT, true);
-                    curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
-                    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                    curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($curl, CURLOPT_URL, HTTPS_CATALOG . 'index.php?path=api/login');
-                    curl_setopt($curl, CURLOPT_POST, true);
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($api_info));
-
-                    $json = curl_exec($curl);
-
-                    if (!$json) {
-                        $data['error_warning'] = sprintf($this->language->get('error_curl'), curl_error($curl), curl_errno($curl));
-                    } else {
-                        $response = json_decode($json, true);
-                    }
-
-                    if (isset($response['cookie'])) {
-                        $this->session->data['cookie'] = $response['cookie'];
-                    }
-                }
-            }
-
-            $data['text_edit_timeslot'] = $this->language->get('text_edit_timeslot');
-
-            $data['get_timeslot_url'] = HTTPS_CATALOG . 'index.php?path=checkout/delivery_time/getOrderEditRawTimeslotFromAdmin&order_id=' . $data['order_id'];
-
-            $data['save_timeslot_url'] = HTTPS_CATALOG . 'index.php?path=checkout/delivery_time/saveOrderEditRawTimeslotFromAdmin';
-
-            $data['save_timeslot_url_override'] = HTTPS_CATALOG . 'index.php?path=checkout/delivery_time/saveOrderEditRawTimeslotOverrideFromAdmin';
-
-            $data['save_flat_addressonly'] = HTTPS_CATALOG . 'index.php?path=checkout/edit_order/updateOnlyFlatNumberShippingAddressFromAdmin';
-
-            $data['save_shipping_url_override'] = HTTPS_CATALOG . 'index.php?path=checkout/edit_order/updateNewShippingAddressFromAdmin';
-
-            $data['shipped'] = false;
-
-            if (in_array($order_info['order_status_id'], $this->config->get('config_complete_status')) || in_array($order_info['order_status_id'], $this->config->get('config_shipped_status'))) {
-                $data['shipped'] = true;
-            }
-
-            //echo "<pre>";print_r($data['totals']);die;
-            $data['payment_action'] = $this->load->controller('payment/' . $order_info['payment_code'] . '/orderAction', '');
 
             $data['header'] = $this->load->controller('common/header');
             $data['column_left'] = $this->load->controller('common/column_left');
