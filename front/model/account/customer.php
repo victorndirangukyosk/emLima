@@ -768,6 +768,26 @@ class ModelAccountCustomer extends Model {
                     //the Same login verify OTP mail is being used.
                     $log = new Log('error.log');
 
+                    if ('111111111' != $this->request->post['phone']) {
+                        $sms_message = $this->emailtemplate->getSmsMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
+
+                        if ($this->emailtemplate->getSmsEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                            $log = new Log('error.log');
+                            $log->write("INSIDE NEW DEVICE OTP");
+                            $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
+                        }
+                    }
+                } catch (Exception $ex) {
+                    $log = new Log('error.log');
+                    $log->write("new device OTP SMS Failed");
+                } finally {
+                    
+                }
+                try {
+
+                    //the Same login verify OTP mail is being used.
+                    $log = new Log('error.log');
+
                     if ($this->emailtemplate->getEmailEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
 
                         $subject = $this->emailtemplate->getSubject('NewDeviceLogin', 'NewDeviceLogin_1', $data);
@@ -783,18 +803,18 @@ class ModelAccountCustomer extends Model {
                         $mail->send();
                     }
 
-                    if ('111111111' != $this->request->post['phone']) {
-                        $sms_message = $this->emailtemplate->getSmsMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
+                    /* if ('111111111' != $this->request->post['phone']) {
+                      $sms_message = $this->emailtemplate->getSmsMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
 
-                        if ($this->emailtemplate->getSmsEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
-                            $log = new Log('error.log');
-                            $log->write("INSIDE NEW DEVICE OTP");
-                            $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
-                        }
-                    }
+                      if ($this->emailtemplate->getSmsEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                      $log = new Log('error.log');
+                      $log->write("INSIDE NEW DEVICE OTP");
+                      $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
+                      }
+                      } */
                 } catch (Exception $ex) {
                     $log = new Log('error.log');
-                    $log->write("new device OTP SMS/Mail Failed");
+                    $log->write("new device OTP Mail Failed");
                 } finally {
                     $data['success_message'] = $this->language->get('text_otp_sent_to');
                     return $data;
