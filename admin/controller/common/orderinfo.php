@@ -260,9 +260,9 @@ class ControllerCommonOrderinfo extends Controller {
             }
 
             if ($this->user->isLogged() && $this->session->data['token'] != NULL) {
-                $data['order_link'] = $this->url->adminLink('sale/order', 'token=' . $this->session->data['token']);
+                $data['order_link'] = $this->url->adminLinks('sale/order', 'token=' . $this->session->data['token']);
             } else {
-                $data['login_link'] = $this->url->adminLink('common/login');
+                $data['login_link'] = $this->url->adminLinks('common/login');
             }
 
 
