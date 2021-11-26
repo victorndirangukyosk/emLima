@@ -9161,4 +9161,18 @@ class ControllerSaleOrder extends Controller {
         return true;
     }
 
+    public function updatevendororderstatus() {
+        $this->load->model('sale/order');
+        $order_id = $this->request->post['order_id'];
+        $vendor_order_status_id = $this->request->post['vendor_order_status_id'];
+        $log = new Log('error.log');
+        $log->write($order_id);
+        $log->write($vendor_order_status_id);
+        $order_update = $this->model_sale_order->updatevendororderstatuss($order_id, $vendor_order_status_id);
+        $log->write($order_update);
+        $json['data'] = $order_update;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
