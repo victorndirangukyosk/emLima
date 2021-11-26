@@ -787,6 +787,8 @@ class ModelAccountCustomer extends Model {
                         $sms_message = $this->emailtemplate->getSmsMessage('NewDeviceLogin', 'NewDeviceLogin_1', $data);
 
                         if ($this->emailtemplate->getSmsEnabled('NewDeviceLogin', 'NewDeviceLogin_1')) {
+                            $log = new Log('error.log');
+                            $log->write("INSIDE NEW DEVICE OTP");
                             $ret = $this->emailtemplate->sendmessage($this->request->post['phone'], $sms_message);
                         }
                     }
