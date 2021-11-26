@@ -147,9 +147,9 @@ class ModelSaleOrderReceivables extends Model
         $sql = 'UPDATE ' . DB_PREFIX . "order SET amount_partialy_paid = '" . $amount_partialy_paid . "', paid = 'P' WHERE order_id = '" . (int) $paid_order_id . "'";
 
         $query = $this->db->query($sql);
-        // $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $paid_order_id . "'";
+        $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $paid_order_id . "'";
 
-        // $query = $this->db->query($sql);
+        $query = $this->db->query($sql);
 
         $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "'";
 
