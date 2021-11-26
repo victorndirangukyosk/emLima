@@ -167,7 +167,7 @@ class Url extends SmartObject
     public function adminLinks($route, $args = '', $secure = false)
     {
         //print_r($route);
-        $url = HTTP_ADMIN;
+        $url = HTTP_SERVER;
 
         //echo "<pre>";print_r($url);die;
 
