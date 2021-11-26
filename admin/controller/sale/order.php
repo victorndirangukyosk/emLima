@@ -1664,8 +1664,6 @@ class ControllerSaleOrder extends Controller {
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
         $data['vendor_order_statuses'] = $this->model_localisation_order_status->getVendorOrderStatuses();
-        $log = new Log('error.log');
-        $log->write($data['vendor_order_statuses']);
         $this->response->setOutput($this->load->view('sale/order_list.tpl', $data));
     }
 
