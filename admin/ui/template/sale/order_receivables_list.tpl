@@ -35,6 +35,7 @@
                    
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_show_filter; ?>" class="btn btn-primary btn-sm" id="showFilter"><i class="fa fa-eye"></i></button>
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_hide_filter; ?>" class="btn btn-primary btn-sm" id="hideFilter"><i class="fa fa-eye-slash"></i></button>
+      <button type="button" onclick="excelSuccessfulTransactions();" data-toggle="tooltip" title="" class="btn btn-warning btn-sm" data-original-title="Download Success Transaction"><i class="fa fa-download"></i></button>
                 </div>		
             </div>
             <div class="panel-body">
@@ -583,18 +584,18 @@
          
         
         
-        
-        
-function excel() {
+      
+
+  function excelSuccessfulTransactions() {
    
-      	url = 'index.php?path=sale/order_receivables/orderreceivablesexcel&token=<?php echo $token; ?>';
+      	url = 'index.php?path=sale/order_receivables/orderreceivedexcel&token=<?php echo $token; ?>';
         
      	  var filter_order_id = $('input[name=\'filter_order_id\']').val();
 
             if (filter_order_id) {
                 url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
             }
- var filter_company = $('input[name=\'filter_company\']').val();
+            var filter_company = $('input[name=\'filter_company\']').val();
 
             if (filter_company) {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
@@ -606,7 +607,51 @@ function excel() {
                 url += '&filter_customer=' + encodeURIComponent(filter_customer);
             }
 
- if(filter_customer==0 && filter_order_id==0 && filter_company==0)
+        if(filter_customer==0 && filter_order_id==0 && filter_company==0)
+            {
+                alert("Please select either customer or order_id or company");
+                return;
+            }
+
+            /*var filter_total = $('input[name=\'filter_total\']').val();
+
+            if (filter_total) {
+                url += '&filter_total=' + encodeURIComponent(filter_total);
+            }
+
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added) {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }*/
+
+    
+    location = url;
+    
+}  
+        
+function excel() {
+   
+      	url = 'index.php?path=sale/order_receivables/orderreceivablesexcel&token=<?php echo $token; ?>';
+        
+     	  var filter_order_id = $('input[name=\'filter_order_id\']').val();
+
+            if (filter_order_id) {
+                url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
+            }
+            var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company) {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+  
+            var filter_customer = $('input[name=\'filter_customer\']').val();
+
+            if (filter_customer) {
+                url += '&filter_customer=' + encodeURIComponent(filter_customer);
+            }
+
+        if(filter_customer==0 && filter_order_id==0 && filter_company==0)
             {
                 alert("Please select either customer or order_id or company");
                 return;
