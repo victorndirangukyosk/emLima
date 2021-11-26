@@ -9244,6 +9244,246 @@ class ModelReportExcel extends Model {
         }
     }
 
+
+    public function download_sale_order_receivables_success_excel($filter_data) {
+        // echo "<pre>";print_r($filter_data);die;
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        $this->load->model('sale/order_receivables');
+
+        if (isset($this->request->get['filter_order_id'])) {
+            $filter_order_id = $this->request->get['filter_order_id'];
+        } else {
+            $filter_order_id = null;
+        }
+
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
+        } else {
+            $filter_customer = null;
+        }
+
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'o.order_id';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'DESC';
+        }
+
+
+        $filter_data = [
+            'filter_order_id' => $filter_order_id,
+            'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
+            'filter_total' => $filter_total,
+            'filter_date_added' => $filter_date_added,
+            'sort' => $sort,
+            'order' => $order,
+        ];
+
+        if ('' != $filter_customer || '' != $filter_company) {
+            // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
+            $order_total_grandTotal = $this->model_sale_order_receivables->getTotalSuccessfulOrderReceivablesAndGrandTotal($filter_data);
+
+            //    echo'<pre>';print_r($order_total_grandTotal['total']);exit;
+
+            $order_total = $order_total_grandTotal['total'];
+            $amount = $order_total_grandTotal['GrandTotal'];
+            $results = $this->model_sale_order_receivables->getSuccessfulOrderReceivables($filter_data);
+        } else {
+            $order_total_grandTotal = null;
+            $order_total = 0;
+            $amount = 0;
+            $results = null;
+        }
+
+        $this->load->model('sale/order');
+        foreach ($results as $result) {
+            // $amount=$amount+$result['total'];
+            $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
+
+            // echo "<pre>";print_r($totals);die; 
+            foreach ($totals as $total) {
+                $data['totals'][] = [
+                    'title' => $total['title'],
+                    'code' => $total['code'],
+                    // 'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                    // 'text' => $this->currency->format($total['value']),
+                ];
+
+                if ('total' == $total['code']) {
+                    $result['total'] = $total['value'];
+                }
+            }
+            if ($result['company']) {
+                $result['company'] = ' (' . $result['company'] . ')';
+            } else {
+                // $result['company_name'] = "(NA)";
+            }
+            $data['orders'][] = [
+                'order_id' => $result['order_id'],
+                'customer_id' => $result['customer_id'],
+
+                'transaction_id' => $result['transaction_id'],
+                // 'no_of_products' => $result['no_of_products'],
+                'customer' => $result['firstname'] . ' ' . $result['lastname'],
+                'company' => $result['company'],
+                'total' => $this->currency->format($result['total']),
+                'total_value' => ($result['total']),
+                // 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                'grand_total' => $this->currency->format($amount),
+                'total_pages' => $totalPages,
+                // o.paid,o.amount_partialy_paid
+                'paid' => $result['paid'],
+                'amount_partialy_paid_value' => $result['amount_partialy_paid'],
+                'amount_partialy_paid' => $result['amount_partialy_paid'] ? $this->currency->format($result['amount_partialy_paid']) : '',
+                'pending_amount' => $this->currency->format($result['total'] - $result['amount_partialy_paid']),
+                'pending_amount_value' => ($result['total'] - $result['amount_partialy_paid']),
+            ];
+        }
+        // echo'<pre>';print_r($data['orders']);exit;
+
+
+        $log = new Log('error.log');
+        $log->write($data['orders'] . 'download_payment_receivables_success_excel');
+        //  echo "<pre>";print_r($data['orders']);die;
+        try {
+            // set appropriate timeout limit
+            set_time_limit(3500);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Payments Received')->setDescription('none');
+
+            //PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            $objPHPExcel->getActiveSheet()->getStyle('B')->getAlignment()->setWrapText(true);
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:E2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Payments Received');
+            // $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
+            // if ($from != null) {
+            //     $from = date('d-m-Y', strtotime($data['filter_date_added']));
+            //     $html = 'Date Added ' . $from;
+            // }
+            // $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('C')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $objPHPExcel->getActiveSheet()->getStyle('D')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Order IDs');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Customer');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Total');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Paid');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Pending Amount');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Transaction ID');
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+
+            // Fetching the table data
+            $row = 5;
+            $Amount = 0;
+            foreach ($data['orders'] as $result) {
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['order_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['customer'] . PHP_EOL . $result['company']);
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['total']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['amount_partialy_paid']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['paid']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['pending_amount']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['transaction_id']);
+                // $Amount = $Amount + $result['pending_amount_value'];
+                ++$row;
+            }
+            //  $Amount = str_replace('KES', ' ', $this->currency->format($Amount));
+            $Amount = $this->currency->format($Amount);
+            // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, $row)->applyFromArray($title);
+            // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, $row)->applyFromArray($title);
+            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, 'Grand Total');
+            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $Amount);
+
+            $objPHPExcel->setActiveSheetIndex(0);
+            //$objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+            // Sending headers to force the user to download the file
+            //header('Content-Type: application/vnd.ms-excel');
+            //header("Content-type: application/octet-stream");
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            $filename = 'Payments_Received.xlsx';
+
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $filename . '"');
+            header('Cache-Control: max-age=0');
+
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $log->write($errstr . ' ' . $errline . ' ' . $errfile . ' ' . $errno . ' ' . 'download_payment_receivables_excel');
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
+
     public function mail_consolidated_sale_order_excel($data) {
         // echo "<pre>";print_r($data);die;
 
