@@ -1291,6 +1291,7 @@ class ControllerSaleOrder extends Controller {
         $results = $this->model_sale_order->getOrders($filter_data);
 
         //        echo "<pre>";print_r($results);die;
+        $disable = [2, 6, 7, 5, 8, 4, 15, 1, 14, 16, 13, 9, 10, 3, 11, 12];
         foreach ($results as $result) {
             $sub_total = 0;
 
