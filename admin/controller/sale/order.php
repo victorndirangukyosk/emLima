@@ -1332,6 +1332,7 @@ class ControllerSaleOrder extends Controller {
                 'delivery_timeslot' => $result['delivery_timeslot'],
                 'store' => $result['store_name'],
                 'order_status_id' => $result['order_status_id'],
+                'vendor_order_status_id' => $result['vendor_order_status_id'],
                 'order_status_color' => $result['color'],
                 'city' => $result['city'],
                 'vendor_total' => $vendor_total,

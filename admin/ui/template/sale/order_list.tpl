@@ -383,8 +383,11 @@
                                        <select name="vendor_order_status_id" id="" class="form-control">
                                            <option>Vendor Order Status</option>
                                           <?php foreach ($vendor_order_statuses as $vendor_order_status) { ?>
-				          <option value="<?php echo $vendor_order_status['order_status_id']; ?>"><?php echo $vendor_order_status['name']; ?></option>
-				          <?php } ?> 
+				          <?php if ($vendor_order_status['order_status_id'] == $order['vendor_order_status_id']) { ?>
+				          <option value="<?php echo $vendor_order_status['order_status_id']; ?>" selected="selected"><?php echo $vendor_order_status['name']; ?></option>
+				          <?php } else { ?>
+                                          <option value="<?php echo $vendor_order_status['order_status_id']; ?>"><?php echo $vendor_order_status['name']; ?></option>
+				          <?php } } ?> 
 				       </select>
                                    </td>
                                    <?php } ?>
