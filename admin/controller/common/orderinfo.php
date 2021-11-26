@@ -260,9 +260,9 @@ class ControllerCommonOrderinfo extends Controller {
             }
 
             if ($this->user->isLogged() && $this->session->data['token'] != NULL) {
-                $data['order_link'] = $this->url->adminLinkss('sale/order', 'token=' . $this->session->data['token'].'&order_id=' . $order_id, 'SSL');
+                $data['order_link'] = $this->url->adminLinkss('sale/order', 'token=' . $this->session->data['token'].'&filter_order_id=' . $order_id, 'SSL');
             } else {
-                $data['login_link'] = $this->url->adminLinkss('sale/order', 'token=' . $this->session->data['token'].'&order_id=' . $order_id, 'SSL');
+                $data['login_link'] = $this->url->adminLinkss('sale/order', 'token=' . $this->session->data['token'].'&filter_order_id=' . $order_id, 'SSL');
             }
 
 
