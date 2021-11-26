@@ -602,7 +602,20 @@ class ControllerSaleOrderReceivables extends Controller
             if (!$this->user->hasPermission('modify', 'sale/order_receivables')) {
                 $data['error'] = $this->language->get('error_permission');
                 $data['status']=false;
-            } else {            
+            } else { 
+                
+                
+                //  #region insert the given amount ,selected orders and order total ,to maintain history
+                //  try{
+                //     $this->model_sale_order_receivables->insertPaymentReceivedEntery($this->request->post['paid_order_id'], $transaction_id,$amount_received,$grand_total,$this->user->getId());
+
+                // }
+                // catch(exception $ex)
+                // {
+
+                // }
+                // #endregion
+
 
              $this->model_sale_order_receivables->confirmPaymentReceived($this->request->post['paid_order_id'], $this->request->post['transaction_id']);
             
@@ -666,6 +679,16 @@ class ControllerSaleOrderReceivables extends Controller
                 $data['error'] = $this->language->get('error_permission');
                 $data['status']=false;
             } else {           
+
+                #region insert the given amount ,selected orders and order total ,to maintain history
+                try{
+                    $this->model_sale_order_receivables->insertPaymentReceivedEntery($this->request->post['selected'], $transaction_id,$amount_received,$grand_total,$this->user->getId());
+
+                }
+                catch(exception $ex)
+                {  $log = new Log('error.log');
+                $log.write("payment received error");}
+                #endregion
                 
                 if($amount_received >=$grand_total)
                 {
