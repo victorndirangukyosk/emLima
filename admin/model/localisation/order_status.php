@@ -104,7 +104,7 @@ class ModelLocalisationOrderStatus extends Model {
     public function getVendorOrderStatuses($data = []) {
         $sql = 'SELECT * FROM ' . DB_PREFIX . "vendor_order_status WHERE language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
-        $sql .= ' ORDER BY name';
+        $sql .= ' ORDER BY order_status_id';
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
             $sql .= ' DESC';
