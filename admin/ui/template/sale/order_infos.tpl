@@ -4,9 +4,9 @@
 	<div class="container-fluid">
           <div class="pull-right">
                     <?php if ($this->user->isLogged() && $this->session->data['token'] != NULL) { ?> 
-                    <a href="" data-toggle="tooltip" data-placement="left" title="Update Order Status" class="btn btn-primary"><i class="fa fa-cogs"></i> Login</a>
+                    <a href="<?php echo $order_link; ?>" role="button" data-toggle="tooltip" data-placement="left" title="Update Order Status" class="btn btn-primary"><i class="fa fa-cogs"></i> Login</a>
                     <?php }  else { ?> 
-                    <a href="" data-toggle="tooltip" data-placement="left" title="Login" class="btn btn-primary"><i class="fa fa-list"> Orders Grid</i></a>
+                    <a href="<?php echo $login_link; ?>" role="button" data-toggle="tooltip" data-placement="left" title="Login To View Orders" class="btn btn-primary"><i class="fa fa-list"> Orders Grid</i></a>
                     <?php } ?>
 	</div>
 	  <h1><?php echo $heading_title; ?></h1>

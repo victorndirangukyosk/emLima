@@ -7,7 +7,7 @@ class ControllerCommonOrderinfo extends Controller {
 
         if (isset($this->request->get['order_id'])) {
             $order_id = base64_decode($this->request->get['order_id']);
-            $order_id = (int)$order_id;
+            $order_id = (int) $order_id;
             $this->request->get['order_id'] = $order_id;
         } else {
             $order_id = 0;
@@ -244,85 +244,6 @@ class ControllerCommonOrderinfo extends Controller {
                 //}
             }
 
-            if (isset($this->request->get['filter_city'])) {
-                $url .= '&filter_city=' . $this->request->get['filter_city'];
-            }
-
-            if (isset($this->request->get['filter_order_id'])) {
-                $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
-            }
-
-
-            if (isset($this->request->get['filter_order_from_id'])) {
-                $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
-            }
-
-            if (isset($this->request->get['filter_order_to_id'])) {
-                $url .= '&filter_order_to_id=' . $this->request->get['filter_order_to_id'];
-            }
-
-            if (isset($this->request->get['filter_customer'])) {
-                $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_vendor'])) {
-                $url .= '&filter_vendor=' . urlencode(html_entity_decode($this->request->get['filter_vendor'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_store_name'])) {
-                $url .= '&filter_store_name=' . urlencode(html_entity_decode($this->request->get['filter_store_name'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_delivery_method'])) {
-                $url .= '&filter_delivery_method=' . urlencode(html_entity_decode($this->request->get['filter_delivery_method'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_delivery_date'])) {
-                $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_delivery_time_slot'])) {
-                $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_payment'])) {
-                $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
-            }
-
-            if (isset($this->request->get['filter_order_status'])) {
-                $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
-            }
-
-
-
-            if (isset($this->request->get['filter_total'])) {
-                $url .= '&filter_total=' . $this->request->get['filter_total'];
-            }
-
-            if (isset($this->request->get['filter_date_added'])) {
-                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-            }
-
-            if (isset($this->request->get['filter_date_modified'])) {
-                $url .= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
-            }
-
-            if (isset($this->request->get['sort'])) {
-                $url .= '&sort=' . $this->request->get['sort'];
-            }
-
-            if (isset($this->request->get['order'])) {
-                $url .= '&order=' . $this->request->get['order'];
-            }
-
-            if (isset($this->request->get['page'])) {
-                $url .= '&page=' . $this->request->get['page'];
-            }
-
-            
-
-            
-
             if (isset($this->request->get['store_id'])) {
                 $store_id = $this->request->get['store_id'];
                 $data['shipping'] = $this->url->link('sale/order/shipping', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
@@ -335,11 +256,14 @@ class ControllerCommonOrderinfo extends Controller {
                     $data['invoicepdf'] = $this->url->link('sale/order/invoicepdf', 'store_id=' . $store_id . '&token=' . $this->session->data['token'] . '&order_id=' . (int) $this->request->get['order_id'], 'SSL');
                 }
             } else {
-
                 
             }
 
-            
+            if ($this->user->isLogged() && $this->session->data['token'] != NULL) {
+                $data['order_link'] = $this->url->adminLinks('sale/order', 'token=' . $this->session->data['token']);
+            } else {
+                $data['login_link'] = $this->url->adminLinks('common/login');
+            }
 
 
             $data['order_id'] = $this->request->get['order_id'];
@@ -349,7 +273,7 @@ class ControllerCommonOrderinfo extends Controller {
             } else {
                 $data['invoice_no'] = '';
             }
-            
+
             if ($order_info['order_id']) {
                 $data['order_id'] = $order_info['order_id'];
             } else {
@@ -384,10 +308,6 @@ class ControllerCommonOrderinfo extends Controller {
             }
 
             $store_data = $this->model_sale_order->getStoreData($order_info['store_id']);
-
-            
-
-            
 
             $data['filter_stores'] = [];
 
@@ -466,7 +386,7 @@ class ControllerCommonOrderinfo extends Controller {
                     }
                 }
             }
-           
+
             $data['email'] = $order_info['email'];
             $this->load->model('sale/customer');
             $parent_user_info = $this->model_sale_customer->getCustomerParentDetails($order_info['customer_id']);
