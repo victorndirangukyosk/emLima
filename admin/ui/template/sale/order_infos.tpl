@@ -2,6 +2,13 @@
 <div id="content">
   <div class="page-header">
 	<div class="container-fluid">
+          <div class="pull-right">
+                    <?php if ($this->user->isLogged() && $this->session->data['token'] != NULL) { ?> 
+                    <a href="" data-toggle="tooltip" title="Update Order Status" class="btn btn-primary"><i class="fa fa-cogs"></i></a>
+                    <?php }  else { ?> 
+                    <a href="" data-toggle="tooltip" title="Login" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+                    <?php } ?>
+	</div>
 	  <h1><?php echo $heading_title; ?></h1>
 	</div>
   </div>
