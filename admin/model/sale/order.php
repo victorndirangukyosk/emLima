@@ -4976,4 +4976,10 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
+    public function updatevendororderstatuss($order_id, $vendor_order_status_id) {
+        $order_sql = 'UPDATE ' . DB_PREFIX . "order SET vendor_order_status_id = '" . $vendor_order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'";
+        $order_query = $this->db->query($order_sql);
+        return $order_query;
+    }
+
 }
