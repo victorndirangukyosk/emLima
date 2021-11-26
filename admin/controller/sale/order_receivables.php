@@ -526,6 +526,72 @@ class ControllerSaleOrderReceivables extends Controller
         $this->model_report_excel->download_sale_order_receivables_excel($filter_data);
     }
 
+    public function orderreceivedexcel()
+    {
+        $this->load->language('sale/order_receivables');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        if (isset($this->request->get['filter_order_id'])) {
+            $filter_order_id = $this->request->get['filter_order_id'];
+        } else {
+            $filter_order_id = null;
+        }
+
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
+        } else {
+            $filter_customer = null;
+        }
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        // if (isset($this->request->get['filter_total'])) {
+        //     $filter_total = $this->request->get['filter_total'];
+        // } else {
+        //     $filter_total = null;
+        // }
+
+        // if (isset($this->request->get['filter_date_added'])) {
+        //     $filter_date_added = $this->request->get['filter_date_added'];
+        // } else {
+        //     $filter_date_added = null;
+        // }
+
+        if (isset($this->request->get['sort'])) {
+            $sort  = $this->request->get['sort'];
+        }
+        else{
+            $sort='o.order_id';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order  = $this->request->get['order'];
+        }
+        else{
+            $order='DESC';
+        }
+
+        $filter_data = [
+            'filter_order_id' => $filter_order_id,
+            'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
+            // 'filter_total' => $filter_total,
+            // 'filter_date_added' => $filter_date_added,
+            // 'sort' => $sort,
+              'order' => $order,
+             
+        ];
+        
+        $this->load->model('report/excel');
+        // $this->model_report_excel->download_sale_ordertransaction_excel($filter_data);
+        $this->model_report_excel->download_sale_order_receivables_success_excel($filter_data);
+    }
+
 
 
 
