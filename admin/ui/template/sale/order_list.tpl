@@ -289,7 +289,8 @@
                                         <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
                                         <?php } ?>
                                     </td>
-
+                                    
+                                    <td class="text-left">Vendor Order Status</td>
                                     
 
                                     <!-- <td class="text-right"><?php if ($sort == 'o.total') { ?>
@@ -355,6 +356,7 @@
                                     <?php endif ?> 
                                     <!-- <td class="text-left"><?php echo $order['city']; ?></td> -->
                                     <!-- <td class="text-left"><?php echo $order['status']; ?></td> -->
+                                    <?php if (!$this->user->isVendor()) { ?>
                                     <td class="text-left">
                                                 <?php 
                                                 $disabled = NULL;
@@ -372,7 +374,19 @@
 						</select>
                                     <!--<h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $order['status']; ?></h3>-->
                                     </td>
-                                   
+                                   <?php } ?>
+                                   <?php if($this->user->isVendor()) { ?>
+                                   <td class="text-left"><?php echo $order['status']; ?></td>
+                                   <?php } ?>
+                                   <?php if($this->user->isVendor()) { ?>
+                                   <td class="text-left">
+                                       <select name="vendor_order_status_id" id="" class="form-control">
+                                          <?php foreach ($vendor_order_statuses as $vendor_order_status) { ?>
+				          <option value="<?php echo $vendor_order_status['order_status_id']; ?>"><?php echo $vendor_order_status['name']; ?></option>
+				          <?php } ?> 
+				       </select>
+                                   </td>
+                                   <?php } ?>
                                     <?php if($this->user->isVendor()) { ?>
                                     <td class="text-right"><?php echo $order['vendor_total']; /*echo $order['total'];*/ ?></td>
                                     <?php } else { ?>
