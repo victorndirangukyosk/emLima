@@ -167,6 +167,42 @@ class Url extends SmartObject
     public function adminLinks($route, $args = '', $secure = false)
     {
         //print_r($route);
+        $url = HTTP_ADMIN;
+
+        //echo "<pre>";print_r($url);die;
+
+        // fix if admin forgot the trailing slash
+        if ('/' != substr($url, -1)) {
+            //$url .= '/mvggrocery/';
+        }
+
+        if ('common/home' == $route) {
+            return $url;
+        }
+
+        $url .= 'index.php?path='.$route;
+
+        /*echo "url 1";
+         echo $args;*/
+
+        if ($args) {
+            $url .= str_replace('&', '&amp;', '&'.ltrim($args, '&'));
+        }
+
+        // echo "url final";
+        // echo $url;
+        // echo "end@";
+        foreach ($this->rewrite as $rewrite) {
+            $url = $rewrite->rewrite($url);
+        }
+        /*echo "final@@";
+        echo $url;die;*/
+        return $url;
+    }
+    
+    public function adminLinkss($route, $args = '', $secure = false)
+    {
+        //print_r($route);
         $url = HTTP_SERVER;
 
         //echo "<pre>";print_r($url);die;
