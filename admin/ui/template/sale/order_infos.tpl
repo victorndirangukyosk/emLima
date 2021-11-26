@@ -6,7 +6,7 @@
                     <?php if ($this->user->isLogged() && $this->session->data['token'] != NULL) { ?> 
                     <a href="<?php echo $order_link; ?>" target="_blank" role="button" data-toggle="tooltip" data-placement="left" title="Update Order Status" class="btn btn-primary"><i class="fa fa-cogs"></i> Orders Grid</a>
                     <?php }  else { ?> 
-                    <a href="<?php echo $login_link; ?>" target="_blank" role="button" data-toggle="tooltip" data-placement="left" title="Login To View Orders" class="btn btn-primary"><i class="fa fa-list"> Login</i></a>
+                    <a href="<?php echo $login_link; ?>" target="_blank" role="button" data-toggle="tooltip" data-placement="left" title="Login To View Orders" class="btn btn-primary"><i class="fa fa-key"> Login</i></a>
                     <?php } ?>
 	</div>
 	  <h1><?php echo $heading_title; ?></h1>
