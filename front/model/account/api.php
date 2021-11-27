@@ -322,7 +322,11 @@ class ModelAccountApi extends Model
             $this->error['warning'] = $this->language->get('error_exists');
         }
 
-        if (false !== strpos($this->request->post['telephone'], '#') || empty($this->request->post['telephone'])) {
+        /*if (false !== strpos($this->request->post['telephone'], '#') || empty($this->request->post['telephone'])) {
+            $this->error['telephone'] = $this->language->get('error_telephone');
+        }*/
+        
+        if (empty($this->request->post['telephone']) || utf8_strlen($this->request->post['telephone']) > 9 || utf8_strlen($this->request->post['telephone']) < 9) {
             $this->error['telephone'] = $this->language->get('error_telephone');
         }
 

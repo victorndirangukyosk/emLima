@@ -28,8 +28,8 @@ $_['text_customer_add'] = '<a href="user_id=%d">%s</a> created a new <a href="cu
 $_['text_customer_delete'] = '<a href="user_id=%d">%s</a> deleted a <a href="customer_id=%d">customer</a>.';
 $_['text_order_invoice_no'] = '<a href="user_id=%d">%s</a> generated <a href="order_id=%d">invoice</a>.';
 $_['text_order_transaction_id_added'] = '<a href="user_id=%d">%s</a> added <a href="order_id=%d">transaction id</a>.';
-$_['order_transaction_id_reversereversed'] = '<a href="user_id=%d">%s</a> reversed payment <a href="order_id=%d">transaction id</a>. -"=%d"';
-$_['order_transaction_id_reversed'] = '<a href="user_id=%d">%s</a> reversed payment <a href="order_id=%d">transaction id</a>. -"=%d"';
+$_['text_order_transaction_id_reversereversed'] = '<a href="user_id=%d">%s</a> reversed payment <a href="order_id=%d">transaction id</a>. - %d';
+$_['text_order_transaction_id_reversed'] = '<a href="user_id=%d">%s</a> reversed payment <a href="order_id=%d">transaction id</a>. - %d';
 $_['text_update_invoice'] = '<a href="user_id=%d">%s</a> edited <a href="order_id=%d">order invoice</a>.';
 $_['text_notify_invoice'] = '<a href="user_id=%d">%s</a> notified <a href="order_id=%d">order invoice</a>.';
 $_['text_order_flat_number_changed'] = '<a href="user_id=%d">%s</a> Order House No. and Building Name <a href="order_id=%d"> Updated</a>.';

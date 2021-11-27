@@ -178,6 +178,12 @@ class ControllerReportVendorOrders extends Controller {
         } else {
             $filter_date_modified = null;
         }
+        
+        if (isset($this->request->get['selected_order_id'])) {
+            $orders = $this->request->get['selected_order_id'];
+        } else {
+            $orders = null;
+        }
 
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -219,6 +225,7 @@ class ControllerReportVendorOrders extends Controller {
             'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
             'order' => $order,
+            'filter_orders' => $orders,
             /*'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),*/
         ];

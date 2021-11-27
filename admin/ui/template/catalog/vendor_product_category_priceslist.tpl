@@ -13,8 +13,9 @@
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_enable; ?>" class="btn btn-default" onclick="changeStatus(1)"><i class="fa fa-check-circle text-success"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="changeStatus(0)"><i class="fa fa-times-circle text-danger"></i></button>
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>-->
+            <button type="button" onclick="addnewproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add New"><i class="fa fa-plus"></i></button>
             <?php } ?>
-				<!--<span style="margin-left: 10px;" onclick="ChangeCategoryPrices()" form="form-product" data-toggle="tooltip" title="" class="btn btn-success"><i class="fa fa-check"></i></span>-->
+	    <!--<span style="margin-left: 10px;" onclick="ChangeCategoryPrices()" form="form-product" data-toggle="tooltip" title="" class="btn btn-success"><i class="fa fa-check"></i></span>-->
             </div>
             <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
@@ -377,8 +378,60 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript"><!--
-        
+<div id="addnewModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div style="color: white;background-color: #008db9;" class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><strong>Add Product To Price Category </strong></h4>
+            </div>
+            <div class="modal-body">
+                <form id="vendor_product_price_category" name="vendor_product_price_category">
+                    <div class="form-group required">
+                        <label for="recipient-name" class="col-form-label">Price Category</label>
+                        <select class="form-select" id="select_price_category" name="select_price_category">
+                            <option value="">Select Price Category</option>
+                            <?php foreach ($price_categories_list as $price_category) { ?>
+                            <option value="<?php echo $price_category['price_category']; ?>"><?php echo $price_category['price_category']; ?></option>
+                            <?php } ?>    
+                        </select>
+                    </div>
+                    <div class="form-group required">
+                        <label for="recipient-name" class="col-form-label">Product</label>
+                        <input type="text" class="form-control" id="vendor_product_name" name="vendor_product_name">
+                    </div>
+                    <div class="form-group required">
+                        <label for="recipient-name" class="col-form-label">Product UOM</label>
+                        <select class="form-select" id="vendor_product_uom" name="vendor_product_uom">
+                        </select>
+                    </div>
+                    <div class="form-group required">
+                        <label for="recipient-name" class="col-form-label">Price</label>
+                        <input type="number" class="form-control" id="vendor_product_price" name="vendor_product_price">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" style="display:none;">
+                </div>
+                <div class="alert alert-success" style="display:none;">
+                </div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="add_vendor_product_to_price_category" name="add_vendor_product_to_price_category">Add New</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript"><!--
+$( document ).ready(function() {
+$('input[name=\'vendor_product_name\']').prop( "disabled", true );
+$('select[name=\'vendor_product_uom\']').prop( "disabled", true );  
+$('input[name=\'vendor_product_price\']').prop( "disabled", true );
+$('button[name=\'add_vendor_product_to_price_category\']').prop( "disabled", true );
+});        
 $(document).delegate('#store-list .fa-minus-circle','click', function(){
     $(this).parent().remove();
 });
@@ -615,6 +668,10 @@ function getProductInventoryHistory(product_store_id){
          });
 }
 
+function addnewproduct(){
+    $('#addnewModal').modal('toggle');
+}
+
 function ChangeCategoryPrices(product_store_id,product_id,product_name){
 
         var tempObj = {};
@@ -704,6 +761,108 @@ $('input.rejected_qty').keyup(function(){
 	$('#total_qty_'+vendor_product_id).val(total);
 });
 
+$('input[name=\'vendor_product_name\']').autocomplete({
+            'source': function(request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/order/product_autocomplete_category&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request) +'&filter_price_category_name=' + encodeURIComponent($('select[name=\'select_price_category\']').val()),
+                    dataType: 'json',
+                    success: function(json) {
+                        response($.map(json, function(item) {
+                            return {
+                                label: item['name']+' '+item['unit'],
+                                value: item['product_store_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function(item) {
+                console.log(item['value']);
+                var selected_product_store_id = item['value'];
+                var category_pricing_name = $('select[name=\'select_price_category\']').val();
+                $('input[name=\'vendor_product_name\']').val(item['label']);
+                $.ajax({
+                url: 'index.php?path=sale/order/getVendorProductVariantsInfo&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>&category_pricing_name='+category_pricing_name,
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-price="'+ json[i].price +'" data-special="'+ json[i].special_price +'" value="'+ json[i].unit + '">' + json[i].unit + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#vendor_product_uom');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    var $price_input = $('#vendor_product_price');
+                    var special_price = json[0].price == null || json[0].price == 0 ? json[0].special_price : json[0].price;
+                    $price_input.val(special_price.replace(/,/g, ""));
+                    $('.selectpicker').selectpicker('refresh');
+                }
+            }
+            });
+            }
+});
+$('select[name^=\'vendor_product_uom\']').on('change', function () {
+var price = $("#vendor_product_uom option:selected").attr("data-price");
+var special_price = $("#vendor_product_uom option:selected").attr("data-special");
+var final_price = price == null || price == 0 ? special_price : price;
+var $price_input = $('#vendor_product_price');
+$price_input.val(final_price.replace(/,/g, ""));
+});
+$('select[name^=\'select_price_category\']').on('change', function () {
+console.log($('select[name=\'select_price_category\']').val());
+if($('select[name=\'select_price_category\']').val() != null) {
+$('input[name=\'vendor_product_name\']').prop( "disabled", false );
+$('select[name=\'vendor_product_uom\']').prop( "disabled", false );  
+$('input[name=\'vendor_product_price\']').prop( "disabled", false );
+$('button[name=\'add_vendor_product_to_price_category\']').prop( "disabled", false );
+} 
+if($('select[name=\'select_price_category\']').val() == '') { 
+$('input[name=\'vendor_product_name\']').prop( "disabled", true );
+$('input[name=\'vendor_product_name\']').val('');
+$('select[name=\'vendor_product_uom\']').prop( "disabled", true ); 
+$('select[name=\'vendor_product_uom\']').val('');  
+$('input[name=\'vendor_product_price\']').prop( "disabled", true );
+$('input[name=\'vendor_product_price\']').val('');
+$('button[name=\'add_vendor_product_to_price_category\']').prop( "disabled", true );
+
+}
+});
+
+$('button[name^=\'add_vendor_product_to_price_category\']').on('click', function () {
+if($('select[name=\'select_price_category\']').val() == '' || $('input[name=\'vendor_product_name\']').val() == '' || $('select[name=\'vendor_product_uom\']').val() == '' || $('input[name=\'vendor_product_price\']').val() == '') {
+$('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger"></i>All Fileds Are Mandatory!');
+$('.alert.alert-danger').show();
+console.log('Validation Failed!');
+return false;
+}
+$.ajax({
+            url: 'index.php?path=catalog/vendor_product/addnewvendorproducttopricecategory&selected_product_store_id='+$("#vendor_product_uom option:selected").attr("data-product_id")+'&token=<?php echo $token; ?>',
+            dataType: 'json',
+            data: $("form[id^='vendor_product_price_category']").serialize(),
+            success: function(json) {
+                if (json) {
+                $('.alert.alert-success').html('<i class="fa fa-check-circle text-success"></i> Successfully Product Added To Price Category!');
+                $('.alert.alert-success').show();
+                setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else {
+                $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger"></i> Please Try Again Later!');
+                $('.alert.alert-danger').show();
+                setTimeout(function(){ location.reload(); }, 2000);
+                }
+            }
+});
+});
 //--></script>
 
 <?php echo $footer; ?>
+<style>
+.bootstrap-select {
+width : 100% !important;    
+}
+</style>
