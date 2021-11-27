@@ -289,7 +289,10 @@
                                         <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
                                         <?php } ?>
                                     </td>
-
+                                    
+                                    <?php if ($this->user->isVendor()) { ?>
+                                    <td class="text-left">Vendor Order Status</td>
+                                    <?php } ?>
                                     
 
                                     <!-- <td class="text-right"><?php if ($sort == 'o.total') { ?>
@@ -355,6 +358,7 @@
                                     <?php endif ?> 
                                     <!-- <td class="text-left"><?php echo $order['city']; ?></td> -->
                                     <!-- <td class="text-left"><?php echo $order['status']; ?></td> -->
+                                    <?php if (!$this->user->isVendor()) { ?>
                                     <td class="text-left">
                                                 <?php 
                                                 $disabled = NULL;
@@ -372,7 +376,23 @@
 						</select>
                                     <!--<h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $order['status']; ?></h3>-->
                                     </td>
-                                   
+                                   <?php } ?>
+                                   <?php if($this->user->isVendor()) { ?>
+                                   <td class="text-left"><?php echo $order['status']; ?></td>
+                                   <?php } ?>
+                                   <?php if($this->user->isVendor()) { ?>
+                                   <td class="text-left">
+                                       <select name="vendor_order_status_id" id="input-vendor-order-status<?php echo $order['order_id']; ?>" class="form-control">
+                                           <option>Vendor Order Status</option>
+                                          <?php foreach ($vendor_order_statuses as $vendor_order_status) { ?>
+				          <?php if ($vendor_order_status['order_status_id'] == $order['vendor_order_status_id']) { ?>
+				          <option value="<?php echo $vendor_order_status['order_status_id']; ?>" selected="selected"><?php echo $vendor_order_status['name']; ?></option>
+				          <?php } else { ?>
+                                          <option value="<?php echo $vendor_order_status['order_status_id']; ?>"><?php echo $vendor_order_status['name']; ?></option>
+				          <?php } } ?> 
+				       </select>
+                                   </td>
+                                   <?php } ?>
                                     <?php if($this->user->isVendor()) { ?>
                                     <td class="text-right"><?php echo $order['vendor_total']; /*echo $order['total'];*/ ?></td>
                                     <?php } else { ?>
@@ -437,6 +457,11 @@
                                         <?php } ?>
                                        <?php if ($order['order_status_id'] != 5  && (!$this->user->isVendor())) { ?>
                                        <a href="#" data-toggle="tooltip" title="Update Order Status" data-orderid="<?= $order['order_id'] ?>" id="update_order_status">
+                                       <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                       </a> 
+                                       <?php } ?>
+                                       <?php if ($order['order_status_id'] != 5  && ($this->user->isVendor())) { ?>
+                                       <a href="#" data-toggle="tooltip" title="Update Vendor Order Status" data-orderid="<?= $order['order_id'] ?>" id="update_vendor_order_status">
                                        <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
                                        </a> 
                                        <?php } ?>
@@ -2498,7 +2523,30 @@ function closevehicledetails() {
                 
     }
 
-
+$('a[id^=\'update_vendor_order_status\']').on('click', function (e) {
+e.preventDefault();
+console.log($(this).data('orderid'));
+var clicked_orderid = $(this).data('orderid');
+var selected_order_status_id = $('select[id=\'input-vendor-order-status'+clicked_orderid+'\']').val();
+console.log(clicked_orderid);
+console.log(selected_order_status_id);
+$.ajax({
+		url: 'index.php?path=sale/order/updatevendororderstatus&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'vendor_order_status_id=' + encodeURIComponent($('select[id=\'input-vendor-order-status'+clicked_orderid+'\']').val()) + '&order_id='+clicked_orderid,
+		success: function(json) {	 
+                    console.log(json);
+                    $('.alert').html('Vendor Order status updated successfully!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    setTimeout(function(){ window.location.reload(false); }, 1500);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+});
+});
 </script></div>
 <?php echo $footer; ?>
 

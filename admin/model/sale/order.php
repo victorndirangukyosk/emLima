@@ -273,6 +273,40 @@ class ModelSaleOrder extends Model {
         return $ret2;
     }
 
+    public function getProductsForCategory($filter_name, $cateogry_price_products) {
+
+
+        $disabled_products = array_column($cateogry_price_products, 'product_store_id');
+        $disabled_products_string = implode(',', $disabled_products);
+
+        $store_id = 0;
+
+        $this->db->select('product_to_store.*,product_to_category.category_id,product.*,product_description.*,product_description.name as pd_name', false);
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+
+        if (!empty($filter_name)) {
+            $this->db->like('product_description.name', $this->db->escape($filter_name), 'both');
+        }
+
+        if ($disabled_products_string != NULL) {
+            $this->db->where_not_in('product_to_store.product_store_id', $disabled_products_string);
+        }
+
+        $limit = 18;
+        $offset = 0;
+        $this->db->group_by('product_description.name');
+        $this->db->where('product_to_store.status', 1);
+        $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
+        $this->db->where('product.status', 1);
+        if ($store_id > 0) {
+            $this->db->where('product_to_store.store_id', $store_id);
+        }
+        $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
+        return $ret;
+    }
+
     public function getProductForPopup($product_store_id, $is_admin = false, $store_id) {
         if (!isset($store_id)) {
             $store_id = $this->session->data['config_store_id'];
@@ -376,6 +410,62 @@ class ModelSaleOrder extends Model {
                     'category_price_variant' => $category_price > 0 && $category_price_status == 0 ? 'disabled' : '',
                     'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
                     'qty_in_cart' => isset($r['qty_in_cart']) ? $r['qty_in_cart'] : NULL,
+                    'key' => $key,
+                    'model' => $r['model']
+                ];
+
+                if (true == $formated) {
+                    array_push($returnData, $res);
+                } else {
+                    array_push($returnData, $r);
+                }
+            }
+        }
+
+        return $returnData;
+    }
+
+    public function getVendorProductVariationsNew($product_name, $store_id, $vendor_category_price_product, $formated = false) {
+        $returnData = [];
+
+        $disabled_products = array_column($vendor_category_price_product, 'product_store_id');
+        $disabled_products_string = implode(',', $disabled_products);
+
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' AND ps.product_store_id NOT IN (" . $disabled_products_string . ") and ps.status=1";
+        $log = new Log('error.log');
+        $log->write($all_variations);
+        $result = $this->db->query($all_variations);
+
+        foreach ($result->rows as $r) {
+            if ($r['status']) {
+                $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
+
+                $r['key'] = $key;
+
+                $percent_off = null;
+                if (isset($r['special_price']) && isset($r['price']) && 0 != $r['price'] && 0 != $r['special_price']) {
+                    $percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
+                }
+
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $r['price'] = $this->currency->formatWithoutCurrency($r['price']);
+                }
+
+                if ((float) $r['special_price']) {
+                    $r['special_price'] = $this->currency->formatWithoutCurrency((float) $r['special_price']);
+                } else {
+                    $r['special_price'] = false;
+                }
+
+                $r['model'] = $r['model'];
+
+                $res = [
+                    'variation_id' => $r['product_store_id'],
+                    'unit' => $r['unit'],
+                    'weight' => floatval($r['weight']),
+                    'price' => $r['price'],
+                    'special' => $r['special_price'],
+                    'percent_off' => number_format($percent_off, 0),
                     'key' => $key,
                     'model' => $r['model']
                 ];
@@ -862,6 +952,7 @@ class ModelSaleOrder extends Model {
                 'procurement' => $order_query->row['procurement'],
                 'delivery_charge' => $order_query->row['delivery_charges'],
                 'vendor_terms_cod' => $order_query->row['vendor_terms_cod'],
+                'vendor_order_status_id' => $order_query->row['vendor_order_status_id'],
             ];
         } else {
             return;
@@ -869,7 +960,7 @@ class ModelSaleOrder extends Model {
     }
 
     public function getOrders($data = []) {
-        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no,o.paid,o.amount_partialy_paid,o.delivery_charges FROM `" . DB_PREFIX . 'order` o ';
+        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, o.vendor_order_status_id,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no,o.paid,o.amount_partialy_paid,o.delivery_charges FROM `" . DB_PREFIX . 'order` o ';
         //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
 
         $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
@@ -920,7 +1011,9 @@ class ModelSaleOrder extends Model {
             //echo "<pre>";print_r($delivery_date);die;
         }
 
-
+        if (isset($data['filter_orders'])) {
+            $sql .= ' AND  o.order_id in ("' . $data['filter_orders'] . '")';
+        }
 
         if ($this->user->isVendor()) {
             $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
@@ -950,11 +1043,11 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_customer'])) {
             $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
-        
+
         if (!empty($data['filter_customer_id'])) {
             $sql .= " AND o.customer_id = '" . $data['filter_customer_id'] . "'";
         }
-        
+
         if (!empty($data['filter_paid'])) {
             $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
         }
@@ -977,7 +1070,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_delivery_date'])) {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
-        
+
         if (!empty($data['filter_delivery_time_slot']) && $data['filter_delivery_time_slot'] != 'undefined') {
             $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
         }
@@ -1051,7 +1144,6 @@ class ModelSaleOrder extends Model {
 
         // $sql = "SELECT od.order_reference_id, od.delivery_partner, od.delivery_status, od.drop_latitude, od.drop_longitude, od.created_at, od.updated_at, c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, o.latitude, o.longitude,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
         //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
-
         // $sql .= ' JOIN `' . DB_PREFIX . 'order_delivery` od on od.order_id = o.order_id ';
         // $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
         // $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
@@ -1112,13 +1204,12 @@ class ModelSaleOrder extends Model {
         }
 
         if (!empty($data['filter_order_id'])) {
-            $sql .= " AND o.order_id in (" .  $data['filter_order_id'] . ")";
+            $sql .= " AND o.order_id in (" . $data['filter_order_id'] . ")";
         }
 
         // if (!empty($data['filter_order_from_id'])) {
         //     $sql .= " AND o.order_id >= '" . (int) $data['filter_order_from_id'] . "'";
         // }
-
         // if (!empty($data['filter_order_to_id'])) {
         //     $sql .= " AND o.order_id <= '" . (int) $data['filter_order_to_id'] . "'";
         // }
@@ -1633,7 +1724,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_date_added']) && $data['filter_date_added'] != 'undefined') {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
-            //added below filter to get orders added after the given date time
+        //added below filter to get orders added after the given date time
         if (!empty($data['filter_date_added_greater']) && $data['filter_date_added_greater'] != 'undefined') {
             $sql .= " AND DATE(o.date_added) >= DATE('" . $this->db->escape($data['filter_date_added_greater']) . "')";
         }
@@ -1686,7 +1777,6 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
-
     public function getOrderswithProcessing($data = []) {
         $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,(SELECT cust.SAP_customer_no FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS SAP_customer_no,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method,o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, o.shipping_code, o.order_status_id,o.store_name,o.store_id , o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
         //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
@@ -1696,36 +1786,33 @@ class ModelSaleOrder extends Model {
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
 
         if (isset($data['filter_order_status'])) {
-        // $sql .= " WHERE o.order_status_id = '1' ";
+            // $sql .= " WHERE o.order_status_id = '1' ";
 
-        $implodestatus = [];
+            $implodestatus = [];
 
-        $order_statuses = explode(',', $data['filter_order_status']);
+            $order_statuses = explode(',', $data['filter_order_status']);
 
-        foreach ($order_statuses as $order_status_id) {
-            $implodestatus[] = "o.order_status_id = '" . (int) $order_status_id . "'";
-        }
+            foreach ($order_statuses as $order_status_id) {
+                $implodestatus[] = "o.order_status_id = '" . (int) $order_status_id . "'";
+            }
 
-        if ($implodestatus) {
-            $sql .= ' WHERE (' . implode(' OR ', $implodestatus) . ')';
-        } 
+            if ($implodestatus) {
+                $sql .= ' WHERE (' . implode(' OR ', $implodestatus) . ')';
+            }
 
-        // $sql .= " WHERE o.order_status_id not in (0,2,5,6,4,16,13,10,3)";//8?
-
+            // $sql .= " WHERE o.order_status_id not in (0,2,5,6,4,16,13,10,3)";//8?
         } else {
-        // $sql .= " WHERE o.order_status_id > '0'";
-        $sql .= " WHERE o.order_status_id not in (0,2,5,6,4,16,13,10,3)";//8?
-
+            // $sql .= " WHERE o.order_status_id > '0'";
+            $sql .= " WHERE o.order_status_id not in (0,2,5,6,4,16,13,10,3)"; //8?
         }
 
 
 
-        if (isset($data['filter_orders'])) {   
-     
-     
-                $sql .= ' and  o.order_id in ("'.$data['filter_orders'].'")';
-            
-            } 
+        if (isset($data['filter_orders'])) {
+
+
+            $sql .= ' and  o.order_id in ("' . $data['filter_orders'] . '")';
+        }
 
         if ($this->user->isVendor()) {
             $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
@@ -1762,7 +1849,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_delivery_date']) && $data['filter_delivery_date'] != 'undefined') {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
-        
+
         if (isset($data['filter_delivery_time']) && !empty($data['filter_delivery_time']) && $data['filter_delivery_time'] != 'undefined') {
             $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time']) . "'";
         }
@@ -1770,7 +1857,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_date_added']) && $data['filter_date_added'] != 'undefined') {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
-            //added below filter to get orders added after the given date time
+        //added below filter to get orders added after the given date time
         if (!empty($data['filter_date_added_greater']) && $data['filter_date_added_greater'] != 'undefined') {
             $sql .= " AND DATE(o.date_added) >= DATE('" . $this->db->escape($data['filter_date_added_greater']) . "')";
         }
@@ -1846,10 +1933,10 @@ class ModelSaleOrder extends Model {
 
 
 
-        if (isset($data['filter_orders'])) {      
-     
-            $sql .= ' and  o.order_id in ("'.$data['filter_orders'].'")';        
-        } 
+        if (isset($data['filter_orders'])) {
+
+            $sql .= ' and  o.order_id in ("' . $data['filter_orders'] . '")';
+        }
 
         //below if condition added for fast orders
         if (!empty($data['filter_order_day'])) {
@@ -2372,7 +2459,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_delivery_date'])) {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
-        
+
         if (!empty($data['filter_delivery_time_slot'])) {
             $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
         }
@@ -2407,7 +2494,7 @@ class ModelSaleOrder extends Model {
             if ($implode) {
                 $sql .= ' WHERE (' . implode(' OR ', $implode) . ')';
             }
-        } 
+        }
         // else {
         //     $sql .= " WHERE o.order_status_id > '0'";
         // }
@@ -2442,15 +2529,13 @@ class ModelSaleOrder extends Model {
         }
 
         if (!empty($data['filter_order_id'])) {
-            $sql .= " AND o.order_id in ( " .  $data['filter_order_id'] . ")";
+            $sql .= " AND o.order_id in ( " . $data['filter_order_id'] . ")";
         }
 
         //not correct ,as orders have comma seperated values
         // if (!empty($data['filter_order_from_id'])) {
         //     $sql .= " AND o.order_id >= '" .  $data['filter_order_from_id'] . "'";
         // }
-
-
         // if (!empty($data['filter_order_to_id'])) {
         //     $sql .= " AND o.order_id <= '" . (int) $data['filter_order_to_id'] . "'";
         // }
@@ -4303,7 +4388,6 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
-
     public function getOrdersDashboard($data = []) {
         $sql = "SELECT o.order_id,  ot.value FROM `" . DB_PREFIX . 'order` o ';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_total ot on (o.order_id = ot.order_id) where ot.code="total"';
@@ -4319,7 +4403,7 @@ class ModelSaleOrder extends Model {
 
             if ($implode) {
                 $sql .= ' and (' . implode(' OR ', $implode) . ')';
-            }  
+            }
         } else {
             $sql .= " and o.order_status_id > '0'";
         }
@@ -4356,13 +4440,12 @@ class ModelSaleOrder extends Model {
             $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
         }
 
-         
+
         if (isset($data['filter_order_status_id_not_in'])) {
             $sql .= " AND o.order_status_id NOT IN (" . $data['filter_order_status_id_not_in'] . ")";
         }
- 
-            $sql .= ' ORDER BY o.order_id';
-        
+
+        $sql .= ' ORDER BY o.order_id';
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
             $sql .= ' DESC';
@@ -4370,9 +4453,9 @@ class ModelSaleOrder extends Model {
             $sql .= ' ASC';
         }
 
-        
 
-            // echo "<pre>";print_r($sql);die;
+
+        // echo "<pre>";print_r($sql);die;
 
         $query = $this->db->query($sql);
 
@@ -4384,45 +4467,37 @@ class ModelSaleOrder extends Model {
         if (is_array($all_orders) && count($all_orders) > 0) {
             $order_grand_total = 0;
             foreach ($all_orders as $all_order) {
-               
-                
-                        
-                            $order_grand_total += $all_order['value'];
-                            //$log->write($order_total);
-                   
-                
+
+
+
+                $order_grand_total += $all_order['value'];
+                //$log->write($order_total);
             }
         }
         return $order_grand_total;
     }
 
-
-
     public function getOrderInfo($order_id) {
 
-        $sql = "SELECT o.order_id, o.delivery_date, o.delivery_timeslot,  o.payment_method,  (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id ) AS status,  o.order_status_id,o.store_name,  o.total,  o.date_added,o.paid,o.amount_partialy_paid,o.delivery_charges FROM `" . DB_PREFIX . 'order` o where o.order_id='.$order_id;
-       
+        $sql = "SELECT o.order_id, o.delivery_date, o.delivery_timeslot,  o.payment_method,  (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id ) AS status,  o.order_status_id,o.store_name,  o.total,  o.date_added,o.paid,o.amount_partialy_paid,o.delivery_charges FROM `" . DB_PREFIX . 'order` o where o.order_id=' . $order_id;
+
         //   echo "<pre>";print_r($sql);die;
         $query = $this->db->query($sql);
 
         return $query->row;
     }
 
-
     public function UpdateOrderDeliveryDate($order_id) {
         $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_date= NOW() WHERE order_id="' . $order_id . '"');
     }
 
+    public function updatePaymentStatus($order_id, $customer_id, $old_total, $final_amount) {
 
-    public function updatePaymentStatus($order_id,$customer_id, $old_total, $final_amount) {
-
-        if($final_amount>$old_total)
-        {
+        if ($final_amount > $old_total) {
             //as of now, we are checking payment for wallet only
             //if cod no need to update
             //so placing payment method='wallet' condition,for mpesa online and other payment options only restrict order
-        $this->db->query('update ' . DB_PREFIX . 'order SET paid="P",amount_partialy_paid ="'. $old_total.'" where  order_id = "' . $order_id . '" and paid="Y" and payment_code="wallet"');
-    
+            $this->db->query('update ' . DB_PREFIX . 'order SET paid="P",amount_partialy_paid ="' . $old_total . '" where  order_id = "' . $order_id . '" and paid="Y" and payment_code="wallet"');
         }
         // else if($final_amount<$old_total)//commented as multiple edits may add more amount to customer wallet
         // {
@@ -4430,8 +4505,6 @@ class ModelSaleOrder extends Model {
         //     $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount returned from order change', amount = '" . (float) $credit . "', date_added = NOW()");
         // }
     }
-
-
 
     public function getOrderedAcceptRejectProductsOnlyOrder($data = []) {
         $sql = "SELECT mp.id,o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id,p.product_id,p.general_product_id,p.name,p.unit,p.quantity,p.price,p.total,p.tax,mp.status FROM `" . DB_PREFIX . 'order` o ';
@@ -4605,8 +4678,6 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
-
-
     public function getTotalOrderedAcceptRejectProducts($data = []) {
         $log = new Log('error.log');
         $log->write('Check For Accept reject Orders');
@@ -4615,8 +4686,7 @@ class ModelSaleOrder extends Model {
         $sql .= 'INNER JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id)';
         $sql .= 'INNER JOIN ' . DB_PREFIX . 'customer cust on(cust.customer_id = o.customer_id)';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'accept_reject_products p on (o.order_id = p.order_id) ';
-        
-       
+
         if (!empty($data['filter_order_status'])) {
             $implode = [];
 
@@ -4641,7 +4711,7 @@ class ModelSaleOrder extends Model {
 
             $sql .= ' AND p.status= ' . $data['filter_accept_reject_status'] . '';
         }
-        
+
         //below if condition added for fast orders
         if (!empty($data['filter_order_day'])) {
             $current_date = date('Y-m-d');
@@ -4737,8 +4807,6 @@ class ModelSaleOrder extends Model {
         return $query->row['total'];
     }
 
-
-
     public function getOrderedAcceptRejectProducts($data = []) {
         $sql = "SELECT mp.id,o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id,p.product_id,p.general_product_id,p.name,p.unit,p.quantity,p.price,p.total,p.tax,mp.status FROM `" . DB_PREFIX . 'order` o ';
 
@@ -4747,8 +4815,6 @@ class ModelSaleOrder extends Model {
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'order_product p on (o.order_id = p.order_id) ';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'accept_reject_products mp on (p.product_id = mp.product_store_id) ';
 
-
-       
         if (isset($data['filter_order_status'])) {
             $implode = [];
 
@@ -4912,5 +4978,17 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
-    
+
+    public function updatevendororderstatuss($order_id, $vendor_order_status_id) {
+        $order_sql = 'UPDATE ' . DB_PREFIX . "order SET vendor_order_status_id = '" . $vendor_order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'";
+        $order_query = $this->db->query($order_sql);
+        return $order_query;
+    }
+
+    public function getVendorOrderStatus($vendor_order_status_id) {
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "vendor_order_status WHERE language_id = '" . (int) $this->config->get('config_language_id') . "' AND order_status_id = '" . (int) $vendor_order_status_id . "'";
+        $query = $this->db->query($sql);
+        return $query->row;
+    }
+
 }

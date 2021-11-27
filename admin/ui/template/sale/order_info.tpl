@@ -250,6 +250,14 @@
 				</td>
 			  </tr>
 			  <?php } ?>
+                          <?php if ($vendor_order_status != NULL) { ?>
+			  <tr>
+				<td>Vendor Order Status</td>
+				<td>
+				<h3 class="my-order-title label" style="background-color: #<?= $vendor_order_status['color']; ?>;   width: 7%;line-height: 2;" id="order-status" ><?php echo $vendor_order_status['name']; ?></h3>
+				</td>
+			  </tr>
+			  <?php } ?>
 			  <?php if ($comment) { ?>
 			  <tr>
 				<td><?php echo $text_comment; ?></td>

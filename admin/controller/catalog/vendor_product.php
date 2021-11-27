@@ -104,6 +104,30 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function addnewvendorproducttopricecategory() {
+        $data = NULL;
+        $log = new Log('error.log');
+        $select_price_category = $this->request->get['select_price_category'];
+        $vendor_product_name = $this->request->get['vendor_product_name'];
+        $vendor_product_uom = $this->request->get['vendor_product_uom'];
+        $vendor_product_price = $this->request->get['vendor_product_price'];
+        $selected_product_store_id = $this->request->get['selected_product_store_id'];
+        $log->write($select_price_category . ' ' . $vendor_product_name . ' ' . $vendor_product_uom . ' ' . $vendor_product_price . ' ' . $selected_product_store_id);
+        $data['product_store_id'] = $this->request->get['selected_product_store_id'];
+        $data['product_price'] = $this->request->get['vendor_product_price'];
+        $data['price_category'] = $this->request->get['select_price_category'];
+        $this->load->model('catalog/vendor_product');
+        $product_details = $this->model_catalog_vendor_product->getProduct($data['product_store_id']);
+        $log->write($product_details);
+        $data['name'] = $product_details['name'];
+        $data['product_id'] = $product_details['product_id'];
+        $res = $this->model_catalog_vendor_product->addVendorProductToCategoryPrices($data);
+        $json = $res;
+        $this->load->controller('catalog/product/cacheProductPrices', 75);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function edit() {
         $this->load->language('catalog/product');
 
@@ -310,7 +334,7 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $filter_status = null;
         }
-        
+
         if (isset($this->request->get['filter_price_category_status'])) {
             $filter_price_category_status = $this->request->get['filter_price_category_status'];
         } else {
@@ -683,7 +707,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_status'])) {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
-        
+
         if (isset($this->request->get['filter_price_category_status'])) {
             $url .= '&filter_price_category_status=' . $this->request->get['filter_price_category_status'];
         }
@@ -786,7 +810,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_status'])) {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
-        
+
         if (isset($this->request->get['filter_price_category_status'])) {
             $url .= '&filter_price_category_status=' . $this->request->get['filter_price_category_status'];
         }
@@ -2932,8 +2956,8 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $this->model_report_excel->download_inventoryhistoryexcel($data, $filter_data);
     }
-    
-        public function getUserByName($name) {
+
+    public function getUserByName($name) {
         if ($name) {
             $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '" . $this->db->escape($name) . "%'");
 

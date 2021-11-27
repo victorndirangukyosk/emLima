@@ -366,6 +366,7 @@ class ControllerUserUserPermission extends Controller
             'common/dashboard',
             'common/startup',
             'common/login',
+            'common/orderinfo',
             'common/logout',
             'common/forgotten',
             'common/reset',

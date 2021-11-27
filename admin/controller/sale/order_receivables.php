@@ -204,7 +204,7 @@ class ControllerSaleOrderReceivables extends Controller
                 $data['totals'][] = [
                     'title' => $total['title'],
                     'code' => $total['code'],
-                    'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                    'text' => $this->currency->format($total['value']),//, $order_info['currency_code'], $order_info['currency_value']
                 ];
 
                 if ('total' == $total['code']) {
@@ -526,6 +526,72 @@ class ControllerSaleOrderReceivables extends Controller
         $this->model_report_excel->download_sale_order_receivables_excel($filter_data);
     }
 
+    public function orderreceivedexcel()
+    {
+        $this->load->language('sale/order_receivables');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        if (isset($this->request->get['filter_order_id'])) {
+            $filter_order_id = $this->request->get['filter_order_id'];
+        } else {
+            $filter_order_id = null;
+        }
+
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
+        } else {
+            $filter_customer = null;
+        }
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        // if (isset($this->request->get['filter_total'])) {
+        //     $filter_total = $this->request->get['filter_total'];
+        // } else {
+        //     $filter_total = null;
+        // }
+
+        // if (isset($this->request->get['filter_date_added'])) {
+        //     $filter_date_added = $this->request->get['filter_date_added'];
+        // } else {
+        //     $filter_date_added = null;
+        // }
+
+        if (isset($this->request->get['sort'])) {
+            $sort  = $this->request->get['sort'];
+        }
+        else{
+            $sort='o.order_id';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order  = $this->request->get['order'];
+        }
+        else{
+            $order='DESC';
+        }
+
+        $filter_data = [
+            'filter_order_id' => $filter_order_id,
+            'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
+            // 'filter_total' => $filter_total,
+            // 'filter_date_added' => $filter_date_added,
+            // 'sort' => $sort,
+              'order' => $order,
+             
+        ];
+        
+        $this->load->model('report/excel');
+        // $this->model_report_excel->download_sale_ordertransaction_excel($filter_data);
+        $this->model_report_excel->download_sale_order_receivables_success_excel($filter_data);
+    }
+
 
 
 
@@ -536,7 +602,20 @@ class ControllerSaleOrderReceivables extends Controller
             if (!$this->user->hasPermission('modify', 'sale/order_receivables')) {
                 $data['error'] = $this->language->get('error_permission');
                 $data['status']=false;
-            } else {            
+            } else { 
+                
+                
+                //  #region insert the given amount ,selected orders and order total ,to maintain history
+                //  try{
+                //     $this->model_sale_order_receivables->insertPaymentReceivedEntery($this->request->post['paid_order_id'], $transaction_id,$amount_received,$grand_total,$this->user->getId());
+
+                // }
+                // catch(exception $ex)
+                // {
+
+                // }
+                // #endregion
+
 
              $this->model_sale_order_receivables->confirmPaymentReceived($this->request->post['paid_order_id'], $this->request->post['transaction_id']);
             
@@ -600,6 +679,16 @@ class ControllerSaleOrderReceivables extends Controller
                 $data['error'] = $this->language->get('error_permission');
                 $data['status']=false;
             } else {           
+
+                #region insert the given amount ,selected orders and order total ,to maintain history
+                try{
+                    $this->model_sale_order_receivables->insertPaymentReceivedEntery($this->request->post['selected'], $transaction_id,$amount_received,$grand_total,$this->user->getId());
+
+                }
+                catch(exception $ex)
+                {  $log = new Log('error.log');
+                $log.write("payment received error");}
+                #endregion
                 
                 if($amount_received >=$grand_total)
                 {

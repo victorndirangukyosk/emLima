@@ -65,6 +65,44 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
+    public function product_autocomplete_category() {
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        if (isset($this->request->get['filter_price_category_name'])) {
+            $filter_price_category_name = $this->request->get['filter_price_category_name'];
+        } else {
+            $filter_price_category_name = '';
+        }
+
+        $this->load->model('sale/order');
+        $this->load->model('catalog/vendor_product');
+
+        $cateogry_price_products = $this->model_catalog_vendor_product->getCategoryProductsCategoryName($filter_price_category_name);
+        $send = [];
+
+        $json = $this->model_sale_order->getProductsForCategory($filter_name, $cateogry_price_products);
+        $log = new Log('error.log');
+
+        foreach ($json as $j) {
+            if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
+                $j['price'] = $j['special_price'];
+            }
+
+            $j['name'] = htmlspecialchars_decode($j['name']);
+
+            $send[] = $j;
+        }
+
+        //echo "<pre>";print_r($json);die;
+
+        echo json_encode($send);
+    }
+
     public function add() {
         $this->load->language('sale/order');
 
@@ -424,6 +462,25 @@ class ControllerSaleOrder extends Controller {
         $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, $order_info['store_id']);
         $variations = $this->model_sale_order->getProductVariationsNew($product_info['name'], $order_info['store_id'], $this->request->get['order_id']);
         //$log->write($variations);
+        $json = $variations;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getVendorProductVariantsInfo() {
+
+        $log = new Log('error.log');
+        $log->write($this->request->get['product_store_id']);
+        $log->write($this->request->get['category_pricing_name']);
+        $filter_price_category_name = $this->request->get['category_pricing_name'];
+        $this->load->model('sale/order');
+        $this->load->model('catalog/vendor_product');
+        $cateogry_price_products = $this->model_catalog_vendor_product->getCategoryProductsCategoryName($filter_price_category_name);
+        $product_details = $this->model_catalog_vendor_product->getProduct($this->request->get['product_store_id']);
+        $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, $product_details['store_id']);
+        $variations = $this->model_sale_order->getVendorProductVariationsNew($product_info['name'], $product_details['store_id'], $cateogry_price_products);
+        $log->write($variations);
         $json = $variations;
 
         $this->response->addHeader('Content-Type: application/json');
@@ -1234,6 +1291,7 @@ class ControllerSaleOrder extends Controller {
         $results = $this->model_sale_order->getOrders($filter_data);
 
         //        echo "<pre>";print_r($results);die;
+        $disable = [2, 6, 7, 5, 8, 4, 15, 1, 14, 16, 13, 9, 10, 3, 11, 12];
         foreach ($results as $result) {
             $sub_total = 0;
 
@@ -1275,6 +1333,7 @@ class ControllerSaleOrder extends Controller {
                 'delivery_timeslot' => $result['delivery_timeslot'],
                 'store' => $result['store_name'],
                 'order_status_id' => $result['order_status_id'],
+                'vendor_order_status_id' => $result['vendor_order_status_id'],
                 'order_status_color' => $result['color'],
                 'city' => $result['city'],
                 'vendor_total' => $vendor_total,
@@ -1603,11 +1662,10 @@ class ControllerSaleOrder extends Controller {
         $data['entry_registration_number'] = $this->language->get('entry_registration_number');
         $data['entry_registration_date'] = $this->language->get('entry_registration_date');
 
-
         $data['entry_registration_validity_upto'] = $this->language->get('entry_registration_validity_upto');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
-
+        $data['vendor_order_statuses'] = $this->model_localisation_order_status->getVendorOrderStatuses();
         $this->response->setOutput($this->load->view('sale/order_list.tpl', $data));
     }
 
@@ -2051,7 +2109,12 @@ class ControllerSaleOrder extends Controller {
 
             $kw_shipping_charges = 0;
             $kw_shipping_charges_vat = 0;
-
+            $vendor_order_status = $this->model_sale_order->getVendorOrderStatus($order_info['vendor_order_status_id']);
+            $log = new Log('error.log');
+            $log->write('vendor_order_status');
+            $log->write($vendor_order_status);
+            $log->write('vendor_order_status');
+            $data['vendor_order_status'] = $vendor_order_status;
             $totals = $this->model_sale_order->getOrderTotals($order_info['order_id']);
 
             //echo "<pre>";print_r($totals);die;
@@ -9102,6 +9165,20 @@ class ControllerSaleOrder extends Controller {
         //  echo '<pre>';print_r($data);exit;
 
         return true;
+    }
+
+    public function updatevendororderstatus() {
+        $this->load->model('sale/order');
+        $order_id = $this->request->post['order_id'];
+        $vendor_order_status_id = $this->request->post['vendor_order_status_id'];
+        $log = new Log('error.log');
+        $log->write($order_id);
+        $log->write($vendor_order_status_id);
+        $order_update = $this->model_sale_order->updatevendororderstatuss($order_id, $vendor_order_status_id);
+        $log->write($order_update);
+        $json['data'] = $order_update;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }

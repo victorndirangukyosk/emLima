@@ -995,7 +995,11 @@ class ModelCheckoutOrder extends Model {
 
 
                     $log->write("vendorData");
+                    $log->write($vendorData);
                     $log->write($store_details['email']);
+                    $log->write($store_details['order_notification_emails']);
+                    $log->write($vendorData['email']);
+                    $log->write($vendorData['order_notification_emails']);
                     $log->write($order_status_id);
 
                     //$text = $this->emailtemplate->getText( 'Order', 'order', $textData );
@@ -1006,7 +1010,7 @@ class ModelCheckoutOrder extends Model {
                     if (isset($vendorData['email']) && $this->emailtemplate->getEmailEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id) && (in_array($order_status_id, $this->config->get('config_processing_status')) || in_array($order_status_id, $this->config->get('config_complete_status')))) {
 
                         // 7 merchant mail
-                        $log->write('vendot if');
+                        $log->write('vendot if 1');
                         $vendorData['order_id'] = $order_id;
                         $vendorData['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
 
@@ -1022,6 +1026,7 @@ class ModelCheckoutOrder extends Model {
 
 
                         $mail->setTo($vendorData['email']);
+                        $mail->setCc($vendorData['order_notification_emails']);
                         $mail->setFrom($this->config->get('config_from_email'));
                         $mail->setSender($this->config->get('config_name'));
                         $mail->setSubject($subject);
@@ -1034,10 +1039,13 @@ class ModelCheckoutOrder extends Model {
 
                     if (isset($store_details['email']) && $this->emailtemplate->getEmailEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id)) {
                         // 7 merchant mail
-                        $log->write('vendot if');
+                        $log->write('vendot if 2');
                         $vendorData['order_id'] = $order_id;
                         $vendorData['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
-
+                        $data['order_id'] = $order_id;
+                        $data['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
+                        $data['order_href'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
+                        $data['vendor_order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
                         $log->write('1');
                         //$subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_'. (int) $order_status_id, $vendorData);
                         $subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
@@ -1061,8 +1069,8 @@ class ModelCheckoutOrder extends Model {
 
 
                           $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8')); */
-
                         $mail->setTo($store_details['email']);
+                        $mail->setCc($store_details['order_notification_emails']);
                         $mail->setFrom($this->config->get('config_from_email'));
                         $mail->setSender($this->config->get('config_name'));
                         $mail->setSubject($subject);

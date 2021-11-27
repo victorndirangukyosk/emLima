@@ -3,13 +3,35 @@
 class ModelExecutivesExecutives extends Model {
 
     public function addExecutive($data) {
+        if(isset($data['password']) && $data['password']!='default' &&$data['password']!='' && $data['password']!=NULL )
+
+        {
+            $options = [
+                'cost' => 8
+              ];
+              $encrypted_password = password_hash($data['password'], PASSWORD_BCRYPT, $options);
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "delivery_executives SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', password = '" . $this->db->escape($encrypted_password) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");
+
+        }else{
         $this->db->query('INSERT INTO ' . DB_PREFIX . "delivery_executives SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "', date_added = NOW()");
+        }
         $executive_id = $this->db->getLastId();
         return $executive_id;
     }
 
     public function editExecutive($executive_id, $data) {
+        if(isset($data['password']) && $data['password']!='default' &&$data['password']!='' && $data['password']!=NULL )
+        {
+
+            $options = [
+                'cost' => 8
+              ];
+              $encrypted_password = password_hash($data['password'], PASSWORD_BCRYPT, $options);
+        $this->db->query('UPDATE ' . DB_PREFIX . "delivery_executives SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', password = '" . $this->db->escape($encrypted_password) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "' WHERE delivery_executive_id = '" . (int) $executive_id . "'");
+
+        }else{
         $this->db->query('UPDATE ' . DB_PREFIX . "delivery_executives SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', status = '" . (int) $data['status'] . "' WHERE delivery_executive_id = '" . (int) $executive_id . "'");
+        }
     }
 
     public function editToken($customer_id, $token) {

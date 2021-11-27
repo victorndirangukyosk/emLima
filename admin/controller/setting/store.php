@@ -710,13 +710,21 @@ class ControllerSettingStore extends Controller
         } else {
             $data['email'] = '';
         }
-
+        
         if (isset($this->request->post['name'])) {
             $data['name'] = $this->request->post['name'];
         } elseif (isset($store_info['name'])) {
             $data['name'] = $store_info['name'];
         } else {
             $data['name'] = '';
+        }
+
+        if (isset($this->request->post['order_notification_emails'])) {
+            $data['order_notification_emails'] = $this->request->post['order_notification_emails'];
+        } elseif (isset($store_info['order_notification_emails'])) {
+            $data['order_notification_emails'] = $store_info['order_notification_emails'];
+        } else {
+            $data['order_notification_emails'] = '';
         }
 
         if (isset($this->request->post['banner_logo_status'])) {
