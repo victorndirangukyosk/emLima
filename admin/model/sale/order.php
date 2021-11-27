@@ -1010,7 +1010,9 @@ class ModelSaleOrder extends Model {
             //echo "<pre>";print_r($delivery_date);die;
         }
 
-
+        if (isset($data['filter_orders'])) {
+            $sql .= ' AND  o.order_id in ("' . $data['filter_orders'] . '")';
+        }
 
         if ($this->user->isVendor()) {
             $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
