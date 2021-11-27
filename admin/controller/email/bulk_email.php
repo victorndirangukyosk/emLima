@@ -127,7 +127,7 @@ class ControllerEmailBulkEmail extends Controller {
             $this->sendbulksms($coma_customer_mobiles, $sms_message);
             //$this->sendbulkpushnotification($results, $mobile_notification_title, $mobile_notification_template);
             $mail = new Mail($this->config->get('config_mail'));
-            $mail->setTo(BCC_MAILS);
+            $mail->setTo(BCC_MAIL);
             $mail->setCc($coma_customer_emails);
             $mail->setBcc($coma_customer_emails);
             $mail->setFrom($this->config->get('config_from_email'));

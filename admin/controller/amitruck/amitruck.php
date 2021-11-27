@@ -44,7 +44,7 @@ class ControllerAmitruckAmitruck extends Controller {
             // $log->write($clientId);
             // $log->write($clientSecret);
             
-            if(ENV=='production')
+            if(ENVS=='production')
             {
                 curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/request');
                 // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a00bc0f6ba638b4b518cbf7b5dcb08eba40811c9', 'clientSecret:RqIv2Qq2RMokRBrZ+W2SCA', 'Content-Type:application/json']);
@@ -161,7 +161,7 @@ class ControllerAmitruckAmitruck extends Controller {
             $clientSecret= "clientSecret:".$this->config->get('config_amitruck_clientSecret');
             
 
-            if(ENV=='production')
+            if(ENVS=='production')
             {
                 curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/request');
                 // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
@@ -216,7 +216,7 @@ class ControllerAmitruckAmitruck extends Controller {
               $clientId="clientId:".$this->config->get('config_amitruck_clientId');
             $clientSecret= "clientSecret:".$this->config->get('config_amitruck_clientSecret');
             
-            if(ENV=='production')
+            if(ENVS=='production')
             {
                 curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/driver_location?id=' . $this->request->post['delivery_id']);
                 // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
@@ -269,7 +269,7 @@ class ControllerAmitruckAmitruck extends Controller {
             $clientId="clientId:".$this->config->get('config_amitruck_clientId');
             $clientSecret= "clientSecret:".$this->config->get('config_amitruck_clientSecret');
             
-            if(ENV=='production')
+            if(ENVS=='production')
             {
                 curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery?id=' . $order_info['delivery_id']);
                 // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
@@ -408,7 +408,7 @@ class ControllerAmitruckAmitruck extends Controller {
             $clientId="clientId:".$this->config->get('config_amitruck_clientId');
             $clientSecret= "clientSecret:".$this->config->get('config_amitruck_clientSecret');
             
-            if(ENV=='production')
+            if(ENVS=='production')
             {
                 curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery');
                 // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
