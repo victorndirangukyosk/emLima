@@ -2109,7 +2109,8 @@ class ControllerSaleOrder extends Controller {
 
             $kw_shipping_charges = 0;
             $kw_shipping_charges_vat = 0;
-
+            $vendor_order_status = $this->model_sale_order->getVendorOrderStatus($order_info['vendor_order_status_id']);
+            $data['vendor_order_status'] = $vendor_order_status;
             $totals = $this->model_sale_order->getOrderTotals($order_info['order_id']);
 
             //echo "<pre>";print_r($totals);die;
