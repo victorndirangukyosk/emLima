@@ -4984,4 +4984,10 @@ class ModelSaleOrder extends Model {
         return $order_query;
     }
 
+    public function getVendorOrderStatus($vendor_order_status_id) {
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "vendor_order_status WHERE language_id = '" . (int) $this->config->get('config_language_id') . "' AND order_status_id = '" . (int) $vendor_order_status_id . "'";
+        $query = $this->db->query($sql);
+        return $query->row;
+    }
+
 }
