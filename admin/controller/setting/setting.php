@@ -136,6 +136,11 @@ class ControllerSettingSetting extends Controller
         } else {
             $data['error_store_longitude'] = '';
         }
+        if (isset($this->error['amitruck_url'])) {
+            $data['error_amitruck_url'] = $this->error['amitruck_url'];
+        } else {
+            $data['error_amitruck_url'] = '';
+        }
 
 
         if (isset($this->error['amitruck_clientId'])) {
@@ -582,7 +587,11 @@ class ControllerSettingSetting extends Controller
             $data['config_store_longitude'] = $this->config->get('config_store_longitude');
         }
 
-
+        if (isset($this->request->post['config_amitruck_url'])) {
+            $data['config_amitruck_url'] = $this->request->post['config_amitruck_url'];
+        } else {
+            $data['config_amitruck_url'] = $this->config->get('config_amitruck_url');
+        }
         if (isset($this->request->post['config_amitruck_clientId'])) {
             $data['config_amitruck_clientId'] = $this->request->post['config_amitruck_clientId'];
         } else {
@@ -2276,7 +2285,9 @@ class ControllerSettingSetting extends Controller
         if (!$this->request->post['config_store_longitude']) {
             $this->error['store_longitude'] = $this->language->get('error_store_longitude');
         }
-
+        if (!$this->request->post['config_amitruck_url']) {
+            $this->error['amitruck_url'] = $this->language->get('error_amitruck_url');
+        }
         if (!$this->request->post['config_amitruck_clientId']) {
             $this->error['amitruck_clientId'] = $this->language->get('error_amitruck_clientId');
         }
