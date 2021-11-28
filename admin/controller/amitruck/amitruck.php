@@ -38,26 +38,34 @@ class ControllerAmitruckAmitruck extends Controller {
             $body = json_encode($body);
             $log->write($body);
             $curl = curl_init();
+            $clientUrl=$this->config->get('config_amitruck_url');
             $clientId="clientId:".$this->config->get('config_amitruck_clientId');
             $clientSecret= "clientSecret:".$this->config->get('config_amitruck_clientSecret');
             
             // $log->write($clientId);
             // $log->write($clientSecret);
+
+
             
-            if(ENVS=='production')
-            {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/request');
-                // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a00bc0f6ba638b4b518cbf7b5dcb08eba40811c9', 'clientSecret:RqIv2Qq2RMokRBrZ+W2SCA', 'Content-Type:application/json']);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            // if(ENVS=='production')
+            // {
+            //     curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/request');
+            //     // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a00bc0f6ba638b4b518cbf7b5dcb08eba40811c9', 'clientSecret:RqIv2Qq2RMokRBrZ+W2SCA', 'Content-Type:application/json']);
+            //     curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
                
-            }
-            else {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/request');
-                // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            // }
+            // else {
+            //     curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/request');
+            //     // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
+            //     curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
 
                   
-            }
+            // }
+            // echo "<pre>";print_r(''.$clientUrl.'delivery/request'.'');die;
+
+            curl_setopt($curl, CURLOPT_URL, ''.$clientUrl.'delivery/request'.'');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
@@ -85,6 +93,12 @@ class ControllerAmitruckAmitruck extends Controller {
                 $this->model_amitruck_amitruck->addDeliveryStatus($this->request->post['order_id'], json_encode($json));
                 $this->model_amitruck_amitruck->updateOrderDelivery($this->request->post['order_id'], json_encode($json));
             }
+            else {
+                # code...
+            $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'CREATE_DELIVERY');
+
+            }
+
 
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
@@ -157,23 +171,27 @@ class ControllerAmitruckAmitruck extends Controller {
             $body = json_encode($body);
             //$log->write($body);
             $curl = curl_init();
+            $clientUrl=$this->config->get('config_amitruck_url');
             $clientId="clientId:".$this->config->get('config_amitruck_clientId');
             $clientSecret= "clientSecret:".$this->config->get('config_amitruck_clientSecret');
             
 
-            if(ENVS=='production')
-            {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/request');
-                // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            // if(ENVS=='production')
+            // {
+            //     curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/request');
+            //     // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
+            //     curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
 
-            }
-            else {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/request');
-                // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            // }
+            // else {
+            //     curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/request');
+            //     // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
+            //     curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
   
-            }
+            // }
+            curl_setopt($curl, CURLOPT_URL, ''.$clientUrl.'delivery/request'.'');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
@@ -191,6 +209,11 @@ class ControllerAmitruckAmitruck extends Controller {
                 $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'CREATE_DELIVERY');
                 $this->model_amitruck_amitruck->addDeliveryStatus($this->request->post['order_id'], json_encode($json));
                 $this->model_amitruck_amitruck->updateOrderDelivery($this->request->post['order_id'], json_encode($json));
+            }
+            else {
+                # code...
+            $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'CREATE_DELIVERY');
+
             }
             $result['token'] = $this->session->data['token'];
 
@@ -213,22 +236,32 @@ class ControllerAmitruckAmitruck extends Controller {
             //$log->write($order_info);
 
             $curl = curl_init();
-              $clientId="clientId:".$this->config->get('config_amitruck_clientId');
+            $tag="delivery/driver_location?id=". $this->request->post['delivery_id'];
+            $clientUrl=$this->config->get('config_amitruck_url');
+
+            $clientId="clientId:".$this->config->get('config_amitruck_clientId');
             $clientSecret= "clientSecret:".$this->config->get('config_amitruck_clientSecret');
             
-            if(ENVS=='production')
-            {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/driver_location?id=' . $this->request->post['delivery_id']);
-                // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
 
-            }
-            else {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/driver_location?id=' . $this->request->post['delivery_id']);
-                // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+
+            // if(ENVS=='production')
+            // {
+            //     curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery/driver_location?id=' . $this->request->post['delivery_id']);
+            //     // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
+            //     curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+
+            // }
+            // else {
+            //     curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery/driver_location?id=' . $this->request->post['delivery_id']);
+            //     // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
+            //     curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
   
-            }
+            // }
+            // echo "<pre>";print_r(''.$clientUrl.$tag.'');die;
+
+            curl_setopt($curl, CURLOPT_URL, ''.$clientUrl.$tag.'');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 0);
             // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
@@ -251,6 +284,10 @@ class ControllerAmitruckAmitruck extends Controller {
                 $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'FETCH_DRIVER_LOCATION');
                 $log->write($result);
             }
+            else {
+                $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'FETCH_DRIVER_LOCATION');
+                
+            }
 
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
@@ -261,28 +298,36 @@ class ControllerAmitruckAmitruck extends Controller {
         $this->load->model('amitruck/amitruck');
         $this->load->model('sale/order');
         $order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
+       
+            // echo "<pre>";print_r($this->request->post['order_id']);die;
+       
         if (is_array($order_info) && count($order_info) > 0 && $order_info['delivery_id'] != NULL) {
             $log = new Log('error.log');
             //$log->write($order_info);
 
             $curl = curl_init();
+            $tag="delivery?id=". $order_info['delivery_id'];
+
+            $clientUrl=$this->config->get('config_amitruck_url');
             $clientId="clientId:".$this->config->get('config_amitruck_clientId');
             $clientSecret= "clientSecret:".$this->config->get('config_amitruck_clientSecret');
             
-            if(ENVS=='production')
-            {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery?id=' . $order_info['delivery_id']);
-                // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            // if(ENVS=='production')
+            // {
+            //     curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery?id=' . $order_info['delivery_id']);
+            //     // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
+            //     curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
 
-            }
-            else {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery?id=' . $order_info['delivery_id']);
-                // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            // }
+            // else {
+            //     curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery?id=' . $order_info['delivery_id']);
+            //     // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
+            //     curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
   
-            }
-            
+            // }
+            curl_setopt($curl, CURLOPT_URL, ''.$clientUrl.$tag.'');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+           
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 0);
             // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
@@ -294,6 +339,9 @@ class ControllerAmitruckAmitruck extends Controller {
             curl_close($curl);
             $result = json_decode($result, true);
             $json = $result;
+
+            // echo "<pre>";print_r(''.$clientUrl.$tag.'');die;
+            
             //In Response "completedByDriver": true
 
             if ($result['status'] == 200) {
@@ -405,22 +453,25 @@ class ControllerAmitruckAmitruck extends Controller {
             //$log->write($order_info);
 
             $curl = curl_init();
+            $clientUrl=$this->config->get('config_amitruck_url');
             $clientId="clientId:".$this->config->get('config_amitruck_clientId');
             $clientSecret= "clientSecret:".$this->config->get('config_amitruck_clientSecret');
             
-            if(ENVS=='production')
-            {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery');
-                // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            // if(ENVS=='production')
+            // {
+            //     curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery');
+            //     // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a1476380a93c2ffffa00b058cd9833ae489ef3d0', 'clientSecret:wjeACEB9BVk/vzmufg3MEg', 'Content-Type:application/json']);
+            //     curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
 
-            }
-            else {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery');
-                // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            // }
+            // else {
+            //     curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery');
+            //     // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
+            //     curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
   
-            }
+            // }
+            curl_setopt($curl, CURLOPT_URL, ''.$clientUrl.'delivery'.'');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
             
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 0);
