@@ -104,4 +104,5 @@ require_once DIR_SYSTEM.'helper/json.php';
 require_once DIR_SYSTEM.'helper/utf8.php';
 
 require_once 'define.php';
+require_once 'newdefine.php';
 //$_SERVER['REQUEST_URI'] = '/';
