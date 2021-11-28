@@ -1738,7 +1738,7 @@ class ControllerSaleAmitruckdelivaries extends Controller {
             $curl = curl_init();
             $clientId="clientId:".$this->config->get('config_amitruck_clientId');
             $clientSecret= "clientSecret:".$this->config->get('config_amitruck_clientSecret');
-            if(ENV=='production')
+            if(ENVS=='production')
             {
                 curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery');
                 // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a00bc0f6ba638b4b518cbf7b5dcb08eba40811c9', 'clientSecret:RqIv2Qq2RMokRBrZ+W2SCA', 'Content-Type:application/json']);
