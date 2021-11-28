@@ -96,6 +96,7 @@ require_once modification(DIR_SYSTEM . 'engine/front.php');
 require_once modification(DIR_SYSTEM . 'engine/loader.php');
 require_once modification(DIR_SYSTEM . 'engine/model.php');
 require_once modification(DIR_SYSTEM . 'engine/registry.php');
+define('DIR_ADMIN', DIR_ROOT.'admin/');
 
 // Helper
 require_once DIR_SYSTEM . 'helper/json.php';
