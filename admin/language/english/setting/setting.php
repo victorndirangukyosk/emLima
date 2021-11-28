@@ -87,6 +87,7 @@ $_['text_deliversystem'] = 'Delivery System';
 $_['entry_name'] = 'Store Name';
 $_['entry_store_latitude'] = 'Store Latitude';
 $_['entry_store_longitude'] = 'Store Longitude';
+$_['entry_amitruck_url'] = 'Amitruck URL';
 $_['entry_amitruck_clientId'] = 'Amitruck Client ID';
 $_['entry_amitruck_clientSecret'] = 'Amitruck Client Secret';
 $_['entry_owner'] = 'Store Owner';
@@ -470,6 +471,7 @@ $_['error_permission'] = 'Warning: You do not have permission to modify settings
 $_['error_name'] = 'Store Name must be between 3 and 32 characters!';
 $_['error_store_latitude'] = 'Store Latitude must be added!';
 $_['error_store_longitude'] = 'Store Longitude must be added!';
+$_['error_amitruck_url'] = 'Amitruck URL must be added!';
 $_['error_amitruck_clientId'] = 'Amitruck Client ID must be added!';
 $_['error_amitruck_clientSecret'] = 'Amitruck Client Secret must be added!';
 
