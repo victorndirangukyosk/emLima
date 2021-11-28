@@ -93,6 +93,12 @@ class ControllerAmitruckAmitruck extends Controller {
                 $this->model_amitruck_amitruck->addDeliveryStatus($this->request->post['order_id'], json_encode($json));
                 $this->model_amitruck_amitruck->updateOrderDelivery($this->request->post['order_id'], json_encode($json));
             }
+            else {
+                # code...
+            $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'CREATE_DELIVERY');
+
+            }
+
 
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
@@ -203,6 +209,11 @@ class ControllerAmitruckAmitruck extends Controller {
                 $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'CREATE_DELIVERY');
                 $this->model_amitruck_amitruck->addDeliveryStatus($this->request->post['order_id'], json_encode($json));
                 $this->model_amitruck_amitruck->updateOrderDelivery($this->request->post['order_id'], json_encode($json));
+            }
+            else {
+                # code...
+            $this->model_amitruck_amitruck->addDelivery($this->request->post['order_id'], json_encode($json), 'CREATE_DELIVERY');
+
             }
             $result['token'] = $this->session->data['token'];
 
