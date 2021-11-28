@@ -96,12 +96,12 @@ require_once modification(DIR_SYSTEM . 'engine/front.php');
 require_once modification(DIR_SYSTEM . 'engine/loader.php');
 require_once modification(DIR_SYSTEM . 'engine/model.php');
 require_once modification(DIR_SYSTEM . 'engine/registry.php');
-define('DIR_ADMIN', DIR_ROOT.'admin/');
+define('DIR_ADMINS', DIR_ROOT.'admin/');
 
 // Helper
 require_once DIR_SYSTEM . 'helper/json.php';
 require_once DIR_SYSTEM . 'helper/utf8.php';
 
 require_once 'define.php';
-require_once DIR_ADMIN . 'newdefine.php';
+require_once DIR_ADMINS . 'newdefine.php';
 //$_SERVER['REQUEST_URI'] = '/';
