@@ -1736,21 +1736,26 @@ class ControllerSaleAmitruckdelivaries extends Controller {
             //$log->write($order_info);
 
             $curl = curl_init();
+            $clientUrl=$this->config->get('config_amitruck_url');
             $clientId="clientId:".$this->config->get('config_amitruck_clientId');
             $clientSecret= "clientSecret:".$this->config->get('config_amitruck_clientSecret');
-            if(ENVS=='production')
-            {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery');
-                // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a00bc0f6ba638b4b518cbf7b5dcb08eba40811c9', 'clientSecret:RqIv2Qq2RMokRBrZ+W2SCA', 'Content-Type:application/json']);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            // if(ENVS=='production')
+            // {
+            //     curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0/delivery');
+            //     // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:a00bc0f6ba638b4b518cbf7b5dcb08eba40811c9', 'clientSecret:RqIv2Qq2RMokRBrZ+W2SCA', 'Content-Type:application/json']);
+            //     curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
 
-            }
-            else {
-                curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery');
-                // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
+            // }
+            // else {
+            //     curl_setopt($curl, CURLOPT_URL, 'https://customer.amitruck.com/rest-api-v1.0.0-test/delivery');
+            //     // curl_setopt($curl, CURLOPT_HTTPHEADER, ['clientId:fbc86ee31d7ee4a998822d234363efd51416c4bb', 'clientSecret:wNSABgWArMR9qNYBghuD4w', 'Content-Type:application/json']);
+            //     curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
                   
-            }
+            // }
+            // echo "<pre>";print_r(''.$clientUrl.'delivery'.'');die;
+
+            curl_setopt($curl, CURLOPT_URL, ''.$clientUrl.'delivery'.'');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [''.$clientId.'', ''.$clientSecret.'', 'Content-Type:application/json']);
             
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 0);
