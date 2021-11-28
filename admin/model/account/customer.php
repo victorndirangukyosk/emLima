@@ -212,6 +212,10 @@ class ModelAccountCustomer extends Model {
     }
 
     public function resetPasswordMail($email, $password) {
+        $log = new Log('error.log');
+        $log->write('email');
+        $log->write($email);
+        $log->write('email');
         $customer = $this->getCustomerByEmail($email);
 
         $data = [
@@ -235,6 +239,10 @@ class ModelAccountCustomer extends Model {
     }
 
     public function resetPasswordSMS($email, $password) {
+        $log = new Log('error.log');
+        $log->write('phone');
+        $log->write($email);
+        $log->write('phone');
         $customer = $this->getCustomerByEmail($email);
 
         $data = [
