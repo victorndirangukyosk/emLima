@@ -1012,7 +1012,7 @@ class ModelSaleOrder extends Model {
         }
 
         if (isset($data['filter_orders'])) {
-            $sql .= ' AND  o.order_id in ("' . $data['filter_orders'] . '")';
+            $sql .= ' AND  o.order_id in (' . $data['filter_orders'] . ')';
         }
 
         if ($this->user->isVendor()) {
@@ -1811,7 +1811,7 @@ class ModelSaleOrder extends Model {
         if (isset($data['filter_orders'])) {
 
 
-            $sql .= ' and  o.order_id in ("' . $data['filter_orders'] . '")';
+            $sql .= ' and  o.order_id in (' . $data['filter_orders'] . ')';
         }
 
         if ($this->user->isVendor()) {
