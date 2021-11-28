@@ -81,6 +81,7 @@ class ControllerApiForgetPassword extends Controller
             //1 implies, new password is generated and user need to update his password
 
             $this->model_account_customer->resetPasswordMail($this->request->post['email'], $password);
+            $this->model_account_customer->resetPasswordSMS($this->request->post['email'], $password);
 
             
             $this->session->data['success'] = $this->language->get('text_success');
