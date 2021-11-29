@@ -274,13 +274,13 @@
                                         <?php //echo $product['status']; 
                                         if($product['status'] == 'Disabled') {
                                         ?>
-                                        <button type="button" data-toggle="tooltip" title="" class="btn btn-default" onclick="changeProductStatus(1, <?php echo $product['product_store_id']; ?>)" data-original-title="Click Here To Enable"><i class="fa fa-times-circle text-danger"></i></button>
+                                        <button <?php if(!$this->user->hasPermission('modify', 'catalog/vendor_product')) { ?> disabled <?php } ?> type="button" data-toggle="tooltip" title="" class="btn btn-default" onclick="changeProductStatus(1, <?php echo $product['product_store_id']; ?>)" data-original-title="Click Here To Enable"><i class="fa fa-times-circle text-danger"></i></button>
                                         <?php } if($product['status'] == 'Enabled') { ?>
-                                        <button type="button" data-toggle="tooltip" title="" class="btn btn-default" onclick="changeProductStatus(0, <?php echo $product['product_store_id']; ?>)" data-original-title="Click Here To Disable"><i class="fa fa-check-circle text-success"></i></button>
+                                        <button <?php if(!$this->user->hasPermission('modify', 'catalog/vendor_product')) { ?> disabled <?php } ?> type="button" data-toggle="tooltip" title="" class="btn btn-default" onclick="changeProductStatus(0, <?php echo $product['product_store_id']; ?>)" data-original-title="Click Here To Disable"><i class="fa fa-check-circle text-success"></i></button>
                                         <?php } ?>
                                         
                                     </td>
-                                    <td class="text-right"><a href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                                    <td class="text-right"><a <?php if(!$this->user->hasPermission('modify', 'catalog/vendor_product')) { ?> disabled <?php } ?> href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                                     
                                 </tr>
                                 <?php } ?>
