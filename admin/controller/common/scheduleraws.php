@@ -260,6 +260,8 @@ class ControllerCommonSchedulerAWS extends Controller {
             }
             catch(exception $e)
             {
+
+                $log = new Log('error.log');
                 $log->write($e->getMessage);
                 echo $e->getMessage;die;
 
@@ -310,6 +312,7 @@ class ControllerCommonSchedulerAWS extends Controller {
             #endregion
 
         } catch (S3Exception $e) {
+            $log = new Log('error.log');
             // Catch an S3 specific exception.
             $log->write("Exception in -S3 specific exception");
 
@@ -318,6 +321,8 @@ class ControllerCommonSchedulerAWS extends Controller {
         $log->write($e->getMessage());
 
         } catch (AwsException $e) {
+
+            $log = new Log('error.log');
         $log->write("AwsException in kwik data upload");
         $log->write($e->getAwsErrorCode());
 
@@ -335,6 +340,7 @@ class ControllerCommonSchedulerAWS extends Controller {
         }
         catch(exception $e)
         {
+            $log = new Log('error.log');
             $log->write("kwik data upload8");
             $log->write($e->getMessage());
 
