@@ -19,6 +19,7 @@ class Customer {
     private $customer_category;
     private $pezesha_customer_id;
     private $pezesha_customer_uuid;
+    private $pezesha_identifier;
 
     public function __construct($registry) {
         $this->config = $registry->get('config');
@@ -47,13 +48,20 @@ class Customer {
                 /* SET CUSTOMER CATEGORY */
 
                 /* SET CUSTOMER PEZESHA */
-                $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $this->session->data['customer_id'] . "'");
+                if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
+                    $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $this->session->data['customer_id'] . "'");
+                }
+                if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                    $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_query->row['parent'] . "'");
+                }
                 if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
                     $this->pezesha_customer_id = $pezesha_customer_query->row['pezesha_customer_id'];
                     $this->pezesha_customer_uuid = $pezesha_customer_query->row['customer_uuid'];
+                    $this->pezesha_identifier = $pezesha_customer_query->row['customer_id'];
                 } else {
                     $this->pezesha_customer_id = NULL;
                     $this->pezesha_customer_uuid = NULL;
+                    $this->pezesha_identifier = NULL;
                 }
                 /* SET CUSTOMER PEZESHA */
 
@@ -114,13 +122,20 @@ class Customer {
             /* SET CUSTOMER CATEGORY */
 
             /* SET CUSTOMER PEZESHA */
-            $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $this->session->data['customer_id'] . "'");
+            if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
+                $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $this->session->data['customer_id'] . "'");
+            }
+            if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_query->row['parent'] . "'");
+            }
             if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
                 $this->pezesha_customer_id = $pezesha_customer_query->row['pezesha_customer_id'];
                 $this->pezesha_customer_uuid = $pezesha_customer_query->row['customer_uuid'];
+                $this->pezesha_identifier = $pezesha_customer_query->row['customer_id'];
             } else {
                 $this->pezesha_customer_id = NULL;
                 $this->pezesha_customer_uuid = NULL;
+                $this->pezesha_identifier = NULL;
             }
             /* SET CUSTOMER PEZESHA */
 
@@ -202,13 +217,20 @@ class Customer {
             $log->write('FROM HERE PARENT CUSTOMER SESSION ASSIGN system_library_customer.php loginByPhone');
 
             /* SET CUSTOMER PEZESHA */
-            $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $this->session->data['customer_id'] . "'");
+            if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
+                $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $this->session->data['customer_id'] . "'");
+            }
+            if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_query->row['parent'] . "'");
+            }
             if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
                 $this->pezesha_customer_id = $pezesha_customer_query->row['pezesha_customer_id'];
                 $this->pezesha_customer_uuid = $pezesha_customer_query->row['customer_uuid'];
+                $this->pezesha_identifier = $pezesha_customer_query->row['customer_id'];
             } else {
                 $this->pezesha_customer_id = NULL;
                 $this->pezesha_customer_uuid = NULL;
+                $this->pezesha_identifier = NULL;
             }
             /* SET CUSTOMER PEZESHA */
             /* if ($customer_query->row['cart'] && is_string($customer_query->row['cart'])) {
@@ -280,6 +302,7 @@ class Customer {
         $this->customer_category = '';
         $this->pezesha_customer_id = '';
         $this->pezesha_customer_uuid = '';
+        $this->pezesha_identifier = '';
     }
 
     public function isLogged() {
@@ -366,6 +389,10 @@ class Customer {
         return $this->pezesha_customer_uuid;
     }
 
+    public function getCustomerPezeshaIdentifier() {
+        return $this->pezesha_identifier;
+    }
+
     public function setVariables($data) {
         $this->customer_id = $data['customer_id'];
         $this->firstname = $data['firstname'];
@@ -384,6 +411,7 @@ class Customer {
         $this->customer_category = $data['customer_category'];
         $this->pezesha_customer_id = $data['pezesha_customer_id'];
         $this->pezesha_customer_uuid = $data['pezesha_customer_uuid'];
+        $this->pezesha_identifier = $data['pezesha_identifier'];
     }
 
 }
