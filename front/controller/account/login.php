@@ -1116,7 +1116,12 @@ class ControllerAccountLogin extends Controller {
                         $customer_query->row['customer_category'] = $data['customer_category'];
 
                         /* SET CUSTOMER PEZESHA */
-                        $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_query->row['customer_id'] . "'");
+                        if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
+                            $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_query->row['customer_id'] . "'");
+                        }
+                        if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                            $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_query->row['parent'] . "'");
+                        }
                         if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
                             $customer_query->row['pezesha_customer_id'] = $pezesha_customer_query->row['pezesha_customer_id'];
                             $customer_query->row['pezesha_customer_uuid'] = $pezesha_customer_query->row['customer_uuid'];
