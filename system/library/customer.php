@@ -64,6 +64,7 @@ class Customer {
                     $this->pezesha_identifier = NULL;
                 }
                 /* SET CUSTOMER PEZESHA */
+                /* SET CUSTOMER PEZESHA */
 
                 $this->customer_id = $customer_query->row['customer_id'];
                 $this->firstname = $customer_query->row['firstname'];
