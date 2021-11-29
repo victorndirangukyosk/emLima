@@ -47,7 +47,7 @@ define('DIR_LOGS', DIR_SYSTEM.'log/'); // depreciated due to plural usage, use D
 define('DIR_MODIFICATION', DIR_SYSTEM.'modification/');
 define('DIR_LANGUAGE', DIR_APPLICATION.'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION.'ui/template/');
-define('BUCKET_PREFIX', 'local-');
+// define('BUCKET_PREFIX', 'local-');
 define('BCC_MAILS', 'email.kbtest@yopmail.com');
 
 
