@@ -4070,9 +4070,9 @@ class ControllerApiCustomerOrder extends Controller {
                 $this->cart->clear();
             } elseif ('pezesha' == $args['payment_method_code']) {
                 $pezesha_result = $this->load->controller('customer/pezesha/applyloan', $args);
-                $log->write('pezesha_result_mobile');
+                $log->write('pezesha_result');
                 $log->write($pezesha_result);
-                $log->write('pezesha_result_mobile');
+                $log->write('pezesha_result');
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
                 unset($this->session->data['accept_vendor_terms']);
