@@ -7,7 +7,7 @@
 		  <a href="<?php echo $shipping; ?>" target="_blank" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></a>  -->
 
 		  <?php if (!$this->user->isVendor()): ?>
-	        <?php if ( !in_array( $order_status_id, $this->config->get( 'config_complete_status' ) ) && $this->user->hasPermission('modify', 'sale/order')) { ?>
+	        <?php if ( !in_array( $order_status_id, $this->config->get( 'config_complete_status' ) ) && $this->user->hasPermission('modify', 'sale/editinvoice')) { ?>
 	            <a href="<?php echo $edit; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary">
 				  <i class="fa fa-pencil"></i>
 			  </a>
