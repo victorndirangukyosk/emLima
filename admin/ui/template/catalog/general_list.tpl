@@ -3,7 +3,6 @@
     <div class="page-header">
         <div class="container-fluid">
             <div class="pull-right">
-                
             <?php if($is_vendor){ ?>
                 <button type="button" onclick="$('.message_wrapper').html('');" type="button" data-target="#store_modal" data-toggle="modal" class="btn btn-default">
                     <i class="fa fa-copy"></i> &nbsp; <?= $button_sell_selected ?>
@@ -15,11 +14,13 @@
 
             <?php }else{ ?>
                 <button type="button" data-toggle="tooltip" title="Download" class="btn btn-success"><i class="fa fa-download"></i></button>
+            <?php if($this->user->hasPermission('modify', 'catalog/general')) { ?>        
                 <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_copy; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $copy; ?>').submit()"><i class="fa fa-copy"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_enable; ?>" class="btn btn-default" onclick="changeStatus(1)"><i class="fa fa-check-circle text-success"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="changeStatus(0)"><i class="fa fa-times-circle text-danger"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirmnew('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
+            <?php } ?>
             <?php } ?>
             </div>
             <h1><?php echo $heading_title; ?></h1>
@@ -190,7 +191,7 @@
                                         <?php echo $product['status']; ?>
                                     </td>
                                     <?php if(!$is_vendor){ ?>
-                                    <td class="text-right"><a href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                                    <td class="text-right"><a <?php if(!$this->user->hasPermission('modify', 'catalog/general')) { ?> disabled <?php } ?> href="<?php echo $product['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                                     <?php } ?>
                                 </tr>
                                 <?php } ?>

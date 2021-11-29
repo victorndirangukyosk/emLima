@@ -103,13 +103,12 @@ class ModelAccountCustomer extends Model {
         $this->trigger->fire('post.customer.edit', $customer_id);
     }
 
-
-    
     public function getCustomerById($customer_id) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'");
 
         return $query->rows;
     }
+
     public function editPassword($email, $password) {
         $this->trigger->fire('pre.customer.edit.password');
 
@@ -213,6 +212,10 @@ class ModelAccountCustomer extends Model {
     }
 
     public function resetPasswordMail($email, $password) {
+        $log = new Log('error.log');
+        $log->write('email');
+        $log->write($email);
+        $log->write('email');
         $customer = $this->getCustomerByEmail($email);
 
         $data = [
@@ -233,6 +236,29 @@ class ModelAccountCustomer extends Model {
         $mail->setSubject($subject);
         $mail->setHTML($message);
         $mail->send();
+    }
+
+    public function resetPasswordSMS($email, $password) {
+        $log = new Log('error.log');
+        $log->write('phone');
+        $log->write($email);
+        $log->write('phone');
+        $customer = $this->getCustomerByEmail($email);
+
+        $data = [
+            'firstname' => $customer['firstname'],
+            'lastname' => $customer['lastname'],
+            'email' => $customer['email'],
+            'telephone' => $customer['telephone'],
+            'password' => $password,
+        ];
+
+        //Reset Password id = 3
+        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_3', $data);
+
+        if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_3')) {
+            $ret = $this->emailtemplate->sendmessage($data['telephone'], $sms_message);
+        }
     }
 
     public function getHeadChef($customer_id) {

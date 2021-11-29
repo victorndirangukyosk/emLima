@@ -491,6 +491,29 @@ class ModelAccountCustomer extends Model {
         $mail->send();
     }
 
+    public function resetPasswordSMS($email, $password) {
+        $log = new Log('error.log');
+        $log->write('phone');
+        $log->write($email);
+        $log->write('phone');
+        $customer = $this->getCustomerByEmail($email);
+
+        $data = [
+            'firstname' => $customer['firstname'],
+            'lastname' => $customer['lastname'],
+            'email' => $customer['email'],
+            'telephone' => $customer['telephone'],
+            'password' => $password,
+        ];
+
+        //Reset Password id = 3
+        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_3', $data);
+
+        if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_3')) {
+            $ret = $this->emailtemplate->sendmessage($data['telephone'], $sms_message);
+        }
+    }
+
     public function getIuguCustomerId($customer_id) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_to_customer_iugu WHERE customer_id = '" . (int) $customer_id . "'");
 

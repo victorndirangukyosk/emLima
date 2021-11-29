@@ -788,6 +788,17 @@
                             </div>
 
 
+
+                        <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-amitruck-url"><?php echo $entry_amitruck_url; ?></label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_amitruck_url" value="<?php echo $config_amitruck_url; ?>" placeholder="<?php echo $entry_amitruck_url; ?>" id="input-amitruck-url" class="form-control" />
+                                    <?php if ($error_amitruck_url) { ?>
+                                    <div class="text-danger"><?php echo $error_amitruck_url; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
                              <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-amitruck-clientId"><?php echo $entry_amitruck_clientId; ?></label>
                                 <div class="col-sm-10">

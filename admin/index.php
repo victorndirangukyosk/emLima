@@ -9,6 +9,7 @@ if (version_compare(PHP_VERSION, '5.3.10', '<')) {
 define('MVG', 1);
 
 require_once 'define.php';
+require_once 'newdefine.php';
 
 // Startup
 require_once DIR_SYSTEM.'startup.php';

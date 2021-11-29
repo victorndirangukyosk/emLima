@@ -1,5 +1,9 @@
 <?php 
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once DIR_SYSTEM . '/vendor/aws/aws-autoloader.php';
 
 use Aws\S3\S3Client;
@@ -136,6 +140,11 @@ class ControllerCommonSchedulerAWS extends Controller {
         $log = new Log('error.log');
         $log->write("kwik data upload");
 
+               
+
+        try
+        {
+
         $sdk = new Aws\Sdk([
             'region' => 'ap-south-1',
             'version' => 'latest',
@@ -144,10 +153,14 @@ class ControllerCommonSchedulerAWS extends Controller {
                 'secret' => 'bewuX0U0P5PbxHtfyd6aFi0JxzAZwnjmkm7uFe5J'
             ]
         ]); 
+        $log->write("kwik data upload1");
+
         // Use an Aws\Sdk class to create the S3Client object.
         $s3Client = $sdk->createS3();
 
         // echo BUCKET_PREFIX . "\n";die;
+        $log->write(BUCKET_PREFIX);
+
 
         try {
            
@@ -182,6 +195,7 @@ class ControllerCommonSchedulerAWS extends Controller {
 
 
         $query = $this->db->query('SELECT * FROM view_kwik ');
+        $log->write("kwik data upload4");
 
         // echo $query->rows;die;
         //   echo "<pre>";print_r($query->rows);die;
@@ -195,6 +209,8 @@ class ControllerCommonSchedulerAWS extends Controller {
             // $file = $this->model_report_excel->mail_consolidated_order_sheet_excel($data);
         
             $delimiter = ","; 
+
+        $log->write("kwik data upload5");
 
             if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
                 mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
@@ -219,34 +235,42 @@ class ControllerCommonSchedulerAWS extends Controller {
             // Set column headers 
             $fields = array('order_id', 'order_status_id', 'customer_id', 'account_manager_id', 'payment_method', 'order_total', 'vendor_product_id', 'general_product_id','product_name','unit','quantity','price','product_total','delivery_date','date','time','delivery_timeslot','dayofweek','month','year','city_id','city'); 
             fputcsv($f, $fields, $delimiter); 
-             // Output each row of the data, format line as csv and write to file pointer 
-    // while($row = $this->db->query->fetch_assoc()){ 
-        foreach($data['products'] as $row){
-        // $status = ($row['status'] == 1)?'Active':'Inactive'; 
-        $lineData = array($row['order_id'], $row['order_status_id'], $row['customer_id'], $row['account_manager_id'], $row['payment_method'], $row['order_total'], $row['vendor_product_id'], $row['general_product_id'], $row['product_name'], $row['unit'], $row['quantity'], $row['price'], $row['product_total'], $row['delivery_date'], $row['date'], $row['time'],$row['delivery_timeslot'],$row['dayofweek'],$row['month'],$row['year'],$row['city_id'],$row['city']); 
-        fputcsv($f, $lineData, $delimiter); 
-    } 
-     
-    // Move back to beginning of file 
-    fseek($f, 0); 
-     
-    // Set headers to download file rather than displayed 
-    // header('Content-Type: text/csv'); 
-    // header('Content-Disposition: attachment; filename="' . $filename . '";'); 
-     
-    //output all remaining data on a file pointer 
-    fpassthru($f); 
-        }
+        $log->write("kwik data upload6");
 
-    }
-    catch(exception $e)
-    {
-        echo $e->getMessage;die;
-    }
+             // Output each row of the data, format line as csv and write to file pointer 
+        // while($row = $this->db->query->fetch_assoc()){ 
+            foreach($data['products'] as $row){
+            // $status = ($row['status'] == 1)?'Active':'Inactive'; 
+            $lineData = array($row['order_id'], $row['order_status_id'], $row['customer_id'], $row['account_manager_id'], $row['payment_method'], $row['order_total'], $row['vendor_product_id'], $row['general_product_id'], $row['product_name'], $row['unit'], $row['quantity'], $row['price'], $row['product_total'], $row['delivery_date'], $row['date'], $row['time'],$row['delivery_timeslot'],$row['dayofweek'],$row['month'],$row['year'],$row['city_id'],$row['city']); 
+            fputcsv($f, $lineData, $delimiter); 
+        } 
+     
+        // Move back to beginning of file 
+        fseek($f, 0); 
+        $log->write("kwik data upload7");
+        
+        // Set headers to download file rather than displayed 
+        // header('Content-Type: text/csv'); 
+        // header('Content-Disposition: attachment; filename="' . $filename . '";'); 
+        
+        //output all remaining data on a file pointer 
+        fpassthru($f); 
+            }
+
+            }
+            catch(exception $e)
+            {
+
+                $log = new Log('error.log');
+                $log->write($e->getMessage);
+                echo $e->getMessage;die;
+
+            }
+            $log->write("kwik data upload6");
 
    
-    // echo "<pre>";print_r($file);;
-    // $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
+            // echo "<pre>";print_r($file);;
+            // $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
     
 
             $key = basename($file_Path);
@@ -257,6 +281,8 @@ class ControllerCommonSchedulerAWS extends Controller {
                 'ACL' => 'private',
             ]);
             echo $result['ObjectURL'] . "\n";
+        $log->write($result['ObjectURL']);
+
             //insert the log file url in table with date.
             $this->load->model('scheduler/dbupdates');
             $result = $this->model_scheduler_dbupdates->insertLogURL($result['ObjectURL']);
@@ -286,12 +312,18 @@ class ControllerCommonSchedulerAWS extends Controller {
             #endregion
 
         } catch (S3Exception $e) {
+            $log = new Log('error.log');
             // Catch an S3 specific exception.
+            $log->write("Exception in -S3 specific exception");
+
+
             echo $e->getMessage();
         $log->write($e->getMessage());
 
         } catch (AwsException $e) {
-        $log->write("Exception in kwik data upload");
+
+            $log = new Log('error.log');
+        $log->write("AwsException in kwik data upload");
         $log->write($e->getAwsErrorCode());
 
 
@@ -304,6 +336,15 @@ class ControllerCommonSchedulerAWS extends Controller {
             // This dumps any modeled response data, if supported by the service
             // Specific members can be accessed directly (e.g. $e['MemberName'])
             var_dump($e->toArray());
+        }
+        }
+        catch(exception $e)
+        {
+            $log = new Log('error.log');
+            $log->write("kwik data upload8");
+            $log->write($e->getMessage());
+
+
         }
          
     }
