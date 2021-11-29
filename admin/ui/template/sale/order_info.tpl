@@ -7,7 +7,7 @@
 		  <a href="<?php echo $shipping; ?>" target="_blank" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></a>  -->
 
 		  <?php if (!$this->user->isVendor()): ?>
-	        <?php if ( !in_array( $order_status_id, $this->config->get( 'config_complete_status' ) ) ) { ?>
+	        <?php if ( !in_array( $order_status_id, $this->config->get( 'config_complete_status' ) ) && $this->user->hasPermission('modify', 'sale/order')) { ?>
 	            <a href="<?php echo $edit; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary">
 				  <i class="fa fa-pencil"></i>
 			  </a>
@@ -345,7 +345,7 @@
 
 				  <tr>
 					<td>Transaction ID</td>
-                                        <td><input type="text" name="order_transaction_id" id="order_transaction_id" value="<?= $order_transaction_id ?>" > <button id="save_order_transaction_id" class="btn btn-primary" type="button" <?php if($order_status_id == 5) { ?> disabled <?php } ?> > Save </button></td>
+                                        <td><input type="text" name="order_transaction_id" id="order_transaction_id" value="<?= $order_transaction_id ?>" > <button id="save_order_transaction_id" class="btn btn-primary" type="button" <?php if($order_status_id == 5 || !$this->user->hasPermission('modify', 'sale/order')) { ?> disabled <?php } ?> > Save </button></td>
 				  </tr>
 
 				</table>
@@ -381,7 +381,7 @@
 
 					<input type="text" name="shipping_flat_number" id="shipping_flat_number" value="<?= $shipping_flat_number ?>" style="width: 100%" >
 
-					<button type="button" class="btn btn-primary" type="button" onclick="saveFlatNumber()" <?php if($order_status_id == 5) { ?> disabled <?php } ?> >
+					<button type="button" class="btn btn-primary" type="button" onclick="saveFlatNumber()" <?php if($order_status_id == 5 || !$this->user->hasPermission('modify', 'sale/order')) { ?> disabled <?php } ?> >
 						Save
 					</button>
             	</td>
@@ -391,7 +391,7 @@
 				<td><?= $text_address ?></td>
 				<td> 
 				<?php echo $shipping_landmark; ?>
-							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#s_address_edit" onclick="locationpickerLoad()" <?php if($order_status_id == 5) { ?> disabled <?php } ?> >
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#s_address_edit" onclick="locationpickerLoad()" <?php if($order_status_id == 5 || !$this->user->hasPermission('modify', 'sale/order')) { ?> disabled <?php } ?> >
 								Edit
 							</button>
             	</td>
@@ -429,7 +429,7 @@
 		        </div>
 
 		        <button style="margin-left: 3px" id="save_shipping_delivery_date" class="btn btn-primary" type="button" onclick="saveOrderEditRawTimeslotOverrideFromAdmin()"> Edit </button> -->
-		        <?php if(!$shipped) { ?>
+		        <?php if(!$shipped && $this->user->hasPermission('modify', 'sale/order')) { ?>
 
                     <a href="#" data-id='<?=$order_id ?>' style="font-size: 13px;text-decoration: underline;color: red" onclick="return timeslots(<?= $order_id ?>)" > <i class="fa fa-pencil" aria-hidden="true"></i> <strong><?= $text_edit_timeslot ?></strong></a>
                     
@@ -442,7 +442,7 @@
 				<td><?= $text_delivery_timeslot ?></td>
 				<td><?php echo $delivery_timeslot; ?>
 					
-					<?php if(!$shipped) { ?>
+					<?php if(!$shipped && $this->user->hasPermission('modify', 'sale/order')) { ?>
 
 	                    <a href="#" data-id='<?=$order_id ?>' style="font-size: 13px;text-decoration: underline;color: red" onclick="return timeslots(<?= $order_id ?>)" > <i class="fa fa-pencil" aria-hidden="true"></i> <strong><?= $text_edit_timeslot ?></strong></a>
 	                    
@@ -476,7 +476,7 @@
                           $order_delivery_executive = $order_delivery_executive_details['firstname'].' '.$order_delivery_executive_details['lastname'];
                           $order_delivery_executive_id = $order_delivery_executive_details['delivery_executive_id'];
                           } ?>
-                          <td><input type="text" name="order_delivery_executive" id="order_delivery_executive" value="<?=$order_delivery_executive; ?>" data_order_id="<?=$order_id ?>" data_delivery_executive_id="<?=$order_delivery_executive_id ?>">&nbsp;<button id="save_order_delivery_executive" class="btn btn-primary" type="button" <?php if($order_status_id == 5) { ?> disabled <?php } ?> > Save </button></td>
+                          <td><input type="text" name="order_delivery_executive" id="order_delivery_executive" value="<?=$order_delivery_executive; ?>" data_order_id="<?=$order_id ?>" data_delivery_executive_id="<?=$order_delivery_executive_id ?>">&nbsp;<button id="save_order_delivery_executive" class="btn btn-primary" type="button" <?php if($order_status_id == 5 || !$this->user->hasPermission('modify', 'sale/order')) { ?> disabled <?php } ?> > Save </button></td>
                           </tr>
                           <tr>
                               <td>Driver</td>
@@ -487,11 +487,11 @@
                               $order_driver = $order_driver_details['firstname'].' '.$order_driver_details['lastname'];
                               $order_driver_id = $order_driver_details['driver_id'];
                               } ?>
-                              <td><input type="text" name="order_driver" id="order_driver" value="<?=$order_driver ?>" data_order_id="<?=$order_id ?>" data_driver_id="<?=$order_driver_id ?>">&nbsp;<button id="save_order_driver" class="btn btn-primary" type="button" <?php if($order_status_id == 5) { ?> disabled <?php } ?> > Save </button></td>
+                              <td><input type="text" name="order_driver" id="order_driver" value="<?=$order_driver ?>" data_order_id="<?=$order_id ?>" data_driver_id="<?=$order_driver_id ?>">&nbsp;<button id="save_order_driver" class="btn btn-primary" type="button" <?php if($order_status_id == 5 || !$this->user->hasPermission('modify', 'sale/order')) { ?> disabled <?php } ?> > Save </button></td>
                           </tr>
                           <tr>
                               <td>Vehicle Number</td>
-                              <td><input type="text" name="order_vehicle_number" id="order_vehicle_number" value="<?=$order_vehicle_number ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_order_vehicle_number" class="btn btn-primary" type="button" <?php if($order_status_id == 5) { ?> disabled <?php } ?> > Save </button></td>
+                              <td><input type="text" name="order_vehicle_number" id="order_vehicle_number" value="<?=$order_vehicle_number ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_order_vehicle_number" class="btn btn-primary" type="button" <?php if($order_status_id == 5 || !$this->user->hasPermission('modify', 'sale/order')) { ?> disabled <?php } ?> > Save </button></td>
                           </tr>
                           <tr>
                               <td>Order Processing Group</td>
@@ -514,7 +514,7 @@
                           <?php if($store_id == 75) { ?>
                           <tr>
                            <td>Shipping Charges</td>
-                           <td><input min="0" type="number" name="kw_shipping_charges" id="kw_shipping_charges" value="<?=round($kw_shipping_charges, 2) ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_kw_shipping_charges" class="btn btn-primary" type="button" <?php if($order_status_id == 5) { ?> disabled <?php } ?> > Save </button></td>
+                           <td><input min="0" type="number" name="kw_shipping_charges" id="kw_shipping_charges" value="<?=round($kw_shipping_charges, 2) ?>" data_order_id="<?=$order_id ?>">&nbsp;<button id="save_kw_shipping_charges" class="btn btn-primary" type="button" <?php if($order_status_id == 5 || !$this->user->hasPermission('modify', 'sale/order')) { ?> disabled <?php } ?> > Save </button></td>
                           </tr>
                           <?php } ?>
 			</table>
@@ -1071,7 +1071,7 @@
 					</div>
 				  </form>
 				  <div class="text-right">
-					<button id="button-history" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary"><i class="fa fa-plus-circle"></i> <?php echo $button_history_add; ?></button>
+					<button id="button-history" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary" <?php if($order_status_id == 5 || !$this->user->hasPermission('modify', 'sale/order')) { ?> disabled <?php } ?>><i class="fa fa-plus-circle"></i> <?php echo $button_history_add; ?></button>
 				  </div>
 				</fieldset>
 				<?php } ?>
