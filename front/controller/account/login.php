@@ -1125,9 +1125,11 @@ class ControllerAccountLogin extends Controller {
                         if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
                             $customer_query->row['pezesha_customer_id'] = $pezesha_customer_query->row['pezesha_customer_id'];
                             $customer_query->row['pezesha_customer_uuid'] = $pezesha_customer_query->row['customer_uuid'];
+                            $customer_query->row['pezesha_identifier'] = $pezesha_customer_query->row['customer_id'];
                         } else {
                             $customer_query->row['pezesha_customer_id'] = NULL;
                             $customer_query->row['pezesha_customer_uuid'] = NULL;
+                            $customer_query->row['pezesha_identifier'] = NULL;
                         }
                         /* SET CUSTOMER PEZESHA */
 

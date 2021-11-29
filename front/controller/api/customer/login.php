@@ -92,6 +92,7 @@ class ControllerApiCustomerLogin extends Controller {
             $customer_info = $this->model_account_customer->getCustomer($api_info['customer_id']);
             $customer_info['pezesha_customer_id'] = $this->customer->getCustomerPezeshaId();
             $customer_info['pezesha_customer_uuid'] = $this->customer->getCustomerPezeshauuId();
+            $customer_info['pezesha_identifier'] = $this->customer->getCustomerPezeshaIdentifier();
             $customer_info['devices'] = $this->model_account_customer->getCustomerDevices($api_info['customer_id']);
 
             // Add to activity log
