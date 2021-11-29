@@ -1,5 +1,9 @@
 <?php 
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once DIR_SYSTEM . '/vendor/aws/aws-autoloader.php';
 
 use Aws\S3\S3Client;
@@ -135,6 +139,8 @@ class ControllerCommonSchedulerAWS extends Controller {
     {  
         $log = new Log('error.log');
         $log->write("kwik data upload");
+
+               
 
         try
         {
@@ -305,11 +311,14 @@ class ControllerCommonSchedulerAWS extends Controller {
 
         } catch (S3Exception $e) {
             // Catch an S3 specific exception.
+            $log->write("Exception in -S3 specific exception");
+
+
             echo $e->getMessage();
         $log->write($e->getMessage());
 
         } catch (AwsException $e) {
-        $log->write("Exception in kwik data upload");
+        $log->write("AwsException in kwik data upload");
         $log->write($e->getAwsErrorCode());
 
 
