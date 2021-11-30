@@ -27,9 +27,11 @@ class ControllerPaymentPezesha extends Controller {
         $body = http_build_query($body);
         $curl = curl_init();
         if ($this->config->get('pezesha_environment') == 'live') {
+            $log->write('PEZESHA_PRODUCTION');
             curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/oauth/token');
             curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
         } else {
+            $log->write('PEZESHA_SANDBOX');
             curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/oauth/token');
             curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
         }
