@@ -1785,7 +1785,7 @@ class ModelAccountOrder extends Model {
     }
 
     public function getPezeshaloans() {
-        $pezesha_loans = $this->db->query('SELECT p.loan_id,p.order_id,p.customer_id,o.total,p.loan_type,p.created_at FROM ' . DB_PREFIX . "customer_pezesha_loans p join " . DB_PREFIX . "order o on p.order_id = o.order_id WHERE p.customer_id = " . $this->customer->getId() . "ORDER BY p.id DESC");
+        $pezesha_loans = $this->db->query('SELECT p.loan_id,p.order_id,p.customer_id,o.total,p.loan_type,p.created_at FROM ' . DB_PREFIX . "customer_pezesha_loans p join " . DB_PREFIX . "order o on p.order_id = o.order_id WHERE p.customer_id = " . $this->customer->getId() . " ORDER BY p.id DESC");
         return $pezesha_loans->rows;
     }
 
