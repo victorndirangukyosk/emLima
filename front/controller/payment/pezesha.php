@@ -138,7 +138,7 @@ class ControllerPaymentPezesha extends Controller {
             $log->write('auth_response');
             //$payment_details = array('type' => 'BUY_GOODS/PAYBILL', 'number' => $order_id, 'callback_url' => $this->url->link('deliversystem/deliversystem/pezeshacallback', '', 'SSL'));
             $payment_details = NULL;
-            $body = array('invoice_numbers' => $this->session->data['order_id'], 'pezesha_id' => /* $customer_pezesha_info['pezesha_customer_id'] */$this->customer->getCustomerPezeshaId(), 'amount' => $amount, 'duration' => $this->config->get('pezesha_loan_duration'), 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => $this->config->get('pezesha_processing_fee'), 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
+            $body = array('invoice_numbers' => array_values($this->session->data['order_id']), 'pezesha_id' => /* $customer_pezesha_info['pezesha_customer_id'] */$this->customer->getCustomerPezeshaId(), 'amount' => $amount, 'duration' => $this->config->get('pezesha_loan_duration'), 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => $this->config->get('pezesha_processing_fee'), 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
             //$body = http_build_query($body);
             $body = json_encode($body);
             $log->write('APPLY_LOAN_BODY');
