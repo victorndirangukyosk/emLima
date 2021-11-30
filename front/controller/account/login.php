@@ -552,8 +552,6 @@ class ControllerAccountLogin extends Controller {
     }
 
     public function customer() {
-        $log = new Log('error.log');
-        $log->write($this->url->link('deliversystem/deliversystem/pezeshacallback', '', 'SSL'));
         setcookie('po_number', null, -1, '/');
         if ($this->request->server['HTTPS']) {
             $server = $this->config->get('config_ssl');
