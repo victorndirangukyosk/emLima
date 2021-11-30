@@ -56,13 +56,13 @@ class ControllerCommonSchedulerAWS extends Controller {
         // Use an Aws\Sdk class to create the S3Client object.
         $s3Client = $sdk->createS3();
 
-        // echo BUCKET_PREFIX . "\n";die;
+        // echo S_BUCKET_PREFIX . "\n";die;
 
         try {
            
             $resultBucketList = $s3Client->listBuckets();
             $bucketexists=false;
-            $bucket = BUCKET_PREFIX.'kwikbasket-log';
+            $bucket = S_BUCKET_PREFIX.'kwikbasket-log';
             foreach ($resultBucketList['Buckets'] as $bucketlist) {
                 // Each Bucket value will contain a Name and CreationDate
                 //  echo "{$bucketlist['Name']} - {$bucketlist['CreationDate']}\n";
@@ -73,7 +73,7 @@ class ControllerCommonSchedulerAWS extends Controller {
             }
             if($bucketexists==false)
             {
-                $s3Client->createBucket(['Bucket' => BUCKET_PREFIX.'kwikbasket-log']);
+                $s3Client->createBucket(['Bucket' => S_BUCKET_PREFIX.'kwikbasket-log']);
             }
 
 
@@ -139,7 +139,7 @@ class ControllerCommonSchedulerAWS extends Controller {
     {  
         $log = new Log('error.log');
         $log->write("kwik data upload");
-
+      
                
 
         try
@@ -158,15 +158,15 @@ class ControllerCommonSchedulerAWS extends Controller {
         // Use an Aws\Sdk class to create the S3Client object.
         $s3Client = $sdk->createS3();
 
-        // echo BUCKET_PREFIX . "\n";die;
-        $log->write(BUCKET_PREFIX);
+        // echo S_BUCKET_PREFIX . "\n";die;
+        $log->write(S_BUCKET_PREFIX);
 
 
         try {
            
             $resultBucketList = $s3Client->listBuckets();
             $bucketexists=false;
-            $bucket = BUCKET_PREFIX.'kwikbasket-data';
+            $bucket = S_BUCKET_PREFIX.'kwikbasket-data';
             foreach ($resultBucketList['Buckets'] as $bucketlist) {
                 // Each Bucket value will contain a Name and CreationDate
                 //  echo "{$bucketlist['Name']} - {$bucketlist['CreationDate']}\n";
@@ -177,7 +177,7 @@ class ControllerCommonSchedulerAWS extends Controller {
             }
             if($bucketexists==false)
             {
-                $s3Client->createBucket(['Bucket' => BUCKET_PREFIX.'kwikbasket-data']);
+                $s3Client->createBucket(['Bucket' => S_BUCKET_PREFIX.'kwikbasket-data']);
             }
 
 
