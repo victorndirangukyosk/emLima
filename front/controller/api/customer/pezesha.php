@@ -43,7 +43,7 @@ class ControllerApiCustomerPezesha extends Controller {
             $body = json_encode($body);
             $log->write($body);
             $curl = curl_init();
-            if (ENV == 'production') {
+            if ($this->config->get('pezesha_environment') == 'live') {
                 curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/options');
                 curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
             } else {
@@ -83,7 +83,7 @@ class ControllerApiCustomerPezesha extends Controller {
         $body = array('grant_type' => 'client_credentials', 'provider' => 'users', 'client_secret' => $this->config->get('pezesha_client_secret'), 'client_id' => $this->config->get('pezesha_client_id'), 'merchant _key' => $this->config->get('pezesha_merchant_key'));
         $body = http_build_query($body);
         $curl = curl_init();
-        if (ENV == 'production') {
+        if ($this->config->get('pezesha_environment') == 'live') {
             curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/oauth/token');
             curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
         } else {
@@ -143,7 +143,7 @@ class ControllerApiCustomerPezesha extends Controller {
                 $body = json_encode($body);
                 $log->write($body);
                 $curl = curl_init();
-                if (ENV == 'production') {
+                if ($this->config->get('pezesha_environment') == 'live') {
                     curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/loans');
                     curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
                 } else {
@@ -209,7 +209,7 @@ class ControllerApiCustomerPezesha extends Controller {
         $body = json_encode($body);
         $log->write($body);
         $curl = curl_init();
-        if (ENV == 'production') {
+        if ($this->config->get('pezesha_environment') == 'live') {
             curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/options');
             curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
         } else {
