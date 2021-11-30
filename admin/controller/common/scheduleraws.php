@@ -140,7 +140,8 @@ class ControllerCommonSchedulerAWS extends Controller {
         $log = new Log('error.log');
         $log->write("kwik data upload");
       
-               
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
 
         try
         {
