@@ -194,6 +194,7 @@ class ControllerCommonSchedulerAWS extends Controller {
         // $this->load->model('scheduler/dbupdates');
         // $results = $this->model_scheduler_dbupdates->getView_kwik($filter_data);
 
+        $log->write("kwik data upload45");
 
         $query = $this->db->query('SELECT * FROM view_kwik ');
         $log->write("kwik data upload4");

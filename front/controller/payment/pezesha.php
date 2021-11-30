@@ -72,7 +72,7 @@ class ControllerPaymentPezesha extends Controller {
         $log->write($auth_response);
         $log->write($customer_device_info);
         $log->write('auth_response');
-        $body = array('identifier' => /*$customer_pezesha_info['customer_id']*/$this->customer->getCustomerPezeshaIdentifier(), 'channel' => $this->config->get('pezesha_channel'));
+        $body = array('identifier' => /* $customer_pezesha_info['customer_id'] */$this->customer->getCustomerPezeshaIdentifier(), 'channel' => $this->config->get('pezesha_channel'));
         //$body = http_build_query($body);
         $body = json_encode($body);
         $log->write($body);
@@ -138,10 +138,13 @@ class ControllerPaymentPezesha extends Controller {
             $log->write('auth_response');
             //$payment_details = array('type' => 'BUY_GOODS/PAYBILL', 'number' => $order_id, 'callback_url' => $this->url->link('deliversystem/deliversystem/pezeshacallback', '', 'SSL'));
             $payment_details = NULL;
-            $body = array('pezesha_id' => /*$customer_pezesha_info['pezesha_customer_id']*/$this->customer->getCustomerPezeshaId(), 'amount' => $amount, 'duration' => $this->config->get('pezesha_loan_duration'), 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => $this->config->get('pezesha_processing_fee'), 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
+            $order_ids = array_values($this->session->data['order_id']);
+            $body = array('invoice_numbers' => $order_ids, 'pezesha_id' => /* $customer_pezesha_info['pezesha_customer_id'] */$this->customer->getCustomerPezeshaId(), 'amount' => $amount, 'duration' => $this->config->get('pezesha_loan_duration'), 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => $this->config->get('pezesha_processing_fee'), 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
             //$body = http_build_query($body);
             $body = json_encode($body);
+            $log->write('APPLY_LOAN_BODY');
             $log->write($body);
+            $log->write('APPLY_LOAN_BODY');
             $curl = curl_init();
             if ($this->config->get('pezesha_environment') == 'live') {
                 curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/loans');
