@@ -2,6 +2,8 @@
 
 class ControllerSaleEditinvoice extends Controller {
 
+    private $error = [];
+
     public function EditInvoice() {
         $this->load->language('sale/order');
 
@@ -645,6 +647,219 @@ class ControllerSaleEditinvoice extends Controller {
 
             return $query->row['fax'];
         }
+    }
+
+    protected function validate() {
+        $this->load->language('sale/order');
+        if (!$this->user->hasPermission('modify', 'sale/editinvoice')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        return !$this->error;
+
+        //        return true;
+    }
+
+    public function editDeliveryRequest($order_id) {
+        $log = new Log('error.log');
+
+        $log->write('inside editDeliveryRequest');
+        $order_info = $this->getOrder($order_id);
+
+        $this->load->model('sale/order');
+        $this->load->model('account/order');
+
+        if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
+            $products = $this->model_account_order->getRealOrderProducts($order_id);
+        } else {
+            $products = $this->model_account_order->getOrderProducts($order_id);
+        }
+
+        $this->load->model('sale/order');
+
+        $new_total = 0;
+
+        $totals = $this->model_sale_order->getOrderTotals($order_id);
+
+        foreach ($totals as $total) {
+            if ('total' == $total['code']) {
+                $new_total = $total['value'];
+                break;
+            }
+        }
+
+        $pay_diff = ($new_total - $order_info['total']);
+
+        $total_type = 'green';
+
+        if (!$this->isOnlinePayment($order_info['payment_code']) || $pay_diff > 0) {
+            $total_type = 'red';
+        }
+
+        if ($this->isOnlinePayment($order_info['payment_code'])) {
+            if ($pay_diff < 0) {
+                $getPayment = 0;
+            } else {
+                $getPayment = $pay_diff;
+            }
+        } else {
+            $getPayment = $new_total;
+        }
+
+        $log->write($products);
+
+        $deliveryAlreadyCreated = $this->model_account_order->getOrderDSDeliveryId($order_id);
+
+        //$deliveryAlreadyCreated = true;
+
+        if ($order_info && $products && $deliveryAlreadyCreated) {
+            $log->write('if');
+
+            $data['products']['products'] = [];
+
+            foreach ($products as $product) {
+                $replacable = 'no';
+
+                if ('replacable' == $product['product_type']) {
+                    $replacable = 'yes';
+                }
+
+                $this->load->model('tool/image');
+
+                if (file_exists(DIR_IMAGE . $product['image'])) {
+                    $image = HTTP_IMAGE . $product['image'];
+                } else {
+                    $image = HTTP_IMAGE . 'placeholder.png';
+                }
+
+                $var = [
+                    'product_name' => htmlspecialchars_decode($product['name']),
+                    'product_unit' => $product['unit'],
+                    'product_quantity' => $product['quantity'],
+                    'product_image' => $image, //"http:\/\/\/product-images\/camera.jpg",
+                    'product_price' => $product['price'], //"1500.00",//product price unit price?? or total
+                    'product_replaceable' => $replacable, //"no"
+                ];
+
+                array_push($data['products']['products'], $var);
+            }
+
+            $log->write($data['products']['products']);
+
+            $data['body'] = [
+                'manifest_id' => $deliveryAlreadyCreated, //order_id,
+                'total_price' => (int) round($new_total),
+                'get_amount' => (int) round($getPayment),
+                'total_type' => $total_type,
+                'manifest_data' => json_encode($data['products']),
+            ];
+
+            $log->write($data['body']);
+
+            $data['email'] = $this->config->get('config_delivery_username');
+            $data['password'] = $this->config->get('config_delivery_secret');
+            $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
+
+            $log->write('token');
+            $log->write($response);
+            if ($response['status']) {
+                $data['tokens'] = $response['token'];
+                $res = $this->load->controller('deliversystem/deliversystem/editDelivery', $data);
+                $log->write('reeponse');
+                $log->write($res);
+            }
+        }
+    }
+
+    public function getOrder($order_id) {
+        $order_query = $this->db->query('SELECT *, (SELECT os.name FROM `' . DB_PREFIX . 'order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `' . DB_PREFIX . "order` o WHERE o.order_id = '" . (int) $order_id . "'");
+
+        if ($order_query->num_rows) {
+            $this->load->model('localisation/language');
+            $this->load->model('account/order');
+
+            $language_info = $this->model_localisation_language->getLanguage($order_query->row['language_id']);
+
+            $city_name = $this->model_account_order->getCityName($order_query->row['shipping_city_id']);
+
+            if ($language_info) {
+                $language_code = $language_info['code'];
+                $language_directory = $language_info['directory'];
+            } else {
+                $language_code = '';
+                $language_directory = '';
+            }
+
+            return [
+                'order_id' => $order_query->row['order_id'],
+                'invoice_no' => $order_query->row['invoice_no'],
+                'invoice_prefix' => $order_query->row['invoice_prefix'],
+                'invoice_sufix' => $order_query->row['invoice_sufix'],
+                'store_id' => $order_query->row['store_id'],
+                'store_name' => $order_query->row['store_name'],
+                'store_url' => $order_query->row['store_url'],
+                'customer_id' => $order_query->row['customer_id'],
+                'firstname' => $order_query->row['firstname'],
+                'lastname' => $order_query->row['lastname'],
+                'email' => $order_query->row['email'],
+                'telephone' => $order_query->row['telephone'],
+                'fax' => $order_query->row['fax'],
+                'custom_field' => unserialize($order_query->row['custom_field']),
+                'shipping_name' => $order_query->row['shipping_name'],
+                'shipping_address' => $order_query->row['shipping_address'],
+                'shipping_city' => $city_name,
+                'shipping_contact_no' => $order_query->row['shipping_contact_no'],
+                'shipping_method' => $order_query->row['shipping_method'],
+                'shipping_zipcode' => $order_query->row['shipping_zipcode'],
+                'shipping_code' => $order_query->row['shipping_code'],
+                'shipping_flat_number' => $order_query->row['shipping_flat_number'],
+                'shipping_building_name' => $order_query->row['shipping_building_name'],
+                'shipping_landmark' => $order_query->row['shipping_landmark'],
+                'payment_method' => $order_query->row['payment_method'],
+                'payment_code' => $order_query->row['payment_code'],
+                'comment' => $order_query->row['comment'],
+                'total' => $order_query->row['total'],
+                'order_status_id' => $order_query->row['order_status_id'],
+                'order_status' => $order_query->row['order_status'],
+                'affiliate_id' => $order_query->row['affiliate_id'],
+                'commission' => $order_query->row['commission'],
+                'language_id' => $order_query->row['language_id'],
+                'language_code' => $language_code,
+                'language_directory' => $language_directory,
+                'currency_id' => $order_query->row['currency_id'],
+                'currency_code' => $order_query->row['currency_code'],
+                'currency_value' => $order_query->row['currency_value'],
+                'order_pdf_link' => $order_query->row['order_pdf_link'],
+                'ip' => $order_query->row['ip'],
+                'forwarded_ip' => $order_query->row['forwarded_ip'],
+                'user_agent' => $order_query->row['user_agent'],
+                'accept_language' => $order_query->row['accept_language'],
+                'date_modified' => $order_query->row['date_modified'],
+                'date_added' => $order_query->row['date_added'],
+                'delivery_date' => $order_query->row['delivery_date'],
+                'delivery_timeslot' => $order_query->row['delivery_timeslot'],
+                    /* 'date_modified' => $order_query->row['date_modified'],
+                      'date_added' => $order_query->row['date_added'] */
+            ];
+        } else {
+            return false;
+        }
+    }
+
+    public function isOnlinePayment($payment_code) {
+        $refundToCustomerWallet = false;
+
+        $allowedPaymentMethods = $this->config->get('config_payment_methods_status');
+
+        if (is_array($allowedPaymentMethods) && count($allowedPaymentMethods) > 0) {
+            foreach ($allowedPaymentMethods as $method) {
+                if ($payment_code == $method) {
+                    $refundToCustomerWallet = true;
+                }
+            }
+        }
+
+        return $refundToCustomerWallet;
     }
 
 }
