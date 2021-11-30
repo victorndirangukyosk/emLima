@@ -135,7 +135,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
         if (!empty($_SESSION['parent'])) {
             $log->write('FOR SUB USERS REMOVED OTHER PAYMENT METHODS');
             foreach ($data['payment_methods'] as $payment_method) {
-                if ($payment_method['code'] != 'cod') {
+                if ($payment_method['code'] != 'cod' && $payment_method['code'] != 'pezesha') {
                     unset($data['payment_methods'][$payment_method['code']]);
                 }
             }
@@ -155,7 +155,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
                 }
             } if ($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') {
                 foreach ($data['payment_methods'] as $payment_method) {
-                    if ($payment_method['code'] != 'cod' && $payment_method['code'] != 'wallet') {
+                    if ($payment_method['code'] != 'cod' && $payment_method['code'] != 'wallet' && $payment_method['code'] != 'pezesha') {
                         unset($data['payment_methods'][$payment_method['code']]);
                     }
                 }
