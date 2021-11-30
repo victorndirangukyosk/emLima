@@ -712,12 +712,12 @@
                         <div class="col-sm-10"><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Accept Terms & Condtions</button></div>   
                     </div>
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                     <label class="col-sm-2 control-label" for="input-pezesha-opt-out">Opt Out</label>
                     <div class="col-sm-10">
                         <div class="col-sm-10"><button id="button-pezesha-opt-out" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Accept Opt Out</button></div>   
                     </div>
-                </div>
+                </div>-->
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="input-pezesha-data-ingestion">Data Ingestion</label>
                     <div class="col-sm-10">
