@@ -150,9 +150,12 @@ class ControllerPaymentPezesha extends Controller {
         $result = json_decode($result, true);
         $log->write($result);
         $json = $result;
-        
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/pezesha_loan_info.tpl')) {
+            $html = $this->load->view($this->config->get('config_template') . '/template/checkout/pezesha_loan_info.tpl', $json);
+        }
+
+        echo json_encode(['html' => $html]);
     }
 
     public function applyloan() {

@@ -36,12 +36,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <div class="row">
                         <div class="col-md-12">
-                            <h2><?= $text_edit_address_new?></h2></div>
-                        <div id="edit-address-message" class="col-md-12" style="color: red">
-                        </div>
-                        <div id="edit-address-success-message" style="color: green">
-                        </div>
-
+                        <h2><?= $text_edit_address_new?></h2></div>
                         <div class="edit-address-form-panel">
                             <!-- Edit form here -->
                         </div>
@@ -205,7 +200,6 @@
 });
 function viewloan(orderId) {
 console.log(orderId); 
-$('#editAddressModal').modal('toggle');
 $.ajax({
                 url: 'index.php?path=payment/pezesha/loanstatus',
                 type: 'post',
@@ -220,6 +214,8 @@ $.ajax({
                 complete: function () {
                 },
                 success: function (json) {
+                    $('#editAddressModal').modal('toggle');
+                    $('.edit-address-form-panel').html(json['html']);
                     console.log("json");
                     console.log(json);
                     return true;
