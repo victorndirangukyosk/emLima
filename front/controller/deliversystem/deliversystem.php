@@ -1708,7 +1708,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
     }
 
     protected function validate($data) {
-        if (!isset($data['order_id']) || !is_array($data['order_id']) || array_count($data['order_id']) <= 0) {
+        if (!isset($data['order_id']) || !is_array($data['order_id']) || (is_array($data['order_id']) && count($data['order_id']) <= 0)) {
             $this->error['order_id'] = 'Order Id Is Required!';
         }
 
