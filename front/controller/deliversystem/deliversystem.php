@@ -1685,6 +1685,11 @@ class ControllerDeliversystemDeliversystem extends Controller {
             fwrite('Error: no data written');
         }
         fclose($file);
+        $response['status'] = true;
+        $response['success'] = 1;
+        $response['message'] = 'Loan Details Saved Successfull!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($response));
     }
 
 }
