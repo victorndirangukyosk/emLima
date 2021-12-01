@@ -1689,6 +1689,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $log = new Log('error.log');
         $log->write($postData);
         if ($this->validate($postData)) {
+            $this->load->model('pezesha/pezeshaloanreceivables');
+            $this->model_pezesha_pezeshaloanreceivables->loanmpesadetails($postData);
             $json['status'] = 200;
             $json['success'] = 1;
             $json['message'] = 'Loan Details Saved Successfull!';
