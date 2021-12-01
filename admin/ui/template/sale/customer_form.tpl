@@ -49,7 +49,7 @@
             <li><a href="#tab-otp" data-toggle="tab">OTP</a></li>
             <li><a href="#tab-activity" data-toggle="tab">Activities</a></li>
             <li><a href="#tab-password" data-toggle="tab">Password</a></li>
-            <?php if($this->config->get('pezesha_status')) { ?>
+            <?php if($this->config->get('pezesha_status') && ($parent == NULL || $parent == 0)) { ?>
             <li><a href="#tab-pezesha" data-toggle="tab">Pezesha</a></li>
             <?php } ?>
            

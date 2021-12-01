@@ -15,7 +15,7 @@ class ControllerPezeshaPezesha extends Controller {
         $body = array('grant_type' => 'client_credentials', 'provider' => 'users', 'client_secret' => $this->config->get('pezesha_client_secret'), 'client_id' => $this->config->get('pezesha_client_id'), 'merchant _key' => $this->config->get('pezesha_merchant_key'));
         $body = http_build_query($body);
         $curl = curl_init();
-        if (ENVS == 'production') {
+        if ($this->config->get('pezesha_environment') == 'live') {
             curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/oauth/token');
             curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
         } else {
@@ -45,19 +45,23 @@ class ControllerPezeshaPezesha extends Controller {
     public function userregistration($customer_id) {
 
         $this->load->model('sale/customer');
+        $this->load->model('sale/customer_group');
         $this->load->model('pezesha/pezesha');
         $customer_device_info = $this->model_sale_customer->getCustomer($customer_id);
+        $customer_group_info = $this->model_sale_customer_group->getCustomerGroup($customer_device_info['customer_group_id']);
         $auth_response = $this->auth();
         $log = new Log('error.log');
         $log->write('auth_response');
         $log->write($auth_response);
         $log->write($customer_device_info);
         $log->write('auth_response');
-        $body = array('terms' => TRUE, 'full_names' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'], 'phone' => '254' . '' . $customer_device_info['telephone'], 'other_phone_nos' => array('254' . '' . $customer_device_info['telephone'], '254' . '' . $customer_device_info['telephone']), 'national_id' => $customer_device_info['national_id'], 'dob' => date('Y-m-d', strtotime($customer_device_info['dob'])), 'email' => $customer_device_info['email'], 'merchant_id' => $customer_device_info['customer_id'], 'merchant_reg_date' => date('Y-m-d', strtotime($customer_device_info['date_added'])), 'location' => $customer_device_info['company_name'] . '' . $customer_device_info['company_address'], 'geo_location' => array('long' => $customer_device_info['longitude'], 'lat' => $customer_device_info['latitude']));
+        $meta_data = array('key' => 'customer_group', 'value' => $customer_group_info['description']);
+        $body = array('channel' => $this->config->get('pezesha_channel'), 'terms' => TRUE, 'full_names' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'], 'phone' => '254' . '' . $customer_device_info['telephone'], 'other_phone_nos' => array('254' . '' . $customer_device_info['telephone'], '254' . '' . $customer_device_info['telephone']), 'national_id' => $customer_device_info['national_id'], 'dob' => date('Y-m-d', strtotime($customer_device_info['dob'])), 'email' => $customer_device_info['email'], 'merchant_id' => $customer_device_info['customer_id'], 'merchant_reg_date' => date('Y-m-d', strtotime($customer_device_info['date_added'])), 'location' => $customer_device_info['company_name'] . '' . $customer_device_info['company_address'], 'geo_location' => array('long' => $customer_device_info['longitude'], 'lat' => $customer_device_info['latitude']), 'meta_data' => $meta_data);
         //$body = http_build_query($body);
         $body = json_encode($body);
+        $log->write($body);
         $curl = curl_init();
-        if (ENVS == 'production') {
+        if ($this->config->get('pezesha_environment') == 'live') {
             curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers');
             curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authentication:Bearer ' . $auth_response]);
         } else {
@@ -107,7 +111,7 @@ class ControllerPezeshaPezesha extends Controller {
         $body = http_build_query($body);
         //$body = json_encode($body);
         $curl = curl_init();
-        if (ENVS == 'production') {
+        if ($this->config->get('pezesha_environment') == 'live') {
             curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/terms');
             curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded', 'Authentication:Bearer ' . $auth_response]);
         } else {
@@ -151,7 +155,7 @@ class ControllerPezeshaPezesha extends Controller {
         $body = http_build_query($body);
         //$body = json_encode($body);
         $curl = curl_init();
-        if (ENVS == 'production') {
+        if ($this->config->get('pezesha_environment') == 'live') {
             curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/opt_out');
             curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded', 'Authentication:Bearer ' . $auth_response]);
         } else {
@@ -215,7 +219,7 @@ class ControllerPezeshaPezesha extends Controller {
         $body = json_encode($body);
         $log->write($body);
         $curl = curl_init();
-        if (ENVS == 'production') {
+        if ($this->config->get('pezesha_environment') == 'live') {
             curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1.1/data');
             curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
         } else {
@@ -268,7 +272,7 @@ class ControllerPezeshaPezesha extends Controller {
         $body = json_encode($body);
         $log->write($body);
         $curl = curl_init();
-        if (ENVS == 'production') {
+        if ($this->config->get('pezesha_environment') == 'live') {
             curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/loans');
             curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
         } else {

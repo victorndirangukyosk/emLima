@@ -2096,6 +2096,7 @@ class ControllerSaleCustomer extends Controller {
         $data['parent_user_phone'] = NULL;
         if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+            $data['parent'] = $customer_info['parent'];
             $data['payment_terms'] = $customer_info['payment_terms'];
             $data['statement_duration'] = $customer_info['statement_duration'];
             $data['customer_category'] = $customer_info['customer_category'];
@@ -2418,7 +2419,7 @@ class ControllerSaleCustomer extends Controller {
           $this->error['dob'] = $this->language->get('error_dob');
           } */
 
-        if ((utf8_strlen($this->request->post['dob']) != NULL) && !preg_match("/^([0-9]{1,2})\\/([0-9]{1,2})\\/([0-9]{4})$/",$this->request->post['dob'])) {
+        if ((utf8_strlen($this->request->post['dob']) != NULL) && !preg_match("/^([0-9]{1,2})\\/([0-9]{1,2})\\/([0-9]{4})$/", $this->request->post['dob'])) {
             $this->error['dob'] = 'Please Check DOB Format!';
         }
 

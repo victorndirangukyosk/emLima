@@ -1674,17 +1674,99 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
     public function pezeshacallback() {
 
+        $this->load->model('pezesha/pezeshaloanreceivables');
         $postData = file_get_contents('php://input');
 
         $log = new Log('error.log');
         $log->write('pezesha_call_back');
         $log->write($postData);
 
-        $file = fopen('system/log/pezesha.txt', 'w+'); //url fopen should be allowed for this to occur
-        if (false === fwrite($file, $postData)) {
+        $file = fopen('system/log/pezesha_' . date('Y-m-d') . '.txt', 'a+'); //url fopen should be allowed for this to occur
+        if (false === fwrite($file, date('Y-m-d H:i:s') . ': ' . $postData . "\n")) {
             fwrite('Error: no data written');
         }
         fclose($file);
+        $postData = json_decode($postData, true);
+        $log = new Log('error.log');
+        $log->write($postData);
+        if ($this->validate($postData)) {
+            $orders = $postData['order_id'];
+            foreach ($orders as $order) {
+                $postData['order'] = $order;
+                $this->model_pezesha_pezeshaloanreceivables->loanmpesadetails($postData);
+            }
+            $json['status'] = 200;
+            $json['success'] = 1;
+            $json['message'] = 'Loan Details Saved Successfull!';
+        } else {
+            $log->write('ERROR');
+            $json['status'] = 400;
+            $json['success'] = 0;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    protected function validate($data) {
+        if (!isset($data['order_id']) || !is_array($data['order_id']) || (is_array($data['order_id']) && count($data['order_id']) <= 0)) {
+            $this->error['order_id'] = 'Order Id Is Required!';
+        }
+
+        if (isset($data['order_id']) && is_array($data['order_id']) && count($data['order_id']) > 0) {
+            $log = new Log('error.log');
+            $this->load->model('pezesha/pezeshaloanreceivables');
+            $unable_to_find = NULL;
+            foreach ($data['order_id'] as $order_id) {
+                $pezesha_loan_details = $this->model_pezesha_pezeshaloanreceivables->findPezeshaLoanById($order_id);
+                if (count($pezesha_loan_details) == 0) {
+                    $unable_to_find .= ' #' . $order_id;
+                }
+            }
+        }
+
+        if ($unable_to_find != NULL) {
+            $this->error['order_id'] = 'Invalid Order Ids(' . $unable_to_find . ')';
+        }
+
+        if (!isset($data['type']) || $data['type'] == NULL) {
+            $this->error['type'] = 'Loan Type Is Required!';
+        }
+
+        if (!isset($data['merchant_id']) || $data['merchant_id'] == NULL) {
+            $this->error['merchant_id'] = 'Merchant ID Is Required!';
+        }
+
+        if (!isset($data['pezesha_id']) || $data['pezesha_id'] == NULL) {
+            $this->error['pezesha_id'] = 'Pezesha ID Is Required!';
+        }
+
+        if (!isset($data['loan_id']) || $data['loan_id'] == NULL) {
+            $this->error['loan_id'] = 'Loan ID Is Required!';
+        }
+
+        if (!isset($data['amount']) || $data['amount'] <= 0 || $data['amount'] == NULL) {
+            $this->error['loan_id'] = 'Loan ID Is Required!';
+        }
+
+        if (!isset($data['account']) || $data['account'] == NULL) {
+            $this->error['account'] = 'National ID Is Required!';
+        }
+
+        if (!isset($data['mpesa_reference']) || $data['mpesa_reference'] == NULL) {
+            $this->error['mpesa_reference'] = 'Mpesa Reference Is Required!';
+        }
+
+        if (!isset($data['transaction_date']) || $data['transaction_date'] == NULL) {
+            $this->error['transaction_date'] = 'Transaction Date Is Required!';
+        }
+
+        return !$this->error;
     }
 
 }
