@@ -45,17 +45,21 @@ class ControllerPezeshaPezesha extends Controller {
     public function userregistration($customer_id) {
 
         $this->load->model('sale/customer');
+        $this->load->model('sale/customer_group');
         $this->load->model('pezesha/pezesha');
         $customer_device_info = $this->model_sale_customer->getCustomer($customer_id);
+        $customer_group_info = $this->model_sale_customer_group->getCustomerGroup($customer_device_info['customer_group_id']);
         $auth_response = $this->auth();
         $log = new Log('error.log');
         $log->write('auth_response');
         $log->write($auth_response);
         $log->write($customer_device_info);
         $log->write('auth_response');
-        $body = array('terms' => TRUE, 'full_names' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'], 'phone' => '254' . '' . $customer_device_info['telephone'], 'other_phone_nos' => array('254' . '' . $customer_device_info['telephone'], '254' . '' . $customer_device_info['telephone']), 'national_id' => $customer_device_info['national_id'], 'dob' => date('Y-m-d', strtotime($customer_device_info['dob'])), 'email' => $customer_device_info['email'], 'merchant_id' => $customer_device_info['customer_id'], 'merchant_reg_date' => date('Y-m-d', strtotime($customer_device_info['date_added'])), 'location' => $customer_device_info['company_name'] . '' . $customer_device_info['company_address'], 'geo_location' => array('long' => $customer_device_info['longitude'], 'lat' => $customer_device_info['latitude']));
+        $meta_data = array('key' => 'customer_group', 'value' => $customer_group_info['description']);
+        $body = array('terms' => TRUE, 'full_names' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'], 'phone' => '254' . '' . $customer_device_info['telephone'], 'other_phone_nos' => array('254' . '' . $customer_device_info['telephone'], '254' . '' . $customer_device_info['telephone']), 'national_id' => $customer_device_info['national_id'], 'dob' => date('Y-m-d', strtotime($customer_device_info['dob'])), 'email' => $customer_device_info['email'], 'merchant_id' => $customer_device_info['customer_id'], 'merchant_reg_date' => date('Y-m-d', strtotime($customer_device_info['date_added'])), 'location' => $customer_device_info['company_name'] . '' . $customer_device_info['company_address'], 'geo_location' => array('long' => $customer_device_info['longitude'], 'lat' => $customer_device_info['latitude']), 'meta_data' => $meta_data);
         //$body = http_build_query($body);
         $body = json_encode($body);
+        $log->write($body);
         $curl = curl_init();
         if ($this->config->get('pezesha_environment') == 'live') {
             curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers');
