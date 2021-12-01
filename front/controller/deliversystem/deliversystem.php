@@ -1738,7 +1738,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $this->error['account'] = 'National ID Is Required!';
         }
 
-        if (!isset($data['mpesa_refference']) || $data['mpesa_refference'] == NULL) {
+        if (!isset($data['mpesa_reference']) || $data['mpesa_refference'] == NULL) {
             $this->error['mpesa_refference'] = 'Mpesa Reference Is Required!';
         }
 
