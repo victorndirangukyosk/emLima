@@ -1,17 +1,30 @@
+<br>
 <table id="employee" class="table table-bordered">
-    <thead>
-        <tr>
-            <th class="order_id">Payment Name</th>
-            <th class="order_id">Amount</th>
-            <th class="order_id">Total Amount</th>
-            <th class="order_id">Due Date</th>
-        </tr>
-    </thead>
     <tbody id="loans_body">
-        <tr><td class="order_id">121</td>
-            <td class="order_id">4299</td>
-            <td class="amount">KES 504.00</td>
-            <td class="amount">LOAN_TOPUP_APPROVED</td>
+        <tr><td class="order_id">Laon ID</td>
+            <td class="order_id"></td>
+            <td class="order_id">Order ID</td>
+            <td class="order_id"></td>
+            <td class="order_id">Loan Amount</td>
+            <td class="order_id"></td>
+            <td class="order_id">Sp Fee</td>
+            <td class="order_id"></td>
+            <td class="order_id">Pezesha Fee</td>
+            <td class="order_id"></td>
+            <td class="order_id">Total Amount</td>
+            <td class="order_id"></td>
+            <td class="order_id">Interest Amount</td>
+            <td class="order_id"></td>
+            <td class="order_id">Interest</td>
+            <td class="order_id"></td>
+            <td class="order_id">Status</td>
+            <td class="order_id"></td>
+            <td class="order_id">Application Date</td>
+            <td class="order_id"></td>
+            <td class="order_id">Funded Date</td>
+            <td class="order_id"></td>
+            <td class="order_id">Due Date</td>
+            <td class="order_id"></td>
         </tr>
     </tbody>
 </table>
