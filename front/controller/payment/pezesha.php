@@ -111,6 +111,47 @@ class ControllerPaymentPezesha extends Controller {
         }
     }
 
+    public function loanstatus() {
+
+        $log = new Log('error.log');
+        $this->load->model('account/customer');
+
+        $customer_id = $this->customer->getId();
+
+        $customer_device_info = $this->model_account_customer->getCustomer($customer_id);
+        $customer_pezesha_info = $this->model_account_customer->getPezeshaCustomer($customer_id);
+
+        $auth_response = $this->auth();
+        $log->write('auth_response');
+        $log->write($auth_response);
+        $log->write($customer_device_info);
+        $log->write('auth_response');
+        $body = array('identifier' => $this->request->post['order_id'], 'channel' => $this->config->get('pezesha_channel'));
+        //$body = http_build_query($body);
+        $body = json_encode($body);
+        $log->write($body);
+        $curl = curl_init();
+        if ($this->config->get('pezesha_environment') == 'live') {
+            curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/latest');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+        } else {
+            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/latest');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+
+        $log->write($result);
+        curl_close($curl);
+        $result = json_decode($result, true);
+        $log->write($result);
+        $json = $result;
+    }
+
     public function applyloan() {
         $json['status'] = false;
         $this->loanoffers();
