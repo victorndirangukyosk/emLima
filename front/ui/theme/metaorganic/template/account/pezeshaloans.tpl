@@ -28,6 +28,29 @@
     </div>                        
 </div>
 <?php echo $footer; ?>
+<div class="editAddressModal">
+    <div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2><?= $text_edit_address_new?></h2></div>
+                        <div id="edit-address-message" class="col-md-12" style="color: red">
+                        </div>
+                        <div id="edit-address-success-message" style="color: green">
+                        </div>
+
+                        <div class="edit-address-form-panel">
+                            <!-- Edit form here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="<?= $base?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
@@ -182,6 +205,7 @@
 });
 function viewloan(orderId) {
 console.log(orderId); 
+$('#editAddressModal').modal('toggle');
 $.ajax({
                 url: 'index.php?path=payment/pezesha/loanstatus',
                 type: 'post',
