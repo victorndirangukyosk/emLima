@@ -7,4 +7,9 @@ class ModelPezeshaPezeshaloanreceivables extends Model {
         return $this->db->getLastId();
     }
 
+    public function findPezeshaLoanById($order_id) {
+        $pezesha = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order WHERE order_id = '" . (int) $order_id . "'");
+        return $pezesha->row;
+    }
+
 }

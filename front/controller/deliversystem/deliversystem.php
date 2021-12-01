@@ -1718,6 +1718,22 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $this->error['order_id'] = 'Order Id Is Required!';
         }
 
+        if (isset($data['order_id']) && is_array($data['order_id']) && count($data['order_id']) > 0) {
+            $log = new Log('error.log');
+            $this->load->model('pezesha/pezeshaloanreceivables');
+            $unable_to_find = NULL;
+            foreach ($data['order_id'] as $order_id) {
+                $pezesha_loan_details = $this->model_pezesha_pezeshaloanreceivables->findPezeshaLoanById($order_id);
+                if (count($pezesha_loan_details) == 0) {
+                    $unable_to_find .= ' #' . $order_id;
+                }
+            }
+        }
+
+        if ($unable_to_find != NULL) {
+            $this->error['order_id'] = 'Invalid Order Ids(' . $unable_to_find . ')';
+        }
+
         if (!isset($data['type']) || $data['type'] == NULL) {
             $this->error['type'] = 'Loan Type Is Required!';
         }
