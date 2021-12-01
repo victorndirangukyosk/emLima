@@ -7,7 +7,7 @@
         </tr>
         <tr>
             <td class="order_id">Order ID</td>
-            <td class="order_id"><?php echo implode('#', $order_id); ?></td>
+            <td class="order_id"><?php echo ' #'.implode(' #', $order_id); ?></td>
         </tr>
         <tr>
             <td class="order_id">Loan Amount</td>
