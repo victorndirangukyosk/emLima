@@ -49,7 +49,7 @@
             <li><a href="#tab-otp" data-toggle="tab">OTP</a></li>
             <li><a href="#tab-activity" data-toggle="tab">Activities</a></li>
             <li><a href="#tab-password" data-toggle="tab">Password</a></li>
-            <?php if($this->config->get('pezesha_status')) { ?>
+            <?php if($this->config->get('pezesha_status') && ) { ?>
             <li><a href="#tab-pezesha" data-toggle="tab">Pezesha</a></li>
             <?php } ?>
            
@@ -371,7 +371,7 @@
                                     <input type="text" maxlength=30  name="SAP_customer_no" value="<?php echo $SAP_customer_no; ?>"  placeholder="SAP Custumer Number"  id="input-SAP_customer_no" class="form-control" />
                                 </div>
                         </div>
-                        <?php if($this->config->get('pezesha_status')) { ?>
+                        <?php if($this->config->get('pezesha_status') && ($parent == NULL && $parent == 0)) { ?>
                          <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-pezesha-customer-id">Pezesha ID</label>
                                 <div class="col-sm-10">
