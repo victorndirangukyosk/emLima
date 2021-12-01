@@ -1681,7 +1681,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $log->write($postData);
 
         $file = fopen('system/log/pezesha.txt', 'a+'); //url fopen should be allowed for this to occur
-        if (false === fwrite($file, $postData)) {
+        if (false === fwrite($file, date('Y-m-d H:i:s') . ': ' . $postData . "\n")) {
             fwrite('Error: no data written');
         }
         fclose($file);
