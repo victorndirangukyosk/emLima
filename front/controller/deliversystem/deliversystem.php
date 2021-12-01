@@ -1674,6 +1674,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
     public function pezeshacallback() {
 
+        $this->load->model('pezesha/pezeshaloanreceivables');
         $postData = file_get_contents('php://input');
 
         $log = new Log('error.log');
@@ -1689,8 +1690,11 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $log = new Log('error.log');
         $log->write($postData);
         if ($this->validate($postData)) {
-            $this->load->model('pezesha/pezeshaloanreceivables');
-            $this->model_pezesha_pezeshaloanreceivables->loanmpesadetails($postData);
+            $orders = $postData['order_id'];
+            foreach ($orders as $order) {
+                $postData['order'] = $order;
+                $this->model_pezesha_pezeshaloanreceivables->loanmpesadetails($postData);
+            }
             $json['status'] = 200;
             $json['success'] = 1;
             $json['message'] = 'Loan Details Saved Successfull!';
