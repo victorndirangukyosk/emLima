@@ -1694,7 +1694,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $json['message'] = 'Loan Details Saved Successfull!';
         } else {
             $log->write('ERROR');
-            $json['status'] = 10014;
+            $json['status'] = 400;
             $json['success'] = 0;
 
             foreach ($this->error as $key => $value) {
