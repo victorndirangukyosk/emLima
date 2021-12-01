@@ -180,6 +180,9 @@
             });
         }
 });
+function viewloan(orderId) {
+console.log(orderId);    
+}
 </script>
 </body>
 </html>
