@@ -14,6 +14,7 @@
                             <th class="order_id">Order Total</th>
                             <th class="order_id">Loan Type</th>
                             <th class="order_id">Order Date</th>
+                            <th class="order_id">Action</th>
                         </tr>
                     </thead>
                     <tbody id="loans_body">
@@ -161,6 +162,7 @@
                 tr.append("<td class='amount'>" + displayRecords[i].total + "</td>");
                 tr.append("<td class='amount'>" + displayRecords[i].loan_type + "</td>");
                 tr.append("<td class='order_id'>" + displayRecords[i].created_at + "</td>");
+                tr.append("<td><a class='btn btn-default' onclick='viewloan(" + displayRecords[i].order_id + ")'>View</a></td>");
                 $('#loans_body').append(tr);
             }
         }
