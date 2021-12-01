@@ -36,7 +36,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <div class="row">
                         <div class="col-md-12">
-                        <h2><?= $text_edit_address_new?></h2></div>
+                        <h2>Pezesha Loan Details </h2></div>
                         <div class="edit-address-form-panel">
                             <!-- Edit form here -->
                         </div>
