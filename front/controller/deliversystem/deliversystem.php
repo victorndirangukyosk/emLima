@@ -1685,11 +1685,66 @@ class ControllerDeliversystemDeliversystem extends Controller {
             fwrite('Error: no data written');
         }
         fclose($file);
-        $response['status'] = true;
-        $response['success'] = 1;
-        $response['message'] = 'Loan Details Saved Successfull!';
+        $postData = json_decode($postData, true);
+        $log = new Log('error.log');
+        $log->write($postData);
+        if ($this->validate($postData)) {
+            $json['status'] = 200;
+            $json['success'] = 1;
+            $json['message'] = 'Loan Details Saved Successfull!';
+        } else {
+            $log->write('ERROR');
+            $json['status'] = 10014;
+            $json['success'] = 0;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
+        }
         $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($response));
+        $this->response->setOutput(json_encode($json));
+    }
+
+    protected function validate($data) {
+        if (!isset($data['order_id']) || !is_array($data['order_id']) || array_count($data['order_id']) <= 0) {
+            $this->error['order_id'] = 'Order Id Is Required!';
+        }
+
+        if (!isset($data['type']) || $data['type'] == NULL) {
+            $this->error['type'] = 'Loan Type Is Required!';
+        }
+
+        if (!isset($data['merchant_id']) || $data['merchant_id'] == NULL) {
+            $this->error['merchant_id'] = 'Merchant ID Is Required!';
+        }
+
+        if (!isset($data['pezesha_id']) || $data['pezesha_id'] == NULL) {
+            $this->error['pezesha_id'] = 'Pezesha ID Is Required!';
+        }
+
+        if (!isset($data['loan_id']) || $data['loan_id'] == NULL) {
+            $this->error['loan_id'] = 'Loan ID Is Required!';
+        }
+
+        if (!isset($data['amount']) || $data['amount'] <= 0 || $data['amount'] == NULL) {
+            $this->error['loan_id'] = 'Loan ID Is Required!';
+        }
+
+        if (!isset($data['account']) || $data['account'] == NULL) {
+            $this->error['account'] = 'National ID Is Required!';
+        }
+
+        if (!isset($data['mpesa_refference']) || $data['mpesa_refference'] == NULL) {
+            $this->error['mpesa_refference'] = 'Mpesa Reference Is Required!';
+        }
+
+        if (!isset($data['transaction_date']) || $data['transaction_date'] == NULL) {
+            $this->error['transaction_date'] = 'Transaction Date Is Required!';
+        }
+
+        return !$this->error;
     }
 
 }
