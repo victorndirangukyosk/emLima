@@ -150,6 +150,9 @@ class ControllerPaymentPezesha extends Controller {
         $result = json_decode($result, true);
         $log->write($result);
         $json = $result;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
     public function applyloan() {

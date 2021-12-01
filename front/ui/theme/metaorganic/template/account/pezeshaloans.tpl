@@ -181,7 +181,29 @@
         }
 });
 function viewloan(orderId) {
-console.log(orderId);    
+console.log(orderId); 
+$.ajax({
+                url: 'index.php?path=payment/pezesha/loanstatus',
+                type: 'post',
+                data: {
+                    order_id: orderId
+                },
+                dataType: 'json',
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                success: function (json) {
+                    console.log("json");
+                    console.log(json);
+                    return true;
+                }, error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    return false;
+                }
+});
 }
 </script>
 </body>
