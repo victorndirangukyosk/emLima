@@ -1772,8 +1772,20 @@ class ControllerDeliversystemDeliversystem extends Controller {
     public function getPezeshaReceivedPayments() {
         $this->load->model('pezesha/pezeshaloanreceivables');
         $pezesha_loan_details = $this->model_pezesha_pezeshaloanreceivables->getPezeshaReceivables();
+
+        $transactions = array();
+        foreach ($pezesha_loan_details as $pezesha_loan_detail) {
+            $tr = NULL;
+            $tr['transaction_id'] = $pezesha_loan_detail['mpesa_reference'];
+            $tr['merchant_id'] = $pezesha_loan_detail['merchant_id'];
+            $tr['face_amount'] = $pezesha_loan_detail['amount'];
+            $tr['transaction_time'] = $pezesha_loan_detail['transaction_date'];
+            $tr['other_details'] = array('key' => 'location', 'value' => $pezesha_loan_detail['shipping_address'], 'key' => 'category', 'value' => 'BUY_GOODS/PAYBILL');
+            $transactions[] = $tr;
+        }
+
         $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($pezesha_loan_details));
+        $this->response->setOutput(json_encode($transactions));
     }
 
 }
