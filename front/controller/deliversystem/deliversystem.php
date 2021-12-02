@@ -1770,22 +1770,52 @@ class ControllerDeliversystemDeliversystem extends Controller {
     }
 
     public function getPezeshaReceivedPayments() {
+        $auth_response = $this->load->controller('payment/pezesha/auth');
         $this->load->model('pezesha/pezeshaloanreceivables');
         $pezesha_loan_details = $this->model_pezesha_pezeshaloanreceivables->getPezeshaReceivables();
 
-        $transactions = array();
+        $transactions_details = array();
         foreach ($pezesha_loan_details as $pezesha_loan_detail) {
             $tr = NULL;
             $tr['transaction_id'] = $pezesha_loan_detail['mpesa_reference'];
             $tr['merchant_id'] = $pezesha_loan_detail['merchant_id'];
             $tr['face_amount'] = $pezesha_loan_detail['amount'];
             $tr['transaction_time'] = $pezesha_loan_detail['transaction_date'];
-            $tr['other_details'] = array('key' => 'location', 'value' => $pezesha_loan_detail['shipping_address'], 'key' => 'category', 'value' => 'BUY_GOODS/PAYBILL');
-            $transactions[] = $tr;
+            $category = array('key' => 'category', 'value' => 'Fresh Produce');
+            $location = array('key' => 'location', 'value' => $pezesha_loan_detail['shipping_address']);
+            $tr['other_details'][] = $category;
+            $tr['other_details'][] = $location;
+            $transactions_details[] = $tr;
         }
 
         $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($transactions));
+        $this->response->setOutput(json_encode($transactions_details));
+
+        $body = array('channel' => $this->config->get('pezesha_channel'), 'transactions' => $transactions_details);
+        //$body = http_build_query($body);
+        $body = json_encode($body);
+        $log->write($body);
+        $curl = curl_init();
+        if ($this->config->get('pezesha_environment') == 'live') {
+            curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1.1/data');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+        } else {
+            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1.1/data');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+
+        $log->write($result);
+        curl_close($curl);
+        $result = json_decode($result, true);
+        $log->write($result);
+        $json = $result;
+        return $json;
     }
 
 }
