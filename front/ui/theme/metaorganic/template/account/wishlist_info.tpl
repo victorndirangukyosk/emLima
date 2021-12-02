@@ -52,6 +52,8 @@
 
 
                                                         <p class="product-info"><span class="small-info"><?php echo $product['unit']; ?></span>
+                                                         
+                                                        <span class="small-info"><?php echo $product['product_note']; ?></span>
                                                         </p>
                                                         <?php if(!$product['is_from_active_store'] || $product['status'] == 0 || $product['category_price_status'] == 0) { ?>
                                                         <span class="badge badge-danger">
