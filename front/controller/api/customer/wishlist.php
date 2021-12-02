@@ -301,7 +301,7 @@ class ControllerApiCustomerWishlist extends Controller
                 $wishlist_id = $this->model_account_wishlist->createWishlist($args['name']);
                 foreach($args['products'] as $product)
                 {
-                $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id, $product['product_id'], $product['quantity']);
+                $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id, $product['product_id'], $product['quantity'], $product['product_note']);
                 }
 
                 $json['message'][] = ['type' => '', 'body' => $this->language->get('text_success_created_list')];
@@ -312,7 +312,7 @@ class ControllerApiCustomerWishlist extends Controller
                 // $this->model_account_wishlist->addProductToWishlist($wishlist_id, $this->request->get['listproductId']);
                 foreach($args['products'] as $product)
                 {
-                $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id, $product['product_id'], $product['quantity']);
+                $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id, $product['product_id'], $product['quantity'], $product['product_note']);
                 }
                 
                 $data['status'] = true; 
@@ -526,6 +526,7 @@ class ControllerApiCustomerWishlist extends Controller
                         'category_price' => $this->model_assets_product->getCategoryPriceStatusByProductStoreId($product_store_id),
                         'status' => isset($product_info['pd_name']) && count($product_info) > 0 ? 1 : 0,
                         'category_price_status' => is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1,
+                        'product_note' => $product['product_note'],
                          
                     ];
                 }
