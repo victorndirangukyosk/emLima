@@ -12,4 +12,11 @@ class ModelPezeshaPezeshaloanreceivables extends Model {
         return $pezesha->row;
     }
 
+    public function getPezeshaReceivables() {
+        $yesterday = date('Y-m-d', strtotime("-1 days"));
+        $yesterday = date('Y-m-d');
+        $pezesha_receivables = $this->db->query('SELECT plr.* FROM ' . DB_PREFIX . "pezesha_loan_recceivables plr WHERE DATE(plr.created_at) = '" . $yesterday . "'");
+        return $pezesha_receivables->rows;
+    }
+
 }

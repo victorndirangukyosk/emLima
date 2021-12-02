@@ -1769,4 +1769,11 @@ class ControllerDeliversystemDeliversystem extends Controller {
         return !$this->error;
     }
 
+    public function getPezeshaReceivedPayments() {
+        $this->load->model('pezesha/pezeshaloanreceivables');
+        $pezesha_loan_details = $this->model_pezesha_pezeshaloanreceivables->getPezeshaReceivables();
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($pezesha_loan_details));
+    }
+
 }
