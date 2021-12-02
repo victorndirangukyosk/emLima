@@ -1158,11 +1158,14 @@ class ControllerCheckoutCart extends Controller {
         $log->write($this->request->post['list_name']);
         $log->write('Save List');
         $products = $this->cart->getProducts();
+        
+        // echo "<pre>";print_r($products);die;
+
         foreach ($products as $product) {
             $log->write('PRODUCT');
             $log->write($product);
             $log->write('PRODUCT');
-            $this->addProdToWishlist($product['product_id'], $product['quantity'], $this->request->post['list_name']);
+            $this->addProdToWishlist($product['product_id'], $product['quantity'], $this->request->post['list_name'], $product['product_note']);
         }
         $this->cart->clear();
 
@@ -1175,7 +1178,7 @@ class ControllerCheckoutCart extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addProdToWishlist($product_id, $quantity, $list_name) {
+    public function addProdToWishlist($product_id, $quantity, $list_name,$product_note='') {
         $this->load->language('account/wishlist');
 
         $data['text_success_added_in_list'] = $this->language->get('text_success_added_in_list');
@@ -1211,7 +1214,7 @@ class ControllerCheckoutCart extends Controller {
             } else {
                 $wishlist_id = $this->model_account_wishlist->createWishlist($list_name);
             }
-            $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id, $product_id, $quantity);
+            $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id, $product_id, $quantity,$product_note);
         }
 
         $this->response->addHeader('Content-Type: application/json');
