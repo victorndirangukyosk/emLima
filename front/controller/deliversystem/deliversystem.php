@@ -1789,8 +1789,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $transactions_details[] = $tr;
         }
 
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($transactions_details));
+        /* $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($transactions_details)); */
 
         $body = array('channel' => $this->config->get('pezesha_channel'), 'transactions' => $transactions_details);
         //$body = http_build_query($body);
@@ -1816,6 +1816,9 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $result = json_decode($result, true);
         $log->write($result);
         $json = $result;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
         return $json;
     }
 
