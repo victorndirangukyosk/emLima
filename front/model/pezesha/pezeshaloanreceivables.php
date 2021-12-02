@@ -12,4 +12,11 @@ class ModelPezeshaPezeshaloanreceivables extends Model {
         return $pezesha->row;
     }
 
+    public function getPezeshaReceivables() {
+        $yesterday = date('Y-m-d', strtotime("-1 days"));
+        $yesterday = date('Y-m-d');
+        $pezesha_receivables = $this->db->query('SELECT plr.id, plr.order_id, plr.loan_type, plr.merchant_id, plr.pezesha_id, plr.loan_id, plr.amount, plr.account, plr.mpesa_reference, plr.transaction_date, plr.created_at, o.shipping_address FROM ' . DB_PREFIX . "pezesha_loan_recceivables plr INNER JOIN " . DB_PREFIX . "order o ON o.order_id = plr.order_id WHERE DATE(plr.created_at) = '" . $yesterday . "'");
+        return $pezesha_receivables->rows;
+    }
+
 }

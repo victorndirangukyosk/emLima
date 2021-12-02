@@ -126,6 +126,7 @@ class ControllerPaymentPezesha extends Controller {
         $log->write($auth_response);
         $log->write($customer_device_info);
         $log->write('auth_response');
+        //$this->request->post['order_id'] = array("55789E36D67", "5545E36D90");
         $body = array('identifier' => $this->request->post['order_id'], 'channel' => $this->config->get('pezesha_channel'));
         //$body = http_build_query($body);
         $body = json_encode($body);
@@ -152,7 +153,7 @@ class ControllerPaymentPezesha extends Controller {
         $json = $result;
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/pezesha_loan_info.tpl')) {
-            $html = $this->load->view($this->config->get('config_template') . '/template/account/pezesha_loan_info.tpl', $json);
+            $html = $this->load->view($this->config->get('config_template') . '/template/account/pezesha_loan_info.tpl', $json['data']);
         }
 
         echo json_encode(['html' => $html]);

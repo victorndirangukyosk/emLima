@@ -195,7 +195,7 @@ class ControllerAccountWishList extends Controller {
 
         $wishlist_info = $this->model_account_wishlist->getWishlist($wishlist_id);
 
-        //echo "<pre>";print_r($wishlist_info);die;
+        // echo "<pre>";print_r($wishlist_info);die;
         if ($wishlist_info) {
             $this->document->setTitle($this->language->get('text_wishlist'));
 
@@ -300,7 +300,7 @@ class ControllerAccountWishList extends Controller {
             $data['store_id'] = ACTIVE_STORE_ID;
             $products = $this->model_account_wishlist->getWishlistProduct($this->request->get['wishlist_id']);
 
-            //   echo "<pre>";print_r($data);die;
+            //   echo "<pre>";print_r($products);die;
 
             foreach ($products as $product) {
                 //below one we need to send product_store_id
@@ -419,7 +419,8 @@ class ControllerAccountWishList extends Controller {
                     'category_price' => $this->model_assets_product->getCategoryPriceStatusByProductStoreId($product_store_id),
                     'status' => isset($product_info['pd_name']) && count($product_info) > 0 ? 1 : 0,
                     'category_price_status' => is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1,
-                        /* 'store_id'     => $product['store_id'],
+                    'product_note' => $product['product_note'],
+                    /* 'store_id'     => $product['store_id'],
                           'model'    => $product['model'], */
 
                         /* 'price'    => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $wishlist_info['currency_code'], $wishlist_info['currency_value']),
@@ -427,7 +428,7 @@ class ControllerAccountWishList extends Controller {
                 ];
             }
 
-            //echo "<pre>";print_r($data['products']);die;
+            // echo "<pre>";print_r($data['products']);die;
             if ($this->request->server['HTTPS']) {
                 $server = $this->config->get('config_ssl');
             } else {
@@ -597,6 +598,7 @@ class ControllerAccountWishList extends Controller {
         $product_id = isset($this->request->post['product_id']) ? $this->request->post['product_id'] : null;
 
         $quantity = isset($this->request->post['quantity']) ? $this->request->post['quantity'] : null;
+        // $product_note = isset($this->request->post['product_note']) ? $this->request->post['product_note'] : null;
 
         if ($wishlist_id && $product_id) {
             $this->load->model('account/wishlist');
@@ -653,7 +655,7 @@ class ControllerAccountWishList extends Controller {
                     $log->write('store details');
                     $log->write($store_data);
                     $log->write('store details');
-                    $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+                    $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = $wishlist_product['product_note'], $produce_type = null);
                 }
             }
         }
@@ -661,6 +663,10 @@ class ControllerAccountWishList extends Controller {
         //echo "reg";
 
         $this->session->data['success'] = $data['text_cart_success'];
+
+        $data['location'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
+        $data['status'] = 'success';
+
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
@@ -689,7 +695,7 @@ class ControllerAccountWishList extends Controller {
             $log->write('Store Details123');
             $log->write($store_data);
             $log->write('Store Details123');
-            $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = null, $produce_type = null);
+            $this->cart->addCustom($store_data['product_store_id'], $wishlist_product['quantity'], $option = [], $recurring_id = 0, $store_data['store_id'], $store_product_variation_id = false, $product_type = 'replacable', $product_note = $wishlist_product['product_note'], $produce_type = null);
             //$this->model_account_wishlist->deleteWishlistProduct($wishlist_id, $product_id);
             //Items should remain in whishlist
         }
@@ -702,7 +708,7 @@ class ControllerAccountWishList extends Controller {
         $this->response->setOutput(json_encode($data));
     }
 
-    public function createWishlist() {
+    public function createWishlisttertert() {
         $this->load->language('account/wishlist');
 
         $data['text_success_added_in_list'] = $this->language->get('text_success_added_in_list');

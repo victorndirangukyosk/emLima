@@ -301,7 +301,18 @@ __kdt.push({"post_on_load": false});
             success: function(json) {
                 console.log(json);
                 
-                setTimeout(function(){ window.location.reload(false); }, 1000);
+               // setTimeout(function(){ window.location.reload(false); }, 1000);
+               if (json.location != null && json.status == 'success') {
+                        console.log(json.location);
+                        var timer = setTimeout(function () {
+                            window.location.href = json.location;
+                        }, 1000);
+                        return false;
+                        //location = json.redirect;
+                        //location = location;
+                    }
+
+
             }
         });
     });
