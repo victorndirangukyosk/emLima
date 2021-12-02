@@ -14,11 +14,11 @@
             <td class="order_id"><?php echo $loan_amount; ?></td>
         </tr>
         <tr>
-            <td class="order_id">Sp Fee</td>
+            <td class="order_id">Service Fee</td>
             <td class="order_id"><?php echo $sp_fee; ?></td>
         </tr>
         <tr>
-            <td class="order_id">Pezesha Fee</td>
+            <td class="order_id">Processing Fee</td>
             <td class="order_id"><?php echo $pz_fee; ?></td>
         </tr>
         <tr>
