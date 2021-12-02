@@ -126,7 +126,7 @@ class ControllerPaymentPezesha extends Controller {
         $log->write($auth_response);
         $log->write($customer_device_info);
         $log->write('auth_response');
-        $this->request->post['order_id'] = array("55789E36D67", "5545E36D90");
+        //$this->request->post['order_id'] = array("55789E36D67", "5545E36D90");
         $body = array('identifier' => $this->request->post['order_id'], 'channel' => $this->config->get('pezesha_channel'));
         //$body = http_build_query($body);
         $body = json_encode($body);
