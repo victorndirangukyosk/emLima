@@ -664,6 +664,10 @@ class ControllerAccountWishList extends Controller {
 
         $this->session->data['success'] = $data['text_cart_success'];
 
+        $data['location'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
+        $data['status'] = 'success';
+
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
     }
