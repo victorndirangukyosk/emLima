@@ -607,7 +607,7 @@
             <table class="products-table">
                 <thead class="font-bold">
                     <tr><td>ORDER ID</td>
-                        <td>
+                        <td colspan="2" class="text-right">
                             <?= '#'.$order['order_id']?>   
                         </td>
                     </tr>
@@ -615,7 +615,7 @@
                         <td>
                             ORDER STATUS
                         </td>
-                        <td>
+                        <td colspan="2" class="text-right">
                             <?= $order['status']['name']?>   
                         </td>
                     </tr>
@@ -623,7 +623,7 @@
                         <td>
                             DATE OF DELIVERY
                         </td>
-                        <td>
+                        <td colspan="2" class="text-right">
                             <?= $order['delivery_date']?>   
                         </td>
                     </tr>
@@ -639,7 +639,7 @@
                         <td>
                             COMPANY NAME
                         </td>
-                        <td>
+                        <td colspan="2" class="text-right">
                             <?= $order['customer_company_name']?>        
                         </td>
                     </tr>
@@ -647,7 +647,7 @@
                         <td>
                             DELIVERY LOCATION
                         </td>
-                        <td>
+                        <td colspan="2" class="text-right">
                             <?= $order['shipping_address']?>        
                         </td>
                     </tr>
