@@ -1502,4 +1502,42 @@ class ControllerCatalogGeneral extends Controller {
         }
     }
 
+    public function changeCategory() {
+        $json = [];
+        $json['status'] = 200;
+        $json['message'] = '';
+        $this->load->model('catalog/general');
+        $log = new Log('error.log');
+        //  echo "<pre>";print_r($this->request->post);die;
+        
+        try{
+            $category_id=$this->request->post['category_id'];
+            $log->write("change category");
+            if (isset($this->request->post['selected_product_id']) && $this->validateCopy()) {
+                $str_arr_products = explode (",", $this->request->post['selected_product_id']); 
+        //  echo "<pre>";print_r($str_arr_products);die;
+                
+                // print_r($str_arr_products);
+            foreach ($str_arr_products as $product_id) {
+                    $log->write("change category".$product_id);
+                    $this->model_catalog_general->changeCategory($product_id,$category_id);
+                }
+                // $this->session->data['success'] = $this->language->get('text_success');  
+            }
+            else {
+                $json['status'] = 400;
+                $json['message'] ="Error occured while processing the request" ;
+            }
+        }
+        catch(exception $e)
+        {
+            $json['status'] = 400;
+            $json['message'] = "Error";
+        }
+        finally{
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
+    }
+
 }
