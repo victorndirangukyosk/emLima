@@ -687,4 +687,12 @@ class ModelSaleOrder extends Model
         $query = $this->db->query($sql);
         return $query->row['CustomersCount'];
     }
+
+    public function addVehicleLatLng($vehicle_number,$latitude,$longitude) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "amitruck_vehicle SET vehicle_number = '" . $this->db->escape($vehicle_number) . "', latitude = '" . $this->db->escape($latitude) . "', longitude = '" . $this->db->escape($data['longitude']) . "', date_added = NOW()");
+        $id = $this->db->getLastId();
+        return $id;
+    }
+
+
 }
