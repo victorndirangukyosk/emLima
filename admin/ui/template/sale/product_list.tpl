@@ -614,7 +614,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($products as $product) { ?>
+                    <?php foreach($order['products'] as $product) { ?>
                     <tr>
                         <td><?= $product['product_id'] ?></td>
                         <td><?= $product['name'] ?></td>
