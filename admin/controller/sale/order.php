@@ -5240,7 +5240,7 @@ class ControllerSaleOrder extends Controller {
                 ];
             }
         }
-        $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
+        $this->response->setOutput($this->load->view('sale/product_list.tpl', $data));
     }
 
     public function invoicepdf() {
