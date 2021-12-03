@@ -68,20 +68,6 @@
         </tr>
         </tfoot>
     </table>
-
-    <div class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-left">
-                    <ul class="list-block">
-                        <li>KWIKBASKET SOLUTIONS LIMITED</li>
-                        <li>3rd Floor, Heritan House, Woodlands Road</li>
-                        <li>Nairobi, Kenya</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <?php } ?>
