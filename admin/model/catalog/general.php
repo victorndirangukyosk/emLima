@@ -770,4 +770,13 @@ class ModelCatalogGeneral extends Model
     {
         $this->db->query('update `'.DB_PREFIX.'product` SET  status="'.$status.'" WHERE vendor_id="'.$vendor_id.'" AND product_id="'.$product_id.'"');
     }
+
+
+    public function changeCategory($product_id,$Category)
+    {
+        //  echo "<pre>";print_r('update `'.DB_PREFIX.'product_to_category` SET  category_id="'.$Category.'" WHERE product_id="'.$product_id.'"');die;
+
+        $this->db->query('update `'.DB_PREFIX.'product_to_category` SET  category_id="'.$Category.'" WHERE product_id="'.$product_id.'"');
+    }
+
 }

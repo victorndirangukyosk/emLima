@@ -20,6 +20,9 @@
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_enable; ?>" class="btn btn-default" onclick="changeStatus(1)"><i class="fa fa-check-circle text-success"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="changeStatus(0)"><i class="fa fa-times-circle text-danger"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirmnew('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>
+
+                <button type="button"  id="button-changeCategory" onclick="changeCategory()"  data-toggle="tooltip" title="Change Category" class="btn btn-default"><i class="fa fa-adjust"></i></button>
+
             <?php } ?>
             <?php } ?>
             </div>
@@ -302,6 +305,7 @@ $('input[name=\'store\']').autocomplete({
 });
 
 function submit_copy() {
+ 
     
     $('.message_wrapper').html('');
     
@@ -476,6 +480,80 @@ function changeStatus(status) {
        
         
      
+
+     
+ function changeCategory() 
+    {   
+            
+
+
+
+             var selected_product_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
+            return n.value;
+            }).join(',');
+            console.log(selected_product_id);
+
+
+            
+            if (selected_product_id == '') {
+                alert('No product selected');
+                return;                
+            }
+            
+             var filter_category = $('select[name=\'filter_category\']').val();
+             var filter_category_text = $( "select[name=\'filter_category\'] option:selected" ).text();;
+
+             //alert(filter_category_text);
+
+            if (filter_category == '*') {
+                 alert('Please select category');
+                return;  
+            }
+
+            
+                    if (confirm("Do you want to change the category of products -"+selected_product_id+" to "+filter_category_text)) {
+                    //continue;
+                  }
+                else{
+                    return;
+                }
+            
+
+              $.ajax({
+		url: 'index.php?path=catalog/general/changeCategory&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'selected_product_id=' + encodeURIComponent(selected_product_id) + '&category_id='+filter_category,
+		beforeSend: function() {
+                // setting a timeout
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                },
+                success: function(json) {	 
+                    console.log(json.status);                    
+                    if(json.status == 200) {
+                    $('.alert').html('Selected products category changed!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    alert('Selected products category changed ');
+                    location=location;
+                    //setTimeout(function(){ window.location.reload(false); }, 1500);
+                    }
+                    else
+                    {
+                        alert('Category not modified ');
+                    }
+                     
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			   console.log(xhr);
+		}
+                }); 
+                
+    }
+
+
 //--></script>
 
 <?php echo $footer; ?>
