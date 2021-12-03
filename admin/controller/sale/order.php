@@ -5529,6 +5529,7 @@ class ControllerSaleOrder extends Controller {
                 ];
             }
         }
+        $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
 
         // echo "<pre>";print_r($data);die;
         try {
@@ -5658,8 +5659,6 @@ class ControllerSaleOrder extends Controller {
         } catch (Exception $e) {
             echo $e->getMessage();
         }
-
-        //$this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
 
     //modified to add delivery charge ,tax,VAT on delivery
