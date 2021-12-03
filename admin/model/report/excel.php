@@ -1870,9 +1870,9 @@ class ModelReportExcel extends Model {
             ];
 
             //Company name, address
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:E2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:H2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Orders Sheet');
-            $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A1:H2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
@@ -1884,9 +1884,9 @@ class ModelReportExcel extends Model {
                 $vendor = 'Combined';
             }
 
-            $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:H3');
 
-            $objPHPExcel->getActiveSheet()->mergeCells('A4:E4');
+            $objPHPExcel->getActiveSheet()->mergeCells('A4:H4');
 
             $objPHPExcel->getActiveSheet()->setCellValue('A4', 'Vendor : ' . $vendor);
 
@@ -1897,29 +1897,40 @@ class ModelReportExcel extends Model {
                         ->setAutoSize(true);
             }
 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 6, 'Order ID');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 6, 'Company Name');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 6, 'Delivery Date');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 6, 'Delivery Time Slot');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 6, 'Order Status');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 6, 'S.NO');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 6, 'Order ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 6, 'Company Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 6, 'Address');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 6, 'Total');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 6, 'Delivery Date');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 6, 'Delivery Time Slot');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 6, 'Order Status');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 6)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 6)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 6)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 6)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 6)->applyFromArray($title);
 
             // Fetching the table data
             $row = 7;
 
             //echo "<pre>";print_r($data['filter_date_end']."er".$data['filter_date_start']);
-
+            $i = 1;
             foreach ($rows as $result) {
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['order_id']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['company_name']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['delivery_date']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['delivery_timeslot']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['status']);
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['shipping_address']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $this->currency->format($result['total']));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['delivery_date']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['delivery_timeslot']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['status']);
+                $i++;
                 ++$row;
             }
 
@@ -9244,7 +9255,6 @@ class ModelReportExcel extends Model {
         }
     }
 
-
     public function download_sale_order_receivables_success_excel($filter_data) {
         // echo "<pre>";print_r($filter_data);die;
         $this->load->library('excel');
@@ -9320,8 +9330,8 @@ class ModelReportExcel extends Model {
                 $data['totals'][] = [
                     'title' => $total['title'],
                     'code' => $total['code'],
-                    // 'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                    // 'text' => $this->currency->format($total['value']),
+                        // 'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                        // 'text' => $this->currency->format($total['value']),
                 ];
 
                 if ('total' == $total['code']) {
@@ -9336,7 +9346,6 @@ class ModelReportExcel extends Model {
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
                 'customer_id' => $result['customer_id'],
-
                 'transaction_id' => $result['transaction_id'],
                 // 'no_of_products' => $result['no_of_products'],
                 'customer' => $result['firstname'] . ' ' . $result['lastname'],
@@ -9482,7 +9491,6 @@ class ModelReportExcel extends Model {
             return;
         }
     }
-
 
     public function mail_consolidated_sale_order_excel($data) {
         // echo "<pre>";print_r($data);die;
