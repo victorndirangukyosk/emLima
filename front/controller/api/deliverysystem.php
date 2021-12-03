@@ -66,4 +66,33 @@ class ControllerApiDeliverySystem extends Controller
         $this->response->setOutput(json_encode($json));
         return $json;
     }
+
+
+    public function getVehicleLatLng() {
+
+        $json = file_get_contents('php://input');
+        // Converts it into a PHP object
+        $data = json_decode($json);
+        // echo "<pre>";print_r($data);die;
+        
+
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        if (empty($data->vehicle_number)) { 
+            $data->vehicle_number=0;
+            } 
+ 
+            $this->load->model('sale/order');
+            $data = $this->model_sale_order->getVehicleLatLng( $data->vehicle_number);
+            $json['data']= $data;
+            $json['message']="Vehicle data fetched successfully";
+         
+       
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        return $json;
+    }
 }
