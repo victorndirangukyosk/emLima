@@ -88,7 +88,14 @@ class ControllerApiDeliverySystem extends Controller
             $this->load->model('sale/order');
             $data = $this->model_sale_order->getVehicleLatLng( $data->vehicle_number);
             $json['data']= $data;
+            if(!empty($data))
+            {
             $json['message']="Vehicle data fetched successfully";
+            }
+            else {
+            $json['message']="No data available";
+                
+            }
          
        
         $this->response->addHeader('Content-Type: application/json');
