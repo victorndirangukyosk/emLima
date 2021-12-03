@@ -651,6 +651,14 @@
                             <?= $order['shipping_address']?>        
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            ORDER NOTES
+                        </td>
+                        <td colspan="3" class="text-right">
+                            <?= $order['comment']?>        
+                        </td>
+                    </tr>
                 </thead>
                 <tbody>
 
