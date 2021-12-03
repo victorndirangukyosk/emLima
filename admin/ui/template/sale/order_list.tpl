@@ -486,7 +486,7 @@
                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
                                         </a>
                                         <?php } ?>
-                                        <a href="#" target="_blank" data-toggle="tooltip" title="Products List" data-orderid="<?= $order['order_id'] ?>" data-order-product-list="<?php echo $order['invoice']; ?>" id="order_products_list">
+                                        <a href="#" target="_blank" data-toggle="tooltip" title="Products List" data-orderid="<?= $order['order_id'] ?>" data-order-product-list="<?php echo $order['invoice']; ?>" id="download_product_list">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg>
                                         </a>
                                        </div>
@@ -1311,9 +1311,13 @@
 <script  type="text/javascript">
 $('a[id^=\'download_product_list\']').on('click', function (e) {
 e.preventDefault();
-console.log($(this).data('orderid'));
-window.open(invoice, '_blank');
+var product_list = $(this).attr("data-order-product-list");
+var order_id = $(this).data('orderid');
+console.log(order_id);
+console.log(product_list);
+window.open(product_list, '_blank');
 });
+        
 $('a[id^=\'assign_to_amitruck\']').on('click', function (e) {
 e.preventDefault();
 console.log($(this).data('orderid'));
