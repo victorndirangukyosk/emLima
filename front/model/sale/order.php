@@ -688,10 +688,39 @@ class ModelSaleOrder extends Model
         return $query->row['CustomersCount'];
     }
 
-    public function addVehicleLatLng($vehicle_number,$latitude,$longitude) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "amitruck_vehicle SET vehicle_number = '" . $this->db->escape($vehicle_number) . "', latitude = '" . $this->db->escape($latitude) . "', longitude = '" . $this->db->escape($data['longitude']) . "', date_added = NOW()");
+    public function addVehicleLatLng($vehicle_number,$latitude,$longitude,$speed) {
+        $sql = "SELECT  vehicle_number FROM `".DB_PREFIX."amitruck_vehicle` where vehicle_number='" . $this->db->escape($vehicle_number) . "'";  
+       
+        // echo $sql;die;
+        $query = $this->db->query($sql);
+        // echo "<pre>";print_r($query->rows['vehicle_number']>0);die;
+
+        if($query->rows['vehicle_number']){
+        //     $sql='INSERT INTO ' . DB_PREFIX . "amitruck_vehicle SET vehicle_number = '" . $this->db->escape($vehicle_number) . "', latitude = '" . $this->db->escape($latitude) . "', longitude = '" . $this->db->escape($longitude) . "', speed = '" . ($speed) . "', date_added = NOW()";
+        // echo $sql;die;
+            
+        $this->db->query('UPDATE ' . DB_PREFIX . "amitruck_vehicle SET   latitude = '" . $this->db->escape($latitude) . "', longitude = '" . $this->db->escape($longitude) . "', speed = '" . ($speed) . "', date_added = NOW() where vehicle_number = '". $this->db->escape($vehicle_number)."'");
+        }
+        else{
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "amitruck_vehicle SET vehicle_number = '" . $this->db->escape($vehicle_number) . "', latitude = '" . $this->db->escape($latitude) . "', longitude = '" . $this->db->escape($longitude) . "', speed = '" . ($speed) . "', date_added = NOW()");
+        }
         $id = $this->db->getLastId();
         return $id;
+    }
+
+
+    public function getVehicleLatLng($vehicle_number=0) {
+       
+        
+        $sql = "SELECT vehicle_number, latitude,longitude,speed FROM `".DB_PREFIX.'amitruck_vehicle` ';
+
+        if (isset($vehicle_number) && $vehicle_number>0) {            
+                $sql .= ' WHERE vehicle_number= '.$vehicle_number;          
+        }  
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
     }
 
 
