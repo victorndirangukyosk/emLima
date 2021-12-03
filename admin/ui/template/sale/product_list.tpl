@@ -604,60 +604,6 @@
     <body>
         <?php foreach($orders as $order) { ?>        
         <div class="main-content">
-            <table class="payment-details-table mt-4">
-                <thead>
-                    <tr>
-                        <td colspan="2" class="text-left">
-                            ORDER ID
-                        </td>
-                        <td colspan="2" class="text-right">
-                            <?= '#'.$order['order_id']?>   
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="text-left">
-                            ORDER STATUS
-                        </td>
-                        <td colspan="2" class="text-right">
-                            <?= $order['status']['name']?>   
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="text-left">
-                            DATE OF DELIVERY
-                        </td>
-                        <td colspan="2" class="text-right">
-                            <?= $order['delivery_date']?>   
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="text-left">
-                            DELIVERY TIMESLOT
-                        </td>
-                        <td colspan="2" class="text-right">
-                            <?= $order['delivery_timeslot']?>      
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="text-left">
-                            COMPANY NAME
-                        </td>
-                        <td colspan="2" class="text-right">
-                            <?= $order['customer_company_name']?>        
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="text-left">
-                            DELIVERY LOCATION
-                        </td>
-                        <td colspan="2" class="text-right">
-                            <?= $order['shipping_address']?>        
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
             <table class="products-table">
                 <thead class="font-bold">
                     <tr>
