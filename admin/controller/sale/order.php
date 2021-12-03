@@ -5242,7 +5242,22 @@ class ControllerSaleOrder extends Controller {
                 ];
             }
         }
-        $this->response->setOutput($this->load->view('sale/product_list.tpl', $data));
+
+        try {
+            require_once DIR_ROOT . '/vendor/autoload.php';
+            $pdf = new \mikehaertl\wkhtmlto\Pdf;
+            $template = $this->load->view('sale/product_list.tpl', $data);
+            $pdf->addPage($template);
+            if (!$pdf->send("Products List #" . $order_id . ".pdf")) {
+                $error = $pdf->getError();
+                echo $error;
+                die;
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+        //$this->response->setOutput($this->load->view('sale/product_list.tpl', $data));
     }
 
     public function invoicepdf() {
@@ -5514,7 +5529,7 @@ class ControllerSaleOrder extends Controller {
                 ];
             }
         }
-
+        //$this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
         // echo "<pre>";print_r($data);die;
         try {
             require_once DIR_ROOT . '/vendor/autoload.php';
@@ -5643,8 +5658,6 @@ class ControllerSaleOrder extends Controller {
         } catch (Exception $e) {
             echo $e->getMessage();
         }
-
-        //$this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
 
     //modified to add delivery charge ,tax,VAT on delivery
