@@ -2056,7 +2056,7 @@ class ModelToolExportImport extends Model
         }
         $log->write("exists ");
         $log->write("incremental");
-        if ($exists && $incremental) {
+        if ($exists && $incremental && 1!=1) {//dont want to delete existing data,so insert, if only product_id not available.
             //delete product_description product_tag product_to_category
 
             $sql = 'DELETE FROM `'.DB_PREFIX."product_description` WHERE `product_id` = '".$product_id."';\n";
@@ -2162,11 +2162,11 @@ class ModelToolExportImport extends Model
                 $this->db->query($sql);
             }
         } else {
-            $existsByModel = $this->db->query('select * from '.DB_PREFIX.'product where model="'.$model.'"');
+            // $existsByModel = $this->db->query('select * from '.DB_PREFIX.'product where model="'.$model.'"');
 
-            if ($existsByModel->num_rows) {
-                // return 0;
-            }
+            // if ($existsByModel->num_rows) {
+            //     // return 0;
+            // }
 
             $sql = 'INSERT INTO `'.DB_PREFIX.'product` SET '
                 ."product_id='".$product_id."', "

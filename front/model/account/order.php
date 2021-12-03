@@ -1785,7 +1785,39 @@ class ModelAccountOrder extends Model {
     }
 
     public function getPezeshaloans() {
-        $pezesha_loans = $this->db->query('SELECT p.loan_id,p.order_id,p.customer_id,o.total,p.loan_type,p.created_at FROM ' . DB_PREFIX . "customer_pezesha_loans p join " . DB_PREFIX . "order o on p.order_id = o.order_id WHERE p.customer_id = " . $this->customer->getId() . " ORDER BY p.id DESC");
+
+        $s_users = [];
+        $sub_users_od = [];
+        $parent_user_id = NULL;
+        $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $this->customer->getId() . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+        $order_approval_access_user = $order_approval_access->row;
+
+        if (is_array($order_approval_access_user) && count($order_approval_access_user) > 0) {
+            //$log->write('order_approval_access_user');
+            //$log->write($order_approval_access_user);
+            //$log->write('order_approval_access_user');
+            $parent_user_id = $order_approval_access_user['parent'];
+        }
+
+        if ($parent_user_id != NULL) {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $parent_user_id . "'");
+            $sub_users = $sub_users_query->rows;
+            //$log->write('SUB USERS ORDERS');
+            //$log->write($sub_users);
+            //$log->write('SUB USERS ORDERS');
+            $s_users = array_column($sub_users, 'customer_id');
+            array_push($s_users, $order_approval_access_user['parent']);
+            $sub_users_od = implode(',', $s_users);
+        } else {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $this->customer->getId() . "'");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
+
+            array_push($s_users, $this->customer->getId());
+            $sub_users_od = implode(',', $s_users);
+        }
+
+        $pezesha_loans = $this->db->query('SELECT p.loan_id,p.order_id,p.customer_id,o.total,p.loan_type,p.created_at FROM ' . DB_PREFIX . "customer_pezesha_loans p join " . DB_PREFIX . "order o on p.order_id = o.order_id WHERE p.customer_id IN (" . $sub_users_od . ") ORDER BY p.id DESC");
         return $pezesha_loans->rows;
     }
 

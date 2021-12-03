@@ -1771,6 +1771,9 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
     public function getPezeshaReceivedPayments() {
         $log = new Log('error.log');
+        $log->write('CRONTAB');
+        $log->write(date('d-m-y h:i:sa'));
+        $log->write('CRONTAB');
         $auth_response = $this->load->controller('payment/pezesha/auth');
         $this->load->model('pezesha/pezeshaloanreceivables');
         $pezesha_loan_details = $this->model_pezesha_pezeshaloanreceivables->getPezeshaReceivables();
