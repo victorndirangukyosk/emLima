@@ -606,6 +606,58 @@
         <div class="main-content">
             <table class="products-table">
                 <thead class="font-bold">
+                    <tr><td>ORDER ID</td>
+                        <td>
+                            <?= '#'.$order['order_id']?>   
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            ORDER STATUS
+                        </td>
+                        <td>
+                            <?= $order['status']['name']?>   
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            DATE OF DELIVERY
+                        </td>
+                        <td>
+                            <?= $order['delivery_date']?>   
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            DELIVERY TIMESLOT
+                        </td>
+                        <td colspan="2" class="text-right">
+                            <?= $order['delivery_timeslot']?>      
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            COMPANY NAME
+                        </td>
+                        <td>
+                            <?= $order['customer_company_name']?>        
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            DELIVERY LOCATION
+                        </td>
+                        <td>
+                            <?= $order['shipping_address']?>        
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            <table class="products-table">
+                <thead class="font-bold">
                     <tr>
                         <td>SKU</td>
                         <td>Product</td>
