@@ -4984,6 +4984,7 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('tool/image');
 
         $this->load->model('setting/setting');
+        $this->load->model('localisation/order_status');
 
         $data['orders'] = [];
 
@@ -5236,7 +5237,8 @@ class ControllerSaleOrder extends Controller {
                     'account_manager_name' => $customer_account_manager_first_last_name,
                     'account_manager_phone' => $customer_account_manager_phone,
                     'customer_experience_first_last_name' => $customer_experience_first_last_name,
-                    'customer_experince_phone' => $customer_experince_phone
+                    'customer_experince_phone' => $customer_experince_phone,
+                    'status' => $this->model_localisation_order_status->getOrderStatus($order_info['order_status_id'])
                 ];
             }
         }

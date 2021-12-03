@@ -35,7 +35,7 @@
                                     ORDER STATUS
                                 </td>
                                 <td colspan="2" class="text-right">
-                                 <?= '#'.$order['order_id']?>   
+                                 <?= $order['status']['name']?>   
                                 </td>
                             </tr>
                             <tr>
