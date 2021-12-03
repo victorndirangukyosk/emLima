@@ -695,4 +695,19 @@ class ModelSaleOrder extends Model
     }
 
 
+    public function getVehicleLatLng($vehicle_number=0) {
+       
+        
+        $sql = "SELECT vehicle_number, latitude,longitude,speed FROM `".DB_PREFIX.'amitruck_vehicle` ';
+
+        if (isset($vehicle_number) && $vehicle_number>0) {            
+                $sql .= ' WHERE vehicle_number= '.$vehicle_number;          
+        }  
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+
 }
