@@ -690,8 +690,15 @@ class ModelSaleOrder extends Model
 
     public function addVehicleLatLng($vehicle_number,$latitude,$longitude,$speed) {
         $sql = "SELECT  vehicle_number FROM `".DB_PREFIX."amitruck_vehicle` where vehicle_number='" . $this->db->escape($vehicle_number) . "'";  
+       
+        // echo $sql;die;
         $query = $this->db->query($sql);
-        if($query->rows>0){
+        // echo "<pre>";print_r($query->rows['vehicle_number']>0);die;
+
+        if($query->rows['vehicle_number']){
+        //     $sql='INSERT INTO ' . DB_PREFIX . "amitruck_vehicle SET vehicle_number = '" . $this->db->escape($vehicle_number) . "', latitude = '" . $this->db->escape($latitude) . "', longitude = '" . $this->db->escape($longitude) . "', speed = '" . ($speed) . "', date_added = NOW()";
+        // echo $sql;die;
+            
         $this->db->query('UPDATE ' . DB_PREFIX . "amitruck_vehicle SET   latitude = '" . $this->db->escape($latitude) . "', longitude = '" . $this->db->escape($longitude) . "', speed = '" . ($speed) . "', date_added = NOW() where vehicle_number = '". $this->db->escape($vehicle_number)."'");
         }
         else{
