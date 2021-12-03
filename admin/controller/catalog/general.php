@@ -170,6 +170,9 @@ class ControllerCatalogGeneral extends Controller {
             if (isset($this->request->get['filter_price'])) {
                 $url .= '&filter_price=' . $this->request->get['filter_price'];
             }
+            if (isset($this->request->get['filter_category'])) {
+                $url .= '&filter_category=' . $this->request->get['filter_category'];
+            }
 
             if (isset($this->request->get['filter_quantity'])) {
                 $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
@@ -240,6 +243,11 @@ class ControllerCatalogGeneral extends Controller {
                 $url .= '&filter_price=' . $this->request->get['filter_price'];
             }
 
+            if (isset($this->request->get['filter_category'])) {
+                $url .= '&filter_category=' . $this->request->get['filter_category'];
+            }
+
+
             if (isset($this->request->get['filter_quantity'])) {
                 $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
             }
@@ -300,6 +308,10 @@ class ControllerCatalogGeneral extends Controller {
 
             if (isset($this->request->get['filter_price'])) {
                 $url .= '&filter_price=' . $this->request->get['filter_price'];
+            }
+
+            if (isset($this->request->get['filter_category'])) {
+                $url .= '&filter_category=' . $this->request->get['filter_category'];
             }
 
             if (isset($this->request->get['filter_quantity'])) {
@@ -415,6 +427,10 @@ class ControllerCatalogGeneral extends Controller {
 
         if (isset($this->request->get['filter_price'])) {
             $url .= '&filter_price=' . $this->request->get['filter_price'];
+        }
+
+        if (isset($this->request->get['filter_category'])) {
+            $url .= '&filter_category=' . $this->request->get['filter_category'];
         }
 
         if (isset($this->request->get['filter_quantity'])) {
@@ -586,6 +602,8 @@ class ControllerCatalogGeneral extends Controller {
 
         $url = '';
 
+        
+
         if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
@@ -602,6 +620,10 @@ class ControllerCatalogGeneral extends Controller {
             $url .= '&filter_product_id_to=' . urlencode(html_entity_decode($this->request->get['filter_product_id_to'], ENT_QUOTES, 'UTF-8'));
         }
 
+
+        if (isset($this->request->get['filter_category'])) {
+            $url .= '&filter_category=' . $this->request->get['filter_category'];
+        }
         if (isset($this->request->get['filter_price'])) {
             $url .= '&filter_price=' . $this->request->get['filter_price'];
         }
@@ -655,6 +677,10 @@ class ControllerCatalogGeneral extends Controller {
 
         if (isset($this->request->get['filter_price'])) {
             $url .= '&filter_price=' . $this->request->get['filter_price'];
+        }
+
+        if (isset($this->request->get['filter_category'])) {
+            $url .= '&filter_category=' . $this->request->get['filter_category'];
         }
 
         if (isset($this->request->get['filter_quantity'])) {
@@ -821,6 +847,19 @@ class ControllerCatalogGeneral extends Controller {
         if (isset($this->request->get['filter_product_id_to'])) {
             $url .= '&filter_product_id_to=' . urlencode(html_entity_decode($this->request->get['filter_product_id_to'], ENT_QUOTES, 'UTF-8'));
         }
+
+
+        if (isset($this->request->get['filter_category'])) {
+            $url .= '&filter_category=' . $this->request->get['filter_category'];
+        }
+        
+        if (isset($this->request->get['filter_price'])) {
+            $url .= '&filter_price=' . $this->request->get['filter_price'];
+        }
+        if (isset($this->request->get['filter_quantity'])) {
+            $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        }
+        
 
         if (isset($this->request->get['filter_status'])) {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
