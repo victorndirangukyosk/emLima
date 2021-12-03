@@ -688,7 +688,7 @@ class ModelSaleOrder extends Model
         return $query->row['CustomersCount'];
     }
 
-    public function addVehicleLatLng($vehicle_number,$latitude,$longitude) {
+    public function addVehicleLatLng($vehicle_number,$latitude,$longitude,$speed) {
         $sql = "SELECT  vehicle_number FROM `".DB_PREFIX."amitruck_vehicle` where vehicle_number='" . $this->db->escape($vehicle_number) . "'";  
         $query = $this->db->query($sql);
         if($query->rows>0){
