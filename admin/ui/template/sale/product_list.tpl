@@ -622,57 +622,8 @@
                         <td class="text-center"><?= $product['quantity'] ?> <?= $product['unit'] ?></td>
                     </tr>
                     <?php } ?>
-
-                    <?php foreach($totals as $total) { ?>
-                    <tr class="font-bold text-right">
-                        <td colspan="4">
-                            <?= $total['title'] ?>
-                        </td>
-                        <td>
-                            <?= $total['text'] ?>
-                        </td>
-                    </tr>
-                    <?php } ?>
                 </tbody>
             </table>
-
-            <p class="mt-4">
-                <?php foreach($totals as $total) { ?>
-                <?php if($total['title'] == 'Total') { ?>
-                <span class="font-bold">Total In Words</span>
-                <?= $total['amount_in_words']?>
-                <?php } ?>
-                <?php } ?>
-            </p>
-
-            <div class="row mt-4">
-                <div class="payment-details">
-                    <p class="text-subheader font-bold mb-2">BANK TRANSFER</p>
-                    <ul class="text-left">
-                        <li>Beneficiary Name: KWIKBASKET SOLUTIONS LIMITED</li>
-                        <li>Account Currency: KES</li>
-                        <li>Account Number: 0100006985957</li>
-                        <li>Bank Name: STANBIC BANK KENYA LTD</li>
-                        <li>Sort Code: 31007</li>
-                        <li>Branch: Chiromo Road, Nairobi</li>
-                        <li>SWIFT Code: SBICKENX</li>
-                    </ul>
-                </div>
-                <div class="payment-details">
-                    <p class="text-subheader font-bold mb-2 text-right">LIPA NA MPESA</p>
-                    <ul class="text-right">
-                        <li>Go to the M-PESA Menu</li>
-                        <li>Select Lipa Na M-PESA</li>
-                        <li>Select Pay Bill</li>
-                        <li>Enter <span class="font-bold">4029127</span></li>
-                        <li>Enter <span class="font-bold">KB
-                                <?= $order_id ?>
-                            </span> as the account number</li>
-                        <li>Enter total amount</li>
-                        <li>Enter M-PESA Pin</li>
-                    </ul>
-                </div>
-            </div>
         </div>
         <?php } ?>
     </body>
