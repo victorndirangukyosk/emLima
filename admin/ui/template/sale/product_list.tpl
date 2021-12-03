@@ -20,17 +20,61 @@
             <td>
                 <div class="content">
                     <div class="container">
-                        <div class="row mb-2">
-                            <div class="col-md-4">
-                             
-
-                            </div>
-
-                            <div class="col-md-4 offset-md-4 text-right">
-                               
-                            </div>
-                        </div>
-
+                        <table class="payment-details-table mt-4">
+                            <thead>
+                            <tr>
+                                <td colspan="2" class="text-left">
+                                    ORDER ID
+                                </td>
+                                <td colspan="2" class="text-right">
+                                 <?= '#'.$order['order_id']?>   
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-left">
+                                    ORDER STATUS
+                                </td>
+                                <td colspan="2" class="text-right">
+                                 <?= '#'.$order['order_id']?>   
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-left">
+                                    DATE OF DELIVERY
+                                </td>
+                                <td colspan="2" class="text-right">
+                                 <?= $order['delivery_date']?>   
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-left">
+                                    DELIVERY TIMESLOT
+                                </td>
+                                <td colspan="2" class="text-right">
+                                <?= $order['delivery_timeslot']?>      
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-left">
+                                    COMPANY NAME
+                                </td>
+                                <td colspan="2" class="text-right">
+                                 <?= $order['customer_company_name']?>        
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-left">
+                                    DELIVERY LOCATION
+                                </td>
+                                <td colspan="2" class="text-right">
+                                 <?= $order['shipping_address']?>        
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            
+                            </tbody>
+                        </table>
                         <table class="datatable">
                             <thead class="datatable-header">
                             <tr>
@@ -38,8 +82,6 @@
                                 <td>Product</td>
                                 <td>Product Notes</td>
                                 <td class="text-center">Quantity</td>
-                                <td class="text-right">Unit Price</td>
-                                <td class="text-right">Total</td>
                             </tr>
                             </thead>
                             <tbody class="datatable-content">
@@ -49,24 +91,19 @@
                                 <td><?= $product['name'] ?></td>
                                 <td><?= $product['product_note'] ?></td>
                                 <td class="text-center"><?= $product['quantity'] ?> <?= $product['unit'] ?></td>
-                                <td class="text-right"><?= $product['price'] ?></td>
-                                <td class="text-right"><?= $product['total'] ?></td>
                             </tr>
                             <?php } ?>
                             </tbody>
                         </table>
+                        <div class="mt-4">
+                            <h5><strong>Order Notes </strong></h5>
+                            <p><?= $order['comment']?></p>
+                        </div>
                     </div>
                 </div>
             </td>
         </tr>
         </tbody>
-        <tfoot class="page-footer">
-        <tr>
-            <td>
-                <div class="footer-space">&nbsp;</div>
-            </td>
-        </tr>
-        </tfoot>
     </table>
 </div>
 
