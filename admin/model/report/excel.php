@@ -1849,7 +1849,7 @@ class ModelReportExcel extends Model {
             set_time_limit(1800);
 
             $objPHPExcel = new PHPExcel();
-            $objPHPExcel->getProperties()->setTitle('Orders Report')->setDescription('none');
+            $objPHPExcel->getProperties()->setTitle('Orders Sheet')->setDescription('none');
             $objPHPExcel->setActiveSheetIndex(0);
 
             // Field names in the first row
@@ -1871,7 +1871,7 @@ class ModelReportExcel extends Model {
 
             //Company name, address
             $objPHPExcel->getActiveSheet()->mergeCells('A1:E2');
-            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Orders Report');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Orders Sheet');
             $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
@@ -1928,7 +1928,7 @@ class ModelReportExcel extends Model {
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-            header('Content-Disposition: attachment;filename="orders_report.xlsx"');
+            header('Content-Disposition: attachment;filename="orders_sheet.xlsx"');
             header('Cache-Control: max-age=0');
             $objWriter->save('php://output');
             exit;
