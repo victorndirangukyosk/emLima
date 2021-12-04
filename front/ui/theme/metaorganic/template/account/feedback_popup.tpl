@@ -123,8 +123,8 @@
 <div class="v34_53" style="cursor:pointer"> 
 <a  class="v34_52" data-dismiss="modal" aria-label="Close" >Will do later</a>
 </div>
-<div class="v30_20" style="cursor:pointer" onclick="saveFeedback()";><span class="v30_21">Submit</span>
-</div>
+<button class="v30_20" id="btnsavefeedback" onclick="saveFeedback()";><span  class="v30_21">Submit</span>
+</button>
 </div>
 
                                 </div>
@@ -417,6 +417,7 @@ align-items: flex-start;
 padding: 5px 0px;
 
 position: static;
+width: fit-content;
  
 left: 128px;
 top: 0px;
@@ -716,6 +717,8 @@ emoji5.style.fill='#F3D02F';
 
 function saveFeedback()
 {
+  $('#btnsavefeedback').addClass('disabled');
+  
   var feedback_type=$('input[name="feedback_type"]').val();
   var rating_id=  $('input[name="rating_id"]').val();
   var comments= document.getElementById("comments").value; 
@@ -727,19 +730,29 @@ function saveFeedback()
      if(rating_id=="")
    {
      alert("Please select the overall shopping experience");
+     $('#btnsavefeedback').removeClass('disabled');
      return;
    }
     if(feedback_type=="")
    {
      alert("Please select the respective tile");
+          $('#btnsavefeedback').removeClass('disabled');
+
+
      return;
    }
    if(comments=="")
    {
      alert("Please provide comments");
+         $('#btnsavefeedback').removeClass('disabled');
+
+
      return;
    }
     $("#feedbackModal").modal('hide');
+         $('#btnsavefeedback').removeClass('disabled');
+
+
 
     var redirectURL = '<?php echo $base; ?>';
       iziToast.success({

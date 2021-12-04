@@ -219,7 +219,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Wallet Payment'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Wallet Payment', 'Pezesha'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -295,7 +295,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Wallet Payment'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Wallet Payment', 'Pezesha'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -367,7 +367,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Wallet Payment'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Wallet Payment', 'Pezesha'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];
@@ -415,7 +415,7 @@ class Controlleraccounttransactions extends Controller {
         $order_total = $this->model_account_order->getTotalOrders();
 
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Wallet Payment'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Wallet Payment', 'Pezesha'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];

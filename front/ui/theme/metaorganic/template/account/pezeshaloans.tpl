@@ -14,6 +14,7 @@
                             <th class="order_id">Order Total</th>
                             <th class="order_id">Loan Type</th>
                             <th class="order_id">Order Date</th>
+                            <th class="order_id">Action</th>
                         </tr>
                     </thead>
                     <tbody id="loans_body">
@@ -27,6 +28,24 @@
     </div>                        
 </div>
 <?php echo $footer; ?>
+<div class="editAddressModal">
+    <div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="row">
+                        <div class="col-md-12">
+                        <h2>Pezesha Loan Details </h2></div>
+                        <div class="edit-address-form-panel">
+                            <!-- Edit form here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="<?= $base?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
@@ -161,6 +180,7 @@
                 tr.append("<td class='amount'>" + displayRecords[i].total + "</td>");
                 tr.append("<td class='amount'>" + displayRecords[i].loan_type + "</td>");
                 tr.append("<td class='order_id'>" + displayRecords[i].created_at + "</td>");
+                tr.append("<td><a class='btn btn-default' onclick='viewloan(" + displayRecords[i].order_id + ")'>View</a></td>");
                 $('#loans_body').append(tr);
             }
         }
@@ -178,6 +198,33 @@
             });
         }
 });
+function viewloan(orderId) {
+console.log(orderId); 
+$.ajax({
+                url: 'index.php?path=payment/pezesha/loanstatus',
+                type: 'post',
+                data: {
+                    order_id: orderId
+                },
+                dataType: 'json',
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                success: function (json) {
+                    $('#editAddressModal').modal('toggle');
+                    $('.edit-address-form-panel').html(json['html']);
+                    console.log("json");
+                    console.log(json);
+                    return true;
+                }, error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    return false;
+                }
+});
+}
 </script>
 </body>
 </html>

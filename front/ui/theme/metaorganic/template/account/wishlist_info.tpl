@@ -52,6 +52,8 @@
 
 
                                                         <p class="product-info"><span class="small-info"><?php echo $product['unit']; ?></span>
+                                                         
+                                                        <span class="small-info"><?php echo $product['product_note']; ?></span>
                                                         </p>
                                                         <?php if(!$product['is_from_active_store'] || $product['status'] == 0 || $product['category_price_status'] == 0) { ?>
                                                         <span class="badge badge-danger">
@@ -446,9 +448,19 @@
                 success: function (json) {
                     console.log(json);
 
-                    setTimeout(function () {
-                        window.location.reload(false);
-                    }, 1000);
+                    //setTimeout(function () {
+                     //   window.location.reload(false);
+                   // }, 1000);
+
+                   if (json.location != null && json.status == 'success') {
+                        console.log(json.location);
+                        var timer = setTimeout(function () {
+                            window.location.href = json.location;
+                        }, 1000);
+                        return false;
+                        //location = json.redirect;
+                        //location = location;
+                    }
                 }
             });
         }

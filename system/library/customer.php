@@ -17,6 +17,7 @@ class Customer {
     private $email_notification;
     private $payment_terms;
     private $customer_category;
+    private $customer_parent;
     private $pezesha_customer_id;
     private $pezesha_customer_uuid;
     private $pezesha_identifier;
@@ -34,6 +35,7 @@ class Customer {
 
                 /* SET CUSTOMER CATEGORY */
                 if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                    $this->customer_parent = $customer_query->row['parent'];
                     $parent_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($customer_query->row['parent']) . "' AND status = '1' AND approved='1'");
                     if ($customer_query->num_rows > 0 && $parent_customer_query->row['customer_id'] > 0) {
                         $this->customer_category = $parent_customer_query->row['customer_category'];
@@ -44,6 +46,7 @@ class Customer {
 
                 if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
                     $this->customer_category = $customer_query->row['customer_category'];
+                    $this->customer_parent = $customer_query->row['parent'];
                 }
                 /* SET CUSTOMER CATEGORY */
 
@@ -109,6 +112,7 @@ class Customer {
 
             /* SET CUSTOMER CATEGORY */
             if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                $this->customer_parent = $customer_query->row['parent'];
                 $parent_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($customer_query->row['parent']) . "' AND status = '1' AND approved='1'");
                 if ($customer_query->num_rows > 0 && $parent_customer_query->row['customer_id'] > 0) {
                     $this->customer_category = $parent_customer_query->row['customer_category'];
@@ -118,6 +122,7 @@ class Customer {
             }
 
             if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
+                $this->customer_parent = $customer_query->row['parent'];
                 $this->customer_category = $customer_query->row['customer_category'];
             }
             /* SET CUSTOMER CATEGORY */
@@ -203,6 +208,7 @@ class Customer {
 
             /* SET CUSTOMER CATEGORY */
             if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                $this->customer_parent = $customer_query->row['parent'];
                 $parent_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($customer_query->row['parent']) . "' AND status = '1' AND approved='1'");
                 if ($customer_query->num_rows > 0 && $parent_customer_query->row['customer_id'] > 0) {
                     $this->customer_category = $parent_customer_query->row['customer_category'];
@@ -212,6 +218,7 @@ class Customer {
             }
 
             if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
+                $this->customer_parent = $customer_query->row['parent'];
                 $this->customer_category = $customer_query->row['customer_category'];
             }
             /* SET CUSTOMER CATEGORY */
@@ -301,6 +308,7 @@ class Customer {
         $this->email_notification = '';
         $this->payment_terms = '';
         $this->customer_category = '';
+        $this->customer_parent = '';
         $this->pezesha_customer_id = '';
         $this->pezesha_customer_uuid = '';
         $this->pezesha_identifier = '';
@@ -382,6 +390,10 @@ class Customer {
         return $this->customer_category;
     }
 
+    public function getCustomerParent() {
+        return $this->customer_parent;
+    }
+
     public function getCustomerPezeshaId() {
         return $this->pezesha_customer_id;
     }
@@ -410,6 +422,7 @@ class Customer {
         $this->email_notification = $data['email_notification'];
         $this->payment_terms = $data['payment_terms'];
         $this->customer_category = $data['customer_category'];
+        $this->customer_parent = $data['customer_parent'];
         $this->pezesha_customer_id = $data['pezesha_customer_id'];
         $this->pezesha_customer_uuid = $data['pezesha_customer_uuid'];
         $this->pezesha_identifier = $data['pezesha_identifier'];

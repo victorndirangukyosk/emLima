@@ -50,7 +50,7 @@ class ControllerApiCustomerTransactions extends Controller {
             $page = 1;
         }
         $results_orders = $this->model_account_order->getOrders(($page - 1) * 10, 10, $NoLimit = true);
-        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal'];
+        $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Pezesha'];
         $statusCancelledFilter = ['Cancelled'];
         $statusSucessFilter = ['Delivered', 'Partially Delivered'];
         $statusPendingFilter = ['Cancelled', 'Delivered', 'Refunded', 'Returned', 'Partially Delivered'];

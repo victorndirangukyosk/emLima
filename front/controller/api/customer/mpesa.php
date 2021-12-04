@@ -315,6 +315,7 @@ class ControllerApiCustomerMpesa extends Controller {
 
             http_response_code(400);
         }
+        $log = new Log('error.log');
         $log->write('MpesaCheckout json');
         $log->write($json);
         $log->write('MpesaCheckout json');

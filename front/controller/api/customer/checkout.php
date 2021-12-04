@@ -1467,19 +1467,19 @@ class ControllerApiCustomerCheckout extends Controller {
             $data = [];
 
             $rangeonestart = "09:00:00";
-            $rangeoneend = "17:00:00";
+            $rangeoneend = "18:59:59";
 
-            $rangetwostart = "17:00:00";
-            $rangetwoend = "22:00:00";
+            $rangetwostart = "19:00:00";
+            $rangetwoend = "21:59:59";
 
             $rangethreestart = "22:00:00";
             $rangethreeend = "23:59:59";
 
             $rangefourstart = "00:00:00";
-            $rangefourend = "05:00:00";
+            $rangefourend = "08:59:59";
 
-            $rangefivestart = "05:00:00";
-            $rangefiveend = "09:00:00";
+            $rangefivestart = "09:00:00";
+            $rangefiveend = "12:00:00";
 
             $log = new Log('error.log');
             $log->write('RANGE');
@@ -1501,9 +1501,8 @@ class ControllerApiCustomerCheckout extends Controller {
             }
 
             if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
-                $pre_defined_slots = array('08:00am - 10:00am', '10:00am - 12:00pm');
-                //$selected_slot = $pre_defined_slots[0];
-                $selected_slot = $pre_defined_slots[array_rand($pre_defined_slots)];
+                $pre_defined_slots = array('08:00am - 10:00am');
+                $selected_slot = $pre_defined_slots[0];
                 $data['selected_slot'] = $selected_slot;
                 $data['disabled_slot'] = array('06:00am - 08:00am');
                 $data['selected_date_slot'] = $next_day;
@@ -1511,7 +1510,7 @@ class ControllerApiCustomerCheckout extends Controller {
             }
 
             if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
-                $pre_defined_slots = array('12:00pm - 02:00pm');
+                $pre_defined_slots = array('10:00am - 12:00pm');
                 $selected_slot = $pre_defined_slots[0];
                 $data['selected_slot'] = $selected_slot;
                 $data['selected_date_slot'] = $next_day;
@@ -1520,20 +1519,20 @@ class ControllerApiCustomerCheckout extends Controller {
             }
 
             if (time() >= strtotime($rangefourstart) && time() <= strtotime($rangefourend)) {
-                $pre_defined_slots = array('12:00pm - 02:00pm');
-                $selected_slot = $pre_defined_slots[0];
-                $data['selected_slot'] = $selected_slot;
-                $data['selected_date_slot'] = date('d-m-Y');
-                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am');
-                $log->write('RANGE FOUR');
-            }
-
-            if (time() >= strtotime($rangefivestart) && time() <= strtotime($rangefiveend)) {
                 $pre_defined_slots = array('02:00pm - 04:00pm');
                 $selected_slot = $pre_defined_slots[0];
                 $data['selected_slot'] = $selected_slot;
                 $data['selected_date_slot'] = date('d-m-Y');
-                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '12:00pm - 02:00pm');
+                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm');
+                $log->write('RANGE FOUR');
+            }
+
+            if (time() >= strtotime($rangefivestart) && time() <= strtotime($rangefiveend)) {
+                $pre_defined_slots = array('04:00pm - 06:00pm');
+                $selected_slot = $pre_defined_slots[0];
+                $data['selected_slot'] = $selected_slot;
+                $data['selected_date_slot'] = date('d-m-Y');
+                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm', '02:00pm - 04:00pm');
                 $log->write('RANGE FIVE');
             }
 

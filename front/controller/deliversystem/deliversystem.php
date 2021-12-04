@@ -1674,17 +1674,155 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
     public function pezeshacallback() {
 
+        $this->load->model('pezesha/pezeshaloanreceivables');
         $postData = file_get_contents('php://input');
 
         $log = new Log('error.log');
         $log->write('pezesha_call_back');
         $log->write($postData);
 
-        $file = fopen('system/log/pezesha.txt', 'w+'); //url fopen should be allowed for this to occur
-        if (false === fwrite($file, $postData)) {
+        $file = fopen('system/log/pezesha_' . date('Y-m-d') . '.txt', 'a+'); //url fopen should be allowed for this to occur
+        if (false === fwrite($file, date('Y-m-d H:i:s') . ': ' . $postData . "\n")) {
             fwrite('Error: no data written');
         }
         fclose($file);
+        $postData = json_decode($postData, true);
+        $log = new Log('error.log');
+        $log->write($postData);
+        if ($this->validate($postData)) {
+            $orders = $postData['order_id'];
+            foreach ($orders as $order) {
+                $postData['order'] = $order;
+                $this->model_pezesha_pezeshaloanreceivables->loanmpesadetails($postData);
+            }
+            $json['status'] = 200;
+            $json['success'] = 1;
+            $json['message'] = 'Loan Details Saved Successfull!';
+        } else {
+            $log->write('ERROR');
+            $json['status'] = 400;
+            $json['success'] = 0;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    protected function validate($data) {
+        if (!isset($data['order_id']) || !is_array($data['order_id']) || (is_array($data['order_id']) && count($data['order_id']) <= 0)) {
+            $this->error['order_id'] = 'Order Id Is Required!';
+        }
+
+        if (isset($data['order_id']) && is_array($data['order_id']) && count($data['order_id']) > 0) {
+            $log = new Log('error.log');
+            $this->load->model('pezesha/pezeshaloanreceivables');
+            $unable_to_find = NULL;
+            foreach ($data['order_id'] as $order_id) {
+                $pezesha_loan_details = $this->model_pezesha_pezeshaloanreceivables->findPezeshaLoanById($order_id);
+                if (count($pezesha_loan_details) == 0) {
+                    $unable_to_find .= ' #' . $order_id;
+                }
+            }
+        }
+
+        if ($unable_to_find != NULL) {
+            $this->error['order_id'] = 'Invalid Order Ids(' . $unable_to_find . ')';
+        }
+
+        if (!isset($data['type']) || $data['type'] == NULL) {
+            $this->error['type'] = 'Loan Type Is Required!';
+        }
+
+        if (!isset($data['merchant_id']) || $data['merchant_id'] == NULL) {
+            $this->error['merchant_id'] = 'Merchant ID Is Required!';
+        }
+
+        if (!isset($data['pezesha_id']) || $data['pezesha_id'] == NULL) {
+            $this->error['pezesha_id'] = 'Pezesha ID Is Required!';
+        }
+
+        if (!isset($data['loan_id']) || $data['loan_id'] == NULL) {
+            $this->error['loan_id'] = 'Loan ID Is Required!';
+        }
+
+        if (!isset($data['amount']) || $data['amount'] <= 0 || $data['amount'] == NULL) {
+            $this->error['loan_id'] = 'Loan ID Is Required!';
+        }
+
+        if (!isset($data['account']) || $data['account'] == NULL) {
+            $this->error['account'] = 'National ID Is Required!';
+        }
+
+        if (!isset($data['mpesa_reference']) || $data['mpesa_reference'] == NULL) {
+            $this->error['mpesa_reference'] = 'Mpesa Reference Is Required!';
+        }
+
+        if (!isset($data['transaction_date']) || $data['transaction_date'] == NULL) {
+            $this->error['transaction_date'] = 'Transaction Date Is Required!';
+        }
+
+        return !$this->error;
+    }
+
+    public function getPezeshaReceivedPayments() {
+        $log = new Log('error.log');
+        $log->write('CRONTAB');
+        $log->write(date('d-m-y h:i:sa'));
+        $log->write('CRONTAB');
+        $auth_response = $this->load->controller('payment/pezesha/auth');
+        $this->load->model('pezesha/pezeshaloanreceivables');
+        $pezesha_loan_details = $this->model_pezesha_pezeshaloanreceivables->getPezeshaReceivables();
+
+        $transactions_details = array();
+        foreach ($pezesha_loan_details as $pezesha_loan_detail) {
+            $tr = NULL;
+            $tr['transaction_id'] = $pezesha_loan_detail['mpesa_reference'];
+            $tr['merchant_id'] = $pezesha_loan_detail['merchant_id'];
+            $tr['face_amount'] = $pezesha_loan_detail['amount'];
+            $tr['transaction_time'] = $pezesha_loan_detail['transaction_date'];
+            $category = array('key' => 'category', 'value' => 'Fresh Produce');
+            $location = array('key' => 'location', 'value' => $pezesha_loan_detail['shipping_address']);
+            $tr['other_details'][] = $category;
+            $tr['other_details'][] = $location;
+            $transactions_details[] = $tr;
+        }
+
+        /* $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($transactions_details)); */
+
+        $body = array('channel' => $this->config->get('pezesha_channel'), 'transactions' => $transactions_details);
+        //$body = http_build_query($body);
+        $body = json_encode($body);
+        $log->write($body);
+        $curl = curl_init();
+        if ($this->config->get('pezesha_environment') == 'live') {
+            curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1.1/data');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+        } else {
+            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1.1/data');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+
+        $log->write($result);
+        curl_close($curl);
+        $result = json_decode($result, true);
+        $log->write($result);
+        $json = $result;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        return $json;
     }
 
 }

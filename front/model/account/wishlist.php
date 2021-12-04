@@ -42,6 +42,8 @@ class ModelAccountWishList extends Model
                     'name' => $wishlist['name'],
                     'image' => $image,
                     'unit' => $wishlist['unit'],
+                    'product_note' => $wishlist['product_note'],
+
                     //for priice add here
                 ];
 
@@ -214,15 +216,18 @@ class ModelAccountWishList extends Model
         return true;
     }
 
-    public function addProductToWishlistWithQuantity($wishlist_id, $product_id, $quantity)
+    public function addProductToWishlistWithQuantity($wishlist_id, $product_id, $quantity,$product_note='')
     {
         $query1 = $this->db->query('Select COUNT(*) AS total from `'.DB_PREFIX.'wishlist_products` where wishlist_id = '.(int) $wishlist_id.' and product_id ='.$product_id);
         if ($query1->row['total'] > 0) {
             //$query = $this->db->query("UPDATE  `" . DB_PREFIX . "wishlist_products` set quantity = " . (int) $quantity ." where wishlist_id ='".$wishlist_id."'" );
-
+            if($product_note!=""){
+            $query = $this->db->query('UPDATE `'.DB_PREFIX.'wishlist_products`  SET quantity = '.$quantity.",product_note ='".$product_note."' WHERE wishlist_id = '".$wishlist_id."' and product_id = ".$product_id);
+            }else{
             $query = $this->db->query('UPDATE `'.DB_PREFIX.'wishlist_products`  SET quantity = '.$quantity." WHERE wishlist_id = '".$wishlist_id."' and product_id = ".$product_id);
+            }
         } else {
-            $query = $this->db->query('INSERT into `'.DB_PREFIX.'wishlist_products` set wishlist_id = '.(int) $wishlist_id.",product_id ='".$product_id."',quantity = ".$quantity.'');
+            $query = $this->db->query('INSERT into `'.DB_PREFIX.'wishlist_products` set wishlist_id = '.(int) $wishlist_id.",product_id ='".$product_id."',product_note ='".$product_note."',quantity = ".$quantity.'');
         }
         //return $query;
         return true;
