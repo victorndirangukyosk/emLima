@@ -254,7 +254,7 @@ class Controlleraccounttransactions extends Controller {
         }
         $this->load->model('account/credit');
         $totalWalletAmount = $this->model_account_credit->getTotalAmount();
-        //  echo "<pre>";print_r($data['success_transactions']);die;
+        //  echo "<pre>";print_r($data['pending_transactions']);die;
         $data['total_pending_amount'] = $totalPendingAmount;
         $data['total_wallet_amount'] = $totalWalletAmount;
         // $data['total_wallet_amount'] = $this->currency->format($totalWalletAmount);

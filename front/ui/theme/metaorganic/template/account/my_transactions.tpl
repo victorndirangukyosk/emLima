@@ -523,14 +523,65 @@
 
             if (radioValue == 'pay_full') {
 
-                var val = $("input[name=pending_order_id]").val();
-            var total = $("input[name=total_pending_amount]").val();
-            if(total>total_wallet_amount)
-            {
-                    alert("Insufficient wallet balance.Please try other options");
+                var val = $("input[name='pending_order_id']").val();
+                console.log(val);
+                var total = $("input[name=total_pending_amount]").val();
+                console.log(total);
+                console.log(total_wallet_amount);
+
+            if(parseFloat(total)>parseFloat(total_wallet_amount))
+            {       var txtInsufficient="Total Order Amount : "+ total+ "\nWallet Amount : "+ total_wallet_amount+"\nInsufficient wallet balance.Please try other options";
+                    alert(txtInsufficient);
                     return false;
             }
-            }else if (radioValue == 'pay_selected_order') {
+            else
+            {
+                  var walletDeductionConfirm = confirm("Are you sure to pay from wallet ?");
+                    if (walletDeductionConfirm == true) {
+            
+                        $.ajax({
+                        url: 'index.php?path=account/transactions/wallet',
+                        type: 'post',
+                        data: {
+                            order_id: val,
+                            amount: total,
+                            payment_type: radioValue
+                        },
+                        dataType: 'json',
+                        cache: false,
+                        async: false,
+                        beforeSend: function () {
+                        $('#pay-confirm-order-wallet').html('Loading Please Wait....');
+                        },
+                        complete: function () {
+                        },
+                        success: function (json) {
+                            console.log(json);
+                            if (json['error']) {
+                                alert(json['error']);
+                                return false;
+                            }
+                            else
+                            {
+                                alert(json['success']);
+                            }
+                            $('#pay-confirm-order-wallet').html('');
+                        
+                            location=location;
+                        }, error: function (xhr, ajaxOptions, thrownError) {
+                            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                            return false;
+                        }
+                    });
+
+                } else {
+                    //txt = "You pressed Cancel!";
+                    //alert('');
+                }
+
+                }
+            }
+            else if (radioValue == 'pay_selected_order') {
                 
             var checkedNum = $('input[name="order_id_selected[]"]:checked').length;
             console.log(checkedNum);
@@ -548,24 +599,27 @@
                     total += amount[i] << 0;
                 }
                 console.log(total);
-            }
-            if (val.length == 0 || amount.length == 0) {
+
+
+                  if (val.length == 0 || amount.length == 0) {
                 $("input:radio").removeAttr("checked");
                 alert('Please select atleast one order!');
                 return false;
             }
             else
             {
-                        if(total>total_wallet_amount)
+                        if(parseFloat(total)>parseFloat(total_wallet_amount))
                     {
-                            alert("Insufficient wallet balance.Please try other options");
+                            var txtInsufficient="Total Order Amount : "+ total+ "\nWallet Amount : "+ total_wallet_amount+"\nInsufficient wallet balance.Please try other options";
+                    alert(txtInsufficient);
+                    
+                    // alert("Insufficient wallet balance.Please try other options");
                             return false;
                 
                     }
-            }
-            } 
-
-            var walletDeductionConfirm = confirm("Are you sure to pay from wallet ?");
+                    else
+                    {
+                          var walletDeductionConfirm = confirm("Are you sure to pay from wallet ?");
             if (walletDeductionConfirm == true) {
             
                 $.ajax({
@@ -607,6 +661,14 @@
             //txt = "You pressed Cancel!";
             //alert('');
             }
+                    }
+            }
+
+            }
+          
+            } 
+
+          
          
 
     }
