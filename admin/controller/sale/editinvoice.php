@@ -370,16 +370,17 @@ class ControllerSaleEditinvoice extends Controller {
             foreach ($datas['products'] as $p_id_key => $updateProduct) {
                 $updateProduct['store_id'] = $store_id;
                 $updateProduct['vendor_id'] = $vendor_id;
+                $custom_price = $updateProduct['price'];
 
                 if (is_numeric($p_id_key)) {
                     $updateProduct_tax_total = NULL;
                     //echo "<pre>";print_r($datas['products']);die;
-                    $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category);
+                    $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category, $custom_price);
                     $products = $this->model_sale_order->updateOrderProduct($order_id, $p_id_key, $updateProduct, $updateProduct_tax_total);
                 } else {
                     $updateProduct_tax_total = NULL;
                     //echo "<pre>";print_r($updateProduct);die;
-                    $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category);
+                    $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category, $custom_price);
                     $products = $this->model_sale_order->updateOrderNewProduct($order_id, $updateProduct['product_id'], $updateProduct, $updateProduct_tax_total);
                 }
 
@@ -391,7 +392,7 @@ class ControllerSaleEditinvoice extends Controller {
             $subTotal = $sumTotal;
 
             //$log->write("tax_total start ");
-            $tax_total = $this->model_tool_image->getTaxTotal($tempProds, $store_id, $pricing_category);
+            $tax_total = $this->model_tool_image->getTaxTotal($tempProds, $store_id, $pricing_category, $custom_price);
 
             //echo "<pre>";print_r($tax_total);die;
 
