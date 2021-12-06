@@ -79,7 +79,9 @@
                                         updateControls(addressComponents);
                                     },
                                     oninitialized: function (component) {
+                                        var addressComponentss = $(component).locationpicker('map').location;
                                         var addressComponents = $(component).locationpicker('map').location.addressComponents;
+                                        console.log(addressComponentss);
                                         updateControls(addressComponents);
                                     },
                                     inputBinding: {
