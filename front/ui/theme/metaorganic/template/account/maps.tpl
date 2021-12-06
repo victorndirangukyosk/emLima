@@ -62,8 +62,8 @@
                             <script>
                                 $('#us3').locationpicker({
                                     location: {
-                                        latitude: 46.15242437752303,
-                                        longitude: 2.7470703125
+                                        latitude: -1.2799559,
+                                        longitude: 36.7702275
                                     },
                                     radius: 300,
                                     inputBinding: {
