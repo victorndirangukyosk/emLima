@@ -68,7 +68,7 @@
                                     {
                                         if (status == google.maps.GeocoderStatus.OK)
                                         {
-                                        console.log(results);   
+                                        console.log(results[0].formatted_address);   
                                         } else {
                                             alert('Geocode was not successful for the following reason: ' + status);
                                         }
