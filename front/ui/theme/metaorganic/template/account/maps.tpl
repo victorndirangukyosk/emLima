@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src='https://maps.googleapis.com/maps/api/js?key=AIzaSyCiMBCIxWmuh1TVf4u6xJzYZS_xhFe04so&libraries=places'></script>
+        <script type="text/javascript" src='https://maps.google.com/maps/api/js?key=AIzaSyCiMBCIxWmuh1TVf4u6xJzYZS_xhFe04so&sensor=false&libraries=places'></script>
         <script src="<?= $base?>front/ui/theme/mvgv2/maps/locationpicker.jquery.min.js"></script>
         <title>Simple example</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,20 +60,6 @@
                             </div>
                             <div class="clearfix"></div>
                             <script>
-                                function codeAddress(lat, lng)
-                                {
-                                    var latlng = { lat: lat, lng: lng };
-                                    var geocoder = new google.maps.Geocoder;
-                                    geocoder.geocode({ 'location': latlng }, function (results, status)
-                                    {
-                                        if (status == google.maps.GeocoderStatus.OK)
-                                        {
-                                        console.log(results[0].formatted_address);   
-                                        } else {
-                                            alert('Geocode was not successful for the following reason: ' + status);
-                                        }
-                                    });
-                                }
                                 function updateControls(addressComponents) {
                                     console.log(addressComponents.addressLine1);
                                     console.log(addressComponents.city);
@@ -88,9 +74,11 @@
                                     },
                                     radius: 300,
                                     onchanged: function (currentLocation, radius, isMarkerDropped) {
+                                        console.log(currentLocation);
+                                        console.log(radius);
+                                        console.log(isMarkerDropped);
                                         var addressComponents = $(this).locationpicker('map').location.addressComponents;
                                         updateControls(addressComponents);
-                                        codeAddress(currentLocation.latitude, currentLocation.longitude);
                                     },
                                     oninitialized: function (component) {
                                         var addressComponents = $(component).locationpicker('map').location.addressComponents;
