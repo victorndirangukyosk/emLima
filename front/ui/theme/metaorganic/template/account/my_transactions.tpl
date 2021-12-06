@@ -545,7 +545,8 @@
                         data: {
                             order_id: val,
                             amount: total,
-                            payment_type: radioValue
+                            payment_type: radioValue,
+                            wallet_amount:total_wallet_amount
                         },
                         dataType: 'json',
                         cache: false,
@@ -628,7 +629,8 @@
                 data: {
                     order_id: val,
                     amount: total,
-                    payment_type: radioValue
+                    payment_type: radioValue,
+                            wallet_amount:total_wallet_amount
                 },
                 dataType: 'json',
                 cache: false,
