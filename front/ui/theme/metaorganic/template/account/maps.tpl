@@ -73,7 +73,7 @@
                                         locationNameInput: $('#us3-address')
                                     },
                                     enableAutocomplete: true,
-                                    markerIcon: 'http://www.iconsdb.com/icons/preview/tropical-blue/map-marker-2-xl.png'
+                                    markerIcon: '<?= $base?>front/ui/theme/mvgv2/maps/marker.png'
                                 });
                                 $('#us6-dialog').on('shown.bs.modal', function () {
                                     $('#us3').locationpicker('autosize');

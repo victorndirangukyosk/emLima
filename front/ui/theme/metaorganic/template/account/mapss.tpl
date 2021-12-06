@@ -30,7 +30,7 @@
 $('#somecomponent').locationpicker({
 	location: {latitude: 46.15242437752303, longitude: 2.7470703125},
 	radius: 300,
-        markerIcon: 'http://www.iconsdb.com/icons/preview/tropical-blue/map-marker-2-xl.png'
+        markerIcon: '<?= $base?>front/ui/theme/mvgv2/maps/marker.png'
 });
 &lt;/script&gt;
                 </pre>
@@ -44,7 +44,7 @@ $('#somecomponent').locationpicker({
                             longitude: 2.7470703125
                         },
                         radius: 300,
-                        markerIcon: 'http://www.iconsdb.com/icons/preview/tropical-blue/map-marker-2-xl.png'
+                        markerIcon: '<?= $base?>front/ui/theme/mvgv2/maps/marker.png'
 
                     });
                 </script>
