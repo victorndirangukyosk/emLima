@@ -805,6 +805,7 @@ function showConfirmPopup($order_id,$order_value) {
     { 
     
         $('#paidModal-message').html('');
+        $('#paid-button').addClass('disabled');
         $('#paidModal-success-message').html('');
         var transactionid = $('input[name="transaction_id"]').val();
         var amountreceived = 0;
@@ -821,6 +822,8 @@ function showConfirmPopup($order_id,$order_value) {
         {
                     
             $('#paidModal-message').html("Please enter data");
+        $('#paid-button').removeClass('disabled');
+
             return false;
         } 
         if(orde_id == -1)
@@ -837,7 +840,10 @@ function showConfirmPopup($order_id,$order_value) {
                     //doc = "OK was pressed.";
                     //go to below Ajax call and add balance to customer wallet
                 } 
-                else { return; } 
+                else { 
+        $('#paid-button').removeClass('disabled');
+                    
+                    return; } 
             }
             if(amountreceived<grand_total)
             {
@@ -847,7 +853,9 @@ function showConfirmPopup($order_id,$order_value) {
                     //doc = "OK was pressed.";
                     //go to below Ajax call
                 } 
-                else { return; }  
+                else { 
+        $('#paid-button').removeClass('disabled');
+                    return; }  
             }
 
 
@@ -860,6 +868,8 @@ function showConfirmPopup($order_id,$order_value) {
             if(selected_order_id=='' || selected_order_id==null)
             {
                 alert("Please Select the order");
+        $('#paid-button').removeClass('disabled');
+
                 return;
             }
 
@@ -877,11 +887,12 @@ function showConfirmPopup($order_id,$order_value) {
                     $('#paidModal-success-message').html(' Saved Successfully');
                     setTimeout(function() {
                             location=location;
-                        }, 1000);
+                        }, 500);
                             
                 }
                 else    {
                             $('#paidModal-success-message').html('Please try again');
+        $('#paid-button').removeClass('disabled');
                             
                         }
                 },
@@ -889,6 +900,7 @@ function showConfirmPopup($order_id,$order_value) {
 
                                     // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
                                     $('#paidModal-message').html("Please try again");
+        $('#paid-button').removeClass('disabled');
                                         return false;
                                     }
                     });             
@@ -909,17 +921,21 @@ function showConfirmPopup($order_id,$order_value) {
                         $('#paidModal-success-message').html(' Saved Successfully');
                             setTimeout(function() {
                             location=location;
-                            }, 1000);
+                            }, 500);
                             
                         }
                         else {
                                 $('#paidModal-success-message').html('Please try again');
+        $('#paid-button').removeClass('disabled');
+
                             }
                         },
                         error: function(xhr, ajaxOptions, thrownError) {    
 
                                     // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
                                     $('#paidModal-message').html("Please try again");
+        $('#paid-button').removeClass('disabled');
+
                                         return false;
                                     }
                     });

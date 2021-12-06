@@ -697,6 +697,8 @@ class ControllerSaleOrderReceivables extends Controller
                     $order_any_selected=0;
                     foreach($orders as $order)
                     {
+                        if($order !='on')
+                        {
                         $order_any_selected=$order;//any order in the selection can be tken, to get customer
                     $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id);
                     // Add to activity log
@@ -711,9 +713,10 @@ class ControllerSaleOrderReceivables extends Controller
                     $log->write('order transaction id added');
                     $this->model_user_user_activity->addActivity('order_transaction_id_added', $activity_data);
                     $log->write('order transaction id added');
+                        }
                     
                     }
-                    //  echo '<pre>';print_r($order_any_selected);exit;
+                    //   echo '<pre>';print_r($order_any_selected);exit;
 
                     //get customer id
                     $this->load->model('sale/customer');

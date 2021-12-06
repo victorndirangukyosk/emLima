@@ -1807,7 +1807,7 @@ class ControllerApiCustomerOrder extends Controller {
 
                         $payment_text = sprintf($this->language->get('text_cod_delivered'), $data['total']);
 
-                        break;
+                        break; 
                     }
                 }
 
@@ -1815,7 +1815,7 @@ class ControllerApiCustomerOrder extends Controller {
                     $payment_text = sprintf($this->language->get('text_cod_not_delivered'), $data['total']);
                 }
 
-                if ('cod' != $order_info['payment_code']) {
+                if ('cod' != $order_info['payment_code'] && 'mod' != $order_info['payment_code']) {
                     $payment_text = sprintf($this->language->get('text_online_paid'), $data['total']);
                 }
 
