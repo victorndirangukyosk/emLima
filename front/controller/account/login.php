@@ -1535,7 +1535,7 @@ class ControllerAccountLogin extends Controller {
     
     public function mapss() {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/maps.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/maps.tpl'));
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/mapss.tpl'));
         }
     }
 
