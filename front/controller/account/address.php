@@ -1,12 +1,11 @@
 
 <?php
 
-class ControllerAccountAddress extends Controller
-{
+class ControllerAccountAddress extends Controller {
+
     private $error = [];
 
-    public function index()
-    {
+    public function index() {
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
 
@@ -26,8 +25,7 @@ class ControllerAccountAddress extends Controller
         $this->getList();
     }
 
-    public function addInAddressBookFromAccount()
-    {
+    public function addInAddressBookFromAccount() {
         $data = $this->request->post;
 
         $log = new Log('error.log');
@@ -53,14 +51,13 @@ class ControllerAccountAddress extends Controller
                 $zipcode_exists = $this->model_account_address->zipcodeExists($data['zipcode']);
             }
 
-            if(isset($data['isdefault_address']))//if true then field will come or else not come
-            {
-                $data['default']=1;
+            if (isset($data['isdefault_address'])) {//if true then field will come or else not come
+                $data['default'] = 1;
             }
-            
+
             /*
-                get city_id from zipcode
-            */
+              get city_id from zipcode
+             */
             if (count($zipcode_exists) > 0) {
                 //$data['city_id'] = $data['shipping_city_id'];
                 $data['city_id'] = 0;
@@ -82,21 +79,21 @@ class ControllerAccountAddress extends Controller
                 $data['landmark'] = isset($data['modal_address_locality']) ? $data['modal_address_locality'] : '';
 
                 //$data['address'] = $data['modal_address_flat'].", ".$data['building_name'].", ".$data['modal_address_locality'];
-                $data['address'] = $data['modal_address_flat'].', '.$data['modal_address_locality'];
+                $data['address'] = $data['modal_address_flat'] . ', ' . $data['modal_address_locality'];
 
-                $mapAddress = $data['building_name'].' '.$data['zipcode'];
+                $mapAddress = $data['building_name'] . ' ' . $data['zipcode'];
 
-                /*$correctAddress = $this->model_account_address->addressCheck($mapAddress);
-                if($correctAddress['status'])
-                {
-                    $data['lat'] = $correctAddress['lat'];
-                    $data['lng'] = $correctAddress['lng'];
+                /* $correctAddress = $this->model_account_address->addressCheck($mapAddress);
+                  if($correctAddress['status'])
+                  {
+                  $data['lat'] = $correctAddress['lat'];
+                  $data['lng'] = $correctAddress['lng'];
 
-                    $save = true;
-                    $address_id = $this->model_account_address->addAddress($data);
-                } else {
-                    $msg = $this->language->get('text_addree_not_found');
-                }*/
+                  $save = true;
+                  $address_id = $this->model_account_address->addAddress($data);
+                  } else {
+                  $msg = $this->language->get('text_addree_not_found');
+                  } */
 
                 if ($this->config->get('config_address_check')) {
                     $correctAddress['lat'] = isset($data['latitude']) ? $data['latitude'] : null;
@@ -116,7 +113,7 @@ class ControllerAccountAddress extends Controller
                         $data['lng'] = $correctAddress['lng'];
 
                         if ('autosuggestion' == $this->config->get('config_store_location')) {
-                            $addressTmp = $this->getZipcode($data['lat'].','.$data['lng']);
+                            $addressTmp = $this->getZipcode($data['lat'] . ',' . $data['lng']);
 
                             //$data['zipcode'] = $addressTmp?$addressTmp:'';
 
@@ -166,12 +163,12 @@ class ControllerAccountAddress extends Controller
                 'city' => $result['city'],
                 'zipcode' => $result['zipcode'],
                 'address_type' => $result['address_type'],
-                'update' => $this->url->link('account/address/edit', 'address_id='.$result['address_id'], 'SSL'),
-                'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL'),
+                'update' => $this->url->link('account/address/edit', 'address_id=' . $result['address_id'], 'SSL'),
+                'delete' => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], 'SSL'),
             ];
         }
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/account-address-panel.tpl')) {
-            $html = $this->load->view($this->config->get('config_template').'/template/checkout/account-address-panel.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/account-address-panel.tpl')) {
+            $html = $this->load->view($this->config->get('config_template') . '/template/checkout/account-address-panel.tpl', $data);
         } else {
             $html = $this->load->view('default/template/checkout/account-address-panel.tpl', $data);
         }
@@ -182,8 +179,7 @@ class ControllerAccountAddress extends Controller
         }
     }
 
-    public function add()
-    {
+    public function add() {
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
 
@@ -211,7 +207,7 @@ class ControllerAccountAddress extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             ];
 
             $this->model_account_activity->addActivity('address_add', $activity_data);
@@ -222,8 +218,7 @@ class ControllerAccountAddress extends Controller
         $this->getForm();
     }
 
-    public function edit()
-    {
+    public function edit() {
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
 
@@ -267,7 +262,7 @@ class ControllerAccountAddress extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             ];
 
             $this->model_account_activity->addActivity('address_edit', $activity_data);
@@ -278,8 +273,7 @@ class ControllerAccountAddress extends Controller
         $this->getForm();
     }
 
-    public function delete()
-    {
+    public function delete() {
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
 
@@ -309,7 +303,7 @@ class ControllerAccountAddress extends Controller
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             ];
 
             $this->model_account_activity->addActivity('address_delete', $activity_data);
@@ -320,8 +314,7 @@ class ControllerAccountAddress extends Controller
         $this->getList();
     }
 
-    protected function getList()
-    {
+    protected function getList() {
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),
             'href' => $this->url->link('common/home'),
@@ -342,7 +335,7 @@ class ControllerAccountAddress extends Controller
 
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         $data['detect_location'] = $this->language->get('detect_location');
         $data['text_locating'] = $this->language->get('text_locating');
@@ -374,8 +367,8 @@ class ControllerAccountAddress extends Controller
         $data['text_flat_house_office'] = $this->language->get('text_flat_house_office');
         $data['text_stree_society_office'] = $this->language->get('text_stree_society_office');
 
-        /*$data['latitude'] = 46.15242437752303;
-        $data['longitude'] = 2.7470703125;*/
+        /* $data['latitude'] = 46.15242437752303;
+          $data['longitude'] = 2.7470703125; */
         $data['latitude'] = null;
         $data['longitude'] = null;
 
@@ -416,8 +409,8 @@ class ControllerAccountAddress extends Controller
                 'city' => $result['city'],
                 'zipcode' => $result['zipcode'],
                 'address_type' => $result['address_type'],
-                'update' => $this->url->link('account/address/edit', 'address_id='.$result['address_id'], 'SSL'),
-                'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL'),
+                'update' => $this->url->link('account/address/edit', 'address_id=' . $result['address_id'], 'SSL'),
+                'delete' => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], 'SSL'),
             ];
         }
 
@@ -457,15 +450,14 @@ class ControllerAccountAddress extends Controller
         $data['header'] = $this->load->controller('common/header/information');
 
         //echo "<pre>";print_r($data['addresses']);die;
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/address_list.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/address_list.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/address_list.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/address_list.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/address_list.tpl', $data));
         }
     }
 
-    protected function getForm()
-    {
+    protected function getForm() {
         $data['breadcrumbs'] = [];
 
         $data['breadcrumbs'][] = [
@@ -491,14 +483,14 @@ class ControllerAccountAddress extends Controller
         } else {
             $data['breadcrumbs'][] = [
                 'text' => $this->language->get('text_edit_address'),
-                'href' => $this->url->link('account/address/edit', 'address_id='.$this->request->get['address_id'], 'SSL'),
+                'href' => $this->url->link('account/address/edit', 'address_id=' . $this->request->get['address_id'], 'SSL'),
             ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         $data['detect_location'] = $this->language->get('detect_location');
         $data['text_locating'] = $this->language->get('text_locating');
@@ -605,7 +597,7 @@ class ControllerAccountAddress extends Controller
         if (!isset($this->request->get['address_id'])) {
             $data['action'] = $this->url->link('account/address/add', '', 'SSL');
         } else {
-            $data['action'] = $this->url->link('account/address/edit', 'address_id='.$this->request->get['address_id'], 'SSL');
+            $data['action'] = $this->url->link('account/address/edit', 'address_id=' . $this->request->get['address_id'], 'SSL');
         }
 
         if (isset($this->request->get['address_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
@@ -640,7 +632,7 @@ class ControllerAccountAddress extends Controller
             $data['city_id'] = $this->request->post['city_id'];
         } elseif (!empty($address_info)) {
             $data['city_id'] = $address_info['city_id'];
-        //$data['city_id'] = $this->getSelectedCity($address_info['city_id']);
+            //$data['city_id'] = $this->getSelectedCity($address_info['city_id']);
         } else {
             $data['city_id'] = '';
         }
@@ -671,14 +663,14 @@ class ControllerAccountAddress extends Controller
 
         if (isset($this->request->post['zipcode'])) {
             $data['zipcode'] = $this->request->post['zipcode'];
-        //$data['zipcode'] = $this->getZipcodesOfCity($data['city_id'],$this->request->post['zipcode']);
+            //$data['zipcode'] = $this->getZipcodesOfCity($data['city_id'],$this->request->post['zipcode']);
         } elseif (!empty($address_info)) {
             $data['zipcode'] = $this->getZipcodesOfCity($data['city_id'], $address_info['zipcode']);
 
-        //$data['zipcode'] = $address_info['zipcode'];
+            //$data['zipcode'] = $address_info['zipcode'];
         } else {
             $json = '<select name="zipcode" id="zipcode" class="form-control">';
-            $json .= '<option selected value="">'.$data['text_select_city_first'].'</option>';
+            $json .= '<option selected value="">' . $data['text_select_city_first'] . '</option>';
             $json .= '</select>';
 
             $data['zipcode'] = $json;
@@ -714,15 +706,14 @@ class ControllerAccountAddress extends Controller
         $data['header'] = $this->load->controller('common/header/information');
 
         //echo "<pre>";print_r($data);die;
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/address_form.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/address_form.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/address_form.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/address_form.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/address_form.tpl', $data));
         }
     }
 
-    protected function validateForm()
-    {
+    protected function validateForm() {
         if ((utf8_strlen(trim($this->request->post['name'])) < 1) || (utf8_strlen(trim($this->request->post['name'])) > 32)) {
             $this->error['name'] = $this->language->get('error_name');
         }
@@ -739,9 +730,9 @@ class ControllerAccountAddress extends Controller
             $this->error['error_city_id'] = $this->language->get('error_city_id');
         }
 
-        /*if (empty($this->request->post['building_name'])) {
-            $this->error['error_building_name'] = $this->language->get('error_building_name');
-        }*/
+        /* if (empty($this->request->post['building_name'])) {
+          $this->error['error_building_name'] = $this->language->get('error_building_name');
+          } */
 
         if (empty($this->request->post['flat_number'])) {
             $this->error['error_flat_number'] = $this->language->get('error_flat_number');
@@ -754,21 +745,19 @@ class ControllerAccountAddress extends Controller
         return !$this->error;
     }
 
-    protected function validateDelete()
-    {
-        /*if ($this->model_account_address->getTotalAddresses() == 1) {
-            $this->error['warning'] = $this->language->get('error_delete');
-        }*/
+    protected function validateDelete() {
+        /* if ($this->model_account_address->getTotalAddresses() == 1) {
+          $this->error['warning'] = $this->language->get('error_delete');
+          } */
 
-        /*if ($this->customer->getAddressId() == $this->request->get['address_id']) {
-            $this->error['warning'] = $this->language->get('error_default');
-        }*/
+        /* if ($this->customer->getAddressId() == $this->request->get['address_id']) {
+          $this->error['warning'] = $this->language->get('error_default');
+          } */
 
         return !$this->error;
     }
 
-    public function getZipcodes()
-    {
+    public function getZipcodes() {
         if (isset($this->request->get['city_id'])) {
             $city_id = $this->request->get['city_id'];
         } else {
@@ -782,14 +771,13 @@ class ControllerAccountAddress extends Controller
         $json = '<select name="zipcode" id="zipcode" class="form-control">';
 
         foreach ($zipcodes as $zipcode) {
-            $json .= '<option value='.$zipcode['zipcode'].'>'.$zipcode['zipcode'].'</option>';
+            $json .= '<option value=' . $zipcode['zipcode'] . '>' . $zipcode['zipcode'] . '</option>';
         }
         $json .= '</select>';
         echo $json;
     }
 
-    public function getZipcodesOfCity($city_id, $select)
-    {
+    public function getZipcodesOfCity($city_id, $select) {
         $this->load->model('account/address');
 
         $zipcodes = $this->model_account_address->getAllZipcodeByCity($city_id);
@@ -798,18 +786,17 @@ class ControllerAccountAddress extends Controller
 
         foreach ($zipcodes as $zipcode) {
             if ($zipcode['zipcode'] == $select) {
-                $json .= '<option selected value='.$zipcode['zipcode'].'>'.$zipcode['zipcode'].'</option>';
+                $json .= '<option selected value=' . $zipcode['zipcode'] . '>' . $zipcode['zipcode'] . '</option>';
             } else {
-                $json .= '<option value='.$zipcode['zipcode'].'>'.$zipcode['zipcode'].'</option>';
+                $json .= '<option value=' . $zipcode['zipcode'] . '>' . $zipcode['zipcode'] . '</option>';
             }
         }
         $json .= '</select>';
 
-        return  $json;
+        return $json;
     }
 
-    public function getAddress($address_id)
-    {
+    public function getAddress($address_id) {
         $this->load->model('account/address');
 
         $address_name = '';
@@ -818,7 +805,7 @@ class ControllerAccountAddress extends Controller
 
         $data = $this->model_account_address->getAddress($data['address_id']);
 
-         // echo "<pre>";print_r($data);die;
+        // echo "<pre>";print_r($data);die;
         if (isset($data)) {
             $address_name = $data['landmark'];
         }
@@ -866,8 +853,8 @@ class ControllerAccountAddress extends Controller
         $log = new Log('error.log');
         $log->write($data);
         //echo "<pre>";print_r($data);die;
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/edit_address_form.tpl')) {
-            $html = $this->load->view($this->config->get('config_template').'/template/checkout/edit_address_form.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/edit_address_form.tpl')) {
+            $html = $this->load->view($this->config->get('config_template') . '/template/checkout/edit_address_form.tpl', $data);
         } else {
             $html = $this->load->view('default/template/checkout/edit_address_form.tpl', $data);
         }
@@ -875,8 +862,7 @@ class ControllerAccountAddress extends Controller
         echo json_encode(['status' => 1, 'latitude' => $data['latitude'], 'longitude' => $data['longitude'], 'address_id' => $address_id, 'address_name' => $address_name, 'html' => $html, 'redirect' => $this->url->link('checkout/checkout')]);
     }
 
-    public function editAddress()
-    {
+    public function editAddress() {
         $data = $this->request->post;
 
         $log = new Log('error.log');
@@ -907,36 +893,35 @@ class ControllerAccountAddress extends Controller
             $data['landmark'] = isset($data['edit_modal_address_locality']) ? $data['edit_modal_address_locality'] : '';
 
             //$data['address'] = $data['edit_modal_address_flat'].", ".$data['building_name'].", ".$data['edit_modal_address_locality'];
-            $data['address'] = $data['edit_modal_address_flat'].', '.$data['edit_modal_address_locality'];
+            $data['address'] = $data['edit_modal_address_flat'] . ', ' . $data['edit_modal_address_locality'];
 
-            $mapAddress = $data['building_name'].' '.$data['zipcode'];
+            $mapAddress = $data['building_name'] . ' ' . $data['zipcode'];
 
-            /*if($this->config->get('config_address_check')) {
-                $correctAddress = $this->model_account_address->addressCheck($mapAddress,$data['zipcode']);
-                if($correctAddress['status'])
-                {
-                    $data['lat'] = $correctAddress['lat'];
-                    $data['lng'] = $correctAddress['lng'];
+            /* if($this->config->get('config_address_check')) {
+              $correctAddress = $this->model_account_address->addressCheck($mapAddress,$data['zipcode']);
+              if($correctAddress['status'])
+              {
+              $data['lat'] = $correctAddress['lat'];
+              $data['lng'] = $correctAddress['lng'];
 
-                    $save = true;
-                    $address_id = $this->model_account_address->editAddress($data['address_id'],$data);
-                } else {
-                    $msg = $this->language->get('text_addree_not_found');
-                }
-            } else {
-                $data['lat'] = '';
-                $data['lng'] = '';
+              $save = true;
+              $address_id = $this->model_account_address->editAddress($data['address_id'],$data);
+              } else {
+              $msg = $this->language->get('text_addree_not_found');
+              }
+              } else {
+              $data['lat'] = '';
+              $data['lng'] = '';
 
-                $save = true;
-                $address_id = $this->model_account_address->editAddress($data['address_id'],$data);
-            }*/
+              $save = true;
+              $address_id = $this->model_account_address->editAddress($data['address_id'],$data);
+              } */
 
 
-            if(isset($data['isdefault_address']))//if true then field will come or else not come
-            {
-                $data['default']=1;
+            if (isset($data['isdefault_address'])) {//if true then field will come or else not come
+                $data['default'] = 1;
             }
-            
+
             if ($this->config->get('config_address_check')) {
                 $correctAddress['lat'] = isset($data['latitude']) ? $data['latitude'] : null;
                 $correctAddress['lng'] = isset($data['longitude']) ? $data['longitude'] : null;
@@ -997,13 +982,13 @@ class ControllerAccountAddress extends Controller
                 'city' => $result['city'],
                 'zipcode' => $result['zipcode'],
                 'address_type' => $result['address_type'],
-                'update' => $this->url->link('account/address/edit', 'address_id='.$result['address_id'], 'SSL'),
-                'delete' => $this->url->link('account/address/delete', 'address_id='.$result['address_id'], 'SSL'),
+                'update' => $this->url->link('account/address/edit', 'address_id=' . $result['address_id'], 'SSL'),
+                'delete' => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], 'SSL'),
             ];
         }
 
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/account-address-panel.tpl')) {
-            $html = $this->load->view($this->config->get('config_template').'/template/checkout/account-address-panel.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/account-address-panel.tpl')) {
+            $html = $this->load->view($this->config->get('config_template') . '/template/checkout/account-address-panel.tpl', $data);
         } else {
             $html = $this->load->view('default/template/checkout/account-address-panel.tpl', $data);
         }
@@ -1014,22 +999,21 @@ class ControllerAccountAddress extends Controller
             echo json_encode(['status' => 0, 'message' => $msg, 'html' => $html, 'redirect' => $this->url->link('checkout/checkout')]);
         }
 
-        /*echo json_encode(array('status'=>1,'address_id' => $address_id,'html' => $html,'redirect' => $this->url->link('checkout/checkout')));*/
+        /* echo json_encode(array('status'=>1,'address_id' => $address_id,'html' => $html,'redirect' => $this->url->link('checkout/checkout'))); */
     }
 
-    public function getZipcode($address)
-    {
+    public function getZipcode($address) {
         if (!empty($address)) {
             //Formatted address
             $formattedAddr = str_replace(' ', '+', $address);
             //Send request and receive json data by address
 
-            $url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
+            $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . $formattedAddr . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
 
             $headers = [
-                     'Cache-Control: no-cache', ];
+                'Cache-Control: no-cache',];
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1045,12 +1029,12 @@ class ControllerAccountAddress extends Controller
             $latitude = $output1->results[0]->geometry->location->lat;
             $longitude = $output1->results[0]->geometry->location->lng;
 
-            $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$latitude.','.$longitude.'&sensor=false&key='.$this->config->get('config_google_server_api_key');
+            $url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' . $latitude . ',' . $longitude . '&sensor=false&key=' . $this->config->get('config_google_server_api_key');
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
 
             $headers = [
-                     'Cache-Control: no-cache', ];
+                'Cache-Control: no-cache',];
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1079,4 +1063,11 @@ class ControllerAccountAddress extends Controller
             return false;
         }
     }
+
+    public function maps() {
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/maps.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/maps.tpl'));
+        }
+    }
+
 }
