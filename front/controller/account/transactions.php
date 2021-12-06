@@ -934,8 +934,17 @@ class Controlleraccounttransactions extends Controller {
             }
             $log = new Log('error.log');
             $log->write('Transaction screen-Wallet deduction for orders ');
-            // echo '<pre>';print_r($this->request->post['order_id']);exit;
+            // echo '<pre>';print_r($this->request->post);
+            // echo '<pre>';print_r($this->request->post['wallet_amount']);exit;
             //wallet amount check is doing in tpl screen itself
+            $amountcheck=(float)($this->request->post['amount']);
+            $walletcheck=(float)($this->request->post['wallet_amount']);
+
+            //  echo '<pre>';print_r($walletcheck);exit;
+
+
+            if( $amountcheck<=($walletcheck))
+            {
             foreach ($this->request->post['order_id'] as $key => $value) {
                 $log->write($value);
                 $order_id = $value;
@@ -957,6 +966,12 @@ class Controlleraccounttransactions extends Controller {
                 $this->model_account_activity->addActivity('login', $activity_data);
             }
             $json['success'] = "Transactions successfully updated!";
+            }
+            else {
+                $json['success'] = "Wallet Amount not sufficient!";
+
+            }
+
         } catch (exception $ex) {
             $json['error'] = "Transaction Failed";
             $log = new Log('error.log');
