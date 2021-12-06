@@ -61,6 +61,7 @@
                             <div class="clearfix"></div>
                             <script>
                                 function updateControls(addressComponents) {
+                                    console.log(addressComponents);
                                     console.log(addressComponents.addressLine1);
                                     console.log(addressComponents.city);
                                     console.log(addressComponents.stateOrProvince);
