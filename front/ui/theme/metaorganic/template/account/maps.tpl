@@ -60,8 +60,20 @@
                             </div>
                             <div class="clearfix"></div>
                             <script>
+                                function codeAddress(lat, lng)
+                                {
+                                    var latlng = { lat: lat, lng: lng };
+                                    geocoder.geocode({ 'location': latlng }, function (results, status)
+                                    {
+                                        if (status == google.maps.GeocoderStatus.OK)
+                                        {
+                                            
+                                        } else {
+                                            alert('Geocode was not successful for the following reason: ' + status);
+                                        }
+                                    });
+                                }
                                 function updateControls(addressComponents) {
-                                    console.log(addressComponents);
                                     console.log(addressComponents.addressLine1);
                                     console.log(addressComponents.city);
                                     console.log(addressComponents.stateOrProvince);
@@ -77,11 +89,10 @@
                                     onchanged: function (currentLocation, radius, isMarkerDropped) {
                                         var addressComponents = $(this).locationpicker('map').location.addressComponents;
                                         updateControls(addressComponents);
+                                        codeAddress(currentLocation.latitude, currentLocation.longitude);
                                     },
                                     oninitialized: function (component) {
-                                        var addressComponentss = $(component).locationpicker('map').location;
                                         var addressComponents = $(component).locationpicker('map').location.addressComponents;
-                                        console.log(addressComponentss);
                                         updateControls(addressComponents);
                                     },
                                     inputBinding: {
