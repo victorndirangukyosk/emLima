@@ -63,6 +63,7 @@
                                 function codeAddress(lat, lng)
                                 {
                                     var latlng = { lat: lat, lng: lng };
+                                    var geocoder = new google.maps.Geocoder;
                                     geocoder.geocode({ 'location': latlng }, function (results, status)
                                     {
                                         if (status == google.maps.GeocoderStatus.OK)
