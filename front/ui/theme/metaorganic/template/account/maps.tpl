@@ -60,12 +60,27 @@
                             </div>
                             <div class="clearfix"></div>
                             <script>
+                                function updateControls(addressComponents) {
+                                    console.log(addressComponents.addressLine1);
+                                    console.log(addressComponents.city);
+                                    console.log(addressComponents.stateOrProvince);
+                                    console.log(addressComponents.postalCode);
+                                    console.log(addressComponents.country);
+                                }
                                 $('#us3').locationpicker({
                                     location: {
                                         latitude: -1.2799559,
                                         longitude: 36.7702275
                                     },
                                     radius: 300,
+                                    onchanged: function (currentLocation, radius, isMarkerDropped) {
+                                        var addressComponents = $(this).locationpicker('map').location.addressComponents;
+                                        updateControls(addressComponents);
+                                    },
+                                    oninitialized: function (component) {
+                                        var addressComponents = $(component).locationpicker('map').location.addressComponents;
+                                        updateControls(addressComponents);
+                                    },
                                     inputBinding: {
                                         latitudeInput: $('#us3-lat'),
                                         longitudeInput: $('#us3-lon'),
