@@ -91,6 +91,9 @@
                                         locationNameInput: $('#us3-address')
                                     },
                                     enableAutocomplete: true,
+                                    autocompleteOptions: {
+                                    componentRestrictions: { country: 'ke' }
+                                    },
                                     markerIcon: '<?= $base?>front/ui/theme/mvgv2/maps/marker.png'
                                 });
                                 $('#us6-dialog').on('shown.bs.modal', function () {
