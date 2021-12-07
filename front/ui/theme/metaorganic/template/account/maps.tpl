@@ -60,20 +60,15 @@
                             </div>
                             <div class="clearfix"></div>
                             <script>
-                                function getFullAddress(lat, lang) {
-                                    console.log(lat+' '+lang);
-                                    $.ajax({
-                                        url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng=44.4647452,7.3553838&key=AIzaSyCiMBCIxWmuh1TVf4u6xJzYZS_xhFe04so',
-                                        type: 'get',
-                                        dataType: 'json',
-                                        beforeSend: function () {
-                                        },
-                                        complete: function () {
-                                        },
-                                        success: function (json) {
-                                        console.log(json);    
-                                        }
-                                    });
+                                function getLocation() {
+                                    var latdegrees = 40.2298;
+                                    var londegrees = -41.88754;
+                                    var url = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCiMBCIxWmuh1TVf4u6xJzYZS_xhFe04so&latlng="+latdegrees+","+londegrees;
+                                            $.getJSON(url, function (data, textStatus) {
+                                                console.log(data);
+                                                var streetaddress = data.results[0].formatted_address;
+                                                return streetaddress;
+                                            });
                                 }
                                 function updateControls(addressComponents) {
                                     console.log(addressComponents.addressLine1);
@@ -94,7 +89,7 @@
                                         console.log(isMarkerDropped);
                                         var addressComponents = $(this).locationpicker('map').location.addressComponents;
                                         updateControls(addressComponents);
-                                        getFullAddress(addressComponents.latitude, addressComponents.longitude);
+                                        getLocation();
                                     },
                                     oninitialized: function (component) {
                                         var addressComponents = $(component).locationpicker('map').location.addressComponents;
