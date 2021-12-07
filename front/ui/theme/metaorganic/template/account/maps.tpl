@@ -91,8 +91,6 @@
                                         locationNameInput: $('#us3-address')
                                     },
                                     enableAutocomplete: true,
-                                    addressFormat: 'postal_code',
-                                    enableReverseGeocode: true,
                                     autocompleteOptions: {
                                     componentRestrictions: { country: 'ke' }
                                     },
