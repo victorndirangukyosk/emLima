@@ -805,8 +805,8 @@ google.maps.event.addListener(autocomplete, 'place_changed', function () {
             console.log(autocomplete);
             $('#us1').locationpicker({
                 location: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
+                    latitude: autocomplete.getPlace().geometry.location.lat(),
+                    longitude: autocomplete.getPlace().geometry.location.lng()
                 },  
                 radius: 0,
                 inputBinding: {
