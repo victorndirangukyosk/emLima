@@ -798,7 +798,7 @@
     });
 
 var autocomplete;
-autocomplete = new google.maps.places.Autocomplete((document.getElementsByClassName('LocalityId2')), {
+autocomplete = new google.maps.places.Autocomplete((document.getElementById('gmap-input')), {
         types: ['geocode'],
         componentRestrictions: {
             country: 'KE'
