@@ -662,8 +662,9 @@
     function GMapPopupInput() {
 
         var acInputs = document.getElementsByClassName("LocalityId2");
-
-        
+        console.log('acInputs');
+        console.log(acInputs);
+        console.log('acInputs');
 
         var autocomplete = new google.maps.places.Autocomplete(acInputs);
         
