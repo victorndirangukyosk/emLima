@@ -63,7 +63,7 @@
                                 function getFullAddress(lat, lang) {
                                     console.log(lat+' '+lang);
                                     $.ajax({
-                                        url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lang+'&key=AIzaSyCiMBCIxWmuh1TVf4u6xJzYZS_xhFe04so',
+                                        url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng=44.4647452,7.3553838&key=AIzaSyCiMBCIxWmuh1TVf4u6xJzYZS_xhFe04so',
                                         type: 'get',
                                         dataType: 'json',
                                         beforeSend: function () {
