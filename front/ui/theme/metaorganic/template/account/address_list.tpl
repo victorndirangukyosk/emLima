@@ -798,12 +798,7 @@
     });
 
 var autocomplete;
-autocomplete = new google.maps.places.Autocomplete((document.getElementById('gmap-input')), {
-        types: ['geocode'],
-        componentRestrictions: {
-            country: 'KE'
-        }
-});
+autocomplete = new google.maps.places.Autocomplete((document.getElementById('gmap-input'));
 google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 
             console.log("latitude");
