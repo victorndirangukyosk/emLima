@@ -60,16 +60,6 @@
                             </div>
                             <div class="clearfix"></div>
                             <script>
-                                function getLocation() {
-                                    var latdegrees = 40.2298;
-                                    var londegrees = -41.88754;
-                                    var url = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCiMBCIxWmuh1TVf4u6xJzYZS_xhFe04so&latlng="+latdegrees+","+londegrees;
-                                            $.getJSON(url, function (data, textStatus) {
-                                                console.log(data);
-                                                var streetaddress = data.results[0].formatted_address;
-                                                return streetaddress;
-                                            });
-                                }
                                 function updateControls(addressComponents) {
                                     console.log(addressComponents.addressLine1);
                                     console.log(addressComponents.city);
@@ -89,7 +79,6 @@
                                         console.log(isMarkerDropped);
                                         var addressComponents = $(this).locationpicker('map').location.addressComponents;
                                         updateControls(addressComponents);
-                                        getLocation();
                                     },
                                     oninitialized: function (component) {
                                         var addressComponents = $(component).locationpicker('map').location.addressComponents;
@@ -103,7 +92,7 @@
                                     },
                                     enableAutocomplete: true,
                                     autocompleteOptions: {
-                                        componentRestrictions: {country: 'ke'}
+                                    componentRestrictions: { country: 'ke' }
                                     },
                                     markerIcon: '<?= $base?>front/ui/theme/mvgv2/maps/marker.png'
                                 });
