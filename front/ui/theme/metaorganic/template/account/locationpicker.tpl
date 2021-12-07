@@ -3,6 +3,7 @@
 <html>
   <head>
     <title>Place Autocomplete Address Form</title>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <style>
