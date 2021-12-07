@@ -694,7 +694,9 @@
     function initialize() {
 
         var acInputs = document.getElementsByClassName("LocalityId");
-
+        console.log('acInputs');
+        console.log(acInputs);
+        console.log('acInputs');
         for (var i = 0; i < acInputs.length; i++) {
 
             var autocomplete = new google.maps.places.Autocomplete(acInputs[i]);
