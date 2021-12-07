@@ -661,12 +661,11 @@
 
     function GMapPopupInput() {
 
-        var acInputs = document.getElementsByClassName("LocalityId2");
-        console.log('acInputs');
-        console.log(acInputs);
-        console.log('acInputs');
+        var acInputss = document.getElementsByClassName("LocalityId2");
 
-        var autocomplete = new google.maps.places.Autocomplete(acInputs);
+        
+
+        var autocomplete = new google.maps.places.Autocomplete(acInputss);
         
         google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 
