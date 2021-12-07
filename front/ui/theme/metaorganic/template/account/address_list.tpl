@@ -272,8 +272,6 @@
                                 <div class="input-group">
 
                                     <input  name="modal_address_locality" type="text" id="gmap-input" class="form-control input-md LocalityId LocalityId2" required="" >                                                    
-                                    <input type="text" id="txtPlaces" style="width: 250px" placeholder="Enter a location" />
-
                                     <span class="input-group-btn">
 
                                         <button class="btn btn-default" id="detect_location" style="color: #333;background-color: #fff;border-color: #ccc;width: 150px;line-height: 2.438571; " type="button"  onclick="getLocation()"><i class="fa fa-location-arrow"></i> <?= $detect_location ?></button>
@@ -662,7 +660,7 @@
     }
 
     function GMapPopupInput() {
-        var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
+
         var acInputs = document.getElementsByClassName("LocalityId2");
 
         
