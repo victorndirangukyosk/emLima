@@ -60,6 +60,21 @@
                             </div>
                             <div class="clearfix"></div>
                             <script>
+                                function getFullAddress(lat, lang) {
+                                    console.log(lat+' '+lang);
+                                    $.ajax({
+                                        url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lang+'&key=AIzaSyCiMBCIxWmuh1TVf4u6xJzYZS_xhFe04so',
+                                        type: 'get',
+                                        dataType: 'json',
+                                        beforeSend: function () {
+                                        },
+                                        complete: function () {
+                                        },
+                                        success: function (json) {
+                                        console.log(json);    
+                                        }
+                                    });
+                                }
                                 function updateControls(addressComponents) {
                                     console.log(addressComponents.addressLine1);
                                     console.log(addressComponents.city);
@@ -79,6 +94,7 @@
                                         console.log(isMarkerDropped);
                                         var addressComponents = $(this).locationpicker('map').location.addressComponents;
                                         updateControls(addressComponents);
+                                        getFullAddress(addressComponents.latitude, addressComponents.longitude);
                                     },
                                     oninitialized: function (component) {
                                         var addressComponents = $(component).locationpicker('map').location.addressComponents;
@@ -92,7 +108,7 @@
                                     },
                                     enableAutocomplete: true,
                                     autocompleteOptions: {
-                                    componentRestrictions: { country: 'ke' }
+                                        componentRestrictions: {country: 'ke'}
                                     },
                                     markerIcon: '<?= $base?>front/ui/theme/mvgv2/maps/marker.png'
                                 });
