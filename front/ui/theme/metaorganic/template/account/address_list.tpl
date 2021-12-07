@@ -661,8 +661,7 @@
 
     function GMapPopupInput() {
 
-        //var acInputs = document.getElementsByClassName("LocalityId2");
-        var acInputs = document.getElementById("gmap-input");
+        var acInputs = document.getElementsByClassName("LocalityId2");
 
         
 
