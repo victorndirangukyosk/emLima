@@ -2260,7 +2260,7 @@ function downloadOrderStickers() {
 
              
             //const deliveryDate = $("#consolidated-order-sheet-datepicker").val();
-                url = 'index.php?path=report/vendor_orders/downloadorders&token=<?php echo $token; ?>';
+                url = 'index.php?path=report/vendor_orders/downloadordersstickers&token=<?php echo $token; ?>';
               var filter_order_status = $('select[name=\'filter_order_status\']').val();
 
             console.log(filter_order_status);

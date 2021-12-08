@@ -5202,7 +5202,7 @@ class ControllerSaleOrder extends Controller {
 
                 $order_processing_group_details = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroup($order_info['order_processing_group_id']);
                 $order_processor = $this->model_orderprocessinggroup_orderprocessor->getOrderProcessor($order_info['order_processor_id']);
-                
+
                 if (is_array($order_processing_group_details) && $order_processing_group_details != NULL) {
                     $data['order_processing_group_details'] = $order_processing_group_details;
                 } else {

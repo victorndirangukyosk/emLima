@@ -178,7 +178,7 @@ class ControllerReportVendorOrders extends Controller {
         } else {
             $filter_date_modified = null;
         }
-        
+
         if (isset($this->request->get['selected_order_id'])) {
             $orders = $this->request->get['selected_order_id'];
         } else {
@@ -226,12 +226,307 @@ class ControllerReportVendorOrders extends Controller {
             'sort' => $sort,
             'order' => $order,
             'filter_orders' => $orders,
-            /*'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin'),*/
+                /* 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+                  'limit' => $this->config->get('config_limit_admin'), */
         ];
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_orders_excel($filter_data);
+    }
+
+    public function downloadordersstickers() {
+        if (isset($this->request->get['filter_city'])) {
+            $filter_city = $this->request->get['filter_city'];
+        } else {
+            $filter_city = null;
+        }
+
+        if (isset($this->request->get['filter_order_id'])) {
+            $filter_order_id = $this->request->get['filter_order_id'];
+        } else {
+            $filter_order_id = null;
+        }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $filter_order_from_id = $this->request->get['filter_order_from_id'];
+        } else {
+            $filter_order_from_id = null;
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $filter_order_to_id = $this->request->get['filter_order_to_id'];
+        } else {
+            $filter_order_to_id = null;
+        }
+
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
+        } else {
+            $filter_customer = null;
+        }
+
+        if (isset($this->request->get['filter_vendor'])) {
+            $filter_vendor = $this->request->get['filter_vendor'];
+        } else {
+            $filter_vendor = null;
+        }
+
+        if (isset($this->request->get['filter_store_name'])) {
+            $filter_store_name = $this->request->get['filter_store_name'];
+        } else {
+            $filter_store_name = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_method'])) {
+            $filter_delivery_method = $this->request->get['filter_delivery_method'];
+        } else {
+            $filter_delivery_method = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $filter_delivery_date = $this->request->get['filter_delivery_date'];
+        } else {
+            $filter_delivery_date = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $filter_delivery_time_slot = $this->request->get['filter_delivery_time_slot'];
+        } else {
+            $filter_delivery_time_slot = null;
+        }
+
+        if (isset($this->request->get['filter_payment'])) {
+            $filter_payment = $this->request->get['filter_payment'];
+        } else {
+            $filter_payment = null;
+        }
+
+        if (isset($this->request->get['filter_order_status'])) {
+            $filter_order_status = $this->request->get['filter_order_status'];
+        } else {
+            $filter_order_status = null;
+        }
+
+        if (isset($this->request->get['filter_order_type'])) {
+            $filter_order_type = $this->request->get['filter_order_type'];
+        } else {
+            $filter_order_type = null;
+        }
+
+        if (isset($this->request->get['filter_total'])) {
+            $filter_total = $this->request->get['filter_total'];
+        } else {
+            $filter_total = null;
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $filter_date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $filter_date_added_end = null;
+        }
+
+        if (isset($this->request->get['filter_date_modified'])) {
+            $filter_date_modified = $this->request->get['filter_date_modified'];
+        } else {
+            $filter_date_modified = null;
+        }
+
+        if (isset($this->request->get['selected_order_id'])) {
+            $orders = $this->request->get['selected_order_id'];
+        } else {
+            $orders = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'o.order_id';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'DESC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $filter_data = [
+            'filter_city' => $filter_city,
+            'filter_order_id' => $filter_order_id,
+            'filter_order_from_id' => $filter_order_from_id,
+            'filter_order_to_id' => $filter_order_to_id,
+            'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
+            'filter_vendor' => $this->getUserByName($filter_vendor),
+            'filter_store_name' => $filter_store_name,
+            'filter_delivery_method' => $filter_delivery_method,
+            'filter_delivery_date' => $filter_delivery_date,
+            'filter_delivery_time_slot' => $filter_delivery_time_slot,
+            'filter_payment' => $filter_payment,
+            'filter_order_status' => $filter_order_status,
+            'filter_order_type' => $filter_order_type,
+            'filter_total' => $filter_total,
+            'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
+            'filter_date_modified' => $filter_date_modified,
+            'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
+            'sort' => $sort,
+            'order' => $order,
+            'filter_orders' => $orders,
+                /* 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+                  'limit' => $this->config->get('config_limit_admin'), */
+        ];
+
+        $this->load->model('sale/order');
+        $rows = $this->model_sale_order->getOrders($filter_data);
+
+        //$this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
+        // echo "<pre>";print_r($data);die;
+        try {
+            require_once DIR_ROOT . '/vendor/autoload.php';
+            if (count($rows) == 1) {
+                $pdf = new \mikehaertl\wkhtmlto\Pdf;
+                $template = $this->load->view('sale/order_sticker_pdf.tpl', $rows[0]);
+                $pdf->addPage($template);
+                if (!$pdf->send("KwikBasket Order #" . $rows[0]['order_id'] . ".pdf")) {
+                    $error = $pdf->getError();
+                    echo $error;
+                    die;
+                }
+            } else if (count($rows) > 1) {
+
+                /**
+                 * Creates a random unique temporary directory, with specified parameters,
+                 * that does not already exist (like tempnam(), but for dirs).
+                 *
+                 * Created dir will begin with the specified prefix, followed by random
+                 * numbers.
+                 *
+                 * @link https://php.net/manual/en/function.tempnam.php
+                 *
+                 * @param string|null $dir Base directory under which to create temp dir.
+                 *     If null, the default system temp dir (sys_get_temp_dir()) will be
+                 *     used.
+                 * @param string $prefix String with which to prefix created dirs.
+                 * @param int $mode Octal file permission mask for the newly-created dir.
+                 *     Should begin with a 0.
+                 * @param int $maxAttempts Maximum attempts before giving up (to prevent
+                 *     endless loops).
+                 * @return string|bool Full path to newly-created dir, or false on failure.
+                 */
+                function tempdir($dir = null, $prefix = 'tmp_', $mode = 0700, $maxAttempts = 1000) {
+                    /* Use the system temp dir by default. */
+                    if (is_null($dir)) {
+                        $dir = sys_get_temp_dir();
+                    }
+
+                    /* Trim trailing slashes from $dir. */
+                    $dir = rtrim($dir, DIRECTORY_SEPARATOR);
+
+                    /* If we don't have permission to create a directory, fail, otherwise we will
+                     * be stuck in an endless loop.
+                     */
+                    if (!is_dir($dir) || !is_writable($dir)) {
+                        return false;
+                    }
+
+                    /* Make sure characters in prefix are safe. */
+                    if (strpbrk($prefix, '\\/:*?"<>|') !== false) {
+                        return false;
+                    }
+
+                    /* Attempt to create a random directory until it works. Abort if we reach
+                     * $maxAttempts. Something screwy could be happening with the filesystem
+                     * and our loop could otherwise become endless.
+                     */
+                    $attempts = 0;
+                    do {
+                        $path = sprintf('%s%s%s%s', $dir, DIRECTORY_SEPARATOR, $prefix, mt_rand(100000, mt_getrandmax()));
+                    } while (
+                    !mkdir($path, $mode) &&
+                    $attempts++ < $maxAttempts
+                    );
+
+                    return $path;
+                }
+
+                $tempdir = tempdir();
+                $zip = new ZipArchive();
+                $zipname = "KwikBasket Orders.zip";
+                if ($zip->open($zipname, ZipArchive::CREATE) !== TRUE) {
+                    exit("cannot open <$zipname>\n");
+                }
+
+                foreach ($rows as $order) {
+                    $pdf = new \mikehaertl\wkhtmlto\Pdf;
+                    $template = $this->load->view('sale/order_sticker_pdf.tpl', $order);
+                    $pdf->addPage($template);
+                    $filename = "KBORDER#" . $order['order_id'] . ".pdf";
+                    if (!$pdf->saveAs($tempdir . '/' . $filename)) {
+                        $error = $pdf->getError();
+                        echo $error;
+                        die;
+                    }
+                    $zip->addFile($tempdir . '/' . $filename, $filename);
+                }
+
+                $zip->close();
+
+                header('Content-Type: application/zip');
+                header('Content-Disposition: attachment; filename="' . basename($zipname) . '"');
+                header('Content-Length: ' . filesize($zipname));
+
+                flush();
+                readfile($zipname);
+                // delete file
+                unlink($zipname);
+
+                // delete temp folder
+                function deleteDirectory($dir) {
+                    if (!file_exists($dir)) {
+                        return true;
+                    }
+
+                    if (!is_dir($dir)) {
+                        return unlink($dir);
+                    }
+
+                    foreach (scandir($dir) as $item) {
+                        if ($item == '.' || $item == '..') {
+                            continue;
+                        }
+
+                        if (!deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+                            return false;
+                        }
+                    }
+
+                    return rmdir($dir);
+                }
+
+                deleteDirectory($tempdir);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     public function index() {
