@@ -1346,6 +1346,7 @@ class ControllerSaleOrder extends Controller {
                 'view' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'invoice' => $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'products_list' => $this->url->link('sale/order/productlist', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
+                'sticker' => $this->url->link('sale/order/printstickers', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'order_spreadsheet' => $this->url->link('sale/order/orderCalculationSheet', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'shipping' => $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'edit' => $this->url->link('sale/editinvoice/EditInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
@@ -5627,6 +5628,406 @@ class ControllerSaleOrder extends Controller {
                 foreach ($data['orders'] as $order) {
                     $pdf = new \mikehaertl\wkhtmlto\Pdf;
                     $template = $this->load->view('sale/order_invoice_pdf.tpl', $order);
+                    $pdf->addPage($template);
+                    $filename = "KBINV#" . $order['order_id'] . ".pdf";
+                    if (!$pdf->saveAs($tempdir . '/' . $filename)) {
+                        $error = $pdf->getError();
+                        echo $error;
+                        die;
+                    }
+                    $zip->addFile($tempdir . '/' . $filename, $filename);
+                }
+
+                $zip->close();
+
+                header('Content-Type: application/zip');
+                header('Content-Disposition: attachment; filename="' . basename($zipname) . '"');
+                header('Content-Length: ' . filesize($zipname));
+
+                flush();
+                readfile($zipname);
+                // delete file
+                unlink($zipname);
+
+                // delete temp folder
+                function deleteDirectory($dir) {
+                    if (!file_exists($dir)) {
+                        return true;
+                    }
+
+                    if (!is_dir($dir)) {
+                        return unlink($dir);
+                    }
+
+                    foreach (scandir($dir) as $item) {
+                        if ($item == '.' || $item == '..') {
+                            continue;
+                        }
+
+                        if (!deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+                            return false;
+                        }
+                    }
+
+                    return rmdir($dir);
+                }
+
+                deleteDirectory($tempdir);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function printstickers() {
+        $this->load->language('sale/order');
+
+        $data['title'] = $this->language->get('text_invoice');
+
+        if ($this->request->server['HTTPS']) {
+            $data['base'] = HTTPS_SERVER;
+        } else {
+            $data['base'] = HTTP_SERVER;
+        }
+
+        $data['direction'] = $this->language->get('direction');
+        $data['lang'] = $this->language->get('code');
+
+        $data['text_date_delivered'] = $this->language->get('text_date_delivered');
+        $data['text_invoice'] = $this->language->get('text_invoice');
+        $data['text_order_detail'] = $this->language->get('text_order_detail');
+        $data['text_order_id'] = $this->language->get('text_order_id');
+        $data['text_invoice_no'] = $this->language->get('text_invoice_no');
+        $data['text_invoice_date'] = $this->language->get('text_invoice_date');
+        $data['text_date_added'] = $this->language->get('text_date_added');
+        $data['text_telephone'] = $this->language->get('text_telephone');
+        $data['text_fax'] = $this->language->get('text_fax');
+        $data['text_name'] = $this->language->get('text_name');
+        $data['text_contact_no'] = $this->language->get('text_contact_no');
+        $data['text_email'] = $this->language->get('text_email');
+        $data['text_website'] = $this->language->get('text_website');
+        $data['text_to'] = $this->language->get('text_to');
+        $data['text_po_no'] = $this->language->get('text_po_no');
+        $data['text_ship_to'] = $this->language->get('text_ship_to');
+        $data['text_payment_method'] = $this->language->get('text_payment_method');
+        $data['text_shipping_method'] = $this->language->get('text_shipping_method');
+
+        $data['column_product'] = $this->language->get('column_product');
+        $data['column_produce_type'] = $this->language->get('column_produce_type');
+
+        $data['column_model'] = $this->language->get('column_model');
+        $data['column_unit'] = $this->language->get('column_unit') . ' Ordered';
+        $data['column_quantity'] = $this->language->get('column_quantity') . ' Ordered';
+        $data['column_unit_change'] = $this->language->get('column_unit') . ' Change';
+        $data['column_quantity_change'] = $this->language->get('column_quantity') . ' Change';
+        $data['column_price'] = $this->language->get('column_price');
+        $data['column_total'] = $this->language->get('column_total');
+        $data['column_comment'] = $this->language->get('column_comment');
+
+        $data['text_tax'] = $this->language->get('text_tax');
+        $data['text_cpf_number'] = $this->language->get('text_cpf_number');
+
+        $this->load->model('sale/order');
+
+        $this->load->model('setting/setting');
+
+        $data['orders'] = [];
+
+        $orders = [];
+
+        if (isset($this->request->post['selected'])) {
+            $orders = $this->request->post['selected'];
+        } elseif (isset($this->request->get['order_id'])) {
+            $orders[] = $this->request->get['order_id'];
+        }
+
+        if (isset($this->request->get['store_id'])) {
+            $store_id = $this->request->get['store_id'];
+        } else {
+            $store_id = 0;
+        }
+
+        foreach ($orders as $order_id) {
+            $order_info = $this->model_sale_order->getOrder($order_id);
+            //check vendor order
+
+            if ($this->user->isVendor()) {
+                if (!$this->isVendorOrder($order_id)) {
+                    $this->response->redirect($this->url->link('error/not_found'));
+                }
+            }
+
+            if ($order_info) {
+                $this->load->model('drivers/drivers');
+                $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
+                $driver_name = NULL;
+                $driver_phone = NULL;
+                if ($driver_info) {
+                    $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
+                    $driver_phone = $driver_info['telephone'];
+                }
+                $data['driver_name'] = $driver_name;
+                $data['driver_phone'] = $driver_phone;
+
+                $this->load->model('executives/executives');
+                $executive_info = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
+                $executive_name = NULL;
+                $executive_phone = NULL;
+                if ($executive_info) {
+                    $executive_name = $executive_info['firstname'] . ' ' . $executive_info['lastname'];
+                    $executive_phone = $executive_info['telephone'];
+                }
+                $data['delivery_executive_name'] = $executive_name;
+                $data['delivery_executive_phone'] = $executive_phone;
+                $store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
+                // if ($store_info) {
+                //     $store_address = $store_info['config_address'];
+                //     $store_email = $store_info['config_email'];
+                //     $store_telephone = $store_info['config_telephone'];
+                //     $store_fax = $store_info['config_fax'];
+                // } else {
+                //     $store_address = $this->config->get('config_address');
+                //     $store_email = $this->config->get('config_email');
+                //     $store_telephone = $this->config->get('config_telephone');
+                //     $store_fax = $this->config->get('config_fax');
+                // }
+
+                $store_data = $this->model_sale_order->getStoreData($order_info['store_id']);
+                if ($store_data) {
+                    $store_address = $store_data['address'];
+                    $store_email = $store_data['email'];
+                    $store_telephone = $store_data['telephone'];
+                    $store_fax = $store_data['fax'];
+                    $store_tax = $store_data['tax'];
+                } else {
+                    $store_address = $this->config->get('config_address');
+                    $store_email = $this->config->get('config_email');
+                    $store_telephone = $this->config->get('config_telephone');
+                    $store_fax = $this->config->get('config_fax');
+                    $store_tax = '';
+                }
+
+
+                $data['store_name'] = $store_data['name'];
+
+                if ($order_info['invoice_no']) {
+                    $invoice_no = $order_info['invoice_prefix'] . $order_info['invoice_no'] . $order_info['invoice_sufix'];
+                } else {
+                    $invoice_no = '';
+                }
+
+                $this->load->model('tool/upload');
+
+                $product_data = [];
+
+                if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
+                    $products = $this->model_sale_order->getRealOrderProducts($order_id);
+                } else {
+                    $products = $this->model_sale_order->getOrderProducts($order_id);
+                }
+
+                foreach ($products as $product) {
+                    if ($store_id && $product['store_id'] != $store_id) {
+                        continue;
+                    }
+                    $option_data = [];
+
+                    $options = $this->model_sale_order->getOrderOptions($order_id, $product['order_product_id']);
+
+                    foreach ($options as $option) {
+                        if ('file' != $option['type']) {
+                            $value = $option['value'];
+                        } else {
+                            $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
+
+                            if ($upload_info) {
+                                $value = $upload_info['name'];
+                            } else {
+                                $value = '';
+                            }
+                        }
+
+                        $option_data[] = [
+                            'name' => $option['name'],
+                            'value' => $value,
+                        ];
+                    }
+
+                    $product_data[] = [
+                        'product_id' => $product['product_id'],
+                        'name' => $product['name'],
+                        'model' => $product['model'],
+                        'unit' => $product['unit'],
+                        'option' => $option_data,
+                        'quantity' => $product['quantity'],
+                        'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                        'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                    ];
+                }
+
+                $total_data = [];
+
+                if ($store_id) {
+                    $totals = $this->model_sale_order->getVendorOrderTotals($order_id, $store_id);
+                } else {
+                    $totals = $this->model_sale_order->getOrderTotals($order_id);
+                }
+
+                foreach ($totals as $total) {
+                    $total_data[] = [
+                        'title' => $total['title'],
+                        'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                        'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
+                    ];
+                }
+
+                $this->load->model('sale/customer');
+                $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
+                $order_customer_first_last_name = NULL;
+                $company_name = NULL;
+                if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
+                    $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
+                    $company_name = $order_customer_detials['company_name'];
+                }
+
+                $this->load->model('drivers/drivers');
+                $driver_info = $this->model_drivers_drivers->getDriver($order_info['driver_id']);
+                $driver_name = NULL;
+                $driver_phone = NULL;
+                if ($driver_info) {
+                    $driver_name = $driver_info['firstname'] . ' ' . $driver_info['lastname'];
+                    $driver_phone = $driver_info['telephone'];
+                }
+                $data['driver_name'] = $driver_name;
+                $data['driver_phone'] = $driver_phone;
+
+                $delivery_executive_info = $this->model_executives_executives->getExecutive($order_info['delivery_executive_id']);
+                $delivery_executive_name = NULL;
+                $delivery_executive_phone = NULL;
+                if ($delivery_executive_info) {
+                    $delivery_executive_name = $delivery_executive_info['firstname'] . ' ' . $delivery_executive_info['lastname'];
+                    $delivery_executive_phone = $delivery_executive_info['telephone'];
+                }
+                $data['delivery_executive_name'] = $delivery_executive_name;
+                $data['delivery_executive_phone'] = $delivery_executive_phone;
+
+                $data['orders'][] = [
+                    'order_id' => $order_id,
+                    'invoice_no' => $invoice_no,
+                    'date_added' => date($this->language->get('datetime_format'), strtotime($order_info['date_added'])),
+                    'delivery_date' => date($this->language->get('date_format_short'), strtotime($order_info['delivery_date'])),
+                    'delivery_timeslot' => $order_info['delivery_timeslot'],
+                    'store_name' => $order_info['store_name'],
+                    'store_url' => rtrim($order_info['store_url'], '/'),
+                    'store_address' => nl2br($store_address),
+                    'store_email' => $store_email,
+                    'store_tax' => $store_tax,
+                    'store_telephone' => $store_telephone,
+                    'store_fax' => $store_fax,
+                    'email' => $order_info['email'],
+                    'cpf_number' => $this->getUser($order_info['customer_id']),
+                    'telephone' => $order_info['telephone'],
+                    'shipping_address' => $order_info['shipping_address'],
+                    'shipping_city' => $order_info['shipping_city'],
+                    'shipping_flat_number' => $order_info['shipping_flat_number'],
+                    'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
+                    /* 'shipping_name' => ($order_info['shipping_name']) ? $order_info['shipping_name'] : $order_info['firstname'] . ' ' . $order_info['lastname'], */
+                    'shipping_name' => $order_customer_first_last_name == NULL ? $order_info['firstname'] . ' ' . $order_info['lastname'] : $order_customer_first_last_name,
+                    'customer_company_name' => $company_name == NULL ? $order_info['customer_company_name'] : $company_name,
+                    'shipping_method' => $order_info['shipping_method'],
+                    'po_number' => $order_info['po_number'],
+                    'payment_method' => $order_info['payment_method'],
+                    'products' => $product_data,
+                    'totals' => $total_data,
+                    'comment' => nl2br($order_info['comment']),
+                    'shipping_name_original' => $order_info['shipping_name'],
+                    'driver_name' => $driver_name,
+                    'driver_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $driver_phone,
+                    'delivery_executive_name' => $delivery_executive_name,
+                    'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $delivery_executive_phone
+                ];
+            }
+        }
+        //$this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
+        // echo "<pre>";print_r($data);die;
+        try {
+            require_once DIR_ROOT . '/vendor/autoload.php';
+            if (count($data['orders']) == 1) {
+                $pdf = new \mikehaertl\wkhtmlto\Pdf;
+                $template = $this->load->view('sale/order_sticker_pdf.tpl', $data['orders'][0]);
+                $pdf->addPage($template);
+                if (!$pdf->send("KwikBasket Order #" . $data['orders'][0]['order_id'] . ".pdf")) {
+                    $error = $pdf->getError();
+                    echo $error;
+                    die;
+                }
+            } else if (count($data['orders']) > 1) {
+
+                /**
+                 * Creates a random unique temporary directory, with specified parameters,
+                 * that does not already exist (like tempnam(), but for dirs).
+                 *
+                 * Created dir will begin with the specified prefix, followed by random
+                 * numbers.
+                 *
+                 * @link https://php.net/manual/en/function.tempnam.php
+                 *
+                 * @param string|null $dir Base directory under which to create temp dir.
+                 *     If null, the default system temp dir (sys_get_temp_dir()) will be
+                 *     used.
+                 * @param string $prefix String with which to prefix created dirs.
+                 * @param int $mode Octal file permission mask for the newly-created dir.
+                 *     Should begin with a 0.
+                 * @param int $maxAttempts Maximum attempts before giving up (to prevent
+                 *     endless loops).
+                 * @return string|bool Full path to newly-created dir, or false on failure.
+                 */
+                function tempdir($dir = null, $prefix = 'tmp_', $mode = 0700, $maxAttempts = 1000) {
+                    /* Use the system temp dir by default. */
+                    if (is_null($dir)) {
+                        $dir = sys_get_temp_dir();
+                    }
+
+                    /* Trim trailing slashes from $dir. */
+                    $dir = rtrim($dir, DIRECTORY_SEPARATOR);
+
+                    /* If we don't have permission to create a directory, fail, otherwise we will
+                     * be stuck in an endless loop.
+                     */
+                    if (!is_dir($dir) || !is_writable($dir)) {
+                        return false;
+                    }
+
+                    /* Make sure characters in prefix are safe. */
+                    if (strpbrk($prefix, '\\/:*?"<>|') !== false) {
+                        return false;
+                    }
+
+                    /* Attempt to create a random directory until it works. Abort if we reach
+                     * $maxAttempts. Something screwy could be happening with the filesystem
+                     * and our loop could otherwise become endless.
+                     */
+                    $attempts = 0;
+                    do {
+                        $path = sprintf('%s%s%s%s', $dir, DIRECTORY_SEPARATOR, $prefix, mt_rand(100000, mt_getrandmax()));
+                    } while (
+                    !mkdir($path, $mode) &&
+                    $attempts++ < $maxAttempts
+                    );
+
+                    return $path;
+                }
+
+                $tempdir = tempdir();
+                $zip = new ZipArchive();
+                $zipname = "KwikBasket Orders.zip";
+                if ($zip->open($zipname, ZipArchive::CREATE) !== TRUE) {
+                    exit("cannot open <$zipname>\n");
+                }
+
+                foreach ($data['orders'] as $order) {
+                    $pdf = new \mikehaertl\wkhtmlto\Pdf;
+                    $template = $this->load->view('sale/order_sticker_pdf.tpl', $order);
                     $pdf->addPage($template);
                     $filename = "KBINV#" . $order['order_id'] . ".pdf";
                     if (!$pdf->saveAs($tempdir . '/' . $filename)) {
