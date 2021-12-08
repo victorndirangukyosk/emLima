@@ -584,6 +584,7 @@
 
             .products-table {
                 width: 100%;
+                margin-bottom: 10px;
             }
 
             .products-table td {
@@ -682,6 +683,22 @@
                         <td class="text-center"><?= $product['quantity'] ?> <?= $product['unit'] ?></td>
                     </tr>
                     <?php } ?>
+                </tbody>
+            </table>
+            <table class="products-table">
+                <thead class="font-bold">
+                    <tr>
+                        <td>Order Processing Team</td>
+                        <td>Order Processor</td>
+                        <td>Order Processor Signature</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><?= $order_processing_group_details; ?></td>
+                        <td><?= $order_processor ?></td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
         </div>

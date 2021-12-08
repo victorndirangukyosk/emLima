@@ -5197,6 +5197,24 @@ class ControllerSaleOrder extends Controller {
                 $data['delivery_executive_name'] = $delivery_executive_name;
                 $data['delivery_executive_phone'] = $delivery_executive_phone;
 
+                $this->load->model('orderprocessinggroup/orderprocessinggroup');
+                $this->load->model('orderprocessinggroup/orderprocessor');
+
+                $order_processing_group_details = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroup($order_info['order_processing_group_id']);
+                $order_processor = $this->model_orderprocessinggroup_orderprocessor->getOrderProcessor($order_info['order_processor_id']);
+
+                if (is_array($order_processing_group_details) && $order_processing_group_details != NULL) {
+                    $data['order_processing_group_details'] = $order_processing_group_details;
+                } else {
+                    $data['order_processing_group_details'] = NULL;
+                }
+
+                if (is_array($order_processor) && $order_processor != NULL) {
+                    $data['order_processor'] = $order_processor;
+                } else {
+                    $data['order_processor'] = NULL;
+                }
+
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
