@@ -146,7 +146,7 @@
                   <td class="text-left"><?php echo $vehicle['registration_number']; ?></td>
                   <td class="text-left"><?php echo $vehicle['status']; ?></td>
                   <td class="text-left"><?php echo $vehicle['date_added']; ?></td>
-                  <td class="text-right"><button type="button" data-toggle="tooltip" title="Dispatch Planning" class="btn btn-primary" onclick=""><i class="fa fa-random"></i></button>
+                  <td class="text-right"><button type="button" id="dispatchplanning" data-toggle="tooltip" title="Dispatch Planning" class="btn btn-primary"><i class="fa fa-random"></i></button>
 <a href="<?php echo $vehicle['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
 </td>
                 </tr>
@@ -167,7 +167,36 @@
       </div>
     </div>
   </div>
+      <!-- Modal -->
+    <div class="modal fade" id="dispatchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content"  >
+                <div class="modal-body"  style="height:130px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="store-find-block">
+                        <div class="mydivsss">
+                            <div class="store-find">
+                                <div class="store-head">
+                                    <h2>Assign Vehicle</h2>
+                                    </br> 
+                                </div>
+                                <div id="ordernoticeModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                </div>
+                                <div id="ordernoticeModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                </div>  
+                            </div>
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
   <script type="text/javascript"><!--
+$('button[id^=\'dispatchplanning\']').on('click', function (e) {
+e.preventDefault();
+$('#dispatchModal').modal('toggle');
+});
 $('#button-filter').on('click', function() {
   url = 'index.php?path=vehicles/vehicles_list&token=<?php echo $token; ?>';
   
