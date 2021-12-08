@@ -689,16 +689,19 @@
                 <thead class="font-bold">
                     <tr>
                         <td>Order Processing Team</td>
-                        <td>Order Processor</td>
-                        <td>Order Processor Signature</td>
+                        <td><?= $order_processing_group_details; ?></td>
+                    </tr>
+                    <tr>
+                     <td>Order Processor</td>
+                     <td><?= $order_processor ?></td>
+                    </tr>
+                    <tr>
+                      <td>Order Processor Signature</td>  
+                      <td></td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><?= $order_processing_group_details; ?></td>
-                        <td><?= $order_processor ?></td>
-                        <td></td>
-                    </tr>
+                    
                 </tbody>
             </table>
         </div>
