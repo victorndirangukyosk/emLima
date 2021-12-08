@@ -146,7 +146,8 @@
                   <td class="text-left"><?php echo $vehicle['registration_number']; ?></td>
                   <td class="text-left"><?php echo $vehicle['status']; ?></td>
                   <td class="text-left"><?php echo $vehicle['date_added']; ?></td>
-                  <td class="text-right"><a href="<?php echo $vehicle['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+                  <td class="text-right"><button type="button" data-toggle="tooltip" title="Dispatch Planning" class="btn btn-primary" onclick=""><i class="fa fa-random"></i></button>
+<a href="<?php echo $vehicle['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
 </td>
                 </tr>
                 <?php } ?>
