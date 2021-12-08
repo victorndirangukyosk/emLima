@@ -584,7 +584,7 @@
 
             .products-table {
                 width: 100%;
-                margin-bottom: 10px;
+                margin-bottom: 20px;
             }
 
             .products-table td {
