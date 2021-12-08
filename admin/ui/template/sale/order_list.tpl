@@ -11,9 +11,9 @@
                 
                 <button type="" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
                 <button type="" id="button-invoice-pdf" form="form-order" formaction="<?php echo $invoicepdf; ?>" data-toggle="tooltip" title="Download Invoice" class="btn btn-default"><i class="fa fa-print"></i></button>
-                <button type="" onclick="downloadOrderStickers();" id="button-order-pdf" form="form-order" formaction="<?php echo $sticker; ?>" data-toggle="tooltip" title="Download Order Stickers" class="btn btn-default"><i class="fa fa-print"></i></button>
-                <button type="button" onclick="downloadOrders();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Orders Excel"><i class="fa fa-download"></i></button>
-                <button type="button" onclick="downloadOrdersonsolidated();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Consolidated Excel"><i class="fa fa-download"></i></button>
+                <button type="button" onclick="downloadOrderStickers();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders List"><i class="fa fa-download"></i></button>
+                <button type="button" onclick="downloadOrders();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders Excel"><i class="fa fa-download"></i></button>
+                <button type="button" onclick="downloadOrdersonsolidated();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Consolidated Excel"><i class="fa fa-download"></i></button>
                <?php if (!$this->user->isVendor()): ?>
                         <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
                 <?php endif ?>  
