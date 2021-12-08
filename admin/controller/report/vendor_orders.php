@@ -394,7 +394,7 @@ class ControllerReportVendorOrders extends Controller {
         ];
 
         $this->load->model('sale/order');
-        $rows = $this->model_sale_order->getOrders($filter_data);
+        $rows['orders'] = $this->model_sale_order->getOrders($filter_data);
         try {
             require_once DIR_ROOT . '/vendor/autoload.php';
             $pdf = new \mikehaertl\wkhtmlto\Pdf;
