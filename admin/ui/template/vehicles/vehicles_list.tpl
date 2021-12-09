@@ -268,6 +268,26 @@ $.ajax({
                     }
             }
 });
+$.ajax({
+                url: 'index.php?path=dropdowns/dropdowns/getdeliverytimeslots&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json.suggestions.delivery_timeslots);
+                    if(json != null) {
+                    var option = '<option value="">Select Delivery Timeslot</option>';
+                    for (var i=0;i<json.suggestions.delivery_timeslots.length;i++){
+                           option += '<option value="'+ json.suggestions.delivery_timeslots[i].timeslot + '">' + json.suggestions.delivery_timeslots[i].timeslot + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#delivery_timeslot');
+                    $select.html('');
+                    if(json.suggestions.delivery_timeslots != null && json.suggestions.delivery_timeslots.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
 });
 $('#button-filter').on('click', function() {
   url = 'index.php?path=vehicles/vehicles_list&token=<?php echo $token; ?>';
