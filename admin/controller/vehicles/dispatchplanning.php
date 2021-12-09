@@ -18,7 +18,7 @@ class ControllerVehiclesDispatchPlanning extends Controller {
         $data['delivery_timeslot'] = $delivery_timeslot;
         $data['delivery_date'] = $delivery_date;
         $data['vehicle_id'] = $vehicle_id;
-        exit;
+        $log->write($data);
         $res = $this->model_dispatchplanning_dispatchplanning->addVehicleToDispatchPlanning($data);
         $json = $res;
         $this->response->addHeader('Content-Type: application/json');
