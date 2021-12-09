@@ -402,7 +402,7 @@ $.ajax({
             data: $("form[id^='vehicle_dispatch_planning']").serialize(),
             success: function(json) {
                 if (json) {
-                $('.alert.alert-success').html('<i class="fa fa-check-circle text-success"></i> Successfully Product Added To Price Category!');
+                $('.alert.alert-success').html('<i class="fa fa-check-circle text-success"></i>Vehicle Assigned Successfully!');
                 $('.alert.alert-success').show();
                 setTimeout(function(){ location.reload(); }, 2000);
                 }
