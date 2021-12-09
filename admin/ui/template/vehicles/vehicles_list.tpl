@@ -191,6 +191,19 @@
                             <option value="">Select Driver</option>
                         </select>
                     </div>
+                    <div class="form-group required">
+                       <label for="recipient-name" class="col-form-label">Delivery Date</label>
+                       <div class="input-group date">
+                           <input type="text" name="delivery_date" value="" placeholder="Delivery Date" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
+                           <span class="input-group-btn">
+                               <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                           </span>
+                       </div>
+                       <label for="recipient-name" class="col-form-label">Delivery Timeslot</label>
+                        <select class="form-select" id="delivery_timeslot" name="delivery_timeslot">
+                            <option value="">Select Delivery Timeslot</option>
+                        </select>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -347,11 +360,11 @@ $('input[name=\'filter_registration_number\']').autocomplete({
     $('input[name=\'filter_registration_number\']').val(item['label']);
   } 
 });
-//--></script> 
-  <script type="text/javascript"><!--
+//--></script>
+<script type="text/javascript"><!--
 $('.date').datetimepicker({
   pickTime: false,
-     widgetParent: 'body'
+  widgetParent: 'body'
 });
 
 function excel() {
