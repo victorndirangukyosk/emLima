@@ -178,7 +178,7 @@
                 <h4 class="modal-title"><strong>Assign Vehicle </strong></h4>
             </div>
             <div class="modal-body">
-                <form id="vendor_product_price_category" name="vendor_product_price_category">
+                <form id="vehicle_dispatch_planning" name="vehicle_dispatch_planning">
                     <div class="form-group required">
                         <label for="recipient-name" class="col-form-label">Delivery Executive</label>
                         <select class="form-select" id="delivery_executive" name="delivery_executive">
@@ -218,7 +218,7 @@
                 <div class="alert alert-success" style="display:none;">
                 </div>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="add_vendor_product_to_price_category" name="add_vendor_product_to_price_category">Assign Vehicle</button>
+                <button type="button" class="btn btn-primary" id="add_vehicle_to_dispatch_plan" name="add_vehicle_to_dispatch_plan">Assign Vehicle</button>
             </div>
         </div>
 
@@ -385,6 +385,31 @@ $('input[name=\'filter_registration_number\']').autocomplete({
   'select': function(item) {
     $('input[name=\'filter_registration_number\']').val(item['label']);
   } 
+});
+$('#add_vehicle_to_dispatch_plan').on('click', function() {
+if($('select[name=\'delivery_executive\']').val() == '' || $('select[name=\'driver\']').val() == '' || $('select[name=\'delivery_timeslot\']').val() == '' || $('input[name=\'delivery_date\']').val() == '') {
+$('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger"></i>All Fileds Are Mandatory!');
+$('.alert.alert-danger').show();
+console.log('Validation Failed!');
+return false;
+}
+$.ajax({
+            url: 'index.php?path=vehicles/dispatchplanning&token=<?php echo $token; ?>',
+            dataType: 'json',
+            data: $("form[id^='vehicle_dispatch_planning']").serialize(),
+            success: function(json) {
+                if (json) {
+                $('.alert.alert-success').html('<i class="fa fa-check-circle text-success"></i> Successfully Product Added To Price Category!');
+                $('.alert.alert-success').show();
+                setTimeout(function(){ location.reload(); }, 2000);
+                }
+                else {
+                $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger"></i> Please Try Again Later!');
+                $('.alert.alert-danger').show();
+                setTimeout(function(){ location.reload(); }, 2000);
+                }
+            }
+});
 });
 //--></script>
 <script type="text/javascript"><!--
