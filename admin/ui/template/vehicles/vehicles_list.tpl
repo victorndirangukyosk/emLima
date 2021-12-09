@@ -168,30 +168,63 @@
     </div>
   </div>
       <!-- Modal -->
-    <div class="modal fade" id="dispatchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content"  >
-                <div class="modal-body"  style="height:130px;">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <div class="store-find-block">
-                        <div class="mydivsss">
-                            <div class="store-find">
-                                <div class="store-head">
-                                    <h2>Assign Vehicle</h2>
-                                    </br> 
-                                </div>
-                                <div id="ordernoticeModal-message" style="color: red;text-align:center; font-size: 15px;" >
-                                </div>
-                                <div id="ordernoticeModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
-                                </div>  
-                            </div>
-                            <!-- next div code -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>  
+      <div class="modal fade" id="dispatchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content"  >
+                  <div class="modal-body"  style="height:330px;">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <div class="store-find-block">
+                          <div class="mydivsss">
+                              <div class="store-find">
+                                  <div class="store-head">
+                                      <h2>Assign Vehicle</h2>
+                                      </br> 
+                                  </div>
+                                  <div id="ordernoticeModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                  </div>
+                                  <div id="ordernoticeModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                  </div>
+                                  <!-- Text input-->
+                                  <div class="store-form">
+                                      <form id="poModal-form" action="" method="post" enctype="multipart/form-data">
+
+
+                                          <div class="form-row">
+                                              <div class="form-group">
+                                                  <label> Driver </label>
+                                                  <div class="col-md-12">
+                                                      <input id="po_number" maxlength="30" required style="max-width:100% ;" name="po_number" type="text" placeholder="P.O. Number" class="form-control" required>
+                                                      <br/> </div>
+                                              </div>
+
+                                              <div class="form-row">
+                                                  <div class="form-group">
+                                                      <label> Delivery Executive </label>
+                                                      <div class="col-md-12">
+                                                          <input id="SAP_customer_no" maxlength="30" required style="max-width:100% ;" name="SAP_customer_no" type="text" placeholder="SAP Customer Number" class="form-control input-md" required>
+                                                          <br/> </div>
+                                                  </div>
+                                                  
+                                              </div>
+                                              <div class="form-row">
+                                                  <div class="form-group">
+                                                      <div class="col-md-12"> 
+                                                          <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: left; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+                                                          <button id="driver-button" name="orderprocessing-button" onclick="saveorderprocessingdetails()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
+                                                      </div>
+                                                  </div>
+                                              </div>     
+                                      </form>
+                                  </div>  
+                              </div>    
+                          </div>
+                          <!-- next div code -->
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+</div>  
   <script type="text/javascript"><!--
 $('button[id^=\'dispatchplanning\']').on('click', function (e) {
 e.preventDefault();
