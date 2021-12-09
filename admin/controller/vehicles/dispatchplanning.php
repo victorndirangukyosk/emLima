@@ -1,6 +1,6 @@
 <?php
 
-class ControllerDispatchPlanning extends Controller {
+class ControllerVehiclesDispatchPlanning extends Controller {
 
     private $error = [];
 

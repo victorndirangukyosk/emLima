@@ -181,6 +181,7 @@
                 <form id="vehicle_dispatch_planning" name="vehicle_dispatch_planning">
                     <div class="form-group required">
                         <label for="recipient-name" class="col-form-label">Delivery Executive</label>
+                        <input type="hidden" id="clicked_vehicle_id" name="clicked_vehicle_id" value="" />
                         <select class="form-select" id="delivery_executive" name="delivery_executive">
                             <option value="">Select Delivery Executive</option>
                         </select>
@@ -227,6 +228,8 @@
   <script type="text/javascript"><!--
 $('button[id^=\'dispatchplanning\']').on('click', function (e) {
 e.preventDefault();
+console.log($(this).data('vehicleid'));
+$('#clicked_vehicle_id').val($(this).data('vehicleid'));
 $('#dispatchModal').modal('toggle');
 $.ajax({
                 url: 'index.php?path=executives/executives_list/autocompletdeliveryexecitives&token=<?php echo $token; ?>',
@@ -393,9 +396,8 @@ $('.alert.alert-danger').show();
 console.log('Validation Failed!');
 return false;
 }
-console.log($(this).data('vehicleid'));
 $.ajax({
-            url: 'index.php?path=vehicles/dispatchplanning&vehicle_id='+$(this).data('vehicleid')+'&token=<?php echo $token; ?>',
+            url: 'index.php?path=vehicles/dispatchplanning&vehicle_id='+$('#clicked_vehicle_id').val()+'&token=<?php echo $token; ?>',
             dataType: 'json',
             data: $("form[id^='vehicle_dispatch_planning']").serialize(),
             success: function(json) {
