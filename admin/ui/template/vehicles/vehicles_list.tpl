@@ -191,18 +191,24 @@
                             <option value="">Select Driver</option>
                         </select>
                     </div>
+                    <div class="row">
+                    <div class="col-sm-6">    
                     <div class="form-group required">
-                       <label for="recipient-name" class="col-form-label">Delivery Date</label>
+                       <label for="input-delivery-date" class="col-form-label">Delivery Date</label>
                        <div class="input-group date">
-                           <input type="text" name="delivery_date" value="" placeholder="Delivery Date" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
+                           <input type="text" name="delivery_date" value="" placeholder="Delivery Date" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
                            <span class="input-group-btn">
                                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                            </span>
                        </div>
-                       <label for="recipient-name" class="col-form-label">Delivery Timeslot</label>
-                        <select class="form-select" id="delivery_timeslot" name="delivery_timeslot">
-                            <option value="">Select Delivery Timeslot</option>
-                        </select>
+                    </div>
+                    </div>
+                    <div class="col-sm-6">        
+                    <label for="recipient-name" class="col-form-label">Delivery Timeslot</label>
+                    <select class="form-select" id="delivery_timeslot" name="delivery_timeslot">
+                     <option value="">Select Delivery Timeslot</option>
+                     </select>
+                    </div>
                     </div>
                 </form>
             </div>
@@ -366,7 +372,6 @@ $('.date').datetimepicker({
   pickTime: false,
   widgetParent: 'body'
 });
-
 function excel() {
             
     url = 'index.php?path=vehicles/vehicles_list/export_excel&token=<?php echo $token; ?>';
