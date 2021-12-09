@@ -229,6 +229,26 @@ $.ajax({
                     }
             }
 });
+$.ajax({
+                url: 'index.php?path=drivers/drivers_list/autocompletedriver&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '<option value="">Select Driver</option>';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].driver_id + '">' + json[i].name + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#driver');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
 });
 $('#button-filter').on('click', function() {
   url = 'index.php?path=vehicles/vehicles_list&token=<?php echo $token; ?>';
