@@ -395,7 +395,7 @@ return false;
 }
 console.log($(this).data('vehicleid'));
 $.ajax({
-            url: 'index.php?path=vehicles/dispatchplanning&vehicle_id='+$(this).data('vehicleid')+&token=<?php echo $token; ?>',
+            url: 'index.php?path=vehicles/dispatchplanning&vehicle_id='+$(this).data('vehicleid')+'&token=<?php echo $token; ?>',
             dataType: 'json',
             data: $("form[id^='vehicle_dispatch_planning']").serialize(),
             success: function(json) {
