@@ -146,7 +146,7 @@
                   <td class="text-left"><?php echo $vehicle['registration_number']; ?></td>
                   <td class="text-left"><?php echo $vehicle['status']; ?></td>
                   <td class="text-left"><?php echo $vehicle['date_added']; ?></td>
-                  <td class="text-right"><button type="button" id="dispatchplanning" data-toggle="tooltip" title="Dispatch Planning" class="btn btn-primary"><i class="fa fa-random"></i></button>
+                  <td class="text-right"><button type="button" data-vehicleid="<?php echo $vehicle['vehicle_id']; ?>" id="dispatchplanning" data-toggle="tooltip" title="Dispatch Planning" class="btn btn-primary"><i class="fa fa-random"></i></button>
 <a href="<?php echo $vehicle['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
 </td>
                 </tr>
@@ -393,8 +393,9 @@ $('.alert.alert-danger').show();
 console.log('Validation Failed!');
 return false;
 }
+console.log($(this).data('vehicleid'));
 $.ajax({
-            url: 'index.php?path=vehicles/dispatchplanning&token=<?php echo $token; ?>',
+            url: 'index.php?path=vehicles/dispatchplanning&vehicle_id='+$(this).data('vehicleid')+&token=<?php echo $token; ?>',
             dataType: 'json',
             data: $("form[id^='vehicle_dispatch_planning']").serialize(),
             success: function(json) {
