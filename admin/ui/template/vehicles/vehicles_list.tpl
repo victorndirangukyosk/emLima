@@ -168,67 +168,67 @@
     </div>
   </div>
       <!-- Modal -->
-      <div class="modal fade" id="dispatchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-          <div class="modal-dialog" role="document">
-              <div class="modal-content"  >
-                  <div class="modal-body"  style="height:330px;">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      <div class="store-find-block">
-                          <div class="mydivsss">
-                              <div class="store-find">
-                                  <div class="store-head">
-                                      <h2>Assign Vehicle</h2>
-                                      </br> 
-                                  </div>
-                                  <div id="ordernoticeModal-message" style="color: red;text-align:center; font-size: 15px;" >
-                                  </div>
-                                  <div id="ordernoticeModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
-                                  </div>
-                                  <!-- Text input-->
-                                  <div class="store-form">
-                                      <form id="poModal-form" action="" method="post" enctype="multipart/form-data">
+    <div id="dispatchModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div style="color: white;background-color: #008db9;" class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><strong>Assign Vehicle </strong></h4>
+            </div>
+            <div class="modal-body">
+                <form id="vendor_product_price_category" name="vendor_product_price_category">
+                    <div class="form-group required">
+                        <label for="recipient-name" class="col-form-label">Delivery Executive</label>
+                        <select class="form-select" id="delivery_executive" name="delivery_executive">
+                            <option value="">Select Delivery Executive</option>
+                        </select>
+                    </div>
+                    <div class="form-group required">
+                        <label for="recipient-name" class="col-form-label">Driver</label>
+                        <select class="form-select" id="driver" name="driver">
+                            <option value="">Select Driver</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" style="display:none;">
+                </div>
+                <div class="alert alert-success" style="display:none;">
+                </div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="add_vendor_product_to_price_category" name="add_vendor_product_to_price_category">Assign Vehicle</button>
+            </div>
+        </div>
 
-                                          <div class="form-row">
-                                              <div class="form-group">
-                                                  <label> Driver </label>
-                                                  <div class="col-md-12">
-                                                      <input id="po_number" maxlength="30" required style="max-width:100% ;" name="po_number" type="text" placeholder="P.O. Number" class="form-control" required>
-                                                      <br/> </div>
-                                              </div>
-
-                                              <div class="form-row">
-                                                  <div class="form-group">
-                                                      <label> Delivery Executive </label>
-                                                      <div class="col-md-12">
-                                                          <input id="SAP_customer_no" maxlength="30" required style="max-width:100% ;" name="SAP_customer_no" type="text" placeholder="SAP Customer Number" class="form-control input-md" required>
-                                                          <br/> </div>
-                                                  </div>
-                                                  
-                                              </div>
-                                              <div class="form-row">
-                                                  <div class="form-group">
-                                                      <div class="col-md-12"> 
-                                                          <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: left; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
-                                                          <button id="driver-button" name="orderprocessing-button" onclick="saveorderprocessingdetails()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
-                                                      </div>
-                                                  </div>
-                                              </div>     
-                                      </form>
-                                  </div>  
-                              </div>    
-                          </div>
-                          <!-- next div code -->
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+    </div>
 </div>  
   <script type="text/javascript"><!--
 $('button[id^=\'dispatchplanning\']').on('click', function (e) {
 e.preventDefault();
 $('#dispatchModal').modal('toggle');
+$.ajax({
+                url: 'index.php?path=executives/executives_list/autocompletdeliveryexecitives&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '<option value="">Select Delivery Executive</option>';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].executive_id + '">' + json[i].name + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#delivery_executive');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
 });
 $('#button-filter').on('click', function() {
   url = 'index.php?path=vehicles/vehicles_list&token=<?php echo $token; ?>';
@@ -347,6 +347,9 @@ function excel() {
 <style>
 body {
     position: relative;
+}
+.bootstrap-select {
+width : 100% !important;    
 }
 </style>
 
