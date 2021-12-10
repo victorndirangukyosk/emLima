@@ -258,7 +258,7 @@ $.ajax({
             }
 });
 });
-$('#delivery_timeslot').on('change', function() {
+$('#delivery_timeslot, #delivery_timeslot').on('change', function() {
 $.ajax({
                 url: 'index.php?path=vehicles/dispatchplanning/getunassignedvehicles&delivery_date='+$('input[name=\'delivery_date\']').val()+'&delivery_timeslot='+$('select[name=\'delivery_timeslot\']').val()+'&token=<?php echo $token; ?>',
                 dataType: 'json',     

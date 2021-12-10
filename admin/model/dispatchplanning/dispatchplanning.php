@@ -32,8 +32,11 @@ class ModelDispatchplanningDispatchplanning extends Model {
             $log->write($vehicles);
             $log->write($selected_vehicles);
             $vehicles = implode(',', $vehicles);
-            $query_vehicles = $this->db->query('SELECT * FROM ' . DB_PREFIX . "vehicles WHERE vehicle_id NOT IN ('" . $vehicles . "')");
+            $query_vehicles = $this->db->query('SELECT * FROM ' . DB_PREFIX . "vehicles WHERE vehicle_id NOT IN (" . $vehicles . ")");
             $un_assigned_vehicles = $query_vehicles->rows;
+            $log->write($vehicles);
+            $log->write($un_assigned_vehicles);
+            $log->write('SELECT * FROM ' . DB_PREFIX . "vehicles WHERE vehicle_id NOT IN (" . $vehicles . ")");
         } else {
             $query_vehicles = $this->db->query('SELECT * FROM ' . DB_PREFIX . "vehicles");
             $un_assigned_vehicles = $query_vehicles->rows;
@@ -50,7 +53,7 @@ class ModelDispatchplanningDispatchplanning extends Model {
             $log->write($executives);
             $log->write($executives);
             $executives = implode(',', $executives);
-            $query_executives = $this->db->query('SELECT * FROM ' . DB_PREFIX . "delivery_executives WHERE delivery_executive_id NOT IN ('" . $executives . "')");
+            $query_executives = $this->db->query('SELECT * FROM ' . DB_PREFIX . "delivery_executives WHERE delivery_executive_id NOT IN (" . $executives . ")");
             $un_assigned_executives = $query_executives->rows;
         } else {
             $query_executives = $this->db->query('SELECT * FROM ' . DB_PREFIX . "delivery_executives");
@@ -68,7 +71,7 @@ class ModelDispatchplanningDispatchplanning extends Model {
             $log->write($drivers);
             $log->write($drivers);
             $drivers = implode(',', $drivers);
-            $query_drivers = $this->db->query('SELECT * FROM ' . DB_PREFIX . "drivers WHERE driver_id NOT IN ('" . $drivers . "')");
+            $query_drivers = $this->db->query('SELECT * FROM ' . DB_PREFIX . "drivers WHERE driver_id NOT IN (" . $drivers . ")");
             $un_assigned_drivers = $query_drivers->rows;
         } else {
             $query_drivers = $this->db->query('SELECT * FROM ' . DB_PREFIX . "drivers");
