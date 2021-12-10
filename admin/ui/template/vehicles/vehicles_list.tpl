@@ -2,7 +2,9 @@
 <div id="content">
   <div class="page-header">
     <div class="container-fluid">
-      <div class="pull-right"><a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a>
+      <div class="pull-right">
+        <button type="button" id="dispatchplanning" data-toggle="tooltip" title="Dispatch Planning" class="btn btn-primary"><i class="fa fa-random"></i></button>
+        <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a>
         <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-customer').submit() : false;"><i class="fa fa-trash-o"></i></button>
         <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
       </div>
@@ -211,6 +213,12 @@
                      </select>
                     </div>
                     </div>
+                    <div class="form-group required">
+                        <label for="recipient-name" class="col-form-label">Vehicle</label>
+                        <select class="form-select" id="vehicle" name="vehicle">
+                            <option value="">Select Vehicle</option>
+                        </select>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -285,6 +293,28 @@ $.ajax({
                     var $select = $('#delivery_timeslot');
                     $select.html('');
                     if(json.suggestions.delivery_timeslots != null && json.suggestions.delivery_timeslots.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
+});
+$('#delivery_timeslot').on('change', function() {
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getunassignedvehicles&delivery_date='+$('input[name=\'delivery_date\']').val()+'&delivery_timeslot='+$('select[name=\'delivery_timeslot\']').val()+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '<option value="">Select Vehicle</option>';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].vehicle_id + '">' + json[i].registration_number + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#vehicle');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
                     $select.append(option);
                     }
                     $('.selectpicker').selectpicker('refresh');
