@@ -148,9 +148,7 @@
                   <td class="text-left"><?php echo $vehicle['registration_number']; ?></td>
                   <td class="text-left"><?php echo $vehicle['status']; ?></td>
                   <td class="text-left"><?php echo $vehicle['date_added']; ?></td>
-                  <td class="text-right">
-<a href="<?php echo $vehicle['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
-</td>
+                  <td class="text-right"><a href="<?php echo $vehicle['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>
@@ -181,19 +179,6 @@
             </div>
             <div class="modal-body">
                 <form id="vehicle_dispatch_planning" name="vehicle_dispatch_planning">
-                    <div class="form-group required">
-                        <label for="recipient-name" class="col-form-label">Delivery Executive</label>
-                        <input type="hidden" id="clicked_vehicle_id" name="clicked_vehicle_id" value="" />
-                        <select class="form-select" id="delivery_executive" name="delivery_executive">
-                            <option value="">Select Delivery Executive</option>
-                        </select>
-                    </div>
-                    <div class="form-group required">
-                        <label for="recipient-name" class="col-form-label">Driver</label>
-                        <select class="form-select" id="driver" name="driver">
-                            <option value="">Select Driver</option>
-                        </select>
-                    </div>
                     <div class="row">
                     <div class="col-sm-6">    
                     <div class="form-group required">
@@ -212,6 +197,19 @@
                      <option value="">Select Delivery Timeslot</option>
                      </select>
                     </div>
+                    </div>
+                    <div class="form-group required">
+                        <label for="recipient-name" class="col-form-label">Delivery Executive</label>
+                        <input type="hidden" id="clicked_vehicle_id" name="clicked_vehicle_id" value="" />
+                        <select class="form-select" id="delivery_executive" name="delivery_executive">
+                            <option value="">Select Delivery Executive</option>
+                        </select>
+                    </div>
+                    <div class="form-group required">
+                        <label for="recipient-name" class="col-form-label">Driver</label>
+                        <select class="form-select" id="driver" name="driver">
+                            <option value="">Select Driver</option>
+                        </select>
                     </div>
                     <div class="form-group required">
                         <label for="recipient-name" class="col-form-label">Vehicle</label>
@@ -239,46 +237,6 @@ e.preventDefault();
 console.log($(this).data('vehicleid'));
 $('#clicked_vehicle_id').val($(this).data('vehicleid'));
 $('#dispatchModal').modal('toggle');
-$.ajax({
-                url: 'index.php?path=executives/executives_list/autocompletdeliveryexecitives&token=<?php echo $token; ?>',
-                dataType: 'json',     
-                success: function(json) {
-                    console.log(json);
-                    if(json != null) {
-                    var option = '<option value="">Select Delivery Executive</option>';
-                    for (var i=0;i<json.length;i++){
-                           option += '<option value="'+ json[i].executive_id + '">' + json[i].name + '</option>';
-                    }
-                    console.log(option);
-                    var $select = $('#delivery_executive');
-                    $select.html('');
-                    if(json != null && json.length > 0) {
-                    $select.append(option);
-                    }
-                    $('.selectpicker').selectpicker('refresh');
-                    }
-            }
-});
-$.ajax({
-                url: 'index.php?path=drivers/drivers_list/autocompletedriver&token=<?php echo $token; ?>',
-                dataType: 'json',     
-                success: function(json) {
-                    console.log(json);
-                    if(json != null) {
-                    var option = '<option value="">Select Driver</option>';
-                    for (var i=0;i<json.length;i++){
-                           option += '<option value="'+ json[i].driver_id + '">' + json[i].name + '</option>';
-                    }
-                    console.log(option);
-                    var $select = $('#driver');
-                    $select.html('');
-                    if(json != null && json.length > 0) {
-                    $select.append(option);
-                    }
-                    $('.selectpicker').selectpicker('refresh');
-                    }
-            }
-});
 $.ajax({
                 url: 'index.php?path=dropdowns/dropdowns/getdeliverytimeslots&token=<?php echo $token; ?>',
                 dataType: 'json',     
@@ -313,6 +271,46 @@ $.ajax({
                     }
                     console.log(option);
                     var $select = $('#vehicle');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getunassigneddeliveryexecutives&delivery_date='+$('input[name=\'delivery_date\']').val()+'&delivery_timeslot='+$('select[name=\'delivery_timeslot\']').val()+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '<option value="">Select Delivery Executive</option>';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].delivery_executive_id + '">' + json[i].firstname +' '+ json[i].lastname + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#delivery_executive');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getunassigneddrivers&delivery_date='+$('input[name=\'delivery_date\']').val()+'&delivery_timeslot='+$('select[name=\'delivery_timeslot\']').val()+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '<option value="">Select Driver</option>';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].driver_id + '">' + json[i].firstname +' '+json[i].lastname+ '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#driver');
                     $select.html('');
                     if(json != null && json.length > 0) {
                     $select.append(option);

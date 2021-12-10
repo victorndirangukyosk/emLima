@@ -41,4 +41,40 @@ class ModelDispatchplanningDispatchplanning extends Model {
         return $un_assigned_vehicles;
     }
 
+    public function getUnAssignedDeliveryExecutives($delivery_date, $delivery_timeslot) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "dispatch_assignment WHERE delivery_date = '" . $delivery_date . "' AND delivery_time_slot = '" . $delivery_timeslot . "'");
+        $selected_executives = $query->rows;
+        if (count($selected_executives) > 0) {
+            $executives = array_column($selected_executives, 'delivery_executive_id');
+            $log = new Log('error.log');
+            $log->write($executives);
+            $log->write($executives);
+            $executives = implode(',', $executives);
+            $query_executives = $this->db->query('SELECT * FROM ' . DB_PREFIX . "delivery_executives WHERE delivery_executive_id NOT IN ('" . $executives . "')");
+            $un_assigned_executives = $query_executives->rows;
+        } else {
+            $query_executives = $this->db->query('SELECT * FROM ' . DB_PREFIX . "delivery_executives");
+            $un_assigned_executives = $query_executives->rows;
+        }
+        return $un_assigned_executives;
+    }
+
+    public function getUnAssignedDriver($delivery_date, $delivery_timeslot) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "dispatch_assignment WHERE delivery_date = '" . $delivery_date . "' AND delivery_time_slot = '" . $delivery_timeslot . "'");
+        $selected_drivers = $query->rows;
+        if (count($selected_drivers) > 0) {
+            $drivers = array_column($selected_drivers, 'driver_id');
+            $log = new Log('error.log');
+            $log->write($drivers);
+            $log->write($drivers);
+            $drivers = implode(',', $drivers);
+            $query_drivers = $this->db->query('SELECT * FROM ' . DB_PREFIX . "drivers WHERE driver_id NOT IN ('" . $drivers . "')");
+            $un_assigned_drivers = $query_drivers->rows;
+        } else {
+            $query_drivers = $this->db->query('SELECT * FROM ' . DB_PREFIX . "drivers");
+            $un_assigned_drivers = $query_drivers->rows;
+        }
+        return $un_assigned_drivers;
+    }
+
 }

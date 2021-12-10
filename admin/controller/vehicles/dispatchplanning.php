@@ -38,4 +38,30 @@ class ControllerVehiclesDispatchPlanning extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getUnAssignedDeliveryExecutives() {
+        $json = [];
+        $delivery_date = $this->request->get['delivery_date'];
+        $delivery_timeslot = $this->request->get['delivery_timeslot'];
+        $data['delivery_date'] = $delivery_date;
+        $data['delivery_timeslot'] = $delivery_timeslot;
+        $this->load->model('dispatchplanning/dispatchplanning');
+        $res = $this->model_dispatchplanning_dispatchplanning->getUnAssignedDeliveryExecutives($data['delivery_date'], $data['delivery_timeslot']);
+        $json = $res;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getUnAssignedDrivers() {
+        $json = [];
+        $delivery_date = $this->request->get['delivery_date'];
+        $delivery_timeslot = $this->request->get['delivery_timeslot'];
+        $data['delivery_date'] = $delivery_date;
+        $data['delivery_timeslot'] = $delivery_timeslot;
+        $this->load->model('dispatchplanning/dispatchplanning');
+        $res = $this->model_dispatchplanning_dispatchplanning->getUnAssignedDriver($data['delivery_date'], $data['delivery_timeslot']);
+        $json = $res;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
