@@ -428,6 +428,12 @@ $.ajax({
             url: 'index.php?path=vehicles/dispatchplanning&vehicle_id='+$('#clicked_vehicle_id').val()+'&token=<?php echo $token; ?>',
             dataType: 'json',
             data: $("form[id^='vehicle_dispatch_planning']").serialize(),
+            beforeSend: function () {
+            $('#add_vehicle_to_dispatch_plan').prop("disabled",true);
+            },
+            complete: function () {
+            $('#add_vehicle_to_dispatch_plan').prop("disabled",false);
+            },
             success: function(json) {
                 if (json) {
                 $('.alert.alert-success').html('<i class="fa fa-check-circle text-success"></i>Vehicle Assigned Successfully!');
