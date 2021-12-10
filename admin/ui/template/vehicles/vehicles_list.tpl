@@ -183,7 +183,7 @@
                     <div class="col-sm-6">    
                     <div class="form-group required">
                        <label for="input-delivery-date" class="col-form-label">Delivery Date</label>
-                       <div class="input-group date">
+                       <div class="input-group date" id="birthdatepicker">
                            <input type="text" name="delivery_date" value="" placeholder="Delivery Date" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
                            <span class="input-group-btn">
                                <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
@@ -472,4 +472,9 @@ body {
 width : 100% !important;    
 }
 </style>
-
+<script type="text/javascript">
+$('#birthdatepicker').datetimepicker({
+  pickTime: false,
+  widgetParent: 'body'
+});
+</script>
