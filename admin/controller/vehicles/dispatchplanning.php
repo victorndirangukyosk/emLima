@@ -12,7 +12,7 @@ class ControllerVehiclesDispatchPlanning extends Controller {
         $driver = $this->request->get['driver'];
         $delivery_timeslot = $this->request->get['delivery_timeslot'];
         $delivery_date = $this->request->get['delivery_date'];
-        $vehicle_id = $this->request->get['vehicle_id'];
+        $vehicle_id = $this->request->get['vehicle'];
         $data['delivery_executive'] = $delivery_executive;
         $data['driver'] = $driver;
         $data['delivery_timeslot'] = $delivery_timeslot;
