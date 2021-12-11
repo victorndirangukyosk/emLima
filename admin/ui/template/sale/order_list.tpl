@@ -430,7 +430,7 @@
                                                 </a>-->  
                                                <?php } else { ?> 
                                                
-                                               <a href="#" id="new_print_invoice"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>"  data-order-delivery-date="<?= $order['delivery_date'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
+                                               <a href="#" id="updated_new_print_invoice"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>"  data-order-delivery-date="<?= $order['delivery_date'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
                                            <?php } ?> 
                                             <?php } ?>
                                         
@@ -1055,7 +1055,76 @@
             </div>
         </div>
     </div>
-    
+     <div class="modal fade" id="driverModal_new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"  >
+                    <div class="modal-body"  style="height:380px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="store-find-block">
+                            <div class="mydivsss">
+                                <div class="store-find">
+                                    <div class="store-head">
+                                        <h2>Save Driver Details</h2>
+                                          </br> 
+                                    </div>
+                                    <div id="driverModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                    </div>
+                                    <div id="driverModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                    </div>  
+                                      </br>
+                                    <!-- Text input-->
+                                    <div class="store-form">
+                                        <form id="driverModal-form" action="" method="post" enctype="multipart/form-data">
+                                            <div class="form-row">
+                                                 <div class="form-row">
+                                                <div class="form-group">
+                                                    <label> Vehicle Number </label>
+                                                    <div class="col-md-12" >
+                                                      <div class="pull-right">
+                                                        <button id="new-vehicle-button" name="new-vehicle-button" type="button" data-toggle="modal" data-dismiss="modal" title="add new vehicle" data-target="#vehicleModal" class="btn btn-lg btn-success"><i class="fa fa-plus"></i></button>
+                                                        </div>  
+                                                        <!--<input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>-->
+                                                    <div style="width:88%;margin-right:10px;" ><select  name="order_vehicle_number" id="order_vehicle_number" class="form-control" required="">
+                                                        <option value="0">Select Vehicle</option>
+                                                        <?php foreach ($vehicles as $vehicle) { ?>
+                                                        <option value="<?php echo $vehicle['name']; ?>"><?php echo $vehicle['name']; ?></option>
+                                                        <?php } ?>    
+                                                        </select> </div>
+                                                       
+                                                    <br/> </div>
+                                                </div>
+                                            </div>
+
+                                                 <div class="form-row">
+                                                <div class="form-group" id="div_deliverycharge">
+                                                    <label> Delivery Charge </label>
+
+                                                    <div class="col-md-12">
+                                                        <input id="order_delivery_charge" maxlength="10" required style="max-width:100% ;" name="order_delivery_charge" type="number" placeholder="Delivery Charge" class="form-control input-md" required>
+                                                    <br/> </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-6"> 
+                                                        <button type="button" id="driver-buttons" name="driver-buttons" onclick="savedriverdetail()" class="btn btn-lg btn-success" data-dismiss="modal" style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
+                                                    </div>
+                                                    <div class="col-md-6"> 
+                                                        <button id="driver-button" name="driver-button" onclick="savedriverdetails()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Save & Print Invoice</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>  
+                                </div>
+                            </div>
+                           
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
     <div class="modal fade" id="orderprocessingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
@@ -1895,6 +1964,85 @@ $('input[name=\'order_delivery_executive\']').autocomplete({
     $('input[name=\'order_delivery_executive\']').val(item['label']);
     $('input[name=\'order_delivery_executive\']').attr('data_delivery_executive_id',item['value']);
   } 
+});
+
+$('a[id^=\'updated_new_print_invoice\']').on('click', function (e) {
+e.preventDefault();
+var invoice = $(this).attr("data-order-invoice");
+var order_id = $(this).attr("data-order-id");
+var order_vendor = $(this).attr("data-order-vendor");
+var order_delivery_date = $(this).attr("data-order-delivery-date");
+var updateDeliveryDate=0;
+
+var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selected').text();
+
+ $('select[name="order_delivery_executives"]').selectpicker('val', 0);
+ $('select[name="order_drivers"]').selectpicker('val', 0);
+ //$('input[name="order_vehicle_number"]').val('');
+  $('#div_deliverycharge').hide();
+ if(order_vendor=='Kwik Basket')
+ { 
+ $('#div_deliverycharge').show();
+ }
+ var currentdate=new Date();
+ var dd = String(currentdate.getDate()).padStart(2, '0');
+var mm = String(currentdate.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = currentdate.getFullYear();
+
+currentdate = dd + '/' + mm + '/' + yyyy;
+console.log(order_delivery_date);
+console.log('beloe current');
+
+console.log(currentdate);
+if(new Date(order_delivery_date) > new Date(currentdate))
+ if (confirm("Do you want to modify delivery date to current date")) {
+     //continue;
+     updateDeliveryDate=1;
+ }
+ else{
+     return;
+ }
+$.ajax({
+		url: 'index.php?path=sale/order/getDriverDetails&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + order_id,
+		success: function(json) {
+                    console.log(json);
+                    console.log(json.order_info.order_id);
+                    console.log(json.order_info.driver_id);
+                    console.log(json.order_info.vehicle_number);
+                    console.log(json.order_info.delivery_executive_id);
+                    console.log(json.order_info.delivery_charges);
+                    if(json.order_info.order_status == 'Order Approval Pending' || order_status == 'Order Approval Pending' || json.order_info.order_status == 'Order Recieved' || order_status == 'Order Recieved' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
+                    {
+                    $('input[name="order_id"]').val(order_id);
+                    $('input[name="updateDeliveryDate"]').val(updateDeliveryDate);
+                    $('input[name="invoice_custom"]').val(invoice);
+                    $('input[name="order_delivery_charge"]').val(json.order_info.delivery_charges);
+                    $('#driverModal_new').modal('toggle');
+                    if(json.order_info.order_status == 'Order Approval Pending' || order_status == 'Order Approval Pending' || json.order_info.order_status == 'Order Recieved' || order_status == 'Order Recieved') {
+                    $('#driverModal-message').html("Please Update Order Status As Order Processing!");
+                    $('#driver-buttons').prop('disabled', true);
+                    $('#driver-button').prop('disabled', true);
+                    return false;
+                    } else {
+                    $('#driverModal-message').html("");
+                    $('#driver-buttons').prop('disabled', false);
+                    $('#driver-button').prop('disabled', false);    
+                    }
+                    } else {
+                    console.log(invoice);
+                    window.open(invoice, '_blank');
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+});
+ 
+ 
+console.log($(this).attr("data-order-id"));
 });
 
 $('a[id^=\'new_print_invoice\']').on('click', function (e) {

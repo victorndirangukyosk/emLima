@@ -80,4 +80,10 @@ class ModelDispatchplanningDispatchplanning extends Model {
         return $un_assigned_drivers;
     }
 
+    public function getAssignedVehicles($delivery_date, $delivery_timeslot) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "dispatch_assignment WHERE delivery_date = '" . $delivery_date . "' AND delivery_time_slot = '" . $delivery_timeslot . "'");
+        $selected_vehicles = $query->rows;
+        return $selected_vehicles;
+    }
+
 }
