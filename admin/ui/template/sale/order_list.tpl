@@ -1085,10 +1085,6 @@
                                                         </div>  
                                                         <!--<input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>-->
                                                     <div style="width:88%;margin-right:10px;" ><select  name="order_vehicle_number" id="order_vehicle_number" class="form-control" required="">
-                                                        <option value="0">Select Vehicle</option>
-                                                        <?php foreach ($vehicles as $vehicle) { ?>
-                                                        <option value="<?php echo $vehicle['name']; ?>"><?php echo $vehicle['name']; ?></option>
-                                                        <?php } ?>    
                                                         </select> </div>
                                                        
                                                     <br/> </div>
@@ -2002,6 +1998,26 @@ if(new Date(order_delivery_date) > new Date(currentdate))
  else{
      return;
  }
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getassignedvehicles&order_id='+order_id+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '<option value="">Select Vehicle</option>';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].vehicle_id + '">' + json[i].registration_number + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#order_vehicle_number');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+}); 
 $.ajax({
 		url: 'index.php?path=sale/order/getDriverDetails&token=<?php echo $token; ?>',
 		type: 'post',

@@ -64,4 +64,19 @@ class ControllerVehiclesDispatchPlanning extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getAssignedVehicles() {
+        $json = [];
+        $this->load->model('sale/order');
+        $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
+        $delivery_date = $order_info['delivery_date'];
+        $delivery_timeslot = $order_info['delivery_timeslot'];
+        $data['delivery_date'] = $delivery_date;
+        $data['delivery_timeslot'] = $delivery_timeslot;
+        $this->load->model('dispatchplanning/dispatchplanning');
+        $res = $this->model_dispatchplanning_dispatchplanning->getAssignedVehicles($data['delivery_date'], $data['delivery_timeslot']);
+        $json = $res;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
