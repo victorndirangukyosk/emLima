@@ -1058,7 +1058,7 @@
      <div class="modal fade" id="driverModal_new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
-                    <div class="modal-body"  style="height:380px;">
+                    <div class="modal-body"  style="height:330px;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="store-find-block">
                             <div class="mydivsss">
@@ -1067,9 +1067,9 @@
                                         <h2>Save Driver Details</h2>
                                           </br> 
                                     </div>
-                                    <div id="driverModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                    <div id="driverModal-messages" style="color: red;text-align:center; font-size: 15px;" >
                                     </div>
-                                    <div id="driverModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                    <div id="driverModal-success-messages" style="color: green; ; text-align:center; font-size: 15px;">
                                     </div>  
                                       </br>
                                     <!-- Text input-->
@@ -2003,7 +2003,7 @@ $.ajax({
                 dataType: 'json',     
                 success: function(json) {
                     console.log(json);
-                    if(json != null) {
+                    if(json != null && json.length > 0) {
                     var option = '<option value="">Select Vehicle</option>';
                     for (var i=0;i<json.length;i++){
                            option += '<option value="'+ json[i].vehicle_id + '">' + json[i].registration_number + '</option>';
@@ -2015,6 +2015,8 @@ $.ajax({
                     $select.append(option);
                     }
                     $('.selectpicker').selectpicker('refresh');
+                    } else {
+                    $('#driverModal-messages').html("Please Assign Vehicle To Dispatch Plan!");
                     }
             }
 }); 

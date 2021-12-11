@@ -74,6 +74,8 @@ class ControllerVehiclesDispatchPlanning extends Controller {
         $data['delivery_timeslot'] = $delivery_timeslot;
         $this->load->model('dispatchplanning/dispatchplanning');
         $res = $this->model_dispatchplanning_dispatchplanning->getAssignedVehicles($data['delivery_date'], $data['delivery_timeslot']);
+        $log = new Log('error.log');
+        $log->write($res);
         $json = $res;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
