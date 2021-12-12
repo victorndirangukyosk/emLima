@@ -1084,7 +1084,7 @@
                                                         <button id="new-vehicle-button" name="new-vehicle-button" type="button" data-toggle="modal" data-dismiss="modal" title="add new vehicle" data-target="#vehicleModal" class="btn btn-lg btn-success"><i class="fa fa-plus"></i></button>
                                                         </div>  
                                                         <!--<input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>-->
-                                                    <div style="width:88%;margin-right:10px;" ><select  name="order_vehicle_number" id="order_vehicle_number" class="form-control" required="">
+                                                    <div style="width:88%;margin-right:10px;" ><select  name="order_vehicle_numbers" id="order_vehicle_numbers" class="form-control" required="">
                                                         </select> </div>
                                                        
                                                     <br/> </div>
@@ -2003,13 +2003,14 @@ $.ajax({
                 dataType: 'json',     
                 success: function(json) {
                     console.log(json);
+                    console.log(json.length);
                     if(json != null && json.length > 0) {
                     var option = '<option value="">Select Vehicle</option>';
                     for (var i=0;i<json.length;i++){
                            option += '<option value="'+ json[i].vehicle_id + '">' + json[i].registration_number + '</option>';
                     }
                     console.log(option);
-                    var $select = $('#order_vehicle_number');
+                    var $select = $('#order_vehicle_numbers');
                     $select.html('');
                     if(json != null && json.length > 0) {
                     $select.append(option);

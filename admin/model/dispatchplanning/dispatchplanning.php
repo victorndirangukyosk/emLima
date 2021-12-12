@@ -81,9 +81,23 @@ class ModelDispatchplanningDispatchplanning extends Model {
     }
 
     public function getAssignedVehicles($delivery_date, $delivery_timeslot) {
+        $un_assigned_vehicles = array();
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "dispatch_assignment WHERE delivery_date = '" . $delivery_date . "' AND delivery_time_slot = '" . $delivery_timeslot . "'");
         $selected_vehicles = $query->rows;
-        return $selected_vehicles;
+
+        if (count($selected_vehicles) > 0) {
+            $vehicles = array_column($selected_vehicles, 'vehicle_id');
+            $log = new Log('error.log');
+            $log->write($vehicles);
+            $log->write($selected_vehicles);
+            $vehicles = implode(',', $vehicles);
+            $query_vehicles = $this->db->query('SELECT * FROM ' . DB_PREFIX . "vehicles WHERE vehicle_id IN (" . $vehicles . ")");
+            $un_assigned_vehicles = $query_vehicles->rows;
+            $log->write($vehicles);
+            $log->write($un_assigned_vehicles);
+        }
+
+        return $un_assigned_vehicles;
     }
 
 }
