@@ -944,7 +944,117 @@
         </div>
     </div>
         
-    
+    <div class="modal fade" id="driverModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"  >
+                    <div class="modal-body"  style="height:480px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="store-find-block">
+                            <div class="mydivsss">
+                                <div class="store-find">
+                                    <div class="store-head">
+                                        <h2>Save Driver Details</h2>
+                                          </br> 
+                                    </div>
+                                    <div id="driverModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                    </div>
+                                    <div id="driverModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                    </div>  
+                                      </br>
+                                    <!-- Text input-->
+                                    <div class="store-form">
+                                        <form id="driverModal-form" action="" method="post" enctype="multipart/form-data">
+ 
+
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="input-order-status" class="control-label"> Delivery Executive </label>
+                                                    <div class="col-md-12">
+                                                        <!--<input id="order_delivery_executive" maxlength="30" required style="max-width:100% ;" name="order_delivery_executive" type="text" placeholder="Delivery Executive" class="form-control" data_delivery_executive_id="" required>-->
+                                                        <select name="order_delivery_executives" id="order_delivery_executives" class="form-control" required="">
+                                                        <option value="0">Select Delivery Executive</option>
+                                                        <?php foreach ($delivery_executives as $delivery_executive) { ?>
+                                                        <option value="<?php echo $delivery_executive['delivery_executive_id']; ?>"><?php echo $delivery_executive['name']; ?></option>
+                                                        <?php } ?>
+                                                        </select>
+                                                    <br/></div>
+                                                </div><br/><br/>
+                                                
+                                                <div class="form-group">
+                                                    <label > Driver </label>
+                                                        <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
+                                                        <input id="order_delivery_date"   name="order_delivery_date" type="hidden"  class="form-control input-md" required>
+                                                        <input id="updateDeliveryDate"   name="updateDeliveryDate" type="hidden" value=0 class="form-control input-md" required>
+                                                    
+                                                    <div class="col-md-12">
+                                                        <!--<input id="order_driver" maxlength="30" required style="max-width:100% ;" name="order_driver" type="text" placeholder="Driver" class="form-control" data_driver_id="" required>-->
+                                                        <select name="order_drivers" id="order_drivers" class="form-control" required="">
+                                                        <option value="0">Select Driver</option>
+                                                        <?php foreach ($drivers as $driver) { ?>
+                                                        <option value="<?php echo $driver['driver_id']; ?>"><?php echo $driver['name']; ?></option>
+                                                        <?php } ?>    
+                                                        </select>
+                                                    <br/></div>
+                                                </div><br/><br/>
+
+                                                 <div class="form-row">
+                                                <div class="form-group">
+                                                    <label> Vehicle Number </label>
+
+  
+                                                        
+                                   
+                                   
+                                    
+                                   
+                                                    <div class="col-md-12" >
+
+                                                      <div class="pull-right">
+                                                        <button id="new-vehicle-button" name="new-vehicle-button" type="button" data-toggle="modal" data-dismiss="modal" title="add new vehicle" data-target="#vehicleModal" class="btn btn-lg btn-success"><i class="fa fa-plus"></i></button>
+                                                        </div>  
+
+                                                        <!--<input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>-->
+                                                    <div style="width:88%;margin-right:10px;" ><select  name="order_vehicle_number" id="order_vehicle_number" class="form-control" required="">
+                                                        <option value="0">Select Vehicle</option>
+                                                        <?php foreach ($vehicles as $vehicle) { ?>
+                                                        <option value="<?php echo $vehicle['name']; ?>"><?php echo $vehicle['name']; ?></option>
+                                                        <?php } ?>    
+                                                        </select> </div>
+                                                       
+                                                    <br/> </div>
+                                                </div>
+                                            </div>
+
+                                                 <div class="form-row">
+                                                <div class="form-group" id="div_deliverycharge">
+                                                    <label> Delivery Charge </label>
+
+                                                    <div class="col-md-12">
+                                                        <input id="order_delivery_charge" maxlength="10" required style="max-width:100% ;" name="order_delivery_charge" type="number" placeholder="Delivery Charge" class="form-control input-md" required>
+                                                    <br/> </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-6"> 
+                                                        <button type="button" id="driver-buttons" name="driver-buttons" onclick="savedriverdetail()" class="btn btn-lg btn-success" data-dismiss="modal" style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
+                                                    </div>
+                                                    <div class="col-md-6"> 
+                                                        <button id="driver-button" name="driver-button" onclick="savedriverdetails()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Save & Print Invoice</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>  
+                                </div>
+                            </div>
+                           
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
      <div class="modal fade" id="driverModal_new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
@@ -974,13 +1084,8 @@
                                                         <button id="new-vehicle-button" name="new-vehicle-button" type="button" data-toggle="modal" data-dismiss="modal" title="add new vehicle" data-target="#vehicleModal" class="btn btn-lg btn-success"><i class="fa fa-plus"></i></button>
                                                         </div>  
                                                         <!--<input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>-->
-                                                    <div style="width:88%;margin-right:10px;" >
-                                                        <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
-                                                        <input id="order_delivery_date"   name="order_delivery_date" type="hidden"  class="form-control input-md" required>
-                                                        <input id="updateDeliveryDate"   name="updateDeliveryDate" type="hidden" value=0 class="form-control input-md" required>
-                                                        <select  name="order_vehicle_numbers" id="order_vehicle_numbers" class="form-control" required="">
-                                                        </select> 
-                                                    </div>
+                                                    <div style="width:88%;margin-right:10px;" ><select  name="order_vehicle_numbers" id="order_vehicle_numbers" class="form-control" required="">
+                                                        </select> </div>
                                                        
                                                     <br/> </div>
                                                 </div>
@@ -1416,21 +1521,29 @@ function savePO() {
 
 function savedriverdetails_new() { 
  
-    $('#driverModal-messages').html('');
-    $('#driverModal-success-messages').html('');
+    $('#driverModal-message').html('');
+    $('#driverModal-success-message').html('');
    var order_id = $('input[name="order_id"]').val();
    var order_delivery_date = $('input[name="order_delivery_date"]').val();  
    var updateDeliveryDate = $('input[name="updateDeliveryDate"]').val();  
  
    var invoice = $('input[name="invoice_custom"]').val();
-   var vehicle_number =  $('select[name="order_vehicle_numbers"]').val();
+   var driver_id = $('select[name="order_drivers"]').val();
+   //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
+   //var vehicle_number =  $('input[name="order_vehicle_number"]').val();
+   var vehicle_number =  $('select[name="order_vehicle_number"]').val();
    var delivery_charge =  $('input[name="order_delivery_charge"]').val();
+   var delivery_executive_id =  $('select[name="order_delivery_executives"]').val();
+   //var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
     console.log(vehicle_number);
     console.log(delivery_charge);
+    console.log(driver_id);
+    console.log(delivery_executive_id);
 
               console.log($('#driverModal-form').serialize());
-                 if (isNaN(order_id) || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || vehicle_number == '0' ) {
-                      $('#driverModal-messages').html("Please enter data");
+                 if (isNaN(delivery_executive_id) || isNaN(order_id) || isNaN(driver_id) || driver_id  <= 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == ''|| delivery_executive_id == '0' || driver_id == '0' || vehicle_number == '0' ) {
+                   
+                      $('#driverModal-message').html("Please enter data");
                        return false;
                 } 
                 else{
@@ -1457,12 +1570,12 @@ function savedriverdetails_new() {
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ order_id : order_id, vehicle_number : vehicle_number, delivery_charge : delivery_charge ,updateDeliveryDate:updateDeliveryDate},
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge ,updateDeliveryDate:updateDeliveryDate},
                     async: true,
                     success: function(json) {
                         console.log(json); 
                         if (json['status']) {
-                            $('#driverModal-success-messages').html('Saved Successfully');
+                            $('#driverModal-success-message').html('Saved Successfully');
                             
                             //ORDER STATUS UPDATE TO TRANSIT
                             $.ajax({
@@ -1483,13 +1596,13 @@ function savedriverdetails_new() {
                             setTimeout(function(){ window.location.reload(false); }, 1500);
                         }
                         else {
-                            $('#driverModal-success-messages').html('Please try again');
+                            $('#driverModal-success-message').html('Please try again');
                         }
                     },
                     error: function(xhr, ajaxOptions, thrownError) {    
 
                                  // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
-                                $('#driverModal-messages').html("Please try again");
+                                $('#driverModal-message').html("Please try again");
                                     return false;
                                 }
                 });
@@ -1590,24 +1703,29 @@ function savedriverdetails() {
             
 function savedriverdetail_new() { 
  
-    $('#driverModal-messages').html('');
-    $('#driverModal-success-messages').html('');
+    $('#driverModal-message').html('');
+    $('#driverModal-success-message').html('');
    var order_id = $('input[name="order_id"]').val();
    var invoice = $('input[name="invoice_custom"]').val();
+   var driver_id = $('select[name="order_drivers"]').val();
    var order_delivery_date = $('input[name="order_delivery_date"]').val();  
    var updateDeliveryDate = $('input[name="updateDeliveryDate"]').val();  
  
-   var vehicle_number =  $('select[name="order_vehicle_numbers"]').val();
+   var vehicle_number =  $('select[name="order_vehicle_number"]').val();
    var delivery_charge =  $('input[name="order_delivery_charge"]').val();
+   var delivery_executive_id =  $('select[name="order_delivery_executives"]').val();
+   //var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
     console.log(vehicle_number);
     console.log(delivery_charge);
+    console.log(driver_id);
+    console.log(delivery_executive_id);
 
               console.log($('#driverModal-form').serialize());
  
-                if (isNaN(order_id) || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || vehicle_number == '0' ) {
+                if (isNaN(delivery_executive_id) || isNaN(order_id) || isNaN(driver_id) || driver_id  <= 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == ''|| delivery_executive_id == '0' || driver_id == '0' || vehicle_number == '0' ) {
 
                    
-                      $('#driverModal-messages').html("Please enter data");
+                      $('#driverModal-message').html("Please enter data");
                        return false;
                 } 
                 else{
@@ -1642,7 +1760,7 @@ function savedriverdetail_new() {
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ order_id : order_id, vehicle_number : vehicle_number, delivery_charge : delivery_charge,updateDeliveryDate:updateDeliveryDate },
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge,updateDeliveryDate:updateDeliveryDate },
                     async: true,
                     success: function(json) {
                         console.log(json); 
@@ -1663,17 +1781,17 @@ function savedriverdetail_new() {
                             });
                             //ORDER STATUS UPDATE TO TRANSIT
                             
-                            $('#driverModal-success-messages').html('Saved Successfully');
+                            $('#driverModal-success-message').html('Saved Successfully');
                             setTimeout(function(){ window.location.reload(false); }, 1500);
                         }
                         else {
-                            $('#driverModal-success-messages').html('Please try again');
+                            $('#driverModal-success-message').html('Please try again');
                         }
                     },
                     error: function(xhr, ajaxOptions, thrownError) {    
 
                                  // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
-                                $('#driverModal-messages').html("Please try again");
+                                $('#driverModal-message').html("Please try again");
                                     return false;
                                 }
                 });

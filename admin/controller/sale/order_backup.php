@@ -9284,8 +9284,11 @@ class ControllerSaleOrder extends Controller {
 
     public function SaveOrUpdateOrderDriverVehicleDetails() {
         $order_id = $this->request->post['order_id'];
+        $driver_id = $this->request->post['driver_id'];
         $vehicle_number = $this->request->post['vehicle_number'];
         $delivery_charge = $this->request->post['delivery_charge'];
+        $delivery_executive_id = $this->request->post['delivery_executive_id'];
+        // $order_delivery_date = $this->request->post['order_delivery_date'];
         $updateDeliveryDate = $this->request->post['updateDeliveryDate'];
 
         /* $log = new Log('error.log');
@@ -9295,16 +9298,13 @@ class ControllerSaleOrder extends Controller {
 
         $this->load->model('checkout/order');
         $this->load->model('sale/order');
-        $this->load->model('dispatchplanning/dispatchplanning');
         $order_info = $this->model_checkout_order->getOrder($order_id);
-        $vehicle_info = $this->model_dispatchplanning_dispatchplanning->getAssignedVehiclesByVehicle($order_info['delivery_date'], $order_info['delivery_timeslot'], $vehicle_number);
-
         if (is_array($order_info) && $order_info != NULL) {
 
             // echo "<pre>";print_r( $delivery_charge);die;
-            $this->model_sale_order->UpdateOrderDriverDetails($order_id, $vehicle_info['driver_id']);
+            $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
             $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
-            $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $vehicle_info['delivery_executive_id']);
+            $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id);
             if ($delivery_charge > 0) {
                 $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
             }
