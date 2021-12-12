@@ -9296,10 +9296,10 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('sale/order');
         $this->load->model('dispatchplanning/dispatchplanning');
-        $this->load->model('vehicle/vehicle');
+        $this->load->model('vehicles/vehicles');
         $order_info = $this->model_checkout_order->getOrder($order_id);
         $vehicle_info = $this->model_dispatchplanning_dispatchplanning->getAssignedVehiclesByVehicle($order_info['delivery_date'], $order_info['delivery_timeslot'], $vehicle_number);
-        $vehicle_details = $this->model_vehicle_vehicle->getVehicle($vehicle_number);
+        $vehicle_details = $this->model_vehicles_vehicles->getVehicle($vehicle_number);
         if (is_array($order_info) && $order_info != NULL) {
 
             // echo "<pre>";print_r( $delivery_charge);die;
