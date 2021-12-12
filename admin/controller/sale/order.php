@@ -9296,14 +9296,15 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('checkout/order');
         $this->load->model('sale/order');
         $this->load->model('dispatchplanning/dispatchplanning');
+        $this->load->model('vehicle/vehicle');
         $order_info = $this->model_checkout_order->getOrder($order_id);
         $vehicle_info = $this->model_dispatchplanning_dispatchplanning->getAssignedVehiclesByVehicle($order_info['delivery_date'], $order_info['delivery_timeslot'], $vehicle_number);
-
+        $vehicle_details = $this->model_vehicle_vehicle->getVehicle($vehicle_number);
         if (is_array($order_info) && $order_info != NULL) {
 
             // echo "<pre>";print_r( $delivery_charge);die;
             $this->model_sale_order->UpdateOrderDriverDetails($order_id, $vehicle_info['driver_id']);
-            $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
+            $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_details['registration_number']);
             $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $vehicle_info['delivery_executive_id']);
             if ($delivery_charge > 0) {
                 $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
