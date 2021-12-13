@@ -1877,7 +1877,8 @@ if(new Date(order_delivery_date) > new Date(currentdate)) {
      updateDeliveryDate=1;
  }
  else{
-     return;
+ console.log('Do you want to modify delivery date to current date_2');     
+ return;
  }
  }
 $.ajax({
