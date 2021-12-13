@@ -1393,6 +1393,7 @@ class ControllerSaleOrder extends Controller {
         $data['entry_date_modified'] = $this->language->get('entry_date_modified');
         $data['entry_store_name'] = $this->language->get('entry_store_name');
         $data['button_invoice_print'] = $this->language->get('button_invoice_print');
+        $data['button_status_update'] = 'Update Status To Order Processing.';
         $data['button_shipping_print'] = $this->language->get('button_shipping_print');
         $data['button_add'] = $this->language->get('button_add');
         $data['button_edit'] = $this->language->get('button_edit');

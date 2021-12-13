@@ -4,6 +4,7 @@
     <div class="page-header">
         <div class="container-fluid">
             <div class="pull-right">
+                <button type="" id="button-status-update" form="form-order" data-toggle="tooltip" title="<?php echo $button_status_update; ?>" class="btn btn-default"><i class="fa fa-refresh"></i></button>
                 <?php if (!$this->user->isVendor()): ?>
                         <button type="" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
                 <?php endif ?>  
@@ -514,6 +515,7 @@
         </div>
     </div>
     <script type="text/javascript"><!--
+    var selected_order_ids=[];        
     $('input[name=\'filter_store_name\']').autocomplete({
     'source': function(request, response) {
         $.ajax({
@@ -786,7 +788,8 @@
 
             $('#button-shipping, #button-invoice').prop('disabled', true);
             $('#button-invoice-pdf').prop('disabled', true);
-              $('#button-bulkdeliveryrequest').prop('disabled', true);
+            $('#button-bulkdeliveryrequest').prop('disabled', true);
+            $('#button-status-update').prop('disabled', true);
 
             var selected = $('input[name^=\'selected\']:checked');
             $('input[name=\'order_delivery_count\']').val('');
@@ -795,7 +798,8 @@
             if (selected.length) {
                 $('#button-invoice').prop('disabled', false);
                 $('#button-invoice-pdf').prop('disabled', false);
-                  $('#button-bulkdeliveryrequest').prop('disabled', false);   
+                $('#button-bulkdeliveryrequest').prop('disabled', false);
+                $('#button-status-update').prop('disabled', false);
              $('input[name=\'order_delivery_count\']').val((selected.length)+' -orders selected');
 
             }
@@ -833,8 +837,10 @@
             
             
                
-                
-
+        $('input[name="selected[]"]:checked').each(function() {
+        console.log(this.value);
+        selected_order_ids.push($(this).val());
+        });
         });
 
         $('input[name^=\'selected\']:first').trigger('change');
@@ -2674,6 +2680,11 @@ $.ajax({
 			 
 		}
 });
+});
+
+$('#button-status-update').on('click', function (e) {
+e.preventDefault();
+console.log(selected_order_ids);
 });
 </script></div>
 <?php echo $footer; ?>
