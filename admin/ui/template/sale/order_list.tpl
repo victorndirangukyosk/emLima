@@ -1871,6 +1871,7 @@ console.log('beloe current');
 
 console.log(currentdate);
 if(new Date(order_delivery_date) > new Date(currentdate)) {
+ console.log('Do you want to modify delivery date to current date');   
  if (confirm("Do you want to modify delivery date to current date")) {
      //continue;
      updateDeliveryDate=1;
