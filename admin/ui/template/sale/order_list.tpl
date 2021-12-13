@@ -1871,16 +1871,15 @@ console.log('beloe current');
 
 console.log(currentdate);
 if(new Date(order_delivery_date) > new Date(currentdate)) {
- console.log('Do you want to modify delivery date to current date');   
  if (confirm("Do you want to modify delivery date to current date")) {
      //continue;
      updateDeliveryDate=1;
  }
  else{
- console.log('Do you want to modify delivery date to current date_2');     
  return;
  }
  }
+console.log("Do you want to modify delivery date to current date"); 
 $.ajax({
                 url: 'index.php?path=vehicles/dispatchplanning/getassignedvehicles&order_id='+order_id+'&token=<?php echo $token; ?>',
                 dataType: 'json',     
