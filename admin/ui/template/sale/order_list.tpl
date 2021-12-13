@@ -1860,18 +1860,23 @@ var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selec
  { 
  $('#div_deliverycharge').show();
  }
- var currentdate=new Date();
- var dd = String(currentdate.getDate()).padStart(2, '0');
+var currentdate=new Date();
+var dd = String(currentdate.getDate()).padStart(2, '0');
 var mm = String(currentdate.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = currentdate.getFullYear();
+
+const order_delivery_dateArray = text.split("/");
+var dd2 = order_delivery_dateArray[0];
+var mm2 = order_delivery_dateArray[1]; //January is 0!
+var yyyy2 = order_delivery_dateArray[2];
 
 currentdate = dd + '/' + mm + '/' + yyyy;
 console.log(order_delivery_date);
 console.log('beloe current');
 
 console.log(currentdate);
-console.log(new Date($(this).attr("data-order-delivery-date")));
-console.log(new Date(currentdate).toDateString());
+console.log(new Date(yyyy2, mm2, dd2));
+console.log(new Date(yyyy, mm, dd));
 if(new Date(order_delivery_date) > new Date(currentdate)) {
  if (confirm("Do you want to modify delivery date to current date")) {
  //continue;
