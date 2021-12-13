@@ -1879,7 +1879,7 @@ var currentdate_js = new Date(yyyy, mm, dd);
 console.log(currentdate);
 console.log(order_delivery_date_js);
 console.log(currentdate_js);
-if(new Date(order_delivery_date_js) > new Date(currentdate_js)) {
+if(new Date(yyyy2, mm2, dd2) > new Date(yyyy, mm, dd)) {
  if (confirm("Do you want to modify delivery date to current date")) {
  //continue;
  updateDeliveryDate=1;
