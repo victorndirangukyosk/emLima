@@ -9302,6 +9302,7 @@ class ControllerSaleOrder extends Controller {
         $log = new Log('error.log');
         $log->write('vehicle_info');
         $log->write($vehicle_info);
+        $log->write($this->request->post['vehicle_number']);
         $log->write('vehicle_info');
         $vehicle_details = $this->model_vehicles_vehicles->getVehicle($vehicle_number);
         if (is_array($order_info) && $order_info != NULL) {
