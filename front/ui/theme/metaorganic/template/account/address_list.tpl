@@ -797,11 +797,32 @@
         }
     });
 
-
-    
-
-    
-    
+var autocomplete;
+autocomplete = new google.maps.places.Autocomplete((document.getElementById('gmap-input')), {
+        componentRestrictions: {
+            country: 'KE'
+        }
+});
+google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                
+            console.log("latitude");
+            console.log(autocomplete);
+            $('#us1').locationpicker({
+                location: {
+                    latitude: autocomplete.getPlace().geometry.location.lat(),
+                    longitude: autocomplete.getPlace().geometry.location.lng()
+                },  
+                radius: 0,
+                inputBinding: {
+                    latitudeInput: $('input[name="latitude"]'),
+                    longitudeInput: $('input[name="longitude"]'),
+                    locationNameInput: $('.LocalityId2')
+                },
+                enableAutocomplete: true,
+                zoom:13
+                
+            });
+});        
 </script>
 </body>
 

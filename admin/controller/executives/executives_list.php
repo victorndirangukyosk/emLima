@@ -440,7 +440,6 @@ class ControllerExecutivesExecutivesList extends Controller {
 
         $data['token'] = $this->session->data['token'];
 
-
         if (isset($this->request->get['executive_id'])) {
             $data['executive_id'] = $this->request->get['executive_id'];
         } else {
@@ -640,14 +639,14 @@ class ControllerExecutivesExecutivesList extends Controller {
             $this->error['email'] = $this->language->get('error_email');
         }
 
-        if (isset($this->request->post['password'])  && ((utf8_strlen($this->request->post['password']) > 10) || (utf8_strlen($this->request->post['password']) < 4) )) {
+        if (isset($this->request->post['password']) && ((utf8_strlen($this->request->post['password']) > 10) || (utf8_strlen($this->request->post['password']) < 4) )) {
             $this->error['password'] = $this->language->get('error_password');
         }
         // echo "<pre>";print_r($this->request->post);die;
 
-        if (isset($this->request->post['password'] ) ) {
-           if($this->request->post['password'] != $this->request->post['confirm'])
-            $this->error['password'] = $this->language->get('error_confirm');
+        if (isset($this->request->post['password'])) {
+            if ($this->request->post['password'] != $this->request->post['confirm'])
+                $this->error['password'] = $this->language->get('error_confirm');
         }
 
         /* if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
@@ -656,15 +655,15 @@ class ControllerExecutivesExecutivesList extends Controller {
 
         $executive_info = $this->model_executives_executives->getExecutiveByEmail($this->request->post['email']);
 
-        /*if (!isset($this->request->get['executive_id'])) {
-            if ($executive_info) {
-                $this->error['warning'] = $this->language->get('error_exists');
-            }
-        } else {
-            if ($executive_info && ($this->request->get['executive_id'] != $executive_info['delivery_executive_id'])) {
-                $this->error['warning'] = $this->language->get('error_exists');
-            }
-        }*/
+        /* if (!isset($this->request->get['executive_id'])) {
+          if ($executive_info) {
+          $this->error['warning'] = $this->language->get('error_exists');
+          }
+          } else {
+          if ($executive_info && ($this->request->get['executive_id'] != $executive_info['delivery_executive_id'])) {
+          $this->error['warning'] = $this->language->get('error_exists');
+          }
+          } */
 
         if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
             $this->error['telephone'] = $this->language->get('error_telephone');
@@ -788,6 +787,43 @@ class ControllerExecutivesExecutivesList extends Controller {
                 ];
             }
         }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function autocompletdeliveryexecitives() {
+        $json = [];
+
+        $this->load->model('executives/executives');
+
+        $filter_data = [];
+        $results = $this->model_executives_executives->getExecutives($filter_data);
+
+        foreach ($results as $result) {
+            if ($this->user->isVendor()) {
+                $result['name'] = $result['firstname'];
+            }
+
+            $json[] = [
+                'executive_id' => $result['delivery_executive_id'],
+                'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                'firstname' => $result['firstname'],
+                'lastname' => $result['lastname'],
+                'email' => $result['email'],
+                /* 'driving_licence' => $result['driving_licence'], */
+                'telephone' => $result['telephone'],
+            ];
+        }
+
 
         $sort_order = [];
 

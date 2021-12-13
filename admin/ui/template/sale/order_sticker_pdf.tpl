@@ -603,109 +603,17 @@
         </style>
     </head>
     <body>
-        <?php foreach($orders as $order) { ?>        
         <div class="main-content">
             <table class="products-table">
                 <thead class="font-bold">
-                    <tr><td>ORDER ID</td>
-                        <td colspan="2" class="text-right">
-                            <?= '#'.$order['order_id']?>   
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            ORDER STATUS
-                        </td>
-                        <td colspan="2" class="text-right">
-                            <?= $order['status']['name']?>   
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            DATE OF DELIVERY
-                        </td>
-                        <td colspan="2" class="text-right">
-                            <?= $order['delivery_date']?>   
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            DELIVERY TIMESLOT
-                        </td>
-                        <td colspan="2" class="text-right">
-                            <?= $order['delivery_timeslot']?>      
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            COMPANY NAME
-                        </td>
-                        <td colspan="2" class="text-right">
-                            <?= $order['customer_company_name']?>        
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            DELIVERY LOCATION
-                        </td>
-                        <td colspan="2" class="text-right">
-                            <?= $order['shipping_address']?>        
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            ORDER NOTES
-                        </td>
-                        <td colspan="3" class="text-right">
-                            <?= $order['comment']?>        
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-            <table class="products-table">
-                <thead class="font-bold">
-                    <tr>
-                        <td>SKU</td>
-                        <td>Product</td>
-                        <td>Product Notes</td>
-                        <td class="text-center">Quantity</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach($order['products'] as $product) { ?>
-                    <tr>
-                        <td><?= $product['product_id'] ?></td>
-                        <td><?= $product['name'] ?></td>
-                        <td><?= $product['product_note'] ?></td>
-                        <td class="text-center"><?= $product['quantity'] ?> <?= $product['unit'] ?></td>
-                    </tr>
+                    <?php foreach($orders as $order) { ?>        
+                    <tr><td><?= '#'.$order['order_id']?></td><td colspan="2" class="text-right"><?= $order['company_name']?></td></tr>
                     <?php } ?>
-                </tbody>
-            </table>
-            <table class="products-table">
-                <thead class="font-bold">
-                    <tr>
-                        <td>Order Processing Team</td>
-                        <td colspan="2" class="text-right"><?= $order_processing_group_details['order_processing_group_name']; ?></td>
-                    </tr>
-                    <tr>
-                     <td>Order Processor</td>
-                     <td colspan="2" class="text-right"><?= $order_processor['firstname'] ?><?= $order_processor['lastname'] ?></td>
-                    </tr>
-                    <tr>
-                      <td>Order Processor Signature</td>  
-                      <td></td>
-                    </tr>
                 </thead>
                 <tbody>
-                    
                 </tbody>
             </table>
         </div>
-        <?php } ?>
     </body>
 
 </html>
