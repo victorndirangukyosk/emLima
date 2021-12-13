@@ -9534,4 +9534,35 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function UpdateOrderStatusToProcessing() {
+        $log = new Log('error.log');
+        $log->write($this->request->post['order_id']);
+        $log->write($this->request->post['order_status_id']);
+        $order_array = explode(',', $this->request->post['order_id']);
+
+        $order_data = array('order_status_id' => 1, 'notify' => 0, 'append' => '', 'comment' => '', 'added_by' => $this->user->getFirstName() . ' ' . $this->user->getLastName(), 'added_by_role' => $this->user->getGroupName());
+        $curl = curl_init();
+
+        // Set SSL if required
+        if ('https' == substr(HTTPS_CATALOG, 0, 5)) {
+            curl_setopt($curl, CURLOPT_PORT, 443);
+        }
+
+        foreach ($order_array as $order_id) {
+            curl_setopt($curl, CURLOPT_HEADER, false);
+            curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+            curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_URL, HTTPS_CATALOG . 'index.php?path=api/order/history&order_id=' . $order_id . '&added_by=' . $this->user->getFirstName() . ' ' . $this->user->getLastName() . '&added_by_role=' . $this->user->getGroupName());
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($order_data));
+
+            $json = curl_exec($curl);
+            $log->write($json);
+        }
+    }
+
 }

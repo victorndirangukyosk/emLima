@@ -2685,6 +2685,18 @@ $.ajax({
 $('#button-status-update').on('click', function (e) {
 e.preventDefault();
 console.log(selected_order_ids);
+$.ajax({
+		url: 'index.php?path=sale/order/updateorderstatustoprocessing&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + selected_order_ids + '&order_status_id=1',
+		success: function(json) {	 
+                    console.log(json);
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+});
 });
 </script></div>
 <?php echo $footer; ?>
