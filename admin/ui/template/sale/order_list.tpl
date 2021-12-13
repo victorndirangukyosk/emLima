@@ -948,7 +948,7 @@
      <div class="modal fade" id="driverModal_new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
-                    <div class="modal-body"  style="height:330px;">
+                    <div class="modal-body"  style="height:300px;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="store-find-block">
                             <div class="mydivsss">
@@ -1882,7 +1882,8 @@ console.log(currentdate_js);
 if(new Date(yyyy2, mm2, dd2) > new Date(yyyy, mm, dd)) {
  if (confirm("Do you want to modify delivery date to current date")) {
  //continue;
- updateDeliveryDate=1;
+updateDeliveryDate=1;
+$('input[name="updateDeliveryDate"]').val(updateDeliveryDate);
  } else {
  return;
  }
