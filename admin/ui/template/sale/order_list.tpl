@@ -1890,7 +1890,7 @@ $('input[name="updateDeliveryDate"]').val(updateDeliveryDate);
  }
 console.log("Do you want to modify delivery date to current date"); 
 $.ajax({
-                url: 'index.php?path=vehicles/dispatchplanning/getassignedvehicles&order_id='+order_id+'&token=<?php echo $token; ?>',
+                url: 'index.php?path=vehicles/dispatchplanning/getassignedvehicles&updateDeliveryDate='+updateDeliveryDate+'&order_id='+order_id+'&token=<?php echo $token; ?>',
                 dataType: 'json',     
                 success: function(json) {
                     console.log(json);

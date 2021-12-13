@@ -70,6 +70,8 @@ class ControllerVehiclesDispatchPlanning extends Controller {
         $updateDeliveryDate = $this->request->get['updateDeliveryDate'];
         $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
         $delivery_date = $updateDeliveryDate == 1 ? date('y-m-d') : $order_info['delivery_date'];
+        $log = new Log('error.log');
+        $log->write($delivery_date);
         $delivery_timeslot = $order_info['delivery_timeslot'];
         $data['delivery_date'] = $delivery_date;
         $data['delivery_timeslot'] = $delivery_timeslot;

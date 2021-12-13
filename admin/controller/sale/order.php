@@ -9299,6 +9299,10 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('vehicles/vehicles');
         $order_info = $this->model_checkout_order->getOrder($order_id);
         $vehicle_info = $this->model_dispatchplanning_dispatchplanning->getAssignedVehiclesByVehicle($order_info['delivery_date'], $order_info['delivery_timeslot'], $vehicle_number);
+        $log = new Log('error.log');
+        $log->write('vehicle_info');
+        $log->write($vehicle_info);
+        $log->write('vehicle_info');
         $vehicle_details = $this->model_vehicles_vehicles->getVehicle($vehicle_number);
         if (is_array($order_info) && $order_info != NULL) {
 
