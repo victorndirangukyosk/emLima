@@ -1873,11 +1873,13 @@ var yyyy2 = order_delivery_dateArray[2];
 currentdate = dd + '/' + mm + '/' + yyyy;
 console.log(order_delivery_date);
 console.log('beloe current');
+var order_delivery_date_js = new Date(yyyy2, mm2, dd2);
+var currentdate_js = new Date(yyyy, mm, dd);
 
 console.log(currentdate);
-console.log(new Date(yyyy2, mm2, dd2));
-console.log(new Date(yyyy, mm, dd));
-if(new Date(order_delivery_date) > new Date(currentdate)) {
+console.log(order_delivery_date_js);
+console.log(currentdate_js);
+if(new Date(order_delivery_date_js) > new Date(currentdate_js)) {
  if (confirm("Do you want to modify delivery date to current date")) {
  //continue;
  updateDeliveryDate=1;
