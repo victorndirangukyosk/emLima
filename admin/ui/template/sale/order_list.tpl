@@ -1865,7 +1865,7 @@ var dd = String(currentdate.getDate()).padStart(2, '0');
 var mm = String(currentdate.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = currentdate.getFullYear();
 
-const order_delivery_dateArray = text.split("/");
+const order_delivery_dateArray = order_delivery_date.split("/");
 var dd2 = order_delivery_dateArray[0];
 var mm2 = order_delivery_dateArray[1]; //January is 0!
 var yyyy2 = order_delivery_dateArray[2];
