@@ -2010,9 +2010,9 @@ $.ajax({
                     }
                     $('.selectpicker').selectpicker('refresh');
                     } else {
-                    $('#driverModal-messages').html("Please Assign Vehicle To Dispatch Plan!");
+                    /*$('#driverModal-messages').html("Please Assign Vehicle To Dispatch Plan!");
                     $('#driver-buttons').prop('disabled', true);
-                    $('#driver-button').prop('disabled', true);
+                    $('#driver-button').prop('disabled', true);*/
                     }
             }
 }); 
