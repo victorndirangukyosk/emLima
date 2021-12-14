@@ -9605,9 +9605,9 @@ class ControllerSaleOrder extends Controller {
             $curl = curl_init();
 
             // Set SSL if required
-            if ('https' == substr(HTTPS_CATALOG, 0, 5)) {
-                curl_setopt($curl, CURLOPT_PORT, 443);
-            }
+            /* if ('https' == substr(HTTPS_CATALOG, 0, 5)) {
+              curl_setopt($curl, CURLOPT_PORT, 443);
+              } */
 
             curl_setopt($curl, CURLOPT_HEADER, false);
             curl_setopt($curl, CURLINFO_HEADER_OUT, true);
@@ -9617,9 +9617,8 @@ class ControllerSaleOrder extends Controller {
             curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_URL, HTTPS_CATALOG . 'index.php?path=api/order/history&order_id=' . $order_id . '&added_by=' . $this->user->getFirstName() . ' ' . $this->user->getLastName() . '&added_by_role=' . $this->user->getGroupName());
-            curl_setopt($curl, CURLOPT_COOKIE, session_name() . '=' . $this->session->data['cookie'] . ';');
-            /* curl_setopt($curl, CURLOPT_POST, true);
-              curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($order_data)); */
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($order_data));
 
             $json = curl_exec($curl);
             $log->write($json);
