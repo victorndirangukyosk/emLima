@@ -2773,6 +2773,20 @@ $('#button-status-update').on('click', function (e) {
 e.preventDefault();
 console.log(selected_order_ids);
 $('#neworderprocessingModal').modal('toggle');
+$.ajax({
+		url: 'index.php?path=sale/order/checkorderstatus&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + selected_order_ids + '&order_status_id=14',
+		success: function(json) {	 
+                    console.log(json);
+                    $('#orderprocessingModal-messages').html('Selected Orders Status Is Invalid!');
+                    return false;
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+});
 });
 
 function saveorderprocessingdetailsnew() { 
