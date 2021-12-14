@@ -1950,6 +1950,8 @@ var order_delivery_date = $(this).attr("data-order-delivery-date");
 var updateDeliveryDate=0;
 
 var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selected').text();
+var order_status_id_new = $('select[id=\'input-order-status'+order_id+'\'] option:selected').val();
+
 
  $('select[name="order_delivery_executives"]').selectpicker('val', 0);
  $('select[name="order_drivers"]').selectpicker('val', 0);
@@ -2010,9 +2012,11 @@ $.ajax({
                     }
                     $('.selectpicker').selectpicker('refresh');
                     } else {
-                    /*$('#driverModal-messages').html("Please Assign Vehicle To Dispatch Plan!");
+                    if(order_status_id_new == 1) {
+                    $('#driverModal-messages').html("Please Assign Vehicle To Dispatch Plan!");
                     $('#driver-buttons').prop('disabled', true);
-                    $('#driver-button').prop('disabled', true);*/
+                    $('#driver-button').prop('disabled', true);
+                    }
                     }
             }
 }); 
