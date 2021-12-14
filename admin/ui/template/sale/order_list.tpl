@@ -1855,7 +1855,26 @@ var $select = $('#order_processor_id');
     $('.selectpicker').selectpicker('refresh');
 }
 });    
-});          
+});
+$('select[id^=\'new_order_processing_group_id\']').on('change', function (e) {
+    var order_processing_group_id = $('select[id=\'new_order_processing_group_id\'] option:selected').val();
+    $.ajax({
+      url: 'index.php?path=orderprocessinggroup/orderprocessor/getAllOrderProcessors&token=<?php echo $token; ?>&order_processing_group_id='+order_processing_group_id,
+      dataType: 'json',     
+      success: function(json) {
+//console.log(json.length);
+var $select = $('#new_order_processor_id');
+    $select.html('');
+    $select.append('<option value=""> Select Order Processor </option>');
+    if(json != null && json.length > 0) {
+    $.each(json, function(index, value) {
+      $select.append('<option value="' + value.order_processor_id + '">' + value.name + '</option>');
+    });
+    }
+    $('.selectpicker').selectpicker('refresh');
+}
+});    
+});
 </script>
 
 
