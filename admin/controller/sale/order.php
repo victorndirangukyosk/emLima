@@ -1393,6 +1393,7 @@ class ControllerSaleOrder extends Controller {
         $data['entry_date_modified'] = $this->language->get('entry_date_modified');
         $data['entry_store_name'] = $this->language->get('entry_store_name');
         $data['button_invoice_print'] = $this->language->get('button_invoice_print');
+        $data['button_status_update'] = 'Update Status To Order Processing.';
         $data['button_shipping_print'] = $this->language->get('button_shipping_print');
         $data['button_add'] = $this->language->get('button_add');
         $data['button_edit'] = $this->language->get('button_edit');
@@ -9394,6 +9395,57 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function NewSaveOrUpdateOrderProcessorDetails() {
+        $order_id = $this->request->post['order_id'];
+        $order_processing_group_id = $this->request->post['order_processing_group_id'];
+        $order_processor_id = $this->request->post['order_processor_id'];
+        $log = new Log('error.log');
+        $log->write('SaveOrUpdateOrderProcessorDetails');
+        $log->write($this->request->post['order_processing_group_id']);
+        $log->write($this->request->post['order_processor_id']);
+        $log->write($this->request->post['order_id']);
+
+        $order_array = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $order_array = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $order_array = explode(',', $this->request->post['order_id']);
+            $order_array = array_unique($order_array);
+        }
+
+        $this->load->model('checkout/order');
+        $this->load->model('sale/order');
+        foreach ($order_array as $order_id) {
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            if (is_array($order_info) && $order_info != NULL) {
+                $this->model_sale_order->UpdateOrderProcessingDetails($order_id, $order_processing_group_id, $order_processor_id);
+            }
+
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $order_id,
+            ];
+            $log->write('order assigned to processor');
+
+            $this->model_user_user_activity->addActivity('order_assigned_to_processor', $activity_data);
+
+            $log->write('order assigned to processor');
+        }
+
+
+        $json['status'] = 'success';
+        $json['message'] = 'Order Assigned To Processor!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function getDriverDetails() {
 
         $order_id = $this->request->post['order_id'];
@@ -9529,6 +9581,72 @@ class ControllerSaleOrder extends Controller {
         $order_update = $this->model_sale_order->updatevendororderstatuss($order_id, $vendor_order_status_id);
         $log->write($order_update);
         $json['data'] = $order_update;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function UpdateOrderStatusToProcessing() {
+        $log = new Log('error.log');
+        $log->write($this->request->post['order_id']);
+        $log->write($this->request->post['order_status_id']);
+
+        $order_array = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $order_array = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $order_array = explode(',', $this->request->post['order_id']);
+            $order_array = array_unique($order_array);
+        }
+
+        $order_data = array('order_status_id' => 1, 'notify' => 0, 'append' => '', 'comment' => '', 'added_by' => $this->user->getFirstName() . ' ' . $this->user->getLastName(), 'added_by_role' => $this->user->getGroupName());
+        $curl = curl_init();
+
+        // Set SSL if required
+        if ('https' == substr(HTTPS_CATALOG, 0, 5)) {
+            curl_setopt($curl, CURLOPT_PORT, 443);
+        }
+
+        foreach ($order_array as $order_id) {
+            curl_setopt($curl, CURLOPT_HEADER, false);
+            curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+            curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_URL, HTTPS_CATALOG . 'index.php?path=api/order/history&order_id=' . $order_id . '&added_by=' . $this->user->getFirstName() . ' ' . $this->user->getLastName() . '&added_by_role=' . $this->user->getGroupName());
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($order_data));
+
+            $json = curl_exec($curl);
+            $log->write($json);
+        }
+    }
+
+    public function checkorderstatus() {
+
+        $this->load->model('sale/order');
+
+        $order_array = NULL;
+        $invalid_order_status = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $order_array = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $order_array = explode(',', $this->request->post['order_id']);
+            $order_array = array_unique($order_array);
+        }
+
+        foreach ($order_array as $order_id) {
+            $order_info = $this->model_sale_order->getOrder($order_id);
+            if ($order_info['order_status_id'] != 14) {
+                $invalid_order_status[] = $order_info['order_id'];
+            }
+        }
+        $data['invalid_order_status'] = $invalid_order_status;
+        $data['invalid_order_status_count'] = count($invalid_order_status);
+        $json['data'] = $data;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

@@ -6,7 +6,7 @@ class ModelDesignSlider extends Model
     {
         $this->trigger->fire('pre.admin.slider.add', $data);
 
-        $this->db->query('INSERT INTO '.DB_PREFIX."sliders SET name = '".$this->db->escape($data['name'])."', store_id = '".(int) $data['store_id']."', date_start = '".$this->db->escape($data['date_start'])."', date_end = '".$this->db->escape($data['date_end'])."', status = '".(int) $data['status']."'");
+        $this->db->query('INSERT INTO '.DB_PREFIX."sliders SET name = '".$this->db->escape($data['name'])."', store_id = '".(int) $data['store_id']."', date_start = '".$this->db->escape($data['date_start'])."', date_end = '".$this->db->escape($data['date_end'])."', description = '".$this->db->escape($data['description'])."', link = '".$this->db->escape($data['sub_title'])."', status = '".(int) $data['status']."'");
 
         $slider_id = $this->db->getLastId();
 
@@ -25,7 +25,7 @@ class ModelDesignSlider extends Model
     {
         $this->trigger->fire('pre.admin.slider.edit', $data);
 
-        $this->db->query('UPDATE '.DB_PREFIX."sliders SET name = '".$this->db->escape($data['name'])."', store_id = '".(int) $data['store_id'].$this->db->escape($data['name'])."', date_start = '".$this->db->escape($data['date_start'])."', date_end = '".$this->db->escape($data['date_end'])."', status = '".(int) $data['status']."' WHERE slider_id = '".(int) $slider_id."'");
+        $this->db->query('UPDATE '.DB_PREFIX."sliders SET name = '".$this->db->escape($data['name'])."', store_id = '".(int) $data['store_id'].$this->db->escape($data['name'])."', date_start = '".$this->db->escape($data['date_start'])."', date_end = '".$this->db->escape($data['date_end'])."', description = '".$this->db->escape($data['description'])."', link = '".$this->db->escape($data['sub_title'])."', status = '".(int) $data['status']."' WHERE slider_id = '".(int) $slider_id."'");
 
         $this->db->query('DELETE FROM '.DB_PREFIX."slider_datas WHERE slider_id = '".(int) $slider_id."'");
 
