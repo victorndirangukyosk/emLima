@@ -689,10 +689,6 @@ class ControllerApiOrder extends Controller {
         $json = [];
 
         $log = new Log('error.log');
-        $log->write('api/order/history');
-        $log->write($this->request);
-        $log->write('api/order/history');
-
         if (isset($this->session->data['api_id'])) {
             $json['error'] = $this->language->get('error_permission');
         } else {
@@ -717,23 +713,33 @@ class ControllerApiOrder extends Controller {
             if (isset($this->request->get['order_id'])) {
                 $order_id = $this->request->get['order_id'];
                 $added_by = $this->request->get['added_by'];
-                $added_by_role = isset($this->request->get['added_by_role']) && $this->request->get['added_by_role'] != NULL ? $this->request->get['added_by_role'] : $this->request->post['added_by_role'];
+                $added_by_role = $this->request->get['added_by_role'];
             } else {
                 $order_id = 0;
             }
 
-            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $order_array = NULL;
+            if (is_array($this->request->get['order_id']) && count($this->request->get['order_id']) > 0) {
+                $order_array = array_unique($this->request->get['order_id']);
+            }
+            if (!is_array($this->request->get['order_id']) && $this->request->get['order_id'] != NULL) {
+                $order_array = explode(',', $this->request->get['order_id']);
+                $order_array = array_unique($order_array);
+            }
 
-            $log->write($order_id);
+            foreach ($order_array as $order_id) {
 
-            if ($order_info) {
-                $this->model_checkout_order->addOrderHistory($order_id, $this->request->post['order_status_id'], $this->request->post['comment'], $this->request->post['notify'], $added_by, $added_by_role);
+                $order_info = $this->model_checkout_order->getOrder($order_id);
 
-                //$this->createDeliveryRequest($order_id);
+                $log->write($order_id);
 
-                $json['success'] = $this->language->get('text_success');
-            } else {
-                $json['error'] = $this->language->get('error_not_found');
+                if ($order_info) {
+                    $this->model_checkout_order->addOrderHistory($order_id, $this->request->post['order_status_id'], $this->request->post['comment'], $this->request->post['notify'], $added_by, $added_by_role);
+                    $this->model_checkout_order->UpdateOrderProcessingDetails($order_id, $this->request->post['order_processing_group_id'], $this->request->post['order_processor_id']);
+                    $json['success'] = $this->language->get('text_success');
+                } else {
+                    $json['error'] = $this->language->get('error_not_found');
+                }
             }
         }
 

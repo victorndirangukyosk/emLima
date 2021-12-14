@@ -2837,7 +2837,7 @@ function saveorderprocessingdetailsnew() {
     url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/bulkhistory&order_id='+selected_order_ids+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
     type: 'post',
     dataType: 'json',
-    data: 'order_status_id=1&notify=1',
+    data: 'order_status_id=1&notify=0&order_processing_group_id='+order_processing_group_id+'&order_processor_id='+order_processor_id,
     success: function(json) {	 
     console.log(json);
     $('.alert').html('Order status updated successfully!');
