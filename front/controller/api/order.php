@@ -683,6 +683,64 @@ class ControllerApiOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function bulkhistory() {
+        $this->load->language('api/order');
+
+        $json = [];
+
+        $log = new Log('error.log');
+        $log->write('api/order/history');
+        $log->write($this->request);
+        $log->write('api/order/history');
+
+        if (isset($this->session->data['api_id'])) {
+            $json['error'] = $this->language->get('error_permission');
+        } else {
+            // Add keys for missing post vars
+            $keys = [
+                'order_status_id',
+                'notify',
+                'append',
+                'comment',
+            ];
+
+            $log->write('1');
+
+            foreach ($keys as $key) {
+                if (!isset($this->request->post[$key])) {
+                    $this->request->post[$key] = '';
+                }
+            }
+
+            $this->load->model('checkout/order');
+
+            if (isset($this->request->get['order_id'])) {
+                $order_id = $this->request->get['order_id'];
+                $added_by = $this->request->get['added_by'];
+                $added_by_role = isset($this->request->get['added_by_role']) && $this->request->get['added_by_role'] != NULL ? $this->request->get['added_by_role'] : $this->request->post['added_by_role'];
+            } else {
+                $order_id = 0;
+            }
+
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+
+            $log->write($order_id);
+
+            if ($order_info) {
+                $this->model_checkout_order->addOrderHistory($order_id, $this->request->post['order_status_id'], $this->request->post['comment'], $this->request->post['notify'], $added_by, $added_by_role);
+
+                //$this->createDeliveryRequest($order_id);
+
+                $json['success'] = $this->language->get('text_success');
+            } else {
+                $json['error'] = $this->language->get('error_not_found');
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function hasProduct() {
         $json = [];
 

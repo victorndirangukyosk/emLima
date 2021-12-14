@@ -9600,15 +9600,15 @@ class ControllerSaleOrder extends Controller {
             $order_array = array_unique($order_array);
         }
 
+        $order_data = array('order_status_id' => 1, 'notify' => 0, 'append' => '', 'comment' => '', 'added_by' => $this->user->getFirstName() . ' ' . $this->user->getLastName(), 'added_by_role' => $this->user->getGroupName());
+        $curl = curl_init();
+
+        // Set SSL if required
+        if ('https' == substr(HTTPS_CATALOG, 0, 5)) {
+            curl_setopt($curl, CURLOPT_PORT, 443);
+        }
+
         foreach ($order_array as $order_id) {
-            $order_data = array('order_status_id' => 1, 'notify' => 0, 'append' => '', 'comment' => '', 'added_by' => $this->user->getFirstName() . ' ' . $this->user->getLastName(), 'added_by_role' => $this->user->getGroupName());
-            $curl = curl_init();
-
-            // Set SSL if required
-            /* if ('https' == substr(HTTPS_CATALOG, 0, 5)) {
-              curl_setopt($curl, CURLOPT_PORT, 443);
-              } */
-
             curl_setopt($curl, CURLOPT_HEADER, false);
             curl_setopt($curl, CURLINFO_HEADER_OUT, true);
             curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
