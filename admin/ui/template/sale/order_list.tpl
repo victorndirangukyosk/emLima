@@ -1992,6 +1992,9 @@ $.ajax({
                     console.log(json);
                     console.log(json.length);
                     if(json != null && json.length > 0) {
+                    $('#driverModal-messages').html("");
+                    $('#driver-buttons').prop('disabled', false);
+                    $('#driver-button').prop('disabled', false);    
                     var option = '<option value="">Select Vehicle</option>';
                     for (var i=0;i<json.length;i++){
                            option += '<option value="'+ json[i].vehicle_id + '">' + json[i].registration_number + '</option>';
@@ -2005,6 +2008,8 @@ $.ajax({
                     $('.selectpicker').selectpicker('refresh');
                     } else {
                     $('#driverModal-messages').html("Please Assign Vehicle To Dispatch Plan!");
+                    $('#driver-buttons').prop('disabled', true);
+                    $('#driver-button').prop('disabled', true);
                     }
             }
 }); 
