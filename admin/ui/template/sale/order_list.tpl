@@ -2840,9 +2840,11 @@ function saveorderprocessingdetailsnew() {
     data: 'order_status_id=1&notify=0&order_processing_group_id='+order_processing_group_id+'&order_processor_id='+order_processor_id,
     success: function(json) {	 
     console.log(json);
+    $('#orderprocessingModal-success-messages').html('Order status updated successfully!');
     $('.alert').html('Order status updated successfully!');
     $(".alert").attr('class', 'alert alert-success');
     $(".alert").show();
+    setTimeout(function(){ window.location.reload(false); }, 1500);
     },			
     error: function(xhr, ajaxOptions, thrownError) {		
 			 
