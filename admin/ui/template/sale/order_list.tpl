@@ -2847,7 +2847,9 @@ function saveorderprocessingdetailsnew() {
     setTimeout(function(){ window.location.reload(false); }, 1500);
     },			
     error: function(xhr, ajaxOptions, thrownError) {		
-			 
+    $('#orderprocessingModal-messages').html("Please try again");
+    return false;
+    }    
     }
     });
     }
