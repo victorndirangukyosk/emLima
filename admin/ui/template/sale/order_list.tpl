@@ -2772,6 +2772,9 @@ $.ajax({
 $('#button-status-update').on('click', function (e) {
 e.preventDefault();
 console.log(selected_order_ids);
+$('#orderprocessingModal-messages').html('');
+$('#orderprocessingModal-success-messages').html('');
+$('#new-driver-button').prop('disabled', false);
 $('#neworderprocessingModal').modal('toggle');
 $.ajax({
 		url: 'index.php?path=sale/order/checkorderstatus&token=<?php echo $token; ?>',
@@ -2780,8 +2783,17 @@ $.ajax({
 		data: 'order_id=' + selected_order_ids + '&order_status_id=14',
 		success: function(json) {	 
                     console.log(json);
+                    if(json.invalid_order_status_count > 0) {
                     $('#orderprocessingModal-messages').html('Selected Orders Status Is Invalid!');
+                    $('#new-driver-button').prop('disabled', true);
                     return false;
+                    }
+                    
+                    if(json.invalid_order_status_count == 0) {
+                    $('#orderprocessingModal-messages').html('');
+                    $('#new-driver-button').prop('disabled', false);
+                    return true;
+                    }
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
 			 
