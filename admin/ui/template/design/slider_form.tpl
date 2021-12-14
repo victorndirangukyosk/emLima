@@ -68,6 +68,24 @@
                     <input type="hidden" name="store_id" value="<?= $store_id ?>" />
                   </div>
               </div>
+
+
+              <div class="form-group">
+                  <label class="col-sm-2 control-label"  >Sub Title</label>
+                  <div class="col-sm-10">
+                    <input name="sub_title" value="<?= $link ?>" class="form-control" />
+                    
+                  </div>
+              </div>
+
+
+              <div class="form-group">
+                  <label class="col-sm-2 control-label"  >Description</label>
+                  <div class="col-sm-10">
+                    <input name="description" value="<?= $description ?>" class="form-control" />
+                  </div>
+              </div>
+
               
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-date-start"><?php echo $entry_date_start; ?></label>
