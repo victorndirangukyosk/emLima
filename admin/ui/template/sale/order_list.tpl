@@ -836,10 +836,13 @@
             }
             
             
-               
+        selected_order_ids = [];       
         $('input[name="selected[]"]:checked').each(function() {
+        console.log('Hi');    
         console.log(this.value);
+        console.log('Hi');    
         selected_order_ids.push($(this).val());
+        console.log(selected_order_ids);
         });
         });
 
