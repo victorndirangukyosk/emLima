@@ -9411,7 +9411,7 @@ class ControllerSaleOrder extends Controller {
         }
         if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
             $order_array = explode(',', $this->request->post['order_id']);
-            $order_array = array_unique($this->request->post['order_id']);
+            $order_array = array_unique($order_array);
         }
 
         $this->load->model('checkout/order');
@@ -9596,7 +9596,7 @@ class ControllerSaleOrder extends Controller {
         }
         if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
             $order_array = explode(',', $this->request->post['order_id']);
-            $order_array = array_unique($this->request->post['order_id']);
+            $order_array = array_unique($order_array);
         }
 
         $order_data = array('order_status_id' => 1, 'notify' => 0, 'append' => '', 'comment' => '', 'added_by' => $this->user->getFirstName() . ' ' . $this->user->getLastName(), 'added_by_role' => $this->user->getGroupName());
