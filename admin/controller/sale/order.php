@@ -9589,7 +9589,15 @@ class ControllerSaleOrder extends Controller {
         $log = new Log('error.log');
         $log->write($this->request->post['order_id']);
         $log->write($this->request->post['order_status_id']);
-        $order_array = explode(',', $this->request->post['order_id']);
+
+        $order_array = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $order_array = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $order_array = explode(',', $this->request->post['order_id']);
+            $order_array = array_unique($this->request->post['order_id']);
+        }
 
         $order_data = array('order_status_id' => 1, 'notify' => 0, 'append' => '', 'comment' => '', 'added_by' => $this->user->getFirstName() . ' ' . $this->user->getLastName(), 'added_by_role' => $this->user->getGroupName());
         $curl = curl_init();
