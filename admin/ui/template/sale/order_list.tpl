@@ -1091,6 +1091,74 @@
         </div>
     </div>
     
+    
+    <div class="modal fade" id="neworderprocessingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"  >
+                    <div class="modal-body"  style="height:330px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="store-find-block">
+                            <div class="mydivsss">
+                                <div class="store-find">
+                                    <div class="store-head">
+                                        <h2>Save Order Processing Details</h2>
+                                          </br> 
+                                    </div>
+                                    <div id="orderprocessingModal-messages" style="color: red;text-align:center; font-size: 15px;" >
+                                    </div>
+                                    <div id="orderprocessingModal-success-messages" style="color: green; ; text-align:center; font-size: 15px;">
+                                    </div>  
+                                      </br>
+                                    <!-- Text input-->
+                                    <div class="store-form">
+                                        <form id="neworderprocessingModal-form" action="" method="post" enctype="multipart/form-data">
+ 
+
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="input-order-status" class="control-label"> Order Processing Group </label>
+                                                    <div class="col-md-12">
+                                                        <!--<input id="order_delivery_executive" maxlength="30" required style="max-width:100% ;" name="order_delivery_executive" type="text" placeholder="Delivery Executive" class="form-control" data_delivery_executive_id="" required>-->
+                                                        <select name="new_order_processing_group_id" id="new_order_processing_group_id" class="form-control" required="">
+                                                        <option> Select Order Processing Group </option>
+                                                        <?php foreach ($order_processing_groups as $order_processing_group) { ?>
+                                                        <option value="<?php echo $order_processing_group['order_processing_group_id']; ?>"><?php echo $order_processing_group['order_processing_group_name']; ?></option>
+                                                        <?php } ?>
+                                                        </select>
+                                                    <br/></div>
+                                                </div><br/><br/>
+                                                
+                                                <div class="form-group">
+                                                    <label > Order Processor </label>
+                                                    <div class="col-md-12">
+                                                        <!--<input id="order_driver" maxlength="30" required style="max-width:100% ;" name="order_driver" type="text" placeholder="Driver" class="form-control" data_driver_id="" required>-->
+                                                        <select name="new_order_processor_id" id="new_order_processor_id" class="form-control" required="">
+                                                        <option> Select Order Processor </option>
+                                                        </select>
+                                                    <br/></div>
+                                                </div><br/><br/>
+
+                                                 <div class="form-row">
+                                                <div class="form-group">
+                                                    <div class="col-md-12"> 
+                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: left; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+                                                        <button id="new-driver-button" name="new-orderprocessing-button" onclick="saveorderprocessingdetailsnew()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>  
+                                </div>
+                            </div>
+                           
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>                                                    
+                                                        
     <!-- Modal -->
     <div class="modal fade" id="ordernoticeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -2685,19 +2753,72 @@ $.ajax({
 $('#button-status-update').on('click', function (e) {
 e.preventDefault();
 console.log(selected_order_ids);
-$.ajax({
+$('#neworderprocessingModal').modal('toggle');
+});
+
+function saveorderprocessingdetailsnew() { 
+ 
+    $('#orderprocessingModal-messages').html('');
+    $('#orderprocessingModal-success-messages').html('');
+   var order_processing_group_id =  $('select[name="new_order_processing_group_id"]').val();
+   var order_processor_id =  $('select[name="new_order_processor_id"]').val();
+   var order_processing_group_name = 'Order Processing Group : '+ $('select[name=\'new_order_processing_group_id\'] option:selected').text();
+    console.log(order_processing_group_id);
+    console.log(order_processor_id);
+
+              console.log($('#neworderprocessingModal-form').serialize());
+ 
+                if (isNaN(order_processor_id) || isNaN(order_processing_group_id) || order_processing_group_id  <= 0 || order_processing_group_id == '' || order_processor_id == '' || order_processor_id <= 0) {
+                   
+                      $('#orderprocessingModal-messages').html("Please enter data");
+                       return false;
+                } 
+                else{
+            $('.alert').html('Please wait your request is processing!');
+            $(".alert").attr('class', 'alert alert-success');
+            $(".alert").show();
+            $.ajax({
 		url: 'index.php?path=sale/order/updateorderstatustoprocessing&token=<?php echo $token; ?>',
 		type: 'post',
 		dataType: 'json',
 		data: 'order_id=' + selected_order_ids + '&order_status_id=1',
 		success: function(json) {	 
                     console.log(json);
+                    $('.alert').html('Order status updated successfully!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
 			 
 		}
-});
-});
+            });
+                  
+                    $.ajax({
+                    url: 'index.php?path=sale/order/NewSaveOrUpdateOrderProcessorDetails&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data:{ order_id : selected_order_ids, order_processing_group_id : order_processing_group_id, order_processor_id : order_processor_id },
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                            $('#orderprocessingModal-success-messages').html('Saved Successfully');
+                            setTimeout(function(){ window.location.reload(false); }, 1500);
+                        }
+                        else {
+                            $('#orderprocessingModal-success-messages').html('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+
+                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                $('#orderprocessingModal-messages').html("Please try again");
+                                    return false;
+                                }
+                });
+                }
+$('#neworderprocessingModal-form')[0].reset();               
+}
 </script></div>
 <?php echo $footer; ?>
 
