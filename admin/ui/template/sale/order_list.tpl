@@ -1951,6 +1951,7 @@ var updateDeliveryDate=0;
 
 var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selected').text();
 var order_status_id_new = $('select[id=\'input-order-status'+order_id+'\'] option:selected').val();
+console.log(order_status_id_new);
 
 
  $('select[name="order_delivery_executives"]').selectpicker('val', 0);
