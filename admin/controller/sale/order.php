@@ -1251,6 +1251,7 @@ class ControllerSaleOrder extends Controller {
         ];
 
         $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
+        $data['dispatchplanning'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'], 'SSL');
         $data['invoicepdf'] = $this->url->link('sale/order/invoicepdf', 'token=' . $this->session->data['token'], 'SSL');
         // $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
         $data['shipping'] = $this->url->link('sale/order/shippingNote', 'token=' . $this->session->data['token'], 'SSL');

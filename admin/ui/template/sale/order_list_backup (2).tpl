@@ -2821,37 +2821,63 @@ function saveorderprocessingdetailsnew() {
  
     $('#orderprocessingModal-messages').html('');
     $('#orderprocessingModal-success-messages').html('');
-    var order_processing_group_id =  $('select[name="new_order_processing_group_id"]').val();
-    var order_processor_id =  $('select[name="new_order_processor_id"]').val();
-    var order_processing_group_name = 'Order Processing Group : '+ $('select[name=\'new_order_processing_group_id\'] option:selected').text();
+   var order_processing_group_id =  $('select[name="new_order_processing_group_id"]').val();
+   var order_processor_id =  $('select[name="new_order_processor_id"]').val();
+   var order_processing_group_name = 'Order Processing Group : '+ $('select[name=\'new_order_processing_group_id\'] option:selected').text();
     console.log(order_processing_group_id);
     console.log(order_processor_id);
-    console.log($('#neworderprocessingModal-form').serialize());
+
+              console.log($('#neworderprocessingModal-form').serialize());
  
-    if (isNaN(order_processor_id) || isNaN(order_processing_group_id) || order_processing_group_id  <= 0 || order_processing_group_id == '' || order_processor_id == '' || order_processor_id <= 0) {
-    $('#orderprocessingModal-messages').html("Please enter data");
-    return false;
-    } 
-    else{
-    $.ajax({
-    url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/bulkhistory&order_id='+selected_order_ids+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
-    type: 'post',
-    dataType: 'json',
-    data: 'order_status_id=1&notify=0&order_processing_group_id='+order_processing_group_id+'&order_processor_id='+order_processor_id,
-    success: function(json) {	 
-    console.log(json);
-    $('#orderprocessingModal-success-messages').html('Order status updated successfully!');
-    $('.alert').html('Order status updated successfully!');
-    $(".alert").attr('class', 'alert alert-success');
-    $(".alert").show();
-    setTimeout(function(){ window.location.reload(false); }, 1500);
-    },			
-    error: function(xhr, ajaxOptions, thrownError) {		
-    $('#orderprocessingModal-messages').html("Please try again");
-    return false;
-    }
-    });
-    }
+                if (isNaN(order_processor_id) || isNaN(order_processing_group_id) || order_processing_group_id  <= 0 || order_processing_group_id == '' || order_processor_id == '' || order_processor_id <= 0) {
+                   
+                      $('#orderprocessingModal-messages').html("Please enter data");
+                       return false;
+                } 
+                else{
+            $('.alert').html('Please wait your request is processing!');
+            $(".alert").attr('class', 'alert alert-success');
+            $(".alert").show();
+            $.ajax({
+		url: 'index.php?path=sale/order/updateorderstatustoprocessing&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + selected_order_ids + '&order_status_id=1',
+		success: function(json) {	 
+                    console.log(json);
+                    $('.alert').html('Order status updated successfully!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+            });
+                  
+                    $.ajax({
+                    url: 'index.php?path=sale/order/NewSaveOrUpdateOrderProcessorDetails&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data:{ order_id : selected_order_ids, order_processing_group_id : order_processing_group_id, order_processor_id : order_processor_id },
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                            $('#orderprocessingModal-success-messages').html('Saved Successfully');
+                            setTimeout(function(){ window.location.reload(false); }, 1500);
+                        }
+                        else {
+                            $('#orderprocessingModal-success-messages').html('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+
+                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                $('#orderprocessingModal-messages').html("Please try again");
+                                    return false;
+                                }
+                });
+                }
 $('#neworderprocessingModal-form')[0].reset();               
 }
 
