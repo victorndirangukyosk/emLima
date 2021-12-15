@@ -2491,7 +2491,7 @@ class ControllerApiCustomerOrder extends Controller {
 
                 if ($this->config->get('config_active_store_minimum_order_amount') > $this->cart->getSubTotal()) {
                     $currentprice = $this->config->get('config_active_store_minimum_order_amount') - $this->cart->getSubTotal();
-                    $json['error_message'] = "<center style='background-color:#ee4054;color:#fff'>" . $this->currency->format($currentprice) . ' away from minimum order value </center>';
+                    $json['error_message'] = $this->currency->format($currentprice) . ' away from minimum order value.';
                     $product['valid_cart_min'] = false;
                     $valid_cart = false;
 
