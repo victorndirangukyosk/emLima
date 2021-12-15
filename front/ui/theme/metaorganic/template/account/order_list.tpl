@@ -1076,6 +1076,7 @@ return;
     });
     viewRejectedProductsModal(orderid);
   }
+$('.newddl').prop('selectedIndex',0);  
 });
  
 

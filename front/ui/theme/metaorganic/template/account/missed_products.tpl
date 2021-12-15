@@ -13,11 +13,11 @@
                                         <li class="list-group-item my-order-list-head">
 
                                             <div class="row">
-                                                <div class="col-sm-4" align="left">
+                                                <div class="col-sm-2" align="left">
                                                     <h2 class="my-order-list-title">#<?php echo $order_id; ?></h2>
                                                 </div>
-                                                <div class="col-sm-4">
-                                                    <h2 class="my-order-list-title">Store Name: <?= $store_name?></h2>
+                                                <div class="col-sm-6" align="center">
+                                                    <h2 class="my-order-list-title"><?= $store_name?></h2>
                                                 </div>
                                                 <div class="col-sm-4" align="right">
                                                     <h2 class="my-order-list-title"><span class="my-order-id-item"><strong><?php echo $total_products; ?></strong> <?= $text_products ?></span></h2>
@@ -27,24 +27,19 @@
                                         <?php $i=0;  foreach ($products as $product) { ?>
                                         <li class="list-group-item">
                                             <div class="row">
-                                                <div class="col-md-2 col-xs-4">
-                                                    <div class="mycart-product-img"><img src="<?= $product['image'] ?>" alt="" class="img-responsive"></div>
-                                                </div>
                                                 <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && $can_return) { ?>
                                                 <div class="col-md-4 col-xs-8">
                                                     <?php } else { ?>
                                                     <div class="col-md-5 col-xs-8">
                                                         <?php } ?>
-                                                        <div class="mycart-product-info">
-                                                            <h3> <?php echo $product['name']; ?> </h3>
-                                                            <p class="product-info"><span class="small-info"><?php echo $product['unit']; ?></span>
-                                                            </p>
+                                                        <div class="my-order-price">
+                                                            <h3> <?php echo $product['name']; ?> <?php echo "(". $product['unit'] . ")"; ?></h3>
                                                         </div>
                                                     </div>
                                                     <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && $can_return) { ?>
                                                     <div class="col-md-2 col-xs-8">
                                                         <?php } else { ?>
-                                                        <div class="col-md-3 col-xs-8">
+                                                        <div class="col-md-5 col-xs-8">
                                                             <?php } ?>
                                                             <div class="my-order-price">
                                                                 <?php echo $product['quantity']; ?> x <?php echo $product['price']; ?>
