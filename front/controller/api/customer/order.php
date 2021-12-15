@@ -2485,19 +2485,17 @@ class ControllerApiCustomerOrder extends Controller {
                   } */
 
                 $product['valid_cart_min'] = true;
-                if (isset($args['stores']) && false) {
-                    $this->load->model('account/address');
+                $this->load->model('account/address');
 
-                    $store_info = $this->model_account_address->getStoreData($store_id);
+                $store_info = $this->model_account_address->getStoreData($store_id);
 
-                    if ($this->config->get('config_active_store_minimum_order_amount') > $this->cart->getSubTotal()) {
-                        $currentprice = $this->config->get('config_active_store_minimum_order_amount') - $this->cart->getSubTotal();
-                        $json['error_message'] = "<center style='background-color:#ee4054;color:#fff'>" . $this->currency->format($currentprice) . ' away from minimum order value </center>';
-                        $product['valid_cart_min'] = false;
-                        $valid_cart = false;
+                if ($this->config->get('config_active_store_minimum_order_amount') > $this->cart->getSubTotal()) {
+                    $currentprice = $this->config->get('config_active_store_minimum_order_amount') - $this->cart->getSubTotal();
+                    $json['error_message'] = "<center style='background-color:#ee4054;color:#fff'>" . $this->currency->format($currentprice) . ' away from minimum order value </center>';
+                    $product['valid_cart_min'] = false;
+                    $valid_cart = false;
 
-                        $json['status'] = 10100;
-                    }
+                    $json['status'] = 10100;
                 }
                 /* PREVIOUS CODE FOR VALIDATE MINIMUM ORDER AMOUNT */
                 /* if (isset($args['stores']) && isset($args['stores'][$store_id]) && false) {
