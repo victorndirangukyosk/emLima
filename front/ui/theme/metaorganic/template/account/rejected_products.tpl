@@ -39,41 +39,6 @@
                                                             <h3> <?php echo $product['name']; ?> </h3>
                                                             <p class="product-info"><span class="small-info"><?php echo $product['unit']; ?></span>
                                                             </p>
-                                                            <p class="product-info"><span class="small-info"><?php echo $product['product_note']; ?></span>
-                                                            </p>
-                                                            <?php foreach ($products_status as $product_status) { ?>
-                                                            <?php if(trim($product['name']) == trim($product_status->product_name) && $product['unit'] == $product_status->unit ) { $is_true = false; ?>
-                                                            <!--<span> <i class="fa fa-arrow-right" aria-hidden="true"></i></span>-->
-                                                            <?php if($product_status->status == 'Remaining') {  $is_true = true;?>
-                                                            <span class="badge badge-warning">
-                                                                <?= $text_remaining ?>
-                                                            </span>
-                                                            <?php } ?>
-
-
-                                                            <?php if($product_status->status == 'not available') { $is_true = true; ?>
-                                                            <span class="badge badge-danger">
-                                                                <?= $text_not_avialable ?>
-                                                            </span>
-                                                            <?php } ?>
-
-                                                            <?php if($product_status->status == 'picked') { $is_true = true; ?>
-                                                            <span class="badge badge-success">
-                                                                <?= $text_picked ?>
-                                                            </span>
-                                                            <?php } ?>
-
-                                                            <?php if($product_status->status == 'replaced') { $is_true = true; ?>
-                                                            <span class="badge badge-primary">
-                                                                <?= $text_replaced ?>
-                                                            </span>
-                                                            <?php } ?>
-                                                            <?php if(!$is_true) { ?>
-                                                            <span class="badge badge-primary">
-                                                                <?= $product_status->status ?>
-                                                            </span>
-                                                            <?php } ?>
-                                                            <?php } } ?>
                                                         </div>
                                                     </div>
                                                     <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && $can_return) { ?>
@@ -90,23 +55,6 @@
                                                                 <?php echo $product['total']; ?>
                                                             </div>
                                                         </div>
-
-                                                        <?php /* if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && is_null($product['return_id']) && $can_return) { ?>
-                                                        <div class="col-md-2">
-                                                            <?php /* ?>
-                                                            <div class="my-order-price">
-                                                                <!-- <a href="<?php echo $product['return']; ?>" id="return_button" data-toggle="tooltip" title="<?php echo $button_return; ?>" class="btn btn-danger"><i class="fa fa-reply"></i></a> -->
-
-                                                                <?php $url = $product['return']; ?>
-                                                                <a onclick="return_product('<?= $url ?>')"  data-toggle="tooltip" title="<?php echo $button_return; ?>" class="btn btn-danger"><i class="fa fa-reply"></i></a>
-
-                                                                <!-- <button type="button" class="btn btn-default" onclick="sendReview()"><?= $text_send ?></button> -->
-
-                                                            </div>
-                                                            <?php  ?>
-                                                        </div>
-                                                        <?php } */ ?>
-
                                                         <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && !is_null($product['return_id'])) { ?>
                                                         <div class="col-md-2 col-xs-8">
                                                             <div class="my-order-price">
