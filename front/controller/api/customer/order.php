@@ -1807,7 +1807,7 @@ class ControllerApiCustomerOrder extends Controller {
 
                         $payment_text = sprintf($this->language->get('text_cod_delivered'), $data['total']);
 
-                        break; 
+                        break;
                     }
                 }
 
@@ -2489,9 +2489,10 @@ class ControllerApiCustomerOrder extends Controller {
                     $this->load->model('account/address');
 
                     $store_info = $this->model_account_address->getStoreData($store_id);
+                    $parent_store_info = $this->model_account_address->getStoreData(75);
 
                     //echo "<pre>";print_r($store_info);die;
-                    if ($store_info['min_order_amount'] > (int) $args['stores'][$store_id]['store_total']) {
+                    if ($parent_store_info['min_order_amount'] > (int) $args['stores'][$store_id]['store_total']) {
                         $product['valid_cart_min'] = false;
                         $valid_cart = false;
 
