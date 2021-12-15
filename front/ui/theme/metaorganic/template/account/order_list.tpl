@@ -427,7 +427,7 @@
                            <h2>Missed Products</h2>
                            </div>
                             
-                            <div class="order-details-form-panel">
+                            <div class="missingproducts-details-form-panel">
                                     <!--  form here -->
                             </div>
                         </div>
@@ -1043,6 +1043,9 @@ return;
   }
   else if(type=="Report missed products")
   {
+    $('#viewMissedProductsModal').modal({
+        show: 'true'
+    });
     viewMissedProductsModal(orderid);
   }
       
@@ -1086,7 +1089,22 @@ return;
    function viewMissedProductsModal($order_id) {
     console.log($order_id);
     console.log("order_id");
-    $('#viewMissedProductsModal').modal('toggle');
+                $.ajax({
+                    url: 'index.php?path=account/order/missingproducts',
+                    type: 'get',
+                    async: false,
+                    data: {order_id: $order_id},
+                    dataType: 'html',
+                    cache: false,
+                    success: function(json) {
+                        console.log(json);
+                        $('.missingproducts-details-form-panel').html(json);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        return false;
+                    }
+                });    
    }
      
 
