@@ -28,7 +28,7 @@
                                         <li class="list-group-item">
                                             <div class="row">
                                                 <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && $can_return) { ?>
-                                                <div class="col-md-4 col-xs-8">
+                                                <div class="col-md-5 col-xs-8">
                                                     <?php } else { ?>
                                                     <div class="col-md-5 col-xs-8">
                                                         <?php } ?>
@@ -37,7 +37,7 @@
                                                         </div>
                                                     </div>
                                                     <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && $can_return) { ?>
-                                                    <div class="col-md-4 col-xs-8">
+                                                    <div class="col-md-5 col-xs-8">
                                                         <?php } else { ?>
                                                         <div class="col-md-5 col-xs-8">
                                                             <?php } ?>
@@ -45,20 +45,11 @@
                                                                 <?php echo $product['quantity']; ?> x <?php echo $product['price']; ?>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-4 col-xs-8">
+                                                        <div class="col-md-2 col-xs-8">
                                                             <div class="my-order-price">
                                                                 <?php echo $product['total']; ?>
                                                             </div>
                                                         </div>
-                                                        <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && !is_null($product['return_id'])) { ?>
-                                                        <div class="col-md-2 col-xs-8">
-                                                            <div class="my-order-price">
-                                                                Return Status: <?= $product['return_status'] ?>
-                                                            </div>
-                                                        </div>
-                                                        <?php } ?>
-
-
                                                     </div>
                                                     </li>
                                                     <?php } ?>
