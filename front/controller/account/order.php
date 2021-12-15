@@ -1892,10 +1892,10 @@ class ControllerAccountOrder extends Controller {
 
             $data['vehicle_number'] = $order_info['vehicle_number'];
 
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_info.tpl')) {
-                $html = $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/order_infopopup.tpl', $data));
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/missed_products.tpl')) {
+                $html = $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/missed_products.tpl', $data));
             } else {
-                $html = $this->response->setOutput($this->load->view('default/template/account/order_info.tpl', $data));
+                $html = $this->response->setOutput($this->load->view('default/template/account/missed_products.tpl', $data));
             }
         } else {
             $this->document->setTitle($this->language->get('text_order'));
