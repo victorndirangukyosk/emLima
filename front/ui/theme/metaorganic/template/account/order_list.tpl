@@ -415,6 +415,27 @@
             </div>
         </div>
     </div>
+    
+    <div class="editAddressModal">
+        <div class="modal fade" id="viewMissedProductsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog a" role="document" style="top:80px;right:160px;">
+                <div class="modal-content" style="width:170%">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="row">
+                           <div class="col-md-12">
+                           <h2>Missed Products</h2>
+                           </div>
+                            
+                            <div class="order-details-form-panel">
+                                    <!--  form here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <script src="<?= $base; ?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -1020,6 +1041,10 @@ return;
        location=accept_reject_href;
 return;
   }
+  else if(type=="Report missed products")
+  {
+    viewMissedProductsModal(orderid);
+  }
       
 });
  
@@ -1057,7 +1082,12 @@ return;
                     }
                 });
             }
-
+   
+   function viewMissedProductsModal($order_id) {
+    console.log($order_id);
+    console.log("order_id");
+    $('#viewMissedProductsModal').modal('toggle');
+   }
      
 
 
