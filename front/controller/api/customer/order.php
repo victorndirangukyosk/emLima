@@ -2485,20 +2485,34 @@ class ControllerApiCustomerOrder extends Controller {
                   } */
 
                 $product['valid_cart_min'] = true;
-                if (isset($args['stores']) && isset($args['stores'][$store_id]) && false) {
+                if (isset($args['stores']) && false) {
                     $this->load->model('account/address');
 
                     $store_info = $this->model_account_address->getStoreData($store_id);
-                    $parent_store_info = $this->model_account_address->getStoreData(75);
 
-                    //echo "<pre>";print_r($store_info);die;
-                    if ($parent_store_info['min_order_amount'] > (int) $args['stores'][$store_id]['store_total']) {
+                    if ($this->config->get('config_active_store_minimum_order_amount') > $this->cart->getSubTotal()) {
+                        $currentprice = $this->config->get('config_active_store_minimum_order_amount') - $this->cart->getSubTotal();
+                        $json['error_message'] = "<center style='background-color:#ee4054;color:#fff'>" . $this->currency->format($currentprice) . ' away from minimum order value </center>';
                         $product['valid_cart_min'] = false;
                         $valid_cart = false;
 
                         $json['status'] = 10100;
                     }
                 }
+                /* PREVIOUS CODE FOR VALIDATE MINIMUM ORDER AMOUNT */
+                /* if (isset($args['stores']) && isset($args['stores'][$store_id]) && false) {
+                  $this->load->model('account/address');
+
+                  $store_info = $this->model_account_address->getStoreData($store_id);
+
+                  //echo "<pre>";print_r($store_info);die;
+                  if ($store_info['min_order_amount'] > (int) $args['stores'][$store_id]['store_total']) {
+                  $product['valid_cart_min'] = false;
+                  $valid_cart = false;
+
+                  $json['status'] = 10100;
+                  }
+                  } */
 
                 $stock = true;
 
