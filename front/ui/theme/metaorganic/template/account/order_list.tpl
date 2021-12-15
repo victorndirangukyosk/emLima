@@ -120,10 +120,10 @@
                              
 
                              
-                               <?php if($order['status'] == 'Delivered' || $order['status'] == 'Cancelled' ) { ?>
-                              
-                               <option   value="<?=$order["order_id"] ?>" type="Add to cart"  data-store-id="<?= $order['store_id']; ?>"  order-id="<?=$order["order_id"] ?>" >&#xf291; &nbsp;Add to cart</option>      
-                                        <?php } ?>
+                              <?php if($order['status'] == 'Delivered' || $order['status'] == 'Cancelled' || $order['status'] == 'In Transit') { ?>
+                              <option   value="<?=$order["order_id"] ?>" type="Add to cart"  data-store-id="<?= $order['store_id']; ?>"  order-id="<?=$order["order_id"] ?>" >&#xf291; &nbsp;Add to cart</option>      
+                              <option disabled style="height: 1px !important;" ></option>
+                              <?php } ?>
                               <option value="<?=$order["order_id"] ?>" type="Report missed products"  view_href=""  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Report Missed Products</option>
                               <option disabled style="height: 1px !important;" ></option>
                               <option value="<?=$order["order_id"] ?>" type="Rejected products"  view_href=""  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Report Rejected Products</option>
