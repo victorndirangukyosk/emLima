@@ -4671,6 +4671,9 @@ class ControllerSaleOrder extends Controller {
             $order_info = $this->model_sale_order->getOrder($order_id);
             //check vendor order
 
+            if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] != 4 && $order_info['order_status_id'] != 5) {
+                $this->response->redirect($this->url->link('error/not_found'));
+            }
             if ($this->user->isVendor()) {
                 if (!$this->isVendorOrder($order_id)) {
                     $this->response->redirect($this->url->link('error/not_found'));
@@ -5351,7 +5354,9 @@ class ControllerSaleOrder extends Controller {
         foreach ($orders as $order_id) {
             $order_info = $this->model_sale_order->getOrder($order_id);
             //check vendor order
-
+            if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] != 4 && $order_info['order_status_id'] != 5) {
+                $this->response->redirect($this->url->link('error/not_found'));
+            }
             if ($this->user->isVendor()) {
                 if (!$this->isVendorOrder($order_id)) {
                     $this->response->redirect($this->url->link('error/not_found'));
