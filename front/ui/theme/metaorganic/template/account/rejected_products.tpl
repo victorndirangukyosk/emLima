@@ -29,12 +29,12 @@
                                             <div class="row">
                                                 <div class="col-md-5 col-xs-8">
                                                  <div class="my-order-price">
-                                                            <h3> <?php echo $product['name']; ?> <?php echo "(". $product['unit'] . ")"; ?></h3>
+                                                    <h3> <?php echo $product['name']; ?> <?php echo "(". $product['unit'] . ")"; ?></h3>
                                                  </div>   
                                                 </div>
                                                 <div class="col-md-5 col-xs-8">
                                                  <div class="my-order-price">
-                                                                <?php echo $product['quantity']; ?> x <?php echo $product['price']; ?>
+                                                    <input type="number" style="margin-left: -15px;" class="input-cart-qty" value="" placeholder="Qty">
                                                  </div>   
                                                 </div>
                                                 <div class="col-md-2 col-xs-8">
