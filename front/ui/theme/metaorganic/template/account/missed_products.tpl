@@ -32,14 +32,15 @@
                                                     <h3> <?php echo $product['name']; ?> <?php echo "(". $product['unit'] . ")"; ?></h3>
                                                  </div>   
                                                 </div>
-                                                <div class="col-md-5 col-xs-8">
+                                                <div class="col-md-2 col-xs-8">
                                                  <div class="my-order-price">
-                                                    <input type="number" style="margin-left: -15px;" class="input-cart-qty" value="" placeholder="Qty">
+                                                    <input type="number" class="input-cart-qty" value="" placeholder="Qty">
                                                  </div>   
                                                 </div>
-                                                <div class="col-md-2 col-xs-8">
+                                                <div class="col-md-2 col-xs-8"></div>
+                                                <div class="col-md-3 col-xs-8" align="right">
                                                    <div class="my-order-price">
-                                                                <?php echo $product['total']; ?>
+                                                     <button type="button" class="btn btn-default">SUBMIT</button>
                                                    </div> 
                                                 </div>
                                             </div>
