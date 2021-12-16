@@ -10,8 +10,8 @@
                 <?php endif ?>  
 
                 
-                <button type="button" id="button-invoice" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
-                <button type="button" id="button-invoice-pdf" form="form-order" formaction="<?php echo $invoicepdf; ?>" data-toggle="tooltip" title="Download Invoice" class="btn btn-default"><i class="fa fa-print"></i></button>
+                <button type="" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
+                <button type="" id="button-invoice-pdf" form="form-order" formaction="<?php echo $invoicepdf; ?>" data-toggle="tooltip" title="Download Invoice" class="btn btn-default"><i class="fa fa-print"></i></button>
                 <button type="button" onclick="downloadOrderStickers();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders List"><i class="fa fa-download"></i></button>
                 <button type="button" onclick="downloadOrders();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders Excel"><i class="fa fa-download"></i></button>
                 <button type="button" onclick="downloadOrdersonsolidated();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Consolidated Excel"><i class="fa fa-download"></i></button>
@@ -2802,7 +2802,8 @@ $.ajax({
                     }
                     
                     if(json.data.invalid_order_status_count == 0) {
-                    $('#form-order').attr('action', '<?php echo $invoice; ?>');
+                    $('#orderprocessingModal-messages').html('');
+                    $('#new-driver-button').prop('disabled', false);
                     return true;
                     }
 		},			
