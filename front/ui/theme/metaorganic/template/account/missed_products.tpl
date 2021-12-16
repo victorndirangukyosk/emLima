@@ -27,31 +27,23 @@
                                         <?php $i=0;  foreach ($products as $product) { ?>
                                         <li class="list-group-item">
                                             <div class="row">
-                                                <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && $can_return) { ?>
                                                 <div class="col-md-5 col-xs-8">
-                                                    <?php } else { ?>
-                                                    <div class="col-md-5 col-xs-8">
-                                                        <?php } ?>
-                                                        <div class="my-order-price">
+                                                 <div class="my-order-price">
                                                             <h3> <?php echo $product['name']; ?> <?php echo "(". $product['unit'] . ")"; ?></h3>
-                                                        </div>
-                                                    </div>
-                                                    <?php if($this->config->get('config_account_return_product_status') == 'yes' && $delivered && $can_return) { ?>
-                                                    <div class="col-md-5 col-xs-8">
-                                                        <?php } else { ?>
-                                                        <div class="col-md-5 col-xs-8">
-                                                            <?php } ?>
-                                                            <div class="my-order-price">
+                                                 </div>   
+                                                </div>
+                                                <div class="col-md-5 col-xs-8">
+                                                 <div class="my-order-price">
                                                                 <?php echo $product['quantity']; ?> x <?php echo $product['price']; ?>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-2 col-xs-8">
-                                                            <div class="my-order-price">
+                                                 </div>   
+                                                </div>
+                                                <div class="col-md-2 col-xs-8">
+                                                   <div class="my-order-price">
                                                                 <?php echo $product['total']; ?>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    </li>
+                                                   </div> 
+                                                </div>
+                                            </div>
+                                        </li>
                                                     <?php } ?>
                                                 </div>
                                             </div>
