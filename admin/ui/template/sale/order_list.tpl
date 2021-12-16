@@ -2785,7 +2785,7 @@ $.ajax({
 });
 });
 
-$('#button-invoice-pdf, #button-invoice').on('click', function (e) {
+$('#button-invoice-pdfs, #button-invoices').on('click', function (e) {
 e.preventDefault();
 $.ajax({
 		url: 'index.php?path=sale/order/checkorderstatusvalidfordownloadpdf&token=<?php echo $token; ?>',
