@@ -9668,7 +9668,7 @@ class ControllerSaleOrder extends Controller {
 
         foreach ($order_array as $order_id) {
             $order_info = $this->model_sale_order->getOrder($order_id);
-            if ($order_info['order_status_id'] != 1 || $order_info['order_status_id'] != 4 || $order_info['order_status_id'] != 5) {
+            if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] != 4 && $order_info['order_status_id'] != 5) {
                 $invalid_order_status[] = $order_info['order_id'];
             }
         }
