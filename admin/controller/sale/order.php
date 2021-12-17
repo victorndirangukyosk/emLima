@@ -4671,6 +4671,9 @@ class ControllerSaleOrder extends Controller {
             $order_info = $this->model_sale_order->getOrder($order_id);
             //check vendor order
 
+            if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] != 4 && $order_info['order_status_id'] != 5) {
+                $this->response->redirect($this->url->link('error/not_found'));
+            }
             if ($this->user->isVendor()) {
                 if (!$this->isVendorOrder($order_id)) {
                     $this->response->redirect($this->url->link('error/not_found'));
@@ -5351,7 +5354,9 @@ class ControllerSaleOrder extends Controller {
         foreach ($orders as $order_id) {
             $order_info = $this->model_sale_order->getOrder($order_id);
             //check vendor order
-
+            if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] != 4 && $order_info['order_status_id'] != 5) {
+                $this->response->redirect($this->url->link('error/not_found'));
+            }
             if ($this->user->isVendor()) {
                 if (!$this->isVendorOrder($order_id)) {
                     $this->response->redirect($this->url->link('error/not_found'));
@@ -9642,6 +9647,33 @@ class ControllerSaleOrder extends Controller {
         foreach ($order_array as $order_id) {
             $order_info = $this->model_sale_order->getOrder($order_id);
             if ($order_info['order_status_id'] != 14) {
+                $invalid_order_status[] = $order_info['order_id'];
+            }
+        }
+        $data['invalid_order_status'] = $invalid_order_status;
+        $data['invalid_order_status_count'] = count($invalid_order_status);
+        $json['data'] = $data;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function checkorderstatusvalidfordownloadpdf() {
+
+        $this->load->model('sale/order');
+
+        $order_array = NULL;
+        $invalid_order_status = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $order_array = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $order_array = explode(',', $this->request->post['order_id']);
+            $order_array = array_unique($order_array);
+        }
+
+        foreach ($order_array as $order_id) {
+            $order_info = $this->model_sale_order->getOrder($order_id);
+            if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] != 4 && $order_info['order_status_id'] != 5) {
                 $invalid_order_status[] = $order_info['order_id'];
             }
         }
