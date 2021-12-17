@@ -99,7 +99,7 @@
                 <tr>
                   <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
                   <td class="text-left">Vehicle</td>
-                  <td style="width: 3px;" class="text-left">Driver</td>
+                  <td class="text-left">Driver</td>
                   <td class="text-left">Delivery Executive</td>
 
                   <td class="text-left">Delivery Date</td>
