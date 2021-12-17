@@ -22,47 +22,29 @@ class ControllerDispatchesDispatchplanlist extends Controller {
     protected function getList() {
         $this->load->language('dispatches/dispatchplanning');
 
-        if (isset($this->request->get['filter_make'])) {
-            $filter_make = $this->request->get['filter_make'];
-        } else {
-            $filter_make = null;
-        }
-
-        if (isset($this->request->get['filter_model'])) {
-            $filter_model = $this->request->get['filter_model'];
-        } else {
-            $filter_model = null;
-        }
-
         if (isset($this->request->get['filter_registration_number'])) {
             $filter_registration_number = $this->request->get['filter_registration_number'];
         } else {
             $filter_registration_number = null;
         }
 
-        if (isset($this->request->get['filter_registration_date'])) {
-            $filter_registration_date = $this->request->get['filter_registration_date'];
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
         } else {
-            $filter_registration_date = null;
+            $filter_name = null;
         }
 
-        if (isset($this->request->get['filter_registration_validity_upto'])) {
-            $filter_registration_validity_upto = $this->request->get['filter_registration_validity_upto'];
+        if (isset($this->request->get['filter_delivery_executive_name'])) {
+            $filter_delivery_executive_name = $this->request->get['filter_delivery_executive_name'];
         } else {
-            $filter_registration_validity_upto = null;
-        }
-
-        if (isset($this->request->get['filter_status'])) {
-            $filter_status = $this->request->get['filter_status'];
-        } else {
-            $filter_status = null;
+            $filter_delivery_executive_name = null;
         }
 
         if (isset($this->request->get['filter_date_added'])) {
             $filter_date_added = $this->request->get['filter_date_added'];
         } else {
             $filter_date_added = null;
-        }
+        }        
 
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -84,32 +66,20 @@ class ControllerDispatchesDispatchplanlist extends Controller {
 
         $url = '';
 
-        if (isset($this->request->get['filter_make'])) {
-            $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_model'])) {
-            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
-        }
-
         if (isset($this->request->get['filter_registration_number'])) {
             $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_registration_date'])) {
-            $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_registration_validity_upto'])) {
-            $url .= '&filter_registration_validity_upto=' . urlencode(html_entity_decode($this->request->get['filter_registration_validity_upto'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_status'])) {
-            $url .= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset($this->request->get['filter_delivery_executive_name'])) {
+            $url .= '&filter_delivery_executive_name=' . urlencode(html_entity_decode($this->request->get['filter_delivery_executive_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            $url .= '&filter_date_added=' . urlencode(html_entity_decode($this->request->get['filter_date_added'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['sort'])) {
@@ -127,12 +97,9 @@ class ControllerDispatchesDispatchplanlist extends Controller {
         $data['dispatch'] = [];
 
         $filter_data = [
-            'filter_make' => $filter_make,
-            'filter_model' => $filter_model,
             'filter_registration_number' => $filter_registration_number,
-            'filter_registration_date' => $filter_registration_date,
-            'filter_registration_validity_upto' => $filter_registration_validity_upto,
-            'filter_status' => $filter_status,
+            'filter_name' => $filter_name,
+            'filter_delivery_executive_name' => $filter_delivery_executive_name,
             'filter_date_added' => $filter_date_added,
             'sort' => $sort,
             'order' => $order,
@@ -227,33 +194,21 @@ class ControllerDispatchesDispatchplanlist extends Controller {
 
         $url = '';
 
-        if (isset($this->request->get['filter_make'])) {
-            $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_model'])) {
-            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_registration_date'])) {
-            $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
-        }
-
         if (isset($this->request->get['filter_registration_number'])) {
             $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_registration_validity_upto'])) {
-            $url .= '&filter_registration_validity_upto=' . urlencode(html_entity_decode($this->request->get['filter_registration_validity_upto'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_status'])) {
-            $url .= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset($this->request->get['filter_delivery_executive_name'])) {
+            $url .= '&filter_delivery_executive_name=' . urlencode(html_entity_decode($this->request->get['filter_delivery_executive_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-        }
+            $url .= '&filter_date_added=' . urlencode(html_entity_decode($this->request->get['filter_date_added'], ENT_QUOTES, 'UTF-8'));
+        }        
 
         if ('ASC' == $order) {
             $url .= '&order=DESC';
@@ -265,43 +220,20 @@ class ControllerDispatchesDispatchplanlist extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_make'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.make' . $url, 'SSL');
-        $data['sort_model'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.model' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('dispatches/dispatchplan_list', 'token=' . $this->session->data['token'] . '&sort=d.date_added' . $url, 'SSL');
 
         $url = '';
-
-        if (isset($this->request->get['filter_make'])) {
-            $url .= '&filter_make=' . urlencode(html_entity_decode($this->request->get['filter_make'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_model'])) {
-            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
-        }
 
         if (isset($this->request->get['filter_registration_number'])) {
             $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_registration_date'])) {
-            $url .= '&filter_registration_date=' . urlencode(html_entity_decode($this->request->get['filter_registration_date'], ENT_QUOTES, 'UTF-8'));
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
-        if (isset($this->request->get['filter_registration_validation_upto'])) {
-            $url .= '&filter_registration_validation_upto=' . urlencode(html_entity_decode($this->request->get['filter_registration_validation_upto'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_driving_licence'])) {
-            $url .= '&filter_driving_licence=' . urlencode(html_entity_decode($this->request->get['filter_driving_licence'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_telephone'])) {
-            $url .= '&filter_telephone=' . urlencode(html_entity_decode($this->request->get['filter_telephone'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_status'])) {
-            $url .= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset($this->request->get['filter_delivery_executive_name'])) {
+            $url .= '&filter_delivery_executive_name=' . urlencode(html_entity_decode($this->request->get['filter_delivery_executive_name'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_date_added'])) {
@@ -326,12 +258,9 @@ class ControllerDispatchesDispatchplanlist extends Controller {
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($dispatches_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($dispatches_total - $this->config->get('config_limit_admin'))) ? $dispatches_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $dispatches_total, ceil($dispatches_total / $this->config->get('config_limit_admin')));
 
-        $data['filter_make'] = $filter_make;
-        $data['filter_model'] = $filter_model;
-        $data['filter_registration_date'] = $filter_registration_date;
         $data['filter_registration_number'] = $filter_registration_number;
-        $data['filter_registration_validity_upto'] = $filter_registration_validity_upto;
-        $data['filter_status'] = $filter_status;
+        $data['filter_name'] = $filter_name;
+        $data['filter_delivery_executive_name'] = $filter_delivery_executive_name;
         $data['filter_date_added'] = $filter_date_added;
         $data['sort'] = $sort;
         $data['order'] = $order;
