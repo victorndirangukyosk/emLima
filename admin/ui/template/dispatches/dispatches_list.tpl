@@ -30,16 +30,16 @@
           <div class="row">
            <div class="col-sm-3">
               <div class="form-group">
-                <label class="control-label" for="input-make"><?php echo $entry_make; ?></label>
-                <input type="text" name="filter_make" value="<?php echo $filter_make; ?>" placeholder="<?php echo $entry_make; ?>" id="input-make" class="form-control" />
+                <label class="control-label" for="input-registration-number"><?php echo $entry_registration_number; ?></label>
+                <input type="text" name="filter_registration_number" value="<?php echo $filter_registration_number; ?>" placeholder="<?php echo $entry_registration_number; ?>" id="input-registration-number" class="form-control" />
               </div>
             </div>
               
             <div class="col-sm-3">
             <div class="form-group">
                 <div class="form-group">
-                <label class="control-label" for="input-model"><?php echo $entry_model; ?></label>
-                <input type="text" name="filter_model" value="<?php echo $filter_model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
+                <label class="control-label" for="input-model">Driver Name</label>
+                <input type="text" name="filter_name" value="" placeholder="Driver Name" id="input-name" class="form-control" />
                 </div>
               </div>
             </div>
@@ -47,20 +47,8 @@
               <div class="col-sm-3">
                   <div class="form-group">
                 <div class="form-group">
-                 <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
-                <select name="filter_status" id="input-status" class="form-control">
-                  <option value="*"></option>
-                  <?php if ($filter_status) { ?>
-                  <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                  <?php } else { ?>
-                  <option value="1"><?php echo $text_enabled; ?></option>
-                  <?php } ?>
-                  <?php if (!$filter_status && !is_null($filter_status)) { ?>
-                  <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                  <?php } else { ?>
-                  <option value="0"><?php echo $text_disabled; ?></option>
-                  <?php } ?>
-                </select>
+                 <label class="control-label" for="input-status">Delivery Executive</label>
+                 <input type="text" name="filter_delivery_executive_name" value="" placeholder="Delivery Executive" id="input-name" class="form-control" />
                  </div>
               </div>
               </div>
@@ -76,12 +64,6 @@
                 </div>
             </div>
             </div>
-           <div class="col-sm-3">
-            <div class="form-group">
-                <label class="control-label" for="input-registration-number"><?php echo $entry_registration_number; ?></label>
-                <input type="text" name="filter_registration_number" value="<?php echo $filter_registration_number; ?>" placeholder="<?php echo $entry_registration_number; ?>" id="input-registration-number" class="form-control" />
-            </div>
-           </div>
               
            <div class="col-sm-3">
             <div class="form-group">
@@ -393,6 +375,48 @@ $('input[name=\'filter_registration_number\']').autocomplete({
     $('input[name=\'filter_registration_number\']').val(item['label']);
   } 
 });
+$driverName="";
+$('input[name=\'filter_name\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=drivers/drivers_list/autocompletebyDriverName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$driverName,
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['driver_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'filter_name\']').val(item['label']);
+  } 
+});
+
+$executiveName="";
+$('input[name=\'filter_delivery_executive_name\']').autocomplete({
+  'source': function(request, response) {
+    $.ajax({
+      url: 'index.php?path=executives/executives_list/autocompletebyExecutiveName&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$executiveName,
+      dataType: 'json',     
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item['name'],
+            value: item['executive_id']
+          }
+        }));
+      }
+    });
+  },
+  'select': function(item) {
+    $('input[name=\'filter_delivery_executive_name\']').val(item['label']);
+  } 
+});
+
 $('#add_vehicle_to_dispatch_plan').on('click', function() {
 if($('select[name=\'delivery_executive\']').val() == '' || $('select[name=\'driver\']').val() == '' || $('select[name=\'delivery_timeslot\']').val() == '' || $('input[name=\'delivery_date\']').val() == '') {
 $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger"></i>All Fileds Are Mandatory!');
