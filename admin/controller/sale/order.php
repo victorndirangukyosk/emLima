@@ -1395,6 +1395,7 @@ class ControllerSaleOrder extends Controller {
         $data['entry_store_name'] = $this->language->get('entry_store_name');
         $data['button_invoice_print'] = $this->language->get('button_invoice_print');
         $data['button_status_update'] = 'Update Status To Order Processing.';
+        $data['button_status_update_transit'] = 'Update Order Status To In Transit.';
         $data['button_shipping_print'] = $this->language->get('button_shipping_print');
         $data['button_add'] = $this->language->get('button_add');
         $data['button_edit'] = $this->language->get('button_edit');
@@ -9647,6 +9648,33 @@ class ControllerSaleOrder extends Controller {
         foreach ($order_array as $order_id) {
             $order_info = $this->model_sale_order->getOrder($order_id);
             if ($order_info['order_status_id'] != 14) {
+                $invalid_order_status[] = $order_info['order_id'];
+            }
+        }
+        $data['invalid_order_status'] = $invalid_order_status;
+        $data['invalid_order_status_count'] = count($invalid_order_status);
+        $json['data'] = $data;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function checkorderstatusprocessing() {
+
+        $this->load->model('sale/order');
+
+        $order_array = NULL;
+        $invalid_order_status = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $order_array = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $order_array = explode(',', $this->request->post['order_id']);
+            $order_array = array_unique($order_array);
+        }
+
+        foreach ($order_array as $order_id) {
+            $order_info = $this->model_sale_order->getOrder($order_id);
+            if ($order_info['order_status_id'] != 1) {
                 $invalid_order_status[] = $order_info['order_id'];
             }
         }
