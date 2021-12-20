@@ -107,8 +107,11 @@ class ModelDispatchplanningDispatchplanning extends Model {
     }
 
     public function getTotalDispatches($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'dispatch_assignment d';
+        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'dispatch_assignment d ';
 
+        $sql .= 'LEFT JOIN `' . DB_PREFIX . 'vehicles` v on v.vehicle_id = d.vehicle_id ';
+        $sql .= 'LEFT JOIN `' . DB_PREFIX . 'drivers` dr on d.driver_id = dr.driver_id ';
+        $sql .= 'LEFT JOIN `' . DB_PREFIX . 'delivery_executives` de on de.delivery_executive_id = d.delivery_executive_id ';
         $implode = [];
 
         if (!empty($data['filter_make'])) {
@@ -137,8 +140,11 @@ class ModelDispatchplanningDispatchplanning extends Model {
     }
 
     public function getAllDispatches($data = []) {
-        $sql = "SELECT * FROM " . DB_PREFIX . 'dispatch_assignment d';
+        $sql = "SELECT * FROM " . DB_PREFIX . 'dispatch_assignment d ';
 
+        $sql .= 'LEFT JOIN `' . DB_PREFIX . 'vehicles` v on v.vehicle_id = d.vehicle_id ';
+        $sql .= 'LEFT JOIN `' . DB_PREFIX . 'drivers` dr on d.driver_id = dr.driver_id ';
+        $sql .= 'LEFT JOIN `' . DB_PREFIX . 'delivery_executives` de on de.delivery_executive_id = d.delivery_executive_id ';
         $implode = [];
 
         if (!empty($data['filter_make'])) {
