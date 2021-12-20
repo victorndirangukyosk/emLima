@@ -123,7 +123,7 @@ class ModelDispatchplanningDispatchplanning extends Model {
         }
 
         if (!empty($data['filter_registration_number'])) {
-            $implode[] = "d.registration_number = '" . $this->db->escape($data['filter_registration_number']) . "'";
+            $implode[] = "v.registration_number = '" . $this->db->escape($data['filter_registration_number']) . "'";
         }
 
         if (!empty($data['filter_date_added'])) {
@@ -156,7 +156,7 @@ class ModelDispatchplanningDispatchplanning extends Model {
         }
 
         if (!empty($data['filter_registration_number'])) {
-            $implode[] = "d.registration_number = '" . $this->db->escape($data['filter_registration_number']) . "'";
+            $implode[] = "v.registration_number = '" . $this->db->escape($data['filter_registration_number']) . "'";
         }
 
         if (!empty($data['filter_date_added'])) {

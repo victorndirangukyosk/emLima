@@ -279,7 +279,7 @@ $.ajax({
 });
 });
 $('#button-filter').on('click', function() {
-  url = 'index.php?path=vehicles/vehicles_list&token=<?php echo $token; ?>';
+  url = 'index.php?path=dispatches/dispatchplan_list&token=<?php echo $token; ?>';
   
   var filter_make = $('input[name=\'filter_make\']').val();
   
@@ -291,13 +291,7 @@ $('#button-filter').on('click', function() {
   
   if (filter_model) {
     url += '&filter_model=' + encodeURIComponent(filter_model);
-  } 
-  
-  var filter_status = $('select[name=\'filter_status\']').val();
-  
-  if (filter_status != '*') {
-    url += '&filter_status=' + encodeURIComponent(filter_status); 
-  } 
+  }  
   
   var filter_registration_number = $('input[name=\'filter_registration_number\']').val();
   
@@ -456,7 +450,7 @@ $('.date').datetimepicker({
 });
 function excel() {
             
-    url = 'index.php?path=vehicles/vehicles_list/export_excel&token=<?php echo $token; ?>';
+    url = 'index.php?path=dispatches/dispatchplan_list/export_excel&token=<?php echo $token; ?>';
     
     location = url;
 }
