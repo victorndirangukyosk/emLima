@@ -9663,7 +9663,9 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('sale/order');
 
         $order_array = NULL;
+        $order_delivery_array = NULL;
         $invalid_order_status = NULL;
+        $invalid_order_delivery_date = NULL;
         if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
             $order_array = array_unique($this->request->post['order_id']);
         }
@@ -9673,13 +9675,26 @@ class ControllerSaleOrder extends Controller {
         }
 
         foreach ($order_array as $order_id) {
-            $order_info = $this->model_sale_order->getOrder($order_id);
-            if ($order_info['order_status_id'] != 1) {
-                $invalid_order_status[] = $order_info['order_id'];
+            if ($order_id > 0) {
+                $order_info = $this->model_sale_order->getOrder($order_id);
+                $order_delivery_array[] = $order_info['delivery_timeslot'];
+                if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] > 0) {
+                    $invalid_order_status[] = $order_info['order_id'];
+                }
+                $date_now = date("Y-m-d");
+                if ($order_info['delivery_date'] > $date_now && $order_info['delivery_date'] != NULL) {
+                    $invalid_order_delivery_date[] = $order_info['order_id'];
+                }
             }
         }
+        $new_delivery_array = array_unique($order_delivery_array);
+        $data['invalid_order_delivery_timeslot'] = $new_delivery_array;
+        $data['invalid_order_delivery_timeslot_count'] = count($new_delivery_array);
+        $data['invalid_order_status_count'] = count($new_delivery_array);
         $data['invalid_order_status'] = $invalid_order_status;
         $data['invalid_order_status_count'] = count($invalid_order_status);
+        $data['invalid_order_delivery_date'] = $invalid_order_delivery_date;
+        $data['invalid_order_delivery_date_count'] = count($invalid_order_delivery_date);
         $json['data'] = $data;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
