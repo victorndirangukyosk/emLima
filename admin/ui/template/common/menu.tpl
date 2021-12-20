@@ -883,6 +883,19 @@
     ?>
     
     <?php
+    if( $preturn_dispatches != false) {
+    ?>
+    <li id="system">
+        <a class="parent"><i class="fa fa-truck fa-fw"></i> <span>Dispatch Plan</span></a>
+        <ul class="collapse">
+            <li><a href="<?php echo $dispatches_list; ?>">Dispatch Plan</a></li>
+        </ul>
+    </li>
+    <?php 
+    }
+    ?>
+    
+    <?php
     if( $preturn_executives != false) {
     ?>
     <li id="system">
