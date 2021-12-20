@@ -48,7 +48,7 @@
                   <div class="form-group">
                 <div class="form-group">
                  <label class="control-label" for="input-status">Delivery Executive</label>
-                 <input type="text" name="filter_delivery_executive_name" value="<?php echo $filter_registration_number; ?>" placeholder="Delivery Executive" id="input-name" class="form-control" />
+                 <input type="text" name="filter_delivery_executive_name" value="<?php echo $filter_delivery_executive_name; ?>" placeholder="Delivery Executive" id="input-name" class="form-control" />
                  </div>
               </div>
               </div>

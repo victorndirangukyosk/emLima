@@ -123,7 +123,7 @@ class ControllerDispatchesDispatchplanlist extends Controller {
                 'driver_id' => $result['driver_id'],
                 'driver_name' => $driver_details['firstname'].' '.$driver_details['lastname'],
                 'delivery_executive_id' => $result['delivery_executive_id'],
-                'delivery_executive_name' => $delivery_executives['firstname'].''.$delivery_executives['lastname'],
+                'delivery_executive_name' => $delivery_executives['firstname'].' '.$delivery_executives['lastname'],
                 'delivery_date' => $result['delivery_date'],
                 'delivery_time_slot' => $result['delivery_time_slot'],
                 'created_at' => $result['created_at'],
