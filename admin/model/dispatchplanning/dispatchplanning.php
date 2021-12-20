@@ -114,8 +114,8 @@ class ModelDispatchplanningDispatchplanning extends Model {
         $sql .= 'LEFT JOIN `' . DB_PREFIX . 'delivery_executives` de on de.delivery_executive_id = d.delivery_executive_id ';
         $implode = [];
 
-        if (!empty($data['filter_make'])) {
-            $implode[] = "d.make = '" . $this->db->escape($data['filter_make']) . "'";
+        if (!empty($data['filter_name'])) {
+            $implode[] = "CONCAT(dr.firstname, ' ', dr.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (!empty($data['filter_model'])) {
@@ -147,8 +147,8 @@ class ModelDispatchplanningDispatchplanning extends Model {
         $sql .= 'LEFT JOIN `' . DB_PREFIX . 'delivery_executives` de on de.delivery_executive_id = d.delivery_executive_id ';
         $implode = [];
 
-        if (!empty($data['filter_make'])) {
-            $implode[] = "d.make = '" . $this->db->escape($data['filter_make']) . "'";
+        if (!empty($data['filter_name'])) {
+            $implode[] = "CONCAT(dr.firstname, ' ', dr.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (!empty($data['filter_model'])) {

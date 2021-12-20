@@ -39,7 +39,7 @@
             <div class="form-group">
                 <div class="form-group">
                 <label class="control-label" for="input-model">Driver Name</label>
-                <input type="text" name="filter_name" value="" placeholder="Driver Name" id="input-name" class="form-control" />
+                <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="Driver Name" id="input-name" class="form-control" />
                 </div>
               </div>
             </div>
@@ -48,7 +48,7 @@
                   <div class="form-group">
                 <div class="form-group">
                  <label class="control-label" for="input-status">Delivery Executive</label>
-                 <input type="text" name="filter_delivery_executive_name" value="" placeholder="Delivery Executive" id="input-name" class="form-control" />
+                 <input type="text" name="filter_delivery_executive_name" value="<?php echo $filter_registration_number; ?>" placeholder="Delivery Executive" id="input-name" class="form-control" />
                  </div>
               </div>
               </div>
@@ -281,16 +281,16 @@ $.ajax({
 $('#button-filter').on('click', function() {
   url = 'index.php?path=dispatches/dispatchplan_list&token=<?php echo $token; ?>';
   
-  var filter_make = $('input[name=\'filter_make\']').val();
+  var filter_name = $('input[name=\'filter_name\']').val();
   
-  if (filter_make) {
-    url += '&filter_make=' + encodeURIComponent(filter_make);
+  if (filter_name) {
+    url += '&filter_name=' + encodeURIComponent(filter_name);
   }
   
-  var filter_model = $('input[name=\'filter_model\']').val();
+  var filter_delivery_executive_name = $('input[name=\'filter_delivery_executive_name\']').val();
   
-  if (filter_model) {
-    url += '&filter_model=' + encodeURIComponent(filter_model);
+  if (filter_delivery_executive_name) {
+    url += '&filter_delivery_executive_name=' + encodeURIComponent(filter_delivery_executive_name);
   }  
   
   var filter_registration_number = $('input[name=\'filter_registration_number\']').val();
