@@ -196,6 +196,8 @@
   <script type="text/javascript"><!--
 $('button[id^=\'dispatchplanning\']').on('click', function (e) {
 e.preventDefault();
+$("form[id^='vehicle_dispatch_planning']")[0].reset();
+$('#vehicle_dispatch_planning')[0].reset();               
 console.log($(this).data('vehicleid'));
 $('#clicked_vehicle_id').val($(this).data('vehicleid'));
 $('#dispatchModal').modal('toggle');
@@ -232,6 +234,8 @@ var edit_driver_name;
 var edit_delivery_executive_name;
 $('button[id^=\'editdispatchplanning\']').on('click', function (e) {
 e.preventDefault();
+$("form[id^='vehicle_dispatch_planning']")[0].reset();
+$('#vehicle_dispatch_planning')[0].reset(); 
 console.log($(this).data('dispatche-id'));
 $('#clicked_vehicle_id').val($(this).data('dispatche-id'));
 $('#dispatchModal').modal('toggle');
