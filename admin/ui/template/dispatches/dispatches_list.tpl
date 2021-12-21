@@ -100,9 +100,9 @@
                 <?php foreach ($dispatches as $dispatche) { ?>
                 <tr>
                   <td class="text-center"><?php if (in_array($dispatche['vehicle_id'], $selected)) { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $dispatche['vehicle_id']; ?>" checked="checked" />
+                    <input type="checkbox" name="selected[]" value="<?php echo $dispatche['dispatche_id']; ?>" checked="checked" />
                     <?php } else { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $dispatche['vehicle_id']; ?>" />
+                    <input type="checkbox" name="selected[]" value="<?php echo $dispatche['dispatche_id']; ?>" />
                     <?php } ?></td>
                   <td class="text-left"><?php echo $dispatche['registration_number']; ?></td>
                   <td class="text-left"><?php echo $dispatche['driver_name']; ?></td>

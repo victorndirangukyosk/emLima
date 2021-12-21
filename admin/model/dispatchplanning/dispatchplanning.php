@@ -208,4 +208,8 @@ class ModelDispatchplanningDispatchplanning extends Model {
         return $query->rows;
     }
 
+    public function deleteDispatche($dispatche_id) {
+        $this->db->query('DELETE FROM ' . DB_PREFIX . "dispatch_assignment WHERE id = '" . (int) $dispatche_id . "'");
+    }
+
 }

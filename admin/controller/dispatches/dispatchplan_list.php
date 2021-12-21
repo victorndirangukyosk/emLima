@@ -118,6 +118,7 @@ class ControllerDispatchesDispatchplanlist extends Controller {
             $vehicle_details = $this->model_vehicles_vehicles->getVehicle($result['vehicle_id']);
 
             $data['dispatches'][] = [
+                'dispatche_id' => $result['id'],
                 'vehicle_id' => $result['vehicle_id'],
                 'registration_number' => $vehicle_details['registration_number'],
                 'driver_id' => $result['driver_id'],
@@ -282,8 +283,8 @@ class ControllerDispatchesDispatchplanlist extends Controller {
         $this->load->model('dispatchplanning/dispatchplanning');
 
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $customer_id) {
-                $this->model_sale_customer->deleteCustomer($customer_id);
+            foreach ($this->request->post['selected'] as $dispatche_id) {
+                $this->model_dispatchplanning_dispatchplanning->deleteDispatche($dispatche_id);
 
                 // Add to activity log
                 $log = new Log('error.log');
@@ -293,7 +294,7 @@ class ControllerDispatchesDispatchplanlist extends Controller {
                     'user_id' => $this->user->getId(),
                     'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                     'user_group_id' => $this->user->getGroupId(),
-                    'customer_id' => $customer_id,
+                    'customer_id' => $dispatche_id,
                 ];
                 $log->write('dispatch delete');
 
