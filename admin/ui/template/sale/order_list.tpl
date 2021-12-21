@@ -985,8 +985,8 @@
                                                         <div class="pull-right">
                                                         <button type="button" id="dispatchplanning" data-url="<?php echo $dispatchplanning; ?>" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="Dispatch Planning"><i class="fa fa-random"></i></button>
                                                         </div>
-                                                    <div style="width:88%;margin-right:10px;" >
-                                                        <select  name="order_vehicle_numbers" id="order_vehicle_numbers" class="form-control" required="">
+                                                    <div style="width:88%;margin-right:10px;">
+                                                        <select  name="order_vehicle_numbers_two" id="order_vehicle_numbers_two" class="form-control" required="">
                                                         </select> 
                                                     </div>
                                                        
@@ -999,7 +999,7 @@
                                                     <label> Delivery Charge </label>
 
                                                     <div class="col-md-12">
-                                                        <input id="order_delivery_charge" maxlength="10" required style="max-width:100% ;" name="order_delivery_charge" type="number" placeholder="Delivery Charge" class="form-control input-md" required>
+                                                        <input id="order_delivery_charge_two" maxlength="10" required style="max-width:100% ;" name="order_delivery_charge_two" type="number" placeholder="Delivery Charge" class="form-control input-md" required>
                                                     <br/> </div>
                                                 </div>
 
@@ -2959,6 +2959,13 @@ $.ajax({
                     return false;
                     }
                     
+                    if(json.data.invalid_order_delivery_date_count > 0) {
+                    $('#driverModal-new-messages').html('Selected Orders Delivery Date Should Not Be Greater Than Current Date!');
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    return false;
+                    }
+                    
                     if(json.data.invalid_order_delivery_timeslot_count > 1) {
                     $('#driverModal-new-messages').html('Selected Orders Delivery Timeslots Should Be Unique!');
                     $('#driver-new-buttons').prop('disabled', true);
@@ -2973,10 +2980,39 @@ $.ajax({
                     return false;
                     }
                     
-                    if(json.data.invalid_order_status_count == 0 && json.data.invalid_order_delivery_timeslot_count == 1 && json.data.invalid_order_deliverydate_count == 1) {
+                    if(json.data.invalid_order_delivery_date_count == 0 && json.data.invalid_order_status_count == 0 && json.data.invalid_order_delivery_timeslot_count == 1 && json.data.invalid_order_deliverydate_count == 1) {
                     $('#driverModal-new-messages').html('');
                     $('#driver-new-buttons').prop('disabled', false);
                     $('#driver-new-button').prop('disabled', false);
+                    console.log('DISPATCH');
+                    $.ajax({
+                    url: 'index.php?path=vehicles/dispatchplanning/getAssignedVehiclesNew&updateDeliveryDate=0&order_id='+selected_order_ids+'&delivery_time_slot='+$('select[name=\'filter_delivery_time_slot\']').val()+'&delivery_date='+$('input[name=\'filter_delivery_date\']').val()+'&token=<?php echo $token; ?>',
+                    dataType: 'json',     
+                    success: function(json) {
+                    console.log(json);
+                    console.log(json.length);
+                    if(json != null && json.length > 0) {
+                    $('#driverModal-new-messages').html("");
+                    $('#driver-new-buttons').prop('disabled', false);
+                    $('#driver-new-button').prop('disabled', false);    
+                    var option = '<option value="">Select Vehicle</option>';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].vehicle_id + '">' + json[i].registration_number + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#order_vehicle_numbers_two');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    } else {
+                    $('#driverModal-new-messages').html("Please Assign Vehicle To Dispatch Plan!");
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    }
+                    }
+                    }); 
                     return true;
                     }
 		},			

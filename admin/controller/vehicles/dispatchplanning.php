@@ -95,6 +95,34 @@ class ControllerVehiclesDispatchPlanning extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getAssignedVehiclesNew() {
+        $json = [];
+        $this->load->model('sale/order');
+        $updateDeliveryDate = $this->request->get['updateDeliveryDate'];
+        $orders = explode(',', $this->request->get['order_id']);
+        $orders_new = NULL;
+        foreach ($orders as $order) {
+            if ($order > 0) {
+                $orders_new[] = $order;
+            }
+        }
+        $log = new Log('error.log');
+        $log->write($orders_new);
+        //$order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
+        $order_info = $this->model_sale_order->getOrder($orders_new[0]);
+        $delivery_date = isset($updateDeliveryDate) && $updateDeliveryDate == 1 ? date('y-m-d') : $order_info['delivery_date'];
+        $log->write($delivery_date);
+        $delivery_timeslot = $order_info['delivery_timeslot'];
+        $data['delivery_date'] = $delivery_date;
+        $data['delivery_timeslot'] = $delivery_timeslot;
+        $this->load->model('dispatchplanning/dispatchplanning');
+        $res = $this->model_dispatchplanning_dispatchplanning->getAssignedVehicles($data['delivery_date'], $data['delivery_timeslot']);
+        $log->write($res);
+        $json = $res;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function getDispatcheById() {
         $json = [];
         $this->load->model('dispatchplanning/dispatchplanning');
