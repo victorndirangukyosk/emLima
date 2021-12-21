@@ -13,13 +13,24 @@ class ControllerVehiclesDispatchPlanning extends Controller {
         $delivery_timeslot = $this->request->get['delivery_timeslot'];
         $delivery_date = $this->request->get['delivery_date'];
         $vehicle_id = $this->request->get['vehicle'];
+        $dispatche_id = $this->request->get['clicked_vehicle_id'];
         $data['delivery_executive'] = $delivery_executive;
         $data['driver'] = $driver;
         $data['delivery_timeslot'] = $delivery_timeslot;
         $data['delivery_date'] = $delivery_date;
         $data['vehicle_id'] = $vehicle_id;
+        $data['dispatche_id'] = $dispatche_id;
         $log->write($data);
-        $res = $this->model_dispatchplanning_dispatchplanning->addVehicleToDispatchPlanning($data);
+        if ($dispatche_id == NULL) {
+            $res = $this->model_dispatchplanning_dispatchplanning->addVehicleToDispatchPlanning($data);
+        }
+        if ($dispatche_id != NULL && $dispatche_id > 0) {
+            $log->write($data);
+            $res = $this->model_dispatchplanning_dispatchplanning->updateVehicleToDispatchPlanning($data);
+            if ($res == NULL) {
+                $res = $dispatche_id;
+            }
+        }
         $json = $res;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -77,6 +88,17 @@ class ControllerVehiclesDispatchPlanning extends Controller {
         $data['delivery_timeslot'] = $delivery_timeslot;
         $this->load->model('dispatchplanning/dispatchplanning');
         $res = $this->model_dispatchplanning_dispatchplanning->getAssignedVehicles($data['delivery_date'], $data['delivery_timeslot']);
+        $log = new Log('error.log');
+        $log->write($res);
+        $json = $res;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getDispatcheById() {
+        $json = [];
+        $this->load->model('dispatchplanning/dispatchplanning');
+        $res = $this->model_dispatchplanning_dispatchplanning->getDispatcheById($this->request->get['dispache_id']);
         $log = new Log('error.log');
         $log->write($res);
         $json = $res;

@@ -8,6 +8,12 @@ class ModelDispatchplanningDispatchplanning extends Model {
         return $dispatch_id;
     }
 
+    public function updateVehicleToDispatchPlanning($data) {
+        $this->db->query('UPDATE ' . DB_PREFIX . "dispatch_assignment SET driver_id = '" . $this->db->escape($data['driver']) . "', vehicle_id = '" . $this->db->escape($data['vehicle_id']) . "', delivery_executive_id = '" . $this->db->escape($data['delivery_executive']) . "', delivery_date = '" . $this->db->escape($data['delivery_date']) . "', delivery_time_slot = '" . $this->db->escape($data['delivery_timeslot']) . "', updated_at = NOW() WHERE id = '" . (int) $data['dispatche_id'] . "'");
+        $dispatch_id = $this->db->getLastId();
+        return $dispatch_id;
+    }
+
     public function CheckVehicleAssigned($vehicle_id, $delivery_date, $delivery_timeslot) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "dispatch_assignment WHERE vehicle_id = '" . (int) $vehicle_id . "' AND delivery_date = '" . $delivery_date . "' AND delivery_time_slot = '" . $delivery_timeslot . "'");
         return $query->row;
@@ -210,6 +216,18 @@ class ModelDispatchplanningDispatchplanning extends Model {
 
     public function deleteDispatche($dispatche_id) {
         $this->db->query('DELETE FROM ' . DB_PREFIX . "dispatch_assignment WHERE id = '" . (int) $dispatche_id . "'");
+    }
+
+    public function getDispatcheById($dispatche_id) {
+        $sql = "SELECT *, v.registration_number, CONCAT(dr.firstname,' ', dr.lastname) AS driver_name, CONCAT(de.firstname,' ',de.lastname) AS delivery_executive_name FROM " . DB_PREFIX . 'dispatch_assignment d ';
+        $sql .= 'LEFT JOIN `' . DB_PREFIX . 'vehicles` v on v.vehicle_id = d.vehicle_id ';
+        $sql .= 'LEFT JOIN `' . DB_PREFIX . 'drivers` dr on d.driver_id = dr.driver_id ';
+        $sql .= 'LEFT JOIN `' . DB_PREFIX . 'delivery_executives` de on de.delivery_executive_id = d.delivery_executive_id ';
+        $sql .= 'WHERE d.id =' . $dispatche_id;
+        $log = new Log('error.log');
+        $log->write($sql);
+        $query = $this->db->query($sql);
+        return $query->row;
     }
 
 }

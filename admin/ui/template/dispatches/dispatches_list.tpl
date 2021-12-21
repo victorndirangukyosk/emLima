@@ -110,7 +110,7 @@
                   <td class="text-left"><?php echo $dispatche['delivery_date']; ?></td>
                   <td class="text-left"><?php echo $dispatche['delivery_time_slot']; ?></td>
                   <td class="text-left"><?php echo $dispatche['created_at']; ?></td>
-                  <td class="text-left"><button type="button" id="dispatchplanning" data-toggle="tooltip" title="Add Dispatch Planning" class="btn btn-primary"><i class="fa fa-pencil"></i></button></td>
+                  <td class="text-left"><button type="button" id="editdispatchplanning" data-dispatche-id="<?php echo $dispatche['dispatche_id']; ?>" data-toggle="tooltip" title="Edit Dispatch Planning" class="btn btn-primary"><i class="fa fa-pencil"></i></button></td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>
@@ -220,6 +220,136 @@ $.ajax({
             }
 });
 });
+
+var edit_delivery_date;
+var edit_delivery_executive_id;
+var edit_delivery_time_slot;
+var edit_driver_id;
+var edit_vehicle_id;
+var edit_registration_number;  
+var edit_dispatche_id;
+var edit_driver_name;
+var edit_delivery_executive_name;
+$('button[id^=\'editdispatchplanning\']').on('click', function (e) {
+e.preventDefault();
+console.log($(this).data('dispatche-id'));
+$('#clicked_vehicle_id').val($(this).data('dispatche-id'));
+$('#dispatchModal').modal('toggle');
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getdispatchebyid&dispache_id='+$('#clicked_vehicle_id').val()+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    edit_delivery_date = json.delivery_date;
+                    edit_delivery_executive_id = json.delivery_executive_id;
+                    edit_delivery_time_slot = json.delivery_time_slot;
+                    edit_driver_id = json.driver_id;
+                    edit_vehicle_id = json.vehicle_id;
+                    edit_registration_number = json.registration_number;
+                    edit_dispatche_id = json.id;
+                    edit_delivery_executive_name = json.delivery_executive_name;
+                    edit_driver_name = json.driver_name;
+                    $('input[name=\'delivery_date\']').val(edit_delivery_date);
+                    setTimeout(function(){ editdispatch(); }, 100);
+                    }
+            }
+});
+});
+
+function editdispatch() {
+$.ajax({
+                url: 'index.php?path=dropdowns/dropdowns/getdeliverytimeslots&dispache_id='+edit_dispatche_id+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    if(json != null) {
+                    var option = '<option value="">Select Delivery Timeslot</option>';
+                    for (var i=0;i<json.suggestions.delivery_timeslots.length;i++){
+                           if(edit_delivery_time_slot == json.suggestions.delivery_timeslots[i].timeslot) {
+                           option += '<option value="'+ json.suggestions.delivery_timeslots[i].timeslot + '" selected>' + json.suggestions.delivery_timeslots[i].timeslot + '</option>';    
+                           } else {
+                           option += '<option value="'+ json.suggestions.delivery_timeslots[i].timeslot + '">' + json.suggestions.delivery_timeslots[i].timeslot + '</option>';
+                           }
+                    }
+                    var $select = $('#delivery_timeslot');
+                    $select.html('');
+                    if(json.suggestions.delivery_timeslots != null && json.suggestions.delivery_timeslots.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getunassignedvehicles&delivery_date='+edit_delivery_date+'&delivery_timeslot='+edit_delivery_time_slot+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '<option value="">Select Vehicle</option>';
+                    if(edit_vehicle_id != null) {
+                    option += '<option value="'+ edit_vehicle_id + '" selected>' + edit_registration_number + '</option>';
+                    }
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].vehicle_id + '">' + json[i].registration_number + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#vehicle');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getunassigneddeliveryexecutives&delivery_date='+edit_delivery_date+'&delivery_timeslot='+edit_delivery_time_slot+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '<option value="">Select Delivery Executive</option>';
+                    if(edit_delivery_executive_id != null) {
+                    option += '<option value="'+ edit_delivery_executive_id + '" selected>' + edit_delivery_executive_name + '</option>';
+                    }
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].delivery_executive_id + '">' + json[i].firstname +' '+ json[i].lastname + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#delivery_executive');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getunassigneddrivers&delivery_date='+edit_delivery_date+'&delivery_timeslot='+edit_delivery_time_slot+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '<option value="">Select Driver</option>';
+                    if(edit_driver_id != null) {
+                    option += '<option value="'+ edit_driver_id + '" selected>' + edit_driver_name + '</option>';
+                    }
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].driver_id + '">' + json[i].firstname +' '+json[i].lastname+ '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#driver');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
+}
 $('#deliverydatepicker, #delivery_timeslot').on('change', function() {
 if($('input[name=\'delivery_date\']').val() == '' || $('select[name=\'delivery_timeslot\']').val() == '') {
 return false;
