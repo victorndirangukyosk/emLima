@@ -349,4 +349,64 @@ class ControllerDispatchesDispatchplanlist extends Controller {
         return !$this->error;
     }
 
+    public function export_excel() {
+        $data = [];
+        $this->load->model('report/excel');
+
+        if (isset($this->request->get['filter_registration_number'])) {
+            $filter_registration_number = $this->request->get['filter_registration_number'];
+        } else {
+            $filter_registration_number = null;
+        }
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_executive_name'])) {
+            $filter_delivery_executive_name = $this->request->get['filter_delivery_executive_name'];
+        } else {
+            $filter_delivery_executive_name = null;
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'name';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $filter_data = [
+            'filter_registration_number' => $filter_registration_number,
+            'filter_name' => $filter_name,
+            'filter_delivery_executive_name' => $filter_delivery_executive_name,
+            'filter_date_added' => $filter_date_added,
+            'sort' => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
+
+        $this->model_report_excel->download_dispatch_excel($filter_data);
+    }
+
 }

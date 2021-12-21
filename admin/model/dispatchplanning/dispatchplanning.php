@@ -214,6 +214,75 @@ class ModelDispatchplanningDispatchplanning extends Model {
         return $query->rows;
     }
 
+    public function getAllDispatchesExcel($data = []) {
+        $sql = "SELECT *, v.registration_number, CONCAT(dr.firstname,' ', dr.lastname) AS driver_name, CONCAT(de.firstname,' ',de.lastname) AS delivery_executive_name FROM " . DB_PREFIX . 'dispatch_assignment d ';
+
+        $sql .= 'LEFT JOIN `' . DB_PREFIX . 'vehicles` v on v.vehicle_id = d.vehicle_id ';
+        $sql .= 'LEFT JOIN `' . DB_PREFIX . 'drivers` dr on d.driver_id = dr.driver_id ';
+        $sql .= 'LEFT JOIN `' . DB_PREFIX . 'delivery_executives` de on de.delivery_executive_id = d.delivery_executive_id ';
+        $implode = [];
+
+        if (!empty($data['filter_name'])) {
+            $implode[] = "CONCAT(dr.firstname, ' ', dr.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (!empty($data['filter_model'])) {
+            $implode[] = "d.model = '" . $this->db->escape($data['filter_model']) . "'";
+        }
+
+        if (!empty($data['filter_registration_number'])) {
+            $implode[] = "v.registration_number = '" . $this->db->escape($data['filter_registration_number']) . "'";
+        }
+
+        if (!empty($data['filter_date_added'])) {
+            $implode[] = "DATE(d.created_at) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $sort_data = [
+            'c.make',
+            'c.model',
+            'c.registration_number',
+            'c.registration_validity',
+            'c.registration_date',
+            'c.status',
+            'c.date_added',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY created_at';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        // echo "<pre>";print_r($sql);die;
+
+        return $query->rows;
+    }
+
     public function deleteDispatche($dispatche_id) {
         $this->db->query('DELETE FROM ' . DB_PREFIX . "dispatch_assignment WHERE id = '" . (int) $dispatche_id . "'");
     }
