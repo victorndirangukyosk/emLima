@@ -2,6 +2,11 @@
 <div id="content">
   <div class="page-header">
     <div class="container-fluid">
+      <div class="pull-right">
+        <button type="button" id="dispatchplanning" data-toggle="tooltip" title="Add Dispatch Planning" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+        <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-customer').submit() : false;"><i class="fa fa-trash-o"></i></button>
+        <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
+      </div>  
       <h1><?php echo $heading_title; ?></h1>
     </div>
   </div>
@@ -74,7 +79,7 @@
            </div>
           </div>
         </div>
-        <form action="" method="post" enctype="multipart/form-data" id="form-customer">
+        <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-customer">
           <div class="table-responsive">
             <table class="table table-bordered table-hover">
               <thead>
@@ -87,6 +92,7 @@
                   <td class="text-left">Delivery Date</td>
                   <td class="text-left">Delivery Timeslot</td>
                   <td class="text-left">Date Added</td>
+                  <td class="text-left">Action</td>
                 </tr>
               </thead>
               <tbody>
@@ -104,6 +110,7 @@
                   <td class="text-left"><?php echo $dispatche['delivery_date']; ?></td>
                   <td class="text-left"><?php echo $dispatche['delivery_time_slot']; ?></td>
                   <td class="text-left"><?php echo $dispatche['created_at']; ?></td>
+                  <td class="text-left"><button type="button" id="dispatchplanning" data-toggle="tooltip" title="Add Dispatch Planning" class="btn btn-primary"><i class="fa fa-pencil"></i></button></td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>
