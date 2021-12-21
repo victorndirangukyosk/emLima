@@ -1005,10 +1005,10 @@
 
                                                 <div class="form-group">
                                                     <div class="col-md-6"> 
-                                                        <button type="button" id="driver-new-buttons" name="driver-new-buttons" onclick="savedriverdetail_new_two()" class="btn btn-lg btn-success" data-dismiss="modal" style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
+                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: left; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
                                                     </div>
                                                     <div class="col-md-6"> 
-                                                        <button id="driver-new-button" name="driver-new-button" onclick="savedriverdetails_new_two()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Save & Print Invoice</button>
+                                                        <button id="driver-new-button" name="driver-new-button" onclick="savedriverdetails_new_two()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Save</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1740,6 +1740,74 @@ function savedriverdetail_new() {
                 }
                 
 $('#driverModal-form')[0].reset();               
+}
+
+function savedriverdetails_new_two() { 
+ 
+    $('#driverModal-new-messages').html('');
+    $('#driverModal-new-success-messages').html('');
+    var order_id = selected_order_ids;
+ 
+    var vehicle_number =  $('select[name="order_vehicle_numbers_two"]').val();
+    var delivery_charge =  $('input[name="order_delivery_charge_two"]').val();
+    console.log(vehicle_number);
+    console.log(delivery_charge);
+    console.log($('#driverModal-new-form').serialize());
+ 
+                if (vehicle_number == '' || vehicle_number.length == 0 || order_id == '' || vehicle_number == '0' ) {
+                $('#driverModal-new-messages').html("Please enter data");
+                return false;
+                } 
+                else{
+                var clicked_orderid = order_id;
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                $.ajax({
+		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/intransit&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_status_id=4&notify=0',
+		beforeSend: function() {
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                },
+                success: function(json) {	 
+                console.log(json);
+                $('.alert').html('Order status updated successfully!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+		}
+                }); 
+                    $.ajax({
+                    url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetailsBulk&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data:{ order_id : selected_order_ids, vehicle_number : vehicle_number, delivery_charge : delivery_charge,updateDeliveryDate:updateDeliveryDate },
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                            $('#driverModal-new-success-messages').html('Saved Successfully');
+                            setTimeout(function(){ window.location.reload(false); }, 1500);
+                        }
+                        else {
+                            $('#driverModal-new-success-messages').html('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+
+                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                $('#driverModal-new-messages').html("Please try again");
+                                    return false;
+                                }
+                });
+                }
+                
+$('#driverModal-new-form')[0].reset();               
 }
 
 function saveorderprocessingdetails() { 
