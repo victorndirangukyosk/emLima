@@ -9664,6 +9664,7 @@ class ControllerSaleOrder extends Controller {
 
         $order_array = NULL;
         $order_delivery_array = NULL;
+        $order_deliverydate_array = NULL;
         $invalid_order_status = NULL;
         $invalid_order_delivery_date = NULL;
         if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
@@ -9678,6 +9679,7 @@ class ControllerSaleOrder extends Controller {
             if ($order_id > 0) {
                 $order_info = $this->model_sale_order->getOrder($order_id);
                 $order_delivery_array[] = $order_info['delivery_timeslot'];
+                $order_deliverydate_array[] = $order_info['delivery_date'];
                 if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] > 0) {
                     $invalid_order_status[] = $order_info['order_id'];
                 }
@@ -9687,10 +9689,14 @@ class ControllerSaleOrder extends Controller {
                 }
             }
         }
+        $log = new Log('error.log');
+        $log->write($order_delivery_array);
         $new_delivery_array = array_unique($order_delivery_array);
+        $new_deliverydate_array = array_unique($order_deliverydate_array);
         $data['invalid_order_delivery_timeslot'] = $new_delivery_array;
         $data['invalid_order_delivery_timeslot_count'] = count($new_delivery_array);
-        $data['invalid_order_status_count'] = count($new_delivery_array);
+        $data['invalid_order_deliverydate'] = $new_deliverydate_array;
+        $data['invalid_order_deliverydate_count'] = count($new_deliverydate_array);
         $data['invalid_order_status'] = $invalid_order_status;
         $data['invalid_order_status_count'] = count($invalid_order_status);
         $data['invalid_order_delivery_date'] = $invalid_order_delivery_date;

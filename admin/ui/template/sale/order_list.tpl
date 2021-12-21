@@ -2945,14 +2945,21 @@ $.ajax({
                     return false;
                     }
                     
-                    if(json.data.invalid_order_delivery_timeslot_count > 0) {
+                    if(json.data.invalid_order_delivery_timeslot_count > 1) {
                     $('#driverModal-new-messages').html('Selected Orders Delivery Timeslots Is Not Unique!');
                     $('#driver-new-buttons').prop('disabled', true);
                     $('#driver-new-button').prop('disabled', true);
                     return false;
                     }
                     
-                    if(json.data.invalid_order_status_count == 0 && json.data.invalid_order_delivery_date_count == 0 && json.data.invalid_order_delivery_timeslot_count == 0) {
+                    if(json.data.invalid_order_deliverydate_count > 1) {
+                    $('#driverModal-new-messages').html('Selected Orders Delivery Dates Is Not Unique!');
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    return false;
+                    }
+                    
+                    if(json.data.invalid_order_status_count == 0 && json.data.invalid_order_delivery_date_count == 0 && json.data.invalid_order_delivery_timeslot_count == 1 && json.data.invalid_order_deliverydate_count == 1) {
                     $('#driverModal-new-messages').html('');
                     $('#driver-new-buttons').prop('disabled', false);
                     $('#driver-new-button').prop('disabled', false);
