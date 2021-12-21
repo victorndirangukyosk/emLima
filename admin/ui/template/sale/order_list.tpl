@@ -2928,9 +2928,30 @@ $.ajax({
 		url: 'index.php?path=sale/order/checkorderstatusprocessing&token=<?php echo $token; ?>',
 		type: 'post',
 		dataType: 'json',
-		data: 'order_id=' + selected_order_ids + '&order_status_id=1',
+		data: 'order_id=' + selected_order_ids + '&order_status_id='+$('select[name=\'filter_order_status\']').val()+'&delivery_date='+$('input[name=\'filter_delivery_date\']').val()+'&delivery_time_slot='+$('select[name=\'filter_delivery_time_slot\']').val(),
 		success: function(json) {	 
                     console.log(json);
+                    if($('select[name=\'filter_order_status\']').val() == null || $('select[name=\'filter_order_status\']').val() != 1 || $('select[name=\'filter_order_status\']').val() == 'undefined') {
+                    $('#driverModal-new-messages').html('Selected Order Status Should Be In Order Processing!');
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    return false;
+                    }
+                    
+                    if($('input[name=\'filter_delivery_date\']').val() == null || $('input[name=\'filter_delivery_date\']').val() == 'undefined') {
+                    $('#driverModal-new-messages').html('Please Select Delivery Date!');
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    return false;
+                    }
+                    
+                    if($('select[name=\'filter_delivery_time_slot\']').val() == null || $('select[name=\'filter_delivery_time_slot\']').val() == 'undefined') {
+                    $('#driverModal-new-messages').html('Please Select Delivery Timeslot!');
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    return false;
+                    }
+                    
                     if(json.data.invalid_order_status_count > 0) {
                     $('#driverModal-new-messages').html('Selected Orders Status Is Invalid!');
                     $('#driver-new-buttons').prop('disabled', true);
@@ -2938,28 +2959,21 @@ $.ajax({
                     return false;
                     }
                     
-                    if(json.data.invalid_order_delivery_date_count > 0) {
-                    $('#driverModal-new-messages').html('Selected Orders Delivery Dates Is Invalid!');
-                    $('#driver-new-buttons').prop('disabled', true);
-                    $('#driver-new-button').prop('disabled', true);
-                    return false;
-                    }
-                    
                     if(json.data.invalid_order_delivery_timeslot_count > 1) {
-                    $('#driverModal-new-messages').html('Selected Orders Delivery Timeslots Is Not Unique!');
+                    $('#driverModal-new-messages').html('Selected Orders Delivery Timeslots Should Be Unique!');
                     $('#driver-new-buttons').prop('disabled', true);
                     $('#driver-new-button').prop('disabled', true);
                     return false;
                     }
                     
                     if(json.data.invalid_order_deliverydate_count > 1) {
-                    $('#driverModal-new-messages').html('Selected Orders Delivery Dates Is Not Unique!');
+                    $('#driverModal-new-messages').html('Selected Orders Delivery Dates Should Be Unique!');
                     $('#driver-new-buttons').prop('disabled', true);
                     $('#driver-new-button').prop('disabled', true);
                     return false;
                     }
                     
-                    if(json.data.invalid_order_status_count == 0 && json.data.invalid_order_delivery_date_count == 0 && json.data.invalid_order_delivery_timeslot_count == 1 && json.data.invalid_order_deliverydate_count == 1) {
+                    if(json.data.invalid_order_status_count == 0 && json.data.invalid_order_delivery_timeslot_count == 1 && json.data.invalid_order_deliverydate_count == 1) {
                     $('#driverModal-new-messages').html('');
                     $('#driver-new-buttons').prop('disabled', false);
                     $('#driver-new-button').prop('disabled', false);

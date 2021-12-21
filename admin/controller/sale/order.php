@@ -9678,19 +9678,19 @@ class ControllerSaleOrder extends Controller {
         foreach ($order_array as $order_id) {
             if ($order_id > 0) {
                 $order_info = $this->model_sale_order->getOrder($order_id);
-                $order_delivery_array[] = $order_info['delivery_timeslot'];
-                $order_deliverydate_array[] = $order_info['delivery_date'];
+                $order_delivery_array[$order_id] = $order_info['delivery_timeslot'];
+                $order_deliverydate_array[$order_id] = $order_info['delivery_date'];
                 if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] > 0) {
-                    $invalid_order_status[] = $order_info['order_id'];
+                    $invalid_order_status[$order_id] = $order_info['order_id'];
                 }
                 $date_now = date("Y-m-d");
                 if ($order_info['delivery_date'] > $date_now && $order_info['delivery_date'] != NULL) {
-                    $invalid_order_delivery_date[] = $order_info['order_id'];
+                    $invalid_order_delivery_date[$order_id] = $order_info['order_id'];
                 }
             }
         }
         $log = new Log('error.log');
-        $log->write($order_delivery_array);
+        $log->write($this->request->post);
         $new_delivery_array = array_unique($order_delivery_array);
         $new_deliverydate_array = array_unique($order_deliverydate_array);
         $data['invalid_order_delivery_timeslot'] = $new_delivery_array;
@@ -9702,6 +9702,7 @@ class ControllerSaleOrder extends Controller {
         $data['invalid_order_delivery_date'] = $invalid_order_delivery_date;
         $data['invalid_order_delivery_date_count'] = count($invalid_order_delivery_date);
         $json['data'] = $data;
+        $log->write($data);
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
