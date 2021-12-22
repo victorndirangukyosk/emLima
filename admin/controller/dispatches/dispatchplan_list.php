@@ -44,7 +44,7 @@ class ControllerDispatchesDispatchplanlist extends Controller {
             $filter_date_added = $this->request->get['filter_date_added'];
         } else {
             $filter_date_added = null;
-        }        
+        }
 
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -118,18 +118,21 @@ class ControllerDispatchesDispatchplanlist extends Controller {
             $vehicle_details = $this->model_vehicles_vehicles->getVehicle($result['vehicle_id']);
 
             $data['dispatches'][] = [
+                'dispatche_id' => $result['id'],
                 'vehicle_id' => $result['vehicle_id'],
                 'registration_number' => $vehicle_details['registration_number'],
                 'driver_id' => $result['driver_id'],
-                'driver_name' => $driver_details['firstname'].' '.$driver_details['lastname'],
+                'driver_name' => $driver_details['firstname'] . ' ' . $driver_details['lastname'],
                 'delivery_executive_id' => $result['delivery_executive_id'],
-                'delivery_executive_name' => $delivery_executives['firstname'].''.$delivery_executives['lastname'],
+                'delivery_executive_name' => $delivery_executives['firstname'] . ' ' . $delivery_executives['lastname'],
                 'delivery_date' => $result['delivery_date'],
                 'delivery_time_slot' => $result['delivery_time_slot'],
                 'created_at' => $result['created_at'],
                 'updated_at' => $result['updated_at'],
             ];
         }
+
+        $data['delete'] = $this->url->link('dispatches/dispatchplan_list/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -208,7 +211,7 @@ class ControllerDispatchesDispatchplanlist extends Controller {
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . urlencode(html_entity_decode($this->request->get['filter_date_added'], ENT_QUOTES, 'UTF-8'));
-        }        
+        }
 
         if ('ASC' == $order) {
             $url .= '&order=DESC';
@@ -270,6 +273,140 @@ class ControllerDispatchesDispatchplanlist extends Controller {
         $data['footer'] = $this->load->controller('common/footer');
 
         $this->response->setOutput($this->load->view('dispatches/dispatches_list.tpl', $data));
+    }
+
+    public function delete() {
+        $this->load->language('dispatches/dispatchplanning');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('dispatchplanning/dispatchplanning');
+
+        if (isset($this->request->post['selected']) && $this->validateDelete()) {
+            foreach ($this->request->post['selected'] as $dispatche_id) {
+                $this->model_dispatchplanning_dispatchplanning->deleteDispatche($dispatche_id);
+
+                // Add to activity log
+                $log = new Log('error.log');
+                $this->load->model('user/user_activity');
+
+                $activity_data = [
+                    'user_id' => $this->user->getId(),
+                    'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                    'user_group_id' => $this->user->getGroupId(),
+                    'customer_id' => $dispatche_id,
+                ];
+                $log->write('dispatch delete');
+
+                $this->model_user_user_activity->addActivity('dispatch_delete', $activity_data);
+
+                $log->write('dispatch delete');
+            }
+
+            $this->session->data['success'] = 'Success : Dispatch Plan(s) deleted successfully!';
+
+            $url = '';
+
+            if (isset($this->request->get['filter_registration_number'])) {
+                $url .= '&filter_registration_number=' . urlencode(html_entity_decode($this->request->get['filter_registration_number'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_name'])) {
+                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_delivery_executive_name'])) {
+                $url .= '&filter_delivery_executive_name=' . urlencode(html_entity_decode($this->request->get['filter_delivery_executive_name'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_date_added'])) {
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            }
+
+            if (isset($this->request->get['sort'])) {
+                $url .= '&sort=' . $this->request->get['sort'];
+            }
+
+            if (isset($this->request->get['order'])) {
+                $url .= '&order=' . $this->request->get['order'];
+            }
+
+            if (isset($this->request->get['page'])) {
+                $url .= '&page=' . $this->request->get['page'];
+            }
+
+            $this->response->redirect($this->url->link('dispatches/dispatchplan_list', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+        }
+
+        $this->getList();
+    }
+
+    protected function validateDelete() {
+        if (!$this->user->hasPermission('modify', 'dispatches/dispatchplan_list')) {
+            $this->error['warning'] = $this->language->get('error_permission');
+        }
+
+        return !$this->error;
+    }
+
+    public function export_excel() {
+        $data = [];
+        $this->load->model('report/excel');
+
+        if (isset($this->request->get['filter_registration_number'])) {
+            $filter_registration_number = $this->request->get['filter_registration_number'];
+        } else {
+            $filter_registration_number = null;
+        }
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_executive_name'])) {
+            $filter_delivery_executive_name = $this->request->get['filter_delivery_executive_name'];
+        } else {
+            $filter_delivery_executive_name = null;
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'name';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $filter_data = [
+            'filter_registration_number' => $filter_registration_number,
+            'filter_name' => $filter_name,
+            'filter_delivery_executive_name' => $filter_delivery_executive_name,
+            'filter_date_added' => $filter_date_added,
+            'sort' => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
+
+        $this->model_report_excel->download_dispatch_excel($filter_data);
     }
 
 }

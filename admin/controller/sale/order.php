@@ -1395,6 +1395,7 @@ class ControllerSaleOrder extends Controller {
         $data['entry_store_name'] = $this->language->get('entry_store_name');
         $data['button_invoice_print'] = $this->language->get('button_invoice_print');
         $data['button_status_update'] = 'Update Status To Order Processing.';
+        $data['button_status_update_transit'] = 'Update Order Status To In Transit.';
         $data['button_shipping_print'] = $this->language->get('button_shipping_print');
         $data['button_add'] = $this->language->get('button_add');
         $data['button_edit'] = $this->language->get('button_edit');
@@ -9362,6 +9363,80 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function SaveOrUpdateOrderDriverVehicleDetailsBulk() {
+        $orders = explode(',', $this->request->post['order_id']);
+        foreach ($orders as $order_id) {
+            $vehicle_number = $this->request->post['vehicle_number'];
+            $delivery_charge = $this->request->post['delivery_charge'];
+            $updateDeliveryDate = $this->request->post['updateDeliveryDate'];
+
+            /* $log = new Log('error.log');
+              $log->write('SaveOrUpdateOrderDriverDetails');
+              $log->write($this->request->post['driver_id']);
+              $log->write($this->request->post['order_id']); */
+
+            $this->load->model('checkout/order');
+            $this->load->model('sale/order');
+            $this->load->model('dispatchplanning/dispatchplanning');
+            $this->load->model('vehicles/vehicles');
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $order_info['delivery_date'] = isset($updateDeliveryDate) && $updateDeliveryDate == 1 ? date('y-m-d') : $order_info['delivery_date'];
+            $vehicle_info = $this->model_dispatchplanning_dispatchplanning->getAssignedVehiclesByVehicle($order_info['delivery_date'], $order_info['delivery_timeslot'], $vehicle_number);
+            $log = new Log('error.log');
+            $log->write('vehicle_info');
+            $log->write($vehicle_info);
+            $log->write($this->request->post['vehicle_number']);
+            $log->write('vehicle_info');
+            $vehicle_details = $this->model_vehicles_vehicles->getVehicle($vehicle_number);
+            if (is_array($order_info) && $order_info != NULL) {
+
+                // echo "<pre>";print_r( $delivery_charge);die;
+                $this->model_sale_order->UpdateOrderDriverDetails($order_id, $vehicle_info['driver_id']);
+                $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_details['registration_number']);
+                $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $vehicle_info['delivery_executive_id']);
+                if ($delivery_charge > 0) {
+                    $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
+                }
+                // $currentdate= date("d/m/Y");
+                // echo "<pre>";print_r( $order_delivery_date);
+                // echo "<pre>";print_r( 'current date below');
+                // echo "<pre>";print_r( $currentdate);
+                // if($order_delivery_date > $currentdate)
+                if (isset($updateDeliveryDate) && $updateDeliveryDate == 1) {
+                    //update delivery date to current date
+                    $this->model_sale_order->UpdateOrderDeliveryDate($order_id);
+                }
+            }
+            try {
+                sleep(5);
+                $this->SendMailToCustomerWithDriverDetails($order_id);
+            } catch (exception $ex) {
+                $log = new Log('error.log');
+                $log->write('Order History Mail Error');
+                $log->write($ex);
+            }
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $order_id,
+            ];
+            $log->write('driver assigned to order');
+
+            $this->model_user_user_activity->addActivity('order_driver_assigned', $activity_data);
+
+            $log->write('driver assigned to order');
+        }
+        $json['status'] = 'success';
+        $json['message'] = 'Order Driver Details Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function SaveOrUpdateOrderProcessorDetails() {
         $order_id = $this->request->post['order_id'];
         $order_processing_group_id = $this->request->post['order_processing_group_id'];
@@ -9653,6 +9728,55 @@ class ControllerSaleOrder extends Controller {
         $data['invalid_order_status'] = $invalid_order_status;
         $data['invalid_order_status_count'] = count($invalid_order_status);
         $json['data'] = $data;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function checkorderstatusprocessing() {
+
+        $this->load->model('sale/order');
+
+        $order_array = NULL;
+        $order_delivery_array = NULL;
+        $order_deliverydate_array = NULL;
+        $invalid_order_status = NULL;
+        $invalid_order_delivery_date = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $order_array = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $order_array = explode(',', $this->request->post['order_id']);
+            $order_array = array_unique($order_array);
+        }
+
+        foreach ($order_array as $order_id) {
+            if ($order_id > 0) {
+                $order_info = $this->model_sale_order->getOrder($order_id);
+                $order_delivery_array[$order_id] = $order_info['delivery_timeslot'];
+                $order_deliverydate_array[$order_id] = $order_info['delivery_date'];
+                if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] > 0) {
+                    $invalid_order_status[$order_id] = $order_info['order_id'];
+                }
+                $date_now = date("Y-m-d");
+                if ($order_info['delivery_date'] > $date_now && $order_info['delivery_date'] != NULL) {
+                    $invalid_order_delivery_date[$order_id] = $order_info['order_id'];
+                }
+            }
+        }
+        $log = new Log('error.log');
+        $log->write($this->request->post);
+        $new_delivery_array = array_unique($order_delivery_array);
+        $new_deliverydate_array = array_unique($order_deliverydate_array);
+        $data['invalid_order_delivery_timeslot'] = $new_delivery_array;
+        $data['invalid_order_delivery_timeslot_count'] = count($new_delivery_array);
+        $data['invalid_order_deliverydate'] = $new_deliverydate_array;
+        $data['invalid_order_deliverydate_count'] = count($new_deliverydate_array);
+        $data['invalid_order_status'] = $invalid_order_status;
+        $data['invalid_order_status_count'] = count($invalid_order_status);
+        $data['invalid_order_delivery_date'] = $invalid_order_delivery_date;
+        $data['invalid_order_delivery_date_count'] = count($invalid_order_delivery_date);
+        $json['data'] = $data;
+        $log->write($data);
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

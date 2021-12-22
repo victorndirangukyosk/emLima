@@ -2,6 +2,11 @@
 <div id="content">
   <div class="page-header">
     <div class="container-fluid">
+      <div class="pull-right">
+        <button type="button" id="dispatchplanning" data-toggle="tooltip" title="Add Dispatch Planning" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+        <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-customer').submit() : false;"><i class="fa fa-trash-o"></i></button>
+        <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
+      </div>  
       <h1><?php echo $heading_title; ?></h1>
     </div>
   </div>
@@ -48,7 +53,7 @@
                   <div class="form-group">
                 <div class="form-group">
                  <label class="control-label" for="input-status">Delivery Executive</label>
-                 <input type="text" name="filter_delivery_executive_name" value="<?php echo $filter_registration_number; ?>" placeholder="Delivery Executive" id="input-name" class="form-control" />
+                 <input type="text" name="filter_delivery_executive_name" value="<?php echo $filter_delivery_executive_name; ?>" placeholder="Delivery Executive" id="input-name" class="form-control" />
                  </div>
               </div>
               </div>
@@ -74,7 +79,7 @@
            </div>
           </div>
         </div>
-        <form action="" method="post" enctype="multipart/form-data" id="form-customer">
+        <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-customer">
           <div class="table-responsive">
             <table class="table table-bordered table-hover">
               <thead>
@@ -87,6 +92,7 @@
                   <td class="text-left">Delivery Date</td>
                   <td class="text-left">Delivery Timeslot</td>
                   <td class="text-left">Date Added</td>
+                  <td class="text-left">Action</td>
                 </tr>
               </thead>
               <tbody>
@@ -94,9 +100,9 @@
                 <?php foreach ($dispatches as $dispatche) { ?>
                 <tr>
                   <td class="text-center"><?php if (in_array($dispatche['vehicle_id'], $selected)) { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $dispatche['vehicle_id']; ?>" checked="checked" />
+                    <input type="checkbox" name="selected[]" value="<?php echo $dispatche['dispatche_id']; ?>" checked="checked" />
                     <?php } else { ?>
-                    <input type="checkbox" name="selected[]" value="<?php echo $dispatche['vehicle_id']; ?>" />
+                    <input type="checkbox" name="selected[]" value="<?php echo $dispatche['dispatche_id']; ?>" />
                     <?php } ?></td>
                   <td class="text-left"><?php echo $dispatche['registration_number']; ?></td>
                   <td class="text-left"><?php echo $dispatche['driver_name']; ?></td>
@@ -104,6 +110,7 @@
                   <td class="text-left"><?php echo $dispatche['delivery_date']; ?></td>
                   <td class="text-left"><?php echo $dispatche['delivery_time_slot']; ?></td>
                   <td class="text-left"><?php echo $dispatche['created_at']; ?></td>
+                  <td class="text-left"><button type="button" id="editdispatchplanning" data-dispatche-id="<?php echo $dispatche['dispatche_id']; ?>" data-toggle="tooltip" title="Edit Dispatch Planning" class="btn btn-primary"><i class="fa fa-pencil"></i></button></td>
                 </tr>
                 <?php } ?>
                 <?php } else { ?>
@@ -189,6 +196,8 @@
   <script type="text/javascript"><!--
 $('button[id^=\'dispatchplanning\']').on('click', function (e) {
 e.preventDefault();
+$("form[id^='vehicle_dispatch_planning']")[0].reset();
+$('#vehicle_dispatch_planning')[0].reset();               
 console.log($(this).data('vehicleid'));
 $('#clicked_vehicle_id').val($(this).data('vehicleid'));
 $('#dispatchModal').modal('toggle');
@@ -213,6 +222,138 @@ $.ajax({
             }
 });
 });
+
+var edit_delivery_date;
+var edit_delivery_executive_id;
+var edit_delivery_time_slot;
+var edit_driver_id;
+var edit_vehicle_id;
+var edit_registration_number;  
+var edit_dispatche_id;
+var edit_driver_name;
+var edit_delivery_executive_name;
+$('button[id^=\'editdispatchplanning\']').on('click', function (e) {
+e.preventDefault();
+$("form[id^='vehicle_dispatch_planning']")[0].reset();
+$('#vehicle_dispatch_planning')[0].reset(); 
+console.log($(this).data('dispatche-id'));
+$('#clicked_vehicle_id').val($(this).data('dispatche-id'));
+$('#dispatchModal').modal('toggle');
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getdispatchebyid&dispache_id='+$('#clicked_vehicle_id').val()+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    edit_delivery_date = json.delivery_date;
+                    edit_delivery_executive_id = json.delivery_executive_id;
+                    edit_delivery_time_slot = json.delivery_time_slot;
+                    edit_driver_id = json.driver_id;
+                    edit_vehicle_id = json.vehicle_id;
+                    edit_registration_number = json.registration_number;
+                    edit_dispatche_id = json.id;
+                    edit_delivery_executive_name = json.delivery_executive_name;
+                    edit_driver_name = json.driver_name;
+                    $('input[name=\'delivery_date\']').val(edit_delivery_date);
+                    setTimeout(function(){ editdispatch(); }, 100);
+                    }
+            }
+});
+});
+
+function editdispatch() {
+$.ajax({
+                url: 'index.php?path=dropdowns/dropdowns/getdeliverytimeslots&dispache_id='+edit_dispatche_id+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    if(json != null) {
+                    var option = '<option value="">Select Delivery Timeslot</option>';
+                    for (var i=0;i<json.suggestions.delivery_timeslots.length;i++){
+                           if(edit_delivery_time_slot == json.suggestions.delivery_timeslots[i].timeslot) {
+                           option += '<option value="'+ json.suggestions.delivery_timeslots[i].timeslot + '" selected>' + json.suggestions.delivery_timeslots[i].timeslot + '</option>';    
+                           } else {
+                           option += '<option value="'+ json.suggestions.delivery_timeslots[i].timeslot + '">' + json.suggestions.delivery_timeslots[i].timeslot + '</option>';
+                           }
+                    }
+                    var $select = $('#delivery_timeslot');
+                    $select.html('');
+                    if(json.suggestions.delivery_timeslots != null && json.suggestions.delivery_timeslots.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getunassignedvehicles&delivery_date='+edit_delivery_date+'&delivery_timeslot='+edit_delivery_time_slot+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '<option value="">Select Vehicle</option>';
+                    if(edit_vehicle_id != null) {
+                    option += '<option value="'+ edit_vehicle_id + '" selected>' + edit_registration_number + '</option>';
+                    }
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].vehicle_id + '">' + json[i].registration_number + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#vehicle');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getunassigneddeliveryexecutives&delivery_date='+edit_delivery_date+'&delivery_timeslot='+edit_delivery_time_slot+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '<option value="">Select Delivery Executive</option>';
+                    if(edit_delivery_executive_id != null) {
+                    option += '<option value="'+ edit_delivery_executive_id + '" selected>' + edit_delivery_executive_name + '</option>';
+                    }
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].delivery_executive_id + '">' + json[i].firstname +' '+ json[i].lastname + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#delivery_executive');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getunassigneddrivers&delivery_date='+edit_delivery_date+'&delivery_timeslot='+edit_delivery_time_slot+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '<option value="">Select Driver</option>';
+                    if(edit_driver_id != null) {
+                    option += '<option value="'+ edit_driver_id + '" selected>' + edit_driver_name + '</option>';
+                    }
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].driver_id + '">' + json[i].firstname +' '+json[i].lastname+ '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#driver');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    }
+            }
+});
+}
 $('#deliverydatepicker, #delivery_timeslot').on('change', function() {
 if($('input[name=\'delivery_date\']').val() == '' || $('select[name=\'delivery_timeslot\']').val() == '') {
 return false;
