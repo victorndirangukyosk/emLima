@@ -2999,7 +2999,7 @@ $.ajax({
 		success: function(json) {	 
                     console.log(json);
                     if($('select[name=\'filter_order_status\']').val() == null || $('select[name=\'filter_order_status\']').val() != 1 || $('select[name=\'filter_order_status\']').val() == 'undefined') {
-                    $('#driverModal-new-messages').html('Selected Order Status Should Be In Order Processing!');
+                    $('#driverModal-new-messages').html('Please Select Order Status As Order Processing From Filters!');
                     $('#driver-new-buttons').prop('disabled', true);
                     $('#driver-new-button').prop('disabled', true);
                     return false;
