@@ -1747,6 +1747,7 @@ function savedriverdetails_new_two() {
     $('#driverModal-new-messages').html('');
     $('#driverModal-new-success-messages').html('');
     var order_id = selected_order_ids;
+    var updateDeliveryDate = 0;
  
     var vehicle_number =  $('select[name="order_vehicle_numbers_two"]').val();
     var delivery_charge =  $('input[name="order_delivery_charge_two"]').val();
@@ -1759,7 +1760,7 @@ function savedriverdetails_new_two() {
                 return false;
                 } 
                 else{
-                var clicked_orderid = order_id;
+                var clicked_orderid = order_id.toString().replace('on,','');
                 $('.alert').html('Please wait your request is processing!');
                 $(".alert").attr('class', 'alert alert-success');
                 $(".alert").show();
@@ -1767,7 +1768,7 @@ function savedriverdetails_new_two() {
 		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/intransit&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
 		type: 'post',
 		dataType: 'json',
-		data: 'order_status_id=4&notify=0',
+		data: 'order_status_id=4&notify=0&vehicle_number='+vehicle_number+'&delivery_charge='+delivery_charge,
 		beforeSend: function() {
                 $('.alert').html('Please wait your request is processing!');
                 $(".alert").attr('class', 'alert alert-success');
@@ -1775,19 +1776,11 @@ function savedriverdetails_new_two() {
                 },
                 success: function(json) {	 
                 console.log(json);
-                $('.alert').html('Order status updated successfully!');
-                $(".alert").attr('class', 'alert alert-success');
-                $(".alert").show();
-		},			
-		error: function(xhr, ajaxOptions, thrownError) {		
-		}
-                }); 
-                    $.ajax({
+                $.ajax({
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetailsBulk&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ order_id : selected_order_ids, vehicle_number : vehicle_number, delivery_charge : delivery_charge,updateDeliveryDate:updateDeliveryDate },
-                    async: true,
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, delivery_charge : delivery_charge,updateDeliveryDate:updateDeliveryDate },
                     success: function(json) {
                         console.log(json); 
                         if (json['status']) {
@@ -1799,12 +1792,18 @@ function savedriverdetails_new_two() {
                         }
                     },
                     error: function(xhr, ajaxOptions, thrownError) {    
-
-                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
-                                $('#driverModal-new-messages').html("Please try again");
-                                    return false;
-                                }
+                    // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                    $('#driverModal-new-messages').html("Please try again");
+                    return false;
+                    }
                 });
+                $('.alert').html('Order status updated successfully!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+		}
+                }); 
                 }
                 
 $('#driverModal-new-form')[0].reset();               
