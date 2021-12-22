@@ -9364,17 +9364,21 @@ class ControllerSaleOrder extends Controller {
     }
 
     public function SaveOrUpdateOrderDriverVehicleDetailsBulk() {
-        $orders = explode(',', $this->request->post['order_id']);
+
+        $orders = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $orders = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $orders = explode(',', $this->request->post['order_id']);
+            $orders = array_unique($orders);
+        }
+
         foreach ($orders as $order_id) {
             if ($order_id > 0) {
                 $vehicle_number = $this->request->post['vehicle_number'];
                 $delivery_charge = $this->request->post['delivery_charge'];
                 $updateDeliveryDate = $this->request->post['updateDeliveryDate'];
-
-                /* $log = new Log('error.log');
-                  $log->write('SaveOrUpdateOrderDriverDetails');
-                  $log->write($this->request->post['driver_id']);
-                  $log->write($this->request->post['order_id']); */
 
                 $this->load->model('checkout/order');
                 $this->load->model('sale/order');
@@ -9391,18 +9395,13 @@ class ControllerSaleOrder extends Controller {
                 $vehicle_details = $this->model_vehicles_vehicles->getVehicle($vehicle_number);
                 if (is_array($order_info) && $order_info != NULL) {
 
-                    // echo "<pre>";print_r( $delivery_charge);die;
                     $this->model_sale_order->UpdateOrderDriverDetails($order_id, $vehicle_info['driver_id']);
                     $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_details['registration_number']);
                     $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $vehicle_info['delivery_executive_id']);
                     if ($delivery_charge > 0) {
                         $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
                     }
-                    // $currentdate= date("d/m/Y");
-                    // echo "<pre>";print_r( $order_delivery_date);
-                    // echo "<pre>";print_r( 'current date below');
-                    // echo "<pre>";print_r( $currentdate);
-                    // if($order_delivery_date > $currentdate)
+
                     if (isset($updateDeliveryDate) && $updateDeliveryDate == 1) {
                         //update delivery date to current date
                         $this->model_sale_order->UpdateOrderDeliveryDate($order_id);
