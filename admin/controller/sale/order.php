@@ -9366,54 +9366,48 @@ class ControllerSaleOrder extends Controller {
     public function SaveOrUpdateOrderDriverVehicleDetailsBulk() {
         $orders = explode(',', $this->request->post['order_id']);
         foreach ($orders as $order_id) {
-            $vehicle_number = $this->request->post['vehicle_number'];
-            $delivery_charge = $this->request->post['delivery_charge'];
-            $updateDeliveryDate = $this->request->post['updateDeliveryDate'];
+            if ($order_id > 0) {
+                $vehicle_number = $this->request->post['vehicle_number'];
+                $delivery_charge = $this->request->post['delivery_charge'];
+                $updateDeliveryDate = $this->request->post['updateDeliveryDate'];
 
-            /* $log = new Log('error.log');
-              $log->write('SaveOrUpdateOrderDriverDetails');
-              $log->write($this->request->post['driver_id']);
-              $log->write($this->request->post['order_id']); */
+                /* $log = new Log('error.log');
+                  $log->write('SaveOrUpdateOrderDriverDetails');
+                  $log->write($this->request->post['driver_id']);
+                  $log->write($this->request->post['order_id']); */
 
-            $this->load->model('checkout/order');
-            $this->load->model('sale/order');
-            $this->load->model('dispatchplanning/dispatchplanning');
-            $this->load->model('vehicles/vehicles');
-            $order_info = $this->model_checkout_order->getOrder($order_id);
-            $order_info['delivery_date'] = isset($updateDeliveryDate) && $updateDeliveryDate == 1 ? date('y-m-d') : $order_info['delivery_date'];
-            $vehicle_info = $this->model_dispatchplanning_dispatchplanning->getAssignedVehiclesByVehicle($order_info['delivery_date'], $order_info['delivery_timeslot'], $vehicle_number);
-            $log = new Log('error.log');
-            $log->write('vehicle_info');
-            $log->write($vehicle_info);
-            $log->write($this->request->post['vehicle_number']);
-            $log->write('vehicle_info');
-            $vehicle_details = $this->model_vehicles_vehicles->getVehicle($vehicle_number);
-            if (is_array($order_info) && $order_info != NULL) {
-
-                // echo "<pre>";print_r( $delivery_charge);die;
-                $this->model_sale_order->UpdateOrderDriverDetails($order_id, $vehicle_info['driver_id']);
-                $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_details['registration_number']);
-                $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $vehicle_info['delivery_executive_id']);
-                if ($delivery_charge > 0) {
-                    $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
-                }
-                // $currentdate= date("d/m/Y");
-                // echo "<pre>";print_r( $order_delivery_date);
-                // echo "<pre>";print_r( 'current date below');
-                // echo "<pre>";print_r( $currentdate);
-                // if($order_delivery_date > $currentdate)
-                if (isset($updateDeliveryDate) && $updateDeliveryDate == 1) {
-                    //update delivery date to current date
-                    $this->model_sale_order->UpdateOrderDeliveryDate($order_id);
-                }
-            }
-            try {
-                sleep(5);
-                $this->SendMailToCustomerWithDriverDetails($order_id);
-            } catch (exception $ex) {
+                $this->load->model('checkout/order');
+                $this->load->model('sale/order');
+                $this->load->model('dispatchplanning/dispatchplanning');
+                $this->load->model('vehicles/vehicles');
+                $order_info = $this->model_checkout_order->getOrder($order_id);
+                $order_info['delivery_date'] = isset($updateDeliveryDate) && $updateDeliveryDate == 1 ? date('y-m-d') : $order_info['delivery_date'];
+                $vehicle_info = $this->model_dispatchplanning_dispatchplanning->getAssignedVehiclesByVehicle($order_info['delivery_date'], $order_info['delivery_timeslot'], $vehicle_number);
                 $log = new Log('error.log');
-                $log->write('Order History Mail Error');
-                $log->write($ex);
+                $log->write('vehicle_info');
+                $log->write($vehicle_info);
+                $log->write($this->request->post['vehicle_number']);
+                $log->write('vehicle_info');
+                $vehicle_details = $this->model_vehicles_vehicles->getVehicle($vehicle_number);
+                if (is_array($order_info) && $order_info != NULL) {
+
+                    // echo "<pre>";print_r( $delivery_charge);die;
+                    $this->model_sale_order->UpdateOrderDriverDetails($order_id, $vehicle_info['driver_id']);
+                    $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_details['registration_number']);
+                    $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $vehicle_info['delivery_executive_id']);
+                    if ($delivery_charge > 0) {
+                        $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
+                    }
+                    // $currentdate= date("d/m/Y");
+                    // echo "<pre>";print_r( $order_delivery_date);
+                    // echo "<pre>";print_r( 'current date below');
+                    // echo "<pre>";print_r( $currentdate);
+                    // if($order_delivery_date > $currentdate)
+                    if (isset($updateDeliveryDate) && $updateDeliveryDate == 1) {
+                        //update delivery date to current date
+                        $this->model_sale_order->UpdateOrderDeliveryDate($order_id);
+                    }
+                }
             }
             // Add to activity log
             $log = new Log('error.log');
@@ -9431,6 +9425,21 @@ class ControllerSaleOrder extends Controller {
 
             $log->write('driver assigned to order');
         }
+
+        foreach ($orders as $order_id) {
+            if ($order_id > 0) {
+
+                try {
+                    sleep(5);
+                    $this->SendMailToCustomerWithDriverDetails($order_id);
+                } catch (exception $ex) {
+                    $log = new Log('error.log');
+                    $log->write('Order History Mail Error');
+                    $log->write($ex);
+                }
+            }
+        }
+
         $json['status'] = 'success';
         $json['message'] = 'Order Driver Details Updated!';
         $this->response->addHeader('Content-Type: application/json');
