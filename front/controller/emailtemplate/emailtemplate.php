@@ -47,7 +47,7 @@ class ControllerEmailtemplateEmailtemplate extends Controller {
             $count++;
         }
         foreach ($totals as $total) {
-            $html .= '<tr><td colspan="2"></td><td>' . $total['title'] . '</td><td>' . $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']) . '</td></tr>';
+            $html .= '<tr><td colspan="3"></td><td>' . $total['title'] . '</td><td>' . $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']) . '</td></tr>';
         }
         $html .= '</tbody></table>';
         return $html;
