@@ -1151,7 +1151,10 @@ class Emailtemplate {
             'system_email' => $this->config->get('config_email'),
             'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
         ];
-
+        $log->write("MAIL DATA");
+        $log->write($data);
+        $log->write($result);
+        $log->write("MAIL DATA");
         /* $log->write($result);
           $log->write("MAIL DATA");
           $log->write($this->config->get('config_logo'));
