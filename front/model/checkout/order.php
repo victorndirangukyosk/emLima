@@ -833,7 +833,8 @@ class ModelCheckoutOrder extends Model {
                         'totals' => $totals,
                         'tax_amount' => $tax_amount,
                         'order_id' => $order_id,
-                        'invoice_no' => !empty($invoice_no) ? $invoice_no : ''
+                        'invoice_no' => !empty($invoice_no) ? $invoice_no : '',
+                        'order_products_list' => $this->load->controller('emailtemplate/emailtemplate/getOrderProductListTemplate', $order_info)
                     );
 
                     $getTotal = $order_total->rows;
