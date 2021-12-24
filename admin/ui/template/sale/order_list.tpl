@@ -1771,6 +1771,7 @@ function savedriverdetails_new_two() {
 		data: 'order_status_id=4&notify=0&vehicle_number='+vehicle_number+'&delivery_charge='+delivery_charge,
 		beforeSend: function() {
                 $('.alert').html('Please wait your request is processing!');
+                $('#driverModal-new-success-messages').html('Please wait your request is processing!');
                 $(".alert").attr('class', 'alert alert-success');
                 $(".alert").show();
                 },
@@ -1781,6 +1782,9 @@ function savedriverdetails_new_two() {
                     type: 'post',
                     dataType: 'json',
                     data:{ order_id : order_id, vehicle_number : vehicle_number, delivery_charge : delivery_charge,updateDeliveryDate:updateDeliveryDate },
+                    beforeSend: function() {
+                    $('#driverModal-new-success-messages').html('Please wait your request is processing!');
+                    },
                     success: function(json) {
                         console.log(json); 
                         if (json['status']) {
