@@ -429,7 +429,7 @@ class Emailtemplate {
 
     // Customer
     public function getCustomerFind() {
-        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{deliveryexecutivename}', '{deliveryexecutivephone}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}', '{order_id}', '{status}', '{mpesa_receipt_number}', '{bulk_notification_subject}', '{bulk_notification_email_description}', '{bulk_notification_sms_description}', '{bulk_notification_mobile_title}', '{bulk_notification_mobile_message}'];
+        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{deliveryexecutivename}', '{deliveryexecutivephone}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}', '{order_id}', '{status}', '{mpesa_receipt_number}', '{bulk_notification_subject}', '{bulk_notification_email_description}', '{bulk_notification_sms_description}', '{bulk_notification_mobile_title}', '{bulk_notification_mobile_message}', '{subuserorderdeliverytimeslot}', '{subuserorderdeliverydate}'];
 
         return $result;
     }
@@ -442,6 +442,8 @@ class Emailtemplate {
             'subuserfirstname' => isset($data['subuserfirstname']) ? $data['subuserfirstname'] : '',
             'subuserlastname' => isset($data['subuserlastname']) ? $data['subuserlastname'] : '',
             'subuserorderid' => isset($data['subuserorderid']) ? $data['subuserorderid'] : '',
+            'subuserorderdeliverydate' => isset($data['subuserorderdeliverydate']) ? $data['subuserorderdeliverydate'] : '',
+            'subuserorderdeliverytimeslot' => isset($data['subuserorderdeliverytimeslot']) ? $data['subuserorderdeliverytimeslot'] : '',
             'drivername' => isset($data['drivername']) ? $data['drivername'] : '',
             'driverphone' => isset($data['driverphone']) ? $data['driverphone'] : '',
             'vehicle' => isset($data['vehicle']) ? $data['vehicle'] : '',
