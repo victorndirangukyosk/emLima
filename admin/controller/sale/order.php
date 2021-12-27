@@ -9253,6 +9253,7 @@ class ControllerSaleOrder extends Controller {
         $customer_info['deliveryexecutivename'] = $executive_name;
         $customer_info['deliveryexecutivephone'] = $executive_phone;
         $customer_info['vehicle'] = $order_info['vehicle_number'];
+        $customer_info['delivery_timeslot'] = $order_info['delivery_timeslot'];
 
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
