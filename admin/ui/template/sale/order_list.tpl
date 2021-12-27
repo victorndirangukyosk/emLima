@@ -3134,6 +3134,7 @@ $('#neworderprocessingModal-form')[0].reset();
 $('#dispatchplanning').on('click', function (e) {
 e.preventDefault();
 var url = $(this).attr("data-url");
+console.log(url);
 window.open(url, '_blank');
 });
 </script></div>
