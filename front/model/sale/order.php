@@ -488,6 +488,10 @@ class ModelSaleOrder extends Model
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $implode[] = "c.status = '".(int) $data['filter_status']."'";
         }
+        
+        if (isset($data['filter_payment_terms']) && !is_null($data['filter_payment_terms'])) {
+            $implode[] = "c.payment_terms = '".$data['filter_payment_terms']."'";
+        }
 
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
             $implode[] = "c.approved = '".(int) $data['filter_approved']."'";
@@ -538,6 +542,8 @@ class ModelSaleOrder extends Model
 
             $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
         }
+        $log = new Log('error.log');
+        $log->write($sql);
         $query = $this->db->query($sql);
 
         return $query->rows;

@@ -1825,4 +1825,109 @@ class ControllerDeliversystemDeliversystem extends Controller {
         return $json;
     }
 
+    public function getunpaidorderssevendayscredit() {
+
+        $json = [];
+        $data['filter_status'] = 1;
+        $data['filter_payment_terms'] = '7 Days Credit';
+        $this->load->model('account/order');
+        $this->load->model('sale/order');
+        $all_customers = $this->model_sale_order->getCustomers($data);
+        $log = new Log('error.log');
+        $data['pending_order_id'] = NULL;
+
+        foreach ($all_customers as $customer) {
+            $page = 1;
+            $results_orders = $this->model_account_order->getOrdersNewByCustomerId($customer['customer_id'], ($page - 1) * 10, 10, $NoLimit = true);
+            $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
+            if (count($results_orders) > 0) {
+                foreach ($results_orders as $order) {
+                    if (in_array($order['payment_method'], $PaymentFilter) && $order['order_status_id'] == 4) {
+                        $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                        if (empty($order['transcation_id'])) {
+                            $data['pending_order_id'][] = $order['order_id'];
+                        }
+                    }
+                }
+            }
+        }
+        $json['status'] = 200;
+        $json['data'] = $data['pending_order_id'];
+        $json['unpaid_orders'] = count($data['pending_order_id']);
+        $json['success'] = 'Customer Unpaid Orders';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        //return $data;
+    }
+
+    public function getunpaidordersfifteendayscredit() {
+
+        $json = [];
+        $data['filter_status'] = 1;
+        $data['filter_payment_terms'] = '15 Days Credit';
+        $this->load->model('account/order');
+        $this->load->model('sale/order');
+        $all_customers = $this->model_sale_order->getCustomers($data);
+        $log = new Log('error.log');
+        $data['pending_order_id'] = NULL;
+
+        foreach ($all_customers as $customer) {
+            $log->write($customer);
+            $page = 1;
+            $results_orders = $this->model_account_order->getOrdersNewByCustomerId($customer['customer_id'], ($page - 1) * 10, 10, $NoLimit = true);
+            $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
+            if (count($results_orders) > 0) {
+                foreach ($results_orders as $order) {
+                    if (in_array($order['payment_method'], $PaymentFilter) && $order['order_status_id'] == 4) {
+                        $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                        if (empty($order['transcation_id'])) {
+                            $data['pending_order_id'][] = $order['order_id'];
+                        }
+                    }
+                }
+            }
+        }
+        $json['status'] = 200;
+        $json['data'] = $data['pending_order_id'];
+        $json['unpaid_orders'] = count($data['pending_order_id']);
+        $json['success'] = 'Customer Unpaid Orders';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        //return $data;
+    }
+
+    public function getunpaidordersthirtydayscredit() {
+        $log = new Log('error.log');
+        $json = [];
+        $data['filter_status'] = 1;
+        $data['filter_payment_terms'] = '30 Days Credit';
+        $this->load->model('account/order');
+        $this->load->model('sale/order');
+        $all_customers = $this->model_sale_order->getCustomers($data);
+        $data['pending_order_id'] = NULL;
+
+        foreach ($all_customers as $customer) {
+            $page = 1;
+            $results_orders = $this->model_account_order->getOrdersNewByCustomerId($customer['customer_id'], ($page - 1) * 10, 10, $NoLimit = true);
+            $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
+            if (count($results_orders) > 0) {
+                foreach ($results_orders as $order) {
+                    if (in_array($order['payment_method'], $PaymentFilter) && $order['order_status_id'] == 4) {
+                        $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                        if (empty($order['transcation_id'])) {
+                            $data['pending_order_id'][] = $order['order_id'];
+                        }
+                    }
+                }
+            }
+        }
+        $json['status'] = 200;
+        $json['data'] = $data['pending_order_id'];
+        $json['unpaid_orders'] = count($data['pending_order_id']);
+        $json['success'] = 'Customer Unpaid Orders';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        //return $data;
+    }
+
 }
