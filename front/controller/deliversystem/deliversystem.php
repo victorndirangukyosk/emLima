@@ -1832,7 +1832,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $data['filter_payment_terms'] = '7 Days Credit';
         $this->load->model('account/order');
         $this->load->model('sale/order');
-        $all_customers = $this->model_sale_order->getCustomers($data);
+        $all_customers = $this->model_sale_order->getCustomersNew($data);
         $log = new Log('error.log');
         $data['pending_order_id'] = NULL;
 
@@ -1842,7 +1842,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
             if (count($results_orders) > 0) {
                 foreach ($results_orders as $order) {
-                    if (in_array($order['payment_method'], $PaymentFilter) && $order['order_status_id'] == 4) {
+                    if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
                         $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                         if (empty($order['transcation_id'])) {
                             $data['pending_order_id'][] = $order['order_id'];
@@ -1867,7 +1867,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $data['filter_payment_terms'] = '15 Days Credit';
         $this->load->model('account/order');
         $this->load->model('sale/order');
-        $all_customers = $this->model_sale_order->getCustomers($data);
+        $all_customers = $this->model_sale_order->getCustomersNew($data);
         $log = new Log('error.log');
         $data['pending_order_id'] = NULL;
 
@@ -1878,7 +1878,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
             if (count($results_orders) > 0) {
                 foreach ($results_orders as $order) {
-                    if (in_array($order['payment_method'], $PaymentFilter) && $order['order_status_id'] == 4) {
+                    if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
                         $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                         if (empty($order['transcation_id'])) {
                             $data['pending_order_id'][] = $order['order_id'];
@@ -1903,7 +1903,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $data['filter_payment_terms'] = '30 Days Credit';
         $this->load->model('account/order');
         $this->load->model('sale/order');
-        $all_customers = $this->model_sale_order->getCustomers($data);
+        $all_customers = $this->model_sale_order->getCustomersNew($data);
         $data['pending_order_id'] = NULL;
 
         foreach ($all_customers as $customer) {
@@ -1912,7 +1912,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
             if (count($results_orders) > 0) {
                 foreach ($results_orders as $order) {
-                    if (in_array($order['payment_method'], $PaymentFilter) && $order['order_status_id'] == 4) {
+                    if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
                         $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                         if (empty($order['transcation_id'])) {
                             $data['pending_order_id'][] = $order['order_id'];

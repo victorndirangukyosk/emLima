@@ -450,7 +450,105 @@ class ModelSaleOrder extends Model
         $query = $this->db->query($sql);
         return $query->row;
     }
+    
+    public function getCustomersNew($data = [])
+    {
+        $sql = "SELECT customer_id FROM ".DB_PREFIX.'customer c LEFT JOIN '.DB_PREFIX."customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '".(int) $this->config->get('config_language_id')."'";
 
+        $implode = [];
+
+        if (!empty($data['filter_name'])) {
+            if ($this->user->isVendor()) {
+                $implode[] = "c.firstname LIKE '%".$this->db->escape($data['filter_name'])."%'";
+            } else {
+                $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%".$this->db->escape($data['filter_name'])."%'";
+            }
+        }
+
+        if (!empty($data['filter_email'])) {
+            $implode[] = "c.email LIKE '".$this->db->escape($data['filter_email'])."%'";
+        }
+
+        if (!empty($data['filter_telephone'])) {
+            $implode[] = "c.telephone LIKE '".$this->db->escape($data['filter_telephone'])."%'";
+        }
+
+        if (isset($data['filter_newsletter']) && !is_null($data['filter_newsletter'])) {
+            $implode[] = "c.newsletter = '".(int) $data['filter_newsletter']."'";
+        }
+
+        if (!empty($data['filter_customer_group_id'])) {
+            $implode[] = "c.customer_group_id = '".(int) $data['filter_customer_group_id']."'";
+        }
+
+        if (!empty($data['filter_ip'])) {
+            $implode[] = "c.ip = '".$this->db->escape($data['filter_ip'])."'";
+        }
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $implode[] = "c.status = '".(int) $data['filter_status']."'";
+        }
+        
+        if (isset($data['filter_payment_terms']) && !is_null($data['filter_payment_terms'])) {
+            $implode[] = "c.payment_terms = '".$data['filter_payment_terms']."'";
+        }
+
+        if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
+            $implode[] = "c.approved = '".(int) $data['filter_approved']."'";
+        }
+
+        if (!empty($data['filter_date_added'])) {
+            $implode[] = "DATE(c.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        }
+
+        if (isset($data['filter_parent']) && !is_null($data['filter_parent'])) {
+            $implode[] = "c.parent = '".(int) $data['filter_parent']."'";
+        }
+
+        if ($implode) {
+            $sql .= ' AND '.implode(' AND ', $implode);
+        }
+
+        $sort_data = [
+            'name',
+            'c.email',
+            'customer_group',
+            'c.status',
+            'c.approved',
+            'c.ip',
+            'c.date_added',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY '.$data['sort'];
+        } else {
+            $sql .= ' ORDER BY name';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
+        }
+        $log = new Log('error.log');
+        $log->write($sql);
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+    
     public function getCustomers($data = [])
     {
         $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.name AS customer_group FROM ".DB_PREFIX.'customer c LEFT JOIN '.DB_PREFIX."customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '".(int) $this->config->get('config_language_id')."'";
