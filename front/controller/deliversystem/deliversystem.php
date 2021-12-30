@@ -1837,6 +1837,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $data['pending_order_id'] = NULL;
 
         foreach ($all_customers as $customer) {
+            $data['customer_id'] = $customer['customer_id'];
             $page = 1;
             $results_orders = $this->model_account_order->getOrdersNewByCustomerId($customer['customer_id'], ($page - 1) * 10, 10, $NoLimit = true);
             $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
@@ -1845,11 +1846,13 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
                         $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                         if (empty($order['transcation_id'])) {
-                            $data['pending_order_id'][] = $order['order_id'];
+                            $data['pending_order_id'][$customer['customer_id']][] = $order['order_id'];
                         }
                     }
                 }
             }
+            $this->load->model('report/excel');
+            //$this->model_report_excel->download_customer_unpaid_order_excel($data['customer_id']);
         }
         $json['status'] = 200;
         $json['data'] = $data['pending_order_id'];
