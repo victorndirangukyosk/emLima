@@ -391,7 +391,6 @@ class ModelReportExcel extends Model {
                 $worksheetName = 'order ID-' . $order['order_id'];
                 $worksheetName = ' ' . $sheetIndex;
 
-
                 // A fatal error is thrown for worksheet titles with more than 30 character
                 if (strlen($worksheetName) > 30) {
                     $worksheetName = substr($worksheetName, 0, 27) . '...';
@@ -480,6 +479,7 @@ class ModelReportExcel extends Model {
             return;
         }
     }
+
     public function download_order_products_excel($data) {
         //	    echo "<pre>";print_r($data);die;
 
@@ -662,4 +662,119 @@ class ModelReportExcel extends Model {
         }
     }
 
- }
+    public function download_customer_unpaid_order_excel($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        $this->load->language('report/vendor_order');
+        $this->load->model('sale/order');
+        $rows = $this->model_sale_order->getOrders($data);
+        //echo "<pre>";print_r($rows);
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Orders Sheet')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:H2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Orders Sheet');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:H2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:H3');
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A4:H4');
+
+            $objPHPExcel->getActiveSheet()->setCellValue('A4', 'Vendor : KwikBasket');
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 6, 'S.NO');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 6, 'Order ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 6, 'Company Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 6, 'Address');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 6, 'Total');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 6, 'Delivery Date');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 6, 'Delivery Time Slot');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 6, 'Order Status');
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 6)->applyFromArray($title);
+
+            // Fetching the table data
+            $row = 7;
+
+            //echo "<pre>";print_r($data['filter_date_end']."er".$data['filter_date_start']);
+            $i = 1;
+            foreach ($rows as $result) {
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['shipping_address']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $this->currency->format($result['total']));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['delivery_date']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['delivery_timeslot']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['status']);
+                $i++;
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+            header('Content-Disposition: attachment;filename="orders_sheet.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
+}

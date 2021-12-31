@@ -1856,7 +1856,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     }
                 }
             }
-            //$this->model_report_excel->download_customer_unpaid_order_excel($data['customer_id']);
+            $data['filter_order_id_array'] = implode(",", $data['pending_order_id'][$customer]);
+            $this->model_report_excel->download_customer_unpaid_order_excel($data);
         }
         $json['status'] = 200;
         $json['data'] = $data['pending_order_id'];
@@ -1896,6 +1897,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     }
                 }
             }
+            $data['filter_order_id_array'] = implode(",", $data['pending_order_id'][$customer]);
+            $this->model_report_excel->download_customer_unpaid_order_excel($data);
         }
         $json['status'] = 200;
         $json['data'] = $data['pending_order_id'];
@@ -1933,6 +1936,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     }
                 }
             }
+            $data['filter_order_id_array'] = implode(",", $data['pending_order_id'][$customer]);
+            $this->model_report_excel->download_customer_unpaid_order_excel($data);
         }
         $json['status'] = 200;
         $json['data'] = $data['pending_order_id'];
