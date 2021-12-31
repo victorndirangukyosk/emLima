@@ -481,6 +481,10 @@ class ModelSaleOrder extends Model {
             $implode[] = "c.payment_terms = '" . $data['filter_payment_terms'] . "'";
         }
 
+        if (isset($data['filter_customer_id_array']) && !is_null($data['filter_customer_id_array'])) {
+            $implode[] = "c.customer_id IN (" . $data['filter_customer_id_array'] . ")";
+        }
+
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
             $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
         }

@@ -1837,26 +1837,28 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $all_customers = $this->model_account_order->getUnpaidOrdersCutomerIds();
         $all_customers = array_column($all_customers, 'customer_id');
         $all_customers = array_unique($all_customers);
-        //$all_customers = $this->model_sale_order->getCustomersNew($data);
+        $all_customers = implode(",", $all_customers);
+        $data['filter_customer_id_array'] = $all_customers;
+        $all_unpaid_customers = $this->model_sale_order->getCustomersNew($data);
         $log = new Log('error.log');
         $data['pending_order_id'] = NULL;
 
-        foreach ($all_customers as $customer) {
-            $data['customer_id'] = $customer;
+        foreach ($all_unpaid_customers as $customer) {
+            $data['customer_id'] = $customer['customer_id'];
             $page = 1;
-            $results_orders = $this->model_account_order->getOrdersNewByCustomerId($customer, ($page - 1) * 10, 10, $NoLimit = true);
+            $results_orders = $this->model_account_order->getOrdersNewByCustomerId($customer['customer_id'], ($page - 1) * 10, 10, $NoLimit = true);
             $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
             if (count($results_orders) > 0) {
                 foreach ($results_orders as $order) {
                     if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
                         $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                         if (empty($order['transcation_id'])) {
-                            $data['pending_order_id'][$customer][] = $order['order_id'];
+                            $data['pending_order_id'][$customer['customer_id']][] = $order['order_id'];
                         }
                     }
                 }
             }
-            $data['filter_order_id_array'] = implode(",", $data['pending_order_id'][$customer]);
+            $data['filter_order_id_array'] = implode(",", $data['pending_order_id'][$customer['customer_id']]);
             $this->load->controller('pdf/pdf', $data);
             //$this->model_report_excel->download_customer_unpaid_order_excel($data);
         }
