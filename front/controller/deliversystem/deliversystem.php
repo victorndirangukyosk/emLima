@@ -1826,27 +1826,31 @@ class ControllerDeliversystemDeliversystem extends Controller {
     }
 
     public function getunpaidorderssevendayscredit() {
+        $log = new Log('error.log');
 
         $json = [];
         $data['filter_status'] = 1;
         $data['filter_payment_terms'] = '7 Days Credit';
         $this->load->model('account/order');
         $this->load->model('sale/order');
-        $all_customers = $this->model_sale_order->getCustomersNew($data);
+        $all_customers = $this->model_account_order->getUnpaidOrdersCutomerIds();
+        $all_customers = array_column($all_customers, 'customer_id');
+        $all_customers = array_unique($all_customers);
+        //$all_customers = $this->model_sale_order->getCustomersNew($data);
         $log = new Log('error.log');
         $data['pending_order_id'] = NULL;
 
         foreach ($all_customers as $customer) {
-            $data['customer_id'] = $customer['customer_id'];
+            $data['customer_id'] = $customer;
             $page = 1;
-            $results_orders = $this->model_account_order->getOrdersNewByCustomerId($customer['customer_id'], ($page - 1) * 10, 10, $NoLimit = true);
+            $results_orders = $this->model_account_order->getOrdersNewByCustomerId($customer, ($page - 1) * 10, 10, $NoLimit = true);
             $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
             if (count($results_orders) > 0) {
                 foreach ($results_orders as $order) {
                     if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
                         $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                         if (empty($order['transcation_id'])) {
-                            $data['pending_order_id'][$customer['customer_id']][] = $order['order_id'];
+                            $data['pending_order_id'][$customer][] = $order['order_id'];
                         }
                     }
                 }
