@@ -8,10 +8,10 @@ class ControllerPdfPdf extends Controller {
             $this->load->model('sale/order');
             $rows = $this->model_sale_order->getOrders($data);
             $log = new Log('error.log');
-            $log->write('rows');
-            $log->write($rows);
-            $log->write('rows');
             $dat['orders'] = $rows;
+            $log->write('rows');
+            $log->write($dat);
+            $log->write('rows');
             require_once DIR_ROOT . '/vendor/autoload.php';
             $pdf = new \mikehaertl\wkhtmlto\Pdf;
             $template = $this->load->view($this->config->get('config_template') . '/template/pdf/pdf.tpl', $dat);
