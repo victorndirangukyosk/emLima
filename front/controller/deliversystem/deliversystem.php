@@ -1833,6 +1833,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $data['filter_payment_terms'] = '7 Days Credit';
         $this->load->model('account/order');
         $this->load->model('sale/order');
+        $this->load->model('report/excel');
         $all_customers = $this->model_account_order->getUnpaidOrdersCutomerIds();
         $all_customers = array_column($all_customers, 'customer_id');
         $all_customers = array_unique($all_customers);
@@ -1855,7 +1856,6 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     }
                 }
             }
-            $this->load->model('report/excel');
             //$this->model_report_excel->download_customer_unpaid_order_excel($data['customer_id']);
         }
         $json['status'] = 200;
@@ -1874,21 +1874,24 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $data['filter_payment_terms'] = '15 Days Credit';
         $this->load->model('account/order');
         $this->load->model('sale/order');
-        $all_customers = $this->model_sale_order->getCustomersNew($data);
+        $this->load->model('report/excel');
+        $all_customers = $this->model_account_order->getUnpaidOrdersCutomerIds();
+        $all_customers = array_column($all_customers, 'customer_id');
+        $all_customers = array_unique($all_customers);
         $log = new Log('error.log');
         $data['pending_order_id'] = NULL;
 
         foreach ($all_customers as $customer) {
             $log->write($customer);
             $page = 1;
-            $results_orders = $this->model_account_order->getOrdersNewByCustomerId($customer['customer_id'], ($page - 1) * 10, 10, $NoLimit = true);
+            $results_orders = $this->model_account_order->getOrdersNewByCustomerId($customer, ($page - 1) * 10, 10, $NoLimit = true);
             $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
             if (count($results_orders) > 0) {
                 foreach ($results_orders as $order) {
                     if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
                         $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                         if (empty($order['transcation_id'])) {
-                            $data['pending_order_id'][] = $order['order_id'];
+                            $data['pending_order_id'][$customer][] = $order['order_id'];
                         }
                     }
                 }
@@ -1910,19 +1913,22 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $data['filter_payment_terms'] = '30 Days Credit';
         $this->load->model('account/order');
         $this->load->model('sale/order');
-        $all_customers = $this->model_sale_order->getCustomersNew($data);
+        $this->load->model('report/excel');
+        $all_customers = $this->model_account_order->getUnpaidOrdersCutomerIds();
+        $all_customers = array_column($all_customers, 'customer_id');
+        $all_customers = array_unique($all_customers);
         $data['pending_order_id'] = NULL;
 
         foreach ($all_customers as $customer) {
             $page = 1;
-            $results_orders = $this->model_account_order->getOrdersNewByCustomerId($customer['customer_id'], ($page - 1) * 10, 10, $NoLimit = true);
+            $results_orders = $this->model_account_order->getOrdersNewByCustomerId($customer, ($page - 1) * 10, 10, $NoLimit = true);
             $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
             if (count($results_orders) > 0) {
                 foreach ($results_orders as $order) {
                     if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
                         $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                         if (empty($order['transcation_id'])) {
-                            $data['pending_order_id'][] = $order['order_id'];
+                            $data['pending_order_id'][$customer][] = $order['order_id'];
                         }
                     }
                 }
