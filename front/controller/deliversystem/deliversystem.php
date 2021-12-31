@@ -1943,7 +1943,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
                         $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                         if (empty($order['transcation_id'])) {
-                            $data['pending_order_id'][$customer][] = $order['order_id'];
+                            $data['pending_order_id'][$customer['customer_id']][] = $order['order_id'];
                         }
                     }
                 }
