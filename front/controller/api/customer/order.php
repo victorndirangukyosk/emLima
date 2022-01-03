@@ -4335,7 +4335,7 @@ class ControllerApiCustomerOrder extends Controller {
 
                 $data['products'] = [];
 
-                $products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
+                $products = $this->model_account_order->getOrderProducts($args['order_id']);
                 foreach ($products as $product) {
                     $option_data = [];
 
