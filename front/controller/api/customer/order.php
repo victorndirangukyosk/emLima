@@ -4310,7 +4310,7 @@ class ControllerApiCustomerOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getOrderedproducts($args = []) {
+    public function addOrderedproducts($args = []) {
         if ($this->validation($args)) {
             $log = new Log('error.log');
             $this->load->model('account/order');
