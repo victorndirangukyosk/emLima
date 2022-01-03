@@ -4383,6 +4383,7 @@ class ControllerApiCustomerOrder extends Controller {
                     ];
                 }
                 $json['data'] = $data;
+                $json['message'] = 'Ordered Products!';
             }
         } else {
             $json['status'] = 10014;
