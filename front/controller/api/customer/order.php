@@ -4326,7 +4326,7 @@ class ControllerApiCustomerOrder extends Controller {
             $products = $this->model_account_order->getOrderProducts($args['order_id']);
             $log->write($order_info);
             $log->write($products);
-            if ($order_info == NULL || $products == NULL || (is_array($order_info) && count($order_info) <= 0)(is_array($products) && count($products) <= 0)) {
+            if ($order_info == NULL || $products == NULL || (is_array($order_info) && count($order_info) <= 0) || (is_array($products) && count($products) <= 0)) {
                 $json['status'] = 10014;
 
                 $json['message'][] = 'Order Or Order Products Not Found!';
