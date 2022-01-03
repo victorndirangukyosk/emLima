@@ -4312,8 +4312,12 @@ class ControllerApiCustomerOrder extends Controller {
 
     public function getOrderedproducts($args = []) {
         if ($this->validation($args)) {
+            $log = new Log('error.log');
+            $this->load->model('account/order');
             $order_info = $this->model_account_order->getOrder($args['order_id']);
             $products = $this->model_account_order->getOrderProducts($args['order_id']);
+            $log->write($order_info);
+            $log->write($products);
         } else {
             $json['status'] = 10014;
 
@@ -4322,12 +4326,6 @@ class ControllerApiCustomerOrder extends Controller {
             }
 
             http_response_code(400);
-        }
-
-        if (200 == $json['status']) {
-            $json['data']['status'] = true;
-        } else {
-            $json['data']['status'] = false;
         }
 
         $this->response->addHeader('Content-Type: application/json');
