@@ -22,7 +22,7 @@ class ControllerPdfPdf extends Controller {
                 $template = $this->load->view($this->config->get('config_template') . '/template/pdf/pdf.tpl', $dat);
                 $pdf->addPage($template);
                 $filename = "KWIKBASKET_UNPAID_ORDERS_" . $pending_order_customer_id . ".pdf";
-                if (!$pdf->saveAs(DIR_ROOT . '/scheduler_downloads/' . $filename)) {
+                if (!$pdf->saveAs(DIR_ROOT . 'scheduler_downloads' . '/' . $filename)) {
                     $error = $pdf->getError();
                     echo $error;
                     die;
