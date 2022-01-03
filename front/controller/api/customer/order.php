@@ -4196,6 +4196,19 @@ class ControllerApiCustomerOrder extends Controller {
         return !$this->error;
     }
 
+    protected function validation($args) {
+
+        if (empty($args['order_id'])) {
+            $this->error['order_id'] = 'Order Id Is Required!';
+        }
+
+        if (!empty($args['order_id']) && ($args['order_id'] <= 0 || is_nan($args['order_id']))) {
+            $this->error['order_id'] = 'Order Id Is Invalid!';
+        }
+
+        return !$this->error;
+    }
+
     public function getunpaidorders() {
         $json = [];
         $log = new Log('error.log');
@@ -4293,6 +4306,30 @@ class ControllerApiCustomerOrder extends Controller {
         //return $data;
         $json['status'] = 200;
         $json['data'] = $data;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getOrderedproducts($args = []) {
+        if ($this->validation($args)) {
+            $order_info = $this->model_account_order->getOrder($args['order_id']);
+            $products = $this->model_account_order->getOrderProducts($args['order_id']);
+        } else {
+            $json['status'] = 10014;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
+        }
+
+        if (200 == $json['status']) {
+            $json['data']['status'] = true;
+        } else {
+            $json['data']['status'] = false;
+        }
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
