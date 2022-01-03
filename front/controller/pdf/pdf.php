@@ -21,7 +21,8 @@ class ControllerPdfPdf extends Controller {
                 $pdf = new \mikehaertl\wkhtmlto\Pdf;
                 $template = $this->load->view($this->config->get('config_template') . '/template/pdf/pdf.tpl', $dat);
                 $pdf->addPage($template);
-                if (!$pdf->send("KwikBasket_UnPaid_Orders" . $pending_order_customer_id . ".pdf")) {
+                $filename = "KWIKBASKET_UNPAID_ORDERS_" . $pending_order_customer_id . ".pdf";
+                if (!$pdf->saveAs(DIR_ROOT . '/scheduler_downloads' . '/' . $filename)) {
                     $error = $pdf->getError();
                     echo $error;
                     die;
