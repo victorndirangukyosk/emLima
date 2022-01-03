@@ -27,6 +27,7 @@ class ControllerPdfPdf extends Controller {
                     echo $error;
                     die;
                 }
+                sleep(3);
             }
         } catch (Exception $e) {
             echo $e->getMessage();
