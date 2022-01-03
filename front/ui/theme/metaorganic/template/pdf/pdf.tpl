@@ -607,7 +607,7 @@
             <table class="products-table">
                 <thead class="font-bold">
                     <?php foreach($orders as $order) { ?>        
-                    <tr><td><?= '#'.$order['order_id']?></td><td colspan="2" class="text-right"><?= $order['company_name']?></td></tr>
+                    <tr><td><?= '#'.$order['order_id']?></td><td><?= $order['company_name']?></td><td><?= $order['date_added']?></td><td><?= $order['delivery_date']?></td><td><?= $order['total']?></td></tr>
                     <?php } ?>
                 </thead>
                 <tbody>
