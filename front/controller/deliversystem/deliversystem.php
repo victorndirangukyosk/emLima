@@ -1859,9 +1859,10 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 }
             }
             $data['filter_order_id_array'] = implode(",", $data['pending_order_id'][$customer['customer_id']]);
-            $this->load->controller('pdf/pdf', $data);
             //$this->model_report_excel->download_customer_unpaid_order_excel($data);
         }
+        $this->load->controller('pdf/pdf', $data);
+
         $json['status'] = 200;
         $json['data'] = $data['pending_order_id'];
         $json['unpaid_orders'] = count($data['pending_order_id']);
@@ -1905,9 +1906,10 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 }
             }
             $data['filter_order_id_array'] = implode(",", $data['pending_order_id'][$customer['customer_id']]);
-            $this->load->controller('pdf/pdf', $data);
             //$this->model_report_excel->download_customer_unpaid_order_excel($data);
         }
+        $this->load->controller('pdf/pdf', $data);
+
         $json['status'] = 200;
         $json['data'] = $data['pending_order_id'];
         $json['unpaid_orders'] = count($data['pending_order_id']);
@@ -1949,9 +1951,10 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 }
             }
             $data['filter_order_id_array'] = implode(",", $data['pending_order_id'][$customer['customer_id']]);
-            $this->load->controller('pdf/pdf', $data);
             //$this->model_report_excel->download_customer_unpaid_order_excel($data);
         }
+        $this->load->controller('pdf/pdf', $data);
+
         $json['status'] = 200;
         $json['data'] = $data['pending_order_id'];
         $json['unpaid_orders'] = count($data['pending_order_id']);
@@ -1992,10 +1995,11 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     }
                 }
             }
-            $data['filter_order_id_array'] = implode(",", $data['pending_order_id'][$customer['customer_id']]);
-            $this->load->controller('pdf/pdf', $data);
+            $data['filter_order_id_array'] = implode(",", $data['pending_order_id'][$customer ['customer_id']]);
             //$this->model_report_excel->download_customer_unpaid_order_excel($data);
         }
+        $this->load->controller('pdf/pdf', $data);
+
         $json['status'] = 200;
         $json['data'] = $data['pending_order_id'];
         $json['unpaid_orders'] = count($data['pending_order_id']);
