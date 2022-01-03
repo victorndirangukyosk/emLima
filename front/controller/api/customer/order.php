@@ -4311,13 +4311,79 @@ class ControllerApiCustomerOrder extends Controller {
     }
 
     public function addOrderedProduct($args = []) {
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
         if ($this->validation($args)) {
             $log = new Log('error.log');
             $this->load->model('account/order');
+            $this->load->model('assets/product');
+            $this->load->model('tool/upload');
+            $this->load->model('tool/image');
             $order_info = $this->model_account_order->getOrder($args['order_id']);
             $products = $this->model_account_order->getOrderProducts($args['order_id']);
             $log->write($order_info);
             $log->write($products);
+            if ($order_info == NULL || $products == NULL || (is_array($order_info) && count($order_info) <= 0)(is_array($products) && count($products) <= 0)) {
+                $json['status'] = 10014;
+
+                $json['message'][] = 'Order Or Order Products Not Found!';
+                http_response_code(404);
+            } else {
+
+                $data['products'] = [];
+
+                $products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
+                foreach ($products as $product) {
+                    $option_data = [];
+
+                    $options = $this->model_account_order->getOrderOptions($args['order_id'], $product['order_product_id']);
+
+                    foreach ($options as $option) {
+                        if ('file' != $option['type']) {
+                            $value = $option['value'];
+                        } else {
+                            $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
+
+                            if ($upload_info) {
+                                $value = $upload_info['name'];
+                            } else {
+                                $value = '';
+                            }
+                        }
+
+                        $option_data[] = [
+                            'name' => $option['name'],
+                            'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value),
+                        ];
+                    }
+
+                    if ($product['image'] != NULL && file_exists(DIR_IMAGE . $product['image'])) {
+                        $image = $this->model_tool_image->resize($product['image'], 80, 100);
+                    } else if ($product['image'] == NULL || !file_exists(DIR_IMAGE . $product['image'])) {
+                        $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
+                    }
+
+                    $data['products'][] = [
+                        'product_id' => $product['product_id'],
+                        'store_id' => $product['store_id'],
+                        'vendor_id' => $product['vendor_id'],
+                        'product_note' => $product['product_note'],
+                        'name' => $product['name'],
+                        'unit' => $product['unit'],
+                        'model' => $product['model'],
+                        'product_type' => $product['product_type'],
+                        'image' => $image,
+                        'option' => $option_data,
+                        'quantity' => $product['quantity'],
+                        'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                        'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+                    ];
+                }
+                $json['data'] = $data;
+            }
         } else {
             $json['status'] = 10014;
 
