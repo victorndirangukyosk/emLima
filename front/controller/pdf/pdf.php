@@ -3,10 +3,13 @@
 class ControllerPdfPdf extends Controller {
 
     public function index($data) {
-        $dat = NULL;
         try {
             $log = new Log('error.log');
+            $log->write('pdf_data');
+            $log->write($data);
+            $log->write('pdf_data');
             $new_data = NULL;
+            $dat = NULL;
             require_once DIR_ROOT . '/vendor/autoload.php';
             $this->load->model('sale/order');
             foreach ($data['pending_order_id'] as $key => $value) {
