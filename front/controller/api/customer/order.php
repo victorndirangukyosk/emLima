@@ -4425,7 +4425,9 @@ class ControllerApiCustomerOrder extends Controller {
 
         if ($this->validationmissedproducts($args)) {
             foreach ($args['products'] as $product_id => $missed_product) {
+                $log->write('missed_product');
                 $log->write($missed_product);
+                $log->write('missed_product');
                 if (is_array($missed_product) && !array_key_exists('issue_type', $missed_product)) {
                     $json['status'] = 10014;
 
