@@ -125,9 +125,8 @@
                               <option disabled style="height: 1px !important;" ></option>
                               <?php } ?>
                               <?php if($order['status'] == 'Delivered' || $order['status'] == 'In Transit') { ?>
-                              <option value="<?=$order["order_id"] ?>" type="Report missed products"  view_href=""  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Report Missed Products</option>
+                              <option value="<?=$order["order_id"] ?>" type="Report missed/rejected products"  view_href=""  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Report Missed Products</option>
                               <option disabled style="height: 1px !important;" ></option>
-                              <option value="<?=$order["order_id"] ?>" type="Report rejected products"  view_href=""  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Report Rejected Products</option>
                               <?php } ?>
                                </select>
                                 <br/>
