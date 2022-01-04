@@ -4428,7 +4428,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write('missed_product');
                 $log->write($missed_product);
                 $log->write('missed_product');
-                if (is_array($missed_product) && !array_key_exists('issue_type', $missed_product)) {
+                if ((is_array($missed_product) && !array_key_exists('issue_type', $missed_product[0])) || (is_array($missed_product) && array_key_exists('issue_type', $missed_product[0]) && $missed_product[0]['issue_type'] != 'Rejected' && $missed_product[0]['issue_type'] != 'Missed')) {
                     $json['status'] = 10014;
 
                     $json['message'] = 'Please Select Issue Type(Rejected Or Missed)!';
