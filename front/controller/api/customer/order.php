@@ -4209,6 +4209,19 @@ class ControllerApiCustomerOrder extends Controller {
         return !$this->error;
     }
 
+    protected function validationmissedproducts($args) {
+
+        if (empty($args['order_id'])) {
+            $this->error['order_id'] = 'Order Id Is Required!';
+        }
+
+        if (!empty($args['order_id']) && ($args['order_id'] <= 0 || is_nan($args['order_id']))) {
+            $this->error['order_id'] = 'Order Id Is Invalid!';
+        }
+
+        return !$this->error;
+    }
+
     public function getunpaidorders() {
         $json = [];
         $log = new Log('error.log');
@@ -4400,7 +4413,22 @@ class ControllerApiCustomerOrder extends Controller {
     }
 
     public function addMissingOrderProduct($args = []) {
-        
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        if ($this->validationmissedproducts($args)) {
+            
+        } else {
+            $json['status'] = 10014;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
+        }
     }
 
 }
