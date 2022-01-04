@@ -1679,7 +1679,7 @@ class ControllerAccountOrder extends Controller {
 
             $products = $this->model_account_order->getRealOrderProducts($this->request->get['order_id']);
             if ($products == NULL || (is_array($products) && count($products) <= 0)) {
-                $products = $this->model_account_order->getOrderProducts($args['order_id']);
+                $products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
             }
 
             //echo "<pre>";print_r($products);die;
@@ -2236,7 +2236,7 @@ class ControllerAccountOrder extends Controller {
 
             $products = $this->model_account_order->getRealOrderProducts($this->request->get['order_id']);
             if ($products == NULL || (is_array($products) && count($products) <= 0)) {
-                $products = $this->model_account_order->getOrderProducts($args['order_id']);
+                $products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
             }
             //echo "<pre>";print_r($products);die;
             $returnProductCount = 0;
