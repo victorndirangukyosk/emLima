@@ -4429,6 +4429,9 @@ class ControllerApiCustomerOrder extends Controller {
 
             http_response_code(400);
         }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
