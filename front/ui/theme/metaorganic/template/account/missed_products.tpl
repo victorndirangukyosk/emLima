@@ -27,25 +27,47 @@
                                         <?php $i=0;  foreach ($products as $product) { ?>
                                         <li class="list-group-item">
                                             <div class="row">
-                                                <div class="col-md-5 col-xs-8">
+                                                <div class="col-md-3 col-xs-8">
                                                  <div class="my-order-price">
                                                     <h3> <?php echo $product['name']; ?> <?php echo "(". $product['unit'] . ")"; ?></h3>
                                                  </div>   
                                                 </div>
-                                                <div class="col-md-2 col-xs-8">
+                                                <div class="col-md-3 col-xs-8" align="right">
+                                                    <div class="my-order-price">
+                                                        <input type="hidden" id="order_id" name="order_id" value="<?php echo $order_id; ?>">
+                                                        <select class="input-cart" style="border-color:#767676 !important;" id="issue_type[<?= $product['product_id'] ?>]" name="issue_type[<?= $product['product_id'] ?>]" >
+                                                            <option value="Missed">Missed Product</option>
+                                                            <option value="Rejected">Rejected Product</option>
+                                                        </select> 
+                                                    </div> 
+                                                </div>
+                                                <div class="col-md-1 col-xs-8">
                                                  <div class="my-order-price">
-                                                    <input type="number" class="input-cart-qty" value="" placeholder="Qty">
+                                                     <input type="number" class="input-cart-qty" value="" placeholder="Qty" id="qty[<?= $product['product_id'] ?>]" name="qty[<?= $product['product_id'] ?>]">
                                                  </div>   
                                                 </div>
-                                                <div class="col-md-2 col-xs-8"></div>
-                                                <div class="col-md-3 col-xs-8" align="right">
+                                                <div class="col-md-5 col-xs-8" align="right">
                                                    <div class="my-order-price">
-                                                     <button type="button" class="btn btn-default">SUBMIT</button>
+                                                       <input id="product_notes[<?= $product['product_id'] ?>]" name="product_notes[<?= $product['product_id'] ?>]" type="text" class="input-cart" value="" placeholder="Notes"> 
                                                    </div> 
                                                 </div>
                                             </div>
                                         </li>
                                                     <?php } ?>
+                                            <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-md-6 col-xs-8" align="left">
+                                                   <div class="my-order-price">
+                                                     <button type="button" class="btn btn-grey" data-dismiss="modal">CLOSE</button>
+                                                   </div> 
+                                                </div>
+                                                <div class="col-md-6 col-xs-8" align="right">
+                                                   <div class="my-order-price">
+                                                       <button type="button" class="btn btn-default" id="missed_rejected_products" name="missed_rejected_products" data-order-id="<?php echo $order_id; ?>">SUBMIT</button>
+                                                   </div> 
+                                                </div>
+                                            </div>
+                                            </li>      
                                                 </div>
                                             </div>
                                     </div>
@@ -125,5 +147,34 @@
         </script>
 
         <?php } ?>
+<script type="text/javascript">
+$(document).delegate('#missed_rejected_products', 'click', function (e) {
+e.preventDefault();
+$('#missed_rejected_products').prop('disabled', true);
+var order_id = $(this).attr('data-order-id');
+console.log($('#edit-address-form').serialize());
+
+$.ajax({
+    url: 'index.php?path=account/order/addMissedRejectedProducts&token=<?php echo $token; ?>',
+    type: 'post',
+    dataType: 'json',
+    data:$('#edit-address-form').serialize(),
+    async: true,
+    success: function(json) {
+    console.log(json); 
+    if (json['status']) {
+        $('#poModal-success-message').html(' Saved Successfully');
+    }
+    else {
+        $('#poModal-success-message').html('Please try again');
+    }
+    },
+    error: function(xhr, ajaxOptions, thrownError) {    
+        $('#poModal-message').html("Please try again");
+        return false;
+    }
+});
+});
+</script>
         </html>
         </form>

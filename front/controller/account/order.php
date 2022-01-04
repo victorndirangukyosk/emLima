@@ -1398,20 +1398,11 @@ class ControllerAccountOrder extends Controller {
         $this->load->language('account/order');
         $this->load->language('account/return');
 
-        // $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
-
         if (isset($this->request->get['order_id'])) {
             $order_id = $this->request->get['order_id'];
         } else {
             $order_id = 0;
         }
-        // if (false == is_numeric($order_id)) {
-        //     $order_id = base64_decode(trim($order_id));
-        //     $order_id = preg_replace('/[^A-Za-z0-9\-]/', '', $order_id);
-        //     $this->request->get['order_id'] = $order_id;
-        //     $redirectNotLogin = false;
-        //     //$this->response->redirect($this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL'));
-        // }
 
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
@@ -6157,6 +6148,30 @@ class ControllerAccountOrder extends Controller {
 
         $this->load->model('account/order');
         $this->model_account_order->download_products_excel($data);
+    }
+
+    public function addMissedRejectedProducts() {
+        $log = new Log('error.log');
+        $this->load->model('account/order');
+        $this->load->model('account/missedrejectedproducts');
+        //$log->write($this->request->post);
+        $data = $this->request->post;
+        $products = $this->model_account_order->getRealOrderProducts($data['order_id']);
+        if ($products == NULL || (is_array($products) && count($products) <= 0)) {
+            $products = $this->model_account_order->getOrderProducts($data['order_id']);
+        }
+
+        $report = NULL;
+        foreach ($products as $product) {
+            $report['order_id'] = $data['order_id'];
+            $report['product_id'] = $product['product_id'];
+            $report['product_store_id'] = $product['product_id'];
+            $report['type'] = $data['issue_type'][$product['product_id']];
+            $report['quantity'] = $data['qty'][$product['product_id']];
+            $report['notes'] = $data['product_notes'][$product['product_id']];
+            $this->model_account_missedrejectedproducts->addProducts($report);
+            $log->write($report);
+        }
     }
 
 }
