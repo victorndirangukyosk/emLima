@@ -4216,7 +4216,7 @@ class ControllerApiCustomerOrder extends Controller {
         }
 
         if (empty($args['products']) || !is_array($args['products'])) {
-            $this->error['order_id'] = 'Missed Products Are Required!';
+            $this->error['products'] = 'Missed Products Are Required!';
         }
 
         if (!empty($args['order_id']) && ($args['order_id'] <= 0 || is_nan($args['order_id']))) {
