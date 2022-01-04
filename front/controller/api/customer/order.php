@@ -4322,7 +4322,7 @@ class ControllerApiCustomerOrder extends Controller {
             $this->load->model('assets/product');
             $this->load->model('tool/upload');
             $this->load->model('tool/image');
-            $order_info = $this->model_account_order->getOrder($args['order_id']);
+            $order_info = $this->model_account_order->getOrderByCustomerId($args['order_id']);
             $products = $this->model_account_order->getOrderProducts($args['order_id']);
             $log->write($order_info);
             $log->write($products);
@@ -4397,6 +4397,10 @@ class ControllerApiCustomerOrder extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function addMissingOrderProduct($args = []) {
+        
     }
 
 }
