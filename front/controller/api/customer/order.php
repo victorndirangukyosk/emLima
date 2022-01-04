@@ -4346,7 +4346,7 @@ class ControllerApiCustomerOrder extends Controller {
             if ($order_info == NULL || $products == NULL || (is_array($order_info) && count($order_info) <= 0) || (is_array($products) && count($products) <= 0)) {
                 $json['status'] = 10014;
 
-                $json['message'][] = 'Order Or Order Products Not Found!';
+                $json['message'][] = 'Order Or Order Products Not Found!'.$this->customer->getId();
                 http_response_code(404);
             } else {
 
@@ -4477,6 +4477,7 @@ class ControllerApiCustomerOrder extends Controller {
                     $datainsert['type'] = $missed_product['issue_type'];
                     $datainsert['notes'] = isset($missed_product['message']) ? $missed_product['message'] : NULL;
                     $this->model_account_missedrejectedproducts->addProducts($datainsert);
+                    $json['message'][] = 'Products Saved Successfully!';
                 }
 
                 //$log->write($products);
