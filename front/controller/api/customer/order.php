@@ -4423,7 +4423,14 @@ class ControllerApiCustomerOrder extends Controller {
         $json['message'] = [];
 
         if ($this->validationmissedproducts($args)) {
-            
+            foreach ($args['products'] as $missed_product) {
+                if (!array_key_exists('product_id', $missed_product)) {
+                    $json['status'] = 10014;
+
+                    $json['message'][] = 'Product Id Is Required!';
+                    http_response_code(400);
+                }
+            }
         } else {
             $json['status'] = 10014;
 
