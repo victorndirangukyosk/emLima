@@ -4216,7 +4216,7 @@ class ControllerApiCustomerOrder extends Controller {
         }
 
         if (empty($args['products'])) {
-            $this->error['products'] = 'Missed Products Are Required!';
+            $this->error['products'] = 'Missed Products Are Required!' . count($args['products']);
         }
 
         if (!empty($args['order_id']) && ($args['order_id'] <= 0 || is_nan($args['order_id']))) {
@@ -4424,7 +4424,7 @@ class ControllerApiCustomerOrder extends Controller {
 
         if ($this->validationmissedproducts($args)) {
             foreach ($args['products'] as $missed_product) {
-                if (!array_key_exists('product_id', $missed_product)) {
+                if ($missed_product <= 0 || is_nan($missed_product)) {
                     $json['status'] = 10014;
 
                     $json['message'][] = 'Product Id Is Required!';
