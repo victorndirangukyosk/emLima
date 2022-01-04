@@ -426,7 +426,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="row">
                            <div class="col-md-12">
-                           <h2>Missed Products</h2>
+                           <h2>Missed/Rejected Products</h2>
                            </div>
                             
                             <div class="missingproducts-details-form-panel">

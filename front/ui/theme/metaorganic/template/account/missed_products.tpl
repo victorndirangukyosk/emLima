@@ -36,6 +36,7 @@
                                                     <div class="my-order-price">
                                                         <input type="hidden" id="order_id" name="order_id" value="<?php echo $order_id; ?>">
                                                         <select class="input-cart" style="border-color:#767676 !important;" id="issue_type[<?= $product['product_id'] ?>]" name="issue_type[<?= $product['product_id'] ?>]" >
+                                                            <option value="">Select Issue Type</option>
                                                             <option value="Missed">Missed Product</option>
                                                             <option value="Rejected">Rejected Product</option>
                                                         </select> 
@@ -43,7 +44,8 @@
                                                 </div>
                                                 <div class="col-md-1 col-xs-8">
                                                  <div class="my-order-price">
-                                                     <input type="number" class="input-cart-qty" value="" placeholder="Qty" id="qty[<?= $product['product_id'] ?>]" name="qty[<?= $product['product_id'] ?>]">
+                                                     <?php $unit = "'".$product['unit']."'";  ?>
+                                                     <input type="number" class="input-cart-qty" value="" placeholder="Qty" id="qty[<?= $product['product_id'] ?>]" name="qty[<?= $product['product_id'] ?>]" max="<?= $product['quantity'] ?>" onkeypress="return validateFloatKeyPresswithVarient(this, event, <?php echo $unit; ?>);">
                                                  </div>   
                                                 </div>
                                                 <div class="col-md-5 col-xs-8" align="right">
@@ -67,7 +69,12 @@
                                                    </div> 
                                                 </div>
                                             </div>
-                                            </li>      
+                                            </li> 
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                  <div class="col-md-12 col-xs-12" id="alert" align="center"></div>
+                                                </div>
+                                            </li>
                                                 </div>
                                             </div>
                                     </div>
@@ -150,9 +157,6 @@
 <script type="text/javascript">
 $(document).delegate('#missed_rejected_products', 'click', function (e) {
 e.preventDefault();
-$('#missed_rejected_products').prop('disabled', true);
-var order_id = $(this).attr('data-order-id');
-console.log($('#edit-address-form').serialize());
 
 $.ajax({
     url: 'index.php?path=account/order/addMissedRejectedProducts&token=<?php echo $token; ?>',
@@ -160,17 +164,28 @@ $.ajax({
     dataType: 'json',
     data:$('#edit-address-form').serialize(),
     async: true,
+    beforeSend: function() {
+        $('#missed_rejected_products').prop('disabled', true);
+        $('#alert').html('Please Wait Your Request Processing!');
+    },
+    complete: function() {
+        $('#missed_rejected_products').prop('disabled', false);
+    },
     success: function(json) {
     console.log(json); 
-    if (json['status']) {
-        $('#poModal-success-message').html(' Saved Successfully');
+    if (json['status'] == 400) {
+        $('#alert').html('');
+        $('#alert').html(json['message']);
     }
-    else {
-        $('#poModal-success-message').html('Please try again');
+    if (json['status'] == 200) {
+        $('#alert').html('');
+        $('#alert').html(json['message']);
+        setTimeout(function(){
+        window.location.reload(false);
+        }, 4000);
     }
     },
     error: function(xhr, ajaxOptions, thrownError) {    
-        $('#poModal-message').html("Please try again");
         return false;
     }
 });
