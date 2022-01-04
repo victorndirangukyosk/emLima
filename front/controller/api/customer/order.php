@@ -4223,6 +4223,10 @@ class ControllerApiCustomerOrder extends Controller {
             $this->error['order_id'] = 'Order Id Is Invalid!';
         }
 
+        if (empty($args['issue_type']) || ($args['issue_type'] != 'missed' && $args['issue_type'] != 'rejected')) {
+            $this->error['order_id'] = 'Please Select Product Missed Or Rejected!';
+        }
+
         return !$this->error;
     }
 
