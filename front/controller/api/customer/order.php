@@ -4424,8 +4424,13 @@ class ControllerApiCustomerOrder extends Controller {
         $json['message'] = [];
 
         if ($this->validationmissedproducts($args)) {
-            foreach ($args['products'] as $missed_product) {
-                $log->write($missed_product);
+            foreach ($args['products'] as $product_id => $missed_product) {
+                if (is_array($missed_product) && !array_key_exists('issue_type', $missed_product)) {
+                    $json['status'] = 10014;
+
+                    $json['message'] = 'Please Select Issue Type(Rejected Or Missed)!';
+                    http_response_code(404);
+                }
             }
         } else {
             $json['status'] = 10014;
