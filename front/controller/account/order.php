@@ -1392,7 +1392,7 @@ class ControllerAccountOrder extends Controller {
             echo json_encode(['html' => $html]);
         }
     }
-    
+
     public function missingproducts() {
         $redirectNotLogin = true;
         $this->load->language('account/order');
@@ -1678,6 +1678,9 @@ class ControllerAccountOrder extends Controller {
             $data['products'] = [];
 
             $products = $this->model_account_order->getRealOrderProducts($this->request->get['order_id']);
+            if ($products == NULL || (is_array($products) && count($products) <= 0)) {
+                $products = $this->model_account_order->getOrderProducts($args['order_id']);
+            }
 
             //echo "<pre>";print_r($products);die;
             $returnProductCount = 0;
@@ -1946,7 +1949,7 @@ class ControllerAccountOrder extends Controller {
             echo json_encode(['html' => $html]);
         }
     }
-    
+
     public function rejectedproducts() {
         $redirectNotLogin = true;
         $this->load->language('account/order');
@@ -2232,7 +2235,9 @@ class ControllerAccountOrder extends Controller {
             $data['products'] = [];
 
             $products = $this->model_account_order->getRealOrderProducts($this->request->get['order_id']);
-
+            if ($products == NULL || (is_array($products) && count($products) <= 0)) {
+                $products = $this->model_account_order->getOrderProducts($args['order_id']);
+            }
             //echo "<pre>";print_r($products);die;
             $returnProductCount = 0;
             foreach ($products as $product) {
@@ -2500,7 +2505,7 @@ class ControllerAccountOrder extends Controller {
             echo json_encode(['html' => $html]);
         }
     }
-    
+
     public function realinfo() {
         $this->load->language('account/order');
 

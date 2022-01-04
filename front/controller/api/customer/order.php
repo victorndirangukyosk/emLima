@@ -4341,18 +4341,24 @@ class ControllerApiCustomerOrder extends Controller {
             $this->load->model('tool/image');
             $order_info = $this->model_account_order->getOrderByCustomerId($args['order_id']);
             $products = $this->model_account_order->getRealOrderProducts($args['order_id']);
+            if ($products == NULL || (is_array($products) && count($products) <= 0)) {
+                $products = $this->model_account_order->getOrderProducts($args['order_id']);
+            }
             $log->write($order_info);
             $log->write($products);
             if ($order_info == NULL || $products == NULL || (is_array($order_info) && count($order_info) <= 0) || (is_array($products) && count($products) <= 0)) {
                 $json['status'] = 10014;
 
-                $json['message'][] = 'Order Or Order Products Not Found!'.$this->customer->getId();
+                $json['message'][] = 'Order Or Order Products Not Found!' . $this->customer->getId();
                 http_response_code(404);
             } else {
 
                 $data['products'] = [];
 
                 $products = $this->model_account_order->getRealOrderProducts($args['order_id']);
+                if ($products == NULL || (is_array($products) && count($products) <= 0)) {
+                    $products = $this->model_account_order->getOrderProducts($args['order_id']);
+                }
                 foreach ($products as $product) {
                     $option_data = [];
 
@@ -4428,11 +4434,17 @@ class ControllerApiCustomerOrder extends Controller {
 
         $order_info = $this->model_account_order->getOrderByCustomerId($args['order_id']);
         $products = $this->model_account_order->getRealOrderProducts($args['order_id']);
+        if ($products == NULL || (is_array($products) && count($products) <= 0)) {
+            $products = $this->model_account_order->getOrderProducts($args['order_id']);
+        }
 
         if ($this->validationmissedproducts($args)) {
             foreach ($args['products'] as $product_id => $missed_product) {
 
                 $products = $this->model_account_order->getRealOrderProducts($args['order_id']);
+                if ($products == NULL || (is_array($products) && count($products) <= 0)) {
+                    $products = $this->model_account_order->getOrderProducts($args['order_id']);
+                }
                 $find_product = NULL;
                 foreach ($products as $product) {
                     if ($product['product_id'] == $product_id) {
