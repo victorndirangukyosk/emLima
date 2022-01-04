@@ -4215,16 +4215,12 @@ class ControllerApiCustomerOrder extends Controller {
             $this->error['order_id'] = 'Order Id Is Required!';
         }
 
-        if (empty($args['products']) || !is_array($args['products']) || (is_array($args['products']) && count($args['products']) <= 0)) {
-            $this->error['products'] = 'Missed Products Are Required!' . count($args['products']);
-        }
-
         if (!empty($args['order_id']) && ($args['order_id'] <= 0 || is_nan($args['order_id']))) {
             $this->error['order_id'] = 'Order Id Is Invalid!';
         }
 
-        if (empty($args['issue_type']) || ($args['issue_type'] != 'Missed' && $args['issue_type'] != 'Rejected')) {
-            $this->error['issue_type'] = 'Please Select Product Missed Or Rejected!';
+        if (empty($args['products']) || !is_array($args['products']) || (is_array($args['products']) && count($args['products']) <= 0)) {
+            $this->error['products'] = 'Missed Products Are Required!' . count($args['products']);
         }
 
         return !$this->error;
@@ -4421,6 +4417,7 @@ class ControllerApiCustomerOrder extends Controller {
     }
 
     public function addMissingOrderProduct($args = []) {
+        $log = new Log('error.log');
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
@@ -4428,12 +4425,7 @@ class ControllerApiCustomerOrder extends Controller {
 
         if ($this->validationmissedproducts($args)) {
             foreach ($args['products'] as $missed_product) {
-                if ($missed_product <= 0 || is_nan($missed_product)) {
-                    $json['status'] = 10014;
-
-                    $json['message'][] = 'Product Id Is Required!';
-                    http_response_code(400);
-                }
+                $log->write($missed_product);
             }
         } else {
             $json['status'] = 10014;
