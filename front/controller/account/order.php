@@ -1677,7 +1677,7 @@ class ControllerAccountOrder extends Controller {
             // Products
             $data['products'] = [];
 
-            $products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
+            $products = $this->model_account_order->getRealOrderProducts($this->request->get['order_id']);
 
             //echo "<pre>";print_r($products);die;
             $returnProductCount = 0;
@@ -2231,7 +2231,7 @@ class ControllerAccountOrder extends Controller {
             // Products
             $data['products'] = [];
 
-            $products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
+            $products = $this->model_account_order->getRealOrderProducts($this->request->get['order_id']);
 
             //echo "<pre>";print_r($products);die;
             $returnProductCount = 0;

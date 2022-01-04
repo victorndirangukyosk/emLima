@@ -4340,7 +4340,7 @@ class ControllerApiCustomerOrder extends Controller {
             $this->load->model('tool/upload');
             $this->load->model('tool/image');
             $order_info = $this->model_account_order->getOrderByCustomerId($args['order_id']);
-            $products = $this->model_account_order->getOrderProducts($args['order_id']);
+            $products = $this->model_account_order->getRealOrderProducts($args['order_id']);
             $log->write($order_info);
             $log->write($products);
             if ($order_info == NULL || $products == NULL || (is_array($order_info) && count($order_info) <= 0) || (is_array($products) && count($products) <= 0)) {
@@ -4352,7 +4352,7 @@ class ControllerApiCustomerOrder extends Controller {
 
                 $data['products'] = [];
 
-                $products = $this->model_account_order->getOrderProducts($args['order_id']);
+                $products = $this->model_account_order->getRealOrderProducts($args['order_id']);
                 foreach ($products as $product) {
                     $option_data = [];
 
@@ -4417,23 +4417,69 @@ class ControllerApiCustomerOrder extends Controller {
     }
 
     public function addMissingOrderProduct($args = []) {
+
+        $this->load->model('account/order');
+        $this->load->model('account/missedrejectedproducts');
         $log = new Log('error.log');
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
 
+        $order_info = $this->model_account_order->getOrderByCustomerId($args['order_id']);
+        $products = $this->model_account_order->getRealOrderProducts($args['order_id']);
+
         if ($this->validationmissedproducts($args)) {
             foreach ($args['products'] as $product_id => $missed_product) {
-                $log->write('missed_product');
-                $log->write($missed_product);
-                $log->write('missed_product');
-                if ((is_array($missed_product) && !array_key_exists('issue_type', $missed_product[0])) || (is_array($missed_product) && array_key_exists('issue_type', $missed_product[0]) && $missed_product[0]['issue_type'] != 'Rejected' && $missed_product[0]['issue_type'] != 'Missed')) {
+
+                $products = $this->model_account_order->getRealOrderProducts($args['order_id']);
+                $find_product = NULL;
+                foreach ($products as $product) {
+                    if ($product['product_id'] == $product_id) {
+                        $find_product['product_id'] = $product['product_id'];
+                        $find_product['quantity'] = $product['quantity'];
+                    }
+                }
+
+                if ((is_array($missed_product) && !array_key_exists('issue_type', $missed_product)) || (is_array($missed_product) && array_key_exists('issue_type', $missed_product) && $missed_product['issue_type'] != 'Rejected' && $missed_product['issue_type'] != 'Missed')) {
                     $json['status'] = 10014;
 
                     $json['message'] = 'Please Select Issue Type(Rejected Or Missed)!';
+                    http_response_code(400);
+                } elseif ($order_info == NULL || $products == NULL || (is_array($order_info) && count($order_info) <= 0) || (is_array($products) && count($products) <= 0)) {
+                    $json['status'] = 10014;
+
+                    $json['message'][] = 'Order Or Order Products Not Found!';
                     http_response_code(404);
+                } elseif (is_array($missed_product) && array_key_exists('issue_type', $missed_product) && $missed_product['issue_type'] == 'Missed' && !array_key_exists('quantity', $missed_product)) {
+                    $json['status'] = 10014;
+
+                    $json['message'] = 'Missed Quantity Required!';
+                    http_response_code(400);
+                } elseif (is_array($missed_product) && array_key_exists('issue_type', $missed_product) && $missed_product['issue_type'] == 'Missed' && array_key_exists('quantity', $missed_product) && ($missed_product['quantity'] <= 0 || is_nan($missed_product['quantity']))) {
+                    $json['status'] = 10014;
+
+                    $json['message'][] = 'Missed Quantity Required!';
+                    http_response_code(400);
+                } elseif ($missed_product['issue_type'] == 'Missed' && $find_product['product_id'] == $product_id && $missed_product['quantity'] > $find_product['quantity']) {
+                    $json['status'] = 10014;
+                    $json['message'][] = ['type' => $product_id, 'body' => 'Missed Quantity Should Less Than Or Equal To Ordred Quantity!'];
+                    http_response_code(400);
+                } elseif ($find_product == NULL) {
+                    $json['status'] = 10014;
+                    $json['message'][] = ['type' => $product_id, 'body' => 'Invalid Missed Product!'];
+                    http_response_code(400);
+                } else {
+                    $datainsert['order_id'] = $order_info['order_id'];
+                    $datainsert['product_id'] = $product_id;
+                    $datainsert['product_store_id'] = $product_id;
+                    $datainsert['quantity'] = isset($missed_product['quantity']) && $missed_product['quantity'] != NULL && $missed_product['quantity'] > 0 ? $missed_product['quantity'] : $find_product['quantity'];
+                    $datainsert['type'] = $missed_product['issue_type'];
+                    $datainsert['notes'] = isset($missed_product['message']) ? $missed_product['message'] : NULL;
+                    $this->model_account_missedrejectedproducts->addProducts($datainsert);
                 }
+
+                //$log->write($products);
             }
         } else {
             $json['status'] = 10014;
