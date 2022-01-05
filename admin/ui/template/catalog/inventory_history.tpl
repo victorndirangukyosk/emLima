@@ -223,7 +223,7 @@
         }
 
         //-->
-$('#download_inventory_voucher').on('click', function (e) {
+$(document).on('click', '#download_inventory_voucher', function(e){ 
 e.preventDefault();
 var inventory_voucher = $(this).attr("data-inventory-voucher");
 console.log(inventory_voucher);
