@@ -121,7 +121,7 @@
                                     <td class="text-left"><?php echo $histor['added_user']; ?></td>
                                     <td class="text-left"><?php echo $histor['added_user_role']; ?></td>
                                     <td class="text-left"><?php echo $histor['date_added']; ?></td>
-                                    <td class="text-left"><button type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Download Voucher" data-inventory-voucher="<?php echo $histor['voucher']; ?>"><i class="fa fa-download text-success"></i></button></td>
+                                    <td class="text-left"><button id="download_inventory_voucher" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Download Voucher" data-inventory-voucher="<?php echo $histor['voucher']; ?>"><i class="fa fa-download text-success"></i></button></td>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
@@ -222,7 +222,15 @@
             location = url;
         }
 
-        //--></script></div>
+        //-->
+$('#download_inventory_voucher').on('click', function (e) {
+e.preventDefault();
+var inventory_voucher = $(this).attr("data-inventory-voucher");
+console.log(inventory_voucher);
+window.open(inventory_voucher, '_blank');
+});
+</script>
+</div>
 <?php echo $footer; ?> 
 
 <style>

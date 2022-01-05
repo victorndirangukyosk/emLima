@@ -618,152 +618,18 @@
             </div>
 
             <div class="invoice-info text-right">
-                <p class="text-header font-bold mb-1">TAX INVOICE
-                    <?php if($invoice_no) { ?>
-                    #
-                    <?= $invoice_no ?>
-                    <?php } ?>
+                <p class="text-header font-bold mb-1">Inventory Voucher
+                    # <?= $product_history_id ?>
                 </p>
                 <p class="text-header">
-                    <?= $delivery_date ?>
+                    <?= $date_added ?>
                 </p>
             </div>
         </div>
 
-        <div class="row">
-            <div class="customer-info">
-                <p class="mb-3 text-header font-bold">TO
-                    <?= $customer_company_name ?>
-                </p>
-                <ul>
-                    <li>
-                        <?= $shipping_name ?>
-                    </li>
-                    <li>
-                        <?= $telephone ?>
-                    </li>
-                    <li>
-                        <?= $email ?>
-                    </li>
-                    <li class="mt-3 font-bold">
-                        <p>
-                            <?= $shipping_name_original ?>
-                        </p>
-                        <p>
-                            <?= $shipping_address ?>
-                        </p>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="order-info text-right">
-                <p class="mb-3 font-bold text-subheader">ORDER INFO</p>
-                <ul>
-                    <li>Order #
-                        <?= $order_id ?>
-                    </li>
-                    <?php if($po_number) { ?>
-                    <li>P.O. NUMBER
-                        <?= $po_number ?>
-                    </li>
-                    <?php } ?>
-                    <li>Placed On
-                        <?= $date_added ?>
-                    </li>
-                    <li>Delivered On
-                        <?= $delivery_date ?>
-                    </li>
-                    <li>
-                        <?= $shipping_method ?>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        
     </div>
-    <div class="main-content">
-        <table class="products-table">
-            <thead class="font-bold">
-                <tr>
-                    <td>SKU</td>
-                    <td>Product</td>
-                    <td class="text-center">Quantity</td>
-                    <td class="text-right">Unit Price</td>
-                    <td class="text-right">Total</td>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($products as $product) { ?>
-                <tr>
-                    <td>
-                        <?= $product['product_id'] ?>
-                    </td>
-                    <td>
-                        <?= $product['name'] ?>
-                    </td>
-                    <td class="text-center">
-                        <?= $product['quantity'] ?>
-                        <?= $product['unit'] ?>
-                    </td>
-                    <td class="text-right">
-                        <?= $product['price'] ?>
-                    </td>
-                    <td class="text-right">
-                        <?= $product['total'] ?>
-                    </td>
-                </tr>
-                <?php } ?>
-
-                <?php foreach($totals as $total) { ?>
-                <tr class="font-bold text-right">
-                    <td colspan="4">
-                        <?= $total['title'] ?>
-                    </td>
-                    <td>
-                        <?= $total['text'] ?>
-                    </td>
-                </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-
-        <p class="mt-4">
-            <?php foreach($totals as $total) { ?>
-            <?php if($total['title'] == 'Total') { ?>
-            <span class="font-bold">Total In Words</span>
-            <?= $total['amount_in_words']?>
-            <?php } ?>
-            <?php } ?>
-        </p>
-
-        <div class="row mt-4">
-            <div class="payment-details">
-                <p class="text-subheader font-bold mb-2">BANK TRANSFER</p>
-                <ul class="text-left">
-                    <li>Beneficiary Name: KWIKBASKET SOLUTIONS LIMITED</li>
-                    <li>Account Currency: KES</li>
-                    <li>Account Number: 0100006985957</li>
-                    <li>Bank Name: STANBIC BANK KENYA LTD</li>
-                    <li>Sort Code: 31007</li>
-                    <li>Branch: Chiromo Road, Nairobi</li>
-                    <li>SWIFT Code: SBICKENX</li>
-                </ul>
-            </div>
-            <div class="payment-details">
-                <p class="text-subheader font-bold mb-2 text-right">LIPA NA MPESA</p>
-                <ul class="text-right">
-                    <li>Go to the M-PESA Menu</li>
-                    <li>Select Lipa Na M-PESA</li>
-                    <li>Select Pay Bill</li>
-                    <li>Enter <span class="font-bold">4029127</span></li>
-                    <li>Enter <span class="font-bold">KB
-                            <?= $order_id ?>
-                        </span> as the account number</li>
-                    <li>Enter total amount</li>
-                    <li>Enter M-PESA Pin</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    
 </body>
 
 </html>

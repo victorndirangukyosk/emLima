@@ -2974,10 +2974,12 @@ class ControllerCatalogVendorProduct extends Controller {
             'filter_product_history_id' => $this->request->get['product_history_id']
         ];
         $results = $this->model_catalog_vendor_product->getProductInventoryHistory($filter_data);
+        $log = new Log('error.log');
+        $log->write($results);
         try {
             require_once DIR_ROOT . '/vendor/autoload.php';
             $pdf = new \mikehaertl\wkhtmlto\Pdf;
-            $template = $this->load->view('catalog/inventory_voucher.tpl', $results);
+            $template = $this->load->view('catalog/inventory_voucher.tpl', $results[0]);
             $pdf->addPage($template);
             if (!$pdf->send("Inventory Voucher #" . $inventory_history_id . ".pdf")) {
                 $error = $pdf->getError();
