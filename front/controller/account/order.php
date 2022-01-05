@@ -6195,8 +6195,7 @@ class ControllerAccountOrder extends Controller {
                             'product_store_id' => $product['product_id'],
                             'type' => $data['issue_type'][$product['product_id']],
                             'quantity' => $data['issue_type'][$product['product_id']] == 'Missed' ? $data['qty'][$product['product_id']] : $product['quantity'],
-                            'notes' => $data['product_notes'][$product['product_id']],
-                            'quantity' => $data['qty'][$product['product_id']]
+                            'notes' => $data['product_notes'][$product['product_id']]
                         ];
                     }
                 }
@@ -6210,7 +6209,7 @@ class ControllerAccountOrder extends Controller {
             if ($json['status'] == 200 && count($report_products['products']) > 0) {
                 foreach ($report_products['products'] as $report_product)
                     $this->model_account_missedrejectedproducts->addProducts($report_product);
-                $log->write($report);
+                $log->write($report_product);
                 $json['status'] = 200;
                 $json['message'][] = 'Your Request Saved Sucessfully!';
             }
