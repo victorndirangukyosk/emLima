@@ -618,16 +618,33 @@
             </div>
 
             <div class="invoice-info text-right">
-                <p class="text-header font-bold mb-1">Inventory Voucher
-                    # <?= $product_history_id ?>
+                <p class="text-header font-bold mb-1">INVENTORY VOUCHER
                 </p>
                 <p class="text-header">
-                    <?= $date_added ?>
+                    <?= date('d/m/Y') ?>
                 </p>
             </div>
         </div>
 
-        
+       <div class="row">
+            <div class="customer-info">
+                <p class="mb-3 text-header font-bold">TO
+                    <?= $source ?>
+                </p>
+            </div>
+
+            <div class="order-info text-right">
+                <p class="mb-3 font-bold text-subheader">INFO</p>
+                <ul>
+                    <li>Inventory #
+                        <?= $product_history_id ?>
+                    </li>
+                    <li>Delivered On
+                        <?= date($this->language->get('date_format_short'), strtotime($date_added)) ?>
+                    </li>
+                </ul>
+            </div>
+        </div> 
     </div>
     
 </body>
