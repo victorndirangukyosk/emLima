@@ -37,20 +37,20 @@
                                                         <input type="hidden" id="order_id" name="order_id" value="<?php echo $order_id; ?>">
                                                         <select class="input-cart" style="border-color:#767676 !important;" id="issue_type[<?= $product['product_id'] ?>]" name="issue_type[<?= $product['product_id'] ?>]" >
                                                             <option value="">Select Issue Type</option>
-                                                            <option value="Missed">Missed Product</option>
-                                                            <option value="Rejected">Rejected Product</option>
+                                                            <option value="Missed" <?php if($product['issue_type'] == 'Missed') { ?> selected <?php } ?>>Missed Product</option>
+                                                            <option value="Rejected" <?php if($product['issue_type'] == 'Rejected') { ?> selected <?php } ?>>Rejected Product</option>
                                                         </select> 
                                                     </div> 
                                                 </div>
                                                 <div class="col-md-1 col-xs-8">
                                                  <div class="my-order-price">
                                                      <?php $unit = "'".$product['unit']."'";  ?>
-                                                     <input type="number" class="input-cart-qty" value="" placeholder="Qty" id="qty[<?= $product['product_id'] ?>]" name="qty[<?= $product['product_id'] ?>]" max="<?= $product['quantity'] ?>" onkeypress="return validateFloatKeyPresswithVarient(this, event, <?php echo $unit; ?>);">
+                                                     <input type="number" class="input-cart-qty" value="<?= $product['missed_rejected_quantity'] ?>" placeholder="Qty" id="qty[<?= $product['product_id'] ?>]" name="qty[<?= $product['product_id'] ?>]" max="<?= $product['quantity'] ?>" onkeypress="return validateFloatKeyPresswithVarient(this, event, <?php echo $unit; ?>);">
                                                  </div>   
                                                 </div>
                                                 <div class="col-md-5 col-xs-8" align="right">
                                                    <div class="my-order-price">
-                                                       <input id="product_notes[<?= $product['product_id'] ?>]" name="product_notes[<?= $product['product_id'] ?>]" type="text" class="input-cart" value="" placeholder="Notes"> 
+                                                       <input id="product_notes[<?= $product['product_id'] ?>]" name="product_notes[<?= $product['product_id'] ?>]" type="text" class="input-cart" value="<?= $product['missed_rejected_notes'] ?>" placeholder="Notes"> 
                                                    </div> 
                                                 </div>
                                             </div>
