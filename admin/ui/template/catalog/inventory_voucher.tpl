@@ -673,7 +673,7 @@
                         <?= $buying_price ?>
                     </td>
                     <td class="text-right">
-                        <?= $procured_qty*$buying_price ?>
+                        <?= $total ?>
                     </td>
                 </tr>
                 <tr class="font-bold text-right">

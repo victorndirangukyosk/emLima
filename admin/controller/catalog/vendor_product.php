@@ -2980,9 +2980,9 @@ class ControllerCatalogVendorProduct extends Controller {
         $full_details = $results[0];
         $full_details['model'] = $product_details['model'];
         $full_details['unit'] = $product_details['unit'];
-        $full_details['buying_price'] = $this->currency->format($product_details['buying_price'], $this->config->get('config_currency'));
-        $full_details['sub_total'] = $this->currency->format($product_details['buying_price'] * $product_details['procured_qty'], $this->config->get('config_currency'));
-        $full_details['total'] = $this->currency->format($product_details['buying_price'] * $product_details['procured_qty'], $this->config->get('config_currency'));
+        $full_details['sub_total'] = $this->currency->format($full_details['buying_price'] * $full_details['procured_qty'], $this->config->get('config_currency'));
+        $full_details['total'] = $this->currency->format($full_details['buying_price'] * $full_details['procured_qty'], $this->config->get('config_currency'));
+        $full_details['buying_price'] = $this->currency->format($full_details['buying_price'], $this->config->get('config_currency'));
 
         try {
             require_once DIR_ROOT . '/vendor/autoload.php';
