@@ -6184,7 +6184,7 @@ class ControllerAccountOrder extends Controller {
                         'product_id' => $product['product_id'],
                         'product_store_id' => $product['product_id'],
                         'type' => $data['issue_type'][$product['product_id']],
-                        'quantity' => $data['qty'][$product['product_id']],
+                        'quantity' => $data['issue_type'][$product['product_id']] == 'Missed' ? $data['qty'][$product['product_id']] : $product['quantity'],
                         'notes' => $data['product_notes'][$product['product_id']],
                         'quantity' => $data['qty'][$product['product_id']]
                     ];
