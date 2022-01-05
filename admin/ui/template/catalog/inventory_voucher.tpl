@@ -646,7 +646,40 @@
             </div>
         </div> 
     </div>
-    
+    <div class="main-content">
+        <table class="products-table">
+            <thead class="font-bold">
+                <tr>
+                    <td>SKU</td>
+                    <td>Product</td>
+                    <td class="text-center">Quantity</td>
+                    <td class="text-right">Unit Price</td>
+                    <td class="text-right">Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <?= $model ?>
+                    </td>
+                    <td>
+                        <?= $product_name ?>
+                    </td>
+                    <td class="text-center">
+                        <?= $procured_qty ?>
+                        <?= $unit ?>
+                    </td>
+                    <td class="text-right">
+                        <?= $buying_price ?>
+                    </td>
+                    <td class="text-right">
+                        <?= $procured_qty*$buying_price ?>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>                
+    </div>
 </body>
 
 </html>
