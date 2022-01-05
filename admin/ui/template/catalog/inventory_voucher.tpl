@@ -676,7 +676,22 @@
                         <?= $procured_qty*$buying_price ?>
                     </td>
                 </tr>
-
+                <tr class="font-bold text-right">
+                    <td colspan="4">
+                        Sub-Total
+                    </td>
+                    <td>
+                       <?= $sub_total ?> 
+                    </td>
+                </tr>
+                <tr class="font-bold text-right">
+                    <td colspan="4">
+                        Total
+                    </td>
+                    <td>
+                       <?= $total ?> 
+                    </td>
+                </tr>
             </tbody>
         </table>                
     </div>
