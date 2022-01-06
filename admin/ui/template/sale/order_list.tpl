@@ -4,6 +4,8 @@
     <div class="page-header">
         <div class="container-fluid">
             <div class="pull-right">
+                <button type="" id="button-status-update" form="form-order" data-toggle="tooltip" title="<?php echo $button_status_update; ?>" class="btn btn-default"><i class="fa fa-refresh"></i></button>
+                <button type="" id="button-status-update-transit" form="form-order" data-toggle="tooltip" title="<?php echo $button_status_update_transit; ?>" class="btn btn-default"><i class="fa fa-cubes"></i></button>
                 <?php if (!$this->user->isVendor()): ?>
                         <button type="" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
                 <?php endif ?>  
@@ -11,8 +13,9 @@
                 
                 <button type="" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
                 <button type="" id="button-invoice-pdf" form="form-order" formaction="<?php echo $invoicepdf; ?>" data-toggle="tooltip" title="Download Invoice" class="btn btn-default"><i class="fa fa-print"></i></button>
-                <button type="button" onclick="downloadOrders();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Orders Excel"><i class="fa fa-download"></i></button>
-                <button type="button" onclick="downloadOrdersonsolidated();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Consolidated Excel"><i class="fa fa-download"></i></button>
+                <button type="button" onclick="downloadOrderStickers();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders List"><i class="fa fa-download"></i></button>
+                <button type="button" onclick="downloadOrders();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders Excel"><i class="fa fa-download"></i></button>
+                <button type="button" onclick="downloadOrdersonsolidated();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Consolidated Excel"><i class="fa fa-download"></i></button>
                <?php if (!$this->user->isVendor()): ?>
                         <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
                 <?php endif ?>  
@@ -429,7 +432,7 @@
                                                 </a>-->  
                                                <?php } else { ?> 
                                                
-                                               <a href="#" id="new_print_invoice"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>"  data-order-delivery-date="<?= $order['delivery_date'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
+                                               <a href="#" id="updated_new_print_invoice"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>"  data-order-delivery-date="<?= $order['delivery_date'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
                                            <?php } ?> 
                                             <?php } ?>
                                         
@@ -513,6 +516,7 @@
         </div>
     </div>
     <script type="text/javascript"><!--
+    var selected_order_ids=[];        
     $('input[name=\'filter_store_name\']').autocomplete({
     'source': function(request, response) {
         $.ajax({
@@ -785,8 +789,10 @@
 
             $('#button-shipping, #button-invoice').prop('disabled', true);
             $('#button-invoice-pdf').prop('disabled', true);
-              $('#button-bulkdeliveryrequest').prop('disabled', true);
-
+            $('#button-bulkdeliveryrequest').prop('disabled', true);
+            $('#button-status-update').prop('disabled', true);
+            $('#button-status-update-transit').prop('disabled', true);
+            
             var selected = $('input[name^=\'selected\']:checked');
             $('input[name=\'order_delivery_count\']').val('');
 
@@ -794,7 +800,9 @@
             if (selected.length) {
                 $('#button-invoice').prop('disabled', false);
                 $('#button-invoice-pdf').prop('disabled', false);
-                  $('#button-bulkdeliveryrequest').prop('disabled', false);   
+                $('#button-bulkdeliveryrequest').prop('disabled', false);
+                $('#button-status-update').prop('disabled', false);
+                $('#button-status-update-transit').prop('disabled', false);
              $('input[name=\'order_delivery_count\']').val((selected.length)+' -orders selected');
 
             }
@@ -831,9 +839,14 @@
             }
             
             
-               
-                
-
+        selected_order_ids = [];       
+        $('input[name="selected[]"]:checked').each(function() {
+        console.log('Hi');    
+        console.log(this.value);
+        console.log('Hi');    
+        selected_order_ids.push($(this).val());
+        console.log(selected_order_ids);
+        });
         });
 
         $('input[name^=\'selected\']:first').trigger('change');
@@ -943,10 +956,11 @@
         </div>
     </div>
         
-    <div class="modal fade" id="driverModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    
+    <div class="modal fade" id="driverModal_new_two" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
-                    <div class="modal-body"  style="height:480px;">
+                    <div class="modal-body"  style="height:330px;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="store-find-block">
                             <div class="mydivsss">
@@ -955,70 +969,101 @@
                                         <h2>Save Driver Details</h2>
                                           </br> 
                                     </div>
-                                    <div id="driverModal-message" style="color: red;text-align:center; font-size: 15px;" >
+                                    <div id="driverModal-new-messages" style="color: red;text-align:center; font-size: 15px;" >
                                     </div>
-                                    <div id="driverModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
+                                    <div id="driverModal-new-success-messages" style="color: green; ; text-align:center; font-size: 15px;">
+                                    </div>  
+                                      </br>
+                                    <!-- Text input-->
+                                    <div class="store-form">
+                                        <form id="driverModal-new-form" action="" method="post" enctype="multipart/form-data">
+                                            <div class="form-row">
+                                                 <div class="form-row">
+                                                <div class="form-group">
+                                                    <label> Vehicle Number </label>
+                                                    <div class="col-md-12" >
+                                                        <div class="pull-right">
+                                                        <button type="button" id="dispatchplanning" data-url="<?php echo $dispatchplanning; ?>" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="Dispatch Planning"><i class="fa fa-random"></i></button>
+                                                        </div>
+                                                    <div style="width:88%;margin-right:10px;">
+                                                        <select  name="order_vehicle_numbers_two" id="order_vehicle_numbers_two" class="form-control" required="">
+                                                        </select> 
+                                                    </div>
+                                                       
+                                                    <br/> </div>
+                                                </div>
+                                            </div>
+
+                                                 <div class="form-row">
+                                                <div class="form-group" id="div_deliverycharge">
+                                                    <label> Delivery Charge </label>
+
+                                                    <div class="col-md-12">
+                                                        <input id="order_delivery_charge_two" maxlength="10" required style="max-width:100% ;" name="order_delivery_charge_two" type="number" placeholder="Delivery Charge" class="form-control input-md" required>
+                                                    <br/> </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-6"> 
+                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: left; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+                                                    </div>
+                                                    <div class="col-md-6"> 
+                                                        <button id="driver-new-button" name="driver-new-button" onclick="savedriverdetails_new_two()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>  
+                                </div>
+                            </div>
+                           
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                                                        
+     <div class="modal fade" id="driverModal_new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"  >
+                    <div class="modal-body"  style="height:330px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="store-find-block">
+                            <div class="mydivsss">
+                                <div class="store-find">
+                                    <div class="store-head">
+                                        <h2>Save Driver Details</h2>
+                                          </br> 
+                                    </div>
+                                    <div id="driverModal-messages" style="color: red;text-align:center; font-size: 15px;" >
+                                    </div>
+                                    <div id="driverModal-success-messages" style="color: green; ; text-align:center; font-size: 15px;">
                                     </div>  
                                       </br>
                                     <!-- Text input-->
                                     <div class="store-form">
                                         <form id="driverModal-form" action="" method="post" enctype="multipart/form-data">
- 
-
                                             <div class="form-row">
-                                                <div class="form-group">
-                                                    <label for="input-order-status" class="control-label"> Delivery Executive </label>
-                                                    <div class="col-md-12">
-                                                        <!--<input id="order_delivery_executive" maxlength="30" required style="max-width:100% ;" name="order_delivery_executive" type="text" placeholder="Delivery Executive" class="form-control" data_delivery_executive_id="" required>-->
-                                                        <select name="order_delivery_executives" id="order_delivery_executives" class="form-control" required="">
-                                                        <option value="0">Select Delivery Executive</option>
-                                                        <?php foreach ($delivery_executives as $delivery_executive) { ?>
-                                                        <option value="<?php echo $delivery_executive['delivery_executive_id']; ?>"><?php echo $delivery_executive['name']; ?></option>
-                                                        <?php } ?>
-                                                        </select>
-                                                    <br/></div>
-                                                </div><br/><br/>
-                                                
-                                                <div class="form-group">
-                                                    <label > Driver </label>
-                                                        <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
-                                                        <input id="order_delivery_date"   name="order_delivery_date" type="hidden"  class="form-control input-md" required>
-                                                        <input id="updateDeliveryDate"   name="updateDeliveryDate" type="hidden" value=0 class="form-control input-md" required>
-                                                    
-                                                    <div class="col-md-12">
-                                                        <!--<input id="order_driver" maxlength="30" required style="max-width:100% ;" name="order_driver" type="text" placeholder="Driver" class="form-control" data_driver_id="" required>-->
-                                                        <select name="order_drivers" id="order_drivers" class="form-control" required="">
-                                                        <option value="0">Select Driver</option>
-                                                        <?php foreach ($drivers as $driver) { ?>
-                                                        <option value="<?php echo $driver['driver_id']; ?>"><?php echo $driver['name']; ?></option>
-                                                        <?php } ?>    
-                                                        </select>
-                                                    <br/></div>
-                                                </div><br/><br/>
-
                                                  <div class="form-row">
                                                 <div class="form-group">
                                                     <label> Vehicle Number </label>
-
-  
-                                                        
-                                   
-                                   
-                                    
-                                   
                                                     <div class="col-md-12" >
-
-                                                      <div class="pull-right">
+                                                        <!--<div class="pull-right">
                                                         <button id="new-vehicle-button" name="new-vehicle-button" type="button" data-toggle="modal" data-dismiss="modal" title="add new vehicle" data-target="#vehicleModal" class="btn btn-lg btn-success"><i class="fa fa-plus"></i></button>
-                                                        </div>  
-
+                                                        </div>-->
+                                                        <div class="pull-right">
+                                                        <button type="button" id="dispatchplanning_new" data-url="<?php echo $dispatchplanning; ?>" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="Dispatch Planning"><i class="fa fa-random"></i></button>
+                                                        </div>
                                                         <!--<input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>-->
-                                                    <div style="width:88%;margin-right:10px;" ><select  name="order_vehicle_number" id="order_vehicle_number" class="form-control" required="">
-                                                        <option value="0">Select Vehicle</option>
-                                                        <?php foreach ($vehicles as $vehicle) { ?>
-                                                        <option value="<?php echo $vehicle['name']; ?>"><?php echo $vehicle['name']; ?></option>
-                                                        <?php } ?>    
-                                                        </select> </div>
+                                                    <div style="width:88%;margin-right:10px;" >
+                                                        <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
+                                                        <input id="order_delivery_date"   name="order_delivery_date" type="hidden"  class="form-control input-md" required>
+                                                        <input id="updateDeliveryDate"   name="updateDeliveryDate" type="hidden" value=0 class="form-control input-md" required>
+                                                        <select  name="order_vehicle_numbers" id="order_vehicle_numbers" class="form-control" required="">
+                                                        </select> 
+                                                    </div>
                                                        
                                                     <br/> </div>
                                                 </div>
@@ -1035,10 +1080,10 @@
 
                                                 <div class="form-group">
                                                     <div class="col-md-6"> 
-                                                        <button type="button" id="driver-buttons" name="driver-buttons" onclick="savedriverdetail()" class="btn btn-lg btn-success" data-dismiss="modal" style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
+                                                        <button type="button" id="driver-buttons" name="driver-buttons" onclick="savedriverdetail_new()" class="btn btn-lg btn-success" data-dismiss="modal" style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
                                                     </div>
                                                     <div class="col-md-6"> 
-                                                        <button id="driver-button" name="driver-button" onclick="savedriverdetails()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Save & Print Invoice</button>
+                                                        <button id="driver-button" name="driver-button" onclick="savedriverdetails_new()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Save & Print Invoice</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1053,8 +1098,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    
+    </div>    
     <div class="modal fade" id="orderprocessingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
@@ -1124,6 +1168,74 @@
         </div>
     </div>
     
+    
+    <div class="modal fade" id="neworderprocessingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"  >
+                    <div class="modal-body"  style="height:330px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="store-find-block">
+                            <div class="mydivsss">
+                                <div class="store-find">
+                                    <div class="store-head">
+                                        <h2>Save Order Processing Details</h2>
+                                          </br> 
+                                    </div>
+                                    <div id="orderprocessingModal-messages" style="color: red;text-align:center; font-size: 15px;" >
+                                    </div>
+                                    <div id="orderprocessingModal-success-messages" style="color: green; ; text-align:center; font-size: 15px;">
+                                    </div>  
+                                      </br>
+                                    <!-- Text input-->
+                                    <div class="store-form">
+                                        <form id="neworderprocessingModal-form" action="" method="post" enctype="multipart/form-data">
+ 
+
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="input-order-status" class="control-label"> Order Processing Group </label>
+                                                    <div class="col-md-12">
+                                                        <!--<input id="order_delivery_executive" maxlength="30" required style="max-width:100% ;" name="order_delivery_executive" type="text" placeholder="Delivery Executive" class="form-control" data_delivery_executive_id="" required>-->
+                                                        <select name="new_order_processing_group_id" id="new_order_processing_group_id" class="form-control" required="">
+                                                        <option> Select Order Processing Group </option>
+                                                        <?php foreach ($order_processing_groups as $order_processing_group) { ?>
+                                                        <option value="<?php echo $order_processing_group['order_processing_group_id']; ?>"><?php echo $order_processing_group['order_processing_group_name']; ?></option>
+                                                        <?php } ?>
+                                                        </select>
+                                                    <br/></div>
+                                                </div><br/><br/>
+                                                
+                                                <div class="form-group">
+                                                    <label > Order Processor </label>
+                                                    <div class="col-md-12">
+                                                        <!--<input id="order_driver" maxlength="30" required style="max-width:100% ;" name="order_driver" type="text" placeholder="Driver" class="form-control" data_driver_id="" required>-->
+                                                        <select name="new_order_processor_id" id="new_order_processor_id" class="form-control" required="">
+                                                        <option> Select Order Processor </option>
+                                                        </select>
+                                                    <br/></div>
+                                                </div><br/><br/>
+
+                                                 <div class="form-row">
+                                                <div class="form-group">
+                                                    <div class="col-md-12"> 
+                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: left; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+                                                        <button id="new-driver-button" name="new-orderprocessing-button" onclick="saveorderprocessingdetailsnew()" type="button" class="btn btn-lg btn-success"  style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>  
+                                </div>
+                            </div>
+                           
+                            <!-- next div code -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>                                                    
+                                                        
     <!-- Modal -->
     <div class="modal fade" id="ordernoticeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -1453,31 +1565,23 @@ function savePO() {
                
             }
 
-function savedriverdetails() { 
+function savedriverdetails_new() { 
  
-    $('#driverModal-message').html('');
-    $('#driverModal-success-message').html('');
+    $('#driverModal-messages').html('');
+    $('#driverModal-success-messages').html('');
    var order_id = $('input[name="order_id"]').val();
    var order_delivery_date = $('input[name="order_delivery_date"]').val();  
    var updateDeliveryDate = $('input[name="updateDeliveryDate"]').val();  
  
    var invoice = $('input[name="invoice_custom"]').val();
-   var driver_id = $('select[name="order_drivers"]').val();
-   //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
-   //var vehicle_number =  $('input[name="order_vehicle_number"]').val();
-   var vehicle_number =  $('select[name="order_vehicle_number"]').val();
+   var vehicle_number =  $('select[name="order_vehicle_numbers"]').val();
    var delivery_charge =  $('input[name="order_delivery_charge"]').val();
-   var delivery_executive_id =  $('select[name="order_delivery_executives"]').val();
-   //var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
     console.log(vehicle_number);
     console.log(delivery_charge);
-    console.log(driver_id);
-    console.log(delivery_executive_id);
 
               console.log($('#driverModal-form').serialize());
-                 if (isNaN(delivery_executive_id) || isNaN(order_id) || isNaN(driver_id) || driver_id  <= 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == ''|| delivery_executive_id == '0' || driver_id == '0' || vehicle_number == '0' ) {
-                   
-                      $('#driverModal-message').html("Please enter data");
+                 if (isNaN(order_id) || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || vehicle_number == '0' ) {
+                      $('#driverModal-messages').html("Please enter data");
                        return false;
                 } 
                 else{
@@ -1504,12 +1608,12 @@ function savedriverdetails() {
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge ,updateDeliveryDate:updateDeliveryDate},
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, delivery_charge : delivery_charge ,updateDeliveryDate:updateDeliveryDate},
                     async: true,
                     success: function(json) {
                         console.log(json); 
                         if (json['status']) {
-                            $('#driverModal-success-message').html('Saved Successfully');
+                            $('#driverModal-success-messages').html('Saved Successfully');
                             
                             //ORDER STATUS UPDATE TO TRANSIT
                             $.ajax({
@@ -1530,47 +1634,40 @@ function savedriverdetails() {
                             setTimeout(function(){ window.location.reload(false); }, 1500);
                         }
                         else {
-                            $('#driverModal-success-message').html('Please try again');
+                            $('#driverModal-success-messages').html('Please try again');
                         }
                     },
                     error: function(xhr, ajaxOptions, thrownError) {    
 
                                  // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
-                                $('#driverModal-message').html("Please try again");
+                                $('#driverModal-messages').html("Please try again");
                                     return false;
                                 }
                 });
                 }
                
-            }
-            
-function savedriverdetail() { 
+}
+
+function savedriverdetail_new() { 
  
-    $('#driverModal-message').html('');
-    $('#driverModal-success-message').html('');
+    $('#driverModal-messages').html('');
+    $('#driverModal-success-messages').html('');
    var order_id = $('input[name="order_id"]').val();
    var invoice = $('input[name="invoice_custom"]').val();
-   var driver_id = $('select[name="order_drivers"]').val();
    var order_delivery_date = $('input[name="order_delivery_date"]').val();  
    var updateDeliveryDate = $('input[name="updateDeliveryDate"]').val();  
  
-   //var driver_id = $('input[name="order_driver"]').attr("data_driver_id");
-   //var vehicle_number =  $('input[name="order_vehicle_number"]').val();
-   var vehicle_number =  $('select[name="order_vehicle_number"]').val();
+   var vehicle_number =  $('select[name="order_vehicle_numbers"]').val();
    var delivery_charge =  $('input[name="order_delivery_charge"]').val();
-   var delivery_executive_id =  $('select[name="order_delivery_executives"]').val();
-   //var delivery_executive_id =  $('input[name="order_delivery_executive"]').attr("data_delivery_executive_id");
     console.log(vehicle_number);
     console.log(delivery_charge);
-    console.log(driver_id);
-    console.log(delivery_executive_id);
 
               console.log($('#driverModal-form').serialize());
  
-                if (isNaN(delivery_executive_id) || isNaN(order_id) || isNaN(driver_id) || driver_id  <= 0 || driver_id == '' || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || delivery_executive_id < 0 || delivery_executive_id == ''|| delivery_executive_id == '0' || driver_id == '0' || vehicle_number == '0' ) {
+                if (isNaN(order_id) || vehicle_number == '' || vehicle_number.length == 0 || order_id < 0 || order_id == '' || vehicle_number == '0' ) {
 
                    
-                      $('#driverModal-message').html("Please enter data");
+                      $('#driverModal-messages').html("Please enter data");
                        return false;
                 } 
                 else{
@@ -1605,7 +1702,7 @@ function savedriverdetail() {
                     url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetails&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ order_id : order_id, vehicle_number : vehicle_number, driver_id : driver_id, delivery_executive_id:delivery_executive_id, delivery_charge : delivery_charge,updateDeliveryDate:updateDeliveryDate },
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, delivery_charge : delivery_charge,updateDeliveryDate:updateDeliveryDate },
                     async: true,
                     success: function(json) {
                         console.log(json); 
@@ -1626,24 +1723,95 @@ function savedriverdetail() {
                             });
                             //ORDER STATUS UPDATE TO TRANSIT
                             
-                            $('#driverModal-success-message').html('Saved Successfully');
+                            $('#driverModal-success-messages').html('Saved Successfully');
                             setTimeout(function(){ window.location.reload(false); }, 1500);
                         }
                         else {
-                            $('#driverModal-success-message').html('Please try again');
+                            $('#driverModal-success-messages').html('Please try again');
                         }
                     },
                     error: function(xhr, ajaxOptions, thrownError) {    
 
                                  // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
-                                $('#driverModal-message').html("Please try again");
+                                $('#driverModal-messages').html("Please try again");
                                     return false;
                                 }
                 });
                 }
                 
 $('#driverModal-form')[0].reset();               
-}            
+}
+
+function savedriverdetails_new_two() { 
+ 
+    $('#driverModal-new-messages').html('');
+    $('#driverModal-new-success-messages').html('');
+    var order_id = selected_order_ids;
+    var updateDeliveryDate = 0;
+ 
+    var vehicle_number =  $('select[name="order_vehicle_numbers_two"]').val();
+    var delivery_charge =  $('input[name="order_delivery_charge_two"]').val();
+    console.log(vehicle_number);
+    console.log(delivery_charge);
+    console.log($('#driverModal-new-form').serialize());
+ 
+                if (vehicle_number == '' || vehicle_number.length == 0 || order_id == '' || vehicle_number == '0' ) {
+                $('#driverModal-new-messages').html("Please enter data");
+                return false;
+                } 
+                else{
+                var clicked_orderid = order_id.toString().replace('on,','');
+                $('.alert').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                $.ajax({
+		url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/intransit&order_id='+clicked_orderid+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_status_id=4&notify=0&vehicle_number='+vehicle_number+'&delivery_charge='+delivery_charge,
+		beforeSend: function() {
+                $('.alert').html('Please wait your request is processing!');
+                $('#driverModal-new-success-messages').html('Please wait your request is processing!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+                },
+                success: function(json) {	 
+                console.log(json);
+                $.ajax({
+                    url: 'index.php?path=sale/order/SaveOrUpdateOrderDriverVehicleDetailsBulk&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data:{ order_id : order_id, vehicle_number : vehicle_number, delivery_charge : delivery_charge,updateDeliveryDate:updateDeliveryDate },
+                    beforeSend: function() {
+                    $('#driverModal-new-success-messages').html('Please wait your request is processing!');
+                    },
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                            $('#driverModal-new-success-messages').html('Saved Successfully');
+                            setTimeout(function(){ window.location.reload(false); }, 1500);
+                        }
+                        else {
+                            $('#driverModal-new-success-messages').html('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+                    // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                    $('#driverModal-new-messages').html("Please try again");
+                    return false;
+                    }
+                });
+                $('.alert').html('Order status updated successfully!');
+                $(".alert").attr('class', 'alert alert-success');
+                $(".alert").show();
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+		}
+                }); 
+                }
+                
+$('#driverModal-new-form')[0].reset();               
+}
 
 function saveorderprocessingdetails() { 
  
@@ -1835,7 +2003,26 @@ var $select = $('#order_processor_id');
     $('.selectpicker').selectpicker('refresh');
 }
 });    
-});          
+});
+$('select[id^=\'new_order_processing_group_id\']').on('change', function (e) {
+    var order_processing_group_id = $('select[id=\'new_order_processing_group_id\'] option:selected').val();
+    $.ajax({
+      url: 'index.php?path=orderprocessinggroup/orderprocessor/getAllOrderProcessors&token=<?php echo $token; ?>&order_processing_group_id='+order_processing_group_id,
+      dataType: 'json',     
+      success: function(json) {
+//console.log(json.length);
+var $select = $('#new_order_processor_id');
+    $select.html('');
+    $select.append('<option value=""> Select Order Processor </option>');
+    if(json != null && json.length > 0) {
+    $.each(json, function(index, value) {
+      $select.append('<option value="' + value.order_processor_id + '">' + value.name + '</option>');
+    });
+    }
+    $('.selectpicker').selectpicker('refresh');
+}
+});    
+});
 </script>
 
 
@@ -1896,7 +2083,7 @@ $('input[name=\'order_delivery_executive\']').autocomplete({
   } 
 });
 
-$('a[id^=\'new_print_invoice\']').on('click', function (e) {
+$('a[id^=\'updated_new_print_invoice\']').on('click', function (e) {
 e.preventDefault();
 var invoice = $(this).attr("data-order-invoice");
 var order_id = $(this).attr("data-order-id");
@@ -1905,6 +2092,9 @@ var order_delivery_date = $(this).attr("data-order-delivery-date");
 var updateDeliveryDate=0;
 
 var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selected').text();
+var order_status_id_new = $('select[id=\'input-order-status'+order_id+'\'] option:selected').val();
+console.log(order_status_id_new);
+
 
  $('select[name="order_delivery_executives"]').selectpicker('val', 0);
  $('select[name="order_drivers"]').selectpicker('val', 0);
@@ -1914,24 +2104,65 @@ var order_status = $('select[id=\'input-order-status'+order_id+'\'] option:selec
  { 
  $('#div_deliverycharge').show();
  }
- var currentdate=new Date();
- var dd = String(currentdate.getDate()).padStart(2, '0');
+var currentdate=new Date();
+var dd = String(currentdate.getDate()).padStart(2, '0');
 var mm = String(currentdate.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = currentdate.getFullYear();
+
+const order_delivery_dateArray = order_delivery_date.split("/");
+var dd2 = order_delivery_dateArray[0];
+var mm2 = order_delivery_dateArray[1]; //January is 0!
+var yyyy2 = order_delivery_dateArray[2];
 
 currentdate = dd + '/' + mm + '/' + yyyy;
 console.log(order_delivery_date);
 console.log('beloe current');
+var order_delivery_date_js = new Date(yyyy2, mm2, dd2);
+var currentdate_js = new Date(yyyy, mm, dd);
 
 console.log(currentdate);
-if(new Date(order_delivery_date) > new Date(currentdate))
+console.log(order_delivery_date_js);
+console.log(currentdate_js);
+if(new Date(yyyy2, mm2, dd2) > new Date(yyyy, mm, dd)) {
  if (confirm("Do you want to modify delivery date to current date")) {
-     //continue;
-     updateDeliveryDate=1;
+ //continue;
+updateDeliveryDate=1;
+$('input[name="updateDeliveryDate"]').val(updateDeliveryDate);
+ } else {
+ return;
  }
- else{
-     return;
  }
+console.log("Do you want to modify delivery date to current date"); 
+$.ajax({
+                url: 'index.php?path=vehicles/dispatchplanning/getassignedvehicles&updateDeliveryDate='+updateDeliveryDate+'&order_id='+order_id+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    console.log(json.length);
+                    if(json != null && json.length > 0) {
+                    $('#driverModal-messages').html("");
+                    $('#driver-buttons').prop('disabled', false);
+                    $('#driver-button').prop('disabled', false);    
+                    var option = '<option value="">Select Vehicle</option>';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].vehicle_id + '">' + json[i].registration_number + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#order_vehicle_numbers');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    } else {
+                    if(order_status_id_new == 1) {
+                    $('#driverModal-messages').html("Please Assign Vehicle To Dispatch Plan!");
+                    $('#driver-buttons').prop('disabled', true);
+                    $('#driver-button').prop('disabled', true);
+                    }
+                    }
+            }
+}); 
 $.ajax({
 		url: 'index.php?path=sale/order/getDriverDetails&token=<?php echo $token; ?>',
 		type: 'post',
@@ -1944,22 +2175,20 @@ $.ajax({
                     console.log(json.order_info.vehicle_number);
                     console.log(json.order_info.delivery_executive_id);
                     console.log(json.order_info.delivery_charges);
-                    if(/*order_status != 'Ready for delivery'*/ json.order_info.order_status == 'Order Approval Pending' || order_status == 'Order Approval Pending' || json.order_info.order_status == 'Order Recieved' || order_status == 'Order Recieved' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
+                    if(json.order_info.order_status == 'Order Approval Pending' || order_status == 'Order Approval Pending' || json.order_info.order_status == 'Order Recieved' || order_status == 'Order Recieved' || json.order_info.driver_id == null || json.order_info.vehicle_number == null || json.order_info.delivery_executive_id == null)
                     {
                     $('input[name="order_id"]').val(order_id);
                     $('input[name="updateDeliveryDate"]').val(updateDeliveryDate);
                     $('input[name="invoice_custom"]').val(invoice);
                     $('input[name="order_delivery_charge"]').val(json.order_info.delivery_charges);
-                    $('#driverModal').modal('toggle');
+                    $('#driverModal_new').modal('toggle');
                     if(json.order_info.order_status == 'Order Approval Pending' || order_status == 'Order Approval Pending' || json.order_info.order_status == 'Order Recieved' || order_status == 'Order Recieved') {
-                    //if(order_status != 'Ready for delivery') {
-                    $('#driverModal-message').html("Please Update Order Status As Order Processing!");
-                    //$('#driverModal-message').html("Please Select Order Status As Ready For Delivery!");
+                    $('#driverModal-messages').html("Please Update Order Status As Order Processing!");
                     $('#driver-buttons').prop('disabled', true);
                     $('#driver-button').prop('disabled', true);
                     return false;
                     } else {
-                    $('#driverModal-message').html("");
+                    $('#driverModal-messages').html("");
                     $('#driver-buttons').prop('disabled', false);
                     $('#driver-button').prop('disabled', false);    
                     }
@@ -2121,6 +2350,145 @@ function downloadOrders() {
              
             //const deliveryDate = $("#consolidated-order-sheet-datepicker").val();
                 url = 'index.php?path=report/vendor_orders/downloadorders&token=<?php echo $token; ?>';
+              var filter_order_status = $('select[name=\'filter_order_status\']').val();
+
+            console.log(filter_order_status);
+
+            if (filter_order_status != '*' && filter_order_status != '') {
+                url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
+            }
+
+            var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
+
+            if (filter_delivery_date != '*' && filter_delivery_date != '') {
+                url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
+            }
+            
+            var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company != '*' && filter_company != '') {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+            
+            var filter_customer = $('input[name=\'filter_customer\']').val();
+
+            if (filter_customer != '*' && filter_customer != '') {
+                url += '&filter_customer=' + encodeURIComponent(filter_customer);
+            }
+            
+            var filter_total = $('input[name=\'filter_total\']').val();
+
+            if (filter_total != '*' && filter_total != '') {
+                url += '&filter_total=' + encodeURIComponent(filter_total);
+            }
+            
+            var filter_delivery_method = $('input[name=\'filter_delivery_method\']').val();
+
+            if (filter_delivery_method != '*' && filter_delivery_method != '') {
+                url += '&filter_delivery_method=' + encodeURIComponent(filter_delivery_method);
+            }
+            
+            var filter_payment = $('input[name=\'filter_payment\']').val();
+
+            if (filter_payment != '*' && filter_payment != '') {
+                url += '&filter_payment=' + encodeURIComponent(filter_payment);
+            }
+            
+            var filter_order_type = $('select[name=\'filter_order_type\']').val();
+
+            if (filter_order_type != '*' && filter_order_type != '') {
+                url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
+            }
+            
+            var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
+
+            if (filter_order_from_id != '*' && filter_order_from_id != '') {
+                url += '&filter_order_from_id=' + encodeURIComponent(filter_order_from_id);
+            }
+            
+            var filter_order_to_id = $('input[name=\'filter_order_to_id\']').val();
+
+            if (filter_order_to_id != '*' && filter_order_to_id != '') {
+                url += '&filter_order_to_id=' + encodeURIComponent(filter_order_to_id);
+            }
+            
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added != '*' && filter_date_added != '') {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+            
+            var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
+
+            if (filter_date_added_end != '*' && filter_date_added_end != '') {
+                url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
+            }
+            
+            var filter_order_id = $('input[name=\'filter_order_id\']').val();
+
+            if (filter_order_id != '*' && filter_order_id != '') {
+                url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
+            }
+            
+            var filter_delivery_time_slot = $('select[name=\'filter_delivery_time_slot\']').val();
+            
+            if (filter_delivery_time_slot != '') {
+                url += '&filter_delivery_time_slot=' + encodeURIComponent(filter_delivery_time_slot);
+            }
+            
+            var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
+            return n.value;
+            }).join(',');
+            console.log(selected_order_id);
+            
+            if (selected_order_id != '') {
+                url += '&selected_order_id=' + encodeURIComponent(selected_order_id);
+            }
+            
+
+              if((filter_order_from_id==''||filter_order_to_id=='') && filter_delivery_date=='' && filter_order_id=='' && selected_order_id=='')
+            {
+                if((filter_date_added=='' || filter_date_added_end=='') && filter_delivery_date=='')
+                {
+                    alert("Please select  date filters or other ");
+                    return;
+                }
+           
+                // alert(filter_date_added_end);
+
+                    if(filter_date_added_end!='' && filter_date_added!='')
+                    {
+                        
+                        const date1 = new Date(filter_date_added);
+                        const date2 = new Date(filter_date_added_end);
+                        const diffTime = Math.abs(date2 - date1);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                        console.log(diffTime + " milliseconds");
+                        console.log(diffDays + " days");
+                        if(diffDays<0)
+                        {
+                        alert("Please select proper start & end date filters");
+                                        return;
+                        }
+                        if(diffDays>60)
+                        {
+                            alert("Duration between start & end date filters should be less than 60 days");
+                                        return;
+                        }
+                    }
+            }
+
+
+            location = url;
+            
+}
+
+function downloadOrderStickers() {
+
+
+             
+            //const deliveryDate = $("#consolidated-order-sheet-datepicker").val();
+                url = 'index.php?path=report/vendor_orders/downloadordersstickers&token=<?php echo $token; ?>';
               var filter_order_status = $('select[name=\'filter_order_status\']').val();
 
             console.log(filter_order_status);
@@ -2557,6 +2925,224 @@ $.ajax({
 			 
 		}
 });
+});
+
+$('#button-invoice-pdfs, #button-invoices').on('click', function (e) {
+e.preventDefault();
+$.ajax({
+		url: 'index.php?path=sale/order/checkorderstatusvalidfordownloadpdf&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + selected_order_ids + '&order_status_id=14',
+		success: function(json) {	 
+                    console.log(json);
+                    if(json.data.invalid_order_status_count > 0) {
+                    $('.alert').html('Selected Orders Status Is Invalid!');
+                    $(".alert").attr('class', 'alert alert-danger');
+                    $(".alert").show();
+                    return false;
+                    }
+                    
+                    if(json.data.invalid_order_status_count == 0) {
+                    $('#orderprocessingModal-messages').html('');
+                    $('#new-driver-button').prop('disabled', false);
+                    return true;
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+});
+});
+
+$('#button-status-update').on('click', function (e) {
+e.preventDefault();
+console.log(selected_order_ids);
+$('#orderprocessingModal-messages').html('');
+$('#orderprocessingModal-success-messages').html('');
+$('#new-driver-button').prop('disabled', false);
+$('#neworderprocessingModal').modal('toggle');
+$.ajax({
+		url: 'index.php?path=sale/order/checkorderstatus&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + selected_order_ids + '&order_status_id=14',
+		success: function(json) {	 
+                    console.log(json);
+                    if(json.data.invalid_order_status_count > 0) {
+                    $('#orderprocessingModal-messages').html('Selected Orders Status Is Invalid!');
+                    $('#new-driver-button').prop('disabled', true);
+                    return false;
+                    }
+                    
+                    if(json.data.invalid_order_status_count == 0) {
+                    $('#orderprocessingModal-messages').html('');
+                    $('#new-driver-button').prop('disabled', false);
+                    return true;
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+});
+});
+
+$('#button-status-update-transit').on('click', function (e) {
+e.preventDefault();
+console.log(selected_order_ids);
+$('#driverModal-new-messages').html('');
+$('#driverModal-new-success-messages').html('');
+$('#driver-new-buttons').prop('disabled', false);
+$('#driver-new-button').prop('disabled', false);
+$('#driverModal_new_two').modal('toggle');
+$.ajax({
+		url: 'index.php?path=sale/order/checkorderstatusprocessing&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: 'order_id=' + selected_order_ids + '&order_status_id='+$('select[name=\'filter_order_status\']').val()+'&delivery_date='+$('input[name=\'filter_delivery_date\']').val()+'&delivery_time_slot='+$('select[name=\'filter_delivery_time_slot\']').val(),
+		success: function(json) {	 
+                    console.log(json);
+                    if($('select[name=\'filter_order_status\']').val() == null || $('select[name=\'filter_order_status\']').val() != 1 || $('select[name=\'filter_order_status\']').val() == 'undefined') {
+                    $('#driverModal-new-messages').html('Please Select Order Status As Order Processing From Filters!');
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    return false;
+                    }
+                    
+                    if($('input[name=\'filter_delivery_date\']').val() == null || $('input[name=\'filter_delivery_date\']').val() == 'undefined') {
+                    $('#driverModal-new-messages').html('Please Select Delivery Date!');
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    return false;
+                    }
+                    
+                    if($('select[name=\'filter_delivery_time_slot\']').val() == null || $('select[name=\'filter_delivery_time_slot\']').val() == 'undefined') {
+                    $('#driverModal-new-messages').html('Please Select Delivery Timeslot!');
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    return false;
+                    }
+                    
+                    if(json.data.invalid_order_status_count > 0) {
+                    $('#driverModal-new-messages').html('Selected Orders Status Is Invalid!');
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    return false;
+                    }
+                    
+                    if(json.data.invalid_order_delivery_date_count > 0) {
+                    $('#driverModal-new-messages').html('Selected Orders Delivery Date Should Not Be Greater Than Current Date!');
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    return false;
+                    }
+                    
+                    if(json.data.invalid_order_delivery_timeslot_count > 1) {
+                    $('#driverModal-new-messages').html('Selected Orders Delivery Timeslots Should Be Unique!');
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    return false;
+                    }
+                    
+                    if(json.data.invalid_order_deliverydate_count > 1) {
+                    $('#driverModal-new-messages').html('Selected Orders Delivery Dates Should Be Unique!');
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    return false;
+                    }
+                    
+                    if(json.data.invalid_order_delivery_date_count == 0 && json.data.invalid_order_status_count == 0 && json.data.invalid_order_delivery_timeslot_count == 1 && json.data.invalid_order_deliverydate_count == 1) {
+                    $('#driverModal-new-messages').html('');
+                    $('#driver-new-buttons').prop('disabled', false);
+                    $('#driver-new-button').prop('disabled', false);
+                    console.log('DISPATCH');
+                    $.ajax({
+                    url: 'index.php?path=vehicles/dispatchplanning/getAssignedVehiclesNew&updateDeliveryDate=0&order_id='+selected_order_ids+'&delivery_time_slot='+$('select[name=\'filter_delivery_time_slot\']').val()+'&delivery_date='+$('input[name=\'filter_delivery_date\']').val()+'&token=<?php echo $token; ?>',
+                    dataType: 'json',     
+                    success: function(json) {
+                    console.log(json);
+                    console.log(json.length);
+                    if(json != null && json.length > 0) {
+                    $('#driverModal-new-messages').html("");
+                    $('#driver-new-buttons').prop('disabled', false);
+                    $('#driver-new-button').prop('disabled', false);    
+                    var option = '<option value="">Select Vehicle</option>';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option value="'+ json[i].vehicle_id + '">' + json[i].registration_number + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#order_vehicle_numbers_two');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    } else {
+                    $('#driverModal-new-messages').html("Please Assign Vehicle To Dispatch Plan!");
+                    $('#driver-new-buttons').prop('disabled', true);
+                    $('#driver-new-button').prop('disabled', true);
+                    }
+                    }
+                    }); 
+                    return true;
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+			 
+		}
+});
+});
+
+function saveorderprocessingdetailsnew() { 
+ 
+    $('#orderprocessingModal-messages').html('');
+    $('#orderprocessingModal-success-messages').html('');
+    var order_processing_group_id =  $('select[name="new_order_processing_group_id"]').val();
+    var order_processor_id =  $('select[name="new_order_processor_id"]').val();
+    var order_processing_group_name = 'Order Processing Group : '+ $('select[name=\'new_order_processing_group_id\'] option:selected').text();
+    console.log(order_processing_group_id);
+    console.log(order_processor_id);
+    console.log($('#neworderprocessingModal-form').serialize());
+ 
+    if (isNaN(order_processor_id) || isNaN(order_processing_group_id) || order_processing_group_id  <= 0 || order_processing_group_id == '' || order_processor_id == '' || order_processor_id <= 0) {
+    $('#orderprocessingModal-messages').html("Please enter data");
+    return false;
+    } 
+    else{
+    $.ajax({
+    url: 'index.php?path=sale/order/api&token=<?php echo $token; ?>&api=api/order/bulkhistory&order_id='+selected_order_ids+'&added_by=<?php echo $this->user->getId(); ?>&added_by_role=<?php echo $this->user->getGroupName(); ?>',
+    type: 'post',
+    dataType: 'json',
+    data: 'order_status_id=1&notify=0&order_processing_group_id='+order_processing_group_id+'&order_processor_id='+order_processor_id,
+    success: function(json) {	 
+    console.log(json);
+    $('#orderprocessingModal-success-messages').html('Order status updated successfully!');
+    $('.alert').html('Order status updated successfully!');
+    $(".alert").attr('class', 'alert alert-success');
+    $(".alert").show();
+    setTimeout(function(){ window.location.reload(false); }, 1500);
+    },			
+    error: function(xhr, ajaxOptions, thrownError) {		
+    $('#orderprocessingModal-messages').html("Please try again");
+    return false;
+    }
+    });
+    }
+$('#neworderprocessingModal-form')[0].reset();               
+}
+
+$('#dispatchplanning').on('click', function (e) {
+e.preventDefault();
+var url = $(this).attr("data-url");
+console.log(url);
+window.open(url, '_blank');
+});
+
+$('#dispatchplanning_new').on('click', function (e) {
+e.preventDefault();
+var url = $(this).attr("data-url");
+console.log(url);
+window.open(url, '_blank');
 });
 </script></div>
 <?php echo $footer; ?>

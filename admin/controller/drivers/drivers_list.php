@@ -271,7 +271,6 @@ class ControllerDriversDriversList extends Controller {
         $data['entry_email'] = $this->language->get('entry_email');
         $data['entry_driving_licence'] = $this->language->get('entry_driving_licence');
 
-
         $data['entry_telephone'] = $this->language->get('entry_telephone');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
@@ -437,7 +436,6 @@ class ControllerDriversDriversList extends Controller {
 
         $data['token'] = $this->session->data['token'];
 
-
         if (isset($this->request->get['driver_id'])) {
             $data['driver_id'] = $this->request->get['driver_id'];
         } else {
@@ -480,7 +478,7 @@ class ControllerDriversDriversList extends Controller {
         } else {
             $data['error_driving_licence'] = '';
         }
-        
+
         if (isset($this->error['driving_licence_expire_date'])) {
             $data['error_driving_licence_expire_date'] = $this->error['driving_licence_expire_date'];
         } else {
@@ -587,7 +585,7 @@ class ControllerDriversDriversList extends Controller {
         } else {
             $data['driving_licence'] = '';
         }
-        
+
         if (isset($this->request->post['driving_licence_expire_date'])) {
             $data['driving_licence_expire_date'] = $this->request->post['driving_licence_expire_date'];
         } elseif (!empty($driver_info)) {
@@ -635,29 +633,29 @@ class ControllerDriversDriversList extends Controller {
             $this->error['lastname'] = $this->language->get('error_lastname');
         }
 
-        /*if (isset($this->request->post['email']) && $this->request->post['email'] != NULL && ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL))) {
-            $this->error['email'] = $this->language->get('error_email');
-        }*/
+        /* if (isset($this->request->post['email']) && $this->request->post['email'] != NULL && ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL))) {
+          $this->error['email'] = $this->language->get('error_email');
+          } */
 
-        /*if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
-            $this->error['driving_licence'] = $this->language->get('error_driving_licence');
-        }*/
-        
-        /*if ((utf8_strlen($this->request->post['driving_licence_expire_date']) < 1) || (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$this->request->post['driving_licence_expire_date'])) || $this->request->post['driving_licence_expire_date'] == '0000-00-00') {
-            $this->error['driving_licence_expire_date'] = 'Driving Licence Expire Date filed required';
-        }*/
+        /* if ((utf8_strlen($this->request->post['driving_licence']) < 1) || (utf8_strlen(trim($this->request->post['driving_licence'])) > 32)) {
+          $this->error['driving_licence'] = $this->language->get('error_driving_licence');
+          } */
+
+        /* if ((utf8_strlen($this->request->post['driving_licence_expire_date']) < 1) || (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$this->request->post['driving_licence_expire_date'])) || $this->request->post['driving_licence_expire_date'] == '0000-00-00') {
+          $this->error['driving_licence_expire_date'] = 'Driving Licence Expire Date filed required';
+          } */
 
         $driver_info = $this->model_drivers_drivers->getDriverByEmail($this->request->post['email']);
 
-        /*if (!isset($this->request->get['driver_id'])) {
-            if ($driver_info) {
-                $this->error['warning'] = $this->language->get('error_exists');
-            }
-        } else {
-            if ($driver_info && ($this->request->get['driver_id'] != $driver_info['driver_id'])) {
-                $this->error['warning'] = $this->language->get('error_exists');
-            }
-        }*/
+        /* if (!isset($this->request->get['driver_id'])) {
+          if ($driver_info) {
+          $this->error['warning'] = $this->language->get('error_exists');
+          }
+          } else {
+          if ($driver_info && ($this->request->get['driver_id'] != $driver_info['driver_id'])) {
+          $this->error['warning'] = $this->language->get('error_exists');
+          }
+          } */
 
         if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
             $this->error['telephone'] = $this->language->get('error_telephone');
@@ -779,6 +777,43 @@ class ControllerDriversDriversList extends Controller {
                     'telephone' => $result['telephone'],
                 ];
             }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function autocompletedriver() {
+        $json = [];
+
+        $this->load->model('drivers/drivers');
+
+        $filter_data = [];
+
+        $results = $this->model_drivers_drivers->getDrivers($filter_data);
+
+        foreach ($results as $result) {
+            if ($this->user->isVendor()) {
+                $result['name'] = $result['firstname'];
+            }
+
+            $json[] = [
+                'driver_id' => $result['driver_id'],
+                'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                'firstname' => $result['firstname'],
+                'lastname' => $result['lastname'],
+                'email' => $result['email'],
+                'driving_licence' => $result['driving_licence'],
+                'telephone' => $result['telephone'],
+            ];
         }
 
         $sort_order = [];

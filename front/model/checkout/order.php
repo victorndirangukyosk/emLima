@@ -16,10 +16,10 @@ class ModelCheckoutOrder extends Model {
 
         $log = new Log('error.log');
         $log->write('addorder 1');
-        /*TIME ZONE ISSUE*/
+        /* TIME ZONE ISSUE */
         $tz = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('P');
         $this->db->query("SET time_zone='$tz';");
-        /*TIME ZONE ISSUE*/
+        /* TIME ZONE ISSUE */
         $this->trigger->fire('pre.order.add', $stores);
         //print_r($data);die;
         //unset($this->session->data['order_id']);die;
@@ -35,8 +35,6 @@ class ModelCheckoutOrder extends Model {
                 $order_id = $this->session->data['order_id'][$key];
                 $log->write('addorder 2');
                 $this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET order_id='" . $order_id . "', invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int) $data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int) $data['customer_id'] . "', customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float) $data['total'] . "', latitude = '" . $data['latitude'] . "',longitude = '" . $data['longitude'] . "', affiliate_id = '" . (int) $data['affiliate_id'] . "',marketing_id = '" . (int) $data['marketing_id'] . "', tracking = '" . $this->db->escape($data['tracking']) . "', language_id = '" . (int) $data['language_id'] . "', currency_id = '" . (int) $data['currency_id'] . "', currency_code = '" . $this->db->escape($data['currency_code']) . "', currency_value = '" . (float) $data['currency_value'] . "', ip = '" . $this->db->escape($data['ip']) . "', forwarded_ip = '" . $this->db->escape($data['forwarded_ip']) . "', user_agent = '" . $this->db->escape($data['user_agent']) . "', accept_language = '" . $this->db->escape($data['accept_language']) . "', commission = '" . $this->db->escape($data['commission']) . "', fixed_commission = '" . $this->db->escape($data['fixed_commission']) . "',delivery_date = '" . $this->db->escape(date('Y-m-d', strtotime($data['delivery_date']))) . "',delivery_timeslot = '" . $this->db->escape($data['delivery_timeslot']) . "',  date_added = NOW(), date_modified = NOW()");
-
-
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
                         . "shipping_city_id = '" . $this->db->escape((array_key_exists('shipping_city_id', $data) ? $data['shipping_city_id'] : '')) . "', "
@@ -75,7 +73,6 @@ class ModelCheckoutOrder extends Model {
 
                 $this->session->data['order_id'][$data['store_id']] = $order_id;
 
-
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
                         . "shipping_city_id = '" . $this->db->escape($data['shipping_city_id']) . "', "
                         . "shipping_contact_no = '" . $this->db->escape($data['shipping_contact_no']) . "', "
@@ -112,14 +109,13 @@ class ModelCheckoutOrder extends Model {
     public function addMultiOrder($stores) {
 
         $log = new Log('error.log');
-        $log->write('addMultiOrder 1'); 
-        /*TIME ZONE ISSUE*/
+        $log->write('addMultiOrder 1');
+        /* TIME ZONE ISSUE */
         $tz = (new DateTime('now', new DateTimeZone('Africa/Nairobi')))->format('P');
         $this->db->query("SET time_zone='$tz';");
-        /*TIME ZONE ISSUE*/
+        /* TIME ZONE ISSUE */
         //$log->write($stores);
         $this->trigger->fire('pre.order.add', $stores);
-
 
         $orders = isset($this->session->data['order_id']);
 
@@ -127,20 +123,19 @@ class ModelCheckoutOrder extends Model {
         if ($orders) {
             foreach ($stores as $key => $data) {
                 //print_r($this->session->data['order_id']);die;
-            // echo "<pre>";print_r($key);die;
-            // echo "<pre>";print_r("UPDATE `" . DB_PREFIX . "order` SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . (int)  $order_id . "'");die;
+                // echo "<pre>";print_r($key);die;
+                // echo "<pre>";print_r("UPDATE `" . DB_PREFIX . "order` SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . (int)  $order_id . "'");die;
 
                 $this->deleteOrder($this->session->data['order_id'][$key]);
                 $order_id = $this->session->data['order_id'][$key];
 
                 $this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET order_id='" . $order_id . "', invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int) $data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int) $data['customer_id'] . "', customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "',shipping_method = '" . $this->db->escape($data['shipping_method']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float) $data['total'] . "', latitude = '" . $data['latitude'] . "',longitude = '" . $data['longitude'] . "', affiliate_id = '" . (int) $data['affiliate_id'] . "',marketing_id = '" . (int) $data['marketing_id'] . "', tracking = '" . $this->db->escape($data['tracking']) . "', language_id = '" . (int) $data['language_id'] . "', currency_id = '" . (int) $data['currency_id'] . "', currency_code = '" . $this->db->escape($data['currency_code']) . "', currency_value = '" . (float) $data['currency_value'] . "', ip = '" . $this->db->escape($data['ip']) . "', po_number = '" . $this->db->escape($data['po_number']) . "', forwarded_ip = '" . $this->db->escape($data['forwarded_ip']) . "', user_agent = '" . $this->db->escape($data['user_agent']) . "', accept_language = '" . $this->db->escape($data['accept_language']) . "', fixed_commission = '" . $this->db->escape($data['fixed_commission']) . "', commission = '" . $this->db->escape($data['commission']) . "',delivery_date = '" . $this->db->escape(date('Y-m-d', strtotime($data['delivery_date']))) . "',delivery_timeslot = '" . $this->db->escape($data['delivery_timeslot']) . "',  date_added = NOW(), date_modified = NOW(), login_latitude = '" . $this->db->escape($data['login_latitude']) . "', login_longitude = '" . $this->db->escape($data['login_longitude']) . "', login_mode = '" . $this->db->escape($data['login_mode']) . "'");
                 //cant place directly in insert , due to dependencies
-
-                 //ADDED FOR MULTI VENDOR ORDER
-                 if($order_id == NULL) {
+                //ADDED FOR MULTI VENDOR ORDER
+                if ($order_id == NULL) {
                     $order_id = $this->db->getLastId();
                     $this->session->data['order_id'][$key] = $order_id;
-                    }
+                }
 
                 // $order_total_value=0;
                 // $credit_total_value=0;
@@ -156,22 +151,17 @@ class ModelCheckoutOrder extends Model {
                 //             $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount deducted', amount = '" . (float) $tot['value'] . "', date_added = NOW()");
                 //             $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0 ,total='" . (float) ABS($tot['value']) . "'  WHERE order_id='" . (int)  $order_id . "'");
                 //             // console.log('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . (int)  $order_id . "'");
-                           
                 //         }
                 //     }
                 //     // if($tot['code']=='total')
                 //     // {
                 //     //     $order_total_value=$tot['value'];
                 //     // }
-
                 //   }
                 //   if($credit_total_value==$order_total_value)//credit amount and order total amount are same, then order is paid order
                 //   {
                 //     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . $order_id . "'");
                 //   }
-                
-                
-               
                 //ADDED FOR MULTI VENDOR ORDER
 
                 if ($this->session->data['adminlogin'] && $this->session->data['adminlogin'] == 1) {
@@ -210,9 +200,8 @@ class ModelCheckoutOrder extends Model {
                 if (isset($data['totals'])) {
                     foreach ($data['totals'] as $total) {
 
-                        if($total['code']=='total')
-                        {
-                            $value=$total['value'];
+                        if ($total['code'] == 'total') {
+                            $value = $total['value'];
                             // if(isset($credit_total_value))
                             // {
                             //     $value +=abs($credit_total_value);
@@ -220,17 +209,16 @@ class ModelCheckoutOrder extends Model {
                             if (isset($total['actual_value'])) {
                                 $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $value . "', `actual_value` = '" . (float) $total['actual_value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
                             } else {
-    
+
                                 $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $value . "', sort_order = '" . (int) $total['sort_order'] . "'");
                             }
-                        }
-                        else{
-                        if (isset($total['actual_value'])) {
-                            $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $total['value'] . "', `actual_value` = '" . (float) $total['actual_value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
                         } else {
+                            if (isset($total['actual_value'])) {
+                                $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $total['value'] . "', `actual_value` = '" . (float) $total['actual_value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
+                            } else {
 
-                            $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $total['value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
-                        }
+                                $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $total['value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
+                            }
                         }
                     }
                 }
@@ -245,7 +233,6 @@ class ModelCheckoutOrder extends Model {
                 // echo "<pre>";print_r($data);die;
                 $this->session->data['order_id'][$data['store_id']] = $order_id;
 
-
                 // $order_total_value=0;
                 // $credit_total_value=0;
                 //check wallet update
@@ -258,7 +245,6 @@ class ModelCheckoutOrder extends Model {
                 //         {
                 //             //as the same method is calling multiple times, delete if credit record is available
                 //         $this->db->query('DELETE FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $data['customer_id'] . "' and  order_id = '" . (int)  $order_id . "'");
-
                 //         $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $data['customer_id'] . "', order_id = '" . (int)  $order_id . "', description = 'Wallet amount deducted', amount = '" . (float) $tot['value'] . "', date_added = NOW()");
                 //         // $this->db->query("UPDATE `" . DB_PREFIX . "order` SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . (int)  $order_id . "'");
                 //         $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0 ,total='" . (float) ABS($tot['value']) . "'  WHERE order_id='" . (int)  $order_id . "'");
@@ -269,14 +255,12 @@ class ModelCheckoutOrder extends Model {
                 //     // {
                 //     //     $order_total_value=$tot['value'];
                 //     // }
-
                 //      //   if($credit_total_value==$order_total_value)//credit amount and order total amount are same, then order is paid order
                 // //   {
                 // //     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET paid='Y', amount_partialy_paid = 0  WHERE order_id='" . $order_id . "'");
                 // //   }
-
                 //   }
-               
+
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
                         . "shipping_city_id = '" . $this->db->escape((array_key_exists('shipping_city_id', $data) ? $data['shipping_city_id'] : '')) . "', "
@@ -314,9 +298,8 @@ class ModelCheckoutOrder extends Model {
 
                     foreach ($data['totals'] as $total) {
 
-                        if($total['code']=='total')
-                        {
-                            $value=$total['value'];
+                        if ($total['code'] == 'total') {
+                            $value = $total['value'];
                             // if(isset($credit_total_value))
                             // {
                             //     $value +=abs($credit_total_value);
@@ -324,19 +307,18 @@ class ModelCheckoutOrder extends Model {
                             if (isset($total['actual_value'])) {
                                 $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $value . "', `actual_value` = '" . (float) $total['actual_value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
                             } else {
-    
+
                                 $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $value . "', sort_order = '" . (int) $total['sort_order'] . "'");
                             }
-                        }
-                        else{
-                        if (isset($total['actual_value'])) {
-
-                            $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $total['value'] . "', `actual_value` = '" . (float) $total['actual_value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
                         } else {
+                            if (isset($total['actual_value'])) {
 
-                            $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $total['value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
+                                $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $total['value'] . "', `actual_value` = '" . (float) $total['actual_value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
+                            } else {
+
+                                $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $total['value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
+                            }
                         }
-                    }
                     }
                 }
             }
@@ -514,8 +496,8 @@ class ModelCheckoutOrder extends Model {
                 'delivery_timeslot' => $order_query->row['delivery_timeslot'],
                 'dropoff_latitude' => $order_query->row['latitude'],
                 'dropoff_longitude' => $order_query->row['longitude'],
-                'amount_partialy_paid'=> $order_query->row['amount_partialy_paid'],
-                'paid'=> $order_query->row['paid']
+                'amount_partialy_paid' => $order_query->row['amount_partialy_paid'],
+                'paid' => $order_query->row['paid']
                     /* 'date_modified' => $order_query->row['date_modified'],
                       'date_added' => $order_query->row['date_added'] */
             );
@@ -525,7 +507,6 @@ class ModelCheckoutOrder extends Model {
     }
 
     public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = true, $added_by = '', $added_by_role = '', $other_vendor_terms = null, $paid = '') {//dont pass default valiue to paid
-
         //$notify = true;
         $log = new Log('error.log');
         $log->write('mod loop addOrderHistory' . $order_id);
@@ -568,7 +549,6 @@ class ModelCheckoutOrder extends Model {
             if (!$safe) {
                 $log->write('addOrderHistory not safe');
                 $status = false;
-
 
                 if ($order_info['customer_id']) {
 
@@ -654,38 +634,29 @@ class ModelCheckoutOrder extends Model {
                     $log->write("deliverSystemStatus elsex");
                 }
             }
-            
+
             if ($other_vendor_terms != NULL) {
-            $log->write('accept_vendor_terms');
-            $log->write($other_vendor_terms);
-            $log->write('accept_vendor_terms');
-                if($paid!='')
-                {
-                $log->write($paid.'PAID VALUE-1');    
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', vendor_terms_cod ='" . (int) $other_vendor_terms . "', paid ='" .  $paid . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
-                
-                }
-                else {
-                $log->write($paid.'PAID VALUE-2');    
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', vendor_terms_cod ='" . (int) $other_vendor_terms . "',  date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
-                    
+                $log->write('accept_vendor_terms');
+                $log->write($other_vendor_terms);
+                $log->write('accept_vendor_terms');
+                if ($paid != '') {
+                    $log->write($paid . 'PAID VALUE-1');
+                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', vendor_terms_cod ='" . (int) $other_vendor_terms . "', paid ='" . $paid . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+                } else {
+                    $log->write($paid . 'PAID VALUE-2');
+                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', vendor_terms_cod ='" . (int) $other_vendor_terms . "',  date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
                 }
             } else {
-                if($paid!='')
-                {
-                $log->write($paid.'PAID VALUE-3');    
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', paid ='" .  $paid . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");    
-            
+                if ($paid != '') {
+                    $log->write($paid . 'PAID VALUE-3');
+                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "', paid ='" . $paid . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+                } else {
+                    $log->write($paid . 'PAID VALUE-4');
+                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "',  date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+                }
             }
-            else {
-                $log->write($paid.'PAID VALUE-4');    
-                $this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int) $order_status_id . "', order_pdf_link ='" . $pdf_link . "',  date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");    
-
-            }
-        }
 
             $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
-
 
             // If current order status is not processing or complete but new status is processing or complete then commence completing the order
             //print_r($order_info['order_status_id']);
@@ -694,7 +665,6 @@ class ModelCheckoutOrder extends Model {
 
                 // Stock subtraction
                 $order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
-
 
                 foreach ($order_product_query->rows as $order_product) {
                     $this->db->query("UPDATE " . DB_PREFIX . "product_to_store SET quantity = (quantity - " . (float) $order_product['quantity'] . ") WHERE product_store_id = '" . (int) $order_product['product_id'] . "' AND subtract_quantity = '1'");
@@ -762,26 +732,21 @@ class ModelCheckoutOrder extends Model {
                 //check if payment paid by wallet
                 $this->load->model('account/order');
                 // $totals_info = $this->model_account_order->getOrderTotals($order_id);
-                  $credit_refund = $this->model_account_order->getOrderCreditAmount($order_id);
-     
-                
+                $credit_refund = $this->model_account_order->getOrderCreditAmount($order_id);
+
                 // foreach ($totals_info as $total) {           
-    
                 //     if ('credit' == $total['code']) {
                 //         $credit_refund = $total['value'];
                 //     }
-                     
                 // }
                 // echo "<pre>";print_r($totals_info);    
-                if($credit_refund<0)//as the order is cancelled, if  any cart amount deducted, then need to rever it
-                {
+                if ($credit_refund < 0) {//as the order is cancelled, if  any cart amount deducted, then need to rever it
                     // echo "<pre>";print_r($totals_info);die;                   
                     $this->load->model('total/credit');
-                     $this->model_total_credit->addOnlyCredit($order_info['customer_id'],'Refund of order #'.$order_id,abs($credit_refund),$order_id);
-                }    
+                    $this->model_total_credit->addOnlyCredit($order_info['customer_id'], 'Refund of order #' . $order_id, abs($credit_refund), $order_id);
+                }
                 //  echo "<pre>";print_r('$totals_info');die;
                 //end of wallet payment check
-
                 //check if payment done via iugu then call refund API
                 if ($order_info['payment_code'] == 'iugu_credit_card') {
                     //refund successfull
@@ -804,365 +769,355 @@ class ModelCheckoutOrder extends Model {
             //this is solely used to send mails
             //if ( in_array( $order_status_id, array_merge( $this->config->get( 'config_processing_status' ), $this->config->get( 'config_complete_status' ) ) ) ) {
             try {
-            if ($notify) {
-
-                //this is solely used to send mails
-
-                $order_status = $this->db->query("SELECT name FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int) $order_status_id . "' AND language_id = '" . (int) $order_info['language_id'] . "'");
-
-                if ($order_status->num_rows) {
-                    $order_status = $order_status->row['name'];
-                } else {
-                    $order_status = '';
-                }
-
-                // Account Href
-                $order_href = '';
-                $order_pdf_href = '';
-
-                if ($order_info['customer_id']) {
-                    $order_href = $order_info['store_url'] . 'index.php?path=account/order/info&order_id=' . $order_info['order_id'];
-                }
-
-                //Address Shipping and Payment
-                $totals = array();
-                $tax_amount = 0;
-
-                if (strlen($order_info['shipping_name']) <> 0) {
-                    $address = $order_info['shipping_name'] . '<br />' . $order_info['shipping_address'] . '<br /><b>Contact No.:</b> ' . $order_info['shipping_contact_no'];
-                } else {
-                    $address = '';
-                }
-
-                $payment_address = '';
-
-                $order_total = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int) $order_info['order_id'] . "'");
-
-                foreach ($order_total->rows as $total) {
-                    $totals[$total['code']][] = array(
-                        'title' => $total['title'],
-                        'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                        'value' => $total['value']
-                    );
-
-                    if ($total['code'] == 'tax') {
-                        $tax_amount += $total['value'];
-                    }
-                }
-
-                $log = new Log('error.log');
-
-                $this->load->model('account/order');
-
-                $special = NULL;
-
-                $data = array(
-                    'template_id' => 'order_' . (int) $order_status_id,
-                    'order_info' => $order_info,
-                    'address' => $address,
-                    'payment_address' => $payment_address,
-                    'special' => $special,
-                    'order_href' => $order_href,
-                    'order_pdf_href' => $order_pdf_href,
-                    'order_status' => $order_status,
-                    'totals' => $totals,
-                    'tax_amount' => $tax_amount,
-                    'order_id' => $order_id,
-                    'invoice_no' => !empty($invoice_no) ? $invoice_no : ''
-                );
-
-
-                $getTotal = $order_total->rows;
-
-                $textData = array(
-                    'order_info' => $order_info,
-                    'order_id' => $order_id,
-                    'order_status' => $order_status,
-                    'comment' => $comment,
-                    'notify' => $notify,
-                    'getProdcuts' => $this->getOrderProducts($order_id),
-                    'getVouchers' => array(),
-                    'getTotal' => $getTotal
-                );
-
-                //$text = $this->emailtemplate->getText( 'Order', 'order', $textData );
-                //Send Email
-                //if ( ( !$order_info['order_status_id'] && $order_status_id ) || ( $order_info['order_status_id'] && $order_status_id && $notify ) ) {
                 if ($notify) {
 
-                    $log->write('in if');
+                    //this is solely used to send mails
 
+                    $order_status = $this->db->query("SELECT name FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int) $order_status_id . "' AND language_id = '" . (int) $order_info['language_id'] . "'");
 
-                    $log->write("cust orderData");
-                    //$log->write($data);
-
-                    /* customer mail/sms/notificaiton start */
-                    $subject = $this->emailtemplate->getSubject('OrderAll', 'order_' . (int) $order_status_id, $data);
-                    $message = $this->emailtemplate->getMessage('OrderAll', 'order_' . (int) $order_status_id, $data);
-                    $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_' . (int) $order_status_id, $data);
-
-                    //$log->write($message);
-                    //echo "<pre>";print_r($message);die;
-                    // try{
-                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
-
-
-                        $mail = new mail($this->config->get('config_mail'));
-                        $mail->setTo($order_info['email']);
-                        $mail->setFrom($this->config->get('config_from_email'));
-                        $mail->setSender($order_info['store_name']);
-                        $mail->setSubject($subject);
-                        $mail->setHtml($message);
-                        //$mail->setText( $text );
-                        $mail->send();
-
-                        $log->write('mail end');
-                    }
-                    // }
-                    // catch(exception $ex)
-                    // {
-                    //     $log->write('Order History Mail Error');
-                    //     $log->write($ex);
-                    // }
-
-
-
-                    if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
-
-                        $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
+                    if ($order_status->num_rows) {
+                        $order_status = $order_status->row['name'];
+                    } else {
+                        $order_status = '';
                     }
 
-                    $log->write('outside mobi noti');
-                    if ($this->emailtemplate->getNotificationEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
+                    // Account Href
+                    $order_href = '';
+                    $order_pdf_href = '';
 
-                        $log->write('status enabled of mobi noti');
-                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('OrderAll', 'order_' . (int) $order_status_id, $data);
+                    if ($order_info['customer_id']) {
+                        $order_href = $order_info['store_url'] . 'index.php?path=account/order/info&order_id=' . $order_info['order_id'];
+                    }
 
-                        //$log->write($mobile_notification_template);
+                    //Address Shipping and Payment
+                    $totals = array();
+                    $tax_amount = 0;
 
-                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('OrderAll', 'order_' . (int) $order_status_id, $data);
+                    if (strlen($order_info['shipping_name']) <> 0) {
+                        $address = $order_info['shipping_name'] . '<br />' . $order_info['shipping_address'] . '<br /><b>Contact No.:</b> ' . $order_info['shipping_contact_no'];
+                    } else {
+                        $address = '';
+                    }
 
-                        //$log->write($mobile_notification_title);
-                        // customer push notitification start
+                    $payment_address = '';
 
-                        if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
+                    $order_total = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int) $order_info['order_id'] . "'");
 
-                            $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-                            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                    foreach ($order_total->rows as $total) {
+                        $totals[$total['code']][] = array(
+                            'title' => $total['title'],
+                            'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                            'value' => $total['value']
+                        );
 
-                            $this->saveVendorNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
-                        } else {
-                            $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+                        if ($total['code'] == 'tax') {
+                            $tax_amount += $total['value'];
                         }
-
-                        // customer push notitification end
-
-                        /* $temporaryVendorInfo = $this->db->query('select * from '.DB_PREFIX.'order LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = '.DB_PREFIX.'order.store_id) WHERE '.DB_PREFIX.'order.store_id="'.$order_info['store_id'].'" AND order_id="'.$order_id.'"')->row;
-
-                          $vendorData = $this->getVendorDetails($temporaryVendorInfo['vendor_id']);
-
-                          $log->write($vendorData);
-
-                          if(isset($vendorData['device_id']) && strlen($vendorData['device_id']) > 0 ) {
-
-                          $log->write('device id set');
-                          $ret =  $this->emailtemplate->sendPushNotification($temporaryVendorInfo['vendor_id'],$vendorData['device_id'],$order_id,$order_info['store_id'],$mobile_notification_template,$mobile_notification_title);
-
-                          $this->saveVendorNotification($temporaryVendorInfo['vendor_id'],$vendorData['device_id'],$order_id,$mobile_notification_template,$mobile_notification_title);
-                          } else {
-                          $log->write('device id not set');
-                          }
-                         */
-                        // vendor push notitification end
                     }
 
-                    /* customer mail/sms/notificaiton end */
-
-                    /* vendor mail sending */
-
-                    $tempVendorInfo = $this->db->query('select * from ' . DB_PREFIX . 'order LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . 'order.store_id) WHERE ' . DB_PREFIX . 'order.store_id="' . $order_info['store_id'] . '" AND order_id="' . $order_id . '"')->row;
-
-                    $vendorData = $this->getVendorDetails($tempVendorInfo['vendor_id']);
-
-
+                    $log = new Log('error.log');
 
                     $this->load->model('account/order');
 
-                    $store_details = $this->model_account_order->getStoreById($order_info['store_id']);
+                    $special = NULL;
 
+                    $data = array(
+                        'template_id' => 'order_' . (int) $order_status_id,
+                        'order_info' => $order_info,
+                        'address' => $address,
+                        'payment_address' => $payment_address,
+                        'special' => $special,
+                        'order_href' => $order_href,
+                        'order_pdf_href' => $order_pdf_href,
+                        'order_status' => $order_status,
+                        'totals' => $totals,
+                        'tax_amount' => $tax_amount,
+                        'order_id' => $order_id,
+                        'invoice_no' => !empty($invoice_no) ? $invoice_no : '',
+                        'order_products_list' => $this->load->controller('emailtemplate/emailtemplate/getOrderProductListTemplate', $order_info)
+                    );
 
-                    // checking if vendor mail is on
+                    $getTotal = $order_total->rows;
 
-
-                    $log->write("vendorData");
-                    $log->write($vendorData);
-                    $log->write($store_details['email']);
-                    $log->write($store_details['order_notification_emails']);
-                    $log->write($vendorData['email']);
-                    $log->write($vendorData['order_notification_emails']);
-                    $log->write($order_status_id);
+                    $textData = array(
+                        'order_info' => $order_info,
+                        'order_id' => $order_id,
+                        'order_status' => $order_status,
+                        'comment' => $comment,
+                        'notify' => $notify,
+                        'getProdcuts' => $this->getOrderProducts($order_id),
+                        'getVouchers' => array(),
+                        'getTotal' => $getTotal
+                    );
 
                     //$text = $this->emailtemplate->getText( 'Order', 'order', $textData );
+                    //Send Email
+                    //if ( ( !$order_info['order_status_id'] && $order_status_id ) || ( $order_info['order_status_id'] && $order_status_id && $notify ) ) {
+                    if ($notify) {
 
-                    $vendor_sms_message = $this->emailtemplate->getSmsMessage('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
+                        $log->write('in if');
 
+                        $log->write("cust orderData");
+                        //$log->write($data);
 
-                    if (isset($vendorData['email']) && $this->emailtemplate->getEmailEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id) && (in_array($order_status_id, $this->config->get('config_processing_status')) || in_array($order_status_id, $this->config->get('config_complete_status')))) {
+                        /* customer mail/sms/notificaiton start */
+                        $subject = $this->emailtemplate->getSubject('OrderAll', 'order_' . (int) $order_status_id, $data);
+                        $message = $this->emailtemplate->getMessage('OrderAll', 'order_' . (int) $order_status_id, $data);
+                        $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_' . (int) $order_status_id, $data);
 
-                        // 7 merchant mail
-                        $log->write('vendot if 1');
-                        $vendorData['order_id'] = $order_id;
-                        $vendorData['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
-
-                        $log->write('1');
-                        //$subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_'. (int) $order_status_id, $vendorData);
-                        $subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
-
-                        $log->write('2');
-                        //$message = $this->emailtemplate->getMessage('VendorOrder', 'vendororder_'. (int) $order_status_id, $vendorData);
-                        $message = $this->emailtemplate->getMessage('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
-
-                        $mail = new mail($this->config->get('config_mail'));
+                        //$log->write($message);
+                        //echo "<pre>";print_r($message);die;
+                        // try{
+                        if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
 
-                        $mail->setTo($vendorData['email']);
-                        $mail->setCc($vendorData['order_notification_emails']);
-                        $mail->setFrom($this->config->get('config_from_email'));
-                        $mail->setSender($this->config->get('config_name'));
-                        $mail->setSubject($subject);
-                        $mail->setHtml($message);
+                            $mail = new mail($this->config->get('config_mail'));
+                            $mail->setTo($order_info['email']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSender($order_info['store_name']);
+                            $mail->setSubject($subject);
+                            $mail->setHtml($message);
+                            //$mail->setText( $text );
+                            $mail->send();
 
-                        $mail->send();
-
-                        $log->write("end");
-                    }
-
-                    if (isset($store_details['email']) && $this->emailtemplate->getEmailEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id)) {
-                        // 7 merchant mail
-                        $log->write('vendot if 2');
-                        $vendorData['order_id'] = $order_id;
-                        $vendorData['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
-                        $data['order_id'] = $order_id;
-                        $data['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
-                        $data['order_href'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
-                        $data['vendor_order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
-                        $log->write('1');
-                        //$subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_'. (int) $order_status_id, $vendorData);
-                        $subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
-
-                        $log->write('2');
-                        //$message = $this->emailtemplate->getMessage('VendorOrder', 'vendororder_'. (int) $order_status_id, $vendorData);
-                        $message = $this->emailtemplate->getMessage('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
-
-                        $mail = new mail($this->config->get('config_mail'));
+                            $log->write('mail end');
+                        }
+                        // }
+                        // catch(exception $ex)
+                        // {
+                        //     $log->write('Order History Mail Error');
+                        //     $log->write($ex);
+                        // }
 
 
-                        /* $mail->setTo($store_details['email']);
 
-                          $mail->setFrom($this->config->get('config_from_email'));
+                        if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
-
-                          $mail->setSender($this->config->get('config_name'));
-
-
-                          $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
-
-
-                          $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8')); */
-                        $mail->setTo($store_details['email']);
-                        $mail->setCc($store_details['order_notification_emails']);
-                        $mail->setFrom($this->config->get('config_from_email'));
-                        $mail->setSender($this->config->get('config_name'));
-                        $mail->setSubject($subject);
-                        $mail->setHtml($message);
-                        //$mail->setText( $text );
-                        $mail->send();
-
-                        $log->write("end");
-                    }
-
-                    $log->write('vendro end');
-
-
-                    if ($this->emailtemplate->getNotificationEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id)) {
-
-                        $log->write('status enabled of mobi noti');
-
-                        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
-
-                        //$log->write($mobile_notification_template);
-
-                        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
-
-                        //$log->write($mobile_notification_title);
-
-                        $temporaryVendorInfo = $this->db->query('select * from ' . DB_PREFIX . 'order LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . 'order.store_id) WHERE ' . DB_PREFIX . 'order.store_id="' . $order_info['store_id'] . '" AND order_id="' . $order_id . '"')->row;
-
-                        $vendorData = $this->getVendorDetails($temporaryVendorInfo['vendor_id']);
-
-                        //$log->write($vendorData);
-
-                        if (isset($vendorData['device_id']) && strlen($vendorData['device_id']) > 0) {
-
-                            $log->write('VENDOR MOBILE PUSH NOTIFICATION device id set front.model.checkout.order');
-
-                            $notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
-
-                            $sen['notification_id'] = $notification_id;
-                            $log->write('title:' . $mobile_notification_title);
-                            $log->write('template:' . $mobile_notification_template);
-                            $log->write('order status id:' . $order_status_id);
-
-                            $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, $sen);
-                        } else {
-                            $log->write('VENDOR MOBILE PUSH NOTIFICATION device id not set front.model.checkout.order');
+                            $ret = $this->emailtemplate->sendmessage($order_info['telephone'], $sms_message);
                         }
 
-                        // vendor push notitification end 
+                        $log->write('outside mobi noti');
+                        if ($this->emailtemplate->getNotificationEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
+
+                            $log->write('status enabled of mobi noti');
+                            $mobile_notification_template = $this->emailtemplate->getNotificationMessage('OrderAll', 'order_' . (int) $order_status_id, $data);
+
+                            //$log->write($mobile_notification_template);
+
+                            $mobile_notification_title = $this->emailtemplate->getNotificationTitle('OrderAll', 'order_' . (int) $order_status_id, $data);
+
+                            //$log->write($mobile_notification_title);
+                            // customer push notitification start
+
+                            if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
+
+                                $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                                $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+
+                                $this->saveVendorNotification($order_info['customer_id'], $customer_info['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
+                            } else {
+                                $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+                            }
+
+                            // customer push notitification end
+
+                            /* $temporaryVendorInfo = $this->db->query('select * from '.DB_PREFIX.'order LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = '.DB_PREFIX.'order.store_id) WHERE '.DB_PREFIX.'order.store_id="'.$order_info['store_id'].'" AND order_id="'.$order_id.'"')->row;
+
+                              $vendorData = $this->getVendorDetails($temporaryVendorInfo['vendor_id']);
+
+                              $log->write($vendorData);
+
+                              if(isset($vendorData['device_id']) && strlen($vendorData['device_id']) > 0 ) {
+
+                              $log->write('device id set');
+                              $ret =  $this->emailtemplate->sendPushNotification($temporaryVendorInfo['vendor_id'],$vendorData['device_id'],$order_id,$order_info['store_id'],$mobile_notification_template,$mobile_notification_title);
+
+                              $this->saveVendorNotification($temporaryVendorInfo['vendor_id'],$vendorData['device_id'],$order_id,$mobile_notification_template,$mobile_notification_title);
+                              } else {
+                              $log->write('device id not set');
+                              }
+                             */
+                            // vendor push notitification end
+                        }
+
+                        /* customer mail/sms/notificaiton end */
+
+                        /* vendor mail sending */
+
+                        $tempVendorInfo = $this->db->query('select * from ' . DB_PREFIX . 'order LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . 'order.store_id) WHERE ' . DB_PREFIX . 'order.store_id="' . $order_info['store_id'] . '" AND order_id="' . $order_id . '"')->row;
+
+                        $vendorData = $this->getVendorDetails($tempVendorInfo['vendor_id']);
+
+                        $this->load->model('account/order');
+
+                        $store_details = $this->model_account_order->getStoreById($order_info['store_id']);
+
+                        // checking if vendor mail is on
+
+
+                        $log->write("vendorData");
+                        $log->write($vendorData);
+                        $log->write($store_details['email']);
+                        $log->write($store_details['order_notification_emails']);
+                        $log->write($vendorData['email']);
+                        $log->write($vendorData['order_notification_emails']);
+                        $log->write($order_status_id);
+
+                        //$text = $this->emailtemplate->getText( 'Order', 'order', $textData );
+
+                        $vendor_sms_message = $this->emailtemplate->getSmsMessage('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
+
+                        if (isset($vendorData['email']) && $this->emailtemplate->getEmailEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id) && (in_array($order_status_id, $this->config->get('config_processing_status')) || in_array($order_status_id, $this->config->get('config_complete_status')))) {
+
+                            // 7 merchant mail
+                            $log->write('vendot if 1');
+                            $vendorData['order_id'] = $order_id;
+                            $vendorData['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
+
+                            $log->write('1');
+                            //$subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_'. (int) $order_status_id, $vendorData);
+                            $subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
+
+                            $log->write('2');
+                            //$message = $this->emailtemplate->getMessage('VendorOrder', 'vendororder_'. (int) $order_status_id, $vendorData);
+                            $message = $this->emailtemplate->getMessage('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
+
+                            $mail = new mail($this->config->get('config_mail'));
+
+                            $mail->setTo($vendorData['email']);
+                            $mail->setCc($vendorData['order_notification_emails']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setSubject($subject);
+                            $mail->setHtml($message);
+
+                            $mail->send();
+
+                            $log->write("end");
+                        }
+
+                        if (isset($store_details['email']) && $this->emailtemplate->getEmailEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id)) {
+                            // 7 merchant mail
+                            $log->write('vendot if 2');
+                            $vendorData['order_id'] = $order_id;
+                            $vendorData['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
+                            $data['order_id'] = $order_id;
+                            $data['order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
+                            $data['order_href'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
+                            $data['vendor_order_link'] = HTTPS_ADMIN . 'index.php?path=sale/order/info&order_id=' . $order_id;
+                            $log->write('1');
+                            //$subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_'. (int) $order_status_id, $vendorData);
+                            $subject = $this->emailtemplate->getSubject('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
+
+                            $log->write('2');
+                            //$message = $this->emailtemplate->getMessage('VendorOrder', 'vendororder_'. (int) $order_status_id, $vendorData);
+                            $message = $this->emailtemplate->getMessage('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
+
+                            $mail = new mail($this->config->get('config_mail'));
+
+                            /* $mail->setTo($store_details['email']);
+
+                              $mail->setFrom($this->config->get('config_from_email'));
+
+
+                              $mail->setSender($this->config->get('config_name'));
+
+
+                              $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+
+
+                              $mail->setHtml(html_entity_decode(strip_tags($message), ENT_QUOTES, 'UTF-8')); */
+                            $mail->setTo($store_details['email']);
+                            $mail->setCc($store_details['order_notification_emails']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setSubject($subject);
+                            $mail->setHtml($message);
+                            //$mail->setText( $text );
+                            $mail->send();
+
+                            $log->write("end");
+                        }
+
+                        $log->write('vendro end');
+
+                        if ($this->emailtemplate->getNotificationEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id)) {
+
+                            $log->write('status enabled of mobi noti');
+
+                            $mobile_notification_template = $this->emailtemplate->getNotificationMessage('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
+
+                            //$log->write($mobile_notification_template);
+
+                            $mobile_notification_title = $this->emailtemplate->getNotificationTitle('VendorOrder', 'vendororder_' . (int) $order_status_id, $data);
+
+                            //$log->write($mobile_notification_title);
+
+                            $temporaryVendorInfo = $this->db->query('select * from ' . DB_PREFIX . 'order LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . 'order.store_id) WHERE ' . DB_PREFIX . 'order.store_id="' . $order_info['store_id'] . '" AND order_id="' . $order_id . '"')->row;
+
+                            $vendorData = $this->getVendorDetails($temporaryVendorInfo['vendor_id']);
+
+                            //$log->write($vendorData);
+
+                            if (isset($vendorData['device_id']) && strlen($vendorData['device_id']) > 0) {
+
+                                $log->write('VENDOR MOBILE PUSH NOTIFICATION device id set front.model.checkout.order');
+
+                                $notification_id = $this->saveVendorNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $mobile_notification_template, $mobile_notification_title);
+
+                                $sen['notification_id'] = $notification_id;
+                                $log->write('title:' . $mobile_notification_title);
+                                $log->write('template:' . $mobile_notification_template);
+                                $log->write('order status id:' . $order_status_id);
+
+                                $ret = $this->emailtemplate->sendOrderVendorPushNotification($temporaryVendorInfo['vendor_id'], $vendorData['device_id'], $order_id, $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, $sen);
+                            } else {
+                                $log->write('VENDOR MOBILE PUSH NOTIFICATION device id not set front.model.checkout.order');
+                            }
+
+                            // vendor push notitification end 
+                        }
+
+                        if ($this->emailtemplate->getSmsEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id)) {
+
+                            $ret = $this->emailtemplate->sendmessage($store_details['telephone'], $vendor_sms_message);
+                        }
+
+                        $log->write('vendro end 1');
+                        /* vendor mail end */
+
+
+                        /* if ( $this->config->get( 'config_order_mail' ) ) {
+                          if ( !isset( $mail ) ) {
+                          $mail = new mail( $this->config->get( 'config_mail' ) );
+                          $mail->setTo( $order_info['email'] );
+                          $mail->setFrom( $this->config->get('config_from_email') );
+                          $mail->setSender( $order_info['store_name'] );
+                          }
+
+                          $mail->setHTML( $message );
+
+
+                          //$mail->setText( $text );
+                          $mail->setTo( $this->config->get( 'config_email' ) );
+                          $mail->send();
+
+                          $emails = explode( ',', $this->config->get( 'config_alert_emails' ) );
+
+                          foreach ( $emails as $email ) {
+                          if ( filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+                          $mail->setTo( $email );
+                          $mail->send();
+                          }
+                          }
+                          } */
                     }
-
-                    if ($this->emailtemplate->getSmsEnabled('VendorOrder', 'vendororder_' . (int) $order_status_id)) {
-
-                        $ret = $this->emailtemplate->sendmessage($store_details['telephone'], $vendor_sms_message);
-                    }
-
-                    $log->write('vendro end 1');
-                    /* vendor mail end */
-
-
-                    /* if ( $this->config->get( 'config_order_mail' ) ) {
-                      if ( !isset( $mail ) ) {
-                      $mail = new mail( $this->config->get( 'config_mail' ) );
-                      $mail->setTo( $order_info['email'] );
-                      $mail->setFrom( $this->config->get('config_from_email') );
-                      $mail->setSender( $order_info['store_name'] );
-                      }
-
-                      $mail->setHTML( $message );
-
-
-                      //$mail->setText( $text );
-                      $mail->setTo( $this->config->get( 'config_email' ) );
-                      $mail->send();
-
-                      $emails = explode( ',', $this->config->get( 'config_alert_emails' ) );
-
-                      foreach ( $emails as $email ) {
-                      if ( filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
-                      $mail->setTo( $email );
-                      $mail->send();
-                      }
-                      }
-                      } */
                 }
+            } catch (exception $ex) {
+                $log->write('Order History Mail Error');
+                $log->write($ex);
             }
-            }
-            catch(exception $ex)
-            {
-            $log->write('Order History Mail Error');
-            $log->write($ex);
-            }
-            
+
             $this->load->model('account/activity');
 
             if (in_array($order_status_id, $this->config->get('config_complete_status'))) {
@@ -1330,7 +1285,6 @@ class ModelCheckoutOrder extends Model {
 
                             $creditDescription = sprintf($this->language->get('text_coupon_order_id'), $order_info['order_id']);
 
-
                             $log->write('coupon cashback');
 
                             $log->write($points);
@@ -1476,7 +1430,6 @@ class ModelCheckoutOrder extends Model {
     public function getOrderDetailIugu($order_id) {
 
         $log = new Log('error.log');
-
 
         $log->write('in igi constant');
         $log->write("SELECT * FROM `" . DB_PREFIX . "order_iugu` WHERE `order_id` = " . (int) $order_id);
@@ -1630,7 +1583,6 @@ class ModelCheckoutOrder extends Model {
 
             $log->write("inside createDeliveryRequest");
 
-
             $data['products']['products'] = [];
             $weight = 0;
 
@@ -1693,7 +1645,6 @@ class ModelCheckoutOrder extends Model {
 
             //$deliverAddress = $order_info['shipping_flat_number'].", ". $order_info['shipping_building_name'].", ".$order_info['shipping_landmark'];
             $deliverAddress = $order_info['shipping_flat_number'] . ", " . $order_info['shipping_landmark'];
-
 
             $this->load->model('sale/order');
 
@@ -1764,7 +1715,6 @@ class ModelCheckoutOrder extends Model {
                 'total_type' => $total_type,
             ];
 
-
             $data['email'] = $this->config->get('config_delivery_username');
             $data['password'] = $this->config->get('config_delivery_secret');
             $response = $this->load->controller('deliversystem/deliversystem/getToken', $data);
@@ -1820,7 +1770,6 @@ class ModelCheckoutOrder extends Model {
             $log->write("response true");
             $log->write($data);
 
-
             $respon = $this->load->controller('deliversystem/deliversystem/updateCancelledOrder', $data);
         }
     }
@@ -1829,7 +1778,6 @@ class ModelCheckoutOrder extends Model {
         $refundToCustomerWallet = false;
 
         $allowedPaymentMethods = $this->config->get('config_payment_methods_status');
-
 
         if (is_array($allowedPaymentMethods) && count($allowedPaymentMethods) > 0) {
             foreach ($allowedPaymentMethods as $method) {
@@ -2149,6 +2097,10 @@ class ModelCheckoutOrder extends Model {
         $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
         $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET parent_approval = '" . $parent_approval . "',head_chef = '" . $head_chef . "',procurement = '" . $procurement . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
+    }
+
+    public function UpdateOrderProcessingDetails($order_id, $order_processing_group_id, $order_processor_id) {
+        $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET order_processing_group_id="' . $order_processing_group_id . '", order_processor_id="' . $order_processor_id . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
     }
 
 }

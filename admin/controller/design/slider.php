@@ -278,6 +278,8 @@ class ControllerDesignSlider extends Controller
             $data['sliders'][] = [
                 'slider_id' => $result['slider_id'],
                 'name' => $result['name'],
+                'description' => $result['description'],
+                'link' => $result['link'],
                 'store_name' => $result['store_name'],
                 'date_start' => date($this->language->get('date_format_short'), strtotime($result['date_start'])),
                 'date_end' => date($this->language->get('date_format_short'), strtotime($result['date_end'])),
@@ -516,7 +518,7 @@ class ControllerDesignSlider extends Controller
             $slider_info = $this->model_design_slider->getslider($this->request->get['slider_id']);
         }
 
-        //echo "<pre>";print_r($slider_info);die;
+        // echo "<pre>";print_r($slider_info);die;
 
         if (isset($this->request->post['name'])) {
             $data['name'] = $this->request->post['name'];
@@ -532,6 +534,22 @@ class ControllerDesignSlider extends Controller
             $data['store'] = $slider_info['store_name']; //get storename by id
         } else {
             $data['store'] = '';
+        }
+
+        if (isset($this->request->post['description'])) {
+            $data['description'] = $this->request->post['description'];
+        } elseif (!empty($slider_info)) {
+            $data['description'] = $slider_info['description']; //get storename by id
+        } else {
+            $data['description'] = '';
+        }
+
+        if (isset($this->request->post['link'])) {
+            $data['link'] = $this->request->post['link'];
+        } elseif (!empty($slider_info)) {
+            $data['link'] = $slider_info['link']; //get storename by id
+        } else {
+            $data['link'] = '';
         }
 
         if (isset($this->request->post['store_id'])) {

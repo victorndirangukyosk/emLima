@@ -1251,6 +1251,7 @@ class ControllerSaleOrder extends Controller {
         ];
 
         $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
+        $data['dispatchplanning'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'], 'SSL');
         $data['invoicepdf'] = $this->url->link('sale/order/invoicepdf', 'token=' . $this->session->data['token'], 'SSL');
         // $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
         $data['shipping'] = $this->url->link('sale/order/shippingNote', 'token=' . $this->session->data['token'], 'SSL');
@@ -1393,6 +1394,8 @@ class ControllerSaleOrder extends Controller {
         $data['entry_date_modified'] = $this->language->get('entry_date_modified');
         $data['entry_store_name'] = $this->language->get('entry_store_name');
         $data['button_invoice_print'] = $this->language->get('button_invoice_print');
+        $data['button_status_update'] = 'Update Status To Order Processing.';
+        $data['button_status_update_transit'] = 'Update Order Status To In Transit.';
         $data['button_shipping_print'] = $this->language->get('button_shipping_print');
         $data['button_add'] = $this->language->get('button_add');
         $data['button_edit'] = $this->language->get('button_edit');
@@ -4669,6 +4672,9 @@ class ControllerSaleOrder extends Controller {
             $order_info = $this->model_sale_order->getOrder($order_id);
             //check vendor order
 
+            if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] != 4 && $order_info['order_status_id'] != 5) {
+                $this->response->redirect($this->url->link('error/not_found'));
+            }
             if ($this->user->isVendor()) {
                 if (!$this->isVendorOrder($order_id)) {
                     $this->response->redirect($this->url->link('error/not_found'));
@@ -5197,6 +5203,24 @@ class ControllerSaleOrder extends Controller {
                 $data['delivery_executive_name'] = $delivery_executive_name;
                 $data['delivery_executive_phone'] = $delivery_executive_phone;
 
+                $this->load->model('orderprocessinggroup/orderprocessinggroup');
+                $this->load->model('orderprocessinggroup/orderprocessor');
+
+                $order_processing_group_details = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroup($order_info['order_processing_group_id']);
+                $order_processor = $this->model_orderprocessinggroup_orderprocessor->getOrderProcessor($order_info['order_processor_id']);
+
+                if (is_array($order_processing_group_details) && $order_processing_group_details != NULL) {
+                    $data['order_processing_group_details'] = $order_processing_group_details;
+                } else {
+                    $data['order_processing_group_details'] = NULL;
+                }
+
+                if (is_array($order_processor) && $order_processor != NULL) {
+                    $data['order_processor'] = $order_processor;
+                } else {
+                    $data['order_processor'] = NULL;
+                }
+
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
@@ -5331,7 +5355,9 @@ class ControllerSaleOrder extends Controller {
         foreach ($orders as $order_id) {
             $order_info = $this->model_sale_order->getOrder($order_id);
             //check vendor order
-
+            if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] != 4 && $order_info['order_status_id'] != 5) {
+                $this->response->redirect($this->url->link('error/not_found'));
+            }
             if ($this->user->isVendor()) {
                 if (!$this->isVendorOrder($order_id)) {
                     $this->response->redirect($this->url->link('error/not_found'));
@@ -9217,6 +9243,8 @@ class ControllerSaleOrder extends Controller {
         $customer_info['subuserfirstname'] = $customer_info['firstname'];
         $customer_info['subuserlastname'] = $customer_info['lastname'];
         $customer_info['subuserorderid'] = $order_info['order_id'];
+        $customer_info['subuserorderdeliverydate'] = $order_info['delivery_date'];
+        $customer_info['subuserorderdeliverytimeslot'] = $order_info['delivery_timeslot'];
         $customer_info['ip_address'] = $order_info['ip'];
         $customer_info['order_link'] = $this->url->link('account/order/info', 'order_id=' . $order_info['order_id'], 'SSL');
         $customer_info['device_id'] = $customer_info['device_id'];
@@ -9225,6 +9253,7 @@ class ControllerSaleOrder extends Controller {
         $customer_info['deliveryexecutivename'] = $executive_name;
         $customer_info['deliveryexecutivephone'] = $executive_phone;
         $customer_info['vehicle'] = $order_info['vehicle_number'];
+        $customer_info['delivery_timeslot'] = $order_info['delivery_timeslot'];
 
         $log->write('EMAIL SENDING');
         $log->write($customer_info);
@@ -9266,11 +9295,8 @@ class ControllerSaleOrder extends Controller {
 
     public function SaveOrUpdateOrderDriverVehicleDetails() {
         $order_id = $this->request->post['order_id'];
-        $driver_id = $this->request->post['driver_id'];
         $vehicle_number = $this->request->post['vehicle_number'];
         $delivery_charge = $this->request->post['delivery_charge'];
-        $delivery_executive_id = $this->request->post['delivery_executive_id'];
-        // $order_delivery_date = $this->request->post['order_delivery_date'];
         $updateDeliveryDate = $this->request->post['updateDeliveryDate'];
 
         /* $log = new Log('error.log');
@@ -9280,13 +9306,23 @@ class ControllerSaleOrder extends Controller {
 
         $this->load->model('checkout/order');
         $this->load->model('sale/order');
+        $this->load->model('dispatchplanning/dispatchplanning');
+        $this->load->model('vehicles/vehicles');
         $order_info = $this->model_checkout_order->getOrder($order_id);
+        $order_info['delivery_date'] = isset($updateDeliveryDate) && $updateDeliveryDate == 1 ? date('y-m-d') : $order_info['delivery_date'];
+        $vehicle_info = $this->model_dispatchplanning_dispatchplanning->getAssignedVehiclesByVehicle($order_info['delivery_date'], $order_info['delivery_timeslot'], $vehicle_number);
+        $log = new Log('error.log');
+        $log->write('vehicle_info');
+        $log->write($vehicle_info);
+        $log->write($this->request->post['vehicle_number']);
+        $log->write('vehicle_info');
+        $vehicle_details = $this->model_vehicles_vehicles->getVehicle($vehicle_number);
         if (is_array($order_info) && $order_info != NULL) {
 
             // echo "<pre>";print_r( $delivery_charge);die;
-            $this->model_sale_order->UpdateOrderDriverDetails($order_id, $driver_id);
-            $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_number);
-            $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $delivery_executive_id);
+            $this->model_sale_order->UpdateOrderDriverDetails($order_id, $vehicle_info['driver_id']);
+            $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_details['registration_number']);
+            $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $vehicle_info['delivery_executive_id']);
             if ($delivery_charge > 0) {
                 $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
             }
@@ -9330,6 +9366,88 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function SaveOrUpdateOrderDriverVehicleDetailsBulk() {
+
+        $orders = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $orders = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $orders = explode(',', $this->request->post['order_id']);
+            $orders = array_unique($orders);
+        }
+
+        foreach ($orders as $order_id) {
+            if ($order_id > 0) {
+                $vehicle_number = $this->request->post['vehicle_number'];
+                $delivery_charge = $this->request->post['delivery_charge'];
+                $updateDeliveryDate = $this->request->post['updateDeliveryDate'];
+
+                $this->load->model('checkout/order');
+                $this->load->model('sale/order');
+                $this->load->model('dispatchplanning/dispatchplanning');
+                $this->load->model('vehicles/vehicles');
+                $order_info = $this->model_checkout_order->getOrder($order_id);
+                $order_info['delivery_date'] = isset($updateDeliveryDate) && $updateDeliveryDate == 1 ? date('y-m-d') : $order_info['delivery_date'];
+                $vehicle_info = $this->model_dispatchplanning_dispatchplanning->getAssignedVehiclesByVehicle($order_info['delivery_date'], $order_info['delivery_timeslot'], $vehicle_number);
+                $log = new Log('error.log');
+                $log->write('vehicle_info');
+                $log->write($vehicle_info);
+                $log->write($this->request->post['vehicle_number']);
+                $log->write('vehicle_info');
+                $vehicle_details = $this->model_vehicles_vehicles->getVehicle($vehicle_number);
+                if (is_array($order_info) && $order_info != NULL) {
+
+                    $this->model_sale_order->UpdateOrderDriverDetails($order_id, $vehicle_info['driver_id']);
+                    $this->model_sale_order->UpdateOrderVehicleDetails($order_id, $vehicle_details['registration_number']);
+                    $this->model_sale_order->UpdateOrderDeliveryExecutiveDetails($order_id, $vehicle_info['delivery_executive_id']);
+                    if ($delivery_charge > 0) {
+                        $this->model_sale_order->UpdateOrderDeliveryCharge($order_id, $delivery_charge);
+                    }
+
+                    if (isset($updateDeliveryDate) && $updateDeliveryDate == 1) {
+                        //update delivery date to current date
+                        $this->model_sale_order->UpdateOrderDeliveryDate($order_id);
+                    }
+                }
+            }
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $order_id,
+            ];
+            $log->write('driver assigned to order');
+
+            $this->model_user_user_activity->addActivity('order_driver_assigned', $activity_data);
+
+            $log->write('driver assigned to order');
+        }
+
+        foreach ($orders as $order_id) {
+            if ($order_id > 0) {
+
+                try {
+                    sleep(5);
+                    $this->SendMailToCustomerWithDriverDetails($order_id);
+                } catch (exception $ex) {
+                    $log = new Log('error.log');
+                    $log->write('Order History Mail Error');
+                    $log->write($ex);
+                }
+            }
+        }
+
+        $json['status'] = 'success';
+        $json['message'] = 'Order Driver Details Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function SaveOrUpdateOrderProcessorDetails() {
         $order_id = $this->request->post['order_id'];
         $order_processing_group_id = $this->request->post['order_processing_group_id'];
@@ -9362,6 +9480,57 @@ class ControllerSaleOrder extends Controller {
         $this->model_user_user_activity->addActivity('order_assigned_to_processor', $activity_data);
 
         $log->write('order assigned to processor');
+
+        $json['status'] = 'success';
+        $json['message'] = 'Order Assigned To Processor!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function NewSaveOrUpdateOrderProcessorDetails() {
+        $order_id = $this->request->post['order_id'];
+        $order_processing_group_id = $this->request->post['order_processing_group_id'];
+        $order_processor_id = $this->request->post['order_processor_id'];
+        $log = new Log('error.log');
+        $log->write('SaveOrUpdateOrderProcessorDetails');
+        $log->write($this->request->post['order_processing_group_id']);
+        $log->write($this->request->post['order_processor_id']);
+        $log->write($this->request->post['order_id']);
+
+        $order_array = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $order_array = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $order_array = explode(',', $this->request->post['order_id']);
+            $order_array = array_unique($order_array);
+        }
+
+        $this->load->model('checkout/order');
+        $this->load->model('sale/order');
+        foreach ($order_array as $order_id) {
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            if (is_array($order_info) && $order_info != NULL) {
+                $this->model_sale_order->UpdateOrderProcessingDetails($order_id, $order_processing_group_id, $order_processor_id);
+            }
+
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $order_id,
+            ];
+            $log->write('order assigned to processor');
+
+            $this->model_user_user_activity->addActivity('order_assigned_to_processor', $activity_data);
+
+            $log->write('order assigned to processor');
+        }
+
 
         $json['status'] = 'success';
         $json['message'] = 'Order Assigned To Processor!';
@@ -9504,6 +9673,150 @@ class ControllerSaleOrder extends Controller {
         $order_update = $this->model_sale_order->updatevendororderstatuss($order_id, $vendor_order_status_id);
         $log->write($order_update);
         $json['data'] = $order_update;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function UpdateOrderStatusToProcessing() {
+        $log = new Log('error.log');
+        $log->write($this->request->post['order_id']);
+        $log->write($this->request->post['order_status_id']);
+
+        $order_array = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $order_array = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $order_array = explode(',', $this->request->post['order_id']);
+            $order_array = array_unique($order_array);
+        }
+
+        $order_data = array('order_status_id' => 1, 'notify' => 0, 'append' => '', 'comment' => '', 'added_by' => $this->user->getFirstName() . ' ' . $this->user->getLastName(), 'added_by_role' => $this->user->getGroupName());
+        $curl = curl_init();
+
+        // Set SSL if required
+        if ('https' == substr(HTTPS_CATALOG, 0, 5)) {
+            curl_setopt($curl, CURLOPT_PORT, 443);
+        }
+
+        foreach ($order_array as $order_id) {
+            curl_setopt($curl, CURLOPT_HEADER, false);
+            curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+            curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_URL, HTTPS_CATALOG . 'index.php?path=api/order/history&order_id=' . $order_id . '&added_by=' . $this->user->getFirstName() . ' ' . $this->user->getLastName() . '&added_by_role=' . $this->user->getGroupName());
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($order_data));
+
+            $json = curl_exec($curl);
+            $log->write($json);
+        }
+    }
+
+    public function checkorderstatus() {
+
+        $this->load->model('sale/order');
+
+        $order_array = NULL;
+        $invalid_order_status = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $order_array = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $order_array = explode(',', $this->request->post['order_id']);
+            $order_array = array_unique($order_array);
+        }
+
+        foreach ($order_array as $order_id) {
+            if ($order_id > 0) {
+                $order_info = $this->model_sale_order->getOrder($order_id);
+                if ($order_info['order_status_id'] != 14) {
+                    $invalid_order_status[] = $order_info['order_id'];
+                }
+            }
+        }
+        $data['invalid_order_status'] = $invalid_order_status;
+        $data['invalid_order_status_count'] = count($invalid_order_status);
+        $json['data'] = $data;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function checkorderstatusprocessing() {
+
+        $this->load->model('sale/order');
+
+        $order_array = NULL;
+        $order_delivery_array = NULL;
+        $order_deliverydate_array = NULL;
+        $invalid_order_status = NULL;
+        $invalid_order_delivery_date = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $order_array = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $order_array = explode(',', $this->request->post['order_id']);
+            $order_array = array_unique($order_array);
+        }
+
+        foreach ($order_array as $order_id) {
+            if ($order_id > 0) {
+                $order_info = $this->model_sale_order->getOrder($order_id);
+                $order_delivery_array[$order_id] = $order_info['delivery_timeslot'];
+                $order_deliverydate_array[$order_id] = $order_info['delivery_date'];
+                if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] > 0) {
+                    $invalid_order_status[$order_id] = $order_info['order_id'];
+                }
+                $date_now = date("Y-m-d");
+                if ($order_info['delivery_date'] > $date_now && $order_info['delivery_date'] != NULL) {
+                    $invalid_order_delivery_date[$order_id] = $order_info['order_id'];
+                }
+            }
+        }
+        $log = new Log('error.log');
+        $log->write($this->request->post);
+        $new_delivery_array = array_unique($order_delivery_array);
+        $new_deliverydate_array = array_unique($order_deliverydate_array);
+        $data['invalid_order_delivery_timeslot'] = $new_delivery_array;
+        $data['invalid_order_delivery_timeslot_count'] = count($new_delivery_array);
+        $data['invalid_order_deliverydate'] = $new_deliverydate_array;
+        $data['invalid_order_deliverydate_count'] = count($new_deliverydate_array);
+        $data['invalid_order_status'] = $invalid_order_status;
+        $data['invalid_order_status_count'] = count($invalid_order_status);
+        $data['invalid_order_delivery_date'] = $invalid_order_delivery_date;
+        $data['invalid_order_delivery_date_count'] = count($invalid_order_delivery_date);
+        $json['data'] = $data;
+        $log->write($data);
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function checkorderstatusvalidfordownloadpdf() {
+
+        $this->load->model('sale/order');
+
+        $order_array = NULL;
+        $invalid_order_status = NULL;
+        if (is_array($this->request->post['order_id']) && count($this->request->post['order_id']) > 0) {
+            $order_array = array_unique($this->request->post['order_id']);
+        }
+        if (!is_array($this->request->post['order_id']) && $this->request->post['order_id'] != NULL) {
+            $order_array = explode(',', $this->request->post['order_id']);
+            $order_array = array_unique($order_array);
+        }
+
+        foreach ($order_array as $order_id) {
+            $order_info = $this->model_sale_order->getOrder($order_id);
+            if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] != 4 && $order_info['order_status_id'] != 5) {
+                $invalid_order_status[] = $order_info['order_id'];
+            }
+        }
+        $data['invalid_order_status'] = $invalid_order_status;
+        $data['invalid_order_status_count'] = count($invalid_order_status);
+        $json['data'] = $data;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

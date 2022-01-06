@@ -1527,4 +1527,22 @@ class ControllerAccountLogin extends Controller {
         $this->emailtemplate->SendSNS($mobile);
     }
 
+    public function maps() {
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/maps.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/maps.tpl'));
+        }
+    }
+
+    public function mapss() {
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/maps.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/mapss.tpl'));
+        }
+    }
+
+    public function locationpicker() {
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/locationpicker.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/locationpicker.tpl'));
+        }
+    }
+
 }

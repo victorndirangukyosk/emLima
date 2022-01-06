@@ -178,7 +178,7 @@ class ControllerReportVendorOrders extends Controller {
         } else {
             $filter_date_modified = null;
         }
-        
+
         if (isset($this->request->get['selected_order_id'])) {
             $orders = $this->request->get['selected_order_id'];
         } else {
@@ -226,12 +226,188 @@ class ControllerReportVendorOrders extends Controller {
             'sort' => $sort,
             'order' => $order,
             'filter_orders' => $orders,
-            /*'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin'),*/
+                /* 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+                  'limit' => $this->config->get('config_limit_admin'), */
         ];
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_orders_excel($filter_data);
+    }
+
+    public function downloadordersstickers() {
+        if (isset($this->request->get['filter_city'])) {
+            $filter_city = $this->request->get['filter_city'];
+        } else {
+            $filter_city = null;
+        }
+
+        if (isset($this->request->get['filter_order_id'])) {
+            $filter_order_id = $this->request->get['filter_order_id'];
+        } else {
+            $filter_order_id = null;
+        }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $filter_order_from_id = $this->request->get['filter_order_from_id'];
+        } else {
+            $filter_order_from_id = null;
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $filter_order_to_id = $this->request->get['filter_order_to_id'];
+        } else {
+            $filter_order_to_id = null;
+        }
+
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
+        } else {
+            $filter_customer = null;
+        }
+
+        if (isset($this->request->get['filter_vendor'])) {
+            $filter_vendor = $this->request->get['filter_vendor'];
+        } else {
+            $filter_vendor = null;
+        }
+
+        if (isset($this->request->get['filter_store_name'])) {
+            $filter_store_name = $this->request->get['filter_store_name'];
+        } else {
+            $filter_store_name = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_method'])) {
+            $filter_delivery_method = $this->request->get['filter_delivery_method'];
+        } else {
+            $filter_delivery_method = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $filter_delivery_date = $this->request->get['filter_delivery_date'];
+        } else {
+            $filter_delivery_date = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $filter_delivery_time_slot = $this->request->get['filter_delivery_time_slot'];
+        } else {
+            $filter_delivery_time_slot = null;
+        }
+
+        if (isset($this->request->get['filter_payment'])) {
+            $filter_payment = $this->request->get['filter_payment'];
+        } else {
+            $filter_payment = null;
+        }
+
+        if (isset($this->request->get['filter_order_status'])) {
+            $filter_order_status = $this->request->get['filter_order_status'];
+        } else {
+            $filter_order_status = null;
+        }
+
+        if (isset($this->request->get['filter_order_type'])) {
+            $filter_order_type = $this->request->get['filter_order_type'];
+        } else {
+            $filter_order_type = null;
+        }
+
+        if (isset($this->request->get['filter_total'])) {
+            $filter_total = $this->request->get['filter_total'];
+        } else {
+            $filter_total = null;
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $filter_date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $filter_date_added_end = null;
+        }
+
+        if (isset($this->request->get['filter_date_modified'])) {
+            $filter_date_modified = $this->request->get['filter_date_modified'];
+        } else {
+            $filter_date_modified = null;
+        }
+
+        if (isset($this->request->get['selected_order_id'])) {
+            $orders = $this->request->get['selected_order_id'];
+        } else {
+            $orders = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'o.order_id';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'DESC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $filter_data = [
+            'filter_city' => $filter_city,
+            'filter_order_id' => $filter_order_id,
+            'filter_order_from_id' => $filter_order_from_id,
+            'filter_order_to_id' => $filter_order_to_id,
+            'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
+            'filter_vendor' => $this->getUserByName($filter_vendor),
+            'filter_store_name' => $filter_store_name,
+            'filter_delivery_method' => $filter_delivery_method,
+            'filter_delivery_date' => $filter_delivery_date,
+            'filter_delivery_time_slot' => $filter_delivery_time_slot,
+            'filter_payment' => $filter_payment,
+            'filter_order_status' => $filter_order_status,
+            'filter_order_type' => $filter_order_type,
+            'filter_total' => $filter_total,
+            'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
+            'filter_date_modified' => $filter_date_modified,
+            'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
+            'sort' => $sort,
+            'order' => $order,
+            'filter_orders' => $orders,
+        ];
+
+        $this->load->model('sale/order');
+        $rows['orders'] = $this->model_sale_order->getOrders($filter_data);
+        try {
+            require_once DIR_ROOT . '/vendor/autoload.php';
+            $pdf = new \mikehaertl\wkhtmlto\Pdf;
+            $template = $this->load->view('sale/order_sticker_pdf.tpl', $rows);
+            $pdf->addPage($template);
+            if (!$pdf->send("KwikBasket Orders.pdf")) {
+                $error = $pdf->getError();
+                echo $error;
+                die;
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     public function index() {

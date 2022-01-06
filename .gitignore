@@ -54,3 +54,4 @@ composer.lock
 ## VsCode
 .vscode
 /nbproject/private/
+scheduler_downloads/

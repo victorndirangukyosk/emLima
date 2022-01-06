@@ -120,12 +120,16 @@
                              
 
                              
-                               <?php if($order['status'] == 'Delivered' || $order['status'] == 'Cancelled' ) { ?>
-                              
-                               <option   value="<?=$order["order_id"] ?>" type="Add to cart"  data-store-id="<?= $order['store_id']; ?>"  order-id="<?=$order["order_id"] ?>" >&#xf291; &nbsp;Add to cart</option>      
-                                        <?php } ?>
-
-                            </select>
+                              <?php if($order['status'] == 'Delivered' || $order['status'] == 'Cancelled' || $order['status'] == 'In Transit') { ?>
+                              <option   value="<?=$order["order_id"] ?>" type="Add to cart"  data-store-id="<?= $order['store_id']; ?>"  order-id="<?=$order["order_id"] ?>" >&#xf291; &nbsp;Add to cart</option>      
+                              <option disabled style="height: 1px !important;" ></option>
+                              <?php } ?>
+                              <?php if($order['status'] == 'Delivered' || $order['status'] == 'In Transit') { ?>
+                              <option value="<?=$order["order_id"] ?>" type="Report missed products"  view_href=""  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Report Missed/Rejected Products</option>
+                              <option disabled style="height: 1px !important;" ></option>
+                              <!--<option value="<?=$order["order_id"] ?>" type="Report rejected products"  view_href=""  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Report Rejected Products</option>-->
+                              <?php } ?>
+                               </select>
                                 <br/>
 
                                                                         
@@ -405,6 +409,48 @@
                             
 
                             <div class="order-details-form-panel">
+                                    <!--  form here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="editAddressModal">
+        <div class="modal fade" id="viewMissedProductsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog a" role="document" style="top:80px;right:160px;">
+                <div class="modal-content" style="width:170%">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="row">
+                           <div class="col-md-12">
+                           <h2>Missed/Rejected Products</h2>
+                           </div>
+                            
+                            <div class="missingproducts-details-form-panel">
+                                    <!--  form here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="editAddressModal">
+        <div class="modal fade" id="viewRejectedProductsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog a" role="document" style="top:80px;right:160px;">
+                <div class="modal-content" style="width:170%">
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="row">
+                           <div class="col-md-12">
+                           <h2>Rejected Products</h2>
+                           </div>
+                            
+                            <div class="rejectedproducts-details-form-panel">
                                     <!--  form here -->
                             </div>
                         </div>
@@ -1018,7 +1064,21 @@ return;
        location=accept_reject_href;
 return;
   }
-      
+  else if(type=="Report missed products")
+  {
+    $('#viewMissedProductsModal').modal({
+        show: 'true'
+    });
+    viewMissedProductsModal(orderid);
+  }
+  else if(type=="Report rejected products")
+  {
+    $('#viewRejectedProductsModal').modal({
+        show: 'true'
+    });
+    viewRejectedProductsModal(orderid);
+  }
+$('.newddl').prop('selectedIndex',0);  
 });
  
 
@@ -1055,7 +1115,48 @@ return;
                     }
                 });
             }
-
+   
+   function viewMissedProductsModal($order_id) {
+    console.log($order_id);
+    console.log("order_id");
+                $.ajax({
+                    url: 'index.php?path=account/order/missingproducts',
+                    type: 'get',
+                    async: false,
+                    data: {order_id: $order_id},
+                    dataType: 'html',
+                    cache: false,
+                    success: function(json) {
+                        console.log(json);
+                        $('.missingproducts-details-form-panel').html(json);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        return false;
+                    }
+                });    
+   }
+   
+   function viewRejectedProductsModal($order_id) {
+    console.log($order_id);
+    console.log("order_id");
+                $.ajax({
+                    url: 'index.php?path=account/order/rejectedproducts',
+                    type: 'get',
+                    async: false,
+                    data: {order_id: $order_id},
+                    dataType: 'html',
+                    cache: false,
+                    success: function(json) {
+                        console.log(json);
+                        $('.rejectedproducts-details-form-panel').html(json);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        return false;
+                    }
+                });    
+   }
      
 
 

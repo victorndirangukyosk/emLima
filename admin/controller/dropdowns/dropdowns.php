@@ -96,4 +96,14 @@ class ControllerDropdownsDropdowns extends Controller {
         $this->response->setOutput(json_encode(['suggestions' => $json]));
     }
 
+    public function getDeliveryTimeslots() {
+        $json = [];
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $log = new Log('error');
+        $json['delivery_timeslots'] = $deliveryTimeslots;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode(['suggestions' => $json]));
+    }
+
 }
