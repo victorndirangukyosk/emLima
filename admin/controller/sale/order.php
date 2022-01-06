@@ -9243,6 +9243,8 @@ class ControllerSaleOrder extends Controller {
         $customer_info['subuserfirstname'] = $customer_info['firstname'];
         $customer_info['subuserlastname'] = $customer_info['lastname'];
         $customer_info['subuserorderid'] = $order_info['order_id'];
+        $customer_info['subuserorderdeliverydate'] = $order_info['delivery_date'];
+        $customer_info['subuserorderdeliverytimeslot'] = $order_info['delivery_timeslot'];
         $customer_info['ip_address'] = $order_info['ip'];
         $customer_info['order_link'] = $this->url->link('account/order/info', 'order_id=' . $order_info['order_id'], 'SSL');
         $customer_info['device_id'] = $customer_info['device_id'];
@@ -9251,6 +9253,7 @@ class ControllerSaleOrder extends Controller {
         $customer_info['deliveryexecutivename'] = $executive_name;
         $customer_info['deliveryexecutivephone'] = $executive_phone;
         $customer_info['vehicle'] = $order_info['vehicle_number'];
+        $customer_info['delivery_timeslot'] = $order_info['delivery_timeslot'];
 
         $log->write('EMAIL SENDING');
         $log->write($customer_info);

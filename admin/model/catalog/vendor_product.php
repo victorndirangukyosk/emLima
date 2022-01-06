@@ -861,6 +861,10 @@ class ModelCatalogVendorProduct extends Model {
             $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
         }
 
+        if (!empty($data['filter_product_history_id'])) {
+            $implode[] = "product_history_id = '" . $this->db->escape($data['filter_product_history_id']) . "'";
+        }
+
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }

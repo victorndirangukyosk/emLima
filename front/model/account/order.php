@@ -659,6 +659,54 @@ class ModelAccountOrder extends Model {
         return $query->rows;
     }
 
+    public function getUnpaidOrdersCutomerIds() {
+        $query = $this->db->query('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.order_status_id IN (4,5) AND o.paid IN ("N", "P") AND os.language_id = ' . (int) $this->config->get('config_language_id') . ' AND ot.code = "total" AND ot.title = "Total" ORDER BY o.customer_id ASC');
+        return $query->rows;
+    }
+
+    public function getOrdersNewByCustomerId($customer_id, $start = 0, $limit = 20, $noLimit = false) {
+        if ($start < 0) {
+            $start = 0;
+        }
+
+        if ($limit < 1) {
+            $limit = 1;
+        }
+
+        $log = new Log('error.log');
+        $log->write('getOrders_By_CustomerID');
+        $log->write($customer_id);
+        $log->write('getOrders_By_CustomerID');
+        $s_users = [];
+        $parent_user_id = NULL;
+        $order_approval_access = $this->db->query('SELECT parent FROM ' . DB_PREFIX . "customer c WHERE c.customer_id = '" . (int) $customer_id . "'");
+        $order_approval_access_user = $order_approval_access->row;
+
+        $parent_user_id = $order_approval_access_user['parent'];
+
+        if ($parent_user_id != NULL && $parent_user_id > 0) {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $parent_user_id . "' AND parent > 0");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
+            array_push($s_users, $order_approval_access_user['parent']);
+            $sub_users_od = implode(',', $s_users);
+        } else {
+            $sub_users_query = $this->db->query('SELECT c.customer_id FROM ' . DB_PREFIX . "customer c WHERE parent = '" . (int) $customer_id . "' AND parent > 0");
+            $sub_users = $sub_users_query->rows;
+            $s_users = array_column($sub_users, 'customer_id');
+            array_push($s_users, $customer_id);
+            $sub_users_od = implode(',', $s_users);
+        }
+
+        if (false == $noLimit) {
+            $query = $this->db->query('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
+        } else {
+            $query = $this->db->query('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC");
+        }
+
+        return $query->rows;
+    }
+
     public function getOrdersForTransactions($start = 0, $limit = 20, $noLimit = false, $filters = []) {
         if ($start < 0) {
             $start = 0;
@@ -1887,6 +1935,73 @@ class ModelAccountOrder extends Model {
 
         $pezesha_loans = $this->db->query('SELECT p.loan_id,p.order_id,p.customer_id,o.total,p.loan_type,p.created_at FROM ' . DB_PREFIX . "customer_pezesha_loans p join " . DB_PREFIX . "order o on p.order_id = o.order_id WHERE p.customer_id IN (" . $sub_users_od . ") ORDER BY p.id DESC");
         return $pezesha_loans->rows;
+    }
+
+    public function getOrderByCustomerId($order_id) {
+        $order_query = $this->db->query('SELECT * ,' . DB_PREFIX . 'order.date_added as order_date ,' . DB_PREFIX . 'order.email as order_email ,' . DB_PREFIX . 'order.telephone as order_telephone FROM `' . DB_PREFIX . 'order` LEFT JOIN ' . DB_PREFIX . 'store ON ( ' . DB_PREFIX . 'store.store_id = ' . DB_PREFIX . 'order.store_id) LEFT JOIN ' . DB_PREFIX . 'order_status ON ( ' . DB_PREFIX . 'order_status.order_status_id = ' . DB_PREFIX . "order.order_status_id)  WHERE customer_id = '" . (int) $this->customer->getId() . "' AND order_id = '" . (int) $order_id . "' AND " . DB_PREFIX . "order.order_status_id > '0' ");
+        if ($order_query->num_rows) {
+            $city_info = $this->db->query('select * from `' . DB_PREFIX . 'city` WHERE city_id="' . $order_query->row['shipping_city_id'] . '"')->row;
+
+            if ($city_info) {
+                $shipping_city = $city_info['name'];
+            } else {
+                $shipping_city = '';
+            }
+
+            return [
+                'order_id' => $order_query->row['order_id'],
+                'invoice_no' => $order_query->row['invoice_no'],
+                'invoice_prefix' => $order_query->row['invoice_prefix'],
+                'store_id' => $order_query->row['store_id'],
+                'store_name' => $order_query->row['store_name'],
+                'store_url' => $order_query->row['store_url'],
+                'customer_id' => $order_query->row['customer_id'],
+                'firstname' => $order_query->row['firstname'],
+                'lastname' => $order_query->row['lastname'],
+                'telephone' => $order_query->row['telephone'],
+                'order_telephone' => $order_query->row['order_telephone'],
+                'store_name' => $order_query->row['store_name'],
+                'fax' => $order_query->row['fax'],
+                'email' => $order_query->row['email'],
+                'order_email' => $order_query->row['order_email'],
+                'payment_method' => $order_query->row['payment_method'],
+                'payment_code' => $order_query->row['payment_code'],
+                'shipping_name' => $order_query->row['shipping_name'],
+                'shipping_city_id' => $order_query->row['shipping_city_id'],
+                'shipping_city' => $shipping_city,
+                'shipping_address' => $order_query->row['shipping_address'],
+                'shipping_flat_number' => $order_query->row['shipping_flat_number'],
+                'shipping_building_name' => $order_query->row['shipping_building_name'],
+                'shipping_landmark' => $order_query->row['shipping_landmark'],
+                'shipping_contact_no' => $order_query->row['shipping_contact_no'],
+                'shipping_method' => $order_query->row['shipping_method'],
+                'comment' => $order_query->row['comment'],
+                'total' => $order_query->row['total'],
+                'rating' => $order_query->row['rating'],
+                'order_status_id' => $order_query->row['order_status_id'],
+                'language_id' => $order_query->row['language_id'],
+                'currency_id' => $order_query->row['currency_id'],
+                'currency_code' => $order_query->row['currency_code'],
+                'currency_value' => $order_query->row['currency_value'],
+                'date_modified' => $order_query->row['date_modified'],
+                'date_added' => $order_query->row['date_added'],
+                'ip' => $order_query->row['ip'],
+                'delivery_timeslot' => $order_query->row['delivery_timeslot'],
+                'delivery_date' => $order_query->row['delivery_date'],
+                'store_address' => $order_query->row['address'],
+                'store_name' => $order_query->row['store_name'],
+                'status' => $order_query->row['name'],
+                'order_date' => $order_query->row['order_date'],
+                'delivery_id' => $order_query->row['delivery_id'],
+                'settlement_amount' => $order_query->row['settlement_amount'],
+                'driver_id' => $order_query->row['driver_id'],
+                'vehicle_number' => $order_query->row['vehicle_number'],
+                'delivery_executive_id' => $order_query->row['delivery_executive_id'],
+                'paid' => $order_query->row['paid'],
+            ];
+        } else {
+            return false;
+        }
     }
 
 }

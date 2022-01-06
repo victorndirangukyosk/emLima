@@ -2511,6 +2511,7 @@ class ControllerCatalogVendorProduct extends Controller {
                 'added_by' => $result['added_by'],
                 'added_user_role' => $result['added_user_role'],
                 'added_user' => $result['added_user'],
+                'voucher' => $this->url->link('catalog/vendor_product/inventoryvoucher', 'token=' . $this->session->data['token'] . '&product_history_id=' . $result['product_history_id'] . $url, 'SSL'),
             ];
         }
 
@@ -2962,6 +2963,39 @@ class ControllerCatalogVendorProduct extends Controller {
             $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '" . $this->db->escape($name) . "%'");
 
             return $query->row['user_id'];
+        }
+    }
+
+    public function inventoryvoucher() {
+        $inventory_history_id = $this->request->get['product_history_id'];
+        $this->load->model('catalog/vendor_product');
+
+        $filter_data = [
+            'filter_product_history_id' => $this->request->get['product_history_id']
+        ];
+        $results = $this->model_catalog_vendor_product->getProductInventoryHistory($filter_data);
+        $vendor_product_details = $this->model_catalog_vendor_product->getProduct($results[0]['product_store_id']);
+        $product_details = $this->model_catalog_vendor_product->getProductDetail($results[0]['product_id']);
+        $log = new Log('error.log');
+        $full_details = $results[0];
+        $full_details['model'] = $product_details['model'];
+        $full_details['unit'] = $product_details['unit'];
+        $full_details['sub_total'] = $this->currency->format($full_details['buying_price'] * $full_details['procured_qty'], $this->config->get('config_currency'));
+        $full_details['total'] = $this->currency->format($full_details['buying_price'] * $full_details['procured_qty'], $this->config->get('config_currency'));
+        $full_details['buying_price'] = $this->currency->format($full_details['buying_price'], $this->config->get('config_currency'));
+
+        try {
+            require_once DIR_ROOT . '/vendor/autoload.php';
+            $pdf = new \mikehaertl\wkhtmlto\Pdf;
+            $template = $this->load->view('catalog/inventory_voucher.tpl', $full_details);
+            $pdf->addPage($template);
+            if (!$pdf->send("Inventory Voucher #" . $inventory_history_id . ".pdf")) {
+                $error = $pdf->getError();
+                echo $error;
+                die;
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
         }
     }
 

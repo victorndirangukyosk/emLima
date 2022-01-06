@@ -129,7 +129,7 @@ class ModelSchedulerDbupdates extends Model {
         $log->write($customer_wallet_amount);
         $log->write('Above wallet, below average order');
         $log->write($customer_order_average);
-        if (isset($customer_wallet_amount) && $customer_wallet_amount <= $customer_order_average) {
+        if (isset($customer_wallet_amount) && $customer_wallet_amount > 0 && $customer_wallet_amount <= $customer_order_average) {
            
             $log->write("average value of wallet order ");  
              $log->write($customer_id);

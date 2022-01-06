@@ -124,10 +124,10 @@
                               <option   value="<?=$order["order_id"] ?>" type="Add to cart"  data-store-id="<?= $order['store_id']; ?>"  order-id="<?=$order["order_id"] ?>" >&#xf291; &nbsp;Add to cart</option>      
                               <option disabled style="height: 1px !important;" ></option>
                               <?php } ?>
-                              <?php if($order == NULL) /*if($order['status'] == 'Delivered' || $order['status'] == 'In Transit')*/ { ?>
-                              <option value="<?=$order["order_id"] ?>" type="Report missed products"  view_href=""  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Report Missed Products</option>
+                              <?php if($order['status'] == 'Delivered' || $order['status'] == 'In Transit') { ?>
+                              <option value="<?=$order["order_id"] ?>" type="Report missed products"  view_href=""  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Report Missed/Rejected Products</option>
                               <option disabled style="height: 1px !important;" ></option>
-                              <option value="<?=$order["order_id"] ?>" type="Report rejected products"  view_href=""  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Report Rejected Products</option>
+                              <!--<option value="<?=$order["order_id"] ?>" type="Report rejected products"  view_href=""  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Report Rejected Products</option>-->
                               <?php } ?>
                                </select>
                                 <br/>
@@ -426,7 +426,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="row">
                            <div class="col-md-12">
-                           <h2>Missed Products</h2>
+                           <h2>Missed/Rejected Products</h2>
                            </div>
                             
                             <div class="missingproducts-details-form-panel">

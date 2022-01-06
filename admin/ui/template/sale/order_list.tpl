@@ -1054,7 +1054,7 @@
                                                         <button id="new-vehicle-button" name="new-vehicle-button" type="button" data-toggle="modal" data-dismiss="modal" title="add new vehicle" data-target="#vehicleModal" class="btn btn-lg btn-success"><i class="fa fa-plus"></i></button>
                                                         </div>-->
                                                         <div class="pull-right">
-                                                        <button type="button" id="dispatchplanning" data-url="<?php echo $dispatchplanning; ?>" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="Dispatch Planning"><i class="fa fa-random"></i></button>
+                                                        <button type="button" id="dispatchplanning_new" data-url="<?php echo $dispatchplanning; ?>" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="Dispatch Planning"><i class="fa fa-random"></i></button>
                                                         </div>
                                                         <!--<input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>-->
                                                     <div style="width:88%;margin-right:10px;" >
@@ -3134,6 +3134,14 @@ $('#neworderprocessingModal-form')[0].reset();
 $('#dispatchplanning').on('click', function (e) {
 e.preventDefault();
 var url = $(this).attr("data-url");
+console.log(url);
+window.open(url, '_blank');
+});
+
+$('#dispatchplanning_new').on('click', function (e) {
+e.preventDefault();
+var url = $(this).attr("data-url");
+console.log(url);
 window.open(url, '_blank');
 });
 </script></div>

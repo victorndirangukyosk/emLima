@@ -1392,26 +1392,17 @@ class ControllerAccountOrder extends Controller {
             echo json_encode(['html' => $html]);
         }
     }
-    
+
     public function missingproducts() {
         $redirectNotLogin = true;
         $this->load->language('account/order');
         $this->load->language('account/return');
-
-        // $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (isset($this->request->get['order_id'])) {
             $order_id = $this->request->get['order_id'];
         } else {
             $order_id = 0;
         }
-        // if (false == is_numeric($order_id)) {
-        //     $order_id = base64_decode(trim($order_id));
-        //     $order_id = preg_replace('/[^A-Za-z0-9\-]/', '', $order_id);
-        //     $this->request->get['order_id'] = $order_id;
-        //     $redirectNotLogin = false;
-        //     //$this->response->redirect($this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL'));
-        // }
 
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
 
@@ -1425,6 +1416,8 @@ class ControllerAccountOrder extends Controller {
         }
 
         $this->load->model('account/order');
+        $this->load->model('account/missedrejectedproducts');
+
         if (false == $redirectNotLogin) {
             $order_info = $this->model_account_order->getOrder($order_id, true);
         } else {
@@ -1677,11 +1670,16 @@ class ControllerAccountOrder extends Controller {
             // Products
             $data['products'] = [];
 
-            $products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
+            $products = $this->model_account_order->getRealOrderProducts($this->request->get['order_id']);
+            if ($products == NULL || (is_array($products) && count($products) <= 0)) {
+                $products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
+            }
 
             //echo "<pre>";print_r($products);die;
             $returnProductCount = 0;
             foreach ($products as $product) {
+                $missed_rejected_products = $this->model_account_missedrejectedproducts->getProducts($order_id, $product['product_id']);
+
                 $option_data = [];
 
                 $options = $this->model_account_order->getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
@@ -1754,6 +1752,9 @@ class ControllerAccountOrder extends Controller {
                     'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                     'reorder' => $reorder,
                     'return' => $this->url->link('account/return/add', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], 'SSL'),
+                    'issue_type' => $missed_rejected_products == NULL || count($missed_rejected_products) == 0 ? NULL : $missed_rejected_products['type'],
+                    'missed_rejected_quantity' => $missed_rejected_products == NULL || count($missed_rejected_products) == 0 ? NULL : $missed_rejected_products['quantity'],
+                    'missed_rejected_notes' => $missed_rejected_products == NULL || count($missed_rejected_products) == 0 ? NULL : $missed_rejected_products['notes'],
                 ];
             }
 
@@ -1946,7 +1947,7 @@ class ControllerAccountOrder extends Controller {
             echo json_encode(['html' => $html]);
         }
     }
-    
+
     public function rejectedproducts() {
         $redirectNotLogin = true;
         $this->load->language('account/order');
@@ -2231,8 +2232,10 @@ class ControllerAccountOrder extends Controller {
             // Products
             $data['products'] = [];
 
-            $products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
-
+            $products = $this->model_account_order->getRealOrderProducts($this->request->get['order_id']);
+            if ($products == NULL || (is_array($products) && count($products) <= 0)) {
+                $products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
+            }
             //echo "<pre>";print_r($products);die;
             $returnProductCount = 0;
             foreach ($products as $product) {
@@ -2500,7 +2503,7 @@ class ControllerAccountOrder extends Controller {
             echo json_encode(['html' => $html]);
         }
     }
-    
+
     public function realinfo() {
         $this->load->language('account/order');
 
@@ -6152,6 +6155,71 @@ class ControllerAccountOrder extends Controller {
 
         $this->load->model('account/order');
         $this->model_account_order->download_products_excel($data);
+    }
+
+    public function addMissedRejectedProducts() {
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $log = new Log('error.log');
+        $this->load->model('account/order');
+        $this->load->model('account/missedrejectedproducts');
+        //$log->write($this->request->post);
+        $data = $this->request->post;
+        $missed_rejected_products = $this->model_account_missedrejectedproducts->getProductsByOrderId($data['order_id']);
+        if (count($missed_rejected_products) <= 0) {
+
+            $products = $this->model_account_order->getRealOrderProducts($data['order_id']);
+            if ($products == NULL || (is_array($products) && count($products) <= 0)) {
+                $products = $this->model_account_order->getOrderProducts($data['order_id']);
+            }
+
+            $report = NULL;
+            $report_products['products'] = [];
+            foreach ($products as $product) {
+                if ($data['issue_type'][$product['product_id']] == 'Missed' || $data['issue_type'][$product['product_id']] == 'Rejected') {
+
+                    $report = 'NO';
+                    if ($data['issue_type'][$product['product_id']] == 'Missed' && ($data['qty'][$product['product_id']] <= 0 || $data['qty'][$product['product_id']] == NULL || $data['qty'][$product['product_id']] == '')) {
+                        $json['status'] = 400;
+                        $json['message'][] = 'Please Enter Missed Quantity For ' . $product['name'] . '(' . $product['unit'] . ')' . '!';
+                    } elseif ($data['issue_type'][$product['product_id']] == 'Missed' && ($data['qty'][$product['product_id']] > 0 && $data['qty'][$product['product_id']] > $product['quantity'])) {
+                        $json['status'] = 400;
+                        $json['message'][] = 'Entered Missed Quantity For ' . $product['name'] . '(' . $product['unit'] . ')' . ' Should Not Be Greater Than Ordered Quantity!';
+                    } else {
+                        $report_products['products'][] = [
+                            'order_id' => $data['order_id'],
+                            'product_id' => $product['product_id'],
+                            'product_store_id' => $product['product_id'],
+                            'type' => $data['issue_type'][$product['product_id']],
+                            'quantity' => $data['issue_type'][$product['product_id']] == 'Missed' ? $data['qty'][$product['product_id']] : $product['quantity'],
+                            'notes' => $data['product_notes'][$product['product_id']]
+                        ];
+                    }
+                }
+            }
+
+            if ($report == NULL) {
+                $json['status'] = 400;
+                $json['message'][] = 'Please Select Atleast One Product!';
+            }
+
+            if ($json['status'] == 200 && count($report_products['products']) > 0) {
+                foreach ($report_products['products'] as $report_product)
+                    $this->model_account_missedrejectedproducts->addProducts($report_product);
+                $log->write($report_product);
+                $json['status'] = 200;
+                $json['message'][] = 'Your Request Saved Sucessfully!';
+            }
+        } else {
+            $json['status'] = 400;
+            $json['message'][] = 'You Cant Submit Request Multiple Times!';
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }

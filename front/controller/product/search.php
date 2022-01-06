@@ -635,7 +635,8 @@ class ControllerProductSearch extends Controller {
         //$json = array_unique($json);
         $products = [];
         foreach ($json as $key => $value) {
-            if (in_array($value['category_id'], $categories)) {
+            //CATEGORY CHECK REMOVED
+            //if (in_array($value['category_id'], $categories)) {
                 $link = $this->url->link('product/category', 'category=' . $value['category_id']);
                 $link_array = explode('/', $link);
                 $page_link = end($link_array);
@@ -729,7 +730,7 @@ class ControllerProductSearch extends Controller {
                   $value['price'] = $o_price;
                   } */
                 $products[] = $value;
-            }
+            //}
         }
 
         //echo "<pre>";print_r($products);die;
