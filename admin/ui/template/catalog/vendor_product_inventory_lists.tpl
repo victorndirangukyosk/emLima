@@ -373,7 +373,7 @@
                 <form id="inventory_update" name="inventory_update">
                     <div class="form-group required">
                         <label for="recipient-name" class="col-form-label">Product Name</label>
-                        <input type="text" class="form-control" id="vendor_product_name" name="vendor_product_name" style="max-width: 568px !important;">
+                        <input type="text" placeholder="Serach Product" class="form-control" id="vendor_product_name" name="vendor_product_name" style="max-width: 568px !important;">
                     </div>
                     <div class="form-group required">
                         <label for="recipient-name" class="col-form-label">Product UOM</label>
@@ -384,7 +384,7 @@
                         <div class="col-sm-6">
                             <div class="form-group required">
                                 <label for="buying-price" class="col-form-label">Buying Price</label>
-                                <input type="text" class="form-control" id="buying_price" name="buying_price" style="max-width: 568px !important;">
+                                <input type="number" class="form-control" id="buying_price" name="buying_price" min="1" style="max-width: 568px !important;">
                             </div>   
                         </div>
                         <div class="col-sm-6">
@@ -398,13 +398,13 @@
                         <div class="col-sm-6">
                             <div class="form-group required">
                                 <label for="procured-quantity" class="col-form-label">Procured Quantity</label>
-                                <input type="text" class="form-control" id="buying_price" name="buying_price" style="max-width: 568px !important;">
+                                <input type="number" class="form-control" id="buying_price" name="buying_price" min="0.01" style="max-width: 568px !important;">
                             </div>   
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group required">
                                 <label for="source" class="col-form-label">Rejected Quantity</label>
-                                <input type="text" class="form-control" id="buying_price" name="buying_price" style="max-width: 568px !important;">
+                                <input type="number" class="form-control" id="buying_price" name="buying_price" min="0" style="max-width: 568px !important;">
                             </div>   
                         </div>
                     </div>
