@@ -142,7 +142,7 @@ class ControllerDropdownsDropdowns extends Controller {
         $this->load->model('catalog/vendor_product');
         $product_details = $this->model_catalog_vendor_product->getProduct($this->request->get['product_store_id']);
         $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, $product_details['store_id']);
-        $variations = $this->model_sale_order->getVendorProductVariations($product_info['name'], $product_details['store_id'], $cateogry_price_products);
+        $variations = $this->model_sale_order->getVendorProductVariations($product_info['name'], $product_details['store_id']);
         $log->write($variations);
         $json = $variations;
 

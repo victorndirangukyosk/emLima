@@ -916,6 +916,53 @@ console.log(data_array);
 
 }
 
+
+$('input[name=\'vendor_product_name\']').autocomplete({
+            'source': function(request, response) {
+                $.ajax({
+                    url: 'index.php?path=dropdowns/dropdowns/product_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function(json) {
+                        response($.map(json, function(item) {
+                            return {
+                                label: item['name']+' '+item['unit'],
+                                value: item['product_store_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function(item) {
+                console.log(item['value']);
+                var selected_product_store_id = item['value'];
+                $('input[name=\'vendor_product_name\']').val(item['label']);
+                $.ajax({
+                url: 'index.php?path=dropdowns/dropdowns/getVendorProductVariantsInfo&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>',
+                dataType: 'json',     
+                success: function(json) {
+                    console.log(json);
+                    if(json != null) {
+                    var option = '';
+                    for (var i=0;i<json.length;i++){
+                           option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-price="'+ json[i].price +'" data-special="'+ json[i].special_price +'" value="'+ json[i].unit + '">' + json[i].unit + '</option>';
+                    }
+                    console.log(option);
+                    var $select = $('#vendor_product_uom');
+                    $select.html('');
+                    if(json != null && json.length > 0) {
+                    $select.append(option);
+                    }
+                    var $price_input = $('#vendor_product_price');
+                    var special_price = json[0].price == null || json[0].price == 0 ? json[0].special_price : json[0].price;
+                    $price_input.val(special_price.replace(/,/g, ""));
+                    $('.selectpicker').selectpicker('refresh');
+                }
+            }
+            });
+            }
+});                    
+
+                    
 $('button[id^=\'update_inventory\']').on('click', function (e) {
 $("form[id^='inventory_update']")[0].reset();
 $('#inventory_update')[0].reset();               
