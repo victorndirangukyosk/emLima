@@ -8,6 +8,7 @@
                 <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>-->
             <?php }else{ ?>
+                <button type="button" id="update_inventory" data-toggle="tooltip" title="Update Inventory" class="btn btn-primary"><i class="fa fa-plus"></i></button>
                 <button type="button" data-toggle="tooltip" title="Update Inventory" class="btn btn-default" onclick="updateinventory();"><i class="fa fa-floppy-o text-success"></i></button>
                 <!--<a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_copy; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $copy; ?>').submit()"><i class="fa fa-copy"></i></button>-->
@@ -357,6 +358,72 @@
             </div>
         </div>
     </div>
+    
+     <!-- Modal -->
+    <div id="inventoryupdateModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div style="color: white;background-color: #008db9;" class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><strong>Inventory Update</strong></h4>
+            </div>
+            <div class="modal-body">
+                <form id="inventory_update" name="inventory_update">
+                    <div class="form-group required">
+                        <label for="recipient-name" class="col-form-label">Product Name</label>
+                        <input type="text" class="form-control" id="vendor_product_name" name="vendor_product_name" style="max-width: 568px !important;">
+                    </div>
+                    <div class="form-group required">
+                        <label for="recipient-name" class="col-form-label">Product UOM</label>
+                        <select class="form-select" id="vendor_product_uom" name="vendor_product_uom" style="max-width: 568px !important;">
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group required">
+                                <label for="buying-price" class="col-form-label">Buying Price</label>
+                                <input type="text" class="form-control" id="buying_price" name="buying_price" style="max-width: 568px !important;">
+                            </div>   
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group required">
+                                <label for="source" class="col-form-label">Source</label>
+                                <input type="text" class="form-control" id="buying_price" name="buying_price" style="max-width: 568px !important;">
+                            </div>   
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group required">
+                                <label for="procured-quantity" class="col-form-label">Procured Quantity</label>
+                                <input type="text" class="form-control" id="buying_price" name="buying_price" style="max-width: 568px !important;">
+                            </div>   
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group required">
+                                <label for="source" class="col-form-label">Rejected Quantity</label>
+                                <input type="text" class="form-control" id="buying_price" name="buying_price" style="max-width: 568px !important;">
+                            </div>   
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="alert alert-danger" style="display:none;">
+                </div>
+                <div class="alert alert-success" style="display:none;">
+                </div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="add_vehicle_to_dispatch_plan" name="add_vehicle_to_dispatch_plan">Update Inventory</button>
+            </div>
+        </div>
+
+    </div>
+</div>  
+    
+    
     <script type="text/javascript"><!--
         
 $(document).delegate('#store-list .fa-minus-circle','click', function(){
@@ -849,6 +916,16 @@ console.log(data_array);
 
 }
 
+$('button[id^=\'update_inventory\']').on('click', function (e) {
+$("form[id^='inventory_update']")[0].reset();
+$('#inventory_update')[0].reset();               
+$('#inventoryupdateModal').modal('toggle');
+});
 </script>
+<style>
+.bootstrap-select {
+width : 100% !important;    
+}
+</style>
 
 <?php echo $footer; ?>

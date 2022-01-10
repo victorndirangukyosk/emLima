@@ -106,4 +106,48 @@ class ControllerDropdownsDropdowns extends Controller {
         $this->response->setOutput(json_encode(['suggestions' => $json]));
     }
 
+    public function product_autocomplete() {
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        $this->load->model('sale/order');
+        $this->load->model('catalog/vendor_product');
+
+        $send = [];
+
+        $json = $this->model_sale_order->getProductsForInventory($filter_name);
+        $log = new Log('error.log');
+
+        foreach ($json as $j) {
+            if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
+                $j['price'] = $j['special_price'];
+            }
+
+            $j['name'] = htmlspecialchars_decode($j['name']);
+
+            $send[] = $j;
+        }
+        echo json_encode($send);
+    }
+
+    public function getVendorProductVariantsInfo() {
+
+        $log = new Log('error.log');
+        $log->write($this->request->get['product_store_id']);
+        $this->load->model('sale/order');
+        $this->load->model('catalog/vendor_product');
+        $product_details = $this->model_catalog_vendor_product->getProduct($this->request->get['product_store_id']);
+        $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, $product_details['store_id']);
+        $variations = $this->model_sale_order->getVendorProductVariations($product_info['name'], $product_details['store_id'], $cateogry_price_products);
+        $log->write($variations);
+        $json = $variations;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
