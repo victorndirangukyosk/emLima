@@ -984,6 +984,14 @@ $.ajax({
         url: 'index.php?path=catalog/product/updateInventorysingle&token=<?= $token ?>',
         dataType: 'json',
         data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_id' : vendor_product_id  },
+        async: true,
+        beforeSend: function() {
+        $('#update_inventory_form').prop('disabled', true);
+        $('.alert.alert-success').html('<i class="fa fa-check-circle text-success">Please Wait Your Request Processing!</i>');
+        },
+        complete: function() {
+        $('#update_inventory_form').prop('disabled', false);
+        },
         success: function(json) {
         if (json) {
         if(json['status'] == '200') {
@@ -1000,6 +1008,7 @@ $.ajax({
         $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger">Please try again later!</i>');
         $('.alert.alert-danger').show();     
         }
+        $('#update_inventory_form').prop('disabled', false);
         }
         });
 });
