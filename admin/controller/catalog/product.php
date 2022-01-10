@@ -266,33 +266,51 @@ class ControllerCatalogProduct extends Controller {
     }
 
     public function updateInventorysingle() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
         $log = new Log('error.log');
         $log->write($this->request->post);
         $log->write($this->request->get);
 
-        $this->load->language('catalog/product');
-        $this->load->model('catalog/vendor_product');
-        $product_details = $this->model_catalog_vendor_product->getProduct($this->request->get['vendor_product_id']);
-        $log->write($product_details);
-        $vendor_product_uom = $this->request->get['vendor_product_uom'];
-        $buying_price = $this->request->get['buying_price'];
-        $buying_source = $this->request->get['buying_source'];
-        $procured_quantity = $this->request->get['procured_quantity'];
-        $rejected_quantity = $this->request->get['rejected_quantity'];
-        $vendor_product_id = $this->request->get['vendor_product_id'];
+        if ($this->request->get['vendor_product_id'] != NULL && $this->request->get['vendor_product_uom'] != NULL && $this->request->get['buying_price'] != NULL && $this->request->get['procured_quantity'] != NULL && $this->request->get['rejected_quantity'] != NULL) {
+            $this->load->language('catalog/product');
+            $this->load->model('catalog/vendor_product');
+            $product_details = $this->model_catalog_vendor_product->getProduct($this->request->get['vendor_product_id']);
+            $log->write($product_details);
+            $vendor_product_uom = $this->request->get['vendor_product_uom'];
+            $buying_price = $this->request->get['buying_price'];
+            $buying_source = $this->request->get['buying_source'];
+            $procured_quantity = $this->request->get['procured_quantity'];
+            $rejected_quantity = $this->request->get['rejected_quantity'];
+            $vendor_product_id = $this->request->get['vendor_product_id'];
 
-        $product['rejected_qty'] = $rejected_quantity;
-        $product['procured_qty'] = $procured_quantity;
-        $product['current_buying_price'] = $buying_price;
-        $product['source'] = $buying_source;
-        $product['current_qty'] = $procured_quantity - $rejected_quantity;
-        $product['product_name'] = $product_details['name'];
-        $product['product_id'] = $product_details['product_id'];
+            $product['rejected_qty'] = $rejected_quantity;
+            $product['procured_qty'] = $procured_quantity;
+            $product['current_buying_price'] = $buying_price;
+            $product['source'] = $buying_source;
+            $product['current_qty'] = $procured_quantity - $rejected_quantity;
+            $product['product_name'] = $product_details['name'];
+            $product['product_id'] = $product_details['product_id'];
 
-        $data[] = $this->model_catalog_vendor_product->updateProductInventory($vendor_product_id, $product);
-        $this->session->data['success'] = 'Products stocks modified successfully!';
-        echo 0;
-        exit();
+            $result = $this->model_catalog_vendor_product->updateProductInventory($vendor_product_id, $product);
+            $log->write('RESULT');
+            $log->write($result);
+            $log->write('RESULT');
+            $json['status'] = '200';
+            $json['message'] = 'Products stocks modified successfully!';
+            $this->session->data['success'] = 'Products stocks modified successfully!';
+        } else {
+            $json['status'] = '400';
+            $json['message'] = 'All fields are mandatory!';
+            $this->session->data['warning'] = 'All fields are mandatory!';
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
     public function updateMultiInventory() {

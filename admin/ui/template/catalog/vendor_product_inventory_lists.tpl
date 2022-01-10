@@ -986,10 +986,19 @@ $.ajax({
         data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_id' : vendor_product_id  },
         success: function(json) {
         if (json) {
-        $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+        if(json['status'] == '200') {
+        $('.alert.alert-success').html('<i class="fa fa-check-circle text-success">'+json['message']+'</i>');
+        $('.alert.alert-success').show();
+        console.log(json);
+        }
+        if(json['status'] == '400') {
+        $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger">'+json['message']+'</i>');
+        $('.alert.alert-danger').show();    
+        }
         }
         else {
-        location.reload();
+        $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger">Please try again later!</i>');
+        $('.alert.alert-danger').show();     
         }
         }
         });
