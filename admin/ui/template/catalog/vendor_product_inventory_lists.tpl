@@ -8,7 +8,7 @@
                 <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>-->
             <?php }else{ ?>
-                <button type="button" id="update_inventory" data-toggle="tooltip" title="Update Inventory" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+                <button type="button" id="new_update_inventory" data-toggle="tooltip" title="Update Inventory" class="btn btn-primary"><i class="fa fa-plus"></i></button>
                 <button type="button" data-toggle="tooltip" title="Update Inventory" class="btn btn-default" onclick="updateinventory();"><i class="fa fa-floppy-o text-success"></i></button>
                 <!--<a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_copy; ?>" class="btn btn-default" onclick="$('#form-product').attr('action', '<?php echo $copy; ?>').submit()"><i class="fa fa-copy"></i></button>-->
@@ -373,24 +373,24 @@
                 <form id="inventory_update" name="inventory_update">
                     <div class="form-group required">
                         <label for="recipient-name" class="col-form-label">Product Name</label>
-                        <input type="text" placeholder="Serach Product" class="form-control" id="vendor_product_name" name="vendor_product_name" style="max-width: 568px !important;">
+                        <input type="text" placeholder="Serach Product" class="form-control" data-vendor-product-id="" data-vendor-product-name="" id="new_vendor_product_name" name="new_vendor_product_name" style="max-width: 568px !important;">
                     </div>
                     <div class="form-group required">
                         <label for="recipient-name" class="col-form-label">Product UOM</label>
-                        <select class="form-select" id="vendor_product_uom" name="vendor_product_uom" style="max-width: 568px !important;">
+                        <select class="form-select" id="new_vendor_product_uom" name="new_vendor_product_uom" style="max-width: 568px !important;">
                         </select>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group required">
                                 <label for="buying-price" class="col-form-label">Buying Price</label>
-                                <input type="number" class="form-control" id="buying_price" name="buying_price" min="1" style="max-width: 568px !important;">
+                                <input type="number" class="form-control" id="new_buying_price" name="new_buying_price" min="1" style="max-width: 568px !important;">
                             </div>   
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group required">
                                 <label for="source" class="col-form-label">Source</label>
-                                <input type="text" class="form-control" id="buying_price" name="buying_price" style="max-width: 568px !important;">
+                                <input type="text" class="form-control" id="new_buying_source" name="new_buying_source" style="max-width: 568px !important;">
                             </div>   
                         </div>
                     </div>
@@ -398,13 +398,13 @@
                         <div class="col-sm-6">
                             <div class="form-group required">
                                 <label for="procured-quantity" class="col-form-label">Procured Quantity</label>
-                                <input type="number" class="form-control" id="buying_price" name="buying_price" min="0.01" style="max-width: 568px !important;">
+                                <input type="number" class="form-control" id="new_procured_quantity" name="new_procured_quantity" min="0.01" style="max-width: 568px !important;">
                             </div>   
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group required">
                                 <label for="source" class="col-form-label">Rejected Quantity</label>
-                                <input type="number" class="form-control" id="buying_price" name="buying_price" min="0" style="max-width: 568px !important;">
+                                <input type="number" class="form-control" id="new_rejected_quantity" name="new_rejected_quantity" min="0" style="max-width: 568px !important;">
                             </div>   
                         </div>
                     </div>
@@ -416,7 +416,7 @@
                 <div class="alert alert-success" style="display:none;">
                 </div>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="add_vehicle_to_dispatch_plan" name="add_vehicle_to_dispatch_plan">Update Inventory</button>
+                <button type="button" class="btn btn-primary" id="update_inventory_form" name="update_inventory_form">Update Inventory</button>
             </div>
         </div>
 
@@ -917,7 +917,7 @@ console.log(data_array);
 }
 
 
-$('input[name=\'vendor_product_name\']').autocomplete({
+$('input[name=\'new_vendor_product_name\']').autocomplete({
             'source': function(request, response) {
                 $.ajax({
                     url: 'index.php?path=dropdowns/dropdowns/product_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
@@ -935,7 +935,9 @@ $('input[name=\'vendor_product_name\']').autocomplete({
             'select': function(item) {
                 console.log(item['value']);
                 var selected_product_store_id = item['value'];
-                $('input[name=\'vendor_product_name\']').val(item['label']);
+                $('#new_vendor_product_name').attr('data-vendor-product-id', selected_product_store_id);
+                $('#new_vendor_product_name').attr('data-vendor-product-name', selected_product_store_id);
+                $('input[name=\'new_vendor_product_name\']').val(item['label']);
                 $.ajax({
                 url: 'index.php?path=dropdowns/dropdowns/getVendorProductVariantsInfo&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>',
                 dataType: 'json',     
@@ -947,12 +949,12 @@ $('input[name=\'vendor_product_name\']').autocomplete({
                            option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-price="'+ json[i].price +'" data-special="'+ json[i].special_price +'" value="'+ json[i].unit + '">' + json[i].unit + '</option>';
                     }
                     console.log(option);
-                    var $select = $('#vendor_product_uom');
+                    var $select = $('#new_vendor_product_uom');
                     $select.html('');
                     if(json != null && json.length > 0) {
                     $select.append(option);
                     }
-                    var $price_input = $('#vendor_product_price');
+                    var $price_input = $('#new_vendor_product_price');
                     var special_price = json[0].price == null || json[0].price == 0 ? json[0].special_price : json[0].price;
                     $price_input.val(special_price.replace(/,/g, ""));
                     $('.selectpicker').selectpicker('refresh');
@@ -963,10 +965,34 @@ $('input[name=\'vendor_product_name\']').autocomplete({
 });                    
 
                     
-$('button[id^=\'update_inventory\']').on('click', function (e) {
+$('button[id^=\'new_update_inventory\']').on('click', function (e) {
 $("form[id^='inventory_update']")[0].reset();
 $('#inventory_update')[0].reset();               
 $('#inventoryupdateModal').modal('toggle');
+$('#new_vendor_product_name').attr('data-vendor-product-id', "");
+$('#new_vendor_product_name').attr('data-vendor-product-name', "");
+});
+
+$('button[id^=\'update_inventory_form\']').on('click', function (e) {
+var vendor_product_uom = $('#new_vendor_product_uom').val();
+var buying_price = $('#new_buying_price').val();
+var buying_source = $('#new_buying_source').val();
+var procured_quantity = $('#new_procured_quantity').val();
+var rejected_quantity = $('#new_rejected_quantity').val();
+var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
+$.ajax({
+        url: 'index.php?path=catalog/product/updateInventorysingle&token=<?= $token ?>',
+        dataType: 'json',
+        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_id' : vendor_product_id  },
+        success: function(json) {
+        if (json) {
+        $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+        }
+        else {
+        location.reload();
+        }
+        }
+        });
 });
 </script>
 <style>

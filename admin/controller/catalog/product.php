@@ -265,6 +265,36 @@ class ControllerCatalogProduct extends Controller {
         exit();
     }
 
+    public function updateInventorysingle() {
+        $log = new Log('error.log');
+        $log->write($this->request->post);
+        $log->write($this->request->get);
+
+        $this->load->language('catalog/product');
+        $this->load->model('catalog/vendor_product');
+        $product_details = $this->model_catalog_vendor_product->getProduct($this->request->get['vendor_product_id']);
+        $log->write($product_details);
+        $vendor_product_uom = $this->request->get['vendor_product_uom'];
+        $buying_price = $this->request->get['buying_price'];
+        $buying_source = $this->request->get['buying_source'];
+        $procured_quantity = $this->request->get['procured_quantity'];
+        $rejected_quantity = $this->request->get['rejected_quantity'];
+        $vendor_product_id = $this->request->get['vendor_product_id'];
+
+        $product['rejected_qty'] = $rejected_quantity;
+        $product['procured_qty'] = $procured_quantity;
+        $product['current_buying_price'] = $buying_price;
+        $product['source'] = $buying_source;
+        $product['current_qty'] = $procured_quantity - $rejected_quantity;
+        $product['product_name'] = $product_details['name'];
+        $product['product_id'] = $product_details['product_id'];
+
+        $data[] = $this->model_catalog_vendor_product->updateProductInventory($vendor_product_id, $product);
+        $this->session->data['success'] = 'Products stocks modified successfully!';
+        echo 0;
+        exit();
+    }
+
     public function updateMultiInventory() {
         $this->load->language('catalog/product');
         $update_products = $this->request->get['updated_products'];

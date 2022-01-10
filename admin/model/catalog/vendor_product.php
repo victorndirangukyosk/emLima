@@ -764,7 +764,7 @@ class ModelCatalogVendorProduct extends Model {
 
         $this->trigger->fire('post.admin.product.edit', $store_product_id);
 
-        return $product_id;
+        return $this->db->getLastId();
     }
 
     public function updateProductInventoryPricing($store_product_id, $data) {
