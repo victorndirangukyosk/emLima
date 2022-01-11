@@ -234,7 +234,7 @@
     <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_supplier; ?></span></a>
         <ul class="collapse">
             <?php if($preturn_customer) { ?>
-            <li><a href="<?php echo $farmer; ?>"><?php echo $text_supplier; ?></a></li>
+            <li><a href="<?php echo $supplier; ?>"><?php echo $text_supplier; ?></a></li>
             <?php } ?>
         </ul>
     </li>
