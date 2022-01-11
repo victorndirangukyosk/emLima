@@ -9,7 +9,7 @@ class ControllerSaleSupplier extends Controller {
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('user/farmer');
+        $this->load->model('user/supplier');
 
         $this->getList();
 
@@ -24,11 +24,11 @@ class ControllerSaleSupplier extends Controller {
     }
 
     public function add() {
-        $this->load->language('sale/farmer');
+        $this->load->language('sale/supplier');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('user/farmer');
+        $this->load->model('user/supplier');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
             $this->request->post['ip'] = $this->request->server['REMOTE_ADDR'];
@@ -48,11 +48,11 @@ class ControllerSaleSupplier extends Controller {
                 'user_group_id' => $this->user->getGroupId(),
                 'supplier_id' => $supplier_id,
             ];
-            $log->write('farmer add');
+            $log->write('supplier add');
 
-            $this->model_user_user_activity->addActivity('farmer_add', $activity_data);
+            $this->model_user_user_activity->addActivity('supplier_add', $activity_data);
 
-            $log->write('farmer add');
+            $log->write('supplier add');
 
             $url = '';
 
@@ -85,7 +85,7 @@ class ControllerSaleSupplier extends Controller {
     public function edit() {
         $log = new Log('error.log');
         $log->write(HTTPS_SERVER . 'index.php?path=common/farmer');
-        $this->load->language('sale/farmer');
+        $this->load->language('sale/supplier');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
@@ -189,7 +189,7 @@ class ControllerSaleSupplier extends Controller {
     }
 
     public function delete() {
-        $this->load->language('sale/farmer');
+        $this->load->language('sale/supplier');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
@@ -232,7 +232,7 @@ class ControllerSaleSupplier extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
@@ -292,7 +292,7 @@ class ControllerSaleSupplier extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getList();
@@ -406,7 +406,7 @@ class ControllerSaleSupplier extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('sale/supplier/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
@@ -427,9 +427,9 @@ class ControllerSaleSupplier extends Controller {
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        $customer_total = $this->model_user_farmer->getTotalFarmers($filter_data);
+        $customer_total = $this->model_user_supplier->getTotalSuppliers($filter_data);
 
-        $results = $this->model_user_farmer->getFarmers($filter_data);
+        $results = $this->model_user_supplier->getSuppliers($filter_data);
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
@@ -569,11 +569,11 @@ class ControllerSaleSupplier extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_email'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
-        $data['sort_ip'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.created_at' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_email'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
+        $data['sort_ip'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=c.created_at' . $url, 'SSL');
 
         $url = '';
 
@@ -621,7 +621,7 @@ class ControllerSaleSupplier extends Controller {
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -790,7 +790,7 @@ class ControllerSaleSupplier extends Controller {
             $data['action'] = $this->url->link('sale/supplier/edit', 'token=' . $this->session->data['token'] . '&supplier_id=' . $this->request->get['supplier_id'] . $url, 'SSL');
         }
 
-        $data['cancel'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         if (isset($this->request->get['supplier_id'])) {
             $user_info = $this->model_user_farmer->getFarmer($this->request->get['supplier_id']);
@@ -961,7 +961,7 @@ class ControllerSaleSupplier extends Controller {
     }
 
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'sale/farmer')) {
+        if (!$this->user->hasPermission('modify', 'sale/supplier')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
@@ -1060,7 +1060,7 @@ class ControllerSaleSupplier extends Controller {
     }
 
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'sale/farmer')) {
+        if (!$this->user->hasPermission('modify', 'sale/supplier')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
@@ -1305,7 +1305,7 @@ class ControllerSaleSupplier extends Controller {
                 'ip' => $result['ip'],
                 'total' => $this->model_sale_customer->getTotalCustomersByIp($result['ip']),
                 'date_added' => date('d/m/y', strtotime($result['date_added'])),
-                'filter_ip' => $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL'),
+                'filter_ip' => $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL'),
                 'ban_ip' => $ban_ip_total,
             ];
         }
@@ -1383,7 +1383,7 @@ class ControllerSaleSupplier extends Controller {
                 $filter_email = '';
             }
 
-            $this->load->model('sale/farmer');
+            $this->load->model('sale/supplier');
 
             $filter_data = [
                 'filter_name' => $filter_name,
