@@ -1,29 +1,25 @@
 <?php
 
-class ControllerSaleOrderProductMissing extends Controller
-{
+class ControllerSaleOrderProductMissing extends Controller {
 
     private $error = [];
 
-    public function index()
-    {      
+    public function index() {
 
         $this->load->language('sale/ordered_product');
         $this->document->setTitle($this->language->get('heading_title'));
         $this->load->model('sale/order');
         $this->getMissingProductsList();
     }
- 
-    protected function validate()
-    {
+
+    protected function validate() {
         if (!$this->user->hasPermission('modify', 'sale/order_product_missing')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
-        return !$this->error; 
+        return !$this->error;
     }
-  
-    protected function getMissingProductsList()
-    {
+
+    protected function getMissingProductsList() {
         if (isset($this->request->get['filter_city'])) {
             $filter_city = $this->request->get['filter_city'];
         } else {
@@ -79,7 +75,7 @@ class ControllerSaleOrderProductMissing extends Controller
             $filter_delivery_method = null;
         }
         if (isset($this->request->get['filter_order_day'])) {
-            $url .= '&filter_order_day='.$this->request->get['filter_order_day'];
+            $url .= '&filter_order_day=' . $this->request->get['filter_order_day'];
         }
         if (isset($this->request->get['filter_delivery_date'])) {
             $filter_delivery_date = $this->request->get['filter_delivery_date'];
@@ -207,7 +203,7 @@ class ControllerSaleOrderProductMissing extends Controller
 
 
         if (isset($this->request->get['filter_order_day'])) {
-            $url .= '&filter_order_day='.$this->request->get['filter_order_day'];
+            $url .= '&filter_order_day=' . $this->request->get['filter_order_day'];
         }
 
         if (isset($this->request->get['filter_order_type'])) {
@@ -299,7 +295,6 @@ class ControllerSaleOrderProductMissing extends Controller
             $sub_total = 0;
 
             // $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
-
             //echo "<pre>";print_r($totals);die;
             // foreach ($totals as $total) {
             //     if ('sub_total' == $total['code']) {
@@ -331,10 +326,10 @@ class ControllerSaleOrderProductMissing extends Controller
                 'quantity' => $result['quantity'],
                 'total' => $result['total'],
                 'price' => $result['price'],
-                'tax' => $result['tax'],   
-           'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
-           'order_product_id'=>$result['order_product_id'],
-        ];
+                'tax' => $result['tax'],
+                'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+                'order_product_id' => $result['order_product_id'],
+            ];
         }
 
         $data['heading_title'] = $this->language->get('heading_title');
@@ -450,7 +445,7 @@ class ControllerSaleOrderProductMissing extends Controller
 
 
         if (isset($this->request->get['filter_order_day'])) {
-            $url .= '&filter_order_day='.$this->request->get['filter_order_day'];
+            $url .= '&filter_order_day=' . $this->request->get['filter_order_day'];
         }
 
         if (isset($this->request->get['filter_order_type'])) {
@@ -618,7 +613,6 @@ class ControllerSaleOrderProductMissing extends Controller
         $drivers = $this->model_drivers_drivers->getDrivers();
         $data['drivers'] = $drivers;
 
-
         $this->load->model('orderprocessinggroup/orderprocessinggroup');
         $order_processing_groups = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
         $data['order_processing_groups'] = $order_processing_groups;
@@ -626,10 +620,7 @@ class ControllerSaleOrderProductMissing extends Controller
         $this->response->setOutput($this->load->view('sale/order_product_missing_list.tpl', $data));
     }
 
-
-
-    public function getUserByName($name)
-    {
+    public function getUserByName($name) {
         if ($name) {
             $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '" . $this->db->escape($name) . "%'");
 
@@ -637,56 +628,33 @@ class ControllerSaleOrderProductMissing extends Controller
         }
     }
 
-
-    public function addtomissingproduct()
-    {
+    public function addtomissingproduct() {
         $json = [];
-        try
-        {
-        $this->load->language('sale/order');        
-        // if ($this->request->server['HTTPS']) {
-        //     $data['base'] = HTTPS_SERVER;
-        // } else {
-        //     $data['base'] = HTTP_SERVER;
-        // }
-       
-        $this->load->model('sale/order');      
-        $data['orders'] = [];
- 
+        try {
+            $this->load->language('sale/order');
+            $this->load->model('sale/order');
+            $data['orders'] = [];
 
-        if (isset($this->request->post['selected'])) {
-            $orders  = explode(",",$this->request->post['selected']);
-        }  
+            if (isset($this->request->post['selected'])) {
+                $orders = explode(",", $this->request->post['selected']);
+            }
 
-        if (isset($this->request->post['quantityrequired'])) {
-            $ordersquantityrequired  = explode(",",$this->request->post['quantityrequired']);
-        } 
+            if (isset($this->request->post['quantityrequired'])) {
+                $ordersquantityrequired = explode(",", $this->request->post['quantityrequired']);
+            }
 
-        //   echo "<pre>";print_r($ordersquantityrequired);die;
-        $i=0;
-        foreach ($orders as $order_product_id) {
-            // echo "<pre>";print_r($order_product_id);die;
-
-            $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id,$ordersquantityrequired[$i]);
-            //   echo "<pre>";print_r($order_product_info);die;
-            $i++;
-            
-         }  
-         $json = 'success';
-        }
-        catch(exception $ex)
-        {
+            $i = 0;
+            foreach ($orders as $order_product_id) {
+                $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i]);
+                $i++;
+            }
+            $json = 'success';
+        } catch (exception $ex) {
             $json = 'failed';
+        } finally {
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
         }
-        finally
-        {
-         $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-        }
-
-                  
-        
     }
-
 
 }
