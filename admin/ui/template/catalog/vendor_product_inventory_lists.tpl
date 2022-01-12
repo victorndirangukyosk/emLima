@@ -415,6 +415,8 @@
                 </div>
                 <div class="alert alert-success" style="display:none;">
                 </div>
+                <div class="alert alert-success download" style="display:none;">
+                </div>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="update_inventory_form" name="update_inventory_form">Update Inventory</button>
             </div>
@@ -972,6 +974,12 @@ $('#inventoryupdateModal').modal('toggle');
 $('#new_vendor_product_name').attr('data-vendor-product-id', "");
 $('#new_vendor_product_name').attr('data-vendor-product-name', "");
 $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id', "");
+$('.alert.alert-success').html('');
+$('.alert.alert-success.download').html('');
+$('.alert.alert-danger').html('');
+$('.alert.alert-success.download').hide();
+$('.alert.alert-success').hide();
+$('.alert.alert-danger').hide();
 });
 
 $('button[id^=\'update_inventory_form\']').on('click', function (e) {
@@ -983,6 +991,11 @@ var rejected_quantity = $('#new_rejected_quantity').val();
 var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
 var buying_source_id = $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id');
 $('.alert.alert-success').html('');
+$('.alert.alert-success.download').html('');
+$('.alert.alert-danger').html(''); 
+$('.alert.alert-success.download').hide();
+$('.alert.alert-success').hide();
+$('.alert.alert-danger').hide();    
 $.ajax({
         url: 'index.php?path=catalog/product/updateInventorysingle&token=<?= $token ?>',
         dataType: 'json',
@@ -999,8 +1012,11 @@ $.ajax({
         if (json) {
         if(json['status'] == '200') {
         $('.alert.alert-success').html('');
+        $('.alert.alert-success.download').html('');
         $('.alert.alert-success').html('<i class="fa fa-check-circle text-success">'+json['message']+'</i>');
+        $('.alert.alert-success.download').html('<button id="download_inventory_voucher" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Download Voucher" data-inventory-voucher="'+json['data']+'"><i class="fa fa-download text-success"></i></button>');
         $('.alert.alert-success').show();
+        $('.alert.alert-success.download').show();
         console.log(json);
         }
         if(json['status'] == '400') {
@@ -1037,6 +1053,13 @@ $('input[name=\'new_buying_source\']').autocomplete({
                 $('input[name=\'new_buying_source\']').val(item['label']);
                 $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id', item['value']);
             }
+});
+
+$(document).on('click', '#download_inventory_voucher', function(e){ 
+e.preventDefault();
+var inventory_voucher = $(this).attr("data-inventory-voucher");
+console.log(inventory_voucher);
+window.open(inventory_voucher, '_blank');
 });
 </script>
 <style>

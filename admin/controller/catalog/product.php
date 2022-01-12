@@ -315,6 +315,7 @@ class ControllerCatalogProduct extends Controller {
             $log->write('RESULT');
             $log->write($result);
             $log->write('RESULT');
+            $json['data'] = $this->url->link('catalog/vendor_product/inventoryvoucher', 'token=' . $this->session->data['token'] . '&product_history_id=' . $result, 'SSL');
             $json['status'] = '200';
             $json['message'] = 'Products stocks modified successfully!';
             $this->session->data['success'] = 'Products stocks modified successfully!';
