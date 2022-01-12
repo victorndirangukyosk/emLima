@@ -89,42 +89,6 @@
                                 </div>
                             </div>
                             <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-farmer-type">Farmer Type</label>
-                                <div class="col-sm-10">
-                                    <select name="farmer_type" id="input-farmer-type" class="form-control">
-                                        <option value="Commercial" <?php if(isset($farmer_type) && $farmer_type == 'Commercial') { ?> selected="selected" <?php } ?> >Commercial</option>
-                                        <option value="Smallholder" <?php if(isset($farmer_type) && $farmer_type == 'Smallholder') { ?> selected="selected" <?php } ?> >Smallholder</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-farm-size">Farm Size</label>
-                                <div class="col-sm-10">
-                                    <input type="text" name="farm_size" value="<?php echo $farm_size; ?>" placeholder="Farm Size" id="input-farm-size" class="form-control" />
-                                    <?php if ($error_farm_size) { ?>
-                                    <div class="text-danger"><?php echo $error_farm_size; ?></div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-farm-size-type">Farm Size Type</label>
-                                <div class="col-sm-10">
-                                    <select name="farm_size_type" id="input-farm-size-type" class="form-control">
-                                        <option value="Acres" <?php if(isset($farm_size_type) && $farm_size_type == 'Acres') { ?> selected="selected" <?php } ?> >Acres</option>
-                                        <option value="Hectares" <?php if(isset($farm_size_type) && $farm_size_type == 'Hectares') { ?> selected="selected" <?php } ?> >Hectares</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-irrigation-type">Irrigation Type</label>
-                                <div class="col-sm-10">
-                                    <select name="irrigation_type" id="input-irrigation-type" class="form-control">
-                                        <option value="Piped" <?php if(isset($irrigation_type) && $irrigation_type == 'Piped') { ?> selected="selected" <?php } ?> >Piped</option>
-                                        <option value="Natural" <?php if(isset($irrigation_type) && $irrigation_type == 'Natural') { ?> selected="selected" <?php } ?> >Natural</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-location">Location</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="location" value="<?php echo $location; ?>" placeholder="Location" id="input-location" class="form-control" />
@@ -145,7 +109,7 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-organization">Organization</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="organization" value="<?php echo $organization; ?>" placeholder="Farmer Organization" id="input-organization" class="form-control" />
+                                    <input type="text" name="organization" value="<?php echo $organization; ?>" placeholder="Supplier Organization" id="input-organization" class="form-control" />
                                     <?php if ($error_organization) { ?>
                                     <div class="text-danger"><?php echo $error_organization; ?></div>
                                     <?php } ?>

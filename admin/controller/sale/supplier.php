@@ -34,7 +34,7 @@ class ControllerSaleSupplier extends Controller {
             $this->request->post['ip'] = $this->request->server['REMOTE_ADDR'];
             $this->request->post['latitude'] = 0;
             $this->request->post['longitude'] = 0;
-            $supplier_id = $this->model_user_farmer->addFarmer($this->request->post);
+            $supplier_id = $this->model_user_supplier->addSupplier($this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -84,23 +84,23 @@ class ControllerSaleSupplier extends Controller {
 
     public function edit() {
         $log = new Log('error.log');
-        $log->write(HTTPS_SERVER . 'index.php?path=common/farmer');
+        $log->write(HTTPS_SERVER . 'index.php?path=common/supplier');
         $this->load->language('sale/supplier');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('user/farmer');
+        $this->load->model('user/supplier');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $supplier_info = $this->model_user_farmer->getFarmer($this->request->get['supplier_id']);
+            $supplier_info = $this->model_user_supplier->getFarmer($this->request->get['supplier_id']);
             $send_message = FALSE;
             if (isset($supplier_info) && $supplier_info['username'] == NULL && $supplier_info['password'] == NULL) {
                 $log->write('supplier_info');
                 $log->write($supplier_info);
                 $send_message = TRUE;
             }
-            $this->model_user_farmer->editFarmer($this->request->get['supplier_id'], $this->request->post);
-            $farmer_info2 = $this->model_user_farmer->getFarmer($this->request->get['supplier_id']);
+            $this->model_user_supplier->editSupplier($this->request->get['supplier_id'], $this->request->post);
+            $farmer_info2 = $this->model_user_supplier->getSupplier($this->request->get['supplier_id']);
             $send_message2 = FALSE;
             if (isset($farmer_info2) && $farmer_info2['username'] != NULL && $farmer_info2['password'] != NULL) {
                 $log->write('farmer_info2');
@@ -193,11 +193,11 @@ class ControllerSaleSupplier extends Controller {
 
         $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model('user/farmer');
+        $this->load->model('user/supplier');
 
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $supplier_id) {
-                $this->model_user_farmer->deleteUser($supplier_id);
+                $this->model_user_supplier->deleteUser($supplier_id);
 
                 // Add to activity log
                 $log = new Log('error.log');
@@ -793,7 +793,7 @@ class ControllerSaleSupplier extends Controller {
         $data['cancel'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         if (isset($this->request->get['supplier_id'])) {
-            $user_info = $this->model_user_farmer->getFarmer($this->request->get['supplier_id']);
+            $user_info = $this->model_user_supplier->getSupplier($this->request->get['supplier_id']);
             $data['supplier_id'] = $user_info['farmer_id'];
         }
 
@@ -969,8 +969,8 @@ class ControllerSaleSupplier extends Controller {
             $this->error['email'] = $this->language->get('error_email');
         }
 
-        $this->load->model('user/farmer');
-        $farmer_info = $this->model_user_farmer->getFarmerByEmail($this->request->post['email']);
+        $this->load->model('user/supplier');
+        $farmer_info = $this->model_user_supplier->getSupplierByEmail($this->request->post['email']);
 
         if (!isset($this->request->get['supplier_id'])) {
             if ($farmer_info) {
@@ -986,7 +986,7 @@ class ControllerSaleSupplier extends Controller {
             $this->error['username'] = $this->language->get('error_username');
         }
 
-        $supplier_username_info = $this->model_user_farmer->getFarmerByUsername($this->request->post['username']);
+        $supplier_username_info = $this->model_user_supplier->getSupplierByUsername($this->request->post['username']);
 
         if (!isset($this->request->get['supplier_id'])) {
             if ($supplier_username_info) {
@@ -1010,7 +1010,7 @@ class ControllerSaleSupplier extends Controller {
             $this->error['mobile'] = $this->language->get('error_telephone');
         }
 
-        $supplier_mobile_info = $this->model_user_farmer->getFarmerByPhone($this->request->post['mobile']);
+        $supplier_mobile_info = $this->model_user_supplier->getSupplierByPhone($this->request->post['mobile']);
 
         if (!isset($this->request->get['supplier_id'])) {
             if ($supplier_mobile_info) {
@@ -1026,20 +1026,16 @@ class ControllerSaleSupplier extends Controller {
             $this->error['mobile'] = $this->language->get('error_telephone');
         }
 
-        if ($this->request->post['farm_size'] <= 0 || strlen($this->request->post['farm_size']) <= 0 || preg_match('/[^\d]/is', $this->request->post['farm_size'])) {
-            $this->error['farm_size'] = 'Farm Size must be greater than zero!';
-        }
-
         if ((utf8_strlen(trim($this->request->post['location'])) < 1) || (utf8_strlen(trim($this->request->post['location'])) > 32)) {
-            $this->error['location'] = 'Farm Location Required!';
+            $this->error['location'] = 'Supplier Location Required!';
         }
 
         if ((utf8_strlen(trim($this->request->post['description'])) < 1) || (utf8_strlen(trim($this->request->post['description'])) > 32)) {
-            $this->error['description'] = 'Farm Description Required!';
+            $this->error['description'] = 'Supplier Description Required!';
         }
 
         if ((utf8_strlen(trim($this->request->post['organization'])) < 1) || (utf8_strlen(trim($this->request->post['organization'])) > 32)) {
-            $this->error['organization'] = 'Farmer Organization Required!';
+            $this->error['organization'] = 'Supplier Organization Required!';
         }
 
         if ($this->request->post['password'] || (!isset($this->request->get['supplier_id']))) {
@@ -1616,7 +1612,7 @@ class ControllerSaleSupplier extends Controller {
                 $filter_name = '';
             }
 
-            $this->load->model('user/farmer');
+            $this->load->model('user/supplier');
 
             $filter_data = [
                 'filter_name' => $filter_name,
@@ -1624,7 +1620,7 @@ class ControllerSaleSupplier extends Controller {
                 'limit' => 5,
             ];
 
-            $results = $this->model_user_farmer->getFarmerOrganizations($filter_data);
+            $results = $this->model_user_supplier->getSupplierOrganizations($filter_data);
             foreach ($results as $result) {
                 $json[] = [
                     'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
