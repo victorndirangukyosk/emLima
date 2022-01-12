@@ -506,7 +506,7 @@ class ModelSaleOrder extends Model {
 
         return $returnData;
     }
-    
+
     public function getVendorProductVariations($product_name, $store_id, $formated = false) {
         $returnData = [];
 
@@ -559,8 +559,7 @@ class ModelSaleOrder extends Model {
 
         return $returnData;
     }
-    
-    
+
     public function getProductVariationsNewFarmer($product_name, $store_id, $formated = false) {
         $returnData = [];
 
@@ -2154,6 +2153,12 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
+    public function getOrderProductById($order_id, $product_id) {
+        $sql = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "' AND order_product_id ='" . (int) $product_id . "'";
+        $query = $this->db->query($sql);
+        return $query->row;
+    }
+
     public function getOrderAndRealOrderProducts($order_id, $store_id = 0) {
         $sql1 = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
 
@@ -2218,6 +2223,12 @@ class ModelSaleOrder extends Model {
         $query = $this->db->query($sql);
 
         return $query->rows;
+    }
+
+    public function getRealOrderProductById($order_id, $product_id) {
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "' AND order_product_id = '" . (int) $product_id . "'";
+        $query = $this->db->query($sql);
+        return $query->row;
     }
 
     public function getRealOrderProductsItems($order_id, $store_id = 0) {

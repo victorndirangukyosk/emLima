@@ -9556,7 +9556,7 @@ class ControllerSaleOrder extends Controller {
         // echo "<pre>";print_r( $res);die;
 
         $html = '';
-        $html .= '<div class="container"><table style="width:48%;" class="table table-bordered table-striped table-responsive">
+        $html .= '<input type="hidden" id="missed_products_order_id" name="missed_products_order_id" value="'.$order_id.'"><div class="container"><table style="width:48%;" class="table table-bordered table-striped table-responsive">
 	   <thead>
       <tr class="info">
     <!--<th>Order ID</th>-->

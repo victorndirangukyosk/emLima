@@ -630,9 +630,16 @@ class ControllerSaleOrderProductMissing extends Controller {
 
     public function addtomissingproduct() {
         $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $ordered_products = NULL;
+        $error = NULL;
+        $log = new Log('error.log');
         try {
             $this->load->language('sale/order');
             $this->load->model('sale/order');
+
             $data['orders'] = [];
 
             if (isset($this->request->post['selected'])) {
@@ -643,12 +650,30 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $ordersquantityrequired = explode(",", $this->request->post['quantityrequired']);
             }
 
-            $i = 0;
+            $j = 0;
             foreach ($orders as $order_product_id) {
-                $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i]);
-                $i++;
+                $ordered_products = $this->model_sale_order->getRealOrderProductById($this->request->post['order_id'], $order_product_id);
+                if ($ordered_products == NULL) {
+                    $ordered_products = $products = $this->model_sale_order->getOrderProductById($this->request->post['order_id'], $order_product_id);
+                }
+                if ($ordersquantityrequired[$j] > $ordered_products['quantity']) {
+                    $error = $ordered_products['name'] . ' Should Not Be Greater Than Ordered Quantity!';
+                }
+                $j++;
+                $json['status'] = 400;
+                $json['message'] = $error;
             }
-            $json = 'success';
+
+            if ($error == NULL) {
+                $i = 0;
+                foreach ($orders as $order_product_id) {
+                    $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i]);
+                    $i++;
+                }
+                $json['status'] = 200;
+                $json['message'] = 'Missed Products Saved Successfully!';
+                $json['data'] = $order_product_info;
+            }
         } catch (exception $ex) {
             $json = 'failed';
         } finally {

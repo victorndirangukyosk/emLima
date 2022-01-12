@@ -1269,6 +1269,10 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     <h4 class="modal-title">Order Products List</h4>
                                 </div>
+                                <div class="alert alert-danger missed" style="display:none;">
+                                </div>
+                                <div class="alert alert-success missed" style="display:none;">
+                                </div>                        
                                 <div class="modal-body orderproducts" style="overflow-y: auto;overflow-x: hidden;max-height:400px">
 
                                     <div class="message_wrapper"></div>
@@ -2625,6 +2629,10 @@ function downloadOrderStickers() {
 $('a[id^=\'order_products_list\']').on('click', function (e) {
 e.preventDefault();
 $('#store_modal').modal('toggle');
+$('.alert.alert-danger.missed').hide();
+$('.alert.alert-success.missed').hide();
+$('.alert.alert-danger.missed').html('');
+$('.alert.alert-success.missed').html('');
  var order_id_val=$(this).attr('data-orderid');
            console.log(order_id_val);
 $('.orderproducts').html('');
@@ -2671,9 +2679,12 @@ function submit_copy() {
 
 
 function addtomissingproduct() {
+              $('.alert.alert-danger.missed').hide();
+              $('.alert.alert-success.missed').hide();
               url = 'index.php?path=sale/order_product_missing/addtomissingproduct&token=<?php echo $token; ?>';
                 var req_quantity="0";
-            var selected_order_product_id = $.map($('input[name="selectedproducts[]"]:checked'), function(n, i){
+                var order_id = $('#missed_products_order_id').val();
+                var selected_order_product_id = $.map($('input[name="selectedproducts[]"]:checked'), function(n, i){
             
                 var req_quantity_single =$('input[id^="updated_quantity_'+n.value+'"]').val(); 
                 if(req_quantity!="0")
@@ -2682,7 +2693,7 @@ function addtomissingproduct() {
                 }
                 else
                 {
-                    req_quantity=req_quantity_single;
+                req_quantity=req_quantity_single;
                 }
            console.log(req_quantity);
            console.log("req_quantity");
@@ -2694,13 +2705,16 @@ function addtomissingproduct() {
 
             if(selected_order_product_id=='' || selected_order_product_id==null)
             {
-                alert("Please Select the product");
-                return;
+            $('.alert.alert-danger.missed').html('');
+            $('.alert.alert-danger.missed').html('<i class="fa fa-times-circle text-danger">Please Select At Lease One Product</i>');
+            $('.alert.alert-danger.missed').show();
+            return;
             } 
 
              data = {
                 selected :selected_order_product_id,
-                quantityrequired: req_quantity
+                quantityrequired: req_quantity,
+                order_id : order_id
             }
 
            
@@ -2710,11 +2724,20 @@ function addtomissingproduct() {
                 dataType: 'json',
                 data: data,
                 success: function(json) {
-                            console.log(json);
-                            alert("Product Added to Missing Products List");
-                            //location=location;
-                            $('#store_modal').modal('hide')
-                            
+                console.log(json);
+                if(json.status == 400) {
+                $('.alert.alert-danger.missed').html('');
+                $('.alert.alert-danger.missed').html('<i class="fa fa-times-circle text-danger">'+json.message+'</i>');
+                $('.alert.alert-danger.missed').show();
+                }
+                
+                if(json.status == 200) {
+                $('.alert.alert-success.missed').html('');
+                $('.alert.alert-success.missed').html('<i class="fa fa-times-circle text-danger">'+json.message+'</i>');
+                $('.alert.alert-success.missed').show();
+                $('#store_modal').modal('hide')            
+                }
+                //location=location;
                 },			
                 error: function(xhr, ajaxOptions, thrownError) {		
                     
