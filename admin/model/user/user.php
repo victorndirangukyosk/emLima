@@ -310,6 +310,89 @@ class ModelUserUser extends Model {
         return $query->rows;
     }
 
+    public function getSupplierUsers($data = []) {
+        $sql = 'SELECT *, CONCAT(first_name, " ", last_name) AS name FROM `' . DB_PREFIX . 'farmer`';
+
+        $isWhere = 1;
+        $_sql = [];
+
+        $_sql[] = "WHERE user_group_id = '" . $this->config->get('config_supplier_group_id') . "'";
+        //filter vendor groups
+        if (isset($data['filter_first_name']) && !is_null($data['filter_first_name'])) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE first_name LIKE '" . $this->db->escape($data['filter_first_name']) . "%'";
+        }
+
+        if (isset($data['filter_last_name']) && !is_null($data['filter_last_name'])) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE last_name LIKE '" . $this->db->escape($data['filter_last_name']) . "%'";
+        }
+
+        if (isset($data['filter_name']) && !is_null($data['filter_name']) && strlen($data['filter_name']) > 0) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE CONCAT(first_name, ' ', last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (isset($data['filter_email']) && !is_null($data['filter_email']) && strlen($data['filter_email']) > 0) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+        }
+
+        if (isset($data['filter_mobile']) && !is_null($data['filter_mobile']) && strlen($data['filter_mobile']) > 0) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE mobile LIKE '" . $this->db->escape($data['filter_mobile']) . "%'";
+        }
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE status LIKE '" . $this->db->escape($data['filter_status']) . "%'";
+        }
+
+        if ($_sql) {
+            $sql .= implode(' AND ', $_sql);
+        }
+
+        $sort_data = [
+            'name',
+            'status',
+            'created_at',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY name';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
     public function getAccountManagerUsers($data = []) {
         $sql = 'SELECT *, CONCAT(firstname, " ", lastname) AS name FROM `' . DB_PREFIX . 'user`';
 

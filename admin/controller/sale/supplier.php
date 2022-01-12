@@ -1672,7 +1672,7 @@ class ControllerSaleSupplier extends Controller {
                 'limit' => 5,
             ];
 
-            $results = $this->model_user_user->getFarmerUsers($filter_data);
+            $results = $this->model_user_user->getSupplierUsers($filter_data);
 
             foreach ($results as $result) {
                 if ($this->user->isVendor()) {
