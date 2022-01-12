@@ -243,7 +243,7 @@ class ModelUserFarmer extends Model {
         $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'farmer';
 
         $implode = [];
-
+        $implode[] = "user_group_id = '" . $this->config->get('config_farmer_group_id') . "'";
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(first_name, ' ', last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
@@ -284,7 +284,7 @@ class ModelUserFarmer extends Model {
         $sql = "SELECT *, CONCAT(c.first_name, ' ', c.last_name) AS name FROM " . DB_PREFIX . 'farmer c';
 
         $implode = [];
-
+        $implode[] = "user_group_id = '" . $this->config->get('config_farmer_group_id') . "'";
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(c.first_name, ' ', c.last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }

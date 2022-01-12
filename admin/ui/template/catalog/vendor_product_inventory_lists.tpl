@@ -390,7 +390,7 @@
                         <div class="col-sm-6">
                             <div class="form-group required">
                                 <label for="source" class="col-form-label">Source</label>
-                                <input placeholder="Search Supplier/Farmer" type="text" class="form-control" id="new_buying_source" name="new_buying_source" style="max-width: 568px !important;">
+                                <input placeholder="Search Supplier/Farmer" type="text" class="form-control" id="new_buying_source" data-new-buying-source-id="" name="new_buying_source" style="max-width: 568px !important;">
                             </div>   
                         </div>
                     </div>
@@ -971,6 +971,7 @@ $('#inventory_update')[0].reset();
 $('#inventoryupdateModal').modal('toggle');
 $('#new_vendor_product_name').attr('data-vendor-product-id', "");
 $('#new_vendor_product_name').attr('data-vendor-product-name', "");
+$('input[name=\'new_buying_source\']').attr('data-new-buying-source-id', "");
 });
 
 $('button[id^=\'update_inventory_form\']').on('click', function (e) {
@@ -980,11 +981,12 @@ var buying_source = $('#new_buying_source').val();
 var procured_quantity = $('#new_procured_quantity').val();
 var rejected_quantity = $('#new_rejected_quantity').val();
 var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
+var buying_source_id = $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id');
 $('.alert.alert-success').html('');
 $.ajax({
         url: 'index.php?path=catalog/product/updateInventorysingle&token=<?= $token ?>',
         dataType: 'json',
-        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_id' : vendor_product_id  },
+        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'buying_source_id' : buying_source_id, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_id' : vendor_product_id  },
         async: true,
         beforeSend: function() {
         $('#update_inventory_form').prop('disabled', true);
@@ -1019,13 +1021,13 @@ $.ajax({
 $('input[name=\'new_buying_source\']').autocomplete({
             'source': function(request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/supplier/autocompletesupplier&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/supplier/autocompletesupplierfarmer&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function(json) {
                         response($.map(json, function(item) {
                             return {
                                 label: item['name'],
-                                value: item['farmer_id']
+                                value: item['supplier_id']
                             }
                         }));
                     }
@@ -1033,6 +1035,7 @@ $('input[name=\'new_buying_source\']').autocomplete({
             },
             'select': function(item) {
                 $('input[name=\'new_buying_source\']').val(item['label']);
+                $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id', item['value']);
             }
 });
 </script>

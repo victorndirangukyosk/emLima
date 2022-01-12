@@ -271,6 +271,7 @@ class ControllerCatalogProduct extends Controller {
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
+        $supplier_details = NULL;
 
         $log = new Log('error.log');
         $log->write($this->request->post);
@@ -279,11 +280,24 @@ class ControllerCatalogProduct extends Controller {
         if ($this->request->get['vendor_product_id'] != NULL && $this->request->get['vendor_product_uom'] != NULL && $this->request->get['buying_price'] != NULL && $this->request->get['procured_quantity'] != NULL && $this->request->get['rejected_quantity'] != NULL) {
             $this->load->language('catalog/product');
             $this->load->model('catalog/vendor_product');
+            $this->load->model('user/farmer');
+            $this->load->model('user/supplier');
+
+            $supplier_details = $this->model_user_supplier->getSupplier($this->request->get['buying_source_id']);
+            if ($supplier_details == NULL) {
+                $supplier_details = $this->model_user_farmer->getFarmer($this->request->get['buying_source_id']);
+            }
+
+            $log->write('supplier_details');
+            $log->write($supplier_details);
+            $log->write('supplier_details');
+
             $product_details = $this->model_catalog_vendor_product->getProduct($this->request->get['vendor_product_id']);
             $log->write($product_details);
             $vendor_product_uom = $this->request->get['vendor_product_uom'];
             $buying_price = $this->request->get['buying_price'];
             $buying_source = $this->request->get['buying_source'];
+            $buying_source_id = $this->request->get['buying_source_id'];
             $procured_quantity = $this->request->get['procured_quantity'];
             $rejected_quantity = $this->request->get['rejected_quantity'];
             $vendor_product_id = $this->request->get['vendor_product_id'];
@@ -297,6 +311,7 @@ class ControllerCatalogProduct extends Controller {
             $product['product_id'] = $product_details['product_id'];
 
             $result = $this->model_catalog_vendor_product->updateProductInventory($vendor_product_id, $product);
+            //$ret = $this->emailtemplate->sendmessage($get_farmer_phone['mobile'], $sms_message);
             $log->write('RESULT');
             $log->write($result);
             $log->write('RESULT');
