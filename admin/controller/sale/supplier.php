@@ -92,7 +92,7 @@ class ControllerSaleSupplier extends Controller {
         $this->load->model('user/supplier');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validateForm()) {
-            $supplier_info = $this->model_user_supplier->getFarmer($this->request->get['supplier_id']);
+            $supplier_info = $this->model_user_supplier->getSupplier($this->request->get['supplier_id']);
             $send_message = FALSE;
             if (isset($supplier_info) && $supplier_info['username'] == NULL && $supplier_info['password'] == NULL) {
                 $log->write('supplier_info');

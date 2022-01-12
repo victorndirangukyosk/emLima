@@ -3,7 +3,7 @@
 class ModelUserSupplier extends Model {
 
     public function addSupplier($data) {
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "farmer` SET user_group_id = '" . $this->config->get('config_supplier_group_id') . "', first_name = '" . $this->db->escape($data['first_name']) . "', last_name = '" . $this->db->escape($data['last_name']) . "', email = '" . $this->db->escape($data['email']) . "', mobile = '" . $this->db->escape($data['mobile']) . "', location = '" . $data['location'] . "', description = '" . $data['description'] . "',  salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', ip = '" . $data['ip'] . "', latitude = '" . $data['latitude'] . "', longitude = '" . (int) $data['longitude'] . "', status = '" . $data['status'] . "', organization = '" . $data['organization'] . "', created_at = NOW()");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "farmer` SET user_group_id = '" . $this->config->get('config_supplier_group_id') . "', username = '" . $this->db->escape($data['username']) . "', first_name = '" . $this->db->escape($data['first_name']) . "', last_name = '" . $this->db->escape($data['last_name']) . "', email = '" . $this->db->escape($data['email']) . "', mobile = '" . $this->db->escape($data['mobile']) . "', location = '" . $data['location'] . "', description = '" . $data['description'] . "',  salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', ip = '" . $data['ip'] . "', latitude = '" . $data['latitude'] . "', longitude = '" . (int) $data['longitude'] . "', status = '" . $data['status'] . "', organization = '" . $data['organization'] . "', created_at = NOW()");
 
         return $this->db->getLastId();
     }
@@ -29,7 +29,7 @@ class ModelUserSupplier extends Model {
     }
 
     public function deleteUser($user_id) {
-        $this->db->query('DELETE FROM `' . DB_PREFIX . "user` WHERE user_id = '" . (int) $user_id . "'");
+        $this->db->query('DELETE FROM `' . DB_PREFIX . "farmer` WHERE farmer_id = '" . (int) $user_id . "'");
     }
 
     public function getSupplier($supplier_id) {
