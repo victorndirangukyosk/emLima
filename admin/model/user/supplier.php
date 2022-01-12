@@ -244,6 +244,7 @@ class ModelUserSupplier extends Model {
 
         $implode = [];
 
+        $implode[] = "user_group_id = '" . $this->config->get('config_supplier_group_id') . "'";
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(first_name, ' ', last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
@@ -284,7 +285,7 @@ class ModelUserSupplier extends Model {
         $sql = "SELECT *, CONCAT(c.first_name, ' ', c.last_name) AS name FROM " . DB_PREFIX . 'farmer c';
 
         $implode = [];
-
+        $implode[] = "user_group_id = '" . $this->config->get('config_supplier_group_id') . "'";
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(c.first_name, ' ', c.last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }

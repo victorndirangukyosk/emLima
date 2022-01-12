@@ -40,7 +40,7 @@
 
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label class="control-label" for="input-company">Farmer Name</label>
+                                <label class="control-label" for="input-company"><?php echo $entry_name; ?></label>
                                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
                             </div>
 
@@ -73,22 +73,7 @@
                                 <label class="control-label" for="input-email"><?php echo $entry_email; ?></label>
                                 <input type="text" name="filter_email" value="<?php echo $filter_email; ?>" placeholder="<?php echo $entry_email; ?>" id="input-email" class="form-control" />
                             </div>
-                            <!--<div class="form-group">
-                                <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
-                                <select name="filter_status" id="input-status" class="form-control">
-                                    <option value="*"></option>
-                                    <?php if ($filter_status) { ?>
-                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                                    <?php } else { ?>
-                                    <option value="1"><?php echo $text_enabled; ?></option>
-                                    <?php } ?>
-                                    <?php if (!$filter_status && !is_null($filter_status)) { ?>
-                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                                    <?php } else { ?>
-                                    <option value="0"><?php echo $text_disabled; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>-->
+                            
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
@@ -128,10 +113,7 @@
                                         <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                                         <?php } ?></td>
                                     <td class="text-left"><?php echo $column_telephone; ?></td>
-                                    <td class="text-left">Produce Details</td>
-                                    <td class="text-left">Farmer Type</td>
                                     <td class="text-left">Organization</td>
-                                    <td class="text-left">Farm Size</td>
                                     <td class="text-left"><?php if ($sort == 'c.date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
                                         <?php } else { ?>
@@ -151,10 +133,7 @@
                                         <?php } ?></td>
                                     <td class="text-left"><?php echo $customer['name']; ?></td>
                                     <td class="text-left"><?php echo $customer['mobile']; ?></td>
-                                    <td class="text-left"><?php echo $customer['description']; ?></td>
-                                    <td class="text-left"><?php echo $customer['farmer_type']; ?></td>
                                     <td class="text-left"><?php echo $customer['organization']; ?></td>
-                                    <td class="text-left"><?php echo $customer['farm_size']; ?></td>
                                     <td class="text-left"><?php echo $customer['created_at']; ?></td>
                                     <td class="text-right"><a href="<?php echo $customer['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
                                 </tr>
