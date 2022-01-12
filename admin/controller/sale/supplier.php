@@ -1640,7 +1640,7 @@ class ControllerSaleSupplier extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function autocompletefarmer() {
+    public function autocompletesupplier() {
         $json = [];
 
         if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email']) || isset($this->request->get['filter_mobile'])) {
