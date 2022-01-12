@@ -404,7 +404,7 @@
                         <div class="col-sm-6">
                             <div class="form-group required">
                                 <label for="source" class="col-form-label">Rejected Quantity</label>
-                                <input type="number" class="form-control" id="new_rejected_quantity" name="new_rejected_quantity" min="0" style="max-width: 568px !important;">
+                                <input type="number" class="form-control" id="new_rejected_quantity" name="new_rejected_quantity" min="0" value="0" style="max-width: 568px !important;">
                             </div>   
                         </div>
                     </div>
@@ -980,6 +980,7 @@ var buying_source = $('#new_buying_source').val();
 var procured_quantity = $('#new_procured_quantity').val();
 var rejected_quantity = $('#new_rejected_quantity').val();
 var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
+$('.alert.alert-success').html('');
 $.ajax({
         url: 'index.php?path=catalog/product/updateInventorysingle&token=<?= $token ?>',
         dataType: 'json',
@@ -995,11 +996,13 @@ $.ajax({
         success: function(json) {
         if (json) {
         if(json['status'] == '200') {
+        $('.alert.alert-success').html('');
         $('.alert.alert-success').html('<i class="fa fa-check-circle text-success">'+json['message']+'</i>');
         $('.alert.alert-success').show();
         console.log(json);
         }
         if(json['status'] == '400') {
+        $('.alert.alert-danger').html('');
         $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger">'+json['message']+'</i>');
         $('.alert.alert-danger').show();    
         }
