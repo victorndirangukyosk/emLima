@@ -321,41 +321,41 @@ class ModelUserUser extends Model {
         if (isset($data['filter_first_name']) && !is_null($data['filter_first_name'])) {
             $isWhere = 1;
 
-            $_sql[] = "WHERE first_name LIKE '" . $this->db->escape($data['filter_first_name']) . "%'";
+            $_sql[] = "AND first_name LIKE '" . $this->db->escape($data['filter_first_name']) . "%'";
         }
 
         if (isset($data['filter_last_name']) && !is_null($data['filter_last_name'])) {
             $isWhere = 1;
 
-            $_sql[] = "WHERE last_name LIKE '" . $this->db->escape($data['filter_last_name']) . "%'";
+            $_sql[] = "AND last_name LIKE '" . $this->db->escape($data['filter_last_name']) . "%'";
         }
 
         if (isset($data['filter_name']) && !is_null($data['filter_name']) && strlen($data['filter_name']) > 0) {
             $isWhere = 1;
 
-            $_sql[] = "WHERE CONCAT(first_name, ' ', last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $_sql[] = "AND CONCAT(first_name, ' ', last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
 
         if (isset($data['filter_email']) && !is_null($data['filter_email']) && strlen($data['filter_email']) > 0) {
             $isWhere = 1;
 
-            $_sql[] = "WHERE email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+            $_sql[] = "AND email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
         }
 
         if (isset($data['filter_mobile']) && !is_null($data['filter_mobile']) && strlen($data['filter_mobile']) > 0) {
             $isWhere = 1;
 
-            $_sql[] = "WHERE mobile LIKE '" . $this->db->escape($data['filter_mobile']) . "%'";
+            $_sql[] = "AND mobile LIKE '" . $this->db->escape($data['filter_mobile']) . "%'";
         }
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $isWhere = 1;
 
-            $_sql[] = "WHERE status LIKE '" . $this->db->escape($data['filter_status']) . "%'";
+            $_sql[] = "AND status LIKE '" . $this->db->escape($data['filter_status']) . "%'";
         }
 
         if ($_sql) {
-            $sql .= implode(' AND ', $_sql);
+            $sql .= implode(' ', $_sql);
         }
 
         $sort_data = [

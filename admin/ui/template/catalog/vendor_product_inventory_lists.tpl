@@ -390,7 +390,7 @@
                         <div class="col-sm-6">
                             <div class="form-group required">
                                 <label for="source" class="col-form-label">Source</label>
-                                <input type="text" class="form-control" id="new_buying_source" name="new_buying_source" style="max-width: 568px !important;">
+                                <input placeholder="Search Supplier/Farmer" type="text" class="form-control" id="new_buying_source" name="new_buying_source" style="max-width: 568px !important;">
                             </div>   
                         </div>
                     </div>
@@ -1011,6 +1011,26 @@ $.ajax({
         $('#update_inventory_form').prop('disabled', false);
         }
         });
+});
+
+$('input[name=\'new_buying_source\']').autocomplete({
+            'source': function(request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/supplier/autocompletesupplier&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function(json) {
+                        response($.map(json, function(item) {
+                            return {
+                                label: item['name'],
+                                value: item['farmer_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function(item) {
+                $('input[name=\'new_buying_source\']').val(item['label']);
+            }
 });
 </script>
 <style>
