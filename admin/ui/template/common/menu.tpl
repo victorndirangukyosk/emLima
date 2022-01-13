@@ -176,7 +176,22 @@
         </ul>
     </li>
     <?php } ?>
-
+    
+    <?php 
+    if($preturn_vendor_product) {
+    ?>
+    <li id="sale"><a class="parent"><i class="fa fa-money fa-fw"></i> <span>Finance</span></a>
+        <ul class="collapse">
+            <?php if($preturn_vendor_product != false) { ?>
+            <li><a href="<?php echo $inventory_management_update_history; ?>">Inward purchase</a></li>
+            <?php } ?>
+            <?php if($preturn_order_receivables) { ?>
+            <li><a href="<?php echo $order_receivables; ?>">Payment Receivables</a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+    
     <?php
     if( $preturn_customer != false || $preturn_customer_group != false || $preturn_customer_ban_ip != false) {
     ?>
