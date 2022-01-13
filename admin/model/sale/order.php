@@ -3874,7 +3874,7 @@ class ModelSaleOrder extends Model {
     }
 
     public function getOrderedMissingProducts($data = []) {
-        $sql = "SELECT mp.id,o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id,p.product_id,p.general_product_id,p.name,p.unit,p.quantity,p.price,p.total,p.tax,mp.quantity_required FROM `" . DB_PREFIX . 'order` o ';
+        $sql = "SELECT mp.id,o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id,p.product_id,p.general_product_id,p.name,p.unit,p.quantity,p.price,p.total,p.tax,p.model,p.product_note,mp.quantity_required FROM `" . DB_PREFIX . 'order` o ';
 
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';

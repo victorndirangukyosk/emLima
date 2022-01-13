@@ -9969,33 +9969,13 @@ class ControllerSaleOrder extends Controller {
                 $filter['filter_order_id'] = $order_id;
 
                 $products = $this->model_sale_order->getOrderedMissingProducts($filter);
-
+                $sub_total = 0;
+                $tax = 0;
                 foreach ($products as $product) {
                     if ($store_id && $product['store_id'] != $store_id) {
                         continue;
                     }
                     $option_data = [];
-
-                    $options = $this->model_sale_order->getOrderOptions($order_id, $product['order_product_id']);
-
-                    foreach ($options as $option) {
-                        if ('file' != $option['type']) {
-                            $value = $option['value'];
-                        } else {
-                            $upload_info = $this->model_tool_upload->getUploadByCode($option['value']);
-
-                            if ($upload_info) {
-                                $value = $upload_info['name'];
-                            } else {
-                                $value = '';
-                            }
-                        }
-
-                        $option_data[] = [
-                            'name' => $option['name'],
-                            'value' => $value,
-                        ];
-                    }
 
                     $product_data[] = [
                         'product_id' => $product['product_id'],
@@ -10008,8 +9988,10 @@ class ControllerSaleOrder extends Controller {
                         'price' => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                         'total' => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                     ];
+                    $sub_total += $product['total'];
+                    $tax += $product['tax']; 
                 }
-
+                $new_total = $sub_total+$tax;
                 $total_data = [];
 
                 if ($store_id) {
@@ -10027,10 +10009,22 @@ class ControllerSaleOrder extends Controller {
                         $total['value'] += $credit_amount;
                         $total_data[] = [
                             'title' => $total['title'],
-                            'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                            'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
+                            'text' => $this->currency->format($new_total, $order_info['currency_code'], $order_info['currency_value']),
+                            'amount_in_words' => ucwords($this->translateAmountToWords(floor(($new_total * 100) / 100))) . ' Kenyan Shillings',
                         ];
-                    } else {
+                    } if ($total['code'] == 'sub_total') {
+                        $total_data[] = [
+                            'title' => $total['title'],
+                            'text' => $this->currency->format($sub_total, $order_info['currency_code'], $order_info['currency_value']),
+                            'amount_in_words' => ucwords($this->translateAmountToWords(floor(($sub_total * 100) / 100))) . ' Kenyan Shillings',
+                        ];
+                    } if ($total['code'] == 'tax') {
+                        $total_data[] = [
+                            'title' => $total['title'],
+                            'text' => $this->currency->format($tax, $order_info['currency_code'], $order_info['currency_value']),
+                            'amount_in_words' => ucwords($this->translateAmountToWords(floor(($tax * 100) / 100))) . ' Kenyan Shillings',
+                        ];
+                    } if ($total['code'] == 'transaction_fee') {
                         $total_data[] = [
                             'title' => $total['title'],
                             'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
