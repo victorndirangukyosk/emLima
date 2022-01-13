@@ -4292,8 +4292,6 @@ class ModelSaleOrder extends Model {
 
         $productinfo = $query->row;
         if ($productinfo != null) {
-            //    echo "<pre>";print_r($productinfo['general_product_id']);die;
-
             $sql = 'Delete FROM ' . DB_PREFIX . "missing_products WHERE order_id = '" . (int) $productinfo['order_id'] . "' and product_store_id = '" . (int) $productinfo['product_id'] . "'";
 
             $query = $this->db->query($sql);
@@ -4303,7 +4301,7 @@ class ModelSaleOrder extends Model {
 
             // echo "<pre>";print_r($required_quantity);die;
 
-            $sql = 'INSERT into ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['total'] . "',  quantity_required = '" . $required_quantity . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'";
+            $sql = 'INSERT into ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['total'] . "',  quantity_required = '" . $required_quantity . "', created_by = '" . $this->user->getId() . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'";
             //  echo "<pre>";print_r($sql);die;
 
 
