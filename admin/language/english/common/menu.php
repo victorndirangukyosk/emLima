@@ -15,6 +15,7 @@ $_['text_offer'] = 'Offers';
 $_['text_currency'] = 'Currencies';
 $_['text_customer'] = 'Customers';
 $_['text_farmer'] = 'Farmers';
+$_['text_supplier'] = 'Suppliers';
 $_['text_farmertransactions'] = 'Farmer Transactions';
 $_['text_customer_group'] = 'Customer Groups';
 $_['text_customer_ban_ip'] = 'Banned IP';

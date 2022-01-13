@@ -78,6 +78,7 @@ class ControllerCommonMenu extends Controller {
         // $data['customer_otp'] = $this->url->link('sale/customer/customer_otp', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
         $data['customer_otp'] = $this->url->link('sale/customer_otp', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
         $data['farmer'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.created_at&order=DESC', 'SSL');
+        $data['supplier'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=c.created_at&order=DESC', 'SSL');
         $data['farmertransactions'] = $this->url->link('sale/farmer_transactions', 'token=' . $this->session->data['token'] . '&sort=c.created_at&order=DESC', 'SSL');
 
         $data['accountmanager'] = $this->url->link('sale/accountmanager', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
@@ -322,6 +323,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_customer'] = $this->user->hasPermission('access', 'sale/customer');
         // $data['preturn_customer_otp'] = $this->user->hasPermission('access', 'sale/customer/customer_otp');
         $data['preturn_farmer'] = $this->user->hasPermission('access', 'sale/farmer');
+        $data['preturn_supplier'] = $this->user->hasPermission('access', 'sale/supplier');
         $data['preturn_farmertransactions'] = $this->user->hasPermission('access', 'sale/farmer_transactions');
         $data['preturn_customer_group'] = $this->user->hasPermission('access', 'sale/customer_group');
         $data['preturn_customer_ban_ip'] = $this->user->hasPermission('access', 'sale/customer_ban_ip');

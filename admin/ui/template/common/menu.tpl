@@ -176,7 +176,22 @@
         </ul>
     </li>
     <?php } ?>
-
+    
+    <?php 
+    if($preturn_vendor_product) {
+    ?>
+    <li id="sale"><a class="parent"><i class="fa fa-money fa-fw"></i> <span>Finance</span></a>
+        <ul class="collapse">
+            <?php if($preturn_vendor_product != false) { ?>
+            <li><a href="<?php echo $inventory_management_update_history; ?>">Inward purchases</a></li>
+            <?php } ?>
+            <?php if($preturn_order_receivables) { ?>
+            <li><a href="<?php echo $order_receivables; ?>">Payment Receivables</a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+    
     <?php
     if( $preturn_customer != false || $preturn_customer_group != false || $preturn_customer_ban_ip != false) {
     ?>
@@ -213,7 +228,7 @@
     </li>
     <?php } ?>
     
-        <?php
+    <?php
     if( $preturn_farmer != false || $preturn_farmertransactions != false) {
     ?>
     <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_farmer; ?></span></a>
@@ -223,6 +238,18 @@
             <?php } ?>
             <?php if($preturn_farmertransactions) { ?>
             <li><a href="<?php echo $farmertransactions; ?>"><?php echo $text_farmertransactions; ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+    <?php } ?>
+    
+    <?php
+    if( $preturn_supplier != false) {
+    ?>
+    <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_supplier; ?></span></a>
+        <ul class="collapse">
+            <?php if($preturn_customer) { ?>
+            <li><a href="<?php echo $supplier; ?>"><?php echo $text_supplier; ?></a></li>
             <?php } ?>
         </ul>
     </li>

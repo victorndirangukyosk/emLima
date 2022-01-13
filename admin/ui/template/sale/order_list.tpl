@@ -478,11 +478,11 @@
                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
                                        </a> 
                                        <?php } ?>
-                                       <!-- <?php if ($order['order_status_id'] == 1  && (!$this->user->isVendor()))    { ?>
-                                       <a href="#" data-toggle="tooltip" data-target="store_modal" title="Order Products List" data-orderid="<?= $order['order_id'] ?>" id="order_products_list">
-                                       <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 512 512" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M499.5 385.4L308.9 57.2c-31.8-52.9-74.1-52.9-105.9 0L12.5 385.4c-31.8 52.9 0 95.3 63.5 95.3h360c63.5 0 95.3-42.4 63.5-95.3zm-201.1 52.9h-84.7v-84.7h84.7v84.7zm0-127h-84.7V120.7h84.7v190.6z" fill="#626262"/></svg>
+                                       <?php if ($order['order_status_id'] == 1  && (!$this->user->isVendor()))    { ?>
+                                       <a href="#" data-toggle="tooltip" data-target="store_modal" title="Missed Products List" data-orderid="<?= $order['order_id'] ?>" id="order_products_list">
+                                       <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                                        </a> 
-                                        <?php } ?>-->
+                                       <?php } ?>
                                         
                                         <?php if ($order['delivery_id'] == NULL && ($order['order_status_id'] == 1 ) && ($this->user->hasPermission('access', 'amitruck/amitruckquotes')) )   { ?>
                                        <a href="#" target="_blank" data-toggle="tooltip" title="Amitruck" data-orderid="<?= $order['order_id'] ?>" data-ordertotal="<?= $order['sub_total_custom'] ?>" id="assign_to_amitruck">
@@ -1269,6 +1269,10 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     <h4 class="modal-title">Order Products List</h4>
                                 </div>
+                                <div class="alert alert-danger missed" style="display:none;">
+                                </div>
+                                <div class="alert alert-success missed" style="display:none;">
+                                </div>                        
                                 <div class="modal-body orderproducts" style="overflow-y: auto;overflow-x: hidden;max-height:400px">
 
                                     <div class="message_wrapper"></div>
@@ -2625,6 +2629,10 @@ function downloadOrderStickers() {
 $('a[id^=\'order_products_list\']').on('click', function (e) {
 e.preventDefault();
 $('#store_modal').modal('toggle');
+$('.alert.alert-danger.missed').hide();
+$('.alert.alert-success.missed').hide();
+$('.alert.alert-danger.missed').html('');
+$('.alert.alert-success.missed').html('');
  var order_id_val=$(this).attr('data-orderid');
            console.log(order_id_val);
 $('.orderproducts').html('');
@@ -2671,9 +2679,12 @@ function submit_copy() {
 
 
 function addtomissingproduct() {
+              $('.alert.alert-danger.missed').hide();
+              $('.alert.alert-success.missed').hide();
               url = 'index.php?path=sale/order_product_missing/addtomissingproduct&token=<?php echo $token; ?>';
                 var req_quantity="0";
-            var selected_order_product_id = $.map($('input[name="selectedproducts[]"]:checked'), function(n, i){
+                var order_id = $('#missed_products_order_id').val();
+                var selected_order_product_id = $.map($('input[name="selectedproducts[]"]:checked'), function(n, i){
             
                 var req_quantity_single =$('input[id^="updated_quantity_'+n.value+'"]').val(); 
                 if(req_quantity!="0")
@@ -2682,7 +2693,7 @@ function addtomissingproduct() {
                 }
                 else
                 {
-                    req_quantity=req_quantity_single;
+                req_quantity=req_quantity_single;
                 }
            console.log(req_quantity);
            console.log("req_quantity");
@@ -2694,13 +2705,16 @@ function addtomissingproduct() {
 
             if(selected_order_product_id=='' || selected_order_product_id==null)
             {
-                alert("Please Select the product");
-                return;
+            $('.alert.alert-danger.missed').html('');
+            $('.alert.alert-danger.missed').html('<i class="fa fa-times-circle text-danger">Please Select At Lease One Product</i>');
+            $('.alert.alert-danger.missed').show();
+            return;
             } 
 
              data = {
                 selected :selected_order_product_id,
-                quantityrequired: req_quantity
+                quantityrequired: req_quantity,
+                order_id : order_id
             }
 
            
@@ -2710,11 +2724,20 @@ function addtomissingproduct() {
                 dataType: 'json',
                 data: data,
                 success: function(json) {
-                            console.log(json);
-                            alert("Product Added to Missing Products List");
-                            //location=location;
-                            $('#store_modal').modal('hide')
-                            
+                console.log(json);
+                if(json.status == 400) {
+                $('.alert.alert-danger.missed').html('');
+                $('.alert.alert-danger.missed').html('<i class="fa fa-times-circle text-danger">'+json.message+'</i>');
+                $('.alert.alert-danger.missed').show();
+                }
+                
+                if(json.status == 200) {
+                $('.alert.alert-success.missed').html('');
+                $('.alert.alert-success.missed').html('<i class="fa fa-times-circle text-danger">'+json.message+'</i>');
+                $('.alert.alert-success.missed').show();
+                $('#store_modal').modal('hide')            
+                }
+                //location=location;
                 },			
                 error: function(xhr, ajaxOptions, thrownError) {		
                     
