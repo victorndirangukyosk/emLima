@@ -9988,10 +9988,10 @@ class ControllerSaleOrder extends Controller {
                         'price' => $this->currency->format($product['mp_price'] + ($this->config->get('config_tax') ? $product['mp_tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                         'total' => $this->currency->format($product['mp_total'] + ($this->config->get('config_tax') ? ($product['mp_tax'] * $product['quantity_required']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                     ];
-                    $sub_total += $product['mp_price']*$product['quantity_required'];
-                    $tax += $product['mp_tax']; 
+                    $sub_total += $product['mp_price'] * $product['quantity_required'];
+                    $tax += $product['mp_tax'] * $product['quantity_required'];
                 }
-                $new_total = $sub_total+$tax;
+                $new_total = $sub_total + $tax;
                 $total_data = [];
 
                 if ($store_id) {
