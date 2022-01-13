@@ -271,7 +271,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             // echo "<pre>";print_r($filter_order_id_temp);die;
 
             foreach ($filter_order_id_temp as $tmp) {
-                $tmp = $tmp[order_id];
+                $tmp = $tmp['order_id'];
 
                 //   echo "<pre>";print_r($tmp);die;
                 // code...
@@ -332,6 +332,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
                     'total' => $result['total'],
                     'price' => $result['price'],
                     'tax' => $result['tax'],
+                    'download_invoice' => $this->url->link('sale/order_product_missing_products/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL'),
                     // 'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
                     'order_product_id' => $result['order_product_id'],
                 ];
