@@ -736,9 +736,19 @@ class ControllerSaleOrderProductMissing extends Controller {
         if ($new_ordered_products == NULL) {
             $new_ordered_products = $products = $this->model_sale_order->getOrderProducts($this->request->post['order_id']);
         }
+
+        $sumTotal = 0;
+        $sumTotalTax = 0;
+
         foreach ($new_ordered_products as $new_ordered_product) {
             $sumTotal += ($new_ordered_product['price'] * $new_ordered_product['quantity']);
+            $sumTotalTax += ($new_ordered_product['tax'] * $new_ordered_product['quantity']);
         }
+
+        $log->write('TOTALS');
+        $log->write($sumTotal);
+        $log->write($sumTotalTax);
+        $log->write('TOTALS');
     }
 
 }
