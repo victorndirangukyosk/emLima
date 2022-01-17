@@ -639,6 +639,8 @@ class ControllerSaleOrderProductMissing extends Controller {
         try {
             $this->load->language('sale/order');
             $this->load->model('sale/order');
+            $this->load->model('catalog/vendor_product');
+            $this->load->model('tool/image');
 
             $data['orders'] = [];
 
@@ -670,6 +672,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                     $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i]);
                     $i++;
                 }
+                $this->editinvocebymissingproducts($this->request->post);
                 $json['status'] = 200;
                 $json['message'] = 'Missed Products Saved Successfully!';
                 $json['data'] = $order_product_info;
@@ -679,6 +682,52 @@ class ControllerSaleOrderProductMissing extends Controller {
         } finally {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
+        }
+    }
+
+    public function editinvocebymissingproducts($data) {
+
+        $log = new Log('error.log');
+
+        if (isset($this->request->post['selected'])) {
+            $orders = explode(",", $this->request->post['selected']);
+        }
+
+        if (isset($this->request->post['quantityrequired'])) {
+            $ordersquantityrequired = explode(",", $this->request->post['quantityrequired']);
+        }
+
+        $j = 0;
+        foreach ($orders as $order_product_id) {
+            $ordered_products = $this->model_sale_order->getRealOrderProductById($this->request->post['order_id'], $order_product_id);
+            if ($ordered_products == NULL) {
+                $ordered_products = $products = $this->model_sale_order->getOrderProductById($this->request->post['order_id'], $order_product_id);
+            }
+
+            $product_details = $this->model_catalog_vendor_product->getProduct($ordered_products['product_id']);
+            $product_details['product_id'] = $product_details['product_store_id'];
+
+            if ($ordered_products['product_id'] == $product_details['product_store_id'] && $ordersquantityrequired[$j] == $ordered_products['quantity']) {
+                $log->write('DELETE PRODUCT');
+                $log->write($ordered_products);
+                $log->write('DELETE PRODUCT');
+                //$products = $this->model_sale_order->deleteOrderProduct($this->request->post['order_id'], $product_details['store_id']);
+            }
+
+            if ($ordered_products['product_id'] == $product_details['product_store_id'] && $ordersquantityrequired[$j] < $ordered_products['quantity']) {
+                $log->write('EDIT PRODUCT');
+                $updateProduct = $ordered_products;
+                $updateProduct['quantity'] = $ordersquantityrequired[$j];
+                $custom_price = $ordered_products['price'];
+                $log->write($updateProduct);
+                $updateProduct_tax_total = NULL;
+                $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($product_details, $product_details['store_id'], NULL, $custom_price);
+                $log->write($updateProduct_tax_total);
+                $log->write('EDIT PRODUCT');
+                //$products = $this->model_sale_order->updateOrderProduct($this->request->post['order_id'], $product_details['product_store_id'], $updateProduct, $updateProduct_tax_total);
+            }
+
+            $j++;
         }
     }
 
