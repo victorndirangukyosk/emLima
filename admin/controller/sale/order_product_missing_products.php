@@ -12,7 +12,6 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $this->getMissingProductsList();
     }
 
-    
     protected function getMissingProductsList() {
         if (isset($this->request->get['filter_city'])) {
             $filter_city = $this->request->get['filter_city'];
@@ -252,43 +251,38 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             'filter_date_modified' => $filter_date_modified,
             'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
-            'order' => $order,// all orders are fecting by group, so dont send limit
-            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            // 'limit' => $this->config->get('config_limit_admin'),
+            'order' => $order, // all orders are fecting by group, so dont send limit
+                // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+                // 'limit' => $this->config->get('config_limit_admin'),
         ];
 
         // echo "<pre>";print_r($filter_data);die;        
-
         // $order_total = $this->model_sale_order->getTotalOrderedMissingProducts($filter_data);
-
         // $results = $this->model_sale_order->getOrderedMissingProducts($filter_data);
-
-
 #region
-        
+
         $order_total_final = [];
         $results_final = [];
 
         $filter_order_id_temp = $this->model_sale_order->getOrderedMissingProductsOnlyOrder($filter_data);
 
-        if (!empty($filter_order_id_temp) ) {
-             
+        if (!empty($filter_order_id_temp)) {
+
             // echo "<pre>";print_r($filter_order_id_temp);die;
 
             foreach ($filter_order_id_temp as $tmp) {
-                $tmp=$tmp[order_id];
+                $tmp = $tmp['order_id'];
 
-            //   echo "<pre>";print_r($tmp);die;
-
+                //   echo "<pre>";print_r($tmp);die;
                 // code...
                 $filter_data['filter_order_id'] = $tmp;
 
-                 $order_total = $this->model_sale_order->getTotalOrderedMissingProducts($filter_data);
+                $order_total = $this->model_sale_order->getTotalOrderedMissingProducts($filter_data);
 
-                  $results = $this->model_sale_order->getOrderedMissingProducts($filter_data);
+                $results = $this->model_sale_order->getOrderedMissingProducts($filter_data);
 
                 //  echo "<pre>";print_r($results);die;
-                
+
                 array_push($order_total_final, $order_total);
                 array_push($results_final, $results);
             }
@@ -303,52 +297,48 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         foreach ($results_final as $key => $results) {
             // code...
 
-            
+
             $result_order_tmp = null;
 
             foreach ($results as $result) {
-                
 
 
-                
-            if ($this->user->isVendor()) {
-                $result['customer'] = strtok($result['firstname'], ' ');
-            }
 
-            if ($result['company_name']) {
-                $result['company_name'] = ' (' . $result['company_name'] . ')';
-            } else {
-                $result['company_name'] = "(NA)";
-            }
 
-               
+                if ($this->user->isVendor()) {
+                    $result['customer'] = strtok($result['firstname'], ' ');
+                }
+
+                if ($result['company_name']) {
+                    $result['company_name'] = ' (' . $result['company_name'] . ')';
+                } else {
+                    $result['company_name'] = "(NA)";
+                }
+
+
                 $this->load->model('localisation/order_status');
                 $data['orders'][$result['order_id']]['orders'][] = [
-
                     'order_id' => $result['order_id'],
-                'id' => $result['id'],
-                'customer' => $result['customer'],
-                'company_name' => $result['company_name'],
-                'status' => $result['status'],
-                'product_id' => $result['product_id'],
-                'product_store_id' => $result['product_store_id'],
-                'name' => $result['name'],
-                'unit' => $result['unit'],
-                'quantity' => $result['quantity'],
-                'quantity_required' => $result['quantity_required'],
-                'total' => $result['total'],
-                'price' => $result['price'],
-                'tax' => $result['tax'],
-                // 'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
-                'order_product_id' => $result['order_product_id'],
+                    'id' => $result['id'],
+                    'customer' => $result['customer'],
+                    'company_name' => $result['company_name'],
+                    'status' => $result['status'],
+                    'product_id' => $result['product_id'],
+                    'product_store_id' => $result['product_store_id'],
+                    'name' => $result['name'],
+                    'unit' => $result['unit'],
+                    'quantity' => $result['quantity'],
+                    'quantity_required' => $result['quantity_required'],
+                    'total' => $result['total'],
+                    'price' => $result['price'],
+                    'tax' => $result['tax'],
+                    'download_invoice' => $this->url->link('sale/order/missing_products_order_invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL'),
+                    // 'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+                    'order_product_id' => $result['order_product_id'],
+                ];
 
-                   ];
-
-             
                 $result_status_tmp = $result['status'];
             }
-
-             
         }
 
 
@@ -636,7 +626,6 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $drivers = $this->model_drivers_drivers->getDrivers();
         $data['drivers'] = $drivers;
 
-
         $this->load->model('orderprocessinggroup/orderprocessinggroup');
         $order_processing_groups = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
         $data['order_processing_groups'] = $order_processing_groups;
@@ -652,5 +641,4 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         }
     }
 
-   
 }
