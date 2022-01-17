@@ -688,6 +688,8 @@ class ControllerSaleOrderProductMissing extends Controller {
     public function editinvocebymissingproducts($data) {
 
         $log = new Log('error.log');
+        $ordered_products = NULL;
+        $new_ordered_products = NULL;
 
         if (isset($this->request->post['selected'])) {
             $orders = explode(",", $this->request->post['selected']);
@@ -717,7 +719,7 @@ class ControllerSaleOrderProductMissing extends Controller {
             if ($ordered_products['product_id'] == $product_details['product_store_id'] && $ordersquantityrequired[$j] < $ordered_products['quantity']) {
                 $log->write('EDIT PRODUCT');
                 $updateProduct = $ordered_products;
-                $updateProduct['quantity'] = $ordersquantityrequired[$j];
+                $updateProduct['quantity'] = $ordered_products['quantity'] - $ordersquantityrequired[$j];
                 $custom_price = $ordered_products['price'];
                 $log->write($updateProduct);
                 $updateProduct_tax_total = NULL;
@@ -728,6 +730,14 @@ class ControllerSaleOrderProductMissing extends Controller {
             }
 
             $j++;
+        }
+
+        $new_ordered_products = $this->model_sale_order->getRealOrderProducts($this->request->post['order_id']);
+        if ($new_ordered_products == NULL) {
+            $new_ordered_products = $products = $this->model_sale_order->getOrderProducts($this->request->post['order_id']);
+        }
+        foreach ($new_ordered_products as $new_ordered_product) {
+            $sumTotal += ($new_ordered_product['price'] * $new_ordered_product['quantity']);
         }
     }
 
