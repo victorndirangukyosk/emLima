@@ -10478,6 +10478,10 @@ class ControllerSaleOrder extends Controller {
                     die;
                 }
             } catch (Exception $e) {
+                $log = new Log('error.log');
+                $log->write('pdf_error');
+                $log->write($e->getMessage());
+                $log->write('pdf_error');
                 echo $e->getMessage();
             }
             exit;
