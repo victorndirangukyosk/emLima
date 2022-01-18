@@ -749,6 +749,45 @@ class ControllerSaleOrderProductMissing extends Controller {
         $log->write($sumTotal);
         $log->write($sumTotalTax);
         $log->write('TOTALS');
+
+        $totals = $this->model_sale_order->getOrderTotals($this->request->post['order_id']);
+        //$this->model_sale_order->deleteOrderTotal($this->request->post['order_id']);
+        $dbsubtotal = NULL;
+        $dbtotal = NULL;
+        $dbtax = NULL;
+
+        foreach ($totals as $total) {
+            $log->write('DB_TOTAL');
+
+            if ($total['code'] == 'sub_total') {
+                $dbsubtotal['order_id'] = $this->request->post['order_id'];
+                $dbsubtotal['code'] = $total['code'];
+                $dbsubtotal['title'] = $total['title'];
+                $dbsubtotal['sort_order'] = $total['sort_order'];
+                $dbsubtotal['value'] = $sumTotal;
+                $log->write($total);
+            }
+
+            if ($total['code'] == 'total') {
+                $dbtotal['order_id'] = $this->request->post['order_id'];
+                $dbtotal['code'] = $total['code'];
+                $dbtotal['title'] = $total['title'];
+                $dbtotal['sort_order'] = $total['sort_order'];
+                $dbtotal['value'] = $sumTotal + $sumTotalTax;
+                $log->write($total);
+            }
+
+            if ($total['code'] == 'tax') {
+                $dbtax['order_id'] = $this->request->post['order_id'];
+                $dbtax['code'] = $total['code'];
+                $dbtax['title'] = $total['title'];
+                $dbtax['sort_order'] = $total['sort_order'];
+                $dbtax['value'] = $sumTotalTax;
+                $log->write($total);
+            }
+
+            $log->write('DB_TOTAL');
+        }
     }
 
 }
