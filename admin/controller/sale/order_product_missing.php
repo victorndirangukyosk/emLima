@@ -1152,17 +1152,13 @@ class ControllerSaleOrderProductMissing extends Controller {
                     $log->write('pdf_error');
                     $log->write($error);
                     $log->write('pdf_error');
-                    echo $error;
-                    die;
                 }
             } catch (Exception $e) {
                 $log = new Log('error.log');
                 $log->write('pdf_error');
                 $log->write($e->getMessage());
                 $log->write('pdf_error');
-                echo $e->getMessage();
             }
-            exit;
         }
     }
 
