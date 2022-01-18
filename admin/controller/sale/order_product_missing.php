@@ -714,6 +714,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $log->write($ordered_products);
                 $log->write('DELETE PRODUCT');
                 $products = $this->model_sale_order->deleteOrderProduct($this->request->post['order_id'], $product_details['store_id']);
+                $products = $this->model_sale_order->deleteCustomerOrderProduct($this->request->post['order_id'], $product_details['store_id']);
             }
 
             if ($ordered_products['product_id'] == $product_details['product_store_id'] && $ordersquantityrequired[$j] < $ordered_products['quantity']) {
@@ -727,6 +728,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $log->write($updateProduct_tax_total);
                 $log->write('EDIT PRODUCT');
                 $products = $this->model_sale_order->updateOrderProduct($this->request->post['order_id'], $product_details['product_store_id'], $updateProduct, $updateProduct_tax_total);
+                $products = $this->model_sale_order->updateOrderProductNew($this->request->post['order_id'], $product_details['product_store_id'], $updateProduct, $updateProduct_tax_total);
             }
 
             $j++;

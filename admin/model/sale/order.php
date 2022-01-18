@@ -2408,6 +2408,34 @@ class ModelSaleOrder extends Model {
         }
     }
 
+    public function updateOrderProductNew($order_id, $product_id, $data, $tax = NULL) {
+        $total = $data['price'] * $data['quantity'];
+
+        //$this->deleteOrderProduct($order_id,$product_id);
+        $tax_value = 0;
+        if (is_array($tax) && count($tax) > 0 && array_key_exists('code', $tax[0]) && array_key_exists('title', $tax[0]) && array_key_exists('value', $tax[0]) && array_key_exists('sort_order', $tax[0]) && $tax[0]['code'] == 'tax' && $tax[0]['value'] > 0) {
+            $tax_value = $tax[0]['value'];
+            //$log = new Log('error.log');
+            //$log->write('tax_value OLD');
+            //$log->write($tax_value);
+            //$log->write('tax_value OLD');
+        }
+
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+
+        $query = $this->db->query($sql);
+
+        if (!$query->num_rows) {
+            $sql = 'INSERT into ' . DB_PREFIX . "order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "',produce_type = '" . $data['produce_type'] . "',product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
+
+            $query = $this->db->query($sql);
+        } else {
+            $sql = 'UPDATE ' . DB_PREFIX . "order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', total = '" . $total . "', tax = '" . $tax_value . "' WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+
+            $query = $this->db->query($sql);
+        }
+    }
+
     public function getOrderOption($order_id, $order_option_id) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_option WHERE order_id = '" . (int) $order_id . "' AND order_option_id = '" . (int) $order_option_id . "'");
 
