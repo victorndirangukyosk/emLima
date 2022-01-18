@@ -1,18 +1,18 @@
 <?php
 
-class ModelUserFarmer extends Model {
+class ModelUserSupplier extends Model {
 
-    public function addFarmer($data) {
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "farmer` SET first_name = '" . $this->db->escape($data['first_name']) . "', last_name = '" . $this->db->escape($data['last_name']) . "', email = '" . $this->db->escape($data['email']) . "', mobile = '" . $this->db->escape($data['mobile']) . "', farmer_type = '" . $data['farmer_type'] . "', irrigation_type = '" . $data['irrigation_type'] . "', location = '" . $data['location'] . "', description = '" . $data['description'] . "',  salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', ip = '" . $data['ip'] . "', latitude = '" . $data['latitude'] . "', longitude = '" . (int) $data['longitude'] . "', status = '" . $data['status'] . "', farm_size = '" . $data['farm_size'] . "', farm_size_type = '" . $data['farm_size_type'] . "', organization = '" . $data['organization'] . "', created_at = NOW()");
+    public function addSupplier($data) {
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "farmer` SET user_group_id = '" . $this->config->get('config_supplier_group_id') . "', username = '" . $this->db->escape($data['username']) . "', first_name = '" . $this->db->escape($data['first_name']) . "', last_name = '" . $this->db->escape($data['last_name']) . "', email = '" . $this->db->escape($data['email']) . "', mobile = '" . $this->db->escape($data['mobile']) . "', location = '" . $data['location'] . "', description = '" . $data['description'] . "',  salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', ip = '" . $data['ip'] . "', latitude = '" . $data['latitude'] . "', longitude = '" . (int) $data['longitude'] . "', status = '" . $data['status'] . "', organization = '" . $data['organization'] . "', created_at = NOW()");
 
         return $this->db->getLastId();
     }
 
-    public function editFarmer($farmer_id, $data) {
-        $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET username = '" . $this->db->escape($data['username']) . "', first_name = '" . $this->db->escape($data['first_name']) . "', last_name = '" . $this->db->escape($data['last_name']) . "', email = '" . $this->db->escape($data['email']) . "', mobile = '" . $this->db->escape($data['mobile']) . "', farmer_type = '" . $data['farmer_type'] . "', irrigation_type = '" . $data['irrigation_type'] . "', location = '" . $data['location'] . "', description = '" . $data['description'] . "', farm_size = '" . $data['farm_size'] . "', farm_size_type = '" . $data['farm_size_type'] . "', organization = '" . $data['organization'] . "', status = '" . (int) $data['status'] . "', updated_at = NOW() WHERE farmer_id = '" . (int) $farmer_id . "'");
+    public function editSupplier($supplier_id, $data) {
+        $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET username = '" . $this->db->escape($data['username']) . "', first_name = '" . $this->db->escape($data['first_name']) . "', last_name = '" . $this->db->escape($data['last_name']) . "', email = '" . $this->db->escape($data['email']) . "', mobile = '" . $this->db->escape($data['mobile']) . "', location = '" . $data['location'] . "', description = '" . $data['description'] . "', organization = '" . $data['organization'] . "', status = '" . (int) $data['status'] . "', updated_at = NOW() WHERE farmer_id = '" . (int) $supplier_id . "'");
 
         if ($data['password']) {
-            $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE farmer_id = '" . (int) $farmer_id . "'");
+            $this->db->query('UPDATE `' . DB_PREFIX . "farmer` SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE farmer_id = '" . (int) $supplier_id . "'");
         }
     }
 
@@ -29,39 +29,39 @@ class ModelUserFarmer extends Model {
     }
 
     public function deleteUser($user_id) {
-        $this->db->query('DELETE FROM `' . DB_PREFIX . "user` WHERE user_id = '" . (int) $user_id . "'");
+        $this->db->query('DELETE FROM `' . DB_PREFIX . "farmer` WHERE farmer_id = '" . (int) $user_id . "'");
     }
 
-    public function getFarmer($farmer_id) {
-        $query = $this->db->query('SELECT *, (SELECT ug.name FROM `' . DB_PREFIX . 'user_group` ug WHERE ug.user_group_id = f.user_group_id) AS user_group FROM `' . DB_PREFIX . "farmer` f WHERE f.farmer_id = '" . (int) $farmer_id . "'");
+    public function getSupplier($supplier_id) {
+        $query = $this->db->query('SELECT *, (SELECT ug.name FROM `' . DB_PREFIX . 'user_group` ug WHERE ug.user_group_id = f.user_group_id) AS user_group FROM `' . DB_PREFIX . "farmer` f WHERE f.farmer_id = '" . (int) $supplier_id . "'");
 
         return $query->row;
     }
 
-    public function getFarmerByUsername($username) {
+    public function getSupplierByUsername($username) {
         $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "farmer` WHERE username = '" . $this->db->escape($username) . "'");
 
         return $query->row;
     }
 
-    public function getFarmerByName($name) {
+    public function getSupplierByName($name) {
         $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` WHERE CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($name) . "%' AND user_group_id ='" . $this->config->get('config_farmer_group_id') . "'");
         return $query->row;
     }
 
-    public function getFarmerByEmail($email) {
+    public function getSupplierByEmail($email) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "farmer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "' AND email != '' AND user_group_id = '" . (int) $this->config->get('config_farmer_group_id') . "'");
 
         return $query->row;
     }
 
-    public function getFarmerByPhone($mobile) {
+    public function getSupplierByPhone($mobile) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "farmer WHERE mobile = '" . $this->db->escape($mobile) . "' AND mobile != '' AND user_group_id = '" . (int) $this->config->get('config_farmer_group_id') . "'");
 
         return $query->row;
     }
 
-    public function getFarmerByCode($code) {
+    public function getSupplierByCode($code) {
         $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "farmer` WHERE code = '" . $this->db->escape($code) . "' AND code != ''");
 
         return $query->row;
@@ -213,7 +213,7 @@ class ModelUserFarmer extends Model {
         return $query->row['total'];
     }
 
-    public function getTotalFarmersByEmail($email) {
+    public function getTotalSuppliersByEmail($email) {
         $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "farmer` WHERE LCASE(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'";
 
         //filter vendor groups
@@ -226,7 +226,7 @@ class ModelUserFarmer extends Model {
         return $query->row['total'];
     }
 
-    public function getTotalFarmersByMobile($mobile) {
+    public function getTotalSuppliersByMobile($mobile) {
         $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "farmer` WHERE mobile = '" . $this->db->escape($mobile) . "'";
 
         //filter vendor groups
@@ -239,11 +239,12 @@ class ModelUserFarmer extends Model {
         return $query->row['total'];
     }
 
-    public function getTotalFarmers($data = []) {
+    public function getTotalSuppliers($data = []) {
         $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'farmer';
 
         $implode = [];
-        $implode[] = "user_group_id = '" . $this->config->get('config_farmer_group_id') . "'";
+
+        $implode[] = "user_group_id = '" . $this->config->get('config_supplier_group_id') . "'";
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(first_name, ' ', last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
@@ -280,11 +281,11 @@ class ModelUserFarmer extends Model {
         return $query->row['total'];
     }
 
-    public function getFarmers($data = []) {
+    public function getSuppliers($data = []) {
         $sql = "SELECT *, CONCAT(c.first_name, ' ', c.last_name) AS name FROM " . DB_PREFIX . 'farmer c';
 
         $implode = [];
-        $implode[] = "user_group_id = '" . $this->config->get('config_farmer_group_id') . "'";
+        $implode[] = "user_group_id = '" . $this->config->get('config_supplier_group_id') . "'";
         if (!empty($data['filter_name'])) {
             $implode[] = "CONCAT(c.first_name, ' ', c.last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
@@ -353,7 +354,7 @@ class ModelUserFarmer extends Model {
         return $query->rows;
     }
 
-    public function getFarmerActivities($data = []) {
+    public function getSupplierActivities($data = []) {
         $sql = 'SELECT c.organization, c.first_name, c.last_name, c.email, ca.activity_id, ca.farmer_id, ca.key, ca.data, ca.ip, ca.date_added FROM ' . DB_PREFIX . 'farmer_activity ca LEFT JOIN ' . DB_PREFIX . 'farmer c ON (ca.farmer_id = c.farmer_id)';
 
         $implode = [];
@@ -406,7 +407,7 @@ class ModelUserFarmer extends Model {
         return $query->rows;
     }
 
-    public function getTotalFarmerActivities($data = []) {
+    public function getTotalSupplierActivities($data = []) {
         $sql = 'SELECT COUNT(*) AS total FROM `' . DB_PREFIX . 'farmer_activity` ca LEFT JOIN ' . DB_PREFIX . 'farmer c ON (ca.farmer_id = c.farmer_id)';
 
         $implode = [];
@@ -454,7 +455,7 @@ class ModelUserFarmer extends Model {
         return $query->rows;
     }
 
-    public function getFarmerOrganizations($data = []) {
+    public function getSupplierOrganizations($data = []) {
         $sql = 'SELECT distinct organization AS name FROM ' . DB_PREFIX . 'farmer WHERE status = 1';
 
         $implode = [];

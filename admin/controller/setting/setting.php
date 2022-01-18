@@ -191,6 +191,12 @@ class ControllerSettingSetting extends Controller
             $data['error_farmer_group_id'] = '';
         }
         
+        if (isset($this->error['supplier_group_ids'])) {
+            $data['error_supplier_group_id'] = $this->error['supplier_group_id'];
+        } else {
+            $data['error_supplier_group_id'] = '';
+        }
+        
         if (isset($this->error['active_store_id'])) {
             $data['error_active_store_id'] = $this->error['active_store_id'];
         } else {
@@ -620,6 +626,12 @@ class ControllerSettingSetting extends Controller
             $data['config_farmer_group_id'] = $this->request->post['config_farmer_group_id'];
         } else {
             $data['config_farmer_group_id'] = $this->config->get('config_farmer_group_id');
+        }
+        
+        if (isset($this->request->post['config_supplier_group_id'])) {
+            $data['config_supplier_group_id'] = $this->request->post['config_supplier_group_id'];
+        } else {
+            $data['config_supplier_group_id'] = $this->config->get('config_supplier_group_id');
         }
         
         if (isset($this->request->post['config_active_store_id'])) {
@@ -2306,6 +2318,10 @@ class ControllerSettingSetting extends Controller
         
         if (!$this->request->post['config_farmer_group_id']) {
             $this->error['farmer_group_id'] = $this->language->get('error_farmer_group_id');
+        }
+        
+        if (!$this->request->post['config_supplier_group_id']) {
+            $this->error['supplier_group_id'] = $this->language->get('error_supplier_group_id');
         }
         
         if (!$this->request->post['config_active_store_id']) {

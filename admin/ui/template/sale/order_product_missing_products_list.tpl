@@ -120,7 +120,7 @@
                                 <?php foreach ($all_orders as $key => $orderLoop ) { ?>
 
                                  
-                                    <tr class="header">  <td colspan="11"><center><h3 class="my-order-title label" style="background-color: #ff2a00a8;display: block;line-height: 2;" id="order-status-id" ><?= $key?> </h3>   </center></td> </tr>
+                                <tr class="header">  <td colspan="11"><center><h3 class="my-order-title label" style="background-color: #ff2a00a8;display: block;line-height: 2;" id="order-status-id" data-download-invoice="<?= $this->url->link('sale/order/missing_products_order_invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $key, 'SSL')?>" ><?= $key?> </h3>   </center></td> </tr>
                                     
                         <?php foreach ($orderLoop['orders'] as $order) { ?>
                                 <tr>
@@ -277,9 +277,9 @@
                             
      
 
-    <script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
-    <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
-    <script type="text/javascript"><!--
+<script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
+<script type="text/javascript"><!--
   $('.date').datetimepicker({
             pickTime: false
         });
@@ -295,6 +295,12 @@
 $(this).nextUntil('tr.header').slideToggle(1000);
 });
 
+$(document).on('click', '#order-status-id', function(e){ 
+e.preventDefault();
+var download_invoice = $(this).attr("data-download-invoice");
+console.log(download_invoice);
+window.open(download_invoice, '_blank');
+});
 </script> 
 <?php echo $footer; ?>
 
