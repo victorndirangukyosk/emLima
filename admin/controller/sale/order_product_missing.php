@@ -690,6 +690,8 @@ class ControllerSaleOrderProductMissing extends Controller {
         $log = new Log('error.log');
         $ordered_products = NULL;
         $new_ordered_products = NULL;
+        $real_order_products_update = NULL;
+        $order_products_update = NULL;
 
         if (isset($this->request->post['selected'])) {
             $orders = explode(",", $this->request->post['selected']);
@@ -701,8 +703,11 @@ class ControllerSaleOrderProductMissing extends Controller {
 
         $j = 0;
         foreach ($orders as $order_product_id) {
+            $real_order_products_update = 'YES';
             $ordered_products = $this->model_sale_order->getRealOrderProductById($this->request->post['order_id'], $order_product_id);
             if ($ordered_products == NULL) {
+                $real_order_products_update = NULL;
+                $order_products_update = 'YES';
                 $ordered_products = $products = $this->model_sale_order->getOrderProductById($this->request->post['order_id'], $order_product_id);
             }
 
@@ -713,8 +718,14 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $log->write('DELETE PRODUCT');
                 $log->write($ordered_products);
                 $log->write('DELETE PRODUCT');
-                $products = $this->model_sale_order->deleteOrderProduct($this->request->post['order_id'], $product_details['store_id']);
-                $products = $this->model_sale_order->deleteCustomerOrderProduct($this->request->post['order_id'], $product_details['store_id']);
+
+                if ($real_order_products_update == 'YES') {
+                    $products = $this->model_sale_order->deleteOrderProduct($this->request->post['order_id'], $product_details['store_id']);
+                }
+
+                if ($order_products_update == 'YES') {
+                    $products = $this->model_sale_order->deleteCustomerOrderProduct($this->request->post['order_id'], $product_details['store_id']);
+                }
             }
 
             if ($ordered_products['product_id'] == $product_details['product_store_id'] && $ordersquantityrequired[$j] < $ordered_products['quantity']) {
@@ -727,8 +738,14 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($product_details, $product_details['store_id'], NULL, $custom_price);
                 $log->write($updateProduct_tax_total);
                 $log->write('EDIT PRODUCT');
-                $products = $this->model_sale_order->updateOrderProduct($this->request->post['order_id'], $product_details['product_store_id'], $updateProduct, $updateProduct_tax_total);
-                $products = $this->model_sale_order->updateOrderProductNew($this->request->post['order_id'], $product_details['product_store_id'], $updateProduct, $updateProduct_tax_total);
+
+                if ($real_order_products_update == 'YES') {
+                    $products = $this->model_sale_order->updateOrderProduct($this->request->post['order_id'], $product_details['product_store_id'], $updateProduct, $updateProduct_tax_total);
+                }
+
+                if ($order_products_update == 'YES') {
+                    $products = $this->model_sale_order->updateOrderProductNew($this->request->post['order_id'], $product_details['product_store_id'], $updateProduct, $updateProduct_tax_total);
+                }
             }
 
             $j++;
@@ -813,7 +830,8 @@ class ControllerSaleOrderProductMissing extends Controller {
         $grand_total = $sumTotal + $sumTotalTax + $dbothertotal;
 
         $this->model_sale_order->updateordertotal($this->request->post['order_id'], $grand_total);
-        $this->load->controller('sale/order/missing_products_order_invoice', $this->request->post['order_id']);
+        $data['order_id'] = $this->request->post['order_id'];
+        $this->load->controller('sale/order/missing_products_order_invoice', $data['order_id']);
         $log->write('TOTALS');
         $log->write($sumTotal);
         $log->write($sumTotalTax);

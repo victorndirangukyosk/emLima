@@ -9886,7 +9886,7 @@ class ControllerSaleOrder extends Controller {
         } elseif (isset($this->request->get['order_id'])) {
             $orders[] = $this->request->get['order_id'];
         } else {
-            $orders[] = $custom_order_id;
+            $orders[] = $custom_order_id['order_id'];
         }
 
         if (isset($this->request->get['store_id'])) {
@@ -10145,7 +10145,7 @@ class ControllerSaleOrder extends Controller {
           $mpdf->Output();
           $mpdf->Output("KwikBasket Invoice # ".$order_id.".pdf", 'D'); */
 
-        if ($custom_order_id != NULL && $custom_order_id > 0) {
+        if ($custom_order_id != NULL && $custom_order_id['order_id'] > 0) {
             try {
                 require_once DIR_ROOT . '/vendor/autoload.php';
                 $pdf = new \mikehaertl\wkhtmlto\Pdf;
