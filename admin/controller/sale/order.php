@@ -10465,7 +10465,7 @@ class ControllerSaleOrder extends Controller {
             try {
                 require_once DIR_ROOT . '/vendor/autoload.php';
                 $pdf = new \mikehaertl\wkhtmlto\Pdf;
-                $template = $this->load->view('sale/order_invoice.tpl', $data);
+                $template = $this->load->view('sale/order_invoice_pdf.tpl', $data['orders'][0]);
                 $pdf->addPage($template);
                 $filename = "KWIKBASKET_MISSED_PRODUCTS_ORDER_" . $order_id . ".pdf";
                 if (!$pdf->saveAs(DIR_ROOT . 'scheduler_downloads' . '/' . $filename)) {
