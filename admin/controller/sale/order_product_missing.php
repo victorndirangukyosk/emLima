@@ -1337,7 +1337,9 @@ class ControllerSaleOrderProductMissing extends Controller {
         $address = '';
         $payment_address = '';
         $special = NULL;
-        $order_href = NULL;
+        if ($order_info['customer_id']) {
+            $order_href = $order_info['store_url'] . 'index.php?path=account/order/info&order_id=' . $order_info['order_id'];
+        }
         $order_pdf_href = NULL;
         $order_status = NULL;
         $totals = NULL;
@@ -1364,7 +1366,8 @@ class ControllerSaleOrderProductMissing extends Controller {
         $subject = $this->emailtemplate->getSubject('OrderAll', 'order_21', $data);
         $message = $this->emailtemplate->getMessage('OrderAll', 'order_21', $data);
         $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_21', $data);
-
+        
+        $log = new Log('error.log');
         $log->write('subject');
         $log->write($subject);
         $log->write('subject');
