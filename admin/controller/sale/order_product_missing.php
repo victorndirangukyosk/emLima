@@ -713,7 +713,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $log->write('DELETE PRODUCT');
                 $log->write($ordered_products);
                 $log->write('DELETE PRODUCT');
-                //$products = $this->model_sale_order->deleteOrderProduct($this->request->post['order_id'], $product_details['store_id']);
+                $products = $this->model_sale_order->deleteOrderProduct($this->request->post['order_id'], $product_details['store_id']);
             }
 
             if ($ordered_products['product_id'] == $product_details['product_store_id'] && $ordersquantityrequired[$j] < $ordered_products['quantity']) {
@@ -726,7 +726,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($product_details, $product_details['store_id'], NULL, $custom_price);
                 $log->write($updateProduct_tax_total);
                 $log->write('EDIT PRODUCT');
-                //$products = $this->model_sale_order->updateOrderProduct($this->request->post['order_id'], $product_details['product_store_id'], $updateProduct, $updateProduct_tax_total);
+                $products = $this->model_sale_order->updateOrderProduct($this->request->post['order_id'], $product_details['product_store_id'], $updateProduct, $updateProduct_tax_total);
             }
 
             $j++;
@@ -745,19 +745,33 @@ class ControllerSaleOrderProductMissing extends Controller {
             $sumTotalTax += ($new_ordered_product['tax'] * $new_ordered_product['quantity']);
         }
 
-        $log->write('TOTALS');
-        $log->write($sumTotal);
-        $log->write($sumTotalTax);
-        $log->write('TOTALS');
-
         $totals = $this->model_sale_order->getOrderTotals($this->request->post['order_id']);
-        //$this->model_sale_order->deleteOrderTotal($this->request->post['order_id']);
+        $this->model_sale_order->deleteOrderTotal($this->request->post['order_id']);
         $dbsubtotal = NULL;
         $dbtotal = NULL;
         $dbtax = NULL;
+        $dbothertotal = 0;
+        $dbothertotals = NULL;
 
         foreach ($totals as $total) {
-            $log->write('DB_TOTAL');
+            if ($total['code'] != 'sub_total' && $total['code'] != 'total' && $total['code'] != 'tax') {
+                $dbothertotal += $total['value'];
+
+                $dbothertotals['order_id'] = $this->request->post['order_id'];
+                $dbothertotals['code'] = $total['code'];
+                $dbothertotals['title'] = $total['title'];
+                $dbothertotals['sort_order'] = $total['sort_order'];
+                $dbothertotals['value'] = $total['value'];
+                $dbothertotals['actual_value'] = $total['actual_value'];
+                $log->write($total);
+                if ($dbothertotals != NULL) {
+                    $this->model_sale_order->insertOrderTotal($this->request->post['order_id'], $dbothertotals, NULL);
+                }
+            }
+            $dbothertotals = NULL;
+        }
+
+        foreach ($totals as $total) {
 
             if ($total['code'] == 'sub_total') {
                 $dbsubtotal['order_id'] = $this->request->post['order_id'];
@@ -765,7 +779,9 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $dbsubtotal['title'] = $total['title'];
                 $dbsubtotal['sort_order'] = $total['sort_order'];
                 $dbsubtotal['value'] = $sumTotal;
+                $dbsubtotal['actual_value'] = $total['actual_value'];
                 $log->write($total);
+                $this->model_sale_order->insertOrderTotal($this->request->post['order_id'], $dbsubtotal, NULL);
             }
 
             if ($total['code'] == 'total') {
@@ -773,8 +789,10 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $dbtotal['code'] = $total['code'];
                 $dbtotal['title'] = $total['title'];
                 $dbtotal['sort_order'] = $total['sort_order'];
-                $dbtotal['value'] = $sumTotal + $sumTotalTax;
+                $dbtotal['value'] = $sumTotal + $sumTotalTax + $dbothertotal;
+                $dbtotal['actual_value'] = $total['actual_value'];
                 $log->write($total);
+                $this->model_sale_order->insertOrderTotal($this->request->post['order_id'], $dbtotal, NULL);
             }
 
             if ($total['code'] == 'tax') {
@@ -783,11 +801,17 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $dbtax['title'] = $total['title'];
                 $dbtax['sort_order'] = $total['sort_order'];
                 $dbtax['value'] = $sumTotalTax;
+                $dbtotal['actual_value'] = $total['actual_value'];
                 $log->write($total);
+                $this->model_sale_order->insertOrderTotal($this->request->post['order_id'], $dbtax, NULL);
             }
-
-            $log->write('DB_TOTAL');
         }
+
+        $log->write('TOTALS');
+        $log->write($sumTotal);
+        $log->write($sumTotalTax);
+        $log->write($dbothertotal);
+        $log->write('TOTALS');
     }
 
 }
