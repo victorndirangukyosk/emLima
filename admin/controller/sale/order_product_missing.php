@@ -830,6 +830,7 @@ class ControllerSaleOrderProductMissing extends Controller {
         $grand_total = $sumTotal + $sumTotalTax + $dbothertotal;
 
         $this->model_sale_order->updateordertotal($this->request->post['order_id'], $grand_total);
+        $this->sendmailwithmissingproducts($this->request->post['order_id']);
         $data['order_id'] = $this->request->post['order_id'];
         $this->missing_products_order_invoice_download($data);
         $log->write('TOTALS');
@@ -1327,6 +1328,46 @@ class ControllerSaleOrderProductMissing extends Controller {
 
             return $query->row['fax'];
         }
+    }
+
+    public function sendmailwithmissingproducts($order_id) {
+
+        $order_info = $this->model_sale_order->getOrder($order_id);
+
+        $address = '';
+        $payment_address = '';
+        $special = NULL;
+        $order_href = NULL;
+        $order_pdf_href = NULL;
+        $order_status = NULL;
+        $totals = NULL;
+        $tax_amount = NULL;
+        $invoice_no = NULL;
+        $order_products_list = NULL;
+
+        $data = array(
+            'template_id' => 'order_21',
+            'order_info' => $order_info,
+            'address' => $address,
+            'payment_address' => $payment_address,
+            'special' => $special,
+            'order_href' => $order_href,
+            'order_pdf_href' => $order_pdf_href,
+            'order_status' => $order_status,
+            'totals' => $totals,
+            'tax_amount' => $tax_amount,
+            'order_id' => $order_id,
+            'invoice_no' => !empty($invoice_no) ? $invoice_no : '',
+            'order_products_list' => $order_products_list
+        );
+
+        $subject = $this->emailtemplate->getSubject('OrderAll', 'order_21', $data);
+        $message = $this->emailtemplate->getMessage('OrderAll', 'order_21', $data);
+        $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_21', $data);
+
+        $log->write('subject');
+        $log->write($subject);
+        $log->write('subject');
     }
 
 }
