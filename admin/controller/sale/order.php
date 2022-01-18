@@ -10470,6 +10470,10 @@ class ControllerSaleOrder extends Controller {
                 $filename = "KWIKBASKET_MISSED_PRODUCTS_ORDER_" . $order_id . ".pdf";
                 if (!$pdf->saveAs(DIR_ROOT . 'scheduler_downloads' . '/' . $filename)) {
                     $error = $pdf->getError();
+                    $log = new Log('error.log');
+                    $log->write('pdf_error');
+                    $log->write($error);
+                    $log->write('pdf_error');
                     echo $error;
                     die;
                 }
