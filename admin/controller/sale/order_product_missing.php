@@ -752,6 +752,7 @@ class ControllerSaleOrderProductMissing extends Controller {
         $dbtax = NULL;
         $dbothertotal = 0;
         $dbothertotals = NULL;
+        $grand_total = 0;
 
         foreach ($totals as $total) {
             if ($total['code'] != 'sub_total' && $total['code'] != 'total' && $total['code'] != 'tax') {
@@ -760,7 +761,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $dbothertotals['order_id'] = $this->request->post['order_id'];
                 $dbothertotals['code'] = $total['code'];
                 $dbothertotals['title'] = $total['title'];
-                $dbothertotals['sort_order'] = $total['sort_order'];
+                $dbothertotals['sort'] = $total['sort_order'];
                 $dbothertotals['value'] = $total['value'];
                 $dbothertotals['actual_value'] = $total['actual_value'];
                 $log->write($total);
@@ -777,7 +778,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $dbsubtotal['order_id'] = $this->request->post['order_id'];
                 $dbsubtotal['code'] = $total['code'];
                 $dbsubtotal['title'] = $total['title'];
-                $dbsubtotal['sort_order'] = $total['sort_order'];
+                $dbsubtotal['sort'] = $total['sort_order'];
                 $dbsubtotal['value'] = $sumTotal;
                 $dbsubtotal['actual_value'] = $total['actual_value'];
                 $log->write($total);
@@ -788,7 +789,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $dbtotal['order_id'] = $this->request->post['order_id'];
                 $dbtotal['code'] = $total['code'];
                 $dbtotal['title'] = $total['title'];
-                $dbtotal['sort_order'] = $total['sort_order'];
+                $dbtotal['sort'] = $total['sort_order'];
                 $dbtotal['value'] = $sumTotal + $sumTotalTax + $dbothertotal;
                 $dbtotal['actual_value'] = $total['actual_value'];
                 $log->write($total);
@@ -799,13 +800,17 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $dbtax['order_id'] = $this->request->post['order_id'];
                 $dbtax['code'] = $total['code'];
                 $dbtax['title'] = $total['title'];
-                $dbtax['sort_order'] = $total['sort_order'];
+                $dbtax['sort'] = $total['sort_order'];
                 $dbtax['value'] = $sumTotalTax;
                 $dbtotal['actual_value'] = $total['actual_value'];
                 $log->write($total);
                 $this->model_sale_order->insertOrderTotal($this->request->post['order_id'], $dbtax, NULL);
             }
         }
+
+        $grand_total = $sumTotal + $sumTotalTax + $dbothertotal;
+
+        $this->model_sale_order->updateordertotal($this->request->post['order_id'], $grand_total);
 
         $log->write('TOTALS');
         $log->write($sumTotal);
