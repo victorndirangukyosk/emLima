@@ -1366,7 +1366,7 @@ class ControllerSaleOrderProductMissing extends Controller {
         $subject = $this->emailtemplate->getSubject('OrderAll', 'order_21', $data);
         $message = $this->emailtemplate->getMessage('OrderAll', 'order_21', $data);
         $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_21', $data);
-        
+
         $log = new Log('error.log');
         $log->write('subject');
         $log->write($subject);
