@@ -9824,7 +9824,7 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function missing_products_order_invoice() {
+    public function missing_products_order_invoice($custom_order_id = NULL) {
         $this->load->language('sale/order');
 
         $data['title'] = $this->language->get('text_invoice');
@@ -9885,6 +9885,8 @@ class ControllerSaleOrder extends Controller {
             $orders = $this->request->post['selected'];
         } elseif (isset($this->request->get['order_id'])) {
             $orders[] = $this->request->get['order_id'];
+        } else {
+            $orders[] = $custom_order_id;
         }
 
         if (isset($this->request->get['store_id'])) {
@@ -10142,6 +10144,24 @@ class ControllerSaleOrder extends Controller {
           $mpdf->WriteHTML($this->load->view('sale/order_invoice_mpdf.tpl', $data['orders'][0]),\Mpdf\HTMLParserMode::HTML_BODY);
           $mpdf->Output();
           $mpdf->Output("KwikBasket Invoice # ".$order_id.".pdf", 'D'); */
+
+        if ($custom_order_id != NULL && $custom_order_id > 0) {
+            try {
+                require_once DIR_ROOT . '/vendor/autoload.php';
+                $pdf = new \mikehaertl\wkhtmlto\Pdf;
+                $template = $this->load->view('sale/order_invoice.tpl', $data);
+                $pdf->addPage($template);
+                $filename = "KWIKBASKET_MISSED_PRODUCTS_ORDER_" . $order_id . ".pdf";
+                if (!$pdf->saveAs(DIR_ROOT . 'scheduler_downloads' . '/' . $filename)) {
+                    $error = $pdf->getError();
+                    echo $error;
+                    die;
+                }
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
+            exit;
+        }
 
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }

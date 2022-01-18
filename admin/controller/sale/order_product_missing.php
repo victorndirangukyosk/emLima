@@ -813,7 +813,7 @@ class ControllerSaleOrderProductMissing extends Controller {
         $grand_total = $sumTotal + $sumTotalTax + $dbothertotal;
 
         $this->model_sale_order->updateordertotal($this->request->post['order_id'], $grand_total);
-
+        $this->load->controller('sale/order/missing_products_order_invoice', $this->request->post['order_id']);
         $log->write('TOTALS');
         $log->write($sumTotal);
         $log->write($sumTotalTax);
