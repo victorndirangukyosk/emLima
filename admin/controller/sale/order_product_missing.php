@@ -638,6 +638,7 @@ class ControllerSaleOrderProductMissing extends Controller {
         $log = new Log('error.log');
         try {
             $this->load->language('sale/order');
+            $this->load->model('account/customer');
             $this->load->model('sale/order');
             $this->load->model('catalog/vendor_product');
             $this->load->model('tool/image');
@@ -1481,12 +1482,13 @@ class ControllerSaleOrderProductMissing extends Controller {
             'missed_products_order_link' => $order_info['store_url'] . 'index.php?path=deliversystem/deliversystem/createorderwithmissingproducts&order_id=' . base64_encode($order_info['order_id']),
         );
 
+        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
         $subject = $this->emailtemplate->getSubject('OrderAll', 'order_21', $data);
         $message = $this->emailtemplate->getMessage('OrderAll', 'order_21', $data);
         $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_21', $data);
 
         $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo('ramakanth.raapaka@yopmail.com');
+        $mail->setTo($customer_info['email']);
         $mail->setFrom($this->config->get('config_from_email'));
         $mail->setSender($this->config->get('config_name'));
         $mail->setSubject($subject);
