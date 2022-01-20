@@ -1366,7 +1366,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                     'title' => $total['title'],
                     'text' => $this->currency->format($sub_total, $order_info['currency_code'], $order_info['currency_value']),
                     'amount_in_words' => ucwords($this->translateAmountToWords(floor(($sub_total * 100) / 100))) . ' Kenyan Shillings',
-                    'value' => $total['value'],
+                    'value' => $sub_total,
                     'sort_order' => $total['sort_order'],
                 ];
             } elseif ($total['code'] == 'tax') {
@@ -1398,7 +1398,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                     'title' => $total['title'],
                     'text' => $this->currency->format($new_total, $order_info['currency_code'], $order_info['currency_value']),
                     'amount_in_words' => ucwords($this->translateAmountToWords(floor(($new_total * 100) / 100))) . ' Kenyan Shillings',
-                    'value' => $new_total,
+                    'value' => $total['value'],
                     'sort_order' => $total['sort_order'],
                 ];
             }
