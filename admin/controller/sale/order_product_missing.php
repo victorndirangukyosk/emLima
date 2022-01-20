@@ -1349,7 +1349,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                 'name' => $product['name'],
                 'unit' => $product['unit'],
                 'model' => $product['model'],
-                'quantity' => $product['quantity'],
+                'quantity' => $product['quantity_required'],
                 'price' => $this->currency->format($product['mp_price'] + ($this->config->get('config_tax') ? $product['mp_tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
                 'total' => $this->currency->format($product['mp_total'] + ($this->config->get('config_tax') ? ($product['mp_tax'] * $product['quantity_required']) : 0), $order_info['currency_code'], $order_info['currency_value']),
             ];
