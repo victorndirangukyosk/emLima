@@ -2010,7 +2010,117 @@ class ControllerDeliversystemDeliversystem extends Controller {
     }
 
     public function createorderwithmissingproducts() {
-        print_r($this->request->get['order_id']);
+        $log = new Log('error.log');
+        $data = NULL;
+        $order_id = $this->request->get['order_id'];
+        if ($order_id > 0) {
+
+            $this->load->model('checkout/order');
+            $this->load->model('sale/order');
+            $this->load->model('assets/product');
+
+            $order_info = $this->model_sale_order->getOrder($order_id);
+            if ($order_info != NULL && is_array($order_info) && count($order_info) > 0) {
+                $totals = $this->model_sale_order->getOrderTotals($order_id);
+                $filter['filter_order_id'] = $order_id;
+                $products = $this->model_checkout_order->getOrderedMissingProducts($filter);
+
+                $sub_total = 0;
+                $tax = 0;
+
+                $i = 0;
+                foreach ($products as $product) {
+                    $product_info = $this->model_assets_product->getProduct($product['product_id'], true);
+                    $data['products'][] = [
+                        'order_id' => $order_id,
+                        'product_id' => $product['product_id'],
+                        'general_product_id' => $product_info['product_id'],
+                        'variation_id' => 0,
+                        'vendor_id' => $product_info['merchant_id'],
+                        'store_id' => $product_info['store_id'],
+                        'name' => $product_info['name'],
+                        'unit' => $product_info['unit'],
+                        'model' => $product_info['model'],
+                        'model' => $product_info['model'],
+                        'quantity' => $product['quantity_required'],
+                        'price' => $product['mp_price'],
+                        'total' => $product['mp_price'] * $product['quantity_required'],
+                        'tax' => $this->tax->getTax($product['mp_price'], $product_info['tax_class_id']),
+                        'reward' => 0,
+                        'product_type' => 'replacable',
+                        'product_note' => $product['product_note'],
+                    ];
+                    $sub_total += $product['mp_price'] * $product['quantity_required'];
+                    $tax += $product['mp_tax'] * $product['quantity_required'];
+                    $i++;
+                }
+
+                $new_total = $sub_total + $tax;
+                $order_info['total'] = $new_total;
+
+                $total_data = [];
+
+                foreach ($totals as $total) {
+                    if ($total['code'] == 'sub_total') {
+                        $total_data[] = [
+                            'code' => $total['code'],
+                            'title' => $total['title'],
+                            'value' => $sub_total,
+                            'sort_order' => $total['sort_order'],
+                            'actual_value' => NULL,
+                        ];
+                    } elseif ($total['code'] == 'tax') {
+                        $total_data[] = [
+                            'code' => $total['code'],
+                            'title' => $total['title'],
+                            'value' => $tax,
+                            'sort_order' => $total['sort_order'],
+                            'actual_value' => NULL,
+                        ];
+                    } elseif ($total['code'] == 'transaction_fee') {
+                        $total_data[] = [
+                            'code' => $total['code'],
+                            'title' => $total['title'],
+                            'value' => $total['value'],
+                            'sort_order' => $total['sort_order'],
+                            'actual_value' => NULL,
+                        ];
+                    } elseif ($total['code'] == 'total') {
+                        $total_data[] = [
+                            'code' => $total['code'],
+                            'title' => $total['title'],
+                            'value' => $new_total,
+                            'sort_order' => $total['sort_order'],
+                            'actual_value' => NULL,
+                        ];
+                    } else {
+                        $total_data[] = [
+                            'code' => $total['code'],
+                            'title' => $total['title'],
+                            'value' => $total['value'],
+                            'sort_order' => $total['sort_order'],
+                            'actual_value' => NULL,
+                        ];
+                    }
+                }
+
+                usort($total_data, function ($a, $b) {
+                    return $a['sort_order'] <=> $b['sort_order'];
+                });
+
+                $transaction_details['customer_id'] = $order_info['customer_id'];
+                $transaction_details['no_of_products'] = $i;
+                $transaction_details['total'] = $order_info['total'];
+
+                $new_order_id = $this->model_sale_order->CreateOrder($order_info);
+                $new_product_id = $this->model_sale_order->InsertProductsByOrderId($data['products'], $new_order_id);
+                $new_total_id = $this->model_sale_order->InsertOrderTotals($total_data, $new_order_id);
+                $new_transaction_id = $this->model_sale_order->InsertOrderTransactionDetails($transaction_details, $new_order_id);
+            }
+            $log->write($order_info);
+            $log->write($data);
+            $log->write($total_data);
+        }
     }
 
 }
