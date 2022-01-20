@@ -56,6 +56,25 @@ class ModelSaleOrder extends Model {
                 'shipping_contact_no' => $order_query->row['shipping_contact_no'],
                 'shipping_method' => $order_query->row['shipping_method'],
                 'shipping_code' => $order_query->row['shipping_code'],
+                'shipping_city_id' => $order_query->row['shipping_city_id'],
+                'shipping_flat_number' => $order_query->row['shipping_flat_number'],
+                'shipping_building_name' => $order_query->row['shipping_building_name'],
+                'shipping_landmark' => $order_query->row['shipping_landmark'],
+                'shipping_zipcode' => $order_query->row['shipping_zipcode'],
+                'parent_approval' => $order_query->row['parent_approval'],
+                'SAP_customer_no' => $order_query->row['SAP_customer_no'],
+                'SAP_doc_no' => $order_query->row['SAP_doc_no'],
+                'head_chef' => $order_query->row['head_chef'],
+                'procurement' => $order_query->row['procurement'],
+                'po_number' => $order_query->row['po_number'],
+                'latitude' => $order_query->row['latitude'],
+                'longitude' => $order_query->row['longitude'],
+                'affiliate_id' => $order_query->row['affiliate_id'],
+                'marketing_id' => $order_query->row['marketing_id'],
+                'tracking' => $order_query->row['tracking'],
+                'fixed_commission' => $order_query->row['fixed_commission'],
+                'delivery_date' => $order_query->row['delivery_date'],
+                'delivery_timeslot' => $order_query->row['delivery_timeslot'],
                 'comment' => $order_query->row['comment'],
                 'total' => $order_query->row['total'],
                 'reward' => $reward,
@@ -805,6 +824,30 @@ class ModelSaleOrder extends Model {
         $query = $this->db->query($sql);
 
         return $query->rows;
+    }
+
+    public function CreateOrder($data) {
+        $this->db->query("INSERT INTO `" . DB_PREFIX . "order` SET invoice_prefix = '" . $this->db->escape($data['invoice_prefix']) . "', store_id = '" . (int) $data['store_id'] . "', store_name = '" . $this->db->escape($data['store_name']) . "', store_url = '" . $this->db->escape($data['store_url']) . "', customer_id = '" . (int) $data['customer_id'] . "', customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', payment_method = '" . $this->db->escape($data['payment_method']) . "', payment_code = '" . $this->db->escape($data['payment_code']) . "', shipping_city_id = '" . $this->db->escape($data['shipping_city_id']) . "', shipping_flat_number = '" . $this->db->escape($data['shipping_flat_number']) . "', shipping_building_name = '" . $this->db->escape($data['shipping_building_name']) . "', shipping_landmark = '" . $this->db->escape($data['shipping_landmark']) . "', shipping_zipcode = '" . $this->db->escape($data['shipping_zipcode']) . "', shipping_code = '" . $this->db->escape($data['shipping_code']) . "', shipping_name = '" . $this->db->escape($data['shipping_name']) . "', shipping_address = '" . $this->db->escape($data['shipping_address']) . "', shipping_contact_no = '" . $this->db->escape($data['shipping_contact_no']) . "', shipping_method = '" . $this->db->escape($data['shipping_method']) . "', comment = '" . $this->db->escape($data['comment']) . "', total = '" . (float) $data['total'] . "', latitude = '" . $data['latitude'] . "',longitude = '" . $data['longitude'] . "', affiliate_id = '" . (int) $data['affiliate_id'] . "', marketing_id = '" . (int) $data['marketing_id'] . "', tracking = '" . $this->db->escape($data['tracking']) . "', language_id = '" . (int) $data['language_id'] . "', currency_id = '" . (int) $data['currency_id'] . "', currency_code = '" . $this->db->escape($data['currency_code']) . "', currency_value = '" . (float) $data['currency_value'] . "', ip = '" . $this->db->escape($data['ip']) . "', forwarded_ip = '" . $this->db->escape($data['forwarded_ip']) . "', user_agent = '" . $this->db->escape($data['user_agent']) . "', accept_language = '" . $this->db->escape($data['accept_language']) . "', commission = '" . $this->db->escape($data['commission']) . "', fixed_commission = '" . $this->db->escape($data['fixed_commission']) . "', delivery_date = '" . $this->db->escape(date('Y-m-d', strtotime($data['delivery_date']))) . "', delivery_timeslot = '" . $this->db->escape($data['delivery_timeslot']) . "', parent_approval = '" . $this->db->escape($data['parent_approval']) . "', SAP_customer_no = '" . $this->db->escape($data['SAP_customer_no']) . "', SAP_doc_no = '" . $this->db->escape($data['SAP_doc_no']) . "', head_chef = '" . $this->db->escape($data['head_chef']) . "', procurement = '" . $this->db->escape($data['procurement']) . "', po_number = '" . $this->db->escape($data['po_number']) . "', login_mode = 'web', order_status_id = 14,  date_added = NOW(), date_modified = NOW()");
+        return $this->db->getLastId();
+    }
+
+    public function InsertProductsByOrderId($products, $order_id) {
+        foreach ($products as $product) {
+            $this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET vendor_id='" . (int) $product['vendor_id'] . "', store_id='" . (int) $product['store_id'] . "', product_type='" . $product['product_type'] . "', unit='" . $product['unit'] . "', order_id = '" . (int) $order_id . "', variation_id = '" . (int) $product['variation_id'] . "', product_id = '" . (int) $product['product_id'] . "', general_product_id = '" . (int) $product['general_product_id'] . "', name = '" . $this->db->escape($product['name']) . "', model = '" . $this->db->escape($product['model']) . "', quantity = '" . (float) $product['quantity'] . "', price = '" . (float) $product['price'] . "', total = '" . (float) $product['total'] . "', tax = '" . (float) $product['tax'] . "', reward = '" . (int) $product['reward'] . "'");
+        }
+        return $this->db->getLastId();
+    }
+
+    public function InsertOrderTotals($totals, $order_id) {
+        foreach ($totals as $total) {
+            $this->db->query("INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape($total['code']) . "', title = '" . $this->db->escape($total['title']) . "', `value` = '" . (float) $total['value'] . "', sort_order = '" . (int) $total['sort_order'] . "'");
+        }
+        return $this->db->getLastId();
+    }
+
+    public function InsertOrderTransactionDetails($data, $order_id) {
+        $this->db->query("INSERT INTO " . DB_PREFIX . "transaction_details SET order_ids = '" . $order_id . "', customer_id = '" . $data['customer_id'] . "', no_of_products = '" . $this->db->escape($data['no_of_products']) . "', `total` = '" . (float) $data['total'] . "',date_added = NOW()");
+        return $this->db->getLastId();
     }
 
 }

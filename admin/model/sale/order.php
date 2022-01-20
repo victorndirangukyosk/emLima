@@ -2408,6 +2408,34 @@ class ModelSaleOrder extends Model {
         }
     }
 
+    public function updateOrderProductNew($order_id, $product_id, $data, $tax = NULL) {
+        $total = $data['price'] * $data['quantity'];
+
+        //$this->deleteOrderProduct($order_id,$product_id);
+        $tax_value = 0;
+        if (is_array($tax) && count($tax) > 0 && array_key_exists('code', $tax[0]) && array_key_exists('title', $tax[0]) && array_key_exists('value', $tax[0]) && array_key_exists('sort_order', $tax[0]) && $tax[0]['code'] == 'tax' && $tax[0]['value'] > 0) {
+            $tax_value = $tax[0]['value'];
+            //$log = new Log('error.log');
+            //$log->write('tax_value OLD');
+            //$log->write($tax_value);
+            //$log->write('tax_value OLD');
+        }
+
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+
+        $query = $this->db->query($sql);
+
+        if (!$query->num_rows) {
+            $sql = 'INSERT into ' . DB_PREFIX . "order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "',produce_type = '" . $data['produce_type'] . "',product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
+
+            $query = $this->db->query($sql);
+        } else {
+            $sql = 'UPDATE ' . DB_PREFIX . "order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', total = '" . $total . "', tax = '" . $tax_value . "' WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+
+            $query = $this->db->query($sql);
+        }
+    }
+
     public function getOrderOption($order_id, $order_option_id) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_option WHERE order_id = '" . (int) $order_id . "' AND order_option_id = '" . (int) $order_option_id . "'");
 
@@ -4301,7 +4329,7 @@ class ModelSaleOrder extends Model {
 
             // echo "<pre>";print_r($required_quantity);die;
 
-            $sql = 'INSERT into ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price']*$required_quantity . "',  quantity_required = '" . $required_quantity . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', created_by = '" . $this->user->getId() . "'";
+            $sql = 'INSERT into ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', created_by = '" . $this->user->getId() . "'";
             //  echo "<pre>";print_r($sql);die;
 
 
@@ -5078,6 +5106,10 @@ class ModelSaleOrder extends Model {
         $sql = 'SELECT * FROM ' . DB_PREFIX . "vendor_order_status WHERE language_id = '" . (int) $this->config->get('config_language_id') . "' AND order_status_id = '" . (int) $vendor_order_status_id . "'";
         $query = $this->db->query($sql);
         return $query->row;
+    }
+
+    public function updateordertotal($order_id, $total) {
+        $this->db->query('UPDATE `' . DB_PREFIX . "order` SET total = '" . (int) $total . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
     }
 
 }

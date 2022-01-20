@@ -9552,7 +9552,10 @@ class ControllerSaleOrder extends Controller {
 
         $this->load->model('sale/order');
         $order_id = $this->request->get['order_id'];
-        $res = $this->model_sale_order->getOrderProducts($order_id);
+        $res = $this->model_sale_order->getRealOrderProducts($order_id);
+        if ($res == NULL || count($res) == 0) {
+            $res = $this->model_sale_order->getOrderProducts($order_id);
+        }
         // echo "<pre>";print_r( $res);die;
 
         $html = '';
