@@ -1115,7 +1115,7 @@ class Emailtemplate {
             'ip' => $order_info['ip'],
             'comment:start' => implode('', $comment),
             'comment:stop' => '',
-            'sub_total' => $totals['sub_total'][0]['text'],
+            'sub_total' => (isset($totals['sub_total'][0]['text'])) ? $totals['sub_total'][0]['text'] : '',
             'shipping_cost' => (isset($totals['shipping'][0]['text'])) ? $totals['shipping'][0]['text'] : '',
             'client_comment' => $order_info['comment'],
             'tax:start' => implode('', $taxes),
@@ -1152,7 +1152,7 @@ class Emailtemplate {
             'system_email' => $this->config->get('config_email'),
             'system_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $this->config->get('config_telephone'),
             'order_products_list' => $data['order_products_list'],
-            'missed_products_order_link' => $data['missed_products_order_link'],
+            'missed_products_order_link' => isset($data['missed_products_order_link']) ? $data['missed_products_order_link'] : '',
         ];
         $log->write("MAIL DATA");
         $log->write($data);

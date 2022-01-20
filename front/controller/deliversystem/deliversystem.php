@@ -2012,12 +2012,14 @@ class ControllerDeliversystemDeliversystem extends Controller {
     public function createorderwithmissingproducts() {
         $log = new Log('error.log');
         $data = NULL;
-        $order_id = base64_decode($this->request->get['order_id']);
+        //$order_id = base64_decode($this->request->get['order_id']);
+        $order_id = $this->request->get['order_id'];
         if (is_numeric($order_id) && $order_id > 0) {
 
             $this->load->model('checkout/order');
             $this->load->model('sale/order');
             $this->load->model('assets/product');
+            $this->load->model('account/customer');
 
             $order_info = $this->model_sale_order->getOrder($order_id);
             if ($order_info != NULL && is_array($order_info) && count($order_info) > 0) {
@@ -2116,6 +2118,56 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 $new_product_id = $this->model_sale_order->InsertProductsByOrderId($data['products'], $new_order_id);
                 $new_total_id = $this->model_sale_order->InsertOrderTotals($total_data, $new_order_id);
                 $new_transaction_id = $this->model_sale_order->InsertOrderTransactionDetails($transaction_details, $new_order_id);
+
+                $new_order_info = $this->model_sale_order->getOrder($new_order_id);
+                $customer_info = $this->model_account_customer->getCustomer($new_order_info['customer_id']);
+
+                if (strlen($new_order_info['shipping_name']) <> 0) {
+                    $address = $new_order_info['shipping_name'] . '<br />' . $new_order_info['shipping_address'] . '<br /><b>Contact No.:</b> ' . $new_order_info['shipping_contact_no'];
+                } else {
+                    $address = '';
+                }
+
+                $payment_address = '';
+                $special = NULL;
+                $order_href = $new_order_info['store_url'] . 'index.php?path=account/order/info&order_id=' . $new_order_info['order_id'];
+                $order_pdf_href = '';
+                $invoice_no = NULL;
+
+                $email_data = array(
+                    'template_id' => 'order_' . (int) $new_order_info['order_status_id'],
+                    'order_info' => $new_order_info,
+                    'address' => $address,
+                    'payment_address' => $payment_address,
+                    'special' => $special,
+                    'order_href' => $order_href,
+                    'order_pdf_href' => $order_pdf_href,
+                    'order_status' => $new_order_info['order_status_id'],
+                    'totals' => $totals,
+                    'tax_amount' => $tax,
+                    'order_id' => $new_order_id,
+                    'invoice_no' => !empty($invoice_no) ? $invoice_no : '',
+                    'order_products_list' => $this->load->controller('emailtemplate/emailtemplate/getOrderProductListTemplate', $new_order_info)
+                );
+
+                $subject = $this->emailtemplate->getSubject('OrderAll', 'order_' . (int) $new_order_info['order_status_id'], $email_data);
+                $message = $this->emailtemplate->getMessage('OrderAll', 'order_' . (int) $new_order_info['order_status_id'], $email_data);
+                $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_' . (int) $new_order_info['order_status_id'], $email_data);
+
+                try {
+                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $new_order_info['order_status_id'])) {
+                        $mail = new mail($this->config->get('config_mail'));
+                        $mail->setTo($new_order_info['email']);
+                        $mail->setFrom($this->config->get('config_from_email'));
+                        $mail->setSender($new_order_info['store_name']);
+                        $mail->setSubject($subject);
+                        $mail->setHtml($message);
+                        $mail->send();
+                        $log->write('mail end');
+                    }
+                } catch (Exception $e) {
+                    
+                }
             }
             $log->write($order_info);
             $log->write($data);
