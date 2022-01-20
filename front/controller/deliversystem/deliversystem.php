@@ -2012,8 +2012,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
     public function createorderwithmissingproducts() {
         $log = new Log('error.log');
         $data = NULL;
-        $order_id = $this->request->get['order_id'];
-        if ($order_id > 0) {
+        $order_id = base64_decode($this->request->get['order_id']);
+        if (is_numeric($order_id) && $order_id > 0) {
 
             $this->load->model('checkout/order');
             $this->load->model('sale/order');
