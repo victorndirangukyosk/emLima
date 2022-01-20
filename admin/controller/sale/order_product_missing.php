@@ -1478,7 +1478,7 @@ class ControllerSaleOrderProductMissing extends Controller {
             'order_id' => $order_id,
             'invoice_no' => !empty($invoice_no) ? $invoice_no : '',
             'order_products_list' => $this->getOrderProductListTemplate($order_id),
-            'missed_products_order_link' => $order_info['store_url'] . 'index.php?path=deliversystem/deliversystem/createorderwithmissingproducts&' . base64_encode('order_id') . '=' . base64_encode($order_info['order_id']),
+            'missed_products_order_link' => $order_info['store_url'] . 'index.php?path=deliversystem/deliversystem/createorderwithmissingproducts&order_id=' . base64_encode($order_info['order_id']),
         );
 
         $subject = $this->emailtemplate->getSubject('OrderAll', 'order_21', $data);

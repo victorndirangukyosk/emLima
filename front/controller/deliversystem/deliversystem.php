@@ -2010,7 +2010,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
     }
 
     public function createorderwithmissingproducts() {
-        echo $this->request->get;
+        print_r($this->request->get['order_id']);
     }
 
 }
