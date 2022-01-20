@@ -832,7 +832,8 @@ class ControllerSaleOrderProductMissing extends Controller {
         $this->model_sale_order->updateordertotal($this->request->post['order_id'], $grand_total);
         $this->sendmailwithmissingproducts($this->request->post['order_id']);
         $data['order_id'] = $this->request->post['order_id'];
-        $this->missing_products_order_invoice_download($data);
+        $this->getOrderProductListTemplate($this->request->post['order_id']);
+        //$this->missing_products_order_invoice_download($data);
         $log->write('TOTALS');
         $log->write($sumTotal);
         $log->write($sumTotalTax);
@@ -1330,6 +1331,123 @@ class ControllerSaleOrderProductMissing extends Controller {
         }
     }
 
+    public function getOrderProductListTemplate($order_id) {
+        $log = new Log('error.log');
+        $data['products'] = [];
+        $filter['filter_order_id'] = $order_id;
+
+        $sub_total = 0;
+        $tax = 0;
+        $order_info = $this->model_sale_order->getOrder($order_id);
+        $products = $this->model_sale_order->getOrderedMissingProducts($filter);
+        $totals = $this->model_sale_order->getOrderTotals($order_id);
+
+        foreach ($products as $product) {
+            $data['products'][] = [
+                'product_id' => $product['product_id'],
+                'product_note' => $product['product_note'],
+                'name' => $product['name'],
+                'unit' => $product['unit'],
+                'model' => $product['model'],
+                'quantity' => $product['quantity'],
+                'price' => $this->currency->format($product['mp_price'] + ($this->config->get('config_tax') ? $product['mp_tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                'total' => $this->currency->format($product['mp_total'] + ($this->config->get('config_tax') ? ($product['mp_tax'] * $product['quantity_required']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+            ];
+            $sub_total += $product['mp_price'] * $product['quantity_required'];
+            $tax += $product['mp_tax'] * $product['quantity_required'];
+        }
+
+        $new_total = $sub_total + $tax;
+        $total_data = [];
+
+        foreach ($totals as $total) {
+            if ($total['code'] == 'sub_total') {
+                $total_data[] = [
+                    'title' => $total['title'],
+                    'text' => $this->currency->format($sub_total, $order_info['currency_code'], $order_info['currency_value']),
+                    'amount_in_words' => ucwords($this->translateAmountToWords(floor(($sub_total * 100) / 100))) . ' Kenyan Shillings',
+                    'value' => $total['value'],
+                    'sort_order' => $total['sort_order'],
+                ];
+            } elseif ($total['code'] == 'tax') {
+                $total_data[] = [
+                    'title' => $total['title'],
+                    'text' => $this->currency->format($tax, $order_info['currency_code'], $order_info['currency_value']),
+                    'amount_in_words' => ucwords($this->translateAmountToWords(floor(($tax * 100) / 100))) . ' Kenyan Shillings',
+                    'value' => $tax,
+                    'sort_order' => $total['sort_order'],
+                ];
+            } elseif ($total['code'] == 'transaction_fee') {
+                $total_data[] = [
+                    'title' => $total['title'],
+                    'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                    'amount_in_words' => ucwords($this->translateAmountToWords(floor(($total['value'] * 100) / 100))) . ' Kenyan Shillings',
+                    'value' => $total['value'],
+                    'sort_order' => $total['sort_order'],
+                ];
+            } elseif ($total['code'] == 'total') {
+                $total_data[] = [
+                    'title' => $total['title'],
+                    'text' => $this->currency->format($new_total, $order_info['currency_code'], $order_info['currency_value']),
+                    'amount_in_words' => ucwords($this->translateAmountToWords(floor(($new_total * 100) / 100))) . ' Kenyan Shillings',
+                    'value' => $new_total,
+                    'sort_order' => $total['sort_order'],
+                ];
+            } else {
+                $total_data[] = [
+                    'title' => $total['title'],
+                    'text' => $this->currency->format($new_total, $order_info['currency_code'], $order_info['currency_value']),
+                    'amount_in_words' => ucwords($this->translateAmountToWords(floor(($new_total * 100) / 100))) . ' Kenyan Shillings',
+                    'value' => $new_total,
+                    'sort_order' => $total['sort_order'],
+                ];
+            }
+        }
+
+        usort($total_data, function ($a, $b) {
+            return $a['sort_order'] <=> $b['sort_order'];
+        });
+
+        $log->write('total_data');
+        $log->write($total_data);
+        $log->write('total_data');
+
+        $html = '';
+        $html .= '<table class="table table-bordered" style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;border-collapse: collapse!important;border-spacing: 0;background-color: transparent;width: 100%;max-width: 100%;margin-bottom: 20px;border: 1px solid #ddd;">';
+        $html .= '<thead class="thead-bg" style="background: #EC7122;color: #fff;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;display: table-header-group;">'
+                . '<tr style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;page-break-inside: avoid;">'
+                . '<th scope="col" style="background-color: #EC7122 !important;color: #000;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: bottom;border-top: 1px solid #ddd;border-bottom: 2px solid #ddd;border: 1px solid #ddd!important;border-bottom-width: 2px;">S.NO</th>'
+                . '<th scope="col" style="background-color: #EC7122 !important;color: #000;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: bottom;border-top: 1px solid #ddd;border-bottom: 2px solid #ddd;border: 1px solid #ddd!important;border-bottom-width: 2px;">PRODUCT NAME</th>'
+                . '<th scope="col" style="background-color: #EC7122 !important;color: #000;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: bottom;border-top: 1px solid #ddd;border-bottom: 2px solid #ddd;border: 1px solid #ddd!important;border-bottom-width: 2px;">UNIT PRICE</th>'
+                . '<th scope="col" style="background-color: #EC7122 !important;color: #000;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: bottom;border-top: 1px solid #ddd;border-bottom: 2px solid #ddd;border: 1px solid #ddd!important;border-bottom-width: 2px;">UNIT</th>'
+                . '<th scope="col" style="background-color: #EC7122 !important;color: #000;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: bottom;border-top: 1px solid #ddd;border-bottom: 2px solid #ddd;border: 1px solid #ddd!important;border-bottom-width: 2px;">QUANTITY</th>'
+                . '<th scope="col" style="background-color: #EC7122 !important;color: #000;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: bottom;border-top: 1px solid #ddd;border-bottom: 2px solid #ddd;border: 1px solid #ddd!important;border-bottom-width: 2px;">TOTAL</th>'
+                . '</tr>'
+                . '</thead>';
+        $html .= '<tbody style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;">';
+        $count = 1;
+        foreach ($data['products'] as $product) {
+            $html .= '<tr style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;page-break-inside: avoid;">
+            <th scope="row" style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $count . '</th>
+            <td style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $product['name'] . '</td>
+            <td style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $product['price'] . '</td>
+            <td style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $product['unit'] . '</td>
+            <td style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $product['quantity'] . '</td>
+            <td style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $product['total'] . '</td>
+        </tr>';
+            $count++;
+        }
+        foreach ($total_data as $total) {
+            $html .= '<tr style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;page-break-inside: avoid;">'
+                    . '<th colspan="4" style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;"></th>'
+                    . '<td style="text-align: right;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;"><strong style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;font-weight: 700;">' . $total['title'] . '</strong></td>'
+                    . '<td style="text-align: right;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;"><strong style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;font-weight: 700;">' . $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']) . '</strong></td>'
+                    . '</tr>';
+        }
+        $html .= '</tbody></table>';
+        return $html;
+    }
+
     public function sendmailwithmissingproducts($order_id) {
 
         $order_info = $this->model_sale_order->getOrder($order_id);
@@ -1345,7 +1463,6 @@ class ControllerSaleOrderProductMissing extends Controller {
         $totals = NULL;
         $tax_amount = NULL;
         $invoice_no = NULL;
-        $order_products_list = NULL;
 
         $data = array(
             'template_id' => 'order_21',
@@ -1360,7 +1477,7 @@ class ControllerSaleOrderProductMissing extends Controller {
             'tax_amount' => $tax_amount,
             'order_id' => $order_id,
             'invoice_no' => !empty($invoice_no) ? $invoice_no : '',
-            'order_products_list' => $order_products_list
+            'order_products_list' => $this->getOrderProductListTemplate($order_id)
         );
 
         $subject = $this->emailtemplate->getSubject('OrderAll', 'order_21', $data);
