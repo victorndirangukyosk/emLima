@@ -2222,14 +2222,11 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
 
-        $data['order_ids'] = [$new_order_id];
+        $data['order_ids'] = array($new_order_id);
 
         if (isset($new_order_id)) {
             $this->load->model('checkout/success');
             $this->load->model('checkout/order');
-
-            $this->cart->clear();
-
             $this->load->model('account/customer');
             $this->load->model('account/activity');
 
