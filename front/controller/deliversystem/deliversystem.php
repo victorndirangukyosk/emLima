@@ -2078,6 +2078,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                             'value' => $sub_total,
                             'sort_order' => $total['sort_order'],
                             'actual_value' => NULL,
+                            'text' => $this->currency->format($sub_total),
                         ];
                     } elseif ($total['code'] == 'tax') {
                         $total_data[] = [
@@ -2086,6 +2087,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                             'value' => $tax,
                             'sort_order' => $total['sort_order'],
                             'actual_value' => NULL,
+                            'text' => $this->currency->format($tax),
                         ];
                     } elseif ($total['code'] == 'transaction_fee') {
                         $total_data[] = [
@@ -2094,6 +2096,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                             'value' => $total['value'],
                             'sort_order' => $total['sort_order'],
                             'actual_value' => NULL,
+                            'text' => $this->currency->format($total['value']),
                         ];
                     } elseif ($total['code'] == 'total') {
                         $total_data[] = [
@@ -2102,6 +2105,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                             'value' => $new_total,
                             'sort_order' => $total['sort_order'],
                             'actual_value' => NULL,
+                            'text' => $this->currency->format($new_total),
                         ];
                     } else {
                         $total_data[] = [
@@ -2110,6 +2114,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                             'value' => $total['value'],
                             'sort_order' => $total['sort_order'],
                             'actual_value' => NULL,
+                            'text' => $this->currency->format($total['value']),
                         ];
                     }
                 }
@@ -2418,7 +2423,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         $data['newTotal'] = $this->currency->format(0);
 
-        $data['totals'] = $totals;
+        $data['totals'] = $total_data;
         $data['order_id'] = [$order_id];
 
         if ($this->request->server['HTTPS']) {
