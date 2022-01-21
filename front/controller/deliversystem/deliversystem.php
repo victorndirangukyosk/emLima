@@ -2115,12 +2115,12 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 $transaction_details['total'] = $order_info['total'];
 
                 $new_order_id = $this->model_sale_order->CreateOrder($order_info);
+                $new_order_info = $this->model_sale_order->getOrder($new_order_id);
+                $customer_info = $this->model_account_customer->getCustomer($new_order_info['customer_id']);
                 $new_product_id = $this->model_sale_order->InsertProductsByOrderId($data['products'], $new_order_id);
                 $new_total_id = $this->model_sale_order->InsertOrderTotals($total_data, $new_order_id);
                 $new_transaction_id = $this->model_sale_order->InsertOrderTransactionDetails($transaction_details, $new_order_id);
-
-                $new_order_info = $this->model_sale_order->getOrder($new_order_id);
-                $customer_info = $this->model_account_customer->getCustomer($new_order_info['customer_id']);
+                $new_order_history_id = $this->model_checkout_order->addOrderHistory($order_id, $new_order_info['order_status_id'], 'Missing Products Order', false, $customer_info['firstname'] . ' ' . $customer_info['lastname'], 'customer', NULL, '');
 
                 if (strlen($new_order_info['shipping_name']) <> 0) {
                     $address = $new_order_info['shipping_name'] . '<br />' . $new_order_info['shipping_address'] . '<br /><b>Contact No.:</b> ' . $new_order_info['shipping_contact_no'];
