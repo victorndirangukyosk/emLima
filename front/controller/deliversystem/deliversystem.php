@@ -2020,6 +2020,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $this->load->model('sale/order');
             $this->load->model('assets/product');
             $this->load->model('account/customer');
+            $this->load->model('tool/image');
 
             $order_info = $this->model_sale_order->getOrder($order_id);
             if ($order_info != NULL && is_array($order_info) && count($order_info) > 0) {
@@ -2033,6 +2034,13 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 $i = 0;
                 foreach ($products as $product) {
                     $product_info = $this->model_assets_product->getProduct($product['product_id'], true);
+
+                    if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
+                        $image = $this->model_tool_image->resize($product_info['image'], 80, 100);
+                    } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
+                        $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
+                    }
+
                     $data['products'][] = [
                         'order_id' => $order_id,
                         'product_id' => $product['product_id'],
@@ -2043,7 +2051,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         'name' => $product_info['name'],
                         'unit' => $product_info['unit'],
                         'model' => $product_info['model'],
-                        'model' => $product_info['model'],
+                        'image' => $image,
                         'quantity' => $product['quantity_required'],
                         'price' => $product['mp_price'],
                         'total' => $product['mp_price'] * $product['quantity_required'],
@@ -2439,7 +2447,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $data['total_quantity'] += $product['quantity'];
         }
 
-        if (in_array($data['order_status_id'], $this->config->get('config_complete_status'))) {
+        if (in_array($new_order_info['order_status_id'], $this->config->get('config_complete_status'))) {
             $data['show_rating'] = false;
 
             if (is_null($data['rating']) || empty($data['rating'])) {
