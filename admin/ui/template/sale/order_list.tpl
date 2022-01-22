@@ -2733,12 +2733,12 @@ function addtomissingproduct() {
                 
                 if(json.status == 200) {
                 $('.alert.alert-success.missed').html('');
-                $('.alert.alert-success.missed').html('<i class="fa fa-times-circle text-danger">'+json.message+'</i>');
+                $('.alert.alert-success.missed').html('<i class="fa fa-times-circle text-success">'+json.message+'</i>');
                 $('.alert.alert-success.missed').show();
                 setTimeout(function(){
                 $('#store_modal').modal('hide');
-                }, 1500);
-                setTimeout(function(){ window.location.reload(false); }, 2000);
+                }, 5000);
+                setTimeout(function(){ window.location.reload(false); }, 6000);
                 }
                 //location=location;
                 },			

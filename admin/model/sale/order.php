@@ -4313,7 +4313,7 @@ class ModelSaleOrder extends Model {
         return $query->row['total'];
     }
 
-    public function addOrderProductToMissingProduct($order_product_id, $required_quantity = 0) {
+    public function addOrderProductToMissingProduct($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model) {
         $sql = 'Select * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
 
         $query = $this->db->query($sql);
@@ -4329,7 +4329,7 @@ class ModelSaleOrder extends Model {
 
             // echo "<pre>";print_r($required_quantity);die;
 
-            $sql = 'INSERT into ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', created_by = '" . $this->user->getId() . "'";
+            $sql = 'INSERT into ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', name = '" . $name . "', unit = '" . $unit . "', product_note = '" . $product_note . "', model = '" . $model . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', created_by = '" . $this->user->getId() . "'";
             //  echo "<pre>";print_r($sql);die;
 
 

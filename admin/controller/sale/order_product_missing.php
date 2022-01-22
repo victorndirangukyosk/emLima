@@ -670,7 +670,13 @@ class ControllerSaleOrderProductMissing extends Controller {
             if ($error == NULL) {
                 $i = 0;
                 foreach ($orders as $order_product_id) {
-                    $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i]);
+
+                    $ordered_products = $this->model_sale_order->getRealOrderProductById($this->request->post['order_id'], $order_product_id);
+                    if ($ordered_products == NULL) {
+                        $ordered_products = $products = $this->model_sale_order->getOrderProductById($this->request->post['order_id'], $order_product_id);
+                    }
+
+                    $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model']);
                     $i++;
                 }
                 $this->editinvocebymissingproducts($this->request->post);
@@ -721,11 +727,11 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $log->write('DELETE PRODUCT');
 
                 if ($real_order_products_update == 'YES') {
-                    $products = $this->model_sale_order->deleteOrderProduct($this->request->post['order_id'], $product_details['store_id']);
+                    $products = $this->model_sale_order->deleteOrderProduct($this->request->post['order_id'], $product_details['product_store_id']);
                 }
 
                 if ($order_products_update == 'YES') {
-                    $products = $this->model_sale_order->deleteCustomerOrderProduct($this->request->post['order_id'], $product_details['store_id']);
+                    $products = $this->model_sale_order->deleteCustomerOrderProduct($this->request->post['order_id'], $product_details['product_store_id']);
                 }
             }
 
