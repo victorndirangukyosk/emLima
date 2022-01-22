@@ -2033,7 +2033,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                 $i = 0;
                 foreach ($products as $product) {
-                    $product_info = $this->model_assets_product->getProduct($product['product_id'], true);
+                    $product_info = $this->model_assets_product->getProduct($product['product_store_id'], true);
 
                     if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
                         $image = $this->model_tool_image->resize($product_info['image'], 80, 100);
@@ -2066,7 +2066,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 }
 
                 foreach ($products as $product) {
-                    $product_info = $this->model_assets_product->getProduct($product['product_id'], true);
+                    $product_info = $this->model_assets_product->getProduct($product['product_store_id'], true);
 
                     if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
                         $image = $this->model_tool_image->resize($product_info['image'], 80, 100);
