@@ -2735,7 +2735,10 @@ function addtomissingproduct() {
                 $('.alert.alert-success.missed').html('');
                 $('.alert.alert-success.missed').html('<i class="fa fa-times-circle text-danger">'+json.message+'</i>');
                 $('.alert.alert-success.missed').show();
-                $('#store_modal').modal('hide')            
+                setTimeout(function(){
+                $('#store_modal').modal('hide');
+                }, 1500);
+                setTimeout(function(){ window.location.reload(false); }, 2000);
                 }
                 //location=location;
                 },			
