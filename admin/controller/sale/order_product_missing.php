@@ -721,11 +721,11 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $log->write('DELETE PRODUCT');
 
                 if ($real_order_products_update == 'YES') {
-                    $products = $this->model_sale_order->deleteOrderProduct($this->request->post['order_id'], $product_details['store_id']);
+                    $products = $this->model_sale_order->deleteOrderProduct($this->request->post['order_id'], $product_details['product_store_id']);
                 }
 
                 if ($order_products_update == 'YES') {
-                    $products = $this->model_sale_order->deleteCustomerOrderProduct($this->request->post['order_id'], $product_details['store_id']);
+                    $products = $this->model_sale_order->deleteCustomerOrderProduct($this->request->post['order_id'], $product_details['product_store_id']);
                 }
             }
 
