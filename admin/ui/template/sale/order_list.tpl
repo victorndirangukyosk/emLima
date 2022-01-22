@@ -1287,7 +1287,7 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     
-                                      <button type="button" onclick="addtomissingproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add To Missing Products">Save To Missing Products</button>
+                                      <button id="addtomissingproduct" type="button" onclick="addtomissingproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add To Missing Products">Save To Missing Products</button>
                                    </div>
                             </div>
                         </div>
@@ -2723,12 +2723,22 @@ function addtomissingproduct() {
                 type: 'post',
                 dataType: 'json',
                 data: data,
+                beforeSend: function() {
+                $('#addtomissingproduct').prop('disabled', true);
+                $('.alert.alert-success.missed').html('');
+                $('.alert.alert-success.missed').html('<i class="fa fa-times-circle text-success">Please wait your request is processing!</i>');
+                $('.alert.alert-success.missed').show();
+                },
+                complete: function() {
+                $('#addtomissingproduct').prop('disabled', false);    
+		},
                 success: function(json) {
                 console.log(json);
                 if(json.status == 400) {
                 $('.alert.alert-danger.missed').html('');
                 $('.alert.alert-danger.missed').html('<i class="fa fa-times-circle text-danger">'+json.message+'</i>');
                 $('.alert.alert-danger.missed').show();
+                $('#addtomissingproduct').prop('disabled', false);
                 }
                 
                 if(json.status == 200) {
