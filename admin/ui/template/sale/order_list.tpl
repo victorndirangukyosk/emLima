@@ -2737,8 +2737,8 @@ function addtomissingproduct() {
                 $('.alert.alert-success.missed').show();
                 setTimeout(function(){
                 $('#store_modal').modal('hide');
-                }, 1500);
-                setTimeout(function(){ window.location.reload(false); }, 2000);
+                }, 5000);
+                setTimeout(function(){ window.location.reload(false); }, 6000);
                 }
                 //location=location;
                 },			
