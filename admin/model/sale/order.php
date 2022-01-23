@@ -5110,4 +5110,14 @@ class ModelSaleOrder extends Model {
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET total = '" . (int) $total . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
     }
 
+    public function getNewOrderIdByMissingProductOrderId($order_id) {
+        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND new_order_id > 0");
+        return $new_order_query->row;
+    }
+
+    public function getMissingProductsByOrderId($order_id) {
+        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "'");
+        return $new_order_query->rows;
+    }
+
 }
