@@ -2021,149 +2021,161 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $this->load->model('assets/product');
             $this->load->model('account/customer');
             $this->load->model('tool/image');
+            $this->load->model('account/activity');
 
             $order_info = $this->model_sale_order->getOrder($order_id);
-            if ($order_info != NULL && is_array($order_info) && count($order_info) > 0) {
-                $totals = $this->model_sale_order->getOrderTotals($order_id);
-                $filter['filter_order_id'] = $order_id;
-                $products = $this->model_checkout_order->getOrderedMissingProducts($filter);
+            $new_order_details = $this->model_checkout_order->getNewOrderIdByMissingProductOrderId($order_info['order_id']);
 
-                $sub_total = 0;
-                $tax = 0;
+            $totals = $this->model_sale_order->getOrderTotals($order_id);
+            $filter['filter_order_id'] = $order_id;
+            $products = $this->model_checkout_order->getOrderedMissingProducts($filter);
 
-                $i = 0;
-                foreach ($products as $product) {
-                    $product_info = $this->model_assets_product->getProduct($product['product_store_id'], true);
+            $sub_total = 0;
+            $tax = 0;
 
-                    if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
-                        $image = $this->model_tool_image->resize($product_info['image'], 80, 100);
-                    } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
-                        $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
-                    }
+            $i = 0;
+            foreach ($products as $product) {
+                $product_info = $this->model_assets_product->getProduct($product['product_store_id'], true);
 
-                    $data['products'][] = [
-                        'order_id' => $order_id,
-                        'product_id' => $product['product_id'],
-                        'general_product_id' => $product_info['product_id'],
-                        'variation_id' => 0,
-                        'vendor_id' => $product_info['merchant_id'],
-                        'store_id' => $product_info['store_id'],
-                        'name' => $product_info['name'],
-                        'unit' => $product_info['unit'],
-                        'model' => $product_info['model'],
-                        'image' => $image,
-                        'quantity' => $product['quantity_required'],
-                        'price' => $product['mp_price'],
-                        'total' => $product['mp_price'] * $product['quantity_required'],
-                        'tax' => $this->tax->getTax($product['mp_price'], $product_info['tax_class_id']),
-                        'reward' => 0,
-                        'product_type' => 'replacable',
-                        'product_note' => $product['product_note'],
+                if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
+                    $image = $this->model_tool_image->resize($product_info['image'], 80, 100);
+                } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
+                    $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
+                }
+
+                $data['products'][] = [
+                    'order_id' => $order_id,
+                    'product_id' => $product['product_id'],
+                    'general_product_id' => $product_info['product_id'],
+                    'variation_id' => 0,
+                    'vendor_id' => $product_info['merchant_id'],
+                    'store_id' => $product_info['store_id'],
+                    'name' => $product_info['name'],
+                    'unit' => $product_info['unit'],
+                    'model' => $product_info['model'],
+                    'image' => $image,
+                    'quantity' => $product['quantity_required'],
+                    'price' => $product['mp_price'],
+                    'total' => $product['mp_price'] * $product['quantity_required'],
+                    'tax' => $this->tax->getTax($product['mp_price'], $product_info['tax_class_id']),
+                    'reward' => 0,
+                    'product_type' => 'replacable',
+                    'product_note' => $product['product_note'],
+                ];
+                $sub_total += $product['mp_price'] * $product['quantity_required'];
+                $tax += $product['mp_tax'] * $product['quantity_required'];
+                $i++;
+            }
+
+            foreach ($products as $product) {
+                $product_info = $this->model_assets_product->getProduct($product['product_store_id'], true);
+
+                if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
+                    $image = $this->model_tool_image->resize($product_info['image'], 80, 100);
+                } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
+                    $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
+                }
+
+                $data['new_products'][] = [
+                    'order_id' => $order_id,
+                    'product_id' => $product['product_id'],
+                    'general_product_id' => $product_info['product_id'],
+                    'variation_id' => 0,
+                    'vendor_id' => $product_info['merchant_id'],
+                    'store_id' => $product_info['store_id'],
+                    'name' => $product_info['name'],
+                    'unit' => $product_info['unit'],
+                    'model' => $product_info['model'],
+                    'image' => $image,
+                    'quantity' => $product['quantity_required'],
+                    'price' => $this->currency->format($this->tax->calculate($product['mp_price'], $product_info['tax_class_id'], $this->config->get('config_tax'))),
+                    'total' => $this->currency->format($this->tax->calculate($product['mp_price'], $product_info['tax_class_id'], $this->config->get('config_tax')) * $product['quantity_required']),
+                    'tax' => $this->tax->getTax($product['mp_price'], $product_info['tax_class_id']),
+                    'reward' => 0,
+                    'product_type' => 'replacable',
+                    'product_note' => $product['product_note'],
+                ];
+            }
+
+            $new_total = $sub_total + $tax;
+            $order_info['total'] = $new_total;
+
+            $total_data = [];
+
+            foreach ($totals as $total) {
+                if ($total['code'] == 'sub_total') {
+                    $total_data[] = [
+                        'code' => $total['code'],
+                        'title' => $total['title'],
+                        'value' => $sub_total,
+                        'sort_order' => $total['sort_order'],
+                        'actual_value' => NULL,
+                        'text' => $this->currency->format($sub_total),
                     ];
-                    $sub_total += $product['mp_price'] * $product['quantity_required'];
-                    $tax += $product['mp_tax'] * $product['quantity_required'];
-                    $i++;
-                }
-
-                foreach ($products as $product) {
-                    $product_info = $this->model_assets_product->getProduct($product['product_store_id'], true);
-
-                    if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
-                        $image = $this->model_tool_image->resize($product_info['image'], 80, 100);
-                    } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
-                        $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
-                    }
-
-                    $data['new_products'][] = [
-                        'order_id' => $order_id,
-                        'product_id' => $product['product_id'],
-                        'general_product_id' => $product_info['product_id'],
-                        'variation_id' => 0,
-                        'vendor_id' => $product_info['merchant_id'],
-                        'store_id' => $product_info['store_id'],
-                        'name' => $product_info['name'],
-                        'unit' => $product_info['unit'],
-                        'model' => $product_info['model'],
-                        'image' => $image,
-                        'quantity' => $product['quantity_required'],
-                        'price' => $this->currency->format($this->tax->calculate($product['mp_price'], $product_info['tax_class_id'], $this->config->get('config_tax'))),
-                        'total' => $this->currency->format($this->tax->calculate($product['mp_price'], $product_info['tax_class_id'], $this->config->get('config_tax')) * $product['quantity_required']),
-                        'tax' => $this->tax->getTax($product['mp_price'], $product_info['tax_class_id']),
-                        'reward' => 0,
-                        'product_type' => 'replacable',
-                        'product_note' => $product['product_note'],
+                } elseif ($total['code'] == 'tax') {
+                    $total_data[] = [
+                        'code' => $total['code'],
+                        'title' => $total['title'],
+                        'value' => $tax,
+                        'sort_order' => $total['sort_order'],
+                        'actual_value' => NULL,
+                        'text' => $this->currency->format($tax),
+                    ];
+                } elseif ($total['code'] == 'transaction_fee') {
+                    $total_data[] = [
+                        'code' => $total['code'],
+                        'title' => $total['title'],
+                        'value' => $total['value'],
+                        'sort_order' => $total['sort_order'],
+                        'actual_value' => NULL,
+                        'text' => $this->currency->format($total['value']),
+                    ];
+                } elseif ($total['code'] == 'total') {
+                    $total_data[] = [
+                        'code' => $total['code'],
+                        'title' => $total['title'],
+                        'value' => $new_total,
+                        'sort_order' => $total['sort_order'],
+                        'actual_value' => NULL,
+                        'text' => $this->currency->format($new_total),
+                    ];
+                } else {
+                    $total_data[] = [
+                        'code' => $total['code'],
+                        'title' => $total['title'],
+                        'value' => $total['value'],
+                        'sort_order' => $total['sort_order'],
+                        'actual_value' => NULL,
+                        'text' => $this->currency->format($total['value']),
                     ];
                 }
+            }
 
-                $new_total = $sub_total + $tax;
-                $order_info['total'] = $new_total;
+            usort($total_data, function ($a, $b) {
+                return $a['sort_order'] <=> $b['sort_order'];
+            });
 
-                $total_data = [];
-
-                foreach ($totals as $total) {
-                    if ($total['code'] == 'sub_total') {
-                        $total_data[] = [
-                            'code' => $total['code'],
-                            'title' => $total['title'],
-                            'value' => $sub_total,
-                            'sort_order' => $total['sort_order'],
-                            'actual_value' => NULL,
-                            'text' => $this->currency->format($sub_total),
-                        ];
-                    } elseif ($total['code'] == 'tax') {
-                        $total_data[] = [
-                            'code' => $total['code'],
-                            'title' => $total['title'],
-                            'value' => $tax,
-                            'sort_order' => $total['sort_order'],
-                            'actual_value' => NULL,
-                            'text' => $this->currency->format($tax),
-                        ];
-                    } elseif ($total['code'] == 'transaction_fee') {
-                        $total_data[] = [
-                            'code' => $total['code'],
-                            'title' => $total['title'],
-                            'value' => $total['value'],
-                            'sort_order' => $total['sort_order'],
-                            'actual_value' => NULL,
-                            'text' => $this->currency->format($total['value']),
-                        ];
-                    } elseif ($total['code'] == 'total') {
-                        $total_data[] = [
-                            'code' => $total['code'],
-                            'title' => $total['title'],
-                            'value' => $new_total,
-                            'sort_order' => $total['sort_order'],
-                            'actual_value' => NULL,
-                            'text' => $this->currency->format($new_total),
-                        ];
-                    } else {
-                        $total_data[] = [
-                            'code' => $total['code'],
-                            'title' => $total['title'],
-                            'value' => $total['value'],
-                            'sort_order' => $total['sort_order'],
-                            'actual_value' => NULL,
-                            'text' => $this->currency->format($total['value']),
-                        ];
-                    }
-                }
-
-                usort($total_data, function ($a, $b) {
-                    return $a['sort_order'] <=> $b['sort_order'];
-                });
+            if (($new_order_details == NULL || count($new_order_details) == 0) && $order_info != NULL && is_array($order_info) && count($order_info) > 0) {
 
                 $transaction_details['customer_id'] = $order_info['customer_id'];
                 $transaction_details['no_of_products'] = $i;
                 $transaction_details['total'] = $order_info['total'];
 
                 $new_order_id = $this->model_sale_order->CreateOrder($order_info);
+                $this->model_checkout_order->UpdateMissingProductsByOrderId($order_id, $new_order_id);
                 $new_order_info = $this->model_sale_order->getOrder($new_order_id);
                 $customer_info = $this->model_account_customer->getCustomer($new_order_info['customer_id']);
                 $new_product_id = $this->model_sale_order->InsertProductsByOrderId($data['products'], $new_order_id);
                 $new_total_id = $this->model_sale_order->InsertOrderTotals($total_data, $new_order_id);
                 $new_transaction_id = $this->model_sale_order->InsertOrderTransactionDetails($transaction_details, $new_order_id);
                 $new_order_history_id = $this->model_checkout_order->addOrderHistory($new_order_info['order_id'], $new_order_info['order_status_id'], 'Missing Products Order', false, $customer_info['firstname'] . ' ' . $customer_info['lastname'], 'customer', NULL, '');
+
+                $activity_data = [
+                    'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+                    'order_id' => $new_order_info['order_id'],
+                ];
+
+                $this->model_account_activity->addActivity('order_account', $activity_data);
 
                 if (strlen($new_order_info['shipping_name']) <> 0) {
                     $address = $new_order_info['shipping_name'] . '<br />' . $new_order_info['shipping_address'] . '<br /><b>Contact No.:</b> ' . $new_order_info['shipping_contact_no'];
@@ -2211,10 +2223,14 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 } catch (Exception $e) {
                     
                 }
+                $log->write($order_info);
+                $log->write($data);
+                $log->write($total_data);
             }
-            $log->write($order_info);
-            $log->write($data);
-            $log->write($total_data);
+        }
+
+        if ($new_order_details != NULL && count($new_order_details) > 0) {
+            $new_order_id = $new_order_details['new_order_id'];
         }
 
         $this->load->language('checkout/success');
@@ -2263,20 +2279,12 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $this->load->model('checkout/success');
             $this->load->model('checkout/order');
             $this->load->model('account/customer');
-            $this->load->model('account/activity');
 
-            $activity_data = [
-                'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
-                'order_id' => $new_order_info['order_id'],
-            ];
-
-            $this->model_account_activity->addActivity('order_account', $activity_data);
-
-            $order_info = $this->model_checkout_order->getOrder($new_order_id);
+            $new_order_info = $this->model_checkout_order->getOrder($new_order_id);
 
             $total = $new_order_info['total'];
 
-            $customer_info = $this->model_account_customer->getCustomer($customer_info['customer_id']);
+            $customer_info = $this->model_account_customer->getCustomer($new_order_info['customer_id']);
         }
 
 

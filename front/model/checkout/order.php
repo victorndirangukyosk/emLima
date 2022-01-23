@@ -2263,4 +2263,13 @@ class ModelCheckoutOrder extends Model {
         return $query->rows;
     }
 
+    public function UpdateMissingProductsByOrderId($order_id, $new_order_id) {
+        $this->db->query('UPDATE `' . DB_PREFIX . 'missing_products` SET new_order_id ="' . $new_order_id . '", updated_at = NOW() WHERE order_id="' . $order_id . '"');
+    }
+
+    public function getNewOrderIdByMissingProductOrderId($order_id) {
+        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND new_order_id > 0");
+        return $new_order_query->row;
+    }
+
 }
