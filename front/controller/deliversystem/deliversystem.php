@@ -2158,6 +2158,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 $transaction_details['total'] = $order_info['total'];
 
                 $new_order_id = $this->model_sale_order->CreateOrder($order_info);
+                $this->model_checkout_order->UpdateMissingProductsByOrderId($order_id, $new_order_id);
                 $new_order_info = $this->model_sale_order->getOrder($new_order_id);
                 $customer_info = $this->model_account_customer->getCustomer($new_order_info['customer_id']);
                 $new_product_id = $this->model_sale_order->InsertProductsByOrderId($data['products'], $new_order_id);
