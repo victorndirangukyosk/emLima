@@ -2706,7 +2706,7 @@ function addtomissingproduct() {
             if(selected_order_product_id=='' || selected_order_product_id==null)
             {
             $('.alert.alert-danger.missed').html('');
-            $('.alert.alert-danger.missed').html('<i class="fa fa-times-circle text-danger">Please Select At Lease One Product</i>');
+            $('.alert.alert-danger.missed').html('<i class="fa fa-exclamation-circle"></i> Warning: Please Select At Lease One Product!');
             $('.alert.alert-danger.missed').show();
             return;
             } 
@@ -2726,7 +2726,7 @@ function addtomissingproduct() {
                 beforeSend: function() {
                 $('#addtomissingproduct').prop('disabled', true);
                 $('.alert.alert-success.missed').html('');
-                $('.alert.alert-success.missed').html('<i class="fa fa-times-circle text-success">Please wait your request is processing!</i>');
+                $('.alert.alert-success.missed').html('<i class="fa fa-exclamation-circle"></i> Success: Please wait your request is processing!');
                 $('.alert.alert-success.missed').show();
                 },
                 complete: function() {
@@ -2736,14 +2736,14 @@ function addtomissingproduct() {
                 console.log(json);
                 if(json.status == 400) {
                 $('.alert.alert-danger.missed').html('');
-                $('.alert.alert-danger.missed').html('<i class="fa fa-times-circle text-danger">'+json.message+'</i>');
+                $('.alert.alert-danger.missed').html('<i class="fa fa-exclamation-circle"></i> Warning: '+json.message+'!');
                 $('.alert.alert-danger.missed').show();
                 $('#addtomissingproduct').prop('disabled', false);
                 }
                 
                 if(json.status == 200) {
                 $('.alert.alert-success.missed').html('');
-                $('.alert.alert-success.missed').html('<i class="fa fa-times-circle text-success">'+json.message+'</i>');
+                $('.alert.alert-success.missed').html('<i class="fa fa-exclamation-circle"></i> Warning: '+json.message+'!');
                 $('.alert.alert-success.missed').show();
                 setTimeout(function(){
                 $('#store_modal').modal('hide');

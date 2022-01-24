@@ -679,7 +679,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                     $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model']);
                     $i++;
                 }
-                $this->editinvocebymissingproducts($this->request->post);
+                //$this->editinvocebymissingproducts($this->request->post);
                 $json['status'] = 200;
                 $json['message'] = 'Missed Products Saved Successfully!';
                 $json['data'] = $order_product_info;
