@@ -5115,6 +5115,11 @@ class ModelSaleOrder extends Model {
         return $new_order_query->row;
     }
 
+    public function getMissingProductQuantityByProductIdOrderId($order_id, $product_id) {
+        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND product_store_id = '" . (int) $product_id . "'");
+        return $new_order_query->row;
+    }
+
     public function getMissingProductsByOrderId($order_id) {
         $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "'");
         return $new_order_query->rows;

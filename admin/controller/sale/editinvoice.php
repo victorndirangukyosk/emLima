@@ -145,6 +145,9 @@ class ControllerSaleEditinvoice extends Controller {
                     $products = $this->model_sale_order->getOrderProducts($order_id);
                 }
 
+                $sub_total = 0;
+                $tax = 0;
+                $new_total = 0;
                 foreach ($products as $product) {
                     if ($store_id && $product['store_id'] != $store_id) {
                         continue;
@@ -173,6 +176,8 @@ class ControllerSaleEditinvoice extends Controller {
                     }
 
                     $variations = $this->model_sale_order->getProductVariationsNew($product['name'], 75, $order_id);
+                    $missed_quantity = $this->model_sale_order->getMissingProductQuantityByProductIdOrderId($order_id, $product['product_id']);
+                    $required_quantity = isset($missed_quantity) && count($missed_quantity) > 0 ? $missed_quantity['quantity_required'] : 0;
                     $product_data[] = [
                         'name' => $product['name'],
                         'product_id' => $product['product_id'],
@@ -186,10 +191,14 @@ class ControllerSaleEditinvoice extends Controller {
                         'price' => number_format((float) $product['price'], 2, '.', ''),
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
                         /* OLD TOTAL WITH TAX */ //'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
-                        'total' => ($product['price'] * $product['quantity']),
-                        'variations' => $variations
+                        'total' => ($product['price'] * ($product['quantity'] - $required_quantity)),
+                        'variations' => $variations,
+                        'missed_quantity' => isset($missed_quantity) && count($missed_quantity) > 0 ? $missed_quantity['quantity_required'] : 0,
                     ];
+                    $sub_total += ($product['price'] * ($product['quantity'] - $required_quantity));
+                    $tax += $product['tax'] * ($product['quantity'] - $required_quantity);
                 }
+                $new_total = $sub_total + $tax;
 
                 $total_data = [];
 
@@ -200,13 +209,39 @@ class ControllerSaleEditinvoice extends Controller {
                 }
 
                 foreach ($totals as $total) {
-                    $total_data[] = [
-                        'title' => $total['title'],
-                        'code' => $total['code'],
-                        //'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                        'text' => number_format((float) $total['value'], 2, '.', ''),
-                        'actual_value' => number_format((float) $total['actual_value'], 2, '.', ''),
-                    ];
+                    if ($total['code'] == 'sub_total') {
+                        $total_data[] = [
+                            'title' => $total['title'],
+                            'code' => $total['code'],
+                            //'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                            'text' => number_format((float) $sub_total, 2, '.', ''),
+                            'actual_value' => number_format((float) $total['actual_value'], 2, '.', ''),
+                        ];
+                    } elseif ($total['code'] == 'tax') {
+                        $total_data[] = [
+                            'title' => $total['title'],
+                            'code' => $total['code'],
+                            //'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                            'text' => number_format((float) $tax, 2, '.', ''),
+                            'actual_value' => number_format((float) $total['actual_value'], 2, '.', ''),
+                        ];
+                    } elseif ($total['code'] == 'total') {
+                        $total_data[] = [
+                            'title' => $total['title'],
+                            'code' => $total['code'],
+                            //'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                            'text' => number_format((float) $new_total, 2, '.', ''),
+                            'actual_value' => number_format((float) $total['actual_value'], 2, '.', ''),
+                        ];
+                    } else {
+                        $total_data[] = [
+                            'title' => $total['title'],
+                            'code' => $total['code'],
+                            //'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                            'text' => number_format((float) $total['value'], 2, '.', ''),
+                            'actual_value' => number_format((float) $total['actual_value'], 2, '.', ''),
+                        ];
+                    }
                 }
 
                 $data['orders'][] = [
