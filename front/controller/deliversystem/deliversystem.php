@@ -2161,6 +2161,19 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 $transaction_details['no_of_products'] = $i;
                 $transaction_details['total'] = $order_info['total'];
 
+                $date = new DateTime("now", new DateTimeZone('Africa/Nairobi'));
+                if (strtotime($date->format('H:i:s')) < strtotime('12:00:00')) {
+                    $order_info['delivery_date'] = $date->format('Y-m-d');
+                    $order_info['delivery_timeslot'] = '02:00pm - 04:00pm';
+                    $log->write('02:00pm - 04:00pm');
+                }
+
+                if (strtotime($date->format('H:i:s')) > strtotime('12:00:00')) {
+                    $order_info['delivery_date'] = date('Y-m-d', strtotime($date->format('Y/m/d') . "+1 days"));
+                    $order_info['delivery_timeslot'] = '06:00am - 08:00am';
+                    $log->write('06:00am - 08:00am');
+                }
+
                 $new_order_id = $this->model_sale_order->CreateOrder($order_info);
                 $this->model_checkout_order->UpdateMissingProductsByOrderId($order_id, $new_order_id);
                 $new_order_info = $this->model_sale_order->getOrder($new_order_id);
