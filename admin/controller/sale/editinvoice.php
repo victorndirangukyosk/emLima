@@ -403,6 +403,7 @@ class ControllerSaleEditinvoice extends Controller {
 
             //echo "<pre>";print_r($datas['products']);die;
             foreach ($datas['products'] as $p_id_key => $updateProduct) {
+                $updateProduct['quantity'] = $updateProduct['quantity'] - $updateProduct['quantity_missed'];
                 $updateProduct['store_id'] = $store_id;
                 $updateProduct['vendor_id'] = $vendor_id;
                 $custom_price = $updateProduct['price'];
