@@ -140,7 +140,7 @@
           <td class="text-right">
 
           <!--<input type="number" min="1" step="1" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>-->
-          <input type="number" min="1" step="1" class="form-control changeTotal changeMissedQuantity text-right" name="products[<?php echo $product['product_id'] ?>][quantity_missed]" value="<?php echo $product['missed_quantity']; ?>"/>
+          <input type="number" min="0" step="1" class="form-control changeTotal changeMissedQuantity text-right" name="products[<?php echo $product['product_id'] ?>][quantity_missed]" value="<?php echo $product['missed_quantity']; ?>"/>
           </td>        
           <td class="text-right">
 
@@ -737,7 +737,7 @@ function add() {
   $html += '</td>';
 
   $html += '<td class="text-right">';
-  $html += '<input type="number" min="1" step="1"  class="form-control changeTotal changeMissedQuantity text-right" name="products['+noProduct+'][quantity_missed]" value="0"/>';
+  $html += '<input type="number" min="0" step="1"  class="form-control changeTotal changeMissedQuantity text-right" name="products['+noProduct+'][quantity_missed]" value="0"/>';
   $html += '</td>';
   
   $html += '<td class="text-right">';
