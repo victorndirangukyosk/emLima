@@ -347,7 +347,7 @@ $(document).delegate('.changeTotal','change', function() {
   console.log("change");
   console.log($(this).val());
 
-  var q = $(this).parent().parent().children().eq(6).children().val() - $(this).parent().parent().children().eq(5).children().val();
+  var q = $(this).parent().parent().children().eq(6).children().val();
   var p = $(this).parent().parent().children().eq(7).children().val();
 
   $(this).parent().parent().children().eq(8).children().val(p*q);
@@ -389,7 +389,7 @@ $(document).delegate('.changeUnit','change', function() {
   var new_product_id = $(this).find(':selected').attr('data-product_id');
   $(this).attr("data-product_id", new_product_id);
 
-  var q = $(this).parent().parent().children().eq(6).children().val() - $(this).parent().parent().children().eq(5).children().val();
+  var q = $(this).parent().parent().children().eq(6).children().val();
   var p = $(this).parent().parent().children().eq(7).children().val();
   var qo = $(this).parent().parent().children().eq(3).children().val();
   var uo = $(this).parent().parent().children().eq(2).children().val();
