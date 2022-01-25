@@ -403,7 +403,7 @@ class ControllerSaleEditinvoice extends Controller {
 
             //echo "<pre>";print_r($datas['products']);die;
             foreach ($datas['products'] as $p_id_key => $updateProduct) {
-                $updateProduct['quantity'] = $updateProduct['quantity'] - $updateProduct['quantity_missed'];
+                $updateProduct['quantity'] = $updateProduct['quantity'];
                 $updateProduct['store_id'] = $store_id;
                 $updateProduct['vendor_id'] = $vendor_id;
                 $custom_price = $updateProduct['price'];
@@ -423,6 +423,13 @@ class ControllerSaleEditinvoice extends Controller {
                 $sumTotal += ($updateProduct['price'] * $updateProduct['quantity']);
 
                 array_push($tempProds['products'], $updateProduct);
+
+                $ordered_products = $this->model_sale_order->getRealOrderProductStoreId($order_id, $updateProduct['product_id']);
+                if ($ordered_products == NULL) {
+                    $ordered_products = $this->model_sale_order->getOrderProductStoreId($order_id, $updateProduct['product_id']);
+                }
+
+                $order_missing_product_info = $this->model_sale_order->addOrderProductToMissingProducts($ordered_products['order_product_id'], $updateProduct['quantity_missed'], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model']);
             }
 
             $subTotal = $sumTotal;
