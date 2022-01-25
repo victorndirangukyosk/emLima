@@ -348,6 +348,7 @@ $(this).parent().parent().children().eq(6).children().val($(this).parent().paren
 });
 
 $(document).delegate('.changeQuantity','change', function() {
+console.log("changeMissedQuantity");    
 $(this).parent().parent().children().eq(3).children().val($(this).val());
 $(this).parent().parent().children().eq(6).children().val($(this).parent().parent().children().eq(3).children().val() - $(this).parent().parent().children().eq(5).children().val());
 });
@@ -740,7 +741,7 @@ function add() {
   $html += '</td>';
   
   $html += '<td class="text-right">';
-  $html += '<input type="number" min="1" step="1"  class="form-control changeTotal text-right" name="products['+noProduct+'][quantity]" value="1"/>';
+  $html += '<input type="number" min="1" step="1"  class="form-control changeTotal changeQuantity text-right" name="products['+noProduct+'][quantity]" value="1"/>';
   $html += '</td>';
 
   $html += '<td class="text-right">';
