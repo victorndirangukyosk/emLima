@@ -348,7 +348,7 @@ $(this).parent().parent().children().eq(6).children().val($(this).parent().paren
 });
 
 $(document).delegate('.changeQuantity','change', function() {
-console.log("changeMissedQuantity");    
+console.log("changeQuantity");    
 $(this).parent().parent().children().eq(3).children().val($(this).val());
 $(this).parent().parent().children().eq(6).children().val($(this).parent().parent().children().eq(3).children().val() - $(this).parent().parent().children().eq(5).children().val());
 });
