@@ -432,6 +432,15 @@ class ControllerSaleEditinvoice extends Controller {
 
                     $order_missing_product_info = $this->model_sale_order->addOrderProductToMissingProducts($ordered_products['order_product_id'], $updateProduct['quantity_missed'], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model']);
                 }
+
+                if ($updateProduct['quantity_missed'] != NULL && $updateProduct['quantity_missed'] <= 0) {
+                    $ordered_products = $this->model_sale_order->getRealOrderProductStoreId($order_id, $updateProduct['product_id']);
+                    if ($ordered_products == NULL) {
+                        $ordered_products = $this->model_sale_order->getOrderProductStoreId($order_id, $updateProduct['product_id']);
+                    }
+
+                    $order_missing_product_info = $this->model_sale_order->deleteOrderProductToMissingProducts($ordered_products['order_product_id'], $updateProduct['quantity_missed'], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model']);
+                }
             }
 
             $subTotal = $sumTotal;

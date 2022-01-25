@@ -4387,6 +4387,30 @@ class ModelSaleOrder extends Model {
         }
     }
 
+    public function deleteOrderProductToMissingProducts($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model) {
+        $log = new Log('error.log');
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
+        $query = $this->db->query($sql);
+        $productinfo = $query->row;
+
+        if ($productinfo == NULL) {
+            $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
+            $query = $this->db->query($sql);
+            $productinfo = $query->row;
+        }
+
+        if ($productinfo != NULL) {
+            $sql2 = 'SELECT * FROM ' . DB_PREFIX . "missing_products WHERE order_id = '" . (int) $productinfo['order_id'] . "' AND product_store_id = '" . (int) $productinfo['product_id'] . "'";
+            $query2 = $this->db->query($sql2);
+            $missing_product_info = $query2->row;
+
+            if ($missing_product_info != NULL) {
+                $sql3 = 'DELETE FROM ' . DB_PREFIX . "missing_products WHERE id = '" . $missing_product_info['id'] . "'";
+                $query3 = $this->db->query($sql3);
+            }
+        }
+    }
+
     //changes in this getOrderedMissingProducts need to chek 
     public function getOrderedMissingProductsOnlyOrder($data = []) {
         $sql = "SELECT distinct o.order_id FROM `" . DB_PREFIX . 'order` o ';
