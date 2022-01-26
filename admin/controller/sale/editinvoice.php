@@ -662,6 +662,11 @@ class ControllerSaleEditinvoice extends Controller {
                 //not settle only update so reset column settlement_amount
                 $this->model_sale_order->settle_payment($order_id, $orderTotal);
             }
+            try {
+                $this->load->controller('sale/order_product_missing/sendmailwithmissingproducts', $order_id);
+            } catch (exception $ex) {
+                
+            }
         } else {
             $json['status'] = false;
         }
