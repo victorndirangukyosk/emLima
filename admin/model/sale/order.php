@@ -2159,6 +2159,12 @@ class ModelSaleOrder extends Model {
         return $query->row;
     }
 
+    public function getOrderProductStoreId($order_id, $product_store_id) {
+        $sql = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "' AND product_id ='" . (int) $product_store_id . "'";
+        $query = $this->db->query($sql);
+        return $query->row;
+    }
+
     public function getOrderAndRealOrderProducts($order_id, $store_id = 0) {
         $sql1 = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
 
@@ -2227,6 +2233,12 @@ class ModelSaleOrder extends Model {
 
     public function getRealOrderProductById($order_id, $product_id) {
         $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "' AND order_product_id = '" . (int) $product_id . "'";
+        $query = $this->db->query($sql);
+        return $query->row;
+    }
+
+    public function getRealOrderProductStoreId($order_id, $product_store_id) {
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "' AND product_id = '" . (int) $product_store_id . "'";
         $query = $this->db->query($sql);
         return $query->row;
     }
@@ -2397,13 +2409,18 @@ class ModelSaleOrder extends Model {
 
         $query = $this->db->query($sql);
 
-        if (!$query->num_rows) {
-            $sql = 'INSERT into ' . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "',produce_type = '" . $data['produce_type'] . "',product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
+        if ($data['quantity'] > 0) {
+            if (!$query->num_rows) {
+                $sql = 'INSERT into ' . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "',produce_type = '" . $data['produce_type'] . "',product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
 
-            $query = $this->db->query($sql);
-        } else {
-            $sql = 'UPDATE ' . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', total = '" . $total . "', tax = '" . $tax_value . "' WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+                $query = $this->db->query($sql);
+            } else {
+                $sql = 'UPDATE ' . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', total = '" . $total . "', tax = '" . $tax_value . "' WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
 
+                $query = $this->db->query($sql);
+            }
+        } if ($data['quantity'] <= 0) {
+            $sql = 'Delete FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "' and product_id = '" . (int) $product_id . "'";
             $query = $this->db->query($sql);
         }
     }
@@ -4336,6 +4353,64 @@ class ModelSaleOrder extends Model {
         }
     }
 
+    public function addOrderProductToMissingProducts($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model) {
+        $log = new Log('error.log');
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
+        $query = $this->db->query($sql);
+        $productinfo = $query->row;
+
+        if ($productinfo == NULL) {
+            $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
+            $query = $this->db->query($sql);
+            $productinfo = $query->row;
+        }
+
+        if ($productinfo != null) {
+            $sql2 = 'SELECT * FROM ' . DB_PREFIX . "missing_products WHERE order_id = '" . (int) $productinfo['order_id'] . "' and product_store_id = '" . (int) $productinfo['product_id'] . "'";
+
+            $query2 = $this->db->query($sql2);
+
+            $missing_product_info = $query2->row;
+
+            if ($required_quantity == 0 || $required_quantity == null) {
+                $required_quantity = $productinfo['quantity'];
+            }
+            if ($missing_product_info != NULL) {
+                $sql3 = 'UPDATE ' . DB_PREFIX . "missing_products SET quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', name = '" . $name . "', unit = '" . $unit . "', product_note = '" . $product_note . "', model = '" . $model . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_by = '" . $this->user->getId() . "' WHERE id = '" . $missing_product_info['id'] . "'";
+
+                $query3 = $this->db->query($sql3);
+            } else {
+                $sql4 = 'INSERT INTO ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', name = '" . $name . "', unit = '" . $unit . "', product_note = '" . $product_note . "', model = '" . $model . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', created_by = '" . $this->user->getId() . "'";
+
+                $query4 = $this->db->query($sql4);
+            }
+        }
+    }
+
+    public function deleteOrderProductToMissingProducts($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model) {
+        $log = new Log('error.log');
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
+        $query = $this->db->query($sql);
+        $productinfo = $query->row;
+
+        if ($productinfo == NULL) {
+            $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
+            $query = $this->db->query($sql);
+            $productinfo = $query->row;
+        }
+
+        if ($productinfo != NULL) {
+            $sql2 = 'SELECT * FROM ' . DB_PREFIX . "missing_products WHERE order_id = '" . (int) $productinfo['order_id'] . "' AND product_store_id = '" . (int) $productinfo['product_id'] . "'";
+            $query2 = $this->db->query($sql2);
+            $missing_product_info = $query2->row;
+
+            if ($missing_product_info != NULL) {
+                $sql3 = 'DELETE FROM ' . DB_PREFIX . "missing_products WHERE id = '" . $missing_product_info['id'] . "'";
+                $query3 = $this->db->query($sql3);
+            }
+        }
+    }
+
     //changes in this getOrderedMissingProducts need to chek 
     public function getOrderedMissingProductsOnlyOrder($data = []) {
         $sql = "SELECT distinct o.order_id FROM `" . DB_PREFIX . 'order` o ';
@@ -5112,6 +5187,11 @@ class ModelSaleOrder extends Model {
 
     public function getNewOrderIdByMissingProductOrderId($order_id) {
         $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND new_order_id > 0");
+        return $new_order_query->row;
+    }
+
+    public function getMissingProductQuantityByProductIdOrderId($order_id, $product_id) {
+        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND product_store_id = '" . (int) $product_id . "'");
         return $new_order_query->row;
     }
 

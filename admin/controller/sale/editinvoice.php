@@ -145,6 +145,9 @@ class ControllerSaleEditinvoice extends Controller {
                     $products = $this->model_sale_order->getOrderProducts($order_id);
                 }
 
+                $sub_total = 0;
+                $tax = 0;
+                $new_total = 0;
                 foreach ($products as $product) {
                     if ($store_id && $product['store_id'] != $store_id) {
                         continue;
@@ -173,6 +176,8 @@ class ControllerSaleEditinvoice extends Controller {
                     }
 
                     $variations = $this->model_sale_order->getProductVariationsNew($product['name'], 75, $order_id);
+                    $missed_quantity = $this->model_sale_order->getMissingProductQuantityByProductIdOrderId($order_id, $product['product_id']);
+                    $required_quantity = isset($missed_quantity) && count($missed_quantity) > 0 ? $missed_quantity['quantity_required'] : 0;
                     $product_data[] = [
                         'name' => $product['name'],
                         'product_id' => $product['product_id'],
@@ -186,10 +191,14 @@ class ControllerSaleEditinvoice extends Controller {
                         'price' => number_format((float) $product['price'], 2, '.', ''),
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
                         /* OLD TOTAL WITH TAX */ //'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
-                        'total' => ($product['price'] * $product['quantity']),
-                        'variations' => $variations
+                        'total' => ($product['price'] * ($product['quantity'])),
+                        'variations' => $variations,
+                        'missed_quantity' => isset($missed_quantity) && count($missed_quantity) > 0 ? $missed_quantity['quantity_required'] : 0,
                     ];
+                    $sub_total += ($product['price'] * ($product['quantity']));
+                    $tax += $product['tax'] * ($product['quantity']);
                 }
+                $new_total = $sub_total + $tax;
 
                 $total_data = [];
 
@@ -200,13 +209,39 @@ class ControllerSaleEditinvoice extends Controller {
                 }
 
                 foreach ($totals as $total) {
-                    $total_data[] = [
-                        'title' => $total['title'],
-                        'code' => $total['code'],
-                        //'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
-                        'text' => number_format((float) $total['value'], 2, '.', ''),
-                        'actual_value' => number_format((float) $total['actual_value'], 2, '.', ''),
-                    ];
+                    if ($total['code'] == 'sub_total') {
+                        $total_data[] = [
+                            'title' => $total['title'],
+                            'code' => $total['code'],
+                            //'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                            'text' => number_format((float) $sub_total, 2, '.', ''),
+                            'actual_value' => number_format((float) $total['actual_value'], 2, '.', ''),
+                        ];
+                    } elseif ($total['code'] == 'tax') {
+                        $total_data[] = [
+                            'title' => $total['title'],
+                            'code' => $total['code'],
+                            //'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                            'text' => number_format((float) $tax, 2, '.', ''),
+                            'actual_value' => number_format((float) $total['actual_value'], 2, '.', ''),
+                        ];
+                    } elseif ($total['code'] == 'total') {
+                        $total_data[] = [
+                            'title' => $total['title'],
+                            'code' => $total['code'],
+                            //'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                            'text' => number_format((float) $new_total, 2, '.', ''),
+                            'actual_value' => number_format((float) $total['actual_value'], 2, '.', ''),
+                        ];
+                    } else {
+                        $total_data[] = [
+                            'title' => $total['title'],
+                            'code' => $total['code'],
+                            //'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+                            'text' => number_format((float) $total['value'], 2, '.', ''),
+                            'actual_value' => number_format((float) $total['actual_value'], 2, '.', ''),
+                        ];
+                    }
                 }
 
                 $data['orders'][] = [
@@ -368,6 +403,7 @@ class ControllerSaleEditinvoice extends Controller {
 
             //echo "<pre>";print_r($datas['products']);die;
             foreach ($datas['products'] as $p_id_key => $updateProduct) {
+                $updateProduct['quantity'] = $updateProduct['quantity'];
                 $updateProduct['store_id'] = $store_id;
                 $updateProduct['vendor_id'] = $vendor_id;
                 $custom_price = $updateProduct['price'];
@@ -387,6 +423,24 @@ class ControllerSaleEditinvoice extends Controller {
                 $sumTotal += ($updateProduct['price'] * $updateProduct['quantity']);
 
                 array_push($tempProds['products'], $updateProduct);
+
+                if ($updateProduct['quantity_missed'] != NULL && $updateProduct['quantity_missed'] > 0) {
+                    $ordered_products = $this->model_sale_order->getRealOrderProductStoreId($order_id, $updateProduct['product_id']);
+                    if ($ordered_products == NULL) {
+                        $ordered_products = $this->model_sale_order->getOrderProductStoreId($order_id, $updateProduct['product_id']);
+                    }
+
+                    $order_missing_product_info = $this->model_sale_order->addOrderProductToMissingProducts($ordered_products['order_product_id'], $updateProduct['quantity_missed'], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model']);
+                }
+
+                if ($updateProduct['quantity_missed'] != NULL && $updateProduct['quantity_missed'] <= 0) {
+                    $ordered_products = $this->model_sale_order->getRealOrderProductStoreId($order_id, $updateProduct['product_id']);
+                    if ($ordered_products == NULL) {
+                        $ordered_products = $this->model_sale_order->getOrderProductStoreId($order_id, $updateProduct['product_id']);
+                    }
+
+                    $order_missing_product_info = $this->model_sale_order->deleteOrderProductToMissingProducts($ordered_products['order_product_id'], $updateProduct['quantity_missed'], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model']);
+                }
             }
 
             $subTotal = $sumTotal;
@@ -607,6 +661,22 @@ class ControllerSaleEditinvoice extends Controller {
             } else {
                 //not settle only update so reset column settlement_amount
                 $this->model_sale_order->settle_payment($order_id, $orderTotal);
+            }
+            $filter['filter_order_id'] = $order_id;
+            $products = $this->model_sale_order->getOrderedMissingProducts($filter);
+            $log->write('MISSING PRODUCTS COUNT');
+            $log->write(count($products));
+            $log->write($order_info['delivery_timeslot']);
+            $log->write('MISSING PRODUCTS COUNT');
+            if (is_array($products) && count($products) > 0 && ($order_info['delivery_timeslot'] == '06:00am - 08:00am' || $order_info['delivery_timeslot'] == '08:00am - 10:00am' || $order_info['delivery_timeslot'] == '10:00am - 12:00am')) {
+                try {
+                    $this->load->controller('sale/order_product_missing/sendmailwithmissingproducts', $order_id);
+                } catch (exception $ex) {
+                    $log = new Log('error.log');
+                    $log->write('EDIT INVOICE EXCEPTION');
+                    $log->write($ex);
+                    $log->write('EDIT INVOICE EXCEPTION');
+                }
             }
         } else {
             $json['status'] = false;
