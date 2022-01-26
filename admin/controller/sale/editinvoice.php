@@ -665,7 +665,10 @@ class ControllerSaleEditinvoice extends Controller {
             try {
                 $this->load->controller('sale/order_product_missing/sendmailwithmissingproducts', $order_id);
             } catch (exception $ex) {
-                
+                $log = new Log('error.log');
+                $log->write('EDIT INVOICE EXCEPTION');
+                $log->write($ex);
+                $log->write('EDIT INVOICE EXCEPTION');
             }
         } else {
             $json['status'] = false;

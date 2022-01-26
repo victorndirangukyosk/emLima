@@ -250,12 +250,12 @@ class ControllerSaleOrderProductMissing extends Controller {
             'href' => $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        // $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['invoicepdf'] = $this->url->link('sale/order/invoicepdf', 'token=' . $this->session->data['token'], 'SSL');
-        // // $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['shipping'] = $this->url->link('sale/order/shippingNote', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['add'] = $this->url->link('sale/order/add', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['delivery_sheet'] = $this->url->link('sale/order/consolidatedOrderSheet', 'token=' . $this->session->data['token'], 'SSL');
+// $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
+// $data['invoicepdf'] = $this->url->link('sale/order/invoicepdf', 'token=' . $this->session->data['token'], 'SSL');
+// // $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
+// $data['shipping'] = $this->url->link('sale/order/shippingNote', 'token=' . $this->session->data['token'], 'SSL');
+// $data['add'] = $this->url->link('sale/order/add', 'token=' . $this->session->data['token'], 'SSL');
+// $data['delivery_sheet'] = $this->url->link('sale/order/consolidatedOrderSheet', 'token=' . $this->session->data['token'], 'SSL');
         $data['orders'] = [];
 
         $filter_data = [
@@ -284,24 +284,24 @@ class ControllerSaleOrderProductMissing extends Controller {
             'filter_order_day' => $filter_order_day,
         ];
 
-        // echo "<pre>";print_r($filter_data);die; 
+// echo "<pre>";print_r($filter_data);die; 
 
         $order_total = $this->model_sale_order->getTotalOrderedProducts($filter_data);
 
         $results = $this->model_sale_order->getOrderedProducts($filter_data);
 
-        //        echo "<pre>";print_r($results);die;
+//        echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $sub_total = 0;
 
-            // $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
-            //echo "<pre>";print_r($totals);die;
-            // foreach ($totals as $total) {
-            //     if ('sub_total' == $total['code']) {
-            //         $sub_total = $total['value'];
-            //         break;
-            //     }
-            // }
+// $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
+//echo "<pre>";print_r($totals);die;
+// foreach ($totals as $total) {
+//     if ('sub_total' == $total['code']) {
+//         $sub_total = $total['value'];
+//         break;
+//     }
+// }
 
             if ($this->user->isVendor()) {
                 $result['customer'] = strtok($result['firstname'], ' ');
@@ -310,7 +310,7 @@ class ControllerSaleOrderProductMissing extends Controller {
             if ($result['company_name']) {
                 $result['company_name'] = ' (' . $result['company_name'] . ')';
             } else {
-                // $result['company_name'] = "(NA)";
+// $result['company_name'] = "(NA)";
             }
 
             $this->load->model('localisation/order_status');
@@ -679,7 +679,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                     $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model']);
                     $i++;
                 }
-                //$this->editinvocebymissingproducts($this->request->post);
+//$this->editinvocebymissingproducts($this->request->post);
                 $json['status'] = 200;
                 $json['message'] = 'Missed Products Saved Successfully!';
                 $json['data'] = $order_product_info;
@@ -840,7 +840,7 @@ class ControllerSaleOrderProductMissing extends Controller {
         $this->sendmailwithmissingproducts($this->request->post['order_id']);
         $data['order_id'] = $this->request->post['order_id'];
         $this->getOrderProductListTemplate($this->request->post['order_id']);
-        //$this->missing_products_order_invoice_download($data);
+//$this->missing_products_order_invoice_download($data);
         $log->write('TOTALS');
         $log->write($sumTotal);
         $log->write($sumTotalTax);
@@ -915,7 +915,7 @@ class ControllerSaleOrderProductMissing extends Controller {
 
         foreach ($orders as $order_id) {
             $order_info = $this->model_sale_order->getOrder($order_id);
-            //check vendor order
+//check vendor order
 
             if ($order_info['order_status_id'] != 1 && $order_info['order_status_id'] != 4 && $order_info['order_status_id'] != 5) {
                 $this->response->redirect($this->url->link('error/not_found'));
@@ -949,17 +949,17 @@ class ControllerSaleOrderProductMissing extends Controller {
                 $data['delivery_executive_name'] = $executive_name;
                 $data['delivery_executive_phone'] = $executive_phone;
                 $store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
-                // if ($store_info) {
-                //     $store_address = $store_info['config_address'];
-                //     $store_email = $store_info['config_email'];
-                //     $store_telephone = $store_info['config_telephone'];
-                //     $store_fax = $store_info['config_fax'];
-                // } else {
-                //     $store_address = $this->config->get('config_address');
-                //     $store_email = $this->config->get('config_email');
-                //     $store_telephone = $this->config->get('config_telephone');
-                //     $store_fax = $this->config->get('config_fax');
-                // }
+// if ($store_info) {
+//     $store_address = $store_info['config_address'];
+//     $store_email = $store_info['config_email'];
+//     $store_telephone = $store_info['config_telephone'];
+//     $store_fax = $store_info['config_fax'];
+// } else {
+//     $store_address = $this->config->get('config_address');
+//     $store_email = $this->config->get('config_email');
+//     $store_telephone = $this->config->get('config_telephone');
+//     $store_fax = $this->config->get('config_fax');
+// }
 
                 $store_data = $this->model_sale_order->getStoreData($order_info['store_id']);
                 if ($store_data) {
@@ -1183,7 +1183,7 @@ class ControllerSaleOrderProductMissing extends Controller {
         }
         if ($number < abs($max_size)) {
             switch ($number) {
-                // set up some rules for converting digits to words
+// set up some rules for converting digits to words
                 case $number < 0:
                     $prefix = 'negative';
                     $suffix = $this->translateAmountToWords(-1 * $number);
@@ -1228,13 +1228,13 @@ class ControllerSaleOrderProductMissing extends Controller {
                 case 13:
                     $string = 'thirteen';
                     break;
-                // fourteen handled later
+// fourteen handled later
                 case 15:
                     $string = 'fifteen';
                     break;
                 case $number < 20:
                     $string = $this->translateAmountToWords($number % 10);
-                    // eighteen only has one "t"
+// eighteen only has one "t"
                     if (18 == $number) {
                         $suffix = 'een';
                     } else {
@@ -1271,9 +1271,9 @@ class ControllerSaleOrderProductMissing extends Controller {
                     $suffix = $this->translateAmountToWords($number % 10);
                     $string = $prefix . ' ' . $suffix;
                     break;
-                // handles all number 100 to 999
+// handles all number 100 to 999
                 case $number < pow(10, 3):
-                    // floor return a float not an integer
+// floor return a float not an integer
                     $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 2)))) . ' hundred';
                     if ($number % pow(10, 2)) {
                         $suffix = ' and ' . $this->translateAmountToWords($number % pow(10, 2));
@@ -1281,7 +1281,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                     $string = $prefix . $suffix;
                     break;
                 case $number < pow(10, 6):
-                    // floor return a float not an integer
+// floor return a float not an integer
                     $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 3)))) . ' thousand';
                     if ($number % pow(10, 3)) {
                         $suffix = $this->translateAmountToWords($number % pow(10, 3));
@@ -1289,7 +1289,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                     $string = $prefix . ' ' . $suffix;
                     break;
                 case $number < pow(10, 9):
-                    // floor return a float not an integer
+// floor return a float not an integer
                     $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 6)))) . ' million';
                     if ($number % pow(10, 6)) {
                         $suffix = $this->translateAmountToWords($number % pow(10, 6));
@@ -1297,7 +1297,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                     $string = $prefix . ' ' . $suffix;
                     break;
                 case $number < pow(10, 12):
-                    // floor return a float not an integer
+// floor return a float not an integer
                     $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 9)))) . ' billion';
                     if ($number % pow(10, 9)) {
                         $suffix = $this->translateAmountToWords($number % pow(10, 9));
@@ -1305,17 +1305,17 @@ class ControllerSaleOrderProductMissing extends Controller {
                     $string = $prefix . ' ' . $suffix;
                     break;
                 case $number < pow(10, 15):
-                    // floor return a float not an integer
+// floor return a float not an integer
                     $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 12)))) . ' trillion';
                     if ($number % pow(10, 12)) {
                         $suffix = $this->translateAmountToWords($number % pow(10, 12));
                     }
                     $string = $prefix . ' ' . $suffix;
                     break;
-                // Be careful not to pass default formatted numbers in the quadrillions+ into this function
-                // Default formatting is float and causes errors
+// Be careful not to pass default formatted numbers in the quadrillions+ into this function
+// Default formatting is float and causes errors
                 case $number < pow(10, 18):
-                    // floor return a float not an integer
+// floor return a float not an integer
                     $prefix = $this->translateAmountToWords(intval(floor($number / pow(10, 15)))) . ' quadrillion';
                     if ($number % pow(10, 15)) {
                         $suffix = $this->translateAmountToWords($number % pow(10, 15));
@@ -1456,7 +1456,6 @@ class ControllerSaleOrderProductMissing extends Controller {
     }
 
     public function sendmailwithmissingproducts($order_id) {
-
         $order_info = $this->model_sale_order->getOrder($order_id);
 
         $address = '';
@@ -1488,23 +1487,30 @@ class ControllerSaleOrderProductMissing extends Controller {
             'missed_products_order_link' => $order_info['store_url'] . 'index.php?path=deliversystem/deliversystem/createorderwithmissingproducts&order_id=' . base64_encode($order_info['order_id']),
         );
 
-        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-        $subject = $this->emailtemplate->getSubject('OrderAll', 'order_21', $data);
-        $message = $this->emailtemplate->getMessage('OrderAll', 'order_21', $data);
-        $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_21', $data);
+        try {
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $subject = $this->emailtemplate->getSubject('OrderAll', 'order_21', $data);
+            $message = $this->emailtemplate->getMessage('OrderAll', 'order_21', $data);
+            $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_21', $data);
 
-        $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo($customer_info['email']);
-        $mail->setFrom($this->config->get('config_from_email'));
-        $mail->setSender($this->config->get('config_name'));
-        $mail->setSubject($subject);
-        $mail->setHTML($message);
-        $mail->send();
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($customer_info['email']);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->send();
 
-        $log = new Log('error.log');
-        $log->write('subject');
-        $log->write($subject);
-        $log->write('subject');
+            $log = new Log('error.log');
+            $log->write('subject');
+            $log->write($subject);
+            $log->write('subject');
+        } catch (exception $ex) {
+            $log = new Log('error.log');
+            $log->write('ORDER PRODUCT MISSING EXCEPTION');
+            $log->write($ex);
+            $log->write('ORDER PRODUCT MISSING EXCEPTION');
+        }
     }
 
 }
