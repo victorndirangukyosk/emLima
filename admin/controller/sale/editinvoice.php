@@ -662,13 +662,20 @@ class ControllerSaleEditinvoice extends Controller {
                 //not settle only update so reset column settlement_amount
                 $this->model_sale_order->settle_payment($order_id, $orderTotal);
             }
-            try {
-                $this->load->controller('sale/order_product_missing/sendmailwithmissingproducts', $order_id);
-            } catch (exception $ex) {
-                $log = new Log('error.log');
-                $log->write('EDIT INVOICE EXCEPTION');
-                $log->write($ex);
-                $log->write('EDIT INVOICE EXCEPTION');
+            $filter['filter_order_id'] = $order_id;
+            $products = $this->model_sale_order->getOrderedMissingProducts($filter);
+            $log->write('MISSING PRODUCTS COUNT');
+            $log->write(count($products));
+            $log->write('MISSING PRODUCTS COUNT');
+            if (is_array($products) && count($products) > 0 && ($order_info['delivery_timeslot'] == '06:00am - 08:00am' || $order_info['delivery_timeslot'] == '08:00am - 10:00am' || $order_info['delivery_timeslot'] == '10:00am - 12:00am')) {
+                try {
+                    $this->load->controller('sale/order_product_missing/sendmailwithmissingproducts', $order_id);
+                } catch (exception $ex) {
+                    $log = new Log('error.log');
+                    $log->write('EDIT INVOICE EXCEPTION');
+                    $log->write($ex);
+                    $log->write('EDIT INVOICE EXCEPTION');
+                }
             }
         } else {
             $json['status'] = false;
