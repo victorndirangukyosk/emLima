@@ -6,13 +6,12 @@ class ModelPaymentPezesha extends Model {
         $this->load->language('payment/pezesha');
 
         if ($this->customer->getCustomerPezeshaId() > 0 && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status') && $this->config->get('pezesha_total') > 0 && $this->config->get('pezesha_total') > $total) {
-            $status = false;
-        } else {
             $status = true;
+        } else {
+            $status = false;
         }
 
         $log = new Log('error.log');
-        $log->write('PEZESHA ID' . $this->customer->getCustomerPezeshaId() . 'PEZESHA UUID' . $this->customer->getCustomerPezeshauuId() . 'PEZESHA STATUS' . $this->config->get('pezesha_status') . 'PEZESHA TOTAL' . $this->config->get('pezesha_total') . 'PEZESHA TOTAL' . $this->config->get('pezesha_total'));
         $log->write('pyment method checking');
         $log->write($total);
 
