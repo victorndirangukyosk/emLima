@@ -5,7 +5,7 @@ class ModelPaymentPezesha extends Model {
     public function getMethod($total) {
         $this->load->language('payment/pezesha');
 
-        if ($this->config->get('pezesha_total') > 0 && $this->config->get('pezesha_total') > $total) {
+        if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status') && $this->config->get('pezesha_total') > 0 && $this->config->get('pezesha_total') > $total) {
             $status = false;
         } else {
             $status = true;
