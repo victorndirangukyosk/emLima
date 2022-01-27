@@ -12,6 +12,7 @@ class ModelPaymentPezesha extends Model {
         }
 
         $log = new Log('error.log');
+        $log->write('PEZESHA ID' . $this->customer->getCustomerPezeshaId() . 'PEZESHA UUID' . $this->customer->getCustomerPezeshauuId() . 'PEZESHA STATUS' . $this->config->get('pezesha_status') . 'PEZESHA TOTAL' . $this->config->get('pezesha_total') . 'PEZESHA TOTAL' . $this->config->get('pezesha_total'));
         $log->write('pyment method checking');
         $log->write($total);
 
