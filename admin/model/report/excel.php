@@ -10244,6 +10244,7 @@ class ModelReportExcel extends Model {
             // }
             // $subject = "Consolidated Order Sheet";                 
             $message = str_replace('consolidated','unpaid',$message);
+            $message = str_replace('Consolidated','Unpaid',$message);
             $this->load->model('setting/setting');
             $email = $this->model_setting_setting->getEmailSetting('financeteam');
 
