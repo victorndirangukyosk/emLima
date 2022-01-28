@@ -2104,12 +2104,11 @@ class ModelCheckoutOrder extends Model {
     }
 
     public function getOrderedMissingProducts($data = []) {
-        $sql = "SELECT mp.id,o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id,p.product_id,p.general_product_id,p.name,p.unit,p.quantity,p.price,p.total,p.tax,p.model,p.product_note,mp.quantity_required,mp.price AS mp_price,mp.tax AS mp_tax,mp.total AS mp_total FROM `" . DB_PREFIX . 'order` o ';
+        $sql = "SELECT mp.id,o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id,mp.product_id,mp.product_store_id,mp.name,mp.unit,mp.quantity,mp.price,mp.total,mp.tax,mp.model,mp.product_note,mp.quantity_required,mp.price AS mp_price,mp.tax AS mp_tax,mp.total AS mp_total FROM `" . DB_PREFIX . 'order` o ';
 
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
-        $sql .= ' INNER JOIN ' . DB_PREFIX . 'order_product p on (o.order_id = p.order_id) ';
-        $sql .= ' INNER JOIN ' . DB_PREFIX . 'missing_products mp on (p.product_id = mp.product_store_id) ';
+        $sql .= ' INNER JOIN ' . DB_PREFIX . 'missing_products mp on (o.order_id = mp.order_id) ';
 
         if (isset($data['filter_order_status'])) {
             $implode = [];
@@ -2126,7 +2125,7 @@ class ModelCheckoutOrder extends Model {
                 
             }
         } else {
-            $sql .= " WHERE o.order_status_id > '0'  and p.order_id =mp.order_id ";
+            $sql .= " WHERE o.order_status_id > '0'  and o.order_id =mp.order_id ";
         }
 
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
@@ -2262,6 +2261,15 @@ class ModelCheckoutOrder extends Model {
         $query = $this->db->query($sql);
 
         return $query->rows;
+    }
+
+    public function UpdateMissingProductsByOrderId($order_id, $new_order_id) {
+        $this->db->query('UPDATE `' . DB_PREFIX . 'missing_products` SET new_order_id ="' . $new_order_id . '", updated_at = NOW() WHERE order_id="' . $order_id . '"');
+    }
+
+    public function getNewOrderIdByMissingProductOrderId($order_id) {
+        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND new_order_id > 0");
+        return $new_order_query->row;
     }
 
 }

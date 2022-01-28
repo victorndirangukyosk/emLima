@@ -2159,12 +2159,6 @@ class ModelSaleOrder extends Model {
         return $query->row;
     }
 
-    public function getOrderProductStoreId($order_id, $product_store_id) {
-        $sql = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "' AND product_id ='" . (int) $product_store_id . "'";
-        $query = $this->db->query($sql);
-        return $query->row;
-    }
-
     public function getOrderAndRealOrderProducts($order_id, $store_id = 0) {
         $sql1 = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
 
@@ -2237,12 +2231,6 @@ class ModelSaleOrder extends Model {
         return $query->row;
     }
 
-    public function getRealOrderProductStoreId($order_id, $product_store_id) {
-        $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "' AND product_id = '" . (int) $product_store_id . "'";
-        $query = $this->db->query($sql);
-        return $query->row;
-    }
-
     public function getRealOrderProductsItems($order_id, $store_id = 0) {
         $qty = 0;
 
@@ -2287,25 +2275,6 @@ class ModelSaleOrder extends Model {
         $query = $this->db->query($sql);
 
         return $query->row;
-    }
-
-    public function getOrderTransactionIdExists($order_id) {
-        $sql = 'SELECT transaction_id FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
-
-        $query = $this->db->query($sql);
-        if (isset($query->row)) {
-            /* $log = new Log('error.log');
-              $log->write('order model');
-              $log->write($query->row);
-              $log->write('order model'); */
-            if (array_key_exists('transaction_id', $query->row)) {
-                return $query->row['transaction_id'];
-            } else {
-                return '';
-            }
-        }
-
-        return null;
     }
 
     public function deleteOrderTotal($order_id) {
@@ -2428,18 +2397,13 @@ class ModelSaleOrder extends Model {
 
         $query = $this->db->query($sql);
 
-        if ($data['quantity'] > 0) {
-            if (!$query->num_rows) {
-                $sql = 'INSERT into ' . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "',produce_type = '" . $data['produce_type'] . "',product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
+        if (!$query->num_rows) {
+            $sql = 'INSERT into ' . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "',produce_type = '" . $data['produce_type'] . "',product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
 
-                $query = $this->db->query($sql);
-            } else {
-                $sql = 'UPDATE ' . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', total = '" . $total . "', tax = '" . $tax_value . "' WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+            $query = $this->db->query($sql);
+        } else {
+            $sql = 'UPDATE ' . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', total = '" . $total . "', tax = '" . $tax_value . "' WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
 
-                $query = $this->db->query($sql);
-            }
-        } if ($data['quantity'] <= 0) {
-            $sql = 'Delete FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "' and product_id = '" . (int) $product_id . "'";
             $query = $this->db->query($sql);
         }
     }
@@ -3938,11 +3902,12 @@ class ModelSaleOrder extends Model {
     }
 
     public function getOrderedMissingProducts($data = []) {
-        $sql = "SELECT mp.id,o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id,mp.product_id,mp.product_store_id,mp.name,mp.unit,mp.quantity,mp.price,mp.total,mp.tax,mp.model,mp.product_note,mp.quantity_required,mp.price AS mp_price,mp.tax AS mp_tax,mp.total AS mp_total FROM `" . DB_PREFIX . 'order` o ';
+        $sql = "SELECT mp.id,o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id,p.product_id,p.general_product_id,p.name,p.unit,p.quantity,p.price,p.total,p.tax,p.model,p.product_note,mp.quantity_required,mp.price AS mp_price,mp.tax AS mp_tax,mp.total AS mp_total FROM `" . DB_PREFIX . 'order` o ';
 
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
-        $sql .= ' INNER JOIN ' . DB_PREFIX . 'missing_products mp on (o.order_id = mp.order_id) ';
+        $sql .= ' INNER JOIN ' . DB_PREFIX . 'order_product p on (o.order_id = p.order_id) ';
+        $sql .= ' INNER JOIN ' . DB_PREFIX . 'missing_products mp on (p.product_id = mp.product_store_id) ';
 
         if (isset($data['filter_order_status'])) {
             $implode = [];
@@ -3959,7 +3924,7 @@ class ModelSaleOrder extends Model {
                 
             }
         } else {
-            $sql .= " WHERE o.order_status_id > '0'  and o.order_id =mp.order_id ";
+            $sql .= " WHERE o.order_status_id > '0'  and p.order_id =mp.order_id ";
         }
 
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
@@ -4372,71 +4337,14 @@ class ModelSaleOrder extends Model {
         }
     }
 
-    public function addOrderProductToMissingProducts($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model) {
-        $log = new Log('error.log');
-        $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
-        $query = $this->db->query($sql);
-        $productinfo = $query->row;
-
-        if ($productinfo == NULL) {
-            $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
-            $query = $this->db->query($sql);
-            $productinfo = $query->row;
-        }
-
-        if ($productinfo != null) {
-            $sql2 = 'SELECT * FROM ' . DB_PREFIX . "missing_products WHERE order_id = '" . (int) $productinfo['order_id'] . "' and product_store_id = '" . (int) $productinfo['product_id'] . "'";
-
-            $query2 = $this->db->query($sql2);
-
-            $missing_product_info = $query2->row;
-
-            if ($required_quantity == 0 || $required_quantity == null) {
-                $required_quantity = $productinfo['quantity'];
-            }
-            if ($missing_product_info != NULL) {
-                $sql3 = 'UPDATE ' . DB_PREFIX . "missing_products SET quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', name = '" . $name . "', unit = '" . $unit . "', product_note = '" . $product_note . "', model = '" . $model . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_by = '" . $this->user->getId() . "' WHERE id = '" . $missing_product_info['id'] . "'";
-
-                $query3 = $this->db->query($sql3);
-            } else {
-                $sql4 = 'INSERT INTO ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', name = '" . $name . "', unit = '" . $unit . "', product_note = '" . $product_note . "', model = '" . $model . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', created_by = '" . $this->user->getId() . "'";
-
-                $query4 = $this->db->query($sql4);
-            }
-        }
-    }
-
-    public function deleteOrderProductToMissingProducts($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model) {
-        $log = new Log('error.log');
-        $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
-        $query = $this->db->query($sql);
-        $productinfo = $query->row;
-
-        if ($productinfo == NULL) {
-            $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
-            $query = $this->db->query($sql);
-            $productinfo = $query->row;
-        }
-
-        if ($productinfo != NULL) {
-            $sql2 = 'SELECT * FROM ' . DB_PREFIX . "missing_products WHERE order_id = '" . (int) $productinfo['order_id'] . "' AND product_store_id = '" . (int) $productinfo['product_id'] . "'";
-            $query2 = $this->db->query($sql2);
-            $missing_product_info = $query2->row;
-
-            if ($missing_product_info != NULL) {
-                $sql3 = 'DELETE FROM ' . DB_PREFIX . "missing_products WHERE id = '" . $missing_product_info['id'] . "'";
-                $query3 = $this->db->query($sql3);
-            }
-        }
-    }
-
     //changes in this getOrderedMissingProducts need to chek 
     public function getOrderedMissingProductsOnlyOrder($data = []) {
         $sql = "SELECT distinct o.order_id FROM `" . DB_PREFIX . 'order` o ';
 
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
         $sql .= ' INNER JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
-        $sql .= ' INNER JOIN ' . DB_PREFIX . 'missing_products mp on (o.order_id = mp.order_id) ';
+        $sql .= ' INNER JOIN ' . DB_PREFIX . 'order_product p on (o.order_id = p.order_id) ';
+        $sql .= ' INNER JOIN ' . DB_PREFIX . 'missing_products mp on (p.product_id = mp.product_store_id) ';
 
         if (isset($data['filter_order_status'])) {
             $implode = [];
@@ -4453,7 +4361,7 @@ class ModelSaleOrder extends Model {
                 
             }
         } else {
-            $sql .= " WHERE o.order_status_id > '0'  and o.order_id =mp.order_id ";
+            $sql .= " WHERE o.order_status_id > '0'  and p.order_id =mp.order_id ";
         }
 
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
@@ -5202,171 +5110,6 @@ class ModelSaleOrder extends Model {
 
     public function updateordertotal($order_id, $total) {
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET total = '" . (int) $total . "', date_modified = NOW() WHERE order_id = '" . (int) $order_id . "'");
-    }
-
-
-    public function getCustomersNew($data = []) {
-        $sql = "SELECT customer_id,CONCAT(c.firstname, ' ', c.lastname) as customer_name,company_name FROM " . DB_PREFIX . 'customer c LEFT JOIN ' . DB_PREFIX . "customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
-
-        $implode = [];
-
-        if (!empty($data['filter_name'])) {
-            if ($this->user->isVendor()) {
-                $implode[] = "c.firstname LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
-            } else {
-                $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
-            }
-        }
-
-        if (!empty($data['filter_email'])) {
-            $implode[] = "c.email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
-        }
-
-        if (!empty($data['filter_telephone'])) {
-            $implode[] = "c.telephone LIKE '" . $this->db->escape($data['filter_telephone']) . "%'";
-        }
-
-        if (isset($data['filter_newsletter']) && !is_null($data['filter_newsletter'])) {
-            $implode[] = "c.newsletter = '" . (int) $data['filter_newsletter'] . "'";
-        }
-
-        if (!empty($data['filter_customer_group_id'])) {
-            $implode[] = "c.customer_group_id = '" . (int) $data['filter_customer_group_id'] . "'";
-        }
-
-        if (!empty($data['filter_ip'])) {
-            $implode[] = "c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
-        }
-
-        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
-        }
-
-        if (isset($data['filter_payment_terms']) && !is_null($data['filter_payment_terms'])) {
-            $implode[] = "c.payment_terms = '" . $data['filter_payment_terms'] . "'";
-        }
-
-        if (isset($data['filter_customer_id_array']) && !is_null($data['filter_customer_id_array'])) {
-            $implode[] = "c.customer_id IN (" . $data['filter_customer_id_array'] . ")";
-        }
-
-        if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
-            $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
-        }
-
-        if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
-        }
-
-        if (isset($data['filter_parent']) && !is_null($data['filter_parent'])) {
-            $implode[] = "c.parent = '" . (int) $data['filter_parent'] . "'";
-        }
-
-        if ($implode) {
-            $sql .= ' AND ' . implode(' AND ', $implode);
-        }
-
-        $sort_data = [
-            'name',
-            'c.email',
-            'customer_group',
-            'c.status',
-            'c.approved',
-            'c.ip',
-            'c.date_added',
-        ];
-
-        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            $sql .= ' ORDER BY ' . $data['sort'];
-        } else {
-            $sql .= ' ORDER BY name';
-        }
-
-        if (isset($data['order']) && ('DESC' == $data['order'])) {
-            $sql .= ' DESC';
-        } else {
-            $sql .= ' ASC';
-        }
-
-        if (isset($data['start']) || isset($data['limit'])) {
-            if ($data['start'] < 0) {
-                $data['start'] = 0;
-            }
-
-            if ($data['limit'] < 1) {
-                $data['limit'] = 20;
-            }
-
-            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
-        }
-        $log = new Log('error.log');
-        $log->write($sql);
-        $query = $this->db->query($sql);
-
-        return $query->rows;
-    }
-
-    public function getUnpaidOrders($data = []) {
-        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, o.vendor_order_status_id,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no,o.paid,o.amount_partialy_paid,o.delivery_charges,ot.value as order_total FROM `" . DB_PREFIX . 'order` o ';
-    //    ('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
-
-        $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
-        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
-        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
-        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id)';
-        
-            $sql .= " WHERE o.order_status_id in(4,5) AND o.paid IN ('N', 'P') And ot.code = 'total' AND ot.title = 'Total'";
-       
-
-        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
-        }
-
-        if (isset($data['filter_payment_terms']) && !is_null($data['filter_payment_terms'])) {
-            $implode[] = "c.payment_terms = '" . $data['filter_payment_terms'] . "'";
-        }
-
-
-        
-            $sql .= ' ORDER BY o.order_id';
-        
-
-        if (isset($data['order']) && ('DESC' == $data['order'])) {
-            $sql .= ' DESC';
-        } else {
-            $sql .= ' ASC';
-        }
-
-        if (isset($data['start']) || isset($data['limit'])) {
-            if ($data['start'] < 0) {
-                $data['start'] = 0;
-            }
-
-            if ($data['limit'] < 1) {
-                $data['limit'] = 20;
-            }
-
-            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
-        }
-
-        //   echo "<pre>";print_r($sql);die;
-        $query = $this->db->query($sql);
-
-        return $query->rows;
-    }
-    public function getNewOrderIdByMissingProductOrderId($order_id) {
-        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND new_order_id > 0");
-        return $new_order_query->row;
-    }
-
-    public function getMissingProductQuantityByProductIdOrderId($order_id, $product_id) {
-        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND product_store_id = '" . (int) $product_id . "'");
-        return $new_order_query->row;
-    }
-
-    public function getMissingProductsByOrderId($order_id) {
-        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "'");
-        return $new_order_query->rows;
     }
 
 }
