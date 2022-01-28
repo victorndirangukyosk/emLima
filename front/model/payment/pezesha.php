@@ -4,7 +4,7 @@ class ModelPaymentPezesha extends Model {
 
     public function getMethod($total) {
         $this->load->language('payment/pezesha');
-        if ($this->customer->getCustomerPezeshaId() > 0 && $this->customer->getCustomerPezeshauuId() != NULL) {
+        if ($this->customer->getCustomerPezeshaId() > 0 && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status')) {
             $log = new Log('error.log');
             $log->write('getCustomerPezeshaId' . $this->customer->getCustomerPezeshaId());
             $log->write('getCustomerPezeshauuId' . $this->customer->getCustomerPezeshauuId());
