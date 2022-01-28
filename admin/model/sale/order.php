@@ -5328,7 +5328,7 @@ class ModelSaleOrder extends Model {
 
 
         
-            $sql .= ' ORDER BY o.order_id';
+            $sql .= ' ORDER BY cust.company_name,cust.firstname,o.order_id';
         
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {

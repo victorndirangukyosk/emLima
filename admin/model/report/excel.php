@@ -10186,15 +10186,15 @@ class ModelReportExcel extends Model {
 
                 $datediff =strtotime($sendingDate)-strtotime($result['delivery_date']) ; 
                
-               if($result['company_name']==''){
-               $result['company_name']= $result['customer_name'];}
+               if($result['company_name']=='' || $result['company_name']==NULL){
+               $result['company_name']= $result['customer'];}
                 // echo "<pre>";print_r(strtotime($result['delivery_date']));
                 // echo "<pre>";print_r(strtotime($sendingDate));
                 // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
                  $result['ageing']=round($datediff / (60 * 60 * 24));
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']??$result['customer_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['date_added']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['delivery_date']);
 
@@ -10210,7 +10210,7 @@ class ModelReportExcel extends Model {
             // $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
             // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-            // header('Content-Disposition: attachment;filename="orders_sheet.xlsx"');
+            // header('Content-Disposition: attachment;filename="unpaid_orders_sheet.xlsx"');
             // header('Cache-Control: max-age=0');
             // $objWriter->save('php://output');
 
