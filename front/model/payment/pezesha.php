@@ -11,6 +11,7 @@ class ModelPaymentPezesha extends Model {
         }
 
         $log = new Log('error.log');
+        $log->write($this->config->get('pezesha_total').' '.$this->cart->getTotal());
         $log->write('pyment method checking');
         $log->write($total);
 
