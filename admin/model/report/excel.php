@@ -10186,7 +10186,8 @@ class ModelReportExcel extends Model {
 
                 $datediff =strtotime($sendingDate)-strtotime($result['delivery_date']) ; 
                
-               
+               if($result['company_name']==''){
+               $result['company_name']= $result['customer_name'];}
                 // echo "<pre>";print_r(strtotime($result['delivery_date']));
                 // echo "<pre>";print_r(strtotime($sendingDate));
                 // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
