@@ -10268,7 +10268,7 @@ class ModelReportExcel extends Model {
               echo "<pre>";print_r( $e->getMessage());
               echo "<pre>";print_r( $e->getFile());
               echo "<pre>";print_r( $e->getCode());
-              echo "<pre>";print_r( $e->getLine());die;
+              echo "<pre>";print_r( $e->getLine());
            
             $errstr = $e->getMessage();
             $errline = $e->getLine();
