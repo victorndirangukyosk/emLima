@@ -10193,7 +10193,7 @@ class ModelReportExcel extends Model {
                  $result['ageing']=round($datediff / (60 * 60 * 24));
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']??$result['customer_name']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['date_added']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['delivery_date']);
 
