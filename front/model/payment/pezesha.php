@@ -4,14 +4,13 @@ class ModelPaymentPezesha extends Model {
 
     public function getMethod($total) {
         $this->load->language('payment/pezesha');
-        if ($this->customer->getCustomerPezeshaId() > 0 && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status') && $this->config->get('pezesha_total') > 0) {
+        if ($this->customer->getCustomerPezeshaId() > 0 && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status') && $this->config->get('pezesha_total') > 0 && $this->cart->getTotal() >= $this->config->get('pezesha_total')) {
             $status = true;
         } else {
             $status = false;
         }
 
         $log = new Log('error.log');
-        $log->write($this->config->get('pezesha_total').' '.$this->cart->getTotal());
         $log->write('pyment method checking');
         $log->write($total);
 
