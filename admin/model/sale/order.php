@@ -5319,11 +5319,11 @@ class ModelSaleOrder extends Model {
        
 
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $sql .= " and c.status = '" . (int) $data['filter_status'] . "'";
+            $sql .= " and cust.status = '" . (int) $data['filter_status'] . "'";
         }
 
         if (isset($data['filter_payment_terms']) && !is_null($data['filter_payment_terms'])) {
-            $sql .= " and c.payment_terms = '" . $data['filter_payment_terms'] . "'";
+            $sql .= " and cust.payment_terms = '" . $data['filter_payment_terms'] . "'";
         }
 
 
