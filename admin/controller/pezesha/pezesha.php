@@ -204,7 +204,7 @@ class ControllerPezeshaPezesha extends Controller {
             $transactions['merchant_id'] = $customer_id;
             $transactions['face_amount'] = $order_info['total'];
             $transactions['transaction_time'] = $order_info['date_added'];
-            $transactions['other_details'] = array('key' => 'location', 'value' => $order_info['shipping_address'], 'key' => 'category', 'value' => 'Fresh Produce');
+            $transactions['other_details'] = array('key' => 'Organization_id', 'value' => $customer_device_info['customer_id'], 'key' => 'payee_type', 'value' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'] . ' ' . $customer_device_info['company_name']);
             $transactions_details[] = $transactions;
         }
         $log->write($transactions_details);

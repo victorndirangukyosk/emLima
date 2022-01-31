@@ -23,6 +23,7 @@
                         <th rowspan="1">SNo.</th>
                         <th rowspan="1">&nbsp;</th>
                         <th rowspan="1"><span class="nobr">Product Name</span></th>
+                        <!--<th rowspan="1"><span class="nobr">Product Note</span></th>-->
                                                 <th class="text-center" ><span class="nobr">Unit Price</span></th>
                                                 <th class="text-right"><span class="nobr">Unit </span></th>
                         <th rowspan="1" class="text-center">Qty</th>
@@ -96,7 +97,9 @@
      <div style="font-size:13px;">( <?= $product['product_note']?> )</div> 
      <?php } ?>
     </td>
-    
+    <!--<td class="a-left hidden-table"  style="width:300px">
+     <span style="font-size:13px;"><?= $product['product_note']?></span> 
+    </td>-->
   
     
     
@@ -136,7 +139,11 @@
             
 
             </td>
+   <!--<td class="a-center hidden-table a">
+     <a id="update_quantity" class="fa fa-refresh" title="Update product quantity" data-id="<?= $product['key']?>" data-prodorderid="<?= $i?>"><span data-id="<?= $product['key']?>"></span></a>
+  </td>-->
   <td class="a-center hidden-table">
+      <!--<p> <a title="Remove item" class="button remove-item" style="background-color: #ec9f4e ;"><span><span><?= $product['key']?></span></span></a></p>-->
      <a id="remove_product" class="button remove-item" title="Remove item" data-id="<?= $product['key']?>" style="background-color: #ec9f4e ;" data-prodorderid="<?= $i?>"><span data-id="<?= $product['key']?>"></span></a>
 
   </td>
@@ -155,6 +162,18 @@
                             <?php $i++; } ?>
 
 <tfoot>
+    
+<!--<tr class="first last">
+<td colspan="4" class="a-right last">                                                       
+</td>    
+<td colspan="4" class="a-left last">                                                       
+<button type="submit" style="width:170px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" name="update_cart_action" value="update_qty" title="Update Cart" class="button"><span id="updatecart"><i class="fa fa-refresh"></i>
+ Update Cart</span></button>
+</td>
+<td colspan="4" class="a-right last">                                                       
+</td>
+</tr>-->
+
 <tr class="first last">
 <td colspan="6" class="a-right last">
 <a  href="<?php echo $continue; ?>"> <button type="button" title="Continue Shopping" class="button btn-continue" style="width:210px;background-color: #ec9f4e ; padding: 15px 20px 27px 20px;" ><span><span>Continue Shopping</span></span></button></a>
@@ -198,6 +217,9 @@
 			<h2><b>Products You May Like</b></h2>
 			<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="0" data-wrap="false">
 			<!-- Carousel indicators -->
+			<!-- <ol class="carousel-indicators">
+				<li data-target="#myCarousel" data-slide-to="0" class="active"></li>				 			 
+			</ol>   -->
 			<!-- Wrapper for carousel items -->
 			<div class="carousel-inner">
 				   <?php echo $mostboughtproducts; ?>
@@ -212,7 +234,51 @@
 		</div>
 		</div>
 	</div>
-</div>        
+</div>
+
+
+ <!--<div >
+          <div>
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+              <ol class="carousel-indicators">
+                <li class="active" data-target="#carousel-example-generic" data-slide-to="0"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
+                <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
+              </ol>
+              <div class="carousel-inner">
+                <div class="item active"><img src="../front/ui/theme/organic/images/slide2.jpg" alt="slide3">
+                  <div class="carousel-caption">
+                  <h4>Fruit Shop</h4>
+                    <h3><a title=" Sample Product" href="product-detail.html">Up to 70% Off</a></h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <a class="link" href="#">Buy Now</a></div>
+                </div>
+                <div class="item"><img src="../front/ui/theme/organic/images/slide3.jpg" alt="slide1">
+                  <div class="carousel-caption">
+                   <h4>Black Grapes</h4>
+                    <h3><a title=" Sample Product" href="product-detail.html">Mega Sale</a></h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                     <a class="link" href="#">Buy Now</a>
+                  </div>
+                </div>
+                <div class="item"><img src="../front/ui/theme/organic/images/slide1.jpg" alt="slide2">
+                  <div class="carousel-caption">
+                  <h4>Food Farm</h4>
+                    <h3><a title=" Sample Product" href="product-detail.html">Up to 50% Off</a></h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                     <a class="link" href="#">Buy Now</a>
+                  </div>
+                </div>
+              </div>
+              <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"> <span class="sr-only">Previous</span> </a> <a class="right carousel-control" href="#carousel-example-generic" data-slide="next"> <span class="sr-only">Next</span> </a></div>
+          </div>
+        </div>-->
+
+
+
+ 
+        
+
 </div>
 
 <div class="cart-collaterals container"> 
@@ -290,10 +356,22 @@
         <col width="1">
         </colgroup><tfoot>
             <tr>
+  <!--  <td style="" class="a-left" >
+        <strong>Grand Total</strong>
+    </td>
+    <td style="" class="a-right">
+        <strong><span class="price"><?= $product_total_amount?></span></strong>
+    </td>-->
 </tr>
         </tfoot>
         <tbody>
           <tr >
+    <!--<td style="" class="a-left" >
+        Subtotal    </td>
+    <td style="" class="a-right">
+        <span class="price"><?= $product_total_amount?></span>    </td>-->
+
+
          <div class="checkout-sidebar" id="checkout-total-wrapper">
 
                                 
@@ -607,6 +685,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
                         <div class="row">
                             <div class="col-md-12">
                               <h2>PAYMENT PENDING</h2>
@@ -653,11 +732,41 @@
             </div>
         </div>
     </div>
+    <!-- CSS Style -->
+<!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/bootstrap.min.css">-->
+<!--<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/font-awesome.css" media="all">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/revslider.css" >
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/owl.theme.css">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/jquery.bxslider.css">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/jquery.mobile-menu.css">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/style.css" media="all">
+<link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/stylesheet/responsive.css" media="all">-->
+
+<!--<link href="https://fonts.googleapis.com/css?family=Merriweather:300,300i,400,400i,700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Oswald:300,400,500,600,700" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:700,600,800,400' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i,900" rel="stylesheet">-->
+
    
     <script type="text/javascript" src="<?= $base;?>front/ui/theme/mvgv2/js/side-menu-script.js"></script>
+
+    
+
     <script type="text/javascript" src="<?= $base;?>front/ui/theme/mvgv2/js/jquery.sticky.js"></script>
     <script type="text/javascript" src="<?= $base;?>front/ui/theme/mvgv2/js/header-sticky.js"></script>
+    
+    <!-- <script src="<?= $base;?>front/ui/theme/mvgv2/js/jquery.maskedinput.js" type="text/javascript"></script> -->
+    
+    <!-- <link rel="stylesheet" href="<?= $base;?>front/ui/theme/mvgv2/css/bootstrap-iso.css" /> -->
+    <!--<link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />-->
+
+    <!-- <script type="text/javascript" src="<?= $base;?>front/ui/theme/mvgv2/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="<?= $base;?>front/ui/theme/mvgv2/css/bootstrap-datepicker3.css"/> -->
+    
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>-->
+
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     <style>
@@ -882,23 +991,6 @@ document.cookie = "po_number="+po_number;
 //$('#exampleModal').modal('toggle');
 
 $.ajax({
-        url: 'index.php?path=checkout/checkoutitems/getunpaidorders',
-        type: 'get',
-        dataType: 'json',
-        cache: false,
-        async: true,
-        beforeSend: function() {
-        },
-        success: function(json) {
-            if(json.unpaid_orders > 0) {
-            console.log('unpaid_orders');
-            $("#proceed_to_checkout").addClass("disabled");  
-            $('#exampleModal3').modal('show');
-            } else {
-            $("#proceed_to_checkout").removeClass("disabled"); 
-            $('#exampleModal3').modal('hide');
-            
-            $.ajax({
             url: 'index.php?path=checkout/confirm/CheckOtherVendorOrderExists',
             type: 'post',
             dataType: 'json',
@@ -909,21 +1001,18 @@ $.ajax({
             success: function(json) {
                 if (json['modal_open']) {
                 $('#exampleModal').modal('show');
-                $('#products_list').text(json['product_list']);
+                 //alert(json['product_list']);
+                       
+                         $('#products_list').text(json['product_list']);
 
                 return false;
                 }else{
                 $('#exampleModal').modal('hide'); 
-                $('#products_list').text('');
+                         $('#products_list').text('');
+
                 window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";     
                 }
             }
-            });
-            
-            }
-        },
-        error: function(xhr, ajaxOptions, thrownError) {
-        }
 });
 
 });
@@ -1714,6 +1803,7 @@ function loadUnpaidorders() {
             console.log('unpaid_orders');
             $("#proceed_to_checkout").addClass("disabled");  
             $('#exampleModal3').modal('show');
+            return false;
             } else {
             $("#proceed_to_checkout").removeClass("disabled"); 
             $('#exampleModal3').modal('hide');
@@ -2732,6 +2822,10 @@ function saveInAddressBook() {
 <script src="https://api-test.equitybankgroup.com/js/eazzycheckout.js"></script>
 <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/owl.carousel.min.js"></script>
     <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/slider-carousel.js"></script>
+   
+  
+  <!--<link rel="stylesheet" type="text/css" href="<?= $base; ?>front/ui/theme/mvgv2/css/custom.min.css?v=1.1.0">
+  <link rel="stylesheet" type="text/css" href="<?= $base;?>front/ui/theme/metaorganic/assets/css/list.min.css">-->
 
 </body>
 
