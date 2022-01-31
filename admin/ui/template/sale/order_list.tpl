@@ -478,7 +478,7 @@
                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
                                        </a> 
                                        <?php } ?>
-                                       <?php if ($order['order_status_id'] == 1  && (!$this->user->isVendor()))    { ?>
+                                       <?php if ($order['missing_products_count'] == 0 && $order['order_status_id'] == 1  && (!$this->user->isVendor()))    { ?>
                                        <a href="#" data-toggle="tooltip" data-target="store_modal" title="Missed Products List" data-orderid="<?= $order['order_id'] ?>" id="order_products_list">
                                        <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                                        </a> 
@@ -1287,7 +1287,7 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     
-                                      <button type="button" onclick="addtomissingproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add To Missing Products">Save To Missing Products</button>
+                                      <button id="addtomissingproduct" type="button" onclick="addtomissingproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add To Missing Products">Save To Missing Products</button>
                                    </div>
                             </div>
                         </div>
@@ -2706,7 +2706,7 @@ function addtomissingproduct() {
             if(selected_order_product_id=='' || selected_order_product_id==null)
             {
             $('.alert.alert-danger.missed').html('');
-            $('.alert.alert-danger.missed').html('<i class="fa fa-times-circle text-danger">Please Select At Lease One Product</i>');
+            $('.alert.alert-danger.missed').html('<i class="fa fa-exclamation-circle"></i> Warning: Please Select At Lease One Product!');
             $('.alert.alert-danger.missed').show();
             return;
             } 
@@ -2723,19 +2723,32 @@ function addtomissingproduct() {
                 type: 'post',
                 dataType: 'json',
                 data: data,
+                beforeSend: function() {
+                $('#addtomissingproduct').prop('disabled', true);
+                $('.alert.alert-success.missed').html('');
+                $('.alert.alert-success.missed').html('<i class="fa fa-exclamation-circle"></i> Success: Please wait your request is processing!');
+                $('.alert.alert-success.missed').show();
+                },
+                complete: function() {
+                $('#addtomissingproduct').prop('disabled', false);    
+		},
                 success: function(json) {
                 console.log(json);
                 if(json.status == 400) {
                 $('.alert.alert-danger.missed').html('');
-                $('.alert.alert-danger.missed').html('<i class="fa fa-times-circle text-danger">'+json.message+'</i>');
+                $('.alert.alert-danger.missed').html('<i class="fa fa-exclamation-circle"></i> Warning: '+json.message+'!');
                 $('.alert.alert-danger.missed').show();
+                $('#addtomissingproduct').prop('disabled', false);
                 }
                 
                 if(json.status == 200) {
                 $('.alert.alert-success.missed').html('');
-                $('.alert.alert-success.missed').html('<i class="fa fa-times-circle text-danger">'+json.message+'</i>');
+                $('.alert.alert-success.missed').html('<i class="fa fa-exclamation-circle"></i> Warning: '+json.message+'!');
                 $('.alert.alert-success.missed').show();
-                $('#store_modal').modal('hide')            
+                setTimeout(function(){
+                $('#store_modal').modal('hide');
+                }, 5000);
+                setTimeout(function(){ window.location.reload(false); }, 6000);
                 }
                 //location=location;
                 },			

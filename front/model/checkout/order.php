@@ -2103,4 +2103,173 @@ class ModelCheckoutOrder extends Model {
         $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET order_processing_group_id="' . $order_processing_group_id . '", order_processor_id="' . $order_processor_id . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
     }
 
+    public function getOrderedMissingProducts($data = []) {
+        $sql = "SELECT mp.id,o.firstname,o.lastname,cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id,mp.product_id,mp.product_store_id,mp.name,mp.unit,mp.quantity,mp.price,mp.total,mp.tax,mp.model,mp.product_note,mp.quantity_required,mp.price AS mp_price,mp.tax AS mp_tax,mp.total AS mp_total FROM `" . DB_PREFIX . 'order` o ';
+
+        $sql .= ' INNER JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
+        $sql .= ' INNER JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
+        $sql .= ' INNER JOIN ' . DB_PREFIX . 'missing_products mp on (o.order_id = mp.order_id) ';
+
+        if (isset($data['filter_order_status'])) {
+            $implode = [];
+
+            $order_statuses = explode(',', $data['filter_order_status']);
+
+            foreach ($order_statuses as $order_status_id) {
+                $implode[] = "o.order_status_id = '" . (int) $order_status_id . "'";
+            }
+
+            if ($implode) {
+                $sql .= ' WHERE (' . implode(' OR ', $implode) . ')';
+            } else {
+                
+            }
+        } else {
+            $sql .= " WHERE o.order_status_id > '0'  and o.order_id =mp.order_id ";
+        }
+
+        //   echo "<pre>";print_r($data['filter_order_type']);die; 
+
+
+        if (isset($data['filter_order_type'])) {
+
+            $sql .= ' AND isadmin_login= ' . $data['filter_order_type'] . '';
+        }
+
+        //below if condition added for fast orders used in fast order sreen 
+        if (!empty($data['filter_order_day'])) {
+            $current_date = date('Y-m-d');
+            if ('today' == $data['filter_order_day']) {
+                $delivery_date = date('Y-m-d');
+            } else {
+                $delivery_date = date('Y-m-d', strtotime('+1 day'));
+            }
+
+            //$sql .= " AND DATE(o.delivery_date) = " . $delivery_date;
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($delivery_date) . "')";
+
+            // fast orders means, ordered placed on current dadte
+            $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($current_date) . "')";
+
+            //echo "<pre>";print_r($delivery_date);die;
+        }
+
+        if (!empty($data['filter_city'])) {
+            $sql .= " AND c.name LIKE '" . $data['filter_city'] . "%'";
+        }
+
+        if (!empty($data['filter_order_id'])) {
+            $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
+        }
+
+        if (!empty($data['filter_order_from_id'])) {
+            $sql .= " AND o.order_id >= '" . (int) $data['filter_order_from_id'] . "'";
+        }
+
+        if (!empty($data['filter_order_to_id'])) {
+            $sql .= " AND o.order_id <= '" . (int) $data['filter_order_to_id'] . "'";
+        }
+
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_vendor'])) {
+            $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';
+        }
+        if (!empty($data['filter_store_name'])) {
+            $sql .= " AND o.store_name = '" . $data['filter_store_name'] . "'";
+        }
+
+        if (!empty($data['filter_payment'])) {
+            $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
+        }
+
+        if (!empty($data['filter_delivery_method'])) {
+            $sql .= " AND o.shipping_method LIKE '%" . $data['filter_delivery_method'] . "%'";
+        }
+
+        if (!empty($data['filter_delivery_date'])) {
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
+        }
+
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if (!empty($data['filter_monthyear_added'])) {
+            $sql .= " AND DATE_FORMAT(o.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+        }
+
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
+        }
+
+        if (!empty($data['filter_date_modified'])) {
+            $sql .= " AND DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
+        }
+
+        if (!empty($data['filter_total'])) {
+            $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
+        }
+
+        if (isset($data['filter_order_status_id_not_in'])) {
+            $sql .= " AND o.order_status_id NOT IN (" . $data['filter_order_status_id_not_in'] . ")";
+        }
+
+        $sort_data = [
+            'o.order_id',
+            'customer',
+            'status',
+            'o.date_added',
+            'o.date_modified',
+            'o.total',
+            'c.name',
+        ];
+        // $sql .= " Group by o.order_id";
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY o.order_id';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        // echo "<pre>";print_r($sql);die;
+        $log = new Log('error.log');
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function UpdateMissingProductsByOrderId($order_id, $new_order_id) {
+        $this->db->query('UPDATE `' . DB_PREFIX . 'missing_products` SET new_order_id ="' . $new_order_id . '", updated_at = NOW() WHERE order_id="' . $order_id . '"');
+    }
+
+    public function getNewOrderIdByMissingProductOrderId($order_id) {
+        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND new_order_id > 0");
+        return $new_order_query->row;
+    }
+
 }

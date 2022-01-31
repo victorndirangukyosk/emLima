@@ -133,12 +133,9 @@
                                     <td class="text-right"><?php echo $order['order_id']; ?></td>
 
                                                                             
-                                    <!--<td class="text-right"><?php echo $order['product_id']; ?></td>-->
                                     <td class="text-left"><?php echo $order['name']; ?></td>
                                     <td class="text-left"><?php echo $order['unit']; ?></td>
                                     <td class="text-right"><?php echo $order['quantity_required']; ?></td>
-                                    <!--<td class="text-right"><?php echo $order['price']; ?></td>
-                                    <td class="text-right"><?php echo $order['total']; ?></td>-->
                                         
                                 </tr>
                                 <?php } ?>

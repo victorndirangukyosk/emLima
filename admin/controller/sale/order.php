@@ -1297,6 +1297,7 @@ class ControllerSaleOrder extends Controller {
             $sub_total = 0;
 
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
+            $missing_products = $this->model_sale_order->getMissingProductsByOrderId($result['order_id']);
             $store_details = $this->model_vendor_vendor->getVendorByStoreId($result['store_id']);
             $vendor_details = $this->model_vendor_vendor->getVendorDetails($store_details['vendor_id']);
 
@@ -1358,6 +1359,7 @@ class ControllerSaleOrder extends Controller {
                 'paid' => $result['paid'],
                 'amount_partialy_paid' => $result['amount_partialy_paid'],
                 'delivery_charges' => $result['delivery_charges'],
+                'missing_products_count' => count($missing_products),
             ];
         }
 
@@ -9552,7 +9554,10 @@ class ControllerSaleOrder extends Controller {
 
         $this->load->model('sale/order');
         $order_id = $this->request->get['order_id'];
-        $res = $this->model_sale_order->getOrderProducts($order_id);
+        $res = $this->model_sale_order->getRealOrderProducts($order_id);
+        if ($res == NULL || count($res) == 0) {
+            $res = $this->model_sale_order->getOrderProducts($order_id);
+        }
         // echo "<pre>";print_r( $res);die;
 
         $html = '';

@@ -10,7 +10,9 @@ class ControllerEmailtemplateEmailtemplate extends Controller {
         $log = new Log('error.log');
         $data['products'] = [];
         $this->load->model('account/order');
-        $order_info = $this->model_account_order->getOrder($dat['order_id']);
+        $this->load->model('sale/order');
+
+        $order_info = $this->model_sale_order->getOrder($dat['order_id']);
         $products = $this->model_account_order->getOrderProducts($dat['order_id']);
         $totals = $this->model_account_order->getOrderTotals($dat['order_id']);
 

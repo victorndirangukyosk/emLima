@@ -322,8 +322,8 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
                     'id' => $result['id'],
                     'customer' => $result['customer'],
                     'company_name' => $result['company_name'],
-                    'status' => $result['status'],
-                    'product_id' => $result['product_id'],
+                    //'status' => $result['status'],
+                    //'product_id' => $result['product_id'],
                     'product_store_id' => $result['product_store_id'],
                     'name' => $result['name'],
                     'unit' => $result['unit'],
@@ -334,10 +334,10 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
                     'tax' => $result['tax'],
                     'download_invoice' => $this->url->link('sale/order/missing_products_order_invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL'),
                     // 'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
-                    'order_product_id' => $result['order_product_id'],
+                    //'order_product_id' => $result['order_product_id'],
                 ];
 
-                $result_status_tmp = $result['status'];
+                //$result_status_tmp = $result['status'];
             }
         }
 
