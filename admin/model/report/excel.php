@@ -10186,7 +10186,7 @@ class ModelReportExcel extends Model {
 
                 $datediff =strtotime($sendingDate)-strtotime($result['delivery_date']) ; 
                
-               if($result['company_name']=='' || $result['company_name']==NULL){
+               if($result['company_name']=='' || $result['company_name']==NULL|| $result['company_name']=='Individual '|| $result['company_name']=='Individual'|| $result['company_name']=='N/A'|| $result['company_name']=='n/a'){
                $result['company_name']= $result['customer'];}
                 // echo "<pre>";print_r(strtotime($result['delivery_date']));
                 // echo "<pre>";print_r(strtotime($sendingDate));
