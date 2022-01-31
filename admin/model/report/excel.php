@@ -1589,7 +1589,7 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $order['SAP_document_no']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $order['amount']);
 
-                if ($order['color'] > 0) {
+                if (isset($order['color']) && $order['color'] > 0) {
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($tax);
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, $row)->applyFromArray($tax);
                     $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, $row)->applyFromArray($tax);
