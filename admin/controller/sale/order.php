@@ -5716,6 +5716,7 @@ class ControllerSaleOrder extends Controller {
             $total = 0;
             $delivery_charge = 0;
             $delivery_charge_vat = 0;
+            $tax = 0;
 
             $totals = $this->model_sale_order->getOrderTotals($order['order_id']);
 
@@ -5734,6 +5735,9 @@ class ControllerSaleOrder extends Controller {
                 if ('delivery_vat' == $total['code']) {
                     $delivery_charge_vat = $total['value'];
                 }
+                if ('tax' == $total['code']) {
+                    $tax = $total['value'];
+                }
             }
             // echo "<pre>";print_r($total);die;
 
@@ -5749,6 +5753,7 @@ class ControllerSaleOrder extends Controller {
                 'invoice_no' => 'KB' . $order['order_id'],
                 'SAP_document_no' => '',
                 'order_status' => $order['status'],
+                'color' => $delivery_charge_vat > 0 || $tax > 0 ? 1 : 0,
             ];
             // $totalOrdersAmount += $order['total'];
         }
