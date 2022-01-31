@@ -1530,6 +1530,15 @@ class ModelReportExcel extends Model {
                 ],
             ];
 
+            $tax = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FF0000',
+                    ],
+                ]
+            ];
+
             $sheet_title = 'Consolidated Customer Orders';
             $sheet_subtitle = 'Delivered on: ' . $data['orders'][0]['delivery_date'];
 
@@ -1579,6 +1588,16 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $order['SAP_customer_no']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $order['SAP_document_no']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $order['amount']);
+
+                if (isset($order['color']) && $order['color'] > 0) {
+                    $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($tax);
+                    $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, $row)->applyFromArray($tax);
+                    $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, $row)->applyFromArray($tax);
+                    $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, $row)->applyFromArray($tax);
+                    $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, $row)->applyFromArray($tax);
+                    $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, $row)->applyFromArray($tax);
+                    $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, $row)->applyFromArray($tax);
+                }
 
                 ++$row;
             }
@@ -4497,7 +4516,7 @@ class ModelReportExcel extends Model {
             return;
         }
     }
-    
+
     public function download_supplier_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
@@ -10104,7 +10123,6 @@ class ModelReportExcel extends Model {
         }
     }
 
-
     public function mail_customer_unpaid_order_excel($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
@@ -10150,7 +10168,7 @@ class ModelReportExcel extends Model {
 
             //subtitle
 
-           
+
             $objPHPExcel->getActiveSheet()->getStyle('A1:G2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $objPHPExcel->getActiveSheet()->getStyle('F')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
@@ -10176,7 +10194,6 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 3)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 3)->applyFromArray($title);
             // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 3)->applyFromArray($title);
-
             // Fetching the table data
             $row = 4;
 
@@ -10184,14 +10201,15 @@ class ModelReportExcel extends Model {
             $i = 1;
             foreach ($rows as $result) {
 
-                $datediff =strtotime($sendingDate)-strtotime($result['delivery_date']) ; 
-               
-               if($result['company_name']=='' || $result['company_name']==NULL|| $result['company_name']=='Individual '|| $result['company_name']=='Individual'|| $result['company_name']=='N/A'|| $result['company_name']=='n/a'){
-               $result['company_name']= $result['customer'];}
+                $datediff = strtotime($sendingDate) - strtotime($result['delivery_date']);
+
+                if ($result['company_name'] == '' || $result['company_name'] == NULL || $result['company_name'] == 'Individual ' || $result['company_name'] == 'Individual' || $result['company_name'] == 'N/A' || $result['company_name'] == 'n/a') {
+                    $result['company_name'] = $result['customer'];
+                }
                 // echo "<pre>";print_r(strtotime($result['delivery_date']));
                 // echo "<pre>";print_r(strtotime($sendingDate));
                 // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
-                 $result['ageing']=round($datediff / (60 * 60 * 24));
+                $result['ageing'] = round($datediff / (60 * 60 * 24));
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
@@ -10209,7 +10227,6 @@ class ModelReportExcel extends Model {
 
             // $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
             // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
             // header('Content-Disposition: attachment;filename="unpaid_orders_sheet.xlsx"');
             // header('Cache-Control: max-age=0');
             // $objWriter->save('php://output');
@@ -10217,8 +10234,6 @@ class ModelReportExcel extends Model {
             $filename = 'KB_Unpaid_Order_Sheet_' . $sendingDate . '.xlsx';
 
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-            
-
 
             if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
                 mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
@@ -10241,11 +10256,11 @@ class ModelReportExcel extends Model {
             $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
 
             // if ($name != "") {
-                $subject = 'Unpaid Orders';
+            $subject = 'Unpaid Orders';
             // }
             // $subject = "Consolidated Order Sheet";                 
-            $message = str_replace('consolidated','unpaid',$message);
-            $message = str_replace('Consolidated','Unpaid',$message);
+            $message = str_replace('consolidated', 'unpaid', $message);
+            $message = str_replace('Consolidated', 'Unpaid', $message);
             $this->load->model('setting/setting');
             $email = $this->model_setting_setting->getEmailSetting('financeteam');
 
@@ -10267,11 +10282,15 @@ class ModelReportExcel extends Model {
             #endregion
             exit;
         } catch (Exception $e) {
-              echo "<pre>";print_r( $e->getMessage());
-              echo "<pre>";print_r( $e->getFile());
-              echo "<pre>";print_r( $e->getCode());
-              echo "<pre>";print_r( $e->getLine());
-           
+            echo "<pre>";
+            print_r($e->getMessage());
+            echo "<pre>";
+            print_r($e->getFile());
+            echo "<pre>";
+            print_r($e->getCode());
+            echo "<pre>";
+            print_r($e->getLine());
+
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
