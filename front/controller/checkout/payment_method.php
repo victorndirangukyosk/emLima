@@ -132,36 +132,39 @@ class ControllerCheckoutPaymentMethod extends Controller {
         //echo "<pre>";print_r($data);die;
         $log = new Log('error.log');
 
-        if (!empty($_SESSION['parent'])) {
-            $log->write('FOR SUB USERS REMOVED OTHER PAYMENT METHODS');
+        /* if (!empty($_SESSION['parent'])) {
+          $log->write('FOR SUB USERS REMOVED OTHER PAYMENT METHODS');
+          foreach ($data['payment_methods'] as $payment_method) {
+          if ($payment_method['code'] != 'cod' && $payment_method['code'] != 'pezesha') {
+          unset($data['payment_methods'][$payment_method['code']]);
+          }
+          }
+          $log->write('FOR SUB USERS REMOVED OTHER PAYMENT METHODS');
+          } else { */
+
+        $log->write('getPaymentTerms');
+        $log->write($this->customer->getPaymentTerms());
+        if ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) {
             foreach ($data['payment_methods'] as $payment_method) {
-                if ($payment_method['code'] != 'cod' && $payment_method['code'] != 'pezesha') {
+                if ($payment_method['code'] != 'wallet' && $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa') {
                     unset($data['payment_methods'][$payment_method['code']]);
                 }
             }
-            $log->write('FOR SUB USERS REMOVED OTHER PAYMENT METHODS');
-        } else {
-
-            $log->write('getPaymentTerms');
-            $log->write($this->customer->getPaymentTerms());
-            if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
-                foreach ($data['payment_methods'] as $payment_method) {
-                    if (/* $payment_method['code'] != 'cod' && $payment_method['code'] != 'wallet' && */ $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa' && $payment_method['code'] != 'pezesha') {
-                        unset($data['payment_methods'][$payment_method['code']]);
-                    }
-                    if ($this->customer->getCustomerPezeshaId() == NULL || $this->customer->getCustomerPezeshauuId() == NULL) {
-                        unset($data['payment_methods']['pezesha']);
-                    }
-                }
-            } if ($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') {
-                foreach ($data['payment_methods'] as $payment_method) {
-                    if ($payment_method['code'] != 'cod' && $payment_method['code'] != 'wallet' && $payment_method['code'] != 'pezesha') {
-                        unset($data['payment_methods'][$payment_method['code']]);
-                    }
+        } if ($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit' && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) {
+            foreach ($data['payment_methods'] as $payment_method) {
+                if ($payment_method['code'] != 'cod') {
+                    unset($data['payment_methods'][$payment_method['code']]);
                 }
             }
-            $log->write('getPaymentTerms');
+        } if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status')) {
+            foreach ($data['payment_methods'] as $payment_method) {
+                if ($payment_method['code'] != 'pezesha') {
+                    unset($data['payment_methods'][$payment_method['code']]);
+                }
+            }
         }
+        $log->write('getPaymentTerms');
+        //}
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/payment_method.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/checkout/payment_method.tpl', $data));
