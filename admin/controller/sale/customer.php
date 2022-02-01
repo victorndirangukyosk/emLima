@@ -2516,7 +2516,7 @@ class ControllerSaleCustomer extends Controller {
     }
 
     protected function validateApprove() {
-        if (!$this->user->hasPermission('modify', 'sale/customer')) {
+        if (!$this->user->hasPermission('modify', 'sale/customer_approve')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
 
