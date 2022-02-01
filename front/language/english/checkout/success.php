@@ -3,9 +3,9 @@
 $_['referral_description'] = 'Referral';
 
 // Heading
-$_['heading_title'] = 'Your order has been placed!';
+$_['heading_title'] = 'Your order(s) %s has been confirmed!';
 $_['heading_title_failed'] = 'Your order is pending!';
-$_['heading_title_sub_user'] = 'Your order approval is pending!';
+$_['heading_title_sub_user'] = 'Your order(s) %s approval is pending!';
 
 // Text
 $_['text_basket'] = 'Shopping Cart';

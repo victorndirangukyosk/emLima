@@ -68,10 +68,10 @@ class ControllerCheckoutSuccess extends Controller {
 
         $data['referral_description'] = $this->language->get('referral_description');
         if (!empty($_SESSION['parent']) && ($this->session->data['order_approval_access'] == 0 && $this->session->data['order_approval_access_role'] == NULL && $sub_customer_order_approval_required == 1)) {
-            $data['heading_title'] = $this->language->get('heading_title_sub_user');
+            $data['heading_title'] = sprintf($this->language->get('heading_title_sub_user'), "#" . implode(' #', $this->session->data['order_id']));
         }
         if (empty($_SESSION['parent']) || ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) || $sub_customer_order_approval_required == 0) {
-            $data['heading_title'] = $this->language->get('heading_title');
+            $data['heading_title'] = sprintf($this->language->get('heading_title'), "#" . implode(' #', $this->session->data['order_id']));
         }
 
         $data['text_basket'] = $this->language->get('text_basket');
