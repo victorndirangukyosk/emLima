@@ -3620,10 +3620,8 @@ class ControllerApiCustomerOrder extends Controller {
             $log->write('addOrder');
             $log->write($args);
             $log->write('addOrder');
-            // $stores = array_keys($args['stores']);
-            //print_r($stores);
+            $stores = array_keys($args['stores']);
 
-            $stores = ($args['stores']);
             //print_r($stores);
             foreach ($stores as $store_id) {
                 $order_data[$store_id] = [];
