@@ -870,7 +870,7 @@ class ModelCheckoutOrder extends Model {
                         // try{
                         if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
-
+                            if($order_info['store_name']!=null && $order_info['store_name']!=''){
                             $mail = new mail($this->config->get('config_mail'));
                             $mail->setTo($order_info['email']);
                             $mail->setFrom($this->config->get('config_from_email'));
@@ -879,6 +879,7 @@ class ModelCheckoutOrder extends Model {
                             $mail->setHtml($message);
                             //$mail->setText( $text );
                             $mail->send();
+                            }
 
                             $log->write('mail end');
                         }
