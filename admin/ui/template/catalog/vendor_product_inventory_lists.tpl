@@ -286,7 +286,7 @@
 				    <td class="text-left">
                                         <input style="max-width: 75px !important; text-align: right; " name="total_qty" disabled type="number"  id="total_qty_<?php echo $product['product_store_id'];?>" value="">
                                     </td>
-                                    <td class="text-right"><button type="button" onclick="ChangeProductInventory('<?php echo $product['product_store_id']; ?>');" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button>
+                                    <td class="text-right"><!--<button type="button" onclick="ChangeProductInventory('<?php echo $product['product_store_id']; ?>');" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button>-->
 									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
 									data-toggle="modal" data-target="#<?php echo $product['product_store_id']; ?>historyModal"
 								    title="" class="btn btn-default" data-original-title="History"><i class="fa fa-history text-success"></i></button>
