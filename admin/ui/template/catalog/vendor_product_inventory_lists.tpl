@@ -655,6 +655,7 @@ function getProductInventoryHistory(product_store_id){
 });
 
 function ChangeProductInventory(product_store_id){
+    return false;
     var data_array = [];
     $(".procured_qty").each(function() {
         var tempObj ={};
