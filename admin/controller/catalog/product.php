@@ -306,7 +306,8 @@ class ControllerCatalogProduct extends Controller {
             $product['procured_qty'] = $procured_quantity;
             $product['current_buying_price'] = $buying_price;
             $product['source'] = $buying_source;
-            $product['current_qty'] = $procured_quantity - $rejected_quantity;
+            //$product['current_qty'] = $procured_quantity - $rejected_quantity;
+            $product['current_qty'] = $product_details['quantity'];
             $product['product_name'] = $product_details['name'];
             $product['product_id'] = $product_details['product_id'];
 
