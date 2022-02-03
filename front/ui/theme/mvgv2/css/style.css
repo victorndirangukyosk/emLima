@@ -1675,3 +1675,9 @@ body { overflow-x: hidden; }
   display: block;
 }
 */
+.control--checkbox .control__indicator:after {
+    left: 5px !important;
+    top: 2px !important;
+    width: 6px !important;
+    height: 11px !important;
+}    

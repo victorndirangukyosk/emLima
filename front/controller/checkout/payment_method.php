@@ -146,12 +146,18 @@ class ControllerCheckoutPaymentMethod extends Controller {
         $log->write($this->customer->getPaymentTerms());
         if ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) {
             foreach ($data['payment_methods'] as $payment_method) {
-                if ($payment_method['code'] != 'wallet' && $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa') {
+                if ($payment_method['code'] == 'wallet') {
+                    $data['payment_wallet_methods'] = $payment_method;
+                }
+                if (/* $payment_method['code'] != 'wallet' && */ $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa') {
                     unset($data['payment_methods'][$payment_method['code']]);
                 }
             }
         } if ($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit' && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) {
             foreach ($data['payment_methods'] as $payment_method) {
+                if ($payment_method['code'] == 'wallet') {
+                    $data['payment_wallet_methods'] = $payment_method;
+                }
                 if ($payment_method['code'] != 'cod') {
                     unset($data['payment_methods'][$payment_method['code']]);
                 }
@@ -220,9 +226,14 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
         if (!$json) {
             $this->session->data['payment_method'] = $this->session->data['payment_methods'][$this->request->post['payment_method']];
-
+            $this->session->data['payment_wallet_method'] = $this->session->data['payment_wallet_method'][$this->request->post['payment_wallet_method']];
             //$this->session->data['comment'] = strip_tags($this->request->post['comment']);
         }
+        $log = new Log('error.log');
+        $log->write('payment_wallet_method');
+        $log->write($this->session->data['payment_method']);
+        $log->write($this->session->data['payment_wallet_method']);
+        $log->write('payment_wallet_method');
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
