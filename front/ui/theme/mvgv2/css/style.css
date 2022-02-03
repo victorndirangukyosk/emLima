@@ -1675,7 +1675,7 @@ body { overflow-x: hidden; }
   display: block;
 }
 */
-.control--checkbox .control__indicator:after {
+.paymentwallet:after {
     left: 5px !important;
     top: 2px !important;
     width: 6px !important;

@@ -9,7 +9,7 @@
 
         <input type="checkbox" class="control control--checkbox" id="payment_<?= $payment_wallet_methods['code'] ?>" name="payment_wallet_method" value="<?php echo $payment_wallet_methods['code']; ?>" checked="checked" />
         
-        <div class="control__indicator"></div>      
+        <div class="control__indicator paymentwallet"></div>      
     </label>
 <?php $i = 0; foreach ($payment_methods as $payment_method) { ?>
     
