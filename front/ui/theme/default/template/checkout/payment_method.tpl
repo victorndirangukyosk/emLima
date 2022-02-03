@@ -5,12 +5,14 @@
 
 <?php if ($payment_methods) { ?>
 <div class="select-locations" >
+    <?php if(isset($payment_wallet_methods)) { ?>
     <label for="payment_<?= $payment_wallet_methods['code'] ?>" class="control control--checkbox"><?php echo $payment_wallet_methods['title']; ?> <span style="font-size: 10px;vertical-align: middle;"><?php echo $payment_wallet_methods['terms1']; ?></span>
 
         <input type="checkbox" class="control control--checkbox" id="payment_<?= $payment_wallet_methods['code'] ?>" name="payment_wallet_method" value="<?php echo $payment_wallet_methods['code']; ?>" checked="checked" />
         
         <div class="control__indicator paymentwallet"></div>      
     </label>
+    <?php } ?>
 <?php $i = 0; foreach ($payment_methods as $payment_method) { ?>
     
     <?php if($i++ == 0) { ?>
