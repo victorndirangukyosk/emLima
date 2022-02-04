@@ -39,19 +39,45 @@ class ControllerPaymentMod extends Controller {
         if ('mod' == $this->session->data['payment_method']['code']) {
             $this->load->model('checkout/order');
             $this->load->model('account/customer');
+            $this->load->model('payment/wallet');
 
             $log->write($this->session->data['order_id']);
             $log->write($this->config->get('mod_order_status_id'));
 
             foreach ($this->session->data['order_id'] as $key => $value) {
-                /* FOR KWIKBASKET ORDERS */
-                if ($key == 75) {
-                    $order_id = $value;
-                    $order_info = $this->model_checkout_order->getOrder($order_id);
-                    $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                $customer_wallet_total = $this->model_account_credit->getTotalAmount();
+                if ($this->session->data['payment_wallet_method']['code'] == 'wallet' && $customer_wallet_total > 0) {
+                    $log->write($this->session->data['payment_wallet_method']);
+                    $this->load->model('account/credit');
+                    $this->load->model('sale/order');
 
-                    $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), 'mPesa On Delivery By Customer', TRUE, $customer_info['customer_id'], 'customer');
-                    $this->load->controller('payment/cod/confirmnonkb');
+                    $totals = $this->model_sale_order->getOrderTotals($value);
+                    $log->write($totals);
+                    $total = 0;
+                    foreach ($totals as $total) {
+                        if ('total' == $total['code']) {
+                            $total = $total['value'];
+                            break;
+                        }
+                    }
+                    if ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total <= $customer_wallet_total) {
+                        $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $total, $value, 'Y', 0);
+                        $ret = $this->model_checkout_order->addOrderHistory($value, 1, 'Paid Through Wallet By Customer', TRUE, $this->customer->getId(), 'customer');
+                    }
+                    if ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
+                        $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $customer_wallet_total, $value, 'P', $customer_wallet_total);
+                        $ret = $this->model_checkout_order->addOrderHistory($value, $this->config->get('mod_order_status_id'), 'Paid Partially Through Wallet By Customer', TRUE, $this->customer->getId(), 'customer');
+                    }
+                } else {
+                    /* FOR KWIKBASKET ORDERS */
+                    if ($key == 75) {
+                        $order_id = $value;
+                        $order_info = $this->model_checkout_order->getOrder($order_id);
+                        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
+                        $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), 'mPesa On Delivery By Customer', TRUE, $customer_info['customer_id'], 'customer');
+                        $this->load->controller('payment/cod/confirmnonkb');
+                    }
                 }
             }
         }

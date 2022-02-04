@@ -72,7 +72,6 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
 
         $this->session->data['payment_methods'] = $method_data;
-        $this->session->data['payment_wallet_methods'] = $method_data['wallet'];
 
         $data['text_payment_method'] = $this->language->get('text_payment_method');
         $data['text_comments'] = $this->language->get('text_comments');
@@ -91,13 +90,6 @@ class ControllerCheckoutPaymentMethod extends Controller {
         } else {
             $data['payment_methods'] = [];
         }
-
-        if (isset($this->session->data['payment_wallet_methods'])) {
-            $data['payment_wallet_methods'] = $this->session->data['payment_wallet_methods'];
-        } else {
-            $data['payment_wallet_methods'] = [];
-        }
-
         /* if (isset($this->session->data['payment_method']['code'])) {
           $data['code'] = $this->session->data['payment_method']['code'];
           } else {
@@ -233,10 +225,9 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
         if (!$json) {
             $this->session->data['payment_method'] = $this->session->data['payment_methods'][$this->request->post['payment_method']];
-            $this->session->data['payment_wallet_method'] = $this->session->data['payment_wallet_methods'][$this->request->post['payment_wallet_method']];
+            $this->session->data['payment_wallet_method'] = $this->session->data['payment_methods'][$this->request->post['payment_wallet_method']];
             //$this->session->data['comment'] = strip_tags($this->request->post['comment']);
         }
-
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

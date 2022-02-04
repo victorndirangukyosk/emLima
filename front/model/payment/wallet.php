@@ -65,7 +65,7 @@ class ModelPaymentWallet extends Model {
         $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0   WHERE order_id='" . (int) $order_id . "'"); //,total='" . (float) $total . "'
     }
 
-    public function addTransactionCreditForHybridPayment($customer_id, $description = '', $amount = '', $order_id = 0) {
+    public function addTransactionCreditForHybridPayment($customer_id, $description = '', $amount = '', $order_id = 0, $paid, $amount_partialy_paid) {
 
 
         // $query = $this->db->query('SELECT total AS total FROM ' . DB_PREFIX . "order WHERE customer_id = '" . (int) $this->customer->getId() . "' AND order_id = '" . (int) $order_id . "'");
@@ -75,7 +75,7 @@ class ModelPaymentWallet extends Model {
         $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $description . "', amount = '" . (float) ($amount * -1) . "', date_added = NOW()");
         $this->db->query('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', transaction_id = 'Paid from wallet amount (T)'");
 
-        $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='P', amount_partialy_paid = '" . $amount . "'   WHERE order_id='" . (int) $order_id . "'"); //,total='" . (float) $total . "'
+        $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='" . $paid . "', amount_partialy_paid = '" . $amount_partialy_paid . "'   WHERE order_id='" . (int) $order_id . "'"); //,total='" . (float) $total . "'
     }
 
 }
