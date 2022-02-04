@@ -39,7 +39,7 @@
 <?php } ?>
 
 <script type="text/javascript"><!--
-$(document).on('change', 'input[name=\'payment_method\']:checked', function () {
+$(document).on('change', 'input[name=\'payment_method\']:checked, input[name=\'payment_wallet_method\']', function () {
     savePaymentMethod();
 });
 //--></script>
