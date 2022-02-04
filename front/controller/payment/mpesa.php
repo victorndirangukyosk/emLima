@@ -76,6 +76,13 @@ class ControllerPaymentMpesa extends Controller {
                         $amount += (int) ($order_info['total']);
                     }
                 }
+
+                $this->load->model('account/credit');
+                $customer_wallet_total = $this->model_account_credit->getTotalAmount();
+                if ($this->session->data['payment_wallet_method']['code'] == 'wallet' && $customer_wallet_total > 0) {
+                    $amount = $amount - $customer_wallet_total;
+                    $amount = abs($amount);
+                }
             }
 
             if (empty($order_id)) {
@@ -339,10 +346,14 @@ class ControllerPaymentMpesa extends Controller {
 
             $this->load->model('checkout/order');
 
+            $this->load->model('account/credit');
+
+            $this->load->model('sale/order');
+
             foreach ($this->session->data['order_id'] as $key => $value) {
-                if ($key == 75) {
-                    $order_id = $value;
-                }
+                //if ($key == 75) {
+                $order_id = $value;
+                //}
             }
 
             if (isset($this->request->post['order_id'])) {
@@ -403,72 +414,99 @@ class ControllerPaymentMpesa extends Controller {
                  */
 
                 if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
-                    $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($order_id);
-                    $log->write('transaction_details on complete');
-                    $log->write($transaction_details);
-                    $log->write('transaction_details on complete');
-                    if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                        $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
-                    }
-                    //success pending to processing
-                    $order_status_id = $this->config->get('mpesa_order_status_id');
+                    foreach ($this->session->data['order_id'] as $key => $value) {
 
-                    $log->write('updateMpesaOrderStatus validatex');
-
-                    $this->load->model('localisation/order_status');
-
-                    $order_status = $this->model_localisation_order_status->getOrderStatuses();
-
-                    $dataAddHisory['order_id'] = $order_id;
-                    $dataAddHisory['order_status_id'] = $order_status_id;
-                    $dataAddHisory['notify'] = 0;
-                    $dataAddHisory['append'] = 0;
-                    $dataAddHisory['comment'] = '';
-                    $dataAddHisory['paid'] = 'Y';
-
-                    $url = HTTPS_SERVER;
-                    $api = 'api/order/addHistory';
-
-                    if (isset($api)) {
-                        $url_data = [];
-                        $log->write('if');
-                        foreach ($dataAddHisory as $key => $value) {
-                            if ('path' != $key && 'token' != $key && 'store_id' != $key) {
-                                $url_data[$key] = $value;
+                        /* WALLET */
+                        $customer_wallet_total = $this->model_account_credit->getTotalAmount();
+                        if ($this->session->data['payment_wallet_method']['code'] == 'wallet' && $customer_wallet_total > 0) {
+                            $log->write($this->session->data['payment_wallet_method']);
+                            $totals = $this->model_sale_order->getOrderTotals($value);
+                            $log->write($totals);
+                            $total = 0;
+                            foreach ($totals as $total) {
+                                if ('total' == $total['code']) {
+                                    $total = $total['value'];
+                                    break;
+                                }
+                            }
+                            if ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total <= $customer_wallet_total) {
+                                $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $total, $value, 'Y', 0);
+                                $ret = $this->model_checkout_order->addOrderHistory($value, 1, 'Paid Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
+                            }
+                            if ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
+                                $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $customer_wallet_total, $value, 'P', $customer_wallet_total);
+                                $ret = $this->model_checkout_order->addOrderHistory($value, $this->config->get('mod_order_status_id'), 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
                             }
                         }
+                        /* WALLET */
 
-                        $curl = curl_init();
-
-                        // Set SSL if required
-                        if ('https' == substr($url, 0, 5)) {
-                            curl_setopt($curl, CURLOPT_PORT, 443);
+                        $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($value);
+                        $log->write('transaction_details on complete');
+                        $log->write($transaction_details);
+                        $log->write('transaction_details on complete');
+                        if (is_array($transaction_details) && count($transaction_details) <= 0) {
+                            $this->model_payment_mpesa->insertOrderTransactionId($value, $stkPushSimulation->CheckoutRequestID);
                         }
+                        //success pending to processing
+                        $order_status_id = $this->config->get('mpesa_order_status_id');
 
-                        curl_setopt($curl, CURLOPT_HEADER, false);
-                        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
-                        curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
-                        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                        curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
-                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                        $log->write('updateMpesaOrderStatus validatex');
 
-                        $resp = curl_exec($curl);
-                        $log->write('resp');
-                        $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                        $this->load->model('localisation/order_status');
 
-                        $log->write($resp);
-                        curl_close($curl);
+                        $order_status = $this->model_localisation_order_status->getOrderStatuses();
 
-                        $json['status'] = true;
+                        $dataAddHisory['order_id'] = $value;
+                        $dataAddHisory['order_status_id'] = $order_status_id;
+                        $dataAddHisory['notify'] = 0;
+                        $dataAddHisory['append'] = 0;
+                        $dataAddHisory['comment'] = '';
+                        $dataAddHisory['paid'] = 'Y';
 
-                        //break;
+                        $url = HTTPS_SERVER;
+                        $api = 'api/order/addHistory';
+
+                        if (isset($api)) {
+                            $url_data = [];
+                            $log->write('if');
+                            foreach ($dataAddHisory as $key => $value) {
+                                if ('path' != $key && 'token' != $key && 'store_id' != $key) {
+                                    $url_data[$key] = $value;
+                                }
+                            }
+
+                            $curl = curl_init();
+
+                            // Set SSL if required
+                            if ('https' == substr($url, 0, 5)) {
+                                curl_setopt($curl, CURLOPT_PORT, 443);
+                            }
+
+                            curl_setopt($curl, CURLOPT_HEADER, false);
+                            curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+                            curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
+                            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+                            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                            curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
+                            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                            curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+
+                            $resp = curl_exec($curl);
+                            $log->write('resp');
+                            $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+
+                            $log->write($resp);
+                            curl_close($curl);
+
+                            $json['status'] = true;
+
+                            //break;
+                        }
                     }
                 }
                 /* } */
             }
-            $this->load->controller('payment/cod/confirmnonkb');
+            //$this->load->controller('payment/cod/confirmnonkb');
         }
 
         $this->response->addHeader('Content-Type: application/json');
