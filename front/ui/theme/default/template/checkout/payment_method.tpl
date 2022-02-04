@@ -18,7 +18,7 @@
     <?php if($i++ == 0) { ?>
         <label for="payment_<?= $payment_method['code'] ?>" class="control control--radio"><?php echo $payment_method['title']; ?> <span style="font-size: 10px;vertical-align: middle;"><?php   echo $payment_method['terms1']; ?></span>
 
-        <input type="radio" class="control control--radio" id="payment_<?= $payment_method['code'] ?>" name="payment_method" value="<?php echo $payment_method['code']; ?>" checked="checked" />
+        <input type="radio" class="control control--radio" id="payment_<?= $payment_method['code'] ?>" name="payment_method" value="<?php echo $payment_method['code']; ?>"/>
         
         <div class="control__indicator"></div>      
         </label>
