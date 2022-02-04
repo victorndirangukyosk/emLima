@@ -40,6 +40,7 @@ class ControllerPaymentMod extends Controller {
             $this->load->model('checkout/order');
             $this->load->model('account/customer');
             $this->load->model('payment/wallet');
+            $this->load->model('account/credit');
 
             $log->write($this->session->data['order_id']);
             $log->write($this->config->get('mod_order_status_id'));
@@ -48,7 +49,6 @@ class ControllerPaymentMod extends Controller {
                 $customer_wallet_total = $this->model_account_credit->getTotalAmount();
                 if ($this->session->data['payment_wallet_method']['code'] == 'wallet' && $customer_wallet_total > 0) {
                     $log->write($this->session->data['payment_wallet_method']);
-                    $this->load->model('account/credit');
                     $this->load->model('sale/order');
 
                     $totals = $this->model_sale_order->getOrderTotals($value);
