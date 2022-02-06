@@ -20,44 +20,51 @@ class ControllerPaymentPesapal extends Controller {
             }
         }
 
+        $amount = 0;
         foreach ($this->session->data['order_id'] as $key => $value) {
             /* FOR KWIKBASKET ORDERS */
-            if ($key == 75) {
-                $order_id = $value;
+            //if ($key == 75) {
+            $order_id = $value;
+            //}
+
+            $log = new Log('error.log');
+            $log->write('Pesapal Order ID');
+            $log->write($this->session->data['order_id']);
+            $log->write('Pesapal Order ID');
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
+
+            $log->write('Pesapal Order Info');
+            $log->write($order_info);
+            $log->write('Pesapal Order Info');
+
+            if (count($order_info) > 0) {
+                $total_data = $this->totalData();
+                $all_sub_total = 0;
+                $all_total = 0;
+                foreach ($total_data as $tots) {
+                    foreach ($tots as $tot) {
+                        if ($tot['title'] == 'Sub-Total') {
+                            $all_sub_total = $tot['value'];
+                        }
+
+                        if ($tot['title'] == 'Total') {
+                            $all_total = $tot['value'];
+                        }
+                    }
+                }
+                $amount += (int) ($all_total);
             }
         }
 
-
-        $log = new Log('error.log');
-        $log->write('Pesapal Order ID');
-        $log->write($this->session->data['order_id']);
-        $log->write('Pesapal Order ID');
-        $order_info = $this->model_checkout_order->getOrder($order_id);
-        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-        $log->write('Pesapal Creds Customer Info');
-        $log->write($customer_info);
-        $log->write('Pesapal Creds Customer Info');
-
-        $log->write('Pesapal Order Info');
-        $log->write($order_info);
-        $log->write('Pesapal Order Info');
-
-        if (count($order_info) > 0) {
-            $total_data = $this->totalData();
-            $all_sub_total = 0;
-            $all_total = 0;
-            foreach ($total_data as $tots) {
-                foreach ($tots as $tot) {
-                    if ($tot['title'] == 'Sub-Total') {
-                        $all_sub_total = $tot['value'];
-                    }
-
-                    if ($tot['title'] == 'Total') {
-                        $all_total = $tot['value'];
-                    }
-                }
-            }
-            $amount = (int) ($all_total);
+        $this->load->model('account/credit');
+        $customer_wallet_total = $this->model_account_credit->getTotalAmount();
+        if ($this->session->data['payment_wallet_method']['code'] == 'wallet' && $customer_wallet_total > 0) {
+            $amount = $amount - $customer_wallet_total;
+            $amount = abs($amount);
         }
 
         $data['text_instruction'] = $this->language->get('text_instruction');
@@ -94,7 +101,7 @@ class ControllerPaymentPesapal extends Controller {
         $iframelink = 'https://www.pesapal.com/api/PostPesapalDirectOrderV4'; //change to
         //https://www.pesapal.com/API/PostPesapalDirectOrderV4 when you are ready to go live!
         //get form details
-        $amount = $this->cart->getTotalForKwikBasket();
+        //$amount = $this->cart->getTotalForKwikBasket();
         $transaction_fee = 0;
         $percentage = 3.5;
         $transaction_fee = ($percentage / 100) * $amount;
