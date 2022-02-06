@@ -52,11 +52,11 @@ class ControllerPaymentPesapal extends Controller {
                         }
 
                         if ($tot['title'] == 'Total') {
-                            $all_total = $tot['value'];
+                            $all_total += $tot['value'];
                         }
                     }
                 }
-                $amount += (int) ($all_total);
+                $amount = (int) ($all_total);
             }
         }
 
