@@ -503,7 +503,7 @@ class ControllerPaymentMpesa extends Controller {
                                 }
                             }
                             /* WALLET */
-                        } else {
+                        } elseif (!isset($this->session->data['payment_wallet_method']['code']) || $this->session->data['payment_wallet_method']['code'] == 0 || $this->session->data['payment_wallet_method']['code'] != 'wallet' || $customer_wallet_total <= 0) {
                             $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($value);
                             $log->write('transaction_details on complete 2');
                             $log->write($transaction_details);
