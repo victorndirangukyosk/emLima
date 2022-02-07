@@ -449,9 +449,7 @@ class ControllerPaymentMpesa extends Controller {
                                     $log->write('transaction_details on complete');
                                     $log->write($transaction_details);
                                     $log->write('transaction_details on complete');
-                                    if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                                        $this->model_payment_mpesa->insertOrderTransactionId($value, $stkPushSimulation->CheckoutRequestID);
-                                    }
+                                    $this->model_payment_mpesa->insertOrderTransactionIdHybrid($value, $stkPushSimulation->CheckoutRequestID);
                                     //success pending to processing
                                     $order_status_id = $this->config->get('mpesa_order_status_id');
 
