@@ -717,12 +717,15 @@ class ControllerPaymentPesapal extends Controller {
                     if ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
                         $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $order_id, $customer_wallet_total, $order_id, 'P', $customer_wallet_total);
                         $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
+
+                        $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
+                        $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                     }
                 }
-                /* WALLET */
-
-                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
-                $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                /* WALLET */ else {
+                    $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
+                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
             } else {
                 $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_pending_order_status_id'), $customer_info['customer_id'], 'customer');
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
