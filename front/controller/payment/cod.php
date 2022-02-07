@@ -95,7 +95,8 @@ class ControllerPaymentCod extends Controller {
                         $ret = $this->model_checkout_order->addOrderHistory($value, $this->config->get('mod_order_status_id'), 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
                     }
                 }
-                /* WALLET */ else {
+                /* WALLET */
+                if (!isset($this->session->data['payment_wallet_method']['code']) || $this->session->data['payment_wallet_method']['code'] == 0 || ($customer_wallet_total <= 0 && $this->session->data['payment_wallet_method']['code'] == 'wallet')) {
                     $order_id = $value;
                     $this->load->model('account/customer');
                     $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());

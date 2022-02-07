@@ -507,8 +507,8 @@ class ControllerPaymentMpesa extends Controller {
                                 }
                             }
                         }
-                        /* WALLET */ else {
-                            //if (!isset($this->session->data['payment_wallet_method']['code']) || ($customer_wallet_total <= 0 && $this->session->data['payment_wallet_method']['code'] == 'wallet')) {
+                        /* WALLET */
+                        if (!isset($this->session->data['payment_wallet_method']['code']) || $this->session->data['payment_wallet_method']['code'] == 0 || ($customer_wallet_total <= 0 && $this->session->data['payment_wallet_method']['code'] == 'wallet')) {
                             $order_info = $this->model_checkout_order->getOrder($value);
                             if ($order_info['paid'] == 'N' || $order_info['paid'] == 'P') {
                                 $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($value);
