@@ -505,16 +505,16 @@ class ControllerPaymentMpesa extends Controller {
                             /* WALLET */
                         } else {
                             $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($value);
-                            $log->write('transaction_details on complete');
+                            $log->write('transaction_details on complete 2');
                             $log->write($transaction_details);
-                            $log->write('transaction_details on complete');
+                            $log->write('transaction_details on complete 2');
                             if (is_array($transaction_details) && count($transaction_details) <= 0) {
                                 $this->model_payment_mpesa->insertOrderTransactionId($value, $stkPushSimulation->CheckoutRequestID);
                             }
                             //success pending to processing
                             $order_status_id = $this->config->get('mpesa_order_status_id');
 
-                            $log->write('updateMpesaOrderStatus validatex');
+                            $log->write('updateMpesaOrderStatus validatex 2');
 
                             $this->load->model('localisation/order_status');
 
