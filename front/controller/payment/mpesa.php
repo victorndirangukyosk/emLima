@@ -460,7 +460,7 @@ class ControllerPaymentMpesa extends Controller {
                                 $dataAddHisory['order_status_id'] = $order_status_id;
                                 $dataAddHisory['notify'] = 0;
                                 $dataAddHisory['append'] = 0;
-                                $dataAddHisory['comment'] = '';
+                                $dataAddHisory['comment'] = 'Paid Full Amount Through MPesa By Customer';
                                 $dataAddHisory['paid'] = 'Y';
 
                                 $url = HTTPS_SERVER;
@@ -525,7 +525,7 @@ class ControllerPaymentMpesa extends Controller {
                             $dataAddHisory['order_status_id'] = $order_status_id;
                             $dataAddHisory['notify'] = 0;
                             $dataAddHisory['append'] = 0;
-                            $dataAddHisory['comment'] = '';
+                            $dataAddHisory['comment'] = 'Paid Through MPesa By Customer';
                             $dataAddHisory['paid'] = 'Y';
 
                             $url = HTTPS_SERVER;
