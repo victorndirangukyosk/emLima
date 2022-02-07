@@ -87,6 +87,7 @@ class ControllerPaymentCod extends Controller {
                     }
                     if ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total <= $customer_wallet_total) {
                         $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $total, $value, 'Y', 0);
+                        $this->model_sale_order->UpdatePaymentMethod($value, $this->session->data['payment_wallet_method']['code']);
                         $ret = $this->model_checkout_order->addOrderHistory($value, 1, 'Paid Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
                     }
                     if ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
