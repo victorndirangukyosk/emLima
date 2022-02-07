@@ -66,16 +66,16 @@ class ControllerPaymentCod extends Controller {
                 }
             }
             foreach ($this->session->data['order_id'] as $key => $value) {
-                if ($key == 75) {
-                    $order_id = $value;
-                    $this->load->model('account/customer');
-                    $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-                    $log->write('cod loop' . $order_id);
+                //if ($key == 75) {
+                $order_id = $value;
+                $this->load->model('account/customer');
+                $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+                $log->write('cod loop' . $order_id);
 
-                    $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, '', true, $customer_info['customer_id'], 'customer');
-                }
+                $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, '', true, $customer_info['customer_id'], 'customer');
+                //}
             }
-            $this->load->controller('payment/cod/confirmnonkb');
+            //$this->load->controller('payment/cod/confirmnonkb');
             /* if ($order_id != NULL) {
               $this->model_checkout_order->UpdateParentApproval($order_id);
               } */

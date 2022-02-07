@@ -70,14 +70,14 @@ class ControllerPaymentMod extends Controller {
                     }
                 } else {
                     /* FOR KWIKBASKET ORDERS */
-                    if ($key == 75) {
-                        $order_id = $value;
-                        $order_info = $this->model_checkout_order->getOrder($order_id);
-                        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                    //if ($key == 75) {
+                    $order_id = $value;
+                    $order_info = $this->model_checkout_order->getOrder($order_id);
+                    $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
 
-                        $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), 'mPesa On Delivery By Customer', TRUE, $customer_info['customer_id'], 'customer');
-                        $this->load->controller('payment/cod/confirmnonkb');
-                    }
+                    $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), 'mPesa On Delivery By Customer', TRUE, $customer_info['customer_id'], 'customer');
+                    //$this->load->controller('payment/cod/confirmnonkb');
+                    //}
                 }
             }
         }
