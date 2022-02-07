@@ -443,69 +443,71 @@ class ControllerPaymentMpesa extends Controller {
                         }
                         /* WALLET */
 
-                        $order_info = $this->model_checkout_order->getOrder($value);
-                        if ($order_info['paid'] == 'N' || $order_info['paid'] == 'P') {
-                            $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($value);
-                            $log->write('transaction_details on complete');
-                            $log->write($transaction_details);
-                            $log->write('transaction_details on complete');
-                            if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                                $this->model_payment_mpesa->insertOrderTransactionId($value, $stkPushSimulation->CheckoutRequestID);
-                            }
-                            //success pending to processing
-                            $order_status_id = $this->config->get('mpesa_order_status_id');
+                        if (!isset($this->session->data['payment_wallet_method']['code']) || ($customer_wallet_total <= 0 && $this->session->data['payment_wallet_method']['code'] == 'wallet')) {
+                            $order_info = $this->model_checkout_order->getOrder($value);
+                            if ($order_info['paid'] == 'N' || $order_info['paid'] == 'P') {
+                                $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($value);
+                                $log->write('transaction_details on complete');
+                                $log->write($transaction_details);
+                                $log->write('transaction_details on complete');
+                                if (is_array($transaction_details) && count($transaction_details) <= 0) {
+                                    $this->model_payment_mpesa->insertOrderTransactionId($value, $stkPushSimulation->CheckoutRequestID);
+                                }
+                                //success pending to processing
+                                $order_status_id = $this->config->get('mpesa_order_status_id');
 
-                            $log->write('updateMpesaOrderStatus validatex');
+                                $log->write('updateMpesaOrderStatus validatex');
 
-                            $this->load->model('localisation/order_status');
+                                $this->load->model('localisation/order_status');
 
-                            $order_status = $this->model_localisation_order_status->getOrderStatuses();
+                                $order_status = $this->model_localisation_order_status->getOrderStatuses();
 
-                            $dataAddHisory['order_id'] = $value;
-                            $dataAddHisory['order_status_id'] = $order_status_id;
-                            $dataAddHisory['notify'] = 0;
-                            $dataAddHisory['append'] = 0;
-                            $dataAddHisory['comment'] = '';
-                            $dataAddHisory['paid'] = 'Y';
+                                $dataAddHisory['order_id'] = $value;
+                                $dataAddHisory['order_status_id'] = $order_status_id;
+                                $dataAddHisory['notify'] = 0;
+                                $dataAddHisory['append'] = 0;
+                                $dataAddHisory['comment'] = '';
+                                $dataAddHisory['paid'] = 'Y';
 
-                            $url = HTTPS_SERVER;
-                            $api = 'api/order/addHistory';
+                                $url = HTTPS_SERVER;
+                                $api = 'api/order/addHistory';
 
-                            if (isset($api)) {
-                                $url_data = [];
-                                $log->write('if');
-                                foreach ($dataAddHisory as $key => $value) {
-                                    if ('path' != $key && 'token' != $key && 'store_id' != $key) {
-                                        $url_data[$key] = $value;
+                                if (isset($api)) {
+                                    $url_data = [];
+                                    $log->write('if');
+                                    foreach ($dataAddHisory as $key => $value) {
+                                        if ('path' != $key && 'token' != $key && 'store_id' != $key) {
+                                            $url_data[$key] = $value;
+                                        }
                                     }
+
+                                    $curl = curl_init();
+
+                                    // Set SSL if required
+                                    if ('https' == substr($url, 0, 5)) {
+                                        curl_setopt($curl, CURLOPT_PORT, 443);
+                                    }
+
+                                    curl_setopt($curl, CURLOPT_HEADER, false);
+                                    curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+                                    curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
+                                    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+                                    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                                    curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
+                                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                                    curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+
+                                    $resp = curl_exec($curl);
+                                    $log->write('resp');
+                                    $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+
+                                    $log->write($resp);
+                                    curl_close($curl);
+
+                                    $json['status'] = true;
+
+                                    //break;
                                 }
-
-                                $curl = curl_init();
-
-                                // Set SSL if required
-                                if ('https' == substr($url, 0, 5)) {
-                                    curl_setopt($curl, CURLOPT_PORT, 443);
-                                }
-
-                                curl_setopt($curl, CURLOPT_HEADER, false);
-                                curl_setopt($curl, CURLINFO_HEADER_OUT, true);
-                                curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
-                                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                                curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
-                                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                                curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
-
-                                $resp = curl_exec($curl);
-                                $log->write('resp');
-                                $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
-
-                                $log->write($resp);
-                                curl_close($curl);
-
-                                $json['status'] = true;
-
-                                //break;
                             }
                         }
                     }
