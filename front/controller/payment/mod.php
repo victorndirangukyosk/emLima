@@ -46,8 +46,11 @@ class ControllerPaymentMod extends Controller {
             $log->write($this->config->get('mod_order_status_id'));
 
             foreach ($this->session->data['order_id'] as $key => $value) {
+
                 $customer_wallet_total = $this->model_account_credit->getTotalAmount();
-                if ($this->session->data['payment_wallet_method']['code'] == 'wallet' && $customer_wallet_total > 0) {
+                $order_info = $this->model_checkout_order->getOrder($value);
+
+                if ($this->session->data['payment_wallet_method']['code'] == 'wallet' && $customer_wallet_total > 0 && $order_info['paid'] == 'N') {
                     $log->write($this->session->data['payment_wallet_method']);
                     $this->load->model('sale/order');
 
@@ -67,10 +70,11 @@ class ControllerPaymentMod extends Controller {
                     }
                     if ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
                         $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $customer_wallet_total, $value, 'P', $customer_wallet_total);
+                        $this->model_sale_order->UpdatePaymentMethod($value, $this->session->data['payment_wallet_method']['code']);
                         $ret = $this->model_checkout_order->addOrderHistory($value, $this->config->get('mod_order_status_id'), 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
                     }
                 }
-                if (!isset($this->session->data['payment_wallet_method']['code']) || $this->session->data['payment_wallet_method']['code'] == 0 || ($customer_wallet_total <= 0 && $this->session->data['payment_wallet_method']['code'] == 'wallet')) {
+                if ((!isset($this->session->data['payment_wallet_method']['code']) || $this->session->data['payment_wallet_method']['code'] == 0 || ($customer_wallet_total <= 0 && $this->session->data['payment_wallet_method']['code'] == 'wallet')) && $order_info['paid'] == 'N') {
                     /* FOR KWIKBASKET ORDERS */
                     //if ($key == 75) {
                     $order_id = $value;
