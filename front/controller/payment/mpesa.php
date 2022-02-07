@@ -350,6 +350,8 @@ class ControllerPaymentMpesa extends Controller {
 
             $this->load->model('sale/order');
 
+            $this->load->model('payment/wallet');
+
             foreach ($this->session->data['order_id'] as $key => $value) {
                 //if ($key == 75) {
                 $order_id = $value;
