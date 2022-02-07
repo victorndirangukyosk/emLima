@@ -419,6 +419,7 @@ class ControllerPaymentMpesa extends Controller {
                         /* WALLET */
                         $customer_wallet_total = $this->model_account_credit->getTotalAmount();
                         if ($this->session->data['payment_wallet_method']['code'] == 'wallet' && $customer_wallet_total > 0) {
+                            $this->load->model('payment/wallet');
                             $log->write($this->session->data['payment_wallet_method']);
                             $totals = $this->model_sale_order->getOrderTotals($value);
                             $log->write($totals);
