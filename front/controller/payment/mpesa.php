@@ -441,9 +441,8 @@ class ControllerPaymentMpesa extends Controller {
                                 $ret = $this->model_checkout_order->addOrderHistory($value, $this->config->get('mod_order_status_id'), 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
                             }
                         }
-                        /* WALLET */
-
-                        if (!isset($this->session->data['payment_wallet_method']['code']) || ($customer_wallet_total <= 0 && $this->session->data['payment_wallet_method']['code'] == 'wallet')) {
+                        /* WALLET */ else {
+                            //if (!isset($this->session->data['payment_wallet_method']['code']) || ($customer_wallet_total <= 0 && $this->session->data['payment_wallet_method']['code'] == 'wallet')) {
                             $order_info = $this->model_checkout_order->getOrder($value);
                             if ($order_info['paid'] == 'N' || $order_info['paid'] == 'P') {
                                 $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($value);

@@ -95,14 +95,14 @@ class ControllerPaymentCod extends Controller {
                         $ret = $this->model_checkout_order->addOrderHistory($value, $this->config->get('mod_order_status_id'), 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
                     }
                 }
-                /* WALLET */
+                /* WALLET */ else {
+                    $order_id = $value;
+                    $this->load->model('account/customer');
+                    $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+                    $log->write('cod loop' . $order_id);
 
-                $order_id = $value;
-                $this->load->model('account/customer');
-                $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-                $log->write('cod loop' . $order_id);
-
-                $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, '', true, $customer_info['customer_id'], 'customer');
+                    $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, '', true, $customer_info['customer_id'], 'customer');
+                }
                 //}
             }
             //$this->load->controller('payment/cod/confirmnonkb');
