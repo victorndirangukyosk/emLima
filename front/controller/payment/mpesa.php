@@ -26,13 +26,13 @@ class ControllerPaymentMpesa extends Controller {
         $order_ids = array();
         foreach ($this->session->data['order_id'] as $key => $value) {
             /* FOR KWIKBASKET ORDERS */
-            //if ($key == 75) {
+//if ($key == 75) {
             $order_ids[] = $value;
             $order_id = $value;
             if ($order_id != NULL) {
                 $this->model_checkout_order->UpdateParentApproval($order_id);
             }
-            //}
+//}
         }
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/mpesa.tpl')) {
@@ -93,7 +93,7 @@ class ControllerPaymentMpesa extends Controller {
 
             $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
 
-            //$sta = $this->checkMpesaStatus($order_id,$mpesa);
+//$sta = $this->checkMpesaStatus($order_id,$mpesa);
 
             $sta = false;
 
@@ -107,14 +107,14 @@ class ControllerPaymentMpesa extends Controller {
                 $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
                 $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
                 $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
-                //$CallBackURL = 'https://a1c6dda0aaba.ngrok.io/kwikbasket/index.php?path=deliversystem/deliversystem/mpesaOrderStatus';
+//$CallBackURL = 'https://a1c6dda0aaba.ngrok.io/kwikbasket/index.php?path=deliversystem/deliversystem/mpesaOrderStatus';
 
                 $Amount = $amount;
-                //$Amount = 10;
+//$Amount = 10;
                 $PartyB = $this->config->get('mpesa_business_short_code');
 
                 $PhoneNumber = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
-                //$AccountReference = 'GPK'; //$this->config->get('config_name');
+//$AccountReference = 'GPK'; //$this->config->get('config_name');
                 $AccountReference = '#' . $order_id; //$this->config->get('config_name');
                 $TransactionDesc = '#' . $order_id;
 
@@ -132,7 +132,7 @@ class ControllerPaymentMpesa extends Controller {
 
                 $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
 
-                // Void the order first
+// Void the order first
                 $log->write('STKPushSimulation');
                 $log->write($stkPushSimulation);
 
@@ -146,14 +146,14 @@ class ControllerPaymentMpesa extends Controller {
 
                 if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
                     if (!empty($order_id)) {
-                        //save in
+//save in
                         foreach ($this->session->data['order_id'] as $key => $value) {
                             $order_info = $this->model_checkout_order->getOrder($value);
                             $this->model_payment_mpesa->addOrder($order_info, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID);
                         }
                     } else {
                         if (isset($this->request->post['paymode']) && !empty($this->request->post['paymode']) && 'pay_other' == $this->request->post['paymode']) {
-                            //$TransactionDesc = '#'.$this->request->post['pending_order_ids'].'##'.$this->request->post['customer'];
+//$TransactionDesc = '#'.$this->request->post['pending_order_ids'].'##'.$this->request->post['customer'];
                         } else {
                             $pendingOrdersIds = explode('--', $this->request->post['pending_order_ids']);
                             if (count($pendingOrdersIds)) {
@@ -186,7 +186,7 @@ class ControllerPaymentMpesa extends Controller {
         $log = new Log('error.log');
         $json['processed'] = false;
 
-        // echo "<pre>";print_r($this->request->post);die; 
+// echo "<pre>";print_r($this->request->post);die; 
 
         if ('mpesa' == $this->request->post['payment_method']) {
             $this->load->language('payment/mpesa');
@@ -225,7 +225,7 @@ class ControllerPaymentMpesa extends Controller {
                 $this->request->post['pending_order_ids'] = implode('--', $this->request->post['order_id']);
             }
 
-            // echo "<pre>";print_r($this->request->post['pending_order_ids']); 
+// echo "<pre>";print_r($this->request->post['pending_order_ids']); 
 
 
 
@@ -235,7 +235,7 @@ class ControllerPaymentMpesa extends Controller {
 
             $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
 
-            //$sta = $this->checkMpesaStatus($order_id,$mpesa);
+//$sta = $this->checkMpesaStatus($order_id,$mpesa);
 
             $sta = false;
 
@@ -253,10 +253,10 @@ class ControllerPaymentMpesa extends Controller {
                     $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
                 } else {
                     $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatusTransactions', '', 'SSL');
-                    //$CallBackURL = 'https://a1c6dda0aaba.ngrok.io/kwikbasket/index.php?path=deliversystem/deliversystem/mpesaOrderStatus';
+//$CallBackURL = 'https://a1c6dda0aaba.ngrok.io/kwikbasket/index.php?path=deliversystem/deliversystem/mpesaOrderStatus';
                 }
                 $Amount = $amount;
-                //$Amount = 10;
+//$Amount = 10;
                 $PartyB = $this->config->get('mpesa_business_short_code');
 
                 $PhoneNumber = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
@@ -277,7 +277,7 @@ class ControllerPaymentMpesa extends Controller {
 
             $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
 
-            // Void the order first
+// Void the order first
             $log->write('STKPushSimulation');
             $log->write($stkPushSimulation);
 
@@ -313,7 +313,7 @@ class ControllerPaymentMpesa extends Controller {
 
                     $this->model_payment_mpesa->addOrder(0, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), $amount);
                     $this->session->data['mpesa_topups_request'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID, 'merchant_request_id' => $stkPushSimulation->MerchantRequestID);
-                    // $this->session->data['mpesa_topups_response'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID);
+// $this->session->data['mpesa_topups_response'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID);
                 }
                 /* foreach ($this->session->data['order_id'] as $order_id) {
 
@@ -353,9 +353,9 @@ class ControllerPaymentMpesa extends Controller {
             $this->load->model('payment/wallet');
 
             foreach ($this->session->data['order_id'] as $key => $value) {
-                //if ($key == 75) {
+//if ($key == 75) {
                 $order_id = $value;
-                //}
+//}
             }
 
             if (isset($this->request->post['order_id'])) {
@@ -374,7 +374,7 @@ class ControllerPaymentMpesa extends Controller {
 
               echo "<pre>";print_r($stkPushSimulation);die; */
 
-            //$order_id = 2;
+//$order_id = 2;
             $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderId($order_id);
 
             $live = true;
@@ -383,7 +383,7 @@ class ControllerPaymentMpesa extends Controller {
 
             if ($mpesaDetails) {
                 /* foreach ($mpesaDetails as $mpesaDetail) { */
-                //echo "<pre>";print_r($mpesaDetail);die;
+//echo "<pre>";print_r($mpesaDetail);die;
 
                 $BusinessShortCode = $this->config->get('mpesa_business_short_code');
                 $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
@@ -394,7 +394,7 @@ class ControllerPaymentMpesa extends Controller {
 
                 $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
 
-                // Void the order first
+// Void the order first
                 $log->write('STKPushSimulation');
                 $log->write($stkPushSimulation);
 
@@ -434,78 +434,19 @@ class ControllerPaymentMpesa extends Controller {
                                 }
                             }
                             if ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total <= $customer_wallet_total) {
+                                $log->write('value');
+                                $log->write($value);
+                                $log->write('value');
                                 $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $total, $value, 'Y', 0);
                                 $this->model_sale_order->UpdatePaymentMethod($value, $this->session->data['payment_wallet_method']['code']);
                                 $ret = $this->model_checkout_order->addOrderHistory($value, 1, 'Paid Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
                             } elseif ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
+                                $log->write('value2');
+                                $log->write($value);
+                                $log->write('value2');
                                 $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $customer_wallet_total, $value, 'P', $customer_wallet_total);
+                                $this->model_sale_order->UpdatePaymentMethod($value, $this->session->data['payment_wallet_method']['code']);
                                 $ret = $this->model_checkout_order->addOrderHistory($value, $this->config->get('mod_order_status_id'), 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
-
-                                $order_info = $this->model_checkout_order->getOrder($value);
-                                if ($order_info['paid'] == 'N' || $order_info['paid'] == 'P') {
-                                    $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($value);
-                                    $log->write('transaction_details on complete');
-                                    $log->write($transaction_details);
-                                    $log->write('transaction_details on complete');
-                                    if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                                        $this->model_payment_mpesa->insertOrderTransactionId($value, $stkPushSimulation->CheckoutRequestID);
-                                    }
-                                    //success pending to processing
-                                    $order_status_id = $this->config->get('mpesa_order_status_id');
-
-                                    $log->write('updateMpesaOrderStatus validatex');
-
-                                    $this->load->model('localisation/order_status');
-
-                                    $order_status = $this->model_localisation_order_status->getOrderStatuses();
-
-                                    $dataAddHisory['order_id'] = $value;
-                                    $dataAddHisory['order_status_id'] = $order_status_id;
-                                    $dataAddHisory['notify'] = 0;
-                                    $dataAddHisory['append'] = 0;
-                                    $dataAddHisory['comment'] = 'Paid Through Mpesa';
-                                    $dataAddHisory['paid'] = 'Y';
-
-                                    $url = HTTPS_SERVER;
-                                    $api = 'api/order/addHistory';
-
-                                    if (isset($api)) {
-                                        $url_data = [];
-                                        $log->write('if');
-                                        foreach ($dataAddHisory as $key => $value) {
-                                            if ('path' != $key && 'token' != $key && 'store_id' != $key) {
-                                                $url_data[$key] = $value;
-                                            }
-                                        }
-
-                                        $curl = curl_init();
-
-                                        // Set SSL if required
-                                        if ('https' == substr($url, 0, 5)) {
-                                            curl_setopt($curl, CURLOPT_PORT, 443);
-                                        }
-
-                                        curl_setopt($curl, CURLOPT_HEADER, false);
-                                        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
-                                        curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
-                                        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                                        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                                        curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
-                                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                                        curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
-
-                                        $resp = curl_exec($curl);
-                                        $log->write('resp');
-                                        $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
-
-                                        $log->write($resp);
-                                        curl_close($curl);
-
-                                        $json['status'] = true;
-
-                                        //break;
-                                    }
-                                }
                             }
                         }
                         /* WALLET */ elseif ((!isset($this->session->data['payment_wallet_method']['code']) || $this->session->data['payment_wallet_method']['code'] == 0 || ($customer_wallet_total <= 0 && $this->session->data['payment_wallet_method']['code'] == 'wallet')) && $order_info['paid'] == 'N') {
@@ -560,11 +501,11 @@ class ControllerPaymentMpesa extends Controller {
                                     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                                     curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
                                     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                                    curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                                    curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path = ' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                                     $resp = curl_exec($curl);
                                     $log->write('resp');
-                                    $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                                    $log->write($url . 'index.php?path = ' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                                     $log->write($resp);
                                     curl_close($curl);
@@ -739,11 +680,11 @@ class ControllerPaymentMpesa extends Controller {
                           curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                           curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
                           curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                          curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                          curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path = ' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                           $resp = curl_exec($curl);
                           $log->write('resp');
-                          $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                          $log->write($url . 'index.php?path = ' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                           $log->write($resp);
                           curl_close($curl);
@@ -948,7 +889,7 @@ class ControllerPaymentMpesa extends Controller {
 
         $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
 
-        // Void the order first
+// Void the order first
         $log->write('STKPushSimulation');
         $log->write($stkPushSimulation);
 
@@ -957,7 +898,7 @@ class ControllerPaymentMpesa extends Controller {
         $json['response'] = $stkPushSimulation;
 
         if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
-            //save in
+//save in
 
             $log->write($mpesa_refrence_id . 'xwe' . $stkPushSimulation->MerchantRequestID . 'xwe' . $stkPushSimulation->CheckoutRequestID);
 
@@ -969,7 +910,7 @@ class ControllerPaymentMpesa extends Controller {
 
             $json['status'] = true;
         } else {
-            //failing orders from api
+//failing orders from api
             if (isset($json['response']->errorMessage)) {
                 $json['response']->errorMessage = 'Above number is not a registered mPesa number';
             }
@@ -1007,7 +948,7 @@ class ControllerPaymentMpesa extends Controller {
         if (isset($order_id)) {
             $totals = $this->model_sale_order->getOrderTotals($order_id);
 
-            //echo "<pre>";print_r($totals);die;
+//echo "<pre>";print_r($totals);die;
             foreach ($totals as $total) {
                 if ('total' == $total['code']) {
                     $amount = (int) $total['value'];
@@ -1028,14 +969,14 @@ class ControllerPaymentMpesa extends Controller {
         $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
         $TransactionType = 'CustomerBuyGoodsOnline';
         $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
-        //$CallBackURL = 'cer';
+//$CallBackURL = 'cer';
 
         $Amount = $amount;
 
-        //$PartyB = '174379';
+//$PartyB = '174379';
         $PartyB = $this->config->get('mpesa_business_short_code');
 
-        //$PhoneNumber = '254708374149';
+//$PhoneNumber = '254708374149';
         $PhoneNumber = $this->config->get('config_telephone_code') . '' . $number;
         $AccountReference = 'GPK'; //$this->config->get('config_name');
         $TransactionDesc = '#' . $order_id;
@@ -1045,7 +986,7 @@ class ControllerPaymentMpesa extends Controller {
 
         $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
 
-        // Void the order first
+// Void the order first
         $log->write('STKPushSimulation');
         $log->write($stkPushSimulation);
 
@@ -1054,7 +995,7 @@ class ControllerPaymentMpesa extends Controller {
         $json['response'] = $stkPushSimulation;
 
         if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
-            //save in
+//save in
 
             $sen['order_id'] = $order_id;
 
@@ -1062,7 +1003,7 @@ class ControllerPaymentMpesa extends Controller {
 
             $json['status'] = true;
         } else {
-            //failing orders from api
+//failing orders from api
         }
 
         /* end */
@@ -1075,7 +1016,7 @@ class ControllerPaymentMpesa extends Controller {
 
         $log = new Log('error.log');
         $json['status'] = false;
-        //$json['status'] = true;
+//$json['status'] = true;
 
         $json['error'] = 'Transaction Failed. Please Try again.';
 
@@ -1098,7 +1039,7 @@ class ControllerPaymentMpesa extends Controller {
 
             if ($mpesaDetails) {
                 foreach ($mpesaDetails as $mpesaDetail) {
-                    //echo "<pre>";print_r($mpesaDetails);die;
+//echo "<pre>";print_r($mpesaDetails);die;
 
                     $BusinessShortCode = $this->config->get('mpesa_business_short_code');
                     $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
@@ -1111,15 +1052,15 @@ class ControllerPaymentMpesa extends Controller {
 
                     $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
 
-                    // Void the order first
+// Void the order first
                     $log->write('STKPushSimulation');
                     $log->write($stkPushSimulation);
 
                     $stkPushSimulation = json_decode($stkPushSimulation);
 
                     if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode && $order_id) {
-                        //if(true && $order_id) {
-                        //success pending to processing
+//if(true && $order_id) {
+//success pending to processing
                         $order_status_id = $this->config->get('mpesa_order_status_id');
 
                         $log->write('updateMpesaOrderStatus validatex');
@@ -1149,7 +1090,7 @@ class ControllerPaymentMpesa extends Controller {
 
                             $curl = curl_init();
 
-                            // Set SSL if required
+// Set SSL if required
                             if ('https' == substr($url, 0, 5)) {
                                 curl_setopt($curl, CURLOPT_PORT, 443);
                             }
@@ -1172,7 +1113,7 @@ class ControllerPaymentMpesa extends Controller {
 
                             $json['status'] = true;
 
-                            //break;
+//break;
                         }
                     }
                 }
@@ -1224,7 +1165,7 @@ class ControllerPaymentMpesa extends Controller {
 
                     $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
 
-                    // Void the order first
+// Void the order first
                     $log->write('STKPushSimulation');
                     $log->write($stkPushSimulation);
 
@@ -1237,7 +1178,7 @@ class ControllerPaymentMpesa extends Controller {
                     }
 
                     if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
-                        //success pending to processing
+//success pending to processing
 
                         if ($status_update) {
                             $order_status_id = $this->config->get('mpesa_order_status_id');
@@ -1269,14 +1210,14 @@ class ControllerPaymentMpesa extends Controller {
 
                                 $curl = curl_init();
 
-                                // Set SSL if required
+// Set SSL if required
                                 if ('https' == substr($url, 0, 5)) {
                                     curl_setopt($curl, CURLOPT_PORT, 443);
                                 }
 
                                 curl_setopt($curl, CURLOPT_HEADER, false);
                                 curl_setopt($curl, CURLINFO_HEADER_OUT, true);
-                                //curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
+//curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
                                 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
                                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                                 curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
@@ -1334,8 +1275,8 @@ class ControllerPaymentMpesa extends Controller {
                 if ($customer_info['email_notification'] == 1) {
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_93', $customer_info);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_93', $customer_info);
-                    //$log->write($subject);
-                    //$log->write($message);
+//$log->write($subject);
+//$log->write($message);
 
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($customer_info['email']);
@@ -1403,8 +1344,8 @@ class ControllerPaymentMpesa extends Controller {
                 if ($customer_info['email_notification'] == 1) {
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_93', $customer_info);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_93', $customer_info);
-                    //$log->write($subject);
-                    //$log->write($message);
+//$log->write($subject);
+//$log->write($message);
 
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($customer_info['email']);
@@ -1473,7 +1414,7 @@ class ControllerPaymentMpesa extends Controller {
         $log->write('mpesa_payments_response');
         $mpesa_payments_request = $this->session->data['mpesa_payments_request'];
         $mpesa_payments_response = $this->cache->get('mpesa_payments_response');
-        //$json['mpesa_payments_request'] = $mpesa_payments_request;
+//$json['mpesa_payments_request'] = $mpesa_payments_request;
         $json['mpesa_payments_response'] = $mpesa_payments_response;
         $log->write($mpesa_payments_request);
         if (is_array($mpesa_payments_response) && $mpesa_payments_response['checkout_request_id'] == $this->request->post['mpesa_checkout_request_id'] && $mpesa_payments_response['result'] == 0) {
@@ -1492,27 +1433,27 @@ class ControllerPaymentMpesa extends Controller {
         $json['processed'] = NULL;
         $log = new Log('error.log');
         $log->write('mpesa_topups_response');
-        // $log->write($this->cache->get('mpesa_payments_response'));
-        // $mpesa_payments_request = $this->session->data['mpesa_payments_request'];
-        // $mpesa_payments_response = $this->cache->get('mpesa_payments_response');
+// $log->write($this->cache->get('mpesa_payments_response'));
+// $mpesa_payments_request = $this->session->data['mpesa_payments_request'];
+// $mpesa_payments_response = $this->cache->get('mpesa_payments_response');
         $mpesa_payments_response = $this->mpesaTopupcallbackupdate($this->session->data['mpesa_topups_request']);
-        //$json['mpesa_payments_request'] = $mpesa_payments_request;
+//$json['mpesa_payments_request'] = $mpesa_payments_request;
         $json['mpesa_payments_response'] = $mpesa_payments_response;
         $log->write($mpesa_payments_request);
         $log->write('mpesa_payments_response');
         $log->write($mpesa_payments_response);
 
-        // if (is_array($mpesa_payments_response) && $mpesa_payments_response['checkout_request_id'] == $this->request->post['mpesa_checkout_request_id'] ) {//&& $mpesa_payments_response['result'] == 0
-        //     $json['processed'] = true;
-        //     $json['redirect'] = $this->url->link('account/credit');
-        // }
-        // // if (is_array($mpesa_payments_response) && $mpesa_payments_response['checkout_request_id'] == $this->request->post['mpesa_checkout_request_id'] && $mpesa_payments_response['result'] != 0) {
-        // //     $json['processed'] = false;
-        // // }
-        // if(!is_array($mpesa_payments_response))
-        // {
-        //     $json['processed'] = false;
-        // }
+// if (is_array($mpesa_payments_response) && $mpesa_payments_response['checkout_request_id'] == $this->request->post['mpesa_checkout_request_id'] ) {//&& $mpesa_payments_response['result'] == 0
+//     $json['processed'] = true;
+//     $json['redirect'] = $this->url->link('account/credit');
+// }
+// // if (is_array($mpesa_payments_response) && $mpesa_payments_response['checkout_request_id'] == $this->request->post['mpesa_checkout_request_id'] && $mpesa_payments_response['result'] != 0) {
+// //     $json['processed'] = false;
+// // }
+// if(!is_array($mpesa_payments_response))
+// {
+//     $json['processed'] = false;
+// }
 
         if ($mpesa_payments_response == 1) {
             $json['processed'] = true;
@@ -1534,8 +1475,8 @@ class ControllerPaymentMpesa extends Controller {
         } else {
             return 0;
         }
-        // $this->cache->set('mpesa_payments_response', array('result' => $stkCallback->ResultCode, 'merchant_request_id' => $stkCallback->MerchantRequestID, 'checkout_request_id' => $stkCallback->CheckoutRequestID, 'mpesa_receipt_number' => $MpesaReceiptNumber, 'description' => $stkCallback->ResultDesc));
-        //  $log->write($this->cache->get('mpesa_payments_response'));
+// $this->cache->set('mpesa_payments_response', array('result' => $stkCallback->ResultCode, 'merchant_request_id' => $stkCallback->MerchantRequestID, 'checkout_request_id' => $stkCallback->CheckoutRequestID, 'mpesa_receipt_number' => $MpesaReceiptNumber, 'description' => $stkCallback->ResultDesc));
+//  $log->write($this->cache->get('mpesa_payments_response'));
     }
 
 }
