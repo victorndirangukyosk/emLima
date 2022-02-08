@@ -436,6 +436,10 @@ class ControllerPaymentMpesa extends Controller {
                                 $this->model_sale_order->UpdatePaymentMethod($value, $this->session->data['payment_wallet_method']['code']);
                                 $ret = $this->model_checkout_order->addOrderHistory($value, 1, 'Paid Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
                                 $non_mpesa_orders[] = $value;
+
+                                $log->write('Paid Through Wallet By Customer');
+                                $log->write($value);
+                                $log->write('Paid Through Wallet By Customer');
                             } elseif ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
                                 $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $customer_wallet_total, $value, 'P', $customer_wallet_total);
                                 $this->model_sale_order->UpdatePaymentMethod($value, $this->session->data['payment_wallet_method']['code']);
@@ -465,7 +469,7 @@ class ControllerPaymentMpesa extends Controller {
                                     $dataAddHisory['order_status_id'] = $order_status_id;
                                     $dataAddHisory['notify'] = 0;
                                     $dataAddHisory['append'] = 0;
-                                    $dataAddHisory['comment'] = 'Paid Full Amount Through MPesa By Customer';
+                                    $dataAddHisory['comment'] = '';
                                     $dataAddHisory['paid'] = 'Y';
 
                                     $url = HTTPS_SERVER;
@@ -531,7 +535,7 @@ class ControllerPaymentMpesa extends Controller {
                             $dataAddHisory['order_status_id'] = $order_status_id;
                             $dataAddHisory['notify'] = 0;
                             $dataAddHisory['append'] = 0;
-                            $dataAddHisory['comment'] = 'Paid Through MPesa By Customer';
+                            $dataAddHisory['comment'] = '';
                             $dataAddHisory['paid'] = 'Y';
 
                             $url = HTTPS_SERVER;
@@ -577,7 +581,10 @@ class ControllerPaymentMpesa extends Controller {
                     }
 
                     foreach ($non_mpesa_orders as $non_mpesa_order) {
+                        $log->write('DELETE NON MPESA ORDER');
+                        $log->write($non_mpesa_order);
                         $this->model_payment_mpesa->deleteOrder($non_mpesa_order);
+                        $log->write('DELETE NON MPESA ORDER');
                     }
                 }
                 /* } */

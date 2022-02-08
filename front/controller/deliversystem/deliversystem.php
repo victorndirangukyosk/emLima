@@ -782,7 +782,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         } else {
 
             $file = fopen('system/log/mpesa_log.txt', 'w+'); //url fopen should be allowed for this to occur
-            if (false === fwrite($file, $postData)) {
+            if (false === fwrite($file, json_encode($postData))) {
                 fwrite('Error: no data written');
             }
             fclose($file);
