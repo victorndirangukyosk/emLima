@@ -752,6 +752,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         $this->load->model('payment/mpesa');
         $this->load->model('account/order');
+        $this->load->model('sale/order');
 
         $postData = file_get_contents('php://input');
 
@@ -799,6 +800,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         $log->write($value);
 
                         if ('MpesaReceiptNumber' == $value->Name) {
+                            $this->model_sale_order->UpdatePaymentMethod($manifest_id['order_id'], 'mPesa Online', 'mpesa');
                             $this->model_payment_mpesa->insertOrderTransactionId($manifest_id['order_id'], $value->Value);
                         }
                     }

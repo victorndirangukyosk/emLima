@@ -850,8 +850,8 @@ class ModelSaleOrder extends Model {
         return $this->db->getLastId();
     }
 
-    public function UpdatePaymentMethod($order_id, $payment_method) {
-        $this->db->query('UPDATE ' . DB_PREFIX . "order SET   payment_method = '" . $this->db->escape($payment_method) . "' WHERE order_id = '" . (int) $order_id . "'");
+    public function UpdatePaymentMethod($order_id, $payment_method, $payment_code) {
+        $this->db->query('UPDATE ' . DB_PREFIX . "order SET   payment_method = '" . $this->db->escape($payment_method) . "', payment_code = '" . $this->db->escape($payment_code) . "' WHERE order_id = '" . (int) $order_id . "'");
     }
 
 }
