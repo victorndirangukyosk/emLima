@@ -510,6 +510,7 @@ class ModelCheckoutOrder extends Model {
         //$notify = true;
         $log = new Log('error.log');
         $log->write('mod loop addOrderHistory' . $order_id);
+        $log->write('mod loop addOrderHistory' . $comment);
         $this->trigger->fire('pre.order.history.add', $order_id);
 
         $order_info = $this->getOrder($order_id);
@@ -870,15 +871,15 @@ class ModelCheckoutOrder extends Model {
                         // try{
                         if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $order_status_id)) {
 
-                            if($order_info['store_name']!=null && $order_info['store_name']!=''){
-                            $mail = new mail($this->config->get('config_mail'));
-                            $mail->setTo($order_info['email']);
-                            $mail->setFrom($this->config->get('config_from_email'));
-                            $mail->setSender($order_info['store_name']);
-                            $mail->setSubject($subject);
-                            $mail->setHtml($message);
-                            //$mail->setText( $text );
-                            $mail->send();
+                            if ($order_info['store_name'] != null && $order_info['store_name'] != '') {
+                                $mail = new mail($this->config->get('config_mail'));
+                                $mail->setTo($order_info['email']);
+                                $mail->setFrom($this->config->get('config_from_email'));
+                                $mail->setSender($order_info['store_name']);
+                                $mail->setSubject($subject);
+                                $mail->setHtml($message);
+                                //$mail->setText( $text );
+                                $mail->send();
                             }
 
                             $log->write('mail end');
