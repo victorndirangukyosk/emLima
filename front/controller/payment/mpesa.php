@@ -444,7 +444,7 @@ class ControllerPaymentMpesa extends Controller {
                             } elseif ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
                                 $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $customer_wallet_total, $value, 'P', $customer_wallet_total);
                                 $this->model_sale_order->UpdatePaymentMethod($value, $this->session->data['payment_wallet_method']['title'], $this->session->data['payment_wallet_method']['code']);
-                                $ret = $this->model_checkout_order->addOrderHistory($value, 1, 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
+                                $ret = $this->model_checkout_order->addOrderHistory($value, 14, 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
 
                                 $order_info = $this->model_checkout_order->getOrder($value);
 
@@ -457,6 +457,7 @@ class ControllerPaymentMpesa extends Controller {
                                     $log->write($transaction_details);
                                     $log->write('transaction_details on complete');
                                     $this->model_payment_mpesa->insertOrderTransactionIdHybrid($value, $stkPushSimulation->CheckoutRequestID);
+                                    $this->model_sale_order->UpdatePaymentMethod($value, 'mPesa Online', 'mpesa');
                                     //success pending to processing
                                     $order_status_id = $this->config->get('mpesa_order_status_id');
 

@@ -522,8 +522,9 @@ class ModelCheckoutOrder extends Model {
         }
 
         $log = new Log('error.log');
-
-        if ($order_info && $order_info['order_status_id'] != $order_status_id) {
+        
+        if ($order_info) {
+        //if ($order_info && $order_info['order_status_id'] != $order_status_id) {
             // Fraud Detection
             $this->load->model('account/customer');
 
