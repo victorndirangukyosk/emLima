@@ -810,7 +810,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     //success pending to processing
                     $order_status_id = $this->config->get('config_order_status_id');
 
-                    $log->write('updateMpesaOrderStatus validate');
+                    $log->write('deliverysystem updateMpesaOrderStatus validate');
 
                     $this->load->model('localisation/order_status');
 
@@ -852,7 +852,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                         $json = curl_exec($curl);
-                        $log->write('json');
+                        $log->write('json deliversystem');
                         $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                         $log->write($json);
