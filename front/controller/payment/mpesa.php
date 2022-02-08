@@ -444,7 +444,7 @@ class ControllerPaymentMpesa extends Controller {
                             } elseif ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
                                 $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $customer_wallet_total, $value, 'P', $customer_wallet_total);
                                 $this->model_sale_order->UpdatePaymentMethod($value, $this->session->data['payment_wallet_method']['code']);
-                                $ret = $this->model_checkout_order->addOrderHistory($value, $this->config->get('mod_order_status_id'), 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
+                                $ret = $this->model_checkout_order->addOrderHistory($value, 1, 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
 
                                 $order_info = $this->model_checkout_order->getOrder($value);
 
@@ -470,7 +470,7 @@ class ControllerPaymentMpesa extends Controller {
                                     $dataAddHisory['order_status_id'] = $order_status_id;
                                     $dataAddHisory['notify'] = 0;
                                     $dataAddHisory['append'] = 0;
-                                    $dataAddHisory['comment'] = '';
+                                    $dataAddHisory['comment'] = 'Paid Through MPesa By Customer';
                                     $dataAddHisory['paid'] = 'Y';
 
                                     $url = HTTPS_SERVER;
@@ -536,7 +536,7 @@ class ControllerPaymentMpesa extends Controller {
                             $dataAddHisory['order_status_id'] = $order_status_id;
                             $dataAddHisory['notify'] = 0;
                             $dataAddHisory['append'] = 0;
-                            $dataAddHisory['comment'] = '';
+                            $dataAddHisory['comment'] = 'Paid Through MPesa By Customer';
                             $dataAddHisory['paid'] = 'Y';
 
                             $url = HTTPS_SERVER;
