@@ -808,7 +808,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                 if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $order_info && !$order_info['order_status_id']) {
                     //success pending to processing
-                    $order_status_id = $this->config->get('config_order_status_id');
+                    $order_status_id = $this->config->get('mpesa_order_status_id');
 
                     $log->write('deliverysystem updateMpesaOrderStatus validate');
 
