@@ -33,6 +33,10 @@ class ModelPaymentMpesa extends Model {
         return $this->db->getLastId();
     }
 
+    public function deleteOrder($order_info) {
+        $this->db->query("DELETE FROM " . DB_PREFIX . "mpesa_order WHERE order_id = " . (int) $order_info['order_id']);
+    }
+
     // public function addOrderMpesa($order_info, $request_id, $checkout_request_id, $customer_id = 0, $topup_amount = 0) {
     //     //$this->db->query("DELETE FROM " . DB_PREFIX . "mpesa_order WHERE order_id = " . (int) $order_info['order_id']);
     //     $this->db->query('INSERT INTO `' . DB_PREFIX . "mpesa_order` SET `order_id` = '" . (int) $order_info . "', `request_id` = '" . $request_id . "', `checkout_request_id` = '" . $checkout_request_id . "', `customer_id` = '" . $customer_id . "', `amount` = '" . $topup_amount . "'");

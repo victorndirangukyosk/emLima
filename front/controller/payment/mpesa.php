@@ -336,6 +336,7 @@ class ControllerPaymentMpesa extends Controller {
         $log = new Log('error.log');
         $json['processed'] = false;
         $json['status'] = false;
+        $non_mpesa_orders = NULL;
 
         $json['error'] = 'Transaction Failed. Please Try again.';
 
@@ -434,6 +435,7 @@ class ControllerPaymentMpesa extends Controller {
                                 $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $total, $value, 'Y', 0);
                                 $this->model_sale_order->UpdatePaymentMethod($value, $this->session->data['payment_wallet_method']['code']);
                                 $ret = $this->model_checkout_order->addOrderHistory($value, 1, 'Paid Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
+                                $non_mpesa_orders[] = $value;
                             } elseif ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
                                 $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $customer_wallet_total, $value, 'P', $customer_wallet_total);
                                 $this->model_sale_order->UpdatePaymentMethod($value, $this->session->data['payment_wallet_method']['code']);
@@ -572,6 +574,10 @@ class ControllerPaymentMpesa extends Controller {
                                 //break;
                             }
                         }
+                    }
+
+                    foreach ($non_mpesa_orders as $non_mpesa_order) {
+                        $this->model_payment_mpesa->deleteOrder($non_mpesa_order);
                     }
                 }
                 /* } */
