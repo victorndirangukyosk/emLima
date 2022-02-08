@@ -440,6 +440,7 @@ class ControllerPaymentMpesa extends Controller {
                                 $log->write('Paid Through Wallet By Customer');
                                 $log->write($value);
                                 $log->write('Paid Through Wallet By Customer');
+                                $this->model_payment_mpesa->deleteOrder($value);
                             } elseif ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
                                 $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $customer_wallet_total, $value, 'P', $customer_wallet_total);
                                 $this->model_sale_order->UpdatePaymentMethod($value, $this->session->data['payment_wallet_method']['code']);
@@ -498,11 +499,11 @@ class ControllerPaymentMpesa extends Controller {
                                         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                                         curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
                                         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                                        curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                                        curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                                         $resp = curl_exec($curl);
                                         $log->write('resp');
-                                        $log->write($url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                                        $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                                         $log->write($resp);
                                         curl_close($curl);
