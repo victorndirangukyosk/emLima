@@ -746,7 +746,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         return $response;
     }
-
+    
     public function mpesaOrderStatus() {
         $response['status'] = false;
 
@@ -912,6 +912,15 @@ class ControllerDeliversystemDeliversystem extends Controller {
         }
 
         return $response;
+    }
+    
+    public function hybridmpesaOrderStatus() {
+        $response['status'] = false;
+
+        $postData = file_get_contents('php://input');
+        $log = new Log('error.log');
+        $log->write('hybridupdateMpesaOrderStatus');
+        $log->write($postData);
     }
 
     public function mpesaOrderStatusTransactions() {
