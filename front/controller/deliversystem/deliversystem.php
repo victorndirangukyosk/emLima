@@ -775,7 +775,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $log->write('customer_id' . $manifest_id_customer);
             $log->write('manifest_id_customer' . $manifest_id_customer);
             $file = fopen('system/log/mpesa_customer_log.txt', 'w+'); //url fopen should be allowed for this to occur
-            if (false === fwrite($file, $postData)) {
+            if (false === fwrite($file, json_decode($postData))) {
                 fwrite('Error: no data written');
             }
             fclose($file);
