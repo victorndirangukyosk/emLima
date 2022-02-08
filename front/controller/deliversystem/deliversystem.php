@@ -767,10 +767,10 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $log->write($stkCallback->stkCallback->MerchantRequestID);
         $log->write('above is merchant request');
 
-        $manifest_id = $this->model_payment_mpesa->getMpesaOrder($stkCallback->stkCallback->MerchantRequestID);
-        $log->write('order_id' . $manifest_id);
+        $manifest_ids = $this->model_payment_mpesa->getMpesaOrders($stkCallback->stkCallback->MerchantRequestID);
+        $log->write('order_id' . $manifest_ids);
 
-        if ($manifest_id == 0 || $manifest_id == false) {
+        if (count($manifest_ids) == 0 || $manifest_ids == NULL) {
             $manifest_id_customer = $this->model_payment_mpesa->getMpesaCustomer($stkCallback->stkCallback->MerchantRequestID);
             $log->write('customer_id' . $manifest_id_customer);
             $log->write('manifest_id_customer' . $manifest_id_customer);
@@ -789,75 +789,77 @@ class ControllerDeliversystemDeliversystem extends Controller {
         }
 
 
-        if (isset($manifest_id) && $manifest_id > 0) {
-            // Store
-            //save CallbackMetadata MpesaReceiptNumber
+        if (isset($manifest_ids) && count($manifest_ids) > 0) {
+            foreach ($manifest_ids as $manifest_id) {
+                // Store
+                //save CallbackMetadata MpesaReceiptNumber
 
-            if (isset($stkCallback->stkCallback->CallbackMetadata->Item)) {
-                foreach ($stkCallback->stkCallback->CallbackMetadata->Item as $key => $value) {
-                    $log->write($value);
+                if (isset($stkCallback->stkCallback->CallbackMetadata->Item)) {
+                    foreach ($stkCallback->stkCallback->CallbackMetadata->Item as $key => $value) {
+                        $log->write($value);
 
-                    if ('MpesaReceiptNumber' == $value->Name) {
-                        $this->model_payment_mpesa->insertOrderTransactionId($manifest_id, $value->Value);
-                    }
-                }
-            }
-
-            $order_info = $this->model_account_order->getAdminOrder($manifest_id);
-
-            if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $order_info && !$order_info['order_status_id']) {
-                //success pending to processing
-                $order_status_id = $this->config->get('config_order_status_id');
-
-                $log->write('updateMpesaOrderStatus validate');
-
-                $this->load->model('localisation/order_status');
-
-                $order_status = $this->model_localisation_order_status->getOrderStatuses();
-
-                $dataAddHisory['order_id'] = $manifest_id;
-                $dataAddHisory['order_status_id'] = $order_status_id;
-                $dataAddHisory['notify'] = 0;
-                $dataAddHisory['append'] = 0;
-                $dataAddHisory['comment'] = '';
-                $dataAddHisory['paid'] = 'Y';
-
-                $url = HTTPS_SERVER;
-                $api = 'api/order/addHistory';
-
-                if (isset($api)) {
-                    $url_data = [];
-                    $log->write('if');
-                    foreach ($dataAddHisory as $key => $value) {
-                        if ('path' != $key && 'token' != $key && 'store_id' != $key) {
-                            $url_data[$key] = $value;
+                        if ('MpesaReceiptNumber' == $value->Name) {
+                            $this->model_payment_mpesa->insertOrderTransactionId($manifest_id['order_id'], $value->Value);
                         }
                     }
+                }
 
-                    $curl = curl_init();
+                $order_info = $this->model_account_order->getAdminOrder($manifest_id['order_id']);
 
-                    // Set SSL if required
-                    if ('https' == substr($url, 0, 5)) {
-                        curl_setopt($curl, CURLOPT_PORT, 443);
+                if (isset($manifest_id) && isset($stkCallback->stkCallback->ResultCode) && 0 == $stkCallback->stkCallback->ResultCode && $order_info && !$order_info['order_status_id']) {
+                    //success pending to processing
+                    $order_status_id = $this->config->get('config_order_status_id');
+
+                    $log->write('updateMpesaOrderStatus validate');
+
+                    $this->load->model('localisation/order_status');
+
+                    $order_status = $this->model_localisation_order_status->getOrderStatuses();
+
+                    $dataAddHisory['order_id'] = $manifest_id['order_id'];
+                    $dataAddHisory['order_status_id'] = $order_status_id;
+                    $dataAddHisory['notify'] = 0;
+                    $dataAddHisory['append'] = 0;
+                    $dataAddHisory['comment'] = '';
+                    $dataAddHisory['paid'] = 'Y';
+
+                    $url = HTTPS_SERVER;
+                    $api = 'api/order/addHistory';
+
+                    if (isset($api)) {
+                        $url_data = [];
+                        $log->write('if');
+                        foreach ($dataAddHisory as $key => $value) {
+                            if ('path' != $key && 'token' != $key && 'store_id' != $key) {
+                                $url_data[$key] = $value;
+                            }
+                        }
+
+                        $curl = curl_init();
+
+                        // Set SSL if required
+                        if ('https' == substr($url, 0, 5)) {
+                            curl_setopt($curl, CURLOPT_PORT, 443);
+                        }
+
+                        curl_setopt($curl, CURLOPT_HEADER, false);
+                        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+                        curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
+                        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+                        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                        curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
+                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+
+                        $json = curl_exec($curl);
+                        $log->write('json');
+                        $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+
+                        $log->write($json);
+                        curl_close($curl);
+
+                        $response['status'] = true;
                     }
-
-                    curl_setopt($curl, CURLOPT_HEADER, false);
-                    curl_setopt($curl, CURLINFO_HEADER_OUT, true);
-                    curl_setopt($curl, CURLOPT_USERAGENT, $this->request->server['HTTP_USER_AGENT']);
-                    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                    curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
-
-                    $json = curl_exec($curl);
-                    $log->write('json');
-                    $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
-
-                    $log->write($json);
-                    curl_close($curl);
-
-                    $response['status'] = true;
                 }
             }
         } else if (isset($manifest_id_customer)) {
