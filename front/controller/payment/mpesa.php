@@ -451,6 +451,7 @@ class ControllerPaymentMpesa extends Controller {
                                 $log->write('order_info');
                                 $log->write($order_info);
                                 $log->write('order_info');
+                                $json['status'] = true;
                                 if ($order_info['paid'] == 'P') {
                                     $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($value);
                                     $log->write('transaction_details on complete');
