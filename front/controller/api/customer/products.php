@@ -2908,9 +2908,9 @@ class ControllerApiCustomerProducts extends Controller {
                 $this->load->model('user/farmer');
                 $this->load->model('user/supplier');
 
-                $supplier_details = $this->model_user_supplier->getSupplier($product['buying_source_id']);
+                $supplier_details = $this->model_user_supplier->getSupplier($args['buying_source_id']);
                 if ($supplier_details == NULL) {
-                    $supplier_details = $this->model_user_farmer->getFarmer($product['buying_source_id']);
+                    $supplier_details = $this->model_user_farmer->getFarmer($args['buying_source_id']);
                 }
 
                 $log->write('supplier_details');
