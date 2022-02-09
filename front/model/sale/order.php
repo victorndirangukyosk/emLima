@@ -880,4 +880,61 @@ class ModelSaleOrder extends Model {
         return $ret;
     }
 
+    public function getProduct($product_store_id) {
+        $query = $this->db->query('SELECT DISTINCT p.*,pd.name,v.user_id as vendor_id FROM ' . DB_PREFIX . 'product_to_store p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = p.store_id) LEFT JOIN ' . DB_PREFIX . "user v ON (v.user_id = st.vendor_id) WHERE p.product_store_id = '" . (int) $product_store_id . "' AND pd.language_id = '" . (int) $this->config->get('config_language_id') . "'");
+
+        $product = $query->row;
+
+        return $product;
+    }
+
+    public function getVendorProductVariations($product_name, $store_id, $formated = false) {
+        $returnData = [];
+
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' and ps.status=1";
+        $log = new Log('error.log');
+        $log->write($all_variations);
+        $result = $this->db->query($all_variations);
+
+        foreach ($result->rows as $r) {
+            if ($r['status']) {
+                $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
+
+                $r['key'] = $key;
+
+                $percent_off = null;
+                if (isset($r['special_price']) && isset($r['price']) && 0 != $r['price'] && 0 != $r['special_price']) {
+                    $percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
+                }
+
+                if ((float) $r['special_price']) {
+                    $r['special_price'] = $this->currency->formatWithoutCurrency((float) $r['special_price']);
+                } else {
+                    $r['special_price'] = false;
+                }
+
+                $r['model'] = $r['model'];
+
+                $res = [
+                    'variation_id' => $r['product_store_id'],
+                    'unit' => $r['unit'],
+                    'weight' => floatval($r['weight']),
+                    'price' => $r['price'],
+                    'special' => $r['special_price'],
+                    'percent_off' => number_format($percent_off, 0),
+                    'key' => $key,
+                    'model' => $r['model']
+                ];
+
+                if (true == $formated) {
+                    array_push($returnData, $res);
+                } else {
+                    array_push($returnData, $r);
+                }
+            }
+        }
+
+        return $returnData;
+    }
+
 }

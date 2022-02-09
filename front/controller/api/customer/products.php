@@ -2751,4 +2751,22 @@ class ControllerApiCustomerProducts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getProductUOM() {
+        $log = new Log('error.log');
+        $log->write($this->request->get['product_store_id']);
+
+        $this->load->model('sale/order');
+        $this->load->model('assets/product');
+
+        $product_details = $this->model_sale_order->getProduct($this->request->get['product_store_id']);
+        $product_info = $this->model_assets_product->getProductForPopup($this->request->get['product_store_id'], false, $product_details['store_id']);
+        $variations = $this->model_sale_order->getVendorProductVariations($product_info['name'], $product_details['store_id']);
+
+        $json['status'] = 200;
+        $json['data'] = $variations;
+        $json['msg'] = 'Product list fetched succesfully';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
