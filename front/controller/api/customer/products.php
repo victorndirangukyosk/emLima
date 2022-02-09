@@ -2895,4 +2895,41 @@ class ControllerApiCustomerProducts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function addupdateInventory($args = []) {
+        $json = [];
+
+        if ($this->validatenew($args)) {
+            
+        } else {
+            $json['status'] = 10014;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
+        }
+
+        if (200 == $json['status']) {
+            $json['data']['status'] = true;
+        } else {
+            $json['data']['status'] = false;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    protected function validatenew($args) {
+        if (empty($args['buying_source_id'])) {
+            $this->error['buying_source_id'] = 'Buying Source Required!';
+        }
+
+        if (empty($args['products']) || !is_array($args['products'])) {
+            $this->error['products'] = 'Products Required!';
+        }
+
+        return !$this->error;
+    }
+
 }
