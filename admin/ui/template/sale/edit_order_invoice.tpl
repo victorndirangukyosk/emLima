@@ -431,6 +431,7 @@ $(document).delegate('.changeUnit','change', function() {
   $(this).parent().parent().children().eq(2).children('input[name="products['+old_product_id+'][unit]"]').attr('name', 'products['+new_product_id+'][unit]');
   $(this).parent().parent().children().eq(3).children('input[name="products['+old_product_id+'][quantity]"]').attr('name', 'products['+new_product_id+'][quantity]');
   $(this).parent().parent().children().eq(4).children('select[name="products['+old_product_id+'][unit]"]').attr('name', 'products['+new_product_id+'][unit]');
+  $(this).parent().parent().children().eq(5).children('input[name="products['+old_product_id+'][quantity_missed]"]').attr('name', 'products['+new_product_id+'][quantity_missed]');
   $(this).parent().parent().children().eq(6).children('input[name="products['+old_product_id+'][quantity]"]').attr('name', 'products['+new_product_id+'][quantity]');
   $(this).parent().parent().children().eq(7).children('input[name="products['+old_product_id+'][price]"]').attr('name', 'products['+new_product_id+'][price]');
   
