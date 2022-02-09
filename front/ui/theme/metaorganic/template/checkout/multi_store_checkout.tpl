@@ -1705,7 +1705,8 @@ $.ajax({
 }
 
 function clearpaymentmethod() {
-$('input:radio[name=payment_method]:checked').prop('checked', false);
+$('input[name=payment_method]:checked').prop('checked', false);
+$('input[name=payment_wallet_method]:checked').prop('checked', false);
 $.ajax({
             type: 'get',
             url: 'index.php?path=checkout/payment_method/clearpaymentmethod',
