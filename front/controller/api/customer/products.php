@@ -2831,4 +2831,68 @@ class ControllerApiCustomerProducts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getupdateInventorysingle() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $supplier_details = NULL;
+
+        $log = new Log('error.log');
+        $log->write($this->request->post);
+        $log->write($this->request->get);
+
+        if ($this->request->get['vendor_product_id'] != NULL && $this->request->get['vendor_product_uom'] != NULL && $this->request->get['buying_price'] != NULL && $this->request->get['procured_quantity'] != NULL && $this->request->get['rejected_quantity'] != NULL) {
+            $this->load->model('sale/order');
+            $this->load->model('user/farmer');
+            $this->load->model('user/supplier');
+
+            $supplier_details = $this->model_user_supplier->getSupplier($this->request->get['buying_source_id']);
+            if ($supplier_details == NULL) {
+                $supplier_details = $this->model_user_farmer->getFarmer($this->request->get['buying_source_id']);
+            }
+
+            $log->write('supplier_details');
+            $log->write($supplier_details);
+            $log->write('supplier_details');
+
+            $product_details = $this->model_sale_order->getProduct($this->request->get['vendor_product_id']);
+            $log->write($product_details);
+            $vendor_product_uom = $this->request->get['vendor_product_uom'];
+            $buying_price = $this->request->get['buying_price'];
+            $buying_source = $this->request->get['buying_source'];
+            $buying_source_id = $this->request->get['buying_source_id'];
+            $procured_quantity = $this->request->get['procured_quantity'];
+            $rejected_quantity = $this->request->get['rejected_quantity'];
+            $vendor_product_id = $this->request->get['vendor_product_id'];
+
+            $product['rejected_qty'] = $rejected_quantity;
+            $product['procured_qty'] = $procured_quantity;
+            $product['current_buying_price'] = $buying_price;
+            $product['source'] = $buying_source;
+            //$product['current_qty'] = $procured_quantity - $rejected_quantity;
+            $product['current_qty'] = $product_details['quantity'];
+            $product['product_name'] = $product_details['name'];
+            $product['product_id'] = $product_details['product_id'];
+
+            $result = $this->model_sale_order->updateProductInventory($vendor_product_id, $product);
+            //$ret = $this->emailtemplate->sendmessage($get_farmer_phone['mobile'], $sms_message);
+            $log->write('RESULT');
+            $log->write($result);
+            $log->write('RESULT');
+            $json['data'] = '';
+            $json['status'] = '200';
+            $json['message'] = 'Products stocks modified successfully!';
+            $this->session->data['success'] = 'Products stocks modified successfully!';
+        } else {
+            $json['status'] = '400';
+            $json['message'] = 'All fields are mandatory!';
+            $this->session->data['warning'] = 'All fields are mandatory!';
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
