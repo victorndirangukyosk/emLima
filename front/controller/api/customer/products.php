@@ -2724,4 +2724,13 @@ class ControllerApiCustomerProducts extends Controller {
         }
     }
 
+    public function getAllProducts() {
+
+        $json['status'] = 200;
+        $json['data'] = $json;
+        $json['msg'] = 'Product list fetched succesfully';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($resjson));
+    }
+
 }
