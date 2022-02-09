@@ -1704,6 +1704,19 @@ $.ajax({
 });
 }
 
+function clearpaymentmethod() {
+$('input:radio[name=payment_method]:checked').prop('checked', false);
+$.ajax({
+            type: 'get',
+            url: 'index.php?path=checkout/payment_method/clearpaymentmethod',
+            dataType: 'json',
+            cache: false,
+            success: function (json) {
+            }
+
+});
+}
+
 function saveOrder() {
 getpezeshalimit();
 console.log("saveOrder");
@@ -2125,6 +2138,7 @@ function saveInAddressBook() {
     $(document).delegate('#payment-next', 'click', function() {
         $('#step-4').addClass('checkout-step-color');
         console.log("payment-next click");
+        clearpaymentmethod();
 
         $('#payment-next').html('<center><div class="login-loader" style=""></div></center>');
 

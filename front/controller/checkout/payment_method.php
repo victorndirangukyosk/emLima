@@ -231,5 +231,25 @@ class ControllerCheckoutPaymentMethod extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
+    public function clearpaymentmethod() {
+
+        $this->load->model('account/credit');
+        $customer_wallet_total = $this->model_account_credit->getTotalAmount();
+        if ($customer_wallet_total > 0 && $this->cart->getTotal() <= $customer_wallet_total) {
+            $this->session->data['payment_method'] = $this->session->data['payment_methods']['wallet'];
+        }
+
+        if ($customer_wallet_total > 0 && $this->cart->getTotal() > $customer_wallet_total) {
+            $this->session->data['payment_wallet_method'] = $this->session->data['payment_methods']['wallet'];
+            unset($this->session->data['payment_method']);
+        }
+
+        $log = new Log('error.log');
+        $log->write('clearpaymentmethod');
+        $log->write($this->session->data['payment_method']);
+        $log->write($this->session->data['payment_wallet_method']);
+        $log->write('clearpaymentmethod');
+    }
+
 }
