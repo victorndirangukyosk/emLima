@@ -2769,4 +2769,66 @@ class ControllerApiCustomerProducts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getSupplierFarmer() {
+        $data = [];
+
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email']) || isset($this->request->get['filter_mobile'])) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
+
+            if (isset($this->request->get['filter_email'])) {
+                $filter_email = $this->request->get['filter_email'];
+            } else {
+                $filter_email = '';
+            }
+
+            if (isset($this->request->get['filter_mobile'])) {
+                $filter_mobile = $this->request->get['filter_mobile'];
+            } else {
+                $filter_mobile = '';
+            }
+
+            $this->load->model('sale/order');
+
+            $filter_data = [
+                'filter_name' => $filter_name,
+                'filter_email' => $filter_email,
+                'filter_mobile' => $filter_mobile,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_sale_order->getFarmerSupplierUsers($filter_data);
+
+            foreach ($results as $result) {
+                $data[] = [
+                    'supplier_id' => $result['farmer_id'],
+                    'username' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                    'name' => $result['name'],
+                    'firstname' => $result['first_name'],
+                    'lastname' => $result['last_name'],
+                    'email' => $result['email'],
+                    'mobile' => $result['mobile']
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $json['status'] = 200;
+        $json['data'] = $data;
+        $json['msg'] = 'Supplier/Farmers list fetched succesfully';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
