@@ -2739,6 +2739,9 @@ class ControllerApiCustomerProducts extends Controller {
 
         $json = $this->model_sale_order->getProductsForInventory($filter_name);
         $log = new Log('error.log');
+        $log->write('json');
+        $log->write($json);
+        $log->write('json');
 
         foreach ($json as $j) {
             if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
