@@ -2818,11 +2818,11 @@ class ControllerApiCustomerProducts extends Controller {
 
         $sort_order = [];
 
-        foreach ($json as $key => $value) {
+        foreach ($data as $key => $value) {
             $sort_order[$key] = $value['name'];
         }
 
-        array_multisort($sort_order, SORT_ASC, $json);
+        array_multisort($sort_order, SORT_ASC, $data);
 
         $json['status'] = 200;
         $json['data'] = $data;
