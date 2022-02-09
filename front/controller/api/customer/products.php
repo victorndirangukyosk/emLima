@@ -2724,8 +2724,9 @@ class ControllerApiCustomerProducts extends Controller {
         }
     }
 
-    public function getAllProducts() {
+    public function addAllProducts() {
         $json = NULL;
+
         $json['status'] = 200;
         $json['msg'] = 'Product list fetched succesfully';
         $this->response->addHeader('Content-Type: application/json');
