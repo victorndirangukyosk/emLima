@@ -2897,6 +2897,9 @@ class ControllerApiCustomerProducts extends Controller {
 
     public function addupdateInventory($args = []) {
         $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
 
         if ($this->validatenew($args)) {
             
@@ -2925,8 +2928,49 @@ class ControllerApiCustomerProducts extends Controller {
             $this->error['buying_source_id'] = 'Buying Source Required!';
         }
 
+        if (empty($args['buying_source'])) {
+            $this->error['buying_source'] = 'Buying Source Required!';
+        }
+
         if (empty($args['products']) || !is_array($args['products'])) {
             $this->error['products'] = 'Products Required!';
+        }
+
+        if (!empty($args['products']) && is_array($args['products'])) {
+            $log = new Log('error.log');
+            foreach ($args['products'] as $product) {
+                if (!array_key_exists('procured_quantity', $product)) {
+                    $this->error['procured_quantity'] = 'Procured Quantity Required!';
+                }
+
+                if (array_key_exists('procured_quantity', $product) && ($product['procured_quantity'] <= 0 || $product['procured_quantity'] == NULL)) {
+                    $this->error['procured_quantity'] = 'Procured Quantity Required!';
+                }
+
+                if (!array_key_exists('rejected_quantity', $product)) {
+                    $this->error['procured_quantity'] = 'Procured Quantity Required!';
+                }
+
+                if (array_key_exists('rejected_quantity', $product) && $product['rejected_quantity'] == NULL) {
+                    $this->error['rejected_quantity'] = 'Rejected Quantity Required!';
+                }
+
+                if (!array_key_exists('vendor_product_id', $product)) {
+                    $this->error['vendor_product_id'] = 'Vendor Product Required!';
+                }
+
+                if (array_key_exists('vendor_product_id', $product) && ($product['vendor_product_id'] == NULL || $product['procured_quantity'] <= 0)) {
+                    $this->error['vendor_product_id'] = 'Vendor Product Required!';
+                }
+
+                if (!array_key_exists('buying_price', $product)) {
+                    $this->error['buying_price'] = 'Buying Price Required!';
+                }
+
+                if (array_key_exists('buying_price', $product) && ($product['buying_price'] == NULL || $product['buying_price'] <= 0)) {
+                    $this->error['buying_price'] = 'Buying Price Required!';
+                }
+            }
         }
 
         return !$this->error;
