@@ -854,4 +854,30 @@ class ModelSaleOrder extends Model {
         $this->db->query('UPDATE ' . DB_PREFIX . "order SET   payment_method = '" . $this->db->escape($payment_method) . "', payment_code = '" . $this->db->escape($payment_code) . "' WHERE order_id = '" . (int) $order_id . "'");
     }
 
+    public function getProductsForInventory($filter_name) {
+
+        $store_id = 0;
+
+        $this->db->select('product_to_store.*,product_to_category.category_id,product.*,product_description.*,product_description.name as pd_name', false);
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+
+        if (!empty($filter_name)) {
+            $this->db->like('product_description.name', $this->db->escape($filter_name), 'both');
+        }
+
+        $limit = 18;
+        $offset = 0;
+        $this->db->group_by('product_description.name');
+        $this->db->where('product_to_store.status', 1);
+        $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
+        $this->db->where('product.status', 1);
+        if ($store_id > 0) {
+            $this->db->where('product_to_store.store_id', $store_id);
+        }
+        $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
+        return $ret;
+    }
+
 }
