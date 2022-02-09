@@ -2724,11 +2724,11 @@ class ControllerApiCustomerProducts extends Controller {
         }
     }
 
-    public function addAllProducts() {
+    public function getAllProducts() {
         $json = NULL;
 
-        if (isset($this->request->post['filter_name'])) {
-            $filter_name = $this->request->post['filter_name'];
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
         } else {
             $filter_name = '';
         }
@@ -2739,9 +2739,6 @@ class ControllerApiCustomerProducts extends Controller {
 
         $json = $this->model_sale_order->getProductsForInventory($filter_name);
         $log = new Log('error.log');
-        $log->write('json');
-        $log->write($json);
-        $log->write('json');
 
         foreach ($json as $j) {
             if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
@@ -2752,9 +2749,10 @@ class ControllerApiCustomerProducts extends Controller {
 
             $send[] = $j;
         }
+        $send = json_encode($send);
 
         $json['status'] = 200;
-        $resjson['data'] = $send;
+        $json['data'] = $send;
         $json['msg'] = 'Product list fetched succesfully';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
