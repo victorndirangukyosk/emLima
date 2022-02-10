@@ -2965,8 +2965,20 @@ class ControllerApiCustomerProducts extends Controller {
     }
 
     protected function validatenew($args) {
-        if (empty($args['buying_source_id'])) {
-            $this->error['buying_source_id'] = 'Buying Source Required!';
+        if (empty($args['email'])) {
+            $this->error['email'] = 'Email Required!';
+        }
+
+        if (empty($args['firstname'])) {
+            $this->error['firstname'] = 'FirstName Required!';
+        }
+
+        if (empty($args['lastname'])) {
+            $this->error['lastname'] = 'LastName Required!';
+        }
+
+        if (empty($args['user_id'])) {
+            $this->error['user_id'] = 'User Id Required!';
         }
 
         if (empty($args['buying_source'])) {
