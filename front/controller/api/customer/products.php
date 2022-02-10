@@ -2907,6 +2907,12 @@ class ControllerApiCustomerProducts extends Controller {
                 $this->load->model('sale/order');
                 $this->load->model('user/farmer');
                 $this->load->model('user/supplier');
+                $this->load->model('user/user');
+
+                $user = $this->model_user_user->getUserByEmail($args['email']);
+                $product['user_id'] = $user['user_id'];
+                $product['user_role'] = $user['user_group'];
+                $product['user_name'] = $user['firstname'] . ' ' . $user['lastname'];
 
                 $supplier_details = $this->model_user_supplier->getSupplier($args['buying_source_id']);
                 if ($supplier_details == NULL) {
@@ -2967,6 +2973,14 @@ class ControllerApiCustomerProducts extends Controller {
     protected function validatenew($args) {
         if (empty($args['email'])) {
             $this->error['email'] = 'Email Required!';
+        }
+
+        if (!empty($args['email'])) {
+            $this->load->model('user/user');
+            $user = $this->model_user_user->getUserByEmail($args['email']);
+            if ($user == NULL) {
+                $this->error['user'] = 'User Invalid!';
+            }
         }
 
         if (empty($args['firstname'])) {

@@ -1058,6 +1058,9 @@ class ModelSaleOrder extends Model {
         $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $qty . "', buying_price = '" . $data['current_buying_price'] . "', source = '" . $data['source'] . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
         //echo $query;
         $this->db->query($query);
+
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_inventory_history SET product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', product_name = '" . $data['product_name'] . "', procured_qty = '" . $data['procured_qty'] . "', prev_qty = '" . $previous_quantity . "', current_qty = '" . $qty . "', rejected_qty = '" . $data['rejected_qty'] . "', buying_price= '" . $data['current_buying_price'] . "', prev_buying_price= '" . $previous_buying_price . "',  source = '" . $data['source'] . "', prev_source = '" . $previous_source . "', added_by = '" . $data['user_id'] . "', added_user_role = '" . $data['user_role'] . "', added_user = '" . $data['user_name'] . "',  date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+        return $this->db->getLastId();
     }
 
 }
