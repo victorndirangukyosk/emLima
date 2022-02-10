@@ -182,7 +182,7 @@ class ControllerApiCustomerDashboard extends Controller
                     'href' => $this->url->link('account/order/info', 'order_id='.$ra['order_id'], 'SSL'),
                     'total' => $this->currency->format($ra['total'], $this->config->get('config_currency')),
                     'date_added' => $ra['date_added'],
-                    'total_value' => Math.round($ra['total'],2)
+                    'total_value' => round($ra['total'],2)
                     // 'total_value' => $ra['total'],
                  ];
             }
