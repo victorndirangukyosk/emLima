@@ -228,6 +228,13 @@ class ControllerCheckoutPaymentMethod extends Controller {
             $this->session->data['payment_wallet_method'] = $this->session->data['payment_methods'][$this->request->post['payment_wallet_method']];
             //$this->session->data['comment'] = strip_tags($this->request->post['comment']);
         }
+
+        $this->load->model('account/credit');
+        $customer_wallet_total = $this->model_account_credit->getTotalAmount();
+        if ($this->request->post['payment_method'] == 0 && $this->request->post['payment_wallet_method'] == 'wallet' && $this->cart->getTotal() > $customer_wallet_total) {
+            $json['error']['notice'] = 'Your Wallet Don\'t Have Sufficient Balance To Complete This Transaction, Please Select One More Payment Method!';
+        }
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

@@ -1613,7 +1613,7 @@ function savePaymentMethod() {
             payment_method: payment_method,
             payment_wallet_method: payment_wallet_method
         },
-        dataType: 'html',
+        dataType: 'json',
         cache: false,
         async: true,
         beforeSend: function() {
@@ -1626,13 +1626,15 @@ function savePaymentMethod() {
             // confirm-order,confirm-order-loader,pay-confirm-order
         },
         success: function(json) {
+            $('.alert-warning').remove();
             console.log(json);
+            if (json['error'] && json['error']['notice']) {
+                    $('#payment-method-wrapper').prepend('<div class="alert alert-warning">' + json['error']['notice'] + '<button type="button" class="close" data-dismiss="alert" style="width:1% !important;">&times;</button></div>');
+            }
             if (json['redirect']) {
                 //  location = json['redirect'];
-            } else if (json['error']) {
-                if (json['error']['warning']) {
-                    $('#payment-method-wrapper').prepend('<div class="alert alert-warning">' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
-                }
+            } else if (json['error'] && json['error']['warning']) {
+                    $('#payment-method-wrapper').prepend('<div class="alert alert-warning">' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert" style="width:1% !important;">&times;</button></div>');
             } else {
                 loadConfirm();
             }
@@ -1710,6 +1712,7 @@ $.ajax({
 function clearpaymentmethod() {
 $('input[name=payment_method]:checked').prop('checked', false);
 $('input[name=payment_wallet_method]:checked').prop('checked', false);
+$('.alert-warning').remove();
 $.ajax({
             type: 'get',
             url: 'index.php?path=checkout/payment_method/clearpaymentmethod',
