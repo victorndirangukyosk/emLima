@@ -250,6 +250,8 @@ class ControllerCheckoutPaymentMethod extends Controller {
         $log->write($this->session->data['payment_method']);
         $log->write($this->session->data['payment_wallet_method']);
         $log->write('clearpaymentmethod');
+        unset($this->session->data['payment_method']);
+        unset($this->session->data['payment_wallet_method']);
     }
 
 }
