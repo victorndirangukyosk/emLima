@@ -3017,4 +3017,32 @@ class ControllerApiCustomerProducts extends Controller {
         return !$this->error;
     }
 
+    public function getProductsInventory() {
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->model('catalog/vendor_product');
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $filter_data = [
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin'),
+        ];
+
+        $product_total = $this->model_catalog_vendor_product->getTotalProducts($filter_data);
+        $results = $this->model_catalog_vendor_product->getProducts($filter_data);
+
+        $json['data'] = $results;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
