@@ -1596,6 +1596,9 @@ function savePaymentMethod() {
     if (payment_wallet_method == undefined) {
         payment_wallet_method = 0;
     }
+    if (payment_method == undefined || payment_method == 0) {
+        payment_method = 'wallet';
+    }
     console.log(payment_method);
     console.log(payment_wallet_method);
     $('#payment-method-wrapper-loader').show();
