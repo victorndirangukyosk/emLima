@@ -30,6 +30,7 @@ class ControllerAccountLogout extends Controller {
             unset($this->session->data['payment_address']);
             unset($this->session->data['payment_method']);
             unset($this->session->data['payment_methods']);
+            unset($this->session->data['payment_wallet_method']);
             unset($this->session->data['comment']);
             unset($this->session->data['order_id']);
             unset($this->session->data['coupon']);
