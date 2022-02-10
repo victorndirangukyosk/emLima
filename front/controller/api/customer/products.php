@@ -3032,15 +3032,33 @@ class ControllerApiCustomerProducts extends Controller {
             $page = 1;
         }
 
+        if (isset($this->request->get['limit'])) {
+            $limit = $this->request->get['limit'];
+        } else {
+            $limit = $this->config->get('config_limit_admin');
+        }
+
         $filter_data = [
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin'),
+            'limit' => $limit,
+            'start' => ($page - 1) * $limit,
         ];
 
         $product_total = $this->model_catalog_vendor_product->getTotalProducts($filter_data);
         $results = $this->model_catalog_vendor_product->getProducts($filter_data);
 
-        $json['data'] = $results;
+        $pagination = new Pagination();
+        $pagination->total = $product_total;
+        $pagination->page = $page;
+        $pagination->limit = $limit;
+
+        $data['products'] = $results;
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
+        $data['total_product'] = $product_total;
+        $data['limit'] = $limit;
+        $data['page'] = $page;
+
+        $json['data'] = $data;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
