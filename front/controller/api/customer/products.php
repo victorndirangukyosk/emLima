@@ -2914,9 +2914,9 @@ class ControllerApiCustomerProducts extends Controller {
                 $product['user_role'] = $user['user_group'];
                 $product['user_name'] = $user['firstname'] . ' ' . $user['lastname'];
 
-                $supplier_details = $this->model_user_supplier->getSupplier($args['buying_source_id']);
+                $supplier_details = $this->model_user_supplier->getSupplier($product['buying_source_id']);
                 if ($supplier_details == NULL) {
-                    $supplier_details = $this->model_user_farmer->getFarmer($args['buying_source_id']);
+                    $supplier_details = $this->model_user_farmer->getFarmer($product['buying_source_id']);
                 }
 
                 $log->write('supplier_details');
@@ -2926,7 +2926,7 @@ class ControllerApiCustomerProducts extends Controller {
                 $product_details = $this->model_sale_order->getProduct($product['vendor_product_id']);
                 $log->write($product_details);
                 $buying_price = $product['buying_price'];
-                $buying_source = $args['buying_source'];
+                $buying_source = $product['buying_source'];
                 $procured_quantity = $product['procured_quantity'];
                 $rejected_quantity = $product['rejected_quantity'];
                 $vendor_product_id = $product['vendor_product_id'];
@@ -2995,10 +2995,6 @@ class ControllerApiCustomerProducts extends Controller {
             $this->error['user_id'] = 'User Id Required!';
         }
 
-        if (empty($args['buying_source'])) {
-            $this->error['buying_source'] = 'Buying Source Required!';
-        }
-
         if (empty($args['products']) || !is_array($args['products'])) {
             $this->error['products'] = 'Products Required!';
         }
@@ -3036,6 +3032,14 @@ class ControllerApiCustomerProducts extends Controller {
 
                 if (array_key_exists('buying_price', $product) && ($product['buying_price'] == NULL || $product['buying_price'] <= 0)) {
                     $this->error['buying_price'] = 'Buying Price Required!';
+                }
+
+                if (array_key_exists('buying_source', $product) && ($product['buying_source'] == NULL || $product['buying_source'] <= 0)) {
+                    $this->error['buying_source'] = 'Buying Source Required!';
+                }
+
+                if (array_key_exists('buying_source_id', $product) && ($product['buying_source_id'] == NULL || $product['buying_source_id'] <= 0)) {
+                    $this->error['buying_source_id'] = 'Buying Source ID Required!';
                 }
             }
         }
