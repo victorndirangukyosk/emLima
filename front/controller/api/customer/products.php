@@ -3036,8 +3036,16 @@ class ControllerApiCustomerProducts extends Controller {
                     $this->error['vendor_product_id'] = 'Vendor Product Required!';
                 }
 
-                if (array_key_exists('vendor_product_id', $product) && ($product['vendor_product_id'] == NULL || $product['procured_quantity'] <= 0)) {
+                if (array_key_exists('vendor_product_id', $product) && ($product['vendor_product_id'] == NULL || $product['vendor_product_id'] <= 0)) {
                     $this->error['vendor_product_id'] = 'Vendor Product Required!';
+                }
+
+                if (array_key_exists('vendor_product_id', $product) && $product['vendor_product_id'] > 0) {
+                    $this->load->model('sale/order');
+                    $product_details = $this->model_sale_order->getProduct($product['vendor_product_id']);
+                    if ($product_details == NULL) {
+                        $this->error['vendor_product_id'] = 'Invalid Vendor Product ID!';
+                    }
                 }
 
                 if (!array_key_exists('buying_price', $product)) {
