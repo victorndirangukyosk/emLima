@@ -1848,6 +1848,24 @@ var name="dropoff_notes";
             dataType: 'html',
             cache: false,
             async: false,
+            beforeSend: function() {
+            },
+            complete: function() {
+                
+            $.ajax({
+            type: 'get',
+            url: 'index.php?path=checkout/payment_method/checkwalletbalancesufficient',
+            dataType: 'json',
+            cache: false,
+            success: function (json) {
+            console.log(json);
+            if(json.wallet_balance_sufficient == false) {
+            $('#button-confirm').prop('disabled', true);
+            }
+            }
+            });
+            
+            },
             success: function(json) {
                 console.log("json");
                 console.log(json);

@@ -199,6 +199,7 @@ class ControllerCheckoutSuccess extends Controller {
                 unset($this->session->data['shipping_methods']);
                 unset($this->session->data['payment_method']);
                 unset($this->session->data['payment_wallet_method']);
+                unset($this->session->data['wallet_balance_sufficient']);
                 unset($this->session->data['payment_methods']);
                 unset($this->session->data['guest']);
                 unset($this->session->data['comment']);

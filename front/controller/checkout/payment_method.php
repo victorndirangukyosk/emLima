@@ -238,7 +238,12 @@ class ControllerCheckoutPaymentMethod extends Controller {
             $log->write($this->request->post['payment_wallet_method']);
             $log->write('payment_method');
 
+            $this->session->data['wallet_balance_sufficient'] = FALSE;
             $json['error']['notice'] = 'Your Wallet Don\'t Have Sufficient Balance To Complete This Transaction, Please Select One More Payment Method!';
+        }
+
+        if ($this->request->post['payment_method'] != 'wallet' || $this->cart->getTotal() <= $customer_wallet_total) {
+            $this->session->data['wallet_balance_sufficient'] = TRUE;
         }
 
         $this->response->addHeader('Content-Type: application/json');
@@ -265,6 +270,25 @@ class ControllerCheckoutPaymentMethod extends Controller {
         $log->write('clearpaymentmethod');
         unset($this->session->data['payment_method']);
         unset($this->session->data['payment_wallet_method']);
+        unset($this->session->data['wallet_balance_sufficient']);
+    }
+
+    public function checkwalletbalancesufficient() {
+        $json = [];
+        if (isset($this->session->data['wallet_balance_sufficient']) && $this->session->data['wallet_balance_sufficient'] == TRUE) {
+            $json['wallet_balance_sufficient'] = TRUE;
+        }
+
+        if (isset($this->session->data['wallet_balance_sufficient']) && $this->session->data['wallet_balance_sufficient'] == FALSE) {
+            $json['wallet_balance_sufficient'] = FALSE;
+        }
+
+        if (!isset($this->session->data['wallet_balance_sufficient'])) {
+            $json['wallet_balance_sufficient'] = TRUE;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
