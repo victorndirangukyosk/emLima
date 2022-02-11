@@ -2926,14 +2926,20 @@ class ControllerApiCustomerProducts extends Controller {
                 $product_details = $this->model_sale_order->getProduct($product['vendor_product_id']);
                 $log->write($product_details);
                 $buying_price = $product['buying_price'];
+                $target_buying_price = $product['target_buying_price'];
                 $buying_source = $product['buying_source'];
                 $procured_quantity = $product['procured_quantity'];
+                $requested_quantity = $product['requested_quantity'];
+                $delivery_date = $product['delivery_date'];
                 $rejected_quantity = $product['rejected_quantity'];
                 $vendor_product_id = $product['vendor_product_id'];
 
                 $product['rejected_qty'] = $rejected_quantity;
                 $product['procured_qty'] = $procured_quantity;
+                $product['requested_quantity'] = $requested_quantity;
+                $product['delivery_date'] = $delivery_date;
                 $product['current_buying_price'] = $buying_price;
+                $product['target_buying_price'] = $target_buying_price;
                 $product['source'] = $buying_source;
                 //$product['current_qty'] = $procured_quantity - $rejected_quantity;
                 $product['current_qty'] = $product_details['quantity'];
@@ -3042,6 +3048,14 @@ class ControllerApiCustomerProducts extends Controller {
                     $this->error['buying_price'] = 'Buying Price Required!';
                 }
 
+                if (!array_key_exists('target_buying_price', $product)) {
+                    $this->error['target_buying_price'] = 'Target Buying Price Required!';
+                }
+
+                if (array_key_exists('target_buying_price', $product) && ($product['target_buying_price'] == NULL || $product['target_buying_price'] <= 0)) {
+                    $this->error['target_buying_price'] = 'Target Buying Price Required!';
+                }
+
                 if (!array_key_exists('buying_source', $product)) {
                     $this->error['buying_source'] = 'Buying Source Is Required!';
                 }
@@ -3062,8 +3076,8 @@ class ControllerApiCustomerProducts extends Controller {
                     $this->error['delivery_date'] = 'Delivery Date Is Required!';
                 }
 
-                if (array_key_exists('delivery_date', $product) && $product['delivery_date'] == NULL) {
-                    $this->error['delivery_date'] = 'Delivery Date Required!';
+                if (array_key_exists('delivery_date', $product) && ($product['delivery_date'] == NULL || !preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $product['delivery_date']))) {
+                    $this->error['delivery_date'] = 'Delivery Date Required/ Invalid Date Format(yyyy-mm-dd)!';
                 }
             }
         }
