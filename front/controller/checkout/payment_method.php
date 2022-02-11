@@ -231,7 +231,13 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
         $this->load->model('account/credit');
         $customer_wallet_total = $this->model_account_credit->getTotalAmount();
-        if ($this->request->post['payment_method'] == 0 && $this->request->post['payment_wallet_method'] == 'wallet' && $this->cart->getTotal() > $customer_wallet_total) {
+        if ($this->request->post['payment_method'] == 'wallet' && $this->request->post['payment_wallet_method'] == 'wallet' && $this->cart->getTotal() > $customer_wallet_total) {
+            $log = new Log('error.log');
+            $log->write('payment_method');
+            $log->write($this->request->post['payment_method']);
+            $log->write($this->request->post['payment_wallet_method']);
+            $log->write('payment_method');
+
             $json['error']['notice'] = 'Your Wallet Don\'t Have Sufficient Balance To Complete This Transaction, Please Select One More Payment Method!';
         }
 
