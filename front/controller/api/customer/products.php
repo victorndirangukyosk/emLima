@@ -3034,12 +3034,28 @@ class ControllerApiCustomerProducts extends Controller {
                     $this->error['buying_price'] = 'Buying Price Required!';
                 }
 
-                if (array_key_exists('buying_source', $product) && ($product['buying_source'] == NULL || $product['buying_source'] <= 0)) {
+                if (!array_key_exists('buying_source', $product)) {
+                    $this->error['buying_source'] = 'Buying Source Is Required!';
+                }
+
+                if (array_key_exists('buying_source', $product) && $product['buying_source'] == NULL) {
                     $this->error['buying_source'] = 'Buying Source Required!';
+                }
+
+                if (!array_key_exists('buying_source_id', $product)) {
+                    $this->error['buying_source_id'] = 'Buying Source ID Required!';
                 }
 
                 if (array_key_exists('buying_source_id', $product) && ($product['buying_source_id'] == NULL || $product['buying_source_id'] <= 0)) {
                     $this->error['buying_source_id'] = 'Buying Source ID Required!';
+                }
+
+                if (!array_key_exists('delivery_date', $product)) {
+                    $this->error['delivery_date'] = 'Delivery Date Is Required!';
+                }
+
+                if (array_key_exists('delivery_date', $product) && $product['delivery_date'] == NULL) {
+                    $this->error['delivery_date'] = 'Delivery Date Required!';
                 }
             }
         }
