@@ -3002,6 +3002,14 @@ class ControllerApiCustomerProducts extends Controller {
         if (!empty($args['products']) && is_array($args['products'])) {
             $log = new Log('error.log');
             foreach ($args['products'] as $product) {
+                if (!array_key_exists('requested_quantity', $product)) {
+                    $this->error['requested_quantity'] = 'Requested Quantity Required!';
+                }
+
+                if (array_key_exists('requested_quantity', $product) && ($product['requested_quantity'] <= 0 || $product['requested_quantity'] == NULL)) {
+                    $this->error['requested_quantity'] = 'Requested Quantity Required!';
+                }
+
                 if (!array_key_exists('procured_quantity', $product)) {
                     $this->error['procured_quantity'] = 'Procured Quantity Required!';
                 }
