@@ -722,8 +722,8 @@ class ControllerPaymentPesapal extends Controller {
                         $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
                         $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                     }
-                }
-                /* WALLET */ elseif ((!isset($this->session->data['payment_wallet_method']['code']) || $this->session->data['payment_wallet_method']['code'] == 0 || ($customer_wallet_total <= 0 && $this->session->data['payment_wallet_method']['code'] == 'wallet')) && $order_info['paid'] == 'N') {
+                    /* WALLET */
+                } elseif (!isset($this->session->data['payment_wallet_method']['code']) || $this->session->data['payment_wallet_method']['code'] == 0 || $this->session->data['payment_wallet_method']['code'] != 'wallet' || $customer_wallet_total <= 0) {
                     $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
                     $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                 }
