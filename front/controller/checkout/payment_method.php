@@ -163,6 +163,9 @@ class ControllerCheckoutPaymentMethod extends Controller {
             }
         } if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status')) {
             foreach ($data['payment_methods'] as $payment_method) {
+                if ($payment_method['code'] == 'wallet') {
+                    $data['payment_wallet_methods'] = $payment_method;
+                }
                 if ($payment_method['code'] != 'pezesha') {
                     unset($data['payment_methods'][$payment_method['code']]);
                 }
