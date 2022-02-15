@@ -13,9 +13,7 @@
                                         <li class="list-group-item my-order-list-head">
 
                                             <div class="row">
-                                                <div class="col-sm-8">
-                                                    <h2 class="my-order-list-title"><?= $store_name?></h2>
-                                                </div>
+                                                
 
                                                 <?php if($show_rating) { ?>
 
