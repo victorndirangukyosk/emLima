@@ -40,6 +40,37 @@
 
 <script type="text/javascript"><!--
 $(document).on('change', 'input[name=\'payment_method\']:checked, input[name=\'payment_wallet_method\']', function () {
-    savePaymentMethod();
+var clickedName = $(this).attr('name');
+$.ajax({
+                url: 'index.php?path=checkout/payment_method/CheckWalletBalanceCartAmountAreSame',
+                type: 'post',
+                dataType: 'json',
+                cache: false,
+                async: false,
+                complete: function() {
+                
+                },
+                beforeSend: function() {
+
+                },
+                success: function(json) {
+                if(json.wallet_cart_amount_same == true) {
+                
+                if(clickedName == 'payment_wallet_method' && $('input[name="'+clickedName+'"]:checked').length > 0) {
+                $('input[name=payment_method]:checked').prop('checked', false);
+                }
+                
+                if(clickedName == 'payment_method' && $('input[name="'+clickedName+'"]:checked').length > 0) {
+                $('input[name=payment_wallet_method]:checked').prop('checked', false);
+                }
+                
+                }
+                
+                savePaymentMethod();
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                }
+            });
 });
 //--></script>

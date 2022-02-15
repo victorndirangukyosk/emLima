@@ -294,4 +294,19 @@ class ControllerCheckoutPaymentMethod extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function CheckWalletBalanceCartAmountAreSame() {
+        $json = [];
+
+        $this->load->model('account/credit');
+        $customer_wallet_total = $this->model_account_credit->getTotalAmount();
+        $json['wallet_cart_amount_same'] = FALSE;
+
+        if ($customer_wallet_total > 0 && $this->cart->getTotal() == $customer_wallet_total) {
+            $json['wallet_cart_amount_same'] = TRUE;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
