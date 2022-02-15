@@ -798,7 +798,7 @@ class ModelCatalogVendorProduct extends Model {
         }
 
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "date_added = '" . $this->db->escape($data['filter_date_added']) . "'";
+            $implode[] = "DATE_FORMAT(date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
         }
 
         if (!empty($data['filter_name'])) {
@@ -854,7 +854,7 @@ class ModelCatalogVendorProduct extends Model {
         }
 
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "date_added = '" . $this->db->escape($data['filter_date_added']) . "'";
+            $implode[] = "DATE_FORMAT(date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
         }
 
         if (!empty($data['filter_name'])) {
