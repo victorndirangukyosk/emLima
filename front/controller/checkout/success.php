@@ -38,10 +38,10 @@ class ControllerCheckoutSuccess extends Controller {
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
 
         if (!empty($_SESSION['parent']) && ($this->session->data['order_approval_access'] == 0 && $this->session->data['order_approval_access_role'] == NULL && $sub_customer_order_approval_required == 1)) {
-            $this->document->setTitle($this->language->get('heading_title_sub_user'));
+            $this->document->setTitle(sprintf($this->language->get('heading_title_sub_user'), "#" . implode(' #', $this->session->data['order_id'])));
         }
         if (empty($_SESSION['parent']) || ($this->session->data['order_approval_access'] > 0 && $this->session->data['order_approval_access_role'] != NULL) || $sub_customer_order_approval_required == 0) {
-            $this->document->setTitle($this->language->get('heading_title'));
+            $this->document->setTitle(sprintf($this->language->get('heading_title'), "#" . implode(' #', $this->session->data['order_id'])));
         }
 
         $data['breadcrumbs'] = [];
@@ -198,6 +198,8 @@ class ControllerCheckoutSuccess extends Controller {
                 unset($this->session->data['shipping_method']);
                 unset($this->session->data['shipping_methods']);
                 unset($this->session->data['payment_method']);
+                unset($this->session->data['payment_wallet_method']);
+                unset($this->session->data['wallet_balance_sufficient']);
                 unset($this->session->data['payment_methods']);
                 unset($this->session->data['guest']);
                 unset($this->session->data['comment']);

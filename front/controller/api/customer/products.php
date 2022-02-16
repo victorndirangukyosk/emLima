@@ -2724,4 +2724,465 @@ class ControllerApiCustomerProducts extends Controller {
         }
     }
 
+    public function getAllProducts() {
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        $this->load->model('sale/order');
+        $products = $this->model_sale_order->getProductsForInventory($filter_name);
+        foreach ($products as $j) {
+            if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
+                $j['price'] = $j['special_price'];
+            }
+
+            $j['name'] = htmlspecialchars_decode($j['name']);
+
+            $send[] = $j;
+        }
+
+        $json['status'] = 200;
+        $json['data'] = $send;
+        $json['msg'] = 'Product list fetched succesfully';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getProductUOM() {
+        $log = new Log('error.log');
+        $log->write($this->request->get['product_store_id']);
+
+        $this->load->model('sale/order');
+        $this->load->model('assets/product');
+
+        $product_details = $this->model_sale_order->getProduct($this->request->get['product_store_id']);
+        $product_info = $this->model_assets_product->getProductForPopup($this->request->get['product_store_id'], false, $product_details['store_id']);
+        $variations = $this->model_sale_order->getVendorProductVariations($product_info['name'], $product_details['store_id']);
+
+        $json['status'] = 200;
+        $json['data'] = $variations;
+        $json['msg'] = 'Product list fetched succesfully';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getSupplierFarmer() {
+        $data = [];
+
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email']) || isset($this->request->get['filter_mobile'])) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
+
+            if (isset($this->request->get['filter_email'])) {
+                $filter_email = $this->request->get['filter_email'];
+            } else {
+                $filter_email = '';
+            }
+
+            if (isset($this->request->get['filter_mobile'])) {
+                $filter_mobile = $this->request->get['filter_mobile'];
+            } else {
+                $filter_mobile = '';
+            }
+
+            $this->load->model('sale/order');
+
+            $filter_data = [
+                'filter_name' => $filter_name,
+                'filter_email' => $filter_email,
+                'filter_mobile' => $filter_mobile,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_sale_order->getFarmerSupplierUsers($filter_data);
+
+            foreach ($results as $result) {
+                $data[] = [
+                    'supplier_id' => $result['farmer_id'],
+                    'username' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                    'name' => $result['name'],
+                    'firstname' => $result['first_name'],
+                    'lastname' => $result['last_name'],
+                    'email' => $result['email'],
+                    'mobile' => $result['mobile']
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($data as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $data);
+
+        $json['status'] = 200;
+        $json['data'] = $data;
+        $json['msg'] = 'Supplier/Farmers list fetched succesfully';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getupdateInventorysingle() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $supplier_details = NULL;
+
+        $log = new Log('error.log');
+        $log->write($this->request->post);
+        $log->write($this->request->get);
+
+        if ($this->request->get['vendor_product_id'] != NULL && $this->request->get['vendor_product_uom'] != NULL && $this->request->get['buying_price'] != NULL && $this->request->get['procured_quantity'] != NULL && $this->request->get['rejected_quantity'] != NULL) {
+            $this->load->model('sale/order');
+            $this->load->model('user/farmer');
+            $this->load->model('user/supplier');
+
+            $supplier_details = $this->model_user_supplier->getSupplier($this->request->get['buying_source_id']);
+            if ($supplier_details == NULL) {
+                $supplier_details = $this->model_user_farmer->getFarmer($this->request->get['buying_source_id']);
+            }
+
+            $log->write('supplier_details');
+            $log->write($supplier_details);
+            $log->write('supplier_details');
+
+            $product_details = $this->model_sale_order->getProduct($this->request->get['vendor_product_id']);
+            $log->write($product_details);
+            $vendor_product_uom = $this->request->get['vendor_product_uom'];
+            $buying_price = $this->request->get['buying_price'];
+            $buying_source = $this->request->get['buying_source'];
+            $buying_source_id = $this->request->get['buying_source_id'];
+            $procured_quantity = $this->request->get['procured_quantity'];
+            $rejected_quantity = $this->request->get['rejected_quantity'];
+            $vendor_product_id = $this->request->get['vendor_product_id'];
+
+            $product['rejected_qty'] = $rejected_quantity;
+            $product['procured_qty'] = $procured_quantity;
+            $product['current_buying_price'] = $buying_price;
+            $product['source'] = $buying_source;
+            //$product['current_qty'] = $procured_quantity - $rejected_quantity;
+            $product['current_qty'] = $product_details['quantity'];
+            $product['product_name'] = $product_details['name'];
+            $product['product_id'] = $product_details['product_id'];
+
+            $result = $this->model_sale_order->updateProductInventory($vendor_product_id, $product);
+            //$ret = $this->emailtemplate->sendmessage($get_farmer_phone['mobile'], $sms_message);
+            $log->write('RESULT');
+            $log->write($result);
+            $log->write('RESULT');
+            $json['data'] = '';
+            $json['status'] = '200';
+            $json['message'] = 'Products stocks modified successfully!';
+            $this->session->data['success'] = 'Products stocks modified successfully!';
+        } else {
+            $json['status'] = '400';
+            $json['message'] = 'All fields are mandatory!';
+            $this->session->data['warning'] = 'All fields are mandatory!';
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function addupdateInventory($args = []) {
+        $log = new Log('error.log');
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        if ($this->validatenew($args)) {
+            foreach ($args['products'] as $product) {
+                $this->load->model('sale/order');
+                $this->load->model('user/farmer');
+                $this->load->model('user/supplier');
+                $this->load->model('user/user');
+
+                $user = $this->model_user_user->getUserByEmail($args['email']);
+                $product['user_id'] = $user['user_id'];
+                $product['user_role'] = $user['user_group'];
+                $product['user_name'] = $user['firstname'] . ' ' . $user['lastname'];
+
+                $supplier_details = $this->model_user_supplier->getSupplier($product['buying_source_id']);
+                if ($supplier_details == NULL) {
+                    $supplier_details = $this->model_user_farmer->getFarmer($product['buying_source_id']);
+                }
+
+                $log->write('supplier_details');
+                $log->write($supplier_details);
+                $log->write('supplier_details');
+
+                $product_details = $this->model_sale_order->getProduct($product['vendor_product_id']);
+                $log->write($product_details);
+                $buying_price = $product['buying_price'];
+                $target_buying_price = $product['target_buying_price'];
+                $buying_source = $product['buying_source'];
+                $procured_quantity = $product['procured_quantity'];
+                $requested_quantity = $product['requested_quantity'];
+                $delivery_date = $product['delivery_date'];
+                $rejected_quantity = $product['rejected_quantity'];
+                $vendor_product_id = $product['vendor_product_id'];
+
+                $product['rejected_qty'] = $rejected_quantity;
+                $product['procured_qty'] = $procured_quantity;
+                $product['requested_quantity'] = $requested_quantity;
+                $product['delivery_date'] = $delivery_date;
+                $product['current_buying_price'] = $buying_price;
+                $product['target_buying_price'] = $target_buying_price;
+                $product['source'] = $buying_source;
+                //$product['current_qty'] = $procured_quantity - $rejected_quantity;
+                $product['current_qty'] = $product_details['quantity'];
+                $product['product_name'] = $product_details['name'];
+                $product['product_id'] = $product_details['product_id'];
+
+                $result = $this->model_sale_order->updateProductInventory($vendor_product_id, $product);
+                //$ret = $this->emailtemplate->sendmessage($get_farmer_phone['mobile'], $sms_message);
+                $log->write('RESULT');
+                $log->write($result);
+                $log->write('RESULT');
+                $json['data'] = '';
+                $json['status'] = '200';
+                $json['message'] = 'Products stocks modified successfully!';
+                $this->session->data['success'] = 'Products stocks modified successfully!';
+            }
+        } else {
+            $json['status'] = 10014;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
+        }
+
+        if (200 == $json['status']) {
+            $json['data']['status'] = true;
+        } else {
+            $json['data']['status'] = false;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    protected function validatenew($args) {
+        if (empty($args['email'])) {
+            $this->error['email'] = 'Email Required!';
+        }
+
+        if (!empty($args['email'])) {
+            $this->load->model('user/user');
+            $user = $this->model_user_user->getUserByEmail($args['email']);
+            if ($user == NULL) {
+                $this->error['user'] = 'User Invalid!';
+            }
+        }
+
+        if (empty($args['firstname'])) {
+            $this->error['firstname'] = 'FirstName Required!';
+        }
+
+        if (empty($args['lastname'])) {
+            $this->error['lastname'] = 'LastName Required!';
+        }
+
+        if (empty($args['user_id'])) {
+            $this->error['user_id'] = 'User Id Required!';
+        }
+
+        if (empty($args['products']) || !is_array($args['products'])) {
+            $this->error['products'] = 'Products Required!';
+        }
+
+        if (!empty($args['products']) && is_array($args['products'])) {
+            $log = new Log('error.log');
+            foreach ($args['products'] as $product) {
+                if (!array_key_exists('requested_quantity', $product)) {
+                    $this->error['requested_quantity'] = 'Requested Quantity Required!';
+                }
+
+                if (array_key_exists('requested_quantity', $product) && ($product['requested_quantity'] <= 0 || $product['requested_quantity'] == NULL)) {
+                    $this->error['requested_quantity'] = 'Requested Quantity Required!';
+                }
+
+                if (!array_key_exists('procured_quantity', $product)) {
+                    $this->error['procured_quantity'] = 'Procured Quantity Required!';
+                }
+
+                if (array_key_exists('procured_quantity', $product) && ($product['procured_quantity'] <= 0 || $product['procured_quantity'] == NULL)) {
+                    $this->error['procured_quantity'] = 'Procured Quantity Required!';
+                }
+
+                if (!array_key_exists('rejected_quantity', $product)) {
+                    $this->error['procured_quantity'] = 'Procured Quantity Required!';
+                }
+
+                if (array_key_exists('rejected_quantity', $product) && $product['rejected_quantity'] == NULL) {
+                    $this->error['rejected_quantity'] = 'Rejected Quantity Required!';
+                }
+
+                if (!array_key_exists('vendor_product_id', $product)) {
+                    $this->error['vendor_product_id'] = 'Vendor Product Required!';
+                }
+
+                if (array_key_exists('vendor_product_id', $product) && ($product['vendor_product_id'] == NULL || $product['vendor_product_id'] <= 0)) {
+                    $this->error['vendor_product_id'] = 'Vendor Product Required!';
+                }
+
+                if (array_key_exists('vendor_product_id', $product) && $product['vendor_product_id'] > 0) {
+                    $this->load->model('sale/order');
+                    $product_details = $this->model_sale_order->getProduct($product['vendor_product_id']);
+                    if ($product_details == NULL) {
+                        $this->error['vendor_product_id'] = 'Invalid Vendor Product ID!';
+                    }
+                }
+
+                if (!array_key_exists('buying_price', $product)) {
+                    $this->error['buying_price'] = 'Buying Price Required!';
+                }
+
+                if (array_key_exists('buying_price', $product) && ($product['buying_price'] == NULL || $product['buying_price'] <= 0)) {
+                    $this->error['buying_price'] = 'Buying Price Required!';
+                }
+
+                if (!array_key_exists('target_buying_price', $product)) {
+                    $this->error['target_buying_price'] = 'Target Buying Price Required!';
+                }
+
+                if (array_key_exists('target_buying_price', $product) && ($product['target_buying_price'] == NULL || $product['target_buying_price'] <= 0)) {
+                    $this->error['target_buying_price'] = 'Target Buying Price Required!';
+                }
+
+                if (!array_key_exists('buying_source', $product)) {
+                    $this->error['buying_source'] = 'Buying Source Is Required!';
+                }
+
+                if (array_key_exists('buying_source', $product) && $product['buying_source'] == NULL) {
+                    $this->error['buying_source'] = 'Buying Source Required!';
+                }
+
+                if (!array_key_exists('buying_source_id', $product)) {
+                    $this->error['buying_source_id'] = 'Buying Source ID Required!';
+                }
+
+                if (array_key_exists('buying_source_id', $product) && ($product['buying_source_id'] == NULL || $product['buying_source_id'] <= 0)) {
+                    $this->error['buying_source_id'] = 'Buying Source ID Required!';
+                }
+
+                if (!array_key_exists('delivery_date', $product)) {
+                    $this->error['delivery_date'] = 'Delivery Date Is Required!';
+                }
+
+                if (array_key_exists('delivery_date', $product) && ($product['delivery_date'] == NULL || !preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $product['delivery_date']))) {
+                    $this->error['delivery_date'] = 'Delivery Date Required/ Invalid Date Format(yyyy-mm-dd)!';
+                }
+            }
+        }
+
+        return !$this->error;
+    }
+
+    public function getProductsInventory() {
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->model('catalog/vendor_product');
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        if (isset($this->request->get['limit'])) {
+            $limit = $this->request->get['limit'];
+        } else {
+            $limit = $this->config->get('config_limit_admin');
+        }
+
+        $filter_data = [
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $limit,
+            'start' => ($page - 1) * $limit,
+        ];
+
+        $product_total = $this->model_catalog_vendor_product->getTotalProducts($filter_data);
+        $results = $this->model_catalog_vendor_product->getProducts($filter_data);
+
+        $pagination = new Pagination();
+        $pagination->total = $product_total;
+        $pagination->page = $page;
+        $pagination->limit = $limit;
+
+        $data['products'] = $results;
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
+        $data['total_product'] = $product_total;
+        $data['limit'] = $limit;
+        $data['page'] = $page;
+
+        $json['data'] = $data;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getProductsInventoryHistory() {
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->model('catalog/vendor_product');
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        if (isset($this->request->get['limit'])) {
+            $limit = $this->request->get['limit'];
+        } else {
+            $limit = $this->config->get('config_limit_admin');
+        }
+
+        $filter_data = [
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $limit,
+            'start' => ($page - 1) * $limit,
+        ];
+
+        $product_total = $this->model_catalog_vendor_product->getTotalProductInventoryHistory($filter_data);
+        $results = $this->model_catalog_vendor_product->getProductInventoryHistory($filter_data);
+
+        $pagination = new Pagination();
+        $pagination->total = $product_total;
+        $pagination->page = $page;
+        $pagination->limit = $limit;
+
+        $data['products'] = $results;
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
+        $data['total_product'] = $product_total;
+        $data['limit'] = $limit;
+        $data['page'] = $page;
+
+        $json['data'] = $data;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

@@ -9,42 +9,7 @@
 
                 <div class="list-group my-order-group">
                     <li class="list-group-item my-order-list-headnew">
-                        <div class="row"><div class="col-md-2" align="left"><strong>#<?php echo $order['order_id']; ?></strong></div><div class="col-md-4" align="right">Store Name: <span><?php echo $order['store_name']; ?></div><div class="col-md-6" align="right">Order Date: <span><?php echo $order['date_added']; ?>, <?php echo $order['time_added']; ?></div></div>
-                            <!--<div class="pull-right">
-                                <button type="button" style="height:25px" onclick="excel( <?=$order["order_id"] ?>,'<?=$order["order_company"] ?>');" data-toggle="tooltip" title="Download Ordered Products"
-                                        class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
-                            </div>-->
-
-
-
-                            <!--<div class="pull-right">
-                            <?php if($order['status'] == 'Delivered' || $order['status'] == 'Cancelled' ) { ?>
-                              <a data-confirm="Available products  in this order will be added to cart !!" id="additemstocart" class="btn btn-success download" style="margin-right: 4px !important; height: 27px;margin-left:4px;"
-                          data-store-id="<?= $order['store_id']; ?>" data-toggle="tooltip"
-                          value="<?php echo $order['order_id']; ?>" title="Add To Cart/Reorder"><i
-                            class="fa fa-cart-plus"></i></a><?php } ?>
-                            </div> --> 
-
-                            <!--<?php if($order['customer_id'] == $this->customer->getId() && $order['edit_own_order'] != NULL) { ?>
-                            <a href="<?php echo $order['edit_own_order'];?>" class="btn btn-success" title="Edit Your Order" style="margin-right: 4px !important; height: 27px;margin-left:4px;"><i class="fa fa-edit"></i></a>
-                            <?php } ?>-->
-
-
-                            <!--<?php if($order['status'] == 'Arrived for Delivery'){?>
-                                                     <a href="<?php echo $order['accept_reject_href']?>"  class="btn btn-default btn-xs btn-accept-reject" >Accept Delivery</a>
-                                                    <?php } ?>-->
-
-
-                            
-                            <!--<a href="#" data-toggle="modal" data-target="#contactusModal"  class="btn btn-default btn-xs"><?= $text_report_issue ?></a>
-
-                            <?php if($order['status'] == 'Order Recieved' || $order['status'] == 'Order Approval Pending' ){?>
-                            <a href="#" id="cancelOrder" data-id='<?=$order["order_id"] ?>' style="margin-right: 4px !important; height: 27px;margin-left:4px;" class="btn btn-danger btn-xs btn-custom-remove"><?= $text_cancel ?></a> 
-                                                    <?php } ?>-->
-                            
-
-
-                        </span>
+                        <div class="row"><div class="col-md-2" align="left"><strong>#<?php echo $order['order_id']; ?></strong></div><div class="col-md-4" align="right"></div><div class="col-md-6" align="right">Order Date: <span><?php echo $order['date_added']; ?>, <?php echo $order['time_added']; ?></div></div>
                     </li>
                     <li class="list-group-item">
                         <div class="my-order-block">

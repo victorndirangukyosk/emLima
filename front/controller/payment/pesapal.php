@@ -20,44 +20,51 @@ class ControllerPaymentPesapal extends Controller {
             }
         }
 
+        $amount = 0;
         foreach ($this->session->data['order_id'] as $key => $value) {
             /* FOR KWIKBASKET ORDERS */
-            if ($key == 75) {
-                $order_id = $value;
+            //if ($key == 75) {
+            $order_id = $value;
+            //}
+
+            $log = new Log('error.log');
+            $log->write('Pesapal Order ID');
+            $log->write($this->session->data['order_id']);
+            $log->write('Pesapal Order ID');
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
+
+            $log->write('Pesapal Order Info');
+            $log->write($order_info);
+            $log->write('Pesapal Order Info');
+
+            if (count($order_info) > 0) {
+                $total_data = $this->totalData();
+                $all_sub_total = 0;
+                $all_total = 0;
+                foreach ($total_data as $tots) {
+                    foreach ($tots as $tot) {
+                        if ($tot['title'] == 'Sub-Total') {
+                            $all_sub_total = $tot['value'];
+                        }
+
+                        if ($tot['title'] == 'Total') {
+                            $all_total += $tot['value'];
+                        }
+                    }
+                }
+                $amount = (int) ($all_total);
             }
         }
 
-
-        $log = new Log('error.log');
-        $log->write('Pesapal Order ID');
-        $log->write($this->session->data['order_id']);
-        $log->write('Pesapal Order ID');
-        $order_info = $this->model_checkout_order->getOrder($order_id);
-        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-        $log->write('Pesapal Creds Customer Info');
-        $log->write($customer_info);
-        $log->write('Pesapal Creds Customer Info');
-
-        $log->write('Pesapal Order Info');
-        $log->write($order_info);
-        $log->write('Pesapal Order Info');
-
-        if (count($order_info) > 0) {
-            $total_data = $this->totalData();
-            $all_sub_total = 0;
-            $all_total = 0;
-            foreach ($total_data as $tots) {
-                foreach ($tots as $tot) {
-                    if ($tot['title'] == 'Sub-Total') {
-                        $all_sub_total = $tot['value'];
-                    }
-
-                    if ($tot['title'] == 'Total') {
-                        $all_total = $tot['value'];
-                    }
-                }
-            }
-            $amount = (int) ($all_total);
+        $this->load->model('account/credit');
+        $customer_wallet_total = $this->model_account_credit->getTotalAmount();
+        if ($this->session->data['payment_wallet_method']['code'] == 'wallet' && $customer_wallet_total > 0) {
+            $amount = $amount - $customer_wallet_total;
+            $amount = abs($amount);
         }
 
         $data['text_instruction'] = $this->language->get('text_instruction');
@@ -94,7 +101,7 @@ class ControllerPaymentPesapal extends Controller {
         $iframelink = 'https://www.pesapal.com/api/PostPesapalDirectOrderV4'; //change to
         //https://www.pesapal.com/API/PostPesapalDirectOrderV4 when you are ready to go live!
         //get form details
-        $amount = $this->cart->getTotalForKwikBasket();
+        //$amount = $this->cart->getTotalForKwikBasket();
         $transaction_fee = 0;
         $percentage = 3.5;
         $transaction_fee = ($percentage / 100) * $amount;
@@ -559,41 +566,41 @@ class ControllerPaymentPesapal extends Controller {
 
         foreach ($this->session->data['order_id'] as $key => $value) {
             /* FOR KWIKBASKET ORDERS */
-            if ($key == 75) {
-                $order_id = $value;
+            //if ($key == 75) {
+            $order_id = $value;
 
-                $log->write('Pesapal Order ID');
-                $log->write($this->session->data['order_id']);
-                $log->write('Pesapal Order ID');
-                $order_info = $this->model_checkout_order->getOrder($order_id);
-                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-                $log->write('Pesapal Creds Customer Info');
-                $log->write($customer_info);
-                $log->write('Pesapal Creds Customer Info');
+            $log->write('Pesapal Order ID');
+            $log->write($this->session->data['order_id']);
+            $log->write('Pesapal Order ID');
+            $order_info = $this->model_checkout_order->getOrder($order_id);
+            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+            $log->write('Pesapal Creds Customer Info');
+            $log->write($customer_info);
+            $log->write('Pesapal Creds Customer Info');
 
-                $log->write('Pesapal Order Info');
-                $log->write($order_info);
-                $log->write('Pesapal Order Info');
+            $log->write('Pesapal Order Info');
+            $log->write($order_info);
+            $log->write('Pesapal Order Info');
 
-                if (count($order_info) > 0) {
-                    $amount = (int) ($order_info['total']);
-                }
-
-                $log->write('PESAPAL CALL BACK');
-                $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
-                $merchant_reference = $this->request->get['pesapal_merchant_reference'];
-                $log->write($transaction_tracking_id);
-                $log->write($merchant_reference);
-                $log->write('PESAPAL CALL BACK');
-                $customer_id = $customer_info['customer_id'];
-                $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
-                $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
-                $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
+            if (count($order_info) > 0) {
+                $amount = (int) ($order_info['total']);
             }
+
+            $log->write('PESAPAL CALL BACK');
+            $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+            $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+            $log->write($transaction_tracking_id);
+            $log->write($merchant_reference);
+            $log->write('PESAPAL CALL BACK');
+            $customer_id = $customer_info['customer_id'];
+            $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
+            $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
+            $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
+            //}
         }
 
         if ('COMPLETED' == $status) {
-            $this->load->controller('payment/cod/confirmnonkb');
+            //$this->load->controller('payment/cod/confirmnonkb');
             $this->response->redirect($this->url->link('checkout/success'));
         }
 
@@ -685,8 +692,41 @@ class ControllerPaymentPesapal extends Controller {
                 $this->model_payment_pesapal->addOrderHistoryFailed($order_id, $this->config->get('pesapal_pending_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['paid']);
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
             } elseif ($response != null && $status != null && $status == 'COMPLETED') {
-                $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
-                $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+
+                /* WALLET */
+                $this->load->model('account/credit');
+                $this->load->model('sale/order');
+                $this->load->model('payment/wallet');
+
+                $customer_wallet_total = $this->model_account_credit->getTotalAmount();
+                if ($this->session->data['payment_wallet_method']['code'] == 'wallet' && $customer_wallet_total > 0 && $order_info['paid'] == 'N') {
+                    $log->write($this->session->data['payment_wallet_method']);
+                    $totals = $this->model_sale_order->getOrderTotals($order_id);
+                    $log->write($totals);
+                    $total = 0;
+                    foreach ($totals as $total) {
+                        if ('total' == $total['code']) {
+                            $total = $total['value'];
+                            break;
+                        }
+                    }
+                    if ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total <= $customer_wallet_total) {
+                        $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $order_id, $total, $order_id, 'Y', 0);
+                        $this->model_sale_order->UpdatePaymentMethod($order_id, $this->session->data['payment_wallet_method']['title'], $this->session->data['payment_wallet_method']['code']);
+                        $ret = $this->model_checkout_order->addOrderHistory($order_id, 1, 'Paid Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
+                    } elseif ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
+                        $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $order_id, $customer_wallet_total, $order_id, 'P', $customer_wallet_total);
+                        $this->model_sale_order->UpdatePaymentMethod($order_id, $this->session->data['payment_wallet_method']['title'], $this->session->data['payment_wallet_method']['code']);
+                        $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
+
+                        $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
+                        $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                    }
+                    /* WALLET */
+                } elseif (!isset($this->session->data['payment_wallet_method']['code']) || $this->session->data['payment_wallet_method']['code'] == 0 || $this->session->data['payment_wallet_method']['code'] != 'wallet' || $customer_wallet_total <= 0) {
+                    $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
+                    $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                }
             } else {
                 $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_pending_order_status_id'), $customer_info['customer_id'], 'customer');
                 $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);

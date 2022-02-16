@@ -1589,11 +1589,18 @@ function savePaymentMethod() {
     console.log("savepayment");
 
     var payment_method = $('input[name=\'payment_method\']:checked').attr('value');
+    var payment_wallet_method = $('input[name=\'payment_wallet_method\']:checked').attr('value');
     if (payment_method == undefined) {
         payment_method = 0;
     }
+    if (payment_wallet_method == undefined) {
+        payment_wallet_method = 0;
+    }
+    if (payment_method == undefined || payment_method == 0) {
+        payment_method = 'wallet';
+    }
     console.log(payment_method);
-
+    console.log(payment_wallet_method);
     $('#payment-method-wrapper-loader').show();
     $('#payment-method-wrapper').hide();
     $('#pay-confirm-order').hide();
@@ -1603,9 +1610,10 @@ function savePaymentMethod() {
         url: 'index.php?path=checkout/payment_method/save',
         type: 'post',
         data: {
-            payment_method: payment_method
+            payment_method: payment_method,
+            payment_wallet_method: payment_wallet_method
         },
-        dataType: 'html',
+        dataType: 'json',
         cache: false,
         async: true,
         beforeSend: function() {
@@ -1618,13 +1626,15 @@ function savePaymentMethod() {
             // confirm-order,confirm-order-loader,pay-confirm-order
         },
         success: function(json) {
+            $('.alert-warning').remove();
             console.log(json);
+            if (json['error'] && json['error']['notice']) {
+                    $('#payment-method-wrapper').prepend('<div class="alert alert-warning">' + json['error']['notice'] + '<button type="button" class="close" data-dismiss="alert" style="width:1% !important;">&times;</button></div>');
+            }
             if (json['redirect']) {
                 //  location = json['redirect'];
-            } else if (json['error']) {
-                if (json['error']['warning']) {
-                    $('#payment-method-wrapper').prepend('<div class="alert alert-warning">' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
-                }
+            } else if (json['error'] && json['error']['warning']) {
+                    $('#payment-method-wrapper').prepend('<div class="alert alert-warning">' + json['error']['warning'] + '<button type="button" class="close" data-dismiss="alert" style="width:1% !important;">&times;</button></div>');
             } else {
                 loadConfirm();
             }
@@ -1691,6 +1701,21 @@ function getpezeshalimit() {
 $.ajax({
             type: 'get',
             url: 'index.php?path=payment/pezesha/loanoffers',
+            dataType: 'json',
+            cache: false,
+            success: function (json) {
+            }
+
+});
+}
+
+function clearpaymentmethod() {
+$('input[name=payment_method]:checked').prop('checked', false);
+$('input[name=payment_wallet_method]:checked').prop('checked', false);
+$('.alert-warning').remove();
+$.ajax({
+            type: 'get',
+            url: 'index.php?path=checkout/payment_method/clearpaymentmethod',
             dataType: 'json',
             cache: false,
             success: function (json) {
@@ -1823,6 +1848,24 @@ var name="dropoff_notes";
             dataType: 'html',
             cache: false,
             async: false,
+            beforeSend: function() {
+            },
+            complete: function() {
+                
+            $.ajax({
+            type: 'get',
+            url: 'index.php?path=checkout/payment_method/checkwalletbalancesufficient',
+            dataType: 'json',
+            cache: false,
+            success: function (json) {
+            console.log(json);
+            if(json.wallet_balance_sufficient == false) {
+            $('#button-confirm').prop('disabled', true);
+            }
+            }
+            });
+            
+            },
             success: function(json) {
                 console.log("json");
                 console.log(json);
@@ -2120,6 +2163,7 @@ function saveInAddressBook() {
     $(document).delegate('#payment-next', 'click', function() {
         $('#step-4').addClass('checkout-step-color');
         console.log("payment-next click");
+        clearpaymentmethod();
 
         $('#payment-next').html('<center><div class="login-loader" style=""></div></center>');
 
