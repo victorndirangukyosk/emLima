@@ -109,6 +109,7 @@
                                 </select>
                             </div>
                             </div>
+                            <?php if (!$this->user->isVendor()) { ?>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="input-group">
@@ -141,6 +142,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <?php } ?>
                         </div>
                             <?php if ($vendor_orders) { ?>
                             <?php foreach ($vendor_orders as $order) { ?>

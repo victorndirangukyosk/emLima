@@ -1231,11 +1231,15 @@ function savePaymentMethod() {
     console.log("savepayment");
 
     var payment_method = $('input[name=\'payment_method\']:checked').attr('value');
+    var payment_wallet_method = $('input[name=\'payment_wallet_method\']:checked').attr('value');
     if (payment_method == undefined) {
         payment_method = 0;
     }
+    if (payment_wallet_method == undefined) {
+        payment_wallet_method = 0;
+    }
     console.log(payment_method);
-
+    console.log(payment_wallet_method);
     $('#payment-method-wrapper-loader').show();
     $('#payment-method-wrapper').hide();
     $('#pay-confirm-order').hide();
@@ -1245,7 +1249,8 @@ function savePaymentMethod() {
         url: 'index.php?path=checkout/payment_method/save',
         type: 'post',
         data: {
-            payment_method: payment_method
+            payment_method: payment_method,
+            payment_wallet_method: payment_wallet_method
         },
         dataType: 'html',
         cache: false,

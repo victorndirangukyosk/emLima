@@ -850,4 +850,217 @@ class ModelSaleOrder extends Model {
         return $this->db->getLastId();
     }
 
+    public function UpdatePaymentMethod($order_id, $payment_method, $payment_code) {
+        $this->db->query('UPDATE ' . DB_PREFIX . "order SET   payment_method = '" . $this->db->escape($payment_method) . "', payment_code = '" . $this->db->escape($payment_code) . "' WHERE order_id = '" . (int) $order_id . "'");
+    }
+
+    public function getProductsForInventory($filter_name) {
+
+        $store_id = 0;
+
+        $this->db->select('product_to_store.*,product_to_category.category_id,product.*,product_description.*,product_description.name as pd_name', false);
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+
+        if (!empty($filter_name)) {
+            $this->db->like('product_description.name', $this->db->escape($filter_name), 'both');
+        }
+
+        $limit = 18;
+        $offset = 0;
+        $this->db->group_by('product_description.name');
+        $this->db->where('product_to_store.status', 1);
+        $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
+        $this->db->where('product.status', 1);
+        if ($store_id > 0) {
+            $this->db->where('product_to_store.store_id', $store_id);
+        }
+        $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
+        return $ret;
+    }
+
+    public function getProduct($product_store_id) {
+        $query = $this->db->query('SELECT DISTINCT p.*,pd.name,v.user_id as vendor_id FROM ' . DB_PREFIX . 'product_to_store p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = p.store_id) LEFT JOIN ' . DB_PREFIX . "user v ON (v.user_id = st.vendor_id) WHERE p.product_store_id = '" . (int) $product_store_id . "' AND pd.language_id = '" . (int) $this->config->get('config_language_id') . "'");
+
+        $product = $query->row;
+
+        return $product;
+    }
+
+    public function getVendorProductVariations($product_name, $store_id, $formated = false) {
+        $returnData = [];
+
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' and ps.status=1";
+        $log = new Log('error.log');
+        $log->write($all_variations);
+        $result = $this->db->query($all_variations);
+
+        foreach ($result->rows as $r) {
+            if ($r['status']) {
+                $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
+
+                $r['key'] = $key;
+
+                $percent_off = null;
+                if (isset($r['special_price']) && isset($r['price']) && 0 != $r['price'] && 0 != $r['special_price']) {
+                    $percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
+                }
+
+                if ((float) $r['special_price']) {
+                    $r['special_price'] = $this->currency->formatWithoutCurrency((float) $r['special_price']);
+                } else {
+                    $r['special_price'] = false;
+                }
+
+                $r['model'] = $r['model'];
+
+                $res = [
+                    'variation_id' => $r['product_store_id'],
+                    'unit' => $r['unit'],
+                    'weight' => floatval($r['weight']),
+                    'price' => $r['price'],
+                    'special' => $r['special_price'],
+                    'percent_off' => number_format($percent_off, 0),
+                    'key' => $key,
+                    'model' => $r['model']
+                ];
+
+                if (true == $formated) {
+                    array_push($returnData, $res);
+                } else {
+                    array_push($returnData, $r);
+                }
+            }
+        }
+
+        return $returnData;
+    }
+
+    public function getFarmerSupplierUsers($data = []) {
+        $sql = 'SELECT *, CONCAT(first_name, " ", last_name) AS name FROM `' . DB_PREFIX . 'farmer`';
+
+        $isWhere = 1;
+        $_sql = [];
+
+        //filter vendor groups
+        if (isset($data['filter_first_name']) && !is_null($data['filter_first_name'])) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE first_name LIKE '" . $this->db->escape($data['filter_first_name']) . "%'";
+        }
+
+        if (isset($data['filter_last_name']) && !is_null($data['filter_last_name'])) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE last_name LIKE '" . $this->db->escape($data['filter_last_name']) . "%'";
+        }
+
+        if (isset($data['filter_name']) && !is_null($data['filter_name']) && strlen($data['filter_name']) > 0) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE CONCAT(first_name, ' ', last_name) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+
+        if (isset($data['filter_email']) && !is_null($data['filter_email']) && strlen($data['filter_email']) > 0) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE email LIKE '" . $this->db->escape($data['filter_email']) . "%'";
+        }
+
+        if (isset($data['filter_mobile']) && !is_null($data['filter_mobile']) && strlen($data['filter_mobile']) > 0) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE mobile LIKE '" . $this->db->escape($data['filter_mobile']) . "%'";
+        }
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $isWhere = 1;
+
+            $_sql[] = "WHERE status LIKE '" . $this->db->escape($data['filter_status']) . "%'";
+        }
+
+        if ($_sql) {
+            $sql .= implode(' AND ', $_sql);
+        }
+
+        $sort_data = [
+            'name',
+            'status',
+            'created_at',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY name';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function updateProductInventory($store_product_id, $data) {
+        $log = new Log('error.log');
+        $log->write($data['rejected_qty']);
+        $log->write($data['procured_qty']);
+        if (!isset($data['rejected_qty']) || $data['rejected_qty'] < 0 || $data['rejected_qty'] == NULL || $data['rejected_qty'] == '') {
+            $data['rejected_qty'] = 0;
+        }
+
+        if (!isset($data['procured_qty']) || $data['procured_qty'] < 0 || $data['procured_qty'] == NULL || $data['procured_qty'] == '') {
+            $data['procured_qty'] = 0;
+        }
+
+        $qty = $data['current_qty'] + ($data['procured_qty'] - $data['rejected_qty']);
+
+        $sel_query = 'SELECT * FROM ' . DB_PREFIX . "product_to_store WHERE product_store_id ='" . (int) $store_product_id . "'";
+        $sel_query = $this->db->query($sel_query);
+        $sel = $sel_query->row;
+        $log = new Log('error.log');
+        $log->write($sel['quantity']);
+        //$data['current_qty'];
+
+        $previous_quantity = $sel['quantity'];
+        $previous_buying_price = $sel['buying_price'];
+        if ($data['current_buying_price'] < 0 || $data['current_buying_price'] == '' || $data['current_buying_price'] == NULL) {
+            $data['current_buying_price'] = $sel['buying_price'];
+        } else {
+            $data['current_buying_price'] = $data['current_buying_price'];
+        }
+
+        $previous_source = $sel['source'];
+        if ($data['source'] == '' || $data['source'] == NULL) {
+            $data['source'] = $sel['source'];
+        } else {
+            $data['source'] = $data['source'];
+        }
+
+        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $qty . "', buying_price = '" . $data['current_buying_price'] . "', source = '" . $data['source'] . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
+        //echo $query;
+        $this->db->query($query);
+
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_inventory_history SET product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', product_name = '" . $data['product_name'] . "', procured_qty = '" . $data['procured_qty'] . "', prev_qty = '" . $previous_quantity . "', current_qty = '" . $qty . "', rejected_qty = '" . $data['rejected_qty'] . "', buying_price= '" . $data['current_buying_price'] . "', prev_buying_price= '" . $previous_buying_price . "',  source = '" . $data['source'] . "', prev_source = '" . $previous_source . "', added_by = '" . $data['user_id'] . "', added_user_role = '" . $data['user_role'] . "', added_user = '" . $data['user_name'] . "', delivery_date = '" . $data['delivery_date'] . "', target_buying_price = '" . $data['target_buying_price'] . "',  date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+        return $this->db->getLastId();
+    }
+
 }

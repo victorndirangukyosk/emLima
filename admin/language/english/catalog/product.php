@@ -34,6 +34,7 @@ $_['column_updation_date'] = 'Updated Date';
 $_['column_updated_by'] = 'Updated By';
 $_['column_added_user_role'] = 'User Role';
 $_['column_date_added'] = 'Date Added';
+$_['column_date_added_end'] = 'To Date Added';
 $_['column_rejected_qty'] = 'Rejected Quantity';
 $_['column_prev_quantity'] = 'Previous Quantity';
 $_['column_updated_quantity'] = 'Updated Quanity';

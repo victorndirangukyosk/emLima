@@ -1158,7 +1158,7 @@ class ControllerCheckoutCart extends Controller {
         $log->write($this->request->post['list_name']);
         $log->write('Save List');
         $products = $this->cart->getProducts();
-        
+
         // echo "<pre>";print_r($products);die;
 
         foreach ($products as $product) {
@@ -1178,7 +1178,7 @@ class ControllerCheckoutCart extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addProdToWishlist($product_id, $quantity, $list_name,$product_note='') {
+    public function addProdToWishlist($product_id, $quantity, $list_name, $product_note = '') {
         $this->load->language('account/wishlist');
 
         $data['text_success_added_in_list'] = $this->language->get('text_success_added_in_list');
@@ -1198,11 +1198,11 @@ class ControllerCheckoutCart extends Controller {
         if ($this->customer->isLogged()) {
             $lists = $this->model_assets_category->getUserLists();
 
-            if (is_array($lists) && count($lists) > 0) {
-                foreach ($lists as $list) {
-                    $this->model_account_wishlist->deleteWishlistProduct($list['wishlist_id'], $this->request->post['listproductId']);
-                }
-            }
+            /* if (is_array($lists) && count($lists) > 0) {
+              foreach ($lists as $list) {
+              $this->model_account_wishlist->deleteWishlistProduct($list['wishlist_id'], $this->request->post['listproductId']);
+              }
+              } */
 
             $wishlist_exists = $this->model_account_wishlist->CheckSaveBasketExits($list_name);
             $log->write('WISHLIST EXISTS WITH NAME');
@@ -1214,7 +1214,7 @@ class ControllerCheckoutCart extends Controller {
             } else {
                 $wishlist_id = $this->model_account_wishlist->createWishlist($list_name);
             }
-            $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id, $product_id, $quantity,$product_note);
+            $this->model_account_wishlist->addProductToWishlistWithQuantity($wishlist_id, $product_id, $quantity, $product_note);
         }
 
         $this->response->addHeader('Content-Type: application/json');

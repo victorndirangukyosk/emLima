@@ -3610,8 +3610,9 @@ class ControllerApiCustomerOrder extends Controller {
         $json['message'] = [];
 
         $log = new Log('error.log');
-        //$log->write($args);die;
-        //$log->write('Log 3.5');
+        $log->write('Log 3.5');
+        $log->write($args);
+        $log->write('Log 3.5');
         //echo "<pre>";print_r($args);die;
         $data['kondutoStatus'] = $this->config->get('config_konduto_status');
         $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');

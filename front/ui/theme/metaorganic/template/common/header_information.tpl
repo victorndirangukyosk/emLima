@@ -410,16 +410,7 @@ $(document).ready(function() {
                                                         <i class="fa fa-bell"></i><?= $text_user_notification_settings ?> </a>
                                             </li>
 
-                                            <li role="presentation" >
-
-                                            <?php if(strpos($refer,$_SERVER["REQUEST_URI"]) !== false) { ?>
-                                                <a href="<?= $refer ?>" class="active">
-                                            <?php } else { ?>
-                                                <a href="<?= $refer ?>">
-                                            <?php } ?>
-
-                                            <i class="fa fa-share-alt"></i><?= $text_refer ?></a>
-                                            </li>
+                                            
 
                                             <li role="presentation"><a href="<?= $logout ?>"><i class="fa fa-power-off"></i> <?= $text_signout ?></a></li>
                                         </ul>
