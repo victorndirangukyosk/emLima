@@ -797,8 +797,12 @@ class ModelCatalogVendorProduct extends Model {
             $implode[] = "product_store_id = '" . $this->db->escape($data['filter_store_id']) . "'";
         }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $implode[] = "DATE_FORMAT(date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
+        }
+        
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $implode[] = "DATE_FORMAT(date_added, '%Y-%m-%d') BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
         }
 
         if (!empty($data['filter_name'])) {
@@ -853,12 +857,12 @@ class ModelCatalogVendorProduct extends Model {
             $implode[] = "product_store_id = '" . $this->db->escape($data['filter_store_id']) . "'";
         }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $implode[] = "DATE_FORMAT(date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
         }
 
-        if (!empty($data['filter_name'])) {
-            $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $implode[] = "DATE_FORMAT(date_added, '%Y-%m-%d') BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
         }
 
         if (!empty($data['filter_product_history_id'])) {

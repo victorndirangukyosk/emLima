@@ -2415,6 +2415,12 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $filter_date_added = null;
         }
+        
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $filter_date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $filter_date_added_end = null;
+        }
 
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -2451,6 +2457,10 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
+        
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
 
         if (isset($this->request->get['sort'])) {
             $url .= '&sort=' . $this->request->get['sort'];
@@ -2483,6 +2493,7 @@ class ControllerCatalogVendorProduct extends Controller {
             'filter_store_id' => $filter_store_id,
             'filter_model' => $filter_model,
             'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -2540,6 +2551,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $data['entry_name'] = $this->language->get('entry_product_name');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
+        $data['entry_date_added_end'] = 'To Date Added';
         $data['entry_store_name'] = $this->language->get('entry_store_name');
 
         $data['button_filter'] = $this->language->get('button_filter');
@@ -2581,6 +2593,10 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
+        
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
 
         if (isset($this->request->get['filter_store_id'])) {
             $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
@@ -2608,6 +2624,10 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
+        
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
 
         if (isset($this->request->get['filter_store_id'])) {
             $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
@@ -2633,6 +2653,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $data['filter_name'] = $filter_name;
         $data['filter_date_added'] = $filter_date_added;
+        $data['filter_date_added_end'] = $filter_date_added_end;
         $data['filter_store_id'] = $filter_store_id;
 
         $data['sort'] = $sort;
@@ -2704,6 +2725,12 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $filter_date_added = null;
         }
+        
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $filter_date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $filter_date_added_end = null;
+        }
 
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -2741,6 +2768,10 @@ class ControllerCatalogVendorProduct extends Controller {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
+        
         if (isset($this->request->get['sort'])) {
             $url .= '&sort=' . $this->request->get['sort'];
         }
@@ -2772,6 +2803,7 @@ class ControllerCatalogVendorProduct extends Controller {
             'filter_store_id' => $filter_store_id,
             'filter_model' => $filter_model,
             'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -2827,6 +2859,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $data['entry_name'] = $this->language->get('entry_product_name');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
+        $data['entry_date_added_end'] = $this->language->get('entry_date_added_end');
         $data['entry_store_name'] = $this->language->get('entry_store_name');
 
         $data['button_filter'] = $this->language->get('button_filter');
@@ -2868,6 +2901,10 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
+        
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
 
         if (isset($this->request->get['filter_store_id'])) {
             $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
@@ -2895,6 +2932,10 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
+        
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
 
         if (isset($this->request->get['filter_store_id'])) {
             $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
@@ -2920,6 +2961,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $data['filter_name'] = $filter_name;
         $data['filter_date_added'] = $filter_date_added;
+        $data['filter_date_added_end'] = $filter_date_added_end;
         $data['filter_store_id'] = $filter_store_id;
 
         $data['sort'] = $sort;

@@ -58,6 +58,17 @@
                         </div>
                         
                         <div class="col-sm-3">
+                         <div class="form-group">
+                                <label class="control-label" for="input-date-added"><?php echo $entry_date_added_end; ?></label>
+                                <div class="input-group date" style="max-width: 321px;">
+                                    <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="<?php echo $entry_date_added_end; ?>" data-date-format="YYYY-MM-DD" id="input-date-added-end" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span></div>
+                            </div>   
+                        </div>
+                        
+                        <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
                                 <input type="text" name="filter_store_id" value="<?php echo $filter_store_id; ?>" placeholder="Store Name" id="input-store-name" class="form-control" />
@@ -154,6 +165,12 @@
             
             if (filter_date_added) {
                 url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+            
+            var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
+            
+            if (filter_date_added_end) {
+                url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
             }
             
             var filter_store_id = $('input[name=\'filter_store_id\']').val();
