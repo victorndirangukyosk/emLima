@@ -235,7 +235,31 @@
         function excel() {
 
             url = 'index.php?path=catalog/vendor_product/InventoryHistoryexcel&token=<?php echo $token; ?>';
+            
+            var filter_name = $('input[name=\'filter_name\']').val();
 
+            if (filter_name) {
+                url += '&filter_name=' + encodeURIComponent(filter_name);
+            }
+            
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+            
+            if (filter_date_added) {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+            
+            var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
+            
+            if (filter_date_added_end) {
+                url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
+            }
+            
+            var filter_store_id = $('input[name=\'filter_store_id\']').val();
+
+            if (filter_store_id) {
+                url += '&filter_store_id=' + encodeURIComponent(filter_store_id);
+            }
+            
             location = url;
         }
 
