@@ -2678,10 +2678,24 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $filter_store_id = null;
         }
+        
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+        
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $filter_date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $filter_date_added_end = null;
+        }
 
         $filter_data = [
             'filter_name' => $filter_name,
             'filter_store_id' => $filter_store_id,
+            'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
         ];
 
         // echo "<pre>";print_r($filter_data);die;
@@ -2986,10 +3000,24 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $filter_store_id = null;
         }
+        
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+        
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $filter_date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $filter_date_added_end = null;
+        }
 
         $filter_data = [
             'filter_name' => $filter_name,
             'filter_store_id' => $filter_store_id,
+            'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
         ];
 
         // echo "<pre>";print_r($filter_data);die;
