@@ -138,6 +138,7 @@ class ModelPaymentPesapal extends Model {
             $this->db->query('UPDATE `' . DB_PREFIX . "order_history` SET notify = '" . (int) $notify . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
         }
         $this->insertOrderTransactionFee($order_id, $order_status_id);
+        $this->updateDateAdded($order_id, $order_status_id);
     }
 
     public function addOrderHistoryFailed($order_id, $order_status_id, $added_by = '', $added_by_role = '', $paid) {
@@ -172,6 +173,7 @@ class ModelPaymentPesapal extends Model {
             $log->write($order_history);
             $this->db->query('UPDATE `' . DB_PREFIX . "order_history` SET notify = '" . (int) $notify . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
         }
+        $this->updateDateAdded($order_id, $order_status_id);
         //$this->insertOrderTransactionFee($order_id, $order_status_id);
     }
 
@@ -215,6 +217,33 @@ class ModelPaymentPesapal extends Model {
     public function getPesapalOtherAmount($customer_id) {
         $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "pesapal_transactions` WHERE `customer_id` = '" . $customer_id . "' AND order_id IS NULL")->rows;
         return $result;
+    }
+
+    public function updateDateAdded($order_id, $order_status_id) {
+        $order_history_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int) $order_id . "'");
+        $order_history = $order_history_query->num_rows;
+
+        $order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int) $order_id . "'");
+        $order = $order_query->row;
+        $date_added = date('Y-m-d', strtotime($order['date_added']));
+        $current_date = date('Y-m-d');
+        $log = new Log('error.log');
+        $log->write('UPDATE DATE ADDED');
+        $log->write($order_id);
+        $log->write($order_status_id);
+        $log->write($date_added);
+        $log->write($current_date);
+        $log->write('UPDATE DATE ADDED');
+
+        if ($order_history == 0 && ($order_status_id == 14 || $order_status_id == 1) && $date_added < $current_date) {
+            $log->write('UPDATE DATE ADDED 2');
+            $log->write($order_id);
+            $log->write($order_status_id);
+            $log->write($date_added);
+            $log->write($current_date);
+            $log->write('UPDATE DATE ADDED 2');
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET date_added = NOW() WHERE order_id="' . $order_id . '"');
+        }
     }
 
 }
