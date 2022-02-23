@@ -289,7 +289,7 @@ class ControllerApiCustomerCheckout extends Controller {
             $total = $this->request->get['total'];
             if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
                 foreach ($results as $result) {
-                    if ($result['code'] == 'cod' || $result['code'] == 'wallet'|| $result['code'] != 'mod' || $result['code'] != 'pesapal' || $result['code'] != 'interswitch') {
+                    if ($result['code'] == 'cod' || $result['code'] == 'wallet' || $result['code'] != 'mod' || $result['code'] != 'pesapal' || $result['code'] != 'interswitch') {
                         if ($this->config->get($result['code'] . '_status')) {
                             $this->load->model('payment/' . $result['code']);
 
@@ -1466,7 +1466,7 @@ class ControllerApiCustomerCheckout extends Controller {
         if ($this->customer->isLogged()) {
             $data = [];
 
-            $rangeonestart = "09:00:00";
+            $rangeonestart = "10:00:00";
             $rangeoneend = "18:59:59";
 
             $rangetwostart = "19:00:00";
@@ -1479,7 +1479,7 @@ class ControllerApiCustomerCheckout extends Controller {
             $rangefourend = "08:59:59";
 
             $rangefivestart = "09:00:00";
-            $rangefiveend = "12:00:00";
+            $rangefiveend = "09:59:59";
 
             $log = new Log('error.log');
             $log->write('RANGE');

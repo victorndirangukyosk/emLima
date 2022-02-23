@@ -2825,6 +2825,23 @@ class ControllerSaleCustomer extends Controller {
         $data['payment_terms'] = $this->request->post['payment_terms'];
         $data['statement_duration'] = $this->request->post['statement_duration'];
         $data['customer_id'] = $this->request->post['customer_id'];
+
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'customer_id' => $this->request->get['customer_id'],
+        ];
+        $log->write('customer configuration');
+
+        $this->model_user_user_activity->addActivity('customer_configuration_edit', $activity_data);
+
+        $log->write('customer configuration');
+
         $this->model_sale_customer->editCustomerConfiguration($this->request->post['customer_id'], $data);
         $json['success'] = true;
         $json['message'] = 'Customer Configuration Saved!';
@@ -4889,6 +4906,23 @@ class ControllerSaleCustomer extends Controller {
             $json['success'] = true;
             $json['message'] = 'Same as previous password';
         } else {
+
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'customer_id' => $this->request->get['customer_id'],
+            ];
+            $log->write('customer password');
+
+            $this->model_user_user_activity->addActivity('customer_password_edit', $activity_data);
+
+            $log->write('customer password');
+
             $data['password'] = $this->request->post['password-1'];
 
             $data['customer_id'] = $this->request->post['customer_id'];

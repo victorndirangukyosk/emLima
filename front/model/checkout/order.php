@@ -521,9 +521,9 @@ class ModelCheckoutOrder extends Model {
         }
 
         $log = new Log('error.log');
-        
+
         if ($order_info) {
-        //if ($order_info && $order_info['order_status_id'] != $order_status_id) {
+            //if ($order_info && $order_info['order_status_id'] != $order_status_id) {
             // Fraud Detection
             $this->load->model('account/customer');
 
@@ -658,7 +658,7 @@ class ModelCheckoutOrder extends Model {
             }
 
             $this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int) $order_id . "', added_by = '" . (int) $added_by . "', role = '" . $added_by_role . "', order_status_id = '" . (int) $order_status_id . "', notify = '" . (int) $notify . "', comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
-
+            $this->updateDateAdded($order_id, $order_status_id);
             // If current order status is not processing or complete but new status is processing or complete then commence completing the order
             //print_r($order_info['order_status_id']);
 
@@ -2272,6 +2272,31 @@ class ModelCheckoutOrder extends Model {
     public function getNewOrderIdByMissingProductOrderId($order_id) {
         $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND new_order_id > 0");
         return $new_order_query->row;
+    }
+
+    public function updateDateAdded($order_id, $order_status_id) {
+        $order_history_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order_history` WHERE order_id = '" . (int) $order_id . "'");
+        $order_history = $order_history_query->num_rows;
+
+        $order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int) $order_id . "'");
+        $order = $order_query->row;
+        $date_added = date('Y-m-d', strtotime($order['date_added']));
+        $current_date = date('Y-m-d');
+        $log = new Log('error.log');
+        $log->write('UPDATE DATE ADDED');
+        $log->write($order_id);
+        $log->write($order_status_id);
+        $log->write($date_added);
+        $log->write($current_date);
+        $log->write('UPDATE DATE ADDED');
+
+        if ($order_history == 0 && ($order_status_id == 14 || $order_status_id == 1) && $date_added < $current_date) {
+            $log->write('UPDATE DATE ADDED 2');
+            $log->write($date_added);
+            $log->write($current_date);
+            $log->write('UPDATE DATE ADDED 2');
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET date_added = NOW() WHERE order_id="' . $order_id . '"');
+        }
     }
 
 }
