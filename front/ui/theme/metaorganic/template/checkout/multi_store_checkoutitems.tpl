@@ -309,7 +309,7 @@
                                 <?php if($min_order_amount_reached == TRUE) { ?>
                                 <div class="checkout-promocode-form"  >
                                  <div class="form-group">
-                                        <span class="input-group-btn" id="proceed_to_checkout"  onclick="setOrderNotes(); getpezeshalimit();">
+                                        <span class="input-group-btn kb_proceed_to_checkout" id="proceed_to_checkout"  onclick="setOrderNotes(); getpezeshalimit();">
                                             <a id="button-reward" href="#" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">Proceed to Check out
                                             </a>
                                         </span>
@@ -319,7 +319,7 @@
                                 <?php } else { ?>
                                 <div class="checkout-promocode-form"  >
                                  <div class="form-group">
-                                        <span class="input-group-btn">
+                                        <span class="input-group-btn kb_proceed_to_checkout" onclick="setOrderNotes(); getpezeshalimit();">
                                             <a id="button-reward" href="<?php echo $server; ?>" class="btn btn-primary btnsetall" style="width: 100%;height: 100%;" type="button">CONTINUE SHOPPING</a>
                                         </span>
                                     </div>
@@ -1018,6 +1018,19 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
             $(".orgprice"+value.product_store_id).html(value.orginal_price);
             $('.cart-total-amount').html(json['total_amount']);    
             });
+            
+            if(json.minimum_order_amount == true) {
+            $("span.kb_proceed_to_checkout").attr('id', 'proceed_to_checkout');
+            $("a[id^='button-reward']").text('PROCEED TO CHECK OUT');
+            $("a[id^='button-reward']").attr('href', '#');
+            }
+            
+            if(json.minimum_order_amount == false) {
+            console.log('minimum_order_amount')
+            $("span.kb_proceed_to_checkout").removeAttr('id');
+            $("a[id^='button-reward']").text('CONTINUE SHOPPING');
+            $("a[id^='button-reward']").attr('href', json.base_url);
+            }
             
             loadTotals($('input#shipping_city_id').val());
             loadUnpaidorders();

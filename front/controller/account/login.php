@@ -47,6 +47,7 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['accept_vendor_terms']);
             unset($this->session->data['pezesha_amount_limit']);
             unset($this->session->data['pezesha_customer_amount_limit']);
+            setcookie('po_number', null, -1, '/');
 
             $customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);
 
@@ -755,6 +756,7 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['voucher']);
             unset($this->session->data['vouchers']);
             unset($this->session->data['adminlogin']);
+            setcookie('po_number', null, -1, '/');
 
             $customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);
 

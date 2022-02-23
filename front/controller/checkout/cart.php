@@ -734,7 +734,8 @@ class ControllerCheckoutCart extends Controller {
 
         $json['count_products'] = $this->cart->countProducts();
         $json['total_amount'] = $this->currency->format($this->cart->getTotal());
-
+        $json['minimum_order_amount'] = $this->config->get('config_active_store_minimum_order_amount') <= $this->cart->getSubTotal() ? TRUE : FALSE;
+        $json['base_url'] = BASE_URL.'/';
         // Validate minimum quantity requirements.
         $products_cart = $this->cart->getProducts();
 
