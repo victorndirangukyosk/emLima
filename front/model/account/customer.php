@@ -1387,9 +1387,37 @@ class ModelAccountCustomer extends Model {
         $cart_db_data = $customer_cart_info->rows;
         if ($customer_cart_info->num_rows > 0 && is_array($cart_db_data) && count($cart_db_data) > 0) {
             foreach ($cart_db_data as $cart_db_dat) {
-                $this->cart->add($cart_db_dat['product_store_id'], $cart_db_dat['quantity'], [], $cart_db_dat['recurring_id'], $cart_db_dat['store_id'], $cart_db_dat['store_product_variation_id'], $cart_db_dat['product_type'], $cart_db_dat['product_note'], $cart_db_dat['produce_type']);
+
+                $new_product = $this->getProductByProductStoreId($cart_db_dat['product_store_id']);
+                $category_price_product = $this->getCategoryPriceProduct($cart_db_dat['product_store_id'], $cart_db_dat['store_id'], $this->customer->getCustomerCategory());
+
+                if ($new_product != NULL && $new_product['product_store_id'] > 0 && ($category_price_product == NULL || ($category_price_product != NULL && $category_price_product['status'] == 1))) {
+                    $this->cart->add($cart_db_dat['product_store_id'], $cart_db_dat['quantity'], [], $cart_db_dat['recurring_id'], $cart_db_dat['store_id'], $cart_db_dat['store_product_variation_id'], $cart_db_dat['product_type'], $cart_db_dat['product_note'], $cart_db_dat['produce_type']);
+                }
             }
         }
+    }
+
+    public function getProductByProductStoreId($product_store_id, $is_admin = false) {
+        //$store_id = $this->session->data['config_store_id'];
+
+        $this->db->select('product_to_store.*,product_description.*,product.unit,product.model,product.image', false);
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+        $this->db->group_by('product_to_store.product_store_id');
+        //$this->db->where('product_to_store.store_id', $store_id);
+        $this->db->where('product_to_store.status', 1);
+        //$this->db->where('product.status',1);
+        $this->db->where('product_to_store.product_store_id', $product_store_id);
+        $ret = $this->db->get('product_to_store')->row;
+
+        return $ret;
+    }
+
+    public function getCategoryPriceProduct($product_store_id, $store_id, $category) {
+        $product_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE product_store_id = '" . (int) $product_store_id . "' AND store_id = '" . (int) $store_id . "' AND price_category = '" . $category . "'");
+        return $product_query->row;
     }
 
     public function checkWalletRunningLow($customer_id) {

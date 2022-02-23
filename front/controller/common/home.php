@@ -1044,7 +1044,7 @@ class ControllerCommonHome extends Controller {
                 'limit' => (1359 == $category['category_id']) ? 12 : 12,
                 'store_id' => ACTIVE_STORE_ID,
                 'selectedProducts' => $selectedProducts,
-                'filter_sort' => isset($this->request->get['filter_sort']) || $this->request->get['filter_sort'] != NULL ? $this->request->get['filter_sort'] : NULL
+                'filter_sort' => isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] != NULL ? $this->request->get['filter_sort'] : NULL
             ];
 
             // Level 1
