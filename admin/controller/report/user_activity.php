@@ -39,15 +39,15 @@ class ControllerReportUserActivity extends Controller {
 
         if (isset($this->request->get['filter_key'])) {
             $filter_key = $this->request->get['filter_key'];
-        } else {
+        } else { 
             $filter_key = null;
         }
 
 
-        if (isset($this->request->get['filter_cutomer'])) {
-            $filter_cutomer = $this->request->get['filter_cutomer'];
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
         } else {
-            $filter_cutomer = null;
+            $filter_customer = null;
         }
         if (isset($this->request->get['filter_company'])) {
             $filter_company = $this->request->get['filter_company'];
@@ -95,12 +95,14 @@ class ControllerReportUserActivity extends Controller {
             $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
         }
 
+
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company='.urlencode($this->request->get['filter_company']);
         }
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer='.urlencode($this->request->get['filter_customer']);
         }
+        
 
         if (isset($this->request->get['filter_order'])) {
             $url .= '&filter_order='.urlencode($this->request->get['filter_order']);
@@ -138,6 +140,7 @@ class ControllerReportUserActivity extends Controller {
             'start' => ($page - 1) * 20,
             'limit' => 20,
         ];
+
 
         $activity_total = $this->model_report_user->getTotalUserActivities($filter_data);
 
