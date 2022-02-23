@@ -26,6 +26,7 @@ $_['text_customer_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="custom
 $_['text_farmer_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="farmer_id=%d">farmer</a>.';
 $_['text_customer_add'] = '<a href="user_id=%d">%s</a> created a new <a href="customer_id=%d">customer</a>.';
 $_['text_customer_delete'] = '<a href="user_id=%d">%s</a> deleted a <a href="customer_id=%d">customer</a>.';
+$_['text_customer_configuration_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="customer_id=%d">customer configuration</a>.';
 $_['text_order_invoice_no'] = '<a href="user_id=%d">%s</a> generated <a href="order_id=%d">invoice</a>.';
 $_['text_order_transaction_id_added'] = '<a href="user_id=%d">%s</a> added <a href="order_id=%d">transaction id</a>.';
 $_['text_order_transaction_id_reversereversed'] = '<a href="user_id=%d">%s</a> reversed payment <a href="order_id=%d">transaction id</a>. - %d';
