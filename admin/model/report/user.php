@@ -32,11 +32,11 @@ class ModelReportUser extends Model {
         }
 
         if (!empty($data['filter_company'])) {
-            $sql .= " AND cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+            $implode[] ="  cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
         if (!empty($data['filter_customer'])) {
-            $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+            $implode[] =" CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
         if (!empty($data['filter_order'])) {
