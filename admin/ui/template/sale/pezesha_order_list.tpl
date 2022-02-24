@@ -210,6 +210,7 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?></a>
                                         <?php } ?></td>
+                                    <td class="text-left">Mpesa Reference</td>
                                     <td class="text-left">
                                         <?php if ($sort == 'o.date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
@@ -240,6 +241,7 @@
 
                                     
                                     <td class="text-left"><?php echo $order['total']; ?></td>
+                                    <td class="text-left"><?php echo $order['mpesa_reference']; ?></td>
                                     <td class="text-left"><?php echo $order['date_added']; ?></td>
                                 </tr>
                                 <?php } ?>
