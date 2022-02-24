@@ -252,6 +252,7 @@ class ControllerCommonMenu extends Controller {
 
         $data['transaction'] = $this->url->link('sale/transactions', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_receivables'] = $this->url->link('sale/order_receivables', 'token=' . $this->session->data['token'], 'SSL');
+        $data['pezesha_order_receivables'] = $this->url->link('sale/pezesha_receivables', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['customer_wallet'] = $this->url->link('wallets/customer_wallet', 'token=' . $this->session->data['token'], 'SSL');
         $data['vendor_wallet'] = $this->url->link('wallets/vendor_wallet', 'token=' . $this->session->data['token'], 'SSL');
@@ -344,6 +345,7 @@ class ControllerCommonMenu extends Controller {
 
         $data['preturn_transaction'] = $this->user->hasPermission('access', 'sale/transactions');
         $data['preturn_order_receivables'] = $this->user->hasPermission('access', 'sale/order_receivables');
+        $data['preturn_pezesha_order_receivables'] = $this->user->hasPermission('access', 'sale/pezesha_receivables');
 
         //Marketting
         $data['preturn_contact'] = $this->user->hasPermission('access', 'marketing/contact');
