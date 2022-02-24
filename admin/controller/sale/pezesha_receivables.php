@@ -352,7 +352,7 @@ class ControllerSalePezeshaReceivables extends Controller {
                 'amount_partialy_paid' => $result['amount_partialy_paid'],
                 'delivery_charges' => $result['delivery_charges'],
                 'missing_products_count' => count($missing_products),
-                'mpesa_reference' => $results['mpesa_reference'],
+                'mpesa_reference' => $result['mpesa_reference'],
             ];
         }
 
