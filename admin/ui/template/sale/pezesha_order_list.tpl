@@ -4,7 +4,7 @@
     <div class="page-header">
         <div class="container-fluid">
             <div class="pull-right">
-                <button type="button" onclick="downloadOrders();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders Excel"><i class="fa fa-download"></i></button>
+                <button type="button" onclick="downloadOrders();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Pezesha Orders Excel"><i class="fa fa-download"></i></button>
             </div>
             <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
@@ -344,7 +344,7 @@
         });
 
    $('#button-filter').on('click', function () {
-            url = 'index.php?path=sale/order&token=<?php echo $token; ?>';
+            url = 'index.php?path=sale/pezesha_receivables&token=<?php echo $token; ?>';
 
              var filter_company = $('input[name=\'filter_company\']').val();
 
@@ -2016,7 +2016,7 @@ function downloadOrders() {
 
              
             //const deliveryDate = $("#consolidated-order-sheet-datepicker").val();
-                url = 'index.php?path=report/vendor_orders/downloadorders&token=<?php echo $token; ?>';
+                url = 'index.php?path=report/vendor_orders/downloadpezeshaordersreceivables&token=<?php echo $token; ?>';
               var filter_order_status = $('select[name=\'filter_order_status\']').val();
 
             console.log(filter_order_status);
