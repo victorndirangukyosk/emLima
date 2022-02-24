@@ -164,6 +164,10 @@
             <li><a href="<?php echo $order_receivables; ?>">Payment Receivables</a></li>
             <?php } ?>
             
+            <?php if($preturn_pezesha_order_receivables) { ?>
+            <li><a href="<?php echo $pezesha_order_receivables; ?>">Pezesha Receivables</a></li>
+            <?php } ?>
+            
             <?php if($preturn_order_bulk_email) { ?>
             <li><a href="<?php echo $order_bulk_notification; ?>">Send Notification To Bulk Orders</a></li>
             <?php } ?>
