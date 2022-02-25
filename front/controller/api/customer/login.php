@@ -537,4 +537,94 @@ class ControllerApiCustomerLogin extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function refreshtoken() {
+        //echo "<pre>";print_r( "addNewAccessToken");die;
+        //echo "<pre>";print_r($this->customer->getId());die;
+        $log->write('TOKEN_REFRESH');
+        $this->request->post['customer_id'] = $this->customer->getId();
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('api/login');
+
+        $this->load->language('api/general');
+
+        if (true) {
+            $tokenId = base64_encode(mcrypt_create_iv(32));
+            $issuedAt = time();
+            $notBefore = $issuedAt;  //Adding 10 seconds
+            $expire = $notBefore + 15780000; // Adding 60 seconds
+            //$expire     = $notBefore + 180; // Adding 60 seconds
+            $serverName = 'serverName'; /// set your domain name
+
+            /*
+             * Create the token as an array
+             */
+            $data = [
+                'iat' => $issuedAt, // Issued at: time when the token was generated
+                'jti' => $tokenId, // Json Token Id: an unique identifier for the token
+                'iss' => $serverName, // Issuer
+                'nbf' => $notBefore, // Not before
+                'exp' => $expire, // Expire
+                'data' => [// Data related to the logged user you can set your required data
+                    'id' => $this->request->post['customer_id'], // id from the users table
+                    'name' => $this->request->post['customer_id'], //  name
+                ],
+            ];
+
+            $secretKey = base64_decode(SECRET_KEY);
+            /// Here we will transform this array into JWT:
+            $jwt = JWT::encode(
+                            $data, //Data to be encoded in the JWT
+                            $secretKey, // The signing key
+                            ALGORITHM
+            );
+
+            $unencodedArray = ['jwt' => $jwt];
+
+            $this->session->data['customer_id'] = $this->request->post['customer_id'];
+
+            //echo  "{'status' : 'success','resp':".json_encode($unencodedArray)."}"
+            $this->load->model('account/customer');
+
+            $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
+            $this->model_account_customer->cacheProductPrices(75);
+            if (!empty($customer_info['dob'])) {
+                $customer_info['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
+            } else {
+                $customer_info['dob'] = '01/01/1990';
+            }
+
+            $customer_info['user_rewards_available'] = (int) $this->customer->getRewardPoints();
+
+            $referUnique = 'refer=' . strtolower(str_replace(' ', '', $this->customer->getFirstName())) . strtolower(str_replace(' ', '', $this->customer->getLastName())) . '!@' . strtolower($this->customer->getId());
+
+            if ($this->request->server['HTTPS']) {
+                $refer_link = $this->config->get('config_ssl');
+            } else {
+                $refer_link = $this->config->get('config_ssl');
+            }
+
+            $refer_link = rtrim($refer_link, '/');
+            $refer_link .= '?' . $referUnique;
+
+            $customer_info['refer_link'] = $referUnique;
+
+            //$json['success'] = $this->language->get('text_valid_otp');
+            $json['token'] = $jwt; //json_encode($unencodedArray);
+            $json['status'] = true;
+
+            $json['data'] = $customer_info;
+        } else {
+            //$json['error'] = $this->language->get('error_login');
+            $json['status'] = 1; //user not found
+        }
+        $log = new Log('error.log');
+        $log->write('TOKEN_REFRESH');
+        return $json;
+    }
+
 }

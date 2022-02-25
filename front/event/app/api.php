@@ -497,7 +497,8 @@ class EventAppApi extends Event {
 
         $log = new Log('error.log');
         $log->write('customer_token_authenticate');
-        $log->write($this->customer->isLogged() . 'cerf');
+        $log->write($this->customer->isLogged() . 'TOKEN_CUSTOMER_ID');
+        $log->write($this->customer->getEmail() . 'TOKEN_EMAIL');
         $log->write($matches);
         //echo "<pre>";print_r($this->customer->isLogged());die;
 
@@ -572,6 +573,9 @@ class EventAppApi extends Event {
                 $res['status'] = 1;
                 $res['data'] = json_encode($DecodedDataArray);
             } catch (Exception $e) {
+                $res = $this->load->controller('api/customer/login/refreshtoken');
+                $log = new Log('error.log');
+                $log->write($res);
                 //echo "<pre>";print_r($e);die;
             }
         }
