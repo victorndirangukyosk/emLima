@@ -573,9 +573,11 @@ class EventAppApi extends Event {
                 $res['status'] = 1;
                 $res['data'] = json_encode($DecodedDataArray);
             } catch (Exception $e) {
-                $res = $this->load->controller('api/customer/login/refreshtoken');
-                $log = new Log('error.log');
-                $log->write($res);
+                if ($e->getMessage() == "Expired token") {
+                    $res = $this->load->controller('api/customer/login/refreshtoken');
+                    $log = new Log('error.log');
+                    $log->write($res);
+                }
                 //echo "<pre>";print_r($e);die;
             }
         }
