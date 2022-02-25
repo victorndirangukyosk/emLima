@@ -44,7 +44,7 @@ class ControllerApiCustomerLogin extends Controller {
             $tokenId = base64_encode(mcrypt_create_iv(32));
             $issuedAt = time();
             $notBefore = $issuedAt;  //Adding 10 seconds
-            $expire = $notBefore + 604800; // Adding 60 seconds
+            $expire = $notBefore + 15780000; // Adding 60 seconds
             $serverName = 'serverName'; /// set your domain name
 
             /*
