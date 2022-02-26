@@ -21,6 +21,7 @@ class Customer {
     private $pezesha_customer_id;
     private $pezesha_customer_uuid;
     private $pezesha_identifier;
+    private $jwt_token;
 
     public function __construct($registry) {
         $this->config = $registry->get('config');
@@ -405,6 +406,10 @@ class Customer {
     public function getCustomerPezeshaIdentifier() {
         return $this->pezesha_identifier;
     }
+    
+    public function getCustomerJwtToken() {
+        return $this->jwt_token;
+    }
 
     public function setVariables($data) {
         $this->customer_id = $data['customer_id'];
@@ -426,6 +431,7 @@ class Customer {
         $this->pezesha_customer_id = $data['pezesha_customer_id'];
         $this->pezesha_customer_uuid = $data['pezesha_customer_uuid'];
         $this->pezesha_identifier = $data['pezesha_identifier'];
+        $this->jwt_token = $data['jwt_token'];
     }
 
 }

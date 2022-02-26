@@ -631,7 +631,7 @@ class ControllerApiCustomerLogin extends Controller {
                     $customer_query->row['pezesha_identifier'] = NULL;
                 }
                 /* SET CUSTOMER PEZESHA */
-
+                $customer_query->row['jwt_token'] = $jwt;
                 $this->customer->setVariables($customer_query->row);
             }
 
@@ -645,6 +645,24 @@ class ControllerApiCustomerLogin extends Controller {
         $log = new Log('error.log');
         $log->write('TOKEN_REFRESH');
         return $json;
+    }
+
+    public function getCurrentUserDetails() {
+
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $customer['customer_id'] = $this->customer->getId();
+        $customer['customer_jwt_token'] = $this->customer->getCustomerJwtToken();
+        $customer['customer_name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
+        $customer['customer_email'] = $this->customer->getEmail();
+        $json['data'] = $customer;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
