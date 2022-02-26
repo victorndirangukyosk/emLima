@@ -540,6 +540,7 @@ class ControllerApiCustomerLogin extends Controller {
     public function refreshtoken() {
         //echo "<pre>";print_r( "addNewAccessToken");die;
         //echo "<pre>";print_r($this->customer->getId());die;
+        $log = new Log('error.log');
         $log->write('TOKEN_REFRESH');
         $this->request->post['customer_id'] = $this->customer->getId();
         $json = [];
@@ -552,7 +553,7 @@ class ControllerApiCustomerLogin extends Controller {
 
         $this->load->language('api/general');
 
-        if (true) {
+        if ($this->customer->getId()) {
             $tokenId = base64_encode(mcrypt_create_iv(32));
             $issuedAt = time();
             $notBefore = $issuedAt;  //Adding 10 seconds
@@ -587,39 +588,58 @@ class ControllerApiCustomerLogin extends Controller {
 
             $this->session->data['customer_id'] = $this->request->post['customer_id'];
 
-            //echo  "{'status' : 'success','resp':".json_encode($unencodedArray)."}"
             $this->load->model('account/customer');
 
             $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
-            $this->model_account_customer->cacheProductPrices(75);
-            if (!empty($customer_info['dob'])) {
-                $customer_info['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
-            } else {
-                $customer_info['dob'] = '01/01/1990';
+            $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $this->customer->getId() . "' AND status = '1'");
+
+            if ($customer_query->num_rows) {
+                $log->write($customer_query->row['customer_category']);
+
+                /* SET CUSTOMER CATEGORY */
+                $data['customer_category'] = NULL;
+                if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                    $parent_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($customer_query->row['parent']) . "' AND status = '1' AND approved='1'");
+                    if ($customer_query->num_rows > 0 && $parent_customer_query->row['customer_id'] > 0) {
+                        $data['customer_category'] = $parent_customer_query->row['customer_category'];
+                    } else {
+                        $data['customer_category'] = NULL;
+                    }
+                }
+
+                if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
+                    $data['customer_category'] = $customer_query->row['customer_category'];
+                }
+
+                $customer_query->row['customer_category'] = $data['customer_category'];
+                /* SET CUSTOMER CATEGORY */
+
+                /* SET CUSTOMER PEZESHA */
+                if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
+                    $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_query->row['customer_id'] . "'");
+                }
+                if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                    $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_query->row['parent'] . "'");
+                }
+                if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
+                    $customer_query->row['pezesha_customer_id'] = $pezesha_customer_query->row['pezesha_customer_id'];
+                    $customer_query->row['pezesha_customer_uuid'] = $pezesha_customer_query->row['customer_uuid'];
+                    $customer_query->row['pezesha_identifier'] = $pezesha_customer_query->row['customer_id'];
+                } else {
+                    $customer_query->row['pezesha_customer_id'] = NULL;
+                    $customer_query->row['pezesha_customer_uuid'] = NULL;
+                    $customer_query->row['pezesha_identifier'] = NULL;
+                }
+                /* SET CUSTOMER PEZESHA */
+
+                $this->customer->setVariables($customer_query->row);
             }
 
-            $customer_info['user_rewards_available'] = (int) $this->customer->getRewardPoints();
-
-            $referUnique = 'refer=' . strtolower(str_replace(' ', '', $this->customer->getFirstName())) . strtolower(str_replace(' ', '', $this->customer->getLastName())) . '!@' . strtolower($this->customer->getId());
-
-            if ($this->request->server['HTTPS']) {
-                $refer_link = $this->config->get('config_ssl');
-            } else {
-                $refer_link = $this->config->get('config_ssl');
-            }
-
-            $refer_link = rtrim($refer_link, '/');
-            $refer_link .= '?' . $referUnique;
-
-            $customer_info['refer_link'] = $referUnique;
-
-            //$json['success'] = $this->language->get('text_valid_otp');
             $json['token'] = $jwt; //json_encode($unencodedArray);
             $json['status'] = true;
 
             $json['data'] = $customer_info;
         } else {
-            //$json['error'] = $this->language->get('error_login');
             $json['status'] = 1; //user not found
         }
         $log = new Log('error.log');
