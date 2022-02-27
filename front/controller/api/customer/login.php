@@ -44,7 +44,7 @@ class ControllerApiCustomerLogin extends Controller {
             $tokenId = base64_encode(mcrypt_create_iv(32));
             $issuedAt = time();
             $notBefore = $issuedAt;  //Adding 10 seconds
-            $expire = $notBefore + 604800; // Adding 60 seconds
+            $expire = $notBefore + 15780000; // Adding 60 seconds
             $serverName = 'serverName'; /// set your domain name
 
             /*
@@ -376,7 +376,7 @@ class ControllerApiCustomerLogin extends Controller {
             $tokenId = base64_encode(mcrypt_create_iv(32));
             $issuedAt = time();
             $notBefore = $issuedAt;  //Adding 10 seconds
-            $expire = $notBefore + 604800; // Adding 60 seconds
+            $expire = $notBefore + 15780000; // Adding 60 seconds
             //$expire     = $notBefore + 180; // Adding 60 seconds
             $serverName = 'serverName'; /// set your domain name
 
@@ -533,6 +533,134 @@ class ControllerApiCustomerLogin extends Controller {
             $ret = $this->emailtemplate->sendDynamicPushNotification($customer['customer_id'], $customer['device_id'], $this->request->post['message'], $this->request->post['title'], $sen);
         }
         $json['response'] = $ret;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function refreshtoken() {
+        //echo "<pre>";print_r( "addNewAccessToken");die;
+        //echo "<pre>";print_r($this->customer->getId());die;
+        $log = new Log('error.log');
+        $log->write('TOKEN_REFRESH');
+        $this->request->post['customer_id'] = $this->customer->getId();
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('api/login');
+
+        $this->load->language('api/general');
+
+        if ($this->customer->getId()) {
+            $tokenId = base64_encode(mcrypt_create_iv(32));
+            $issuedAt = time();
+            $notBefore = $issuedAt;  //Adding 10 seconds
+            $expire = $notBefore + 15780000; // Adding 60 seconds
+            //$expire     = $notBefore + 180; // Adding 60 seconds
+            $serverName = 'serverName'; /// set your domain name
+
+            /*
+             * Create the token as an array
+             */
+            $data = [
+                'iat' => $issuedAt, // Issued at: time when the token was generated
+                'jti' => $tokenId, // Json Token Id: an unique identifier for the token
+                'iss' => $serverName, // Issuer
+                'nbf' => $notBefore, // Not before
+                'exp' => $expire, // Expire
+                'data' => [// Data related to the logged user you can set your required data
+                    'id' => $this->request->post['customer_id'], // id from the users table
+                    'name' => $this->request->post['customer_id'], //  name
+                ],
+            ];
+
+            $secretKey = base64_decode(SECRET_KEY);
+            /// Here we will transform this array into JWT:
+            $jwt = JWT::encode(
+                            $data, //Data to be encoded in the JWT
+                            $secretKey, // The signing key
+                            ALGORITHM
+            );
+
+            $unencodedArray = ['jwt' => $jwt];
+
+            $this->session->data['customer_id'] = $this->request->post['customer_id'];
+
+            $this->load->model('account/customer');
+
+            $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
+            $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $this->customer->getId() . "' AND status = '1'");
+
+            if ($customer_query->num_rows) {
+                $log->write($customer_query->row['customer_category']);
+
+                /* SET CUSTOMER CATEGORY */
+                $data['customer_category'] = NULL;
+                if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                    $parent_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($customer_query->row['parent']) . "' AND status = '1' AND approved='1'");
+                    if ($customer_query->num_rows > 0 && $parent_customer_query->row['customer_id'] > 0) {
+                        $data['customer_category'] = $parent_customer_query->row['customer_category'];
+                    } else {
+                        $data['customer_category'] = NULL;
+                    }
+                }
+
+                if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
+                    $data['customer_category'] = $customer_query->row['customer_category'];
+                }
+
+                $customer_query->row['customer_category'] = $data['customer_category'];
+                /* SET CUSTOMER CATEGORY */
+
+                /* SET CUSTOMER PEZESHA */
+                if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
+                    $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_query->row['customer_id'] . "'");
+                }
+                if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
+                    $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_query->row['parent'] . "'");
+                }
+                if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
+                    $customer_query->row['pezesha_customer_id'] = $pezesha_customer_query->row['pezesha_customer_id'];
+                    $customer_query->row['pezesha_customer_uuid'] = $pezesha_customer_query->row['customer_uuid'];
+                    $customer_query->row['pezesha_identifier'] = $pezesha_customer_query->row['customer_id'];
+                } else {
+                    $customer_query->row['pezesha_customer_id'] = NULL;
+                    $customer_query->row['pezesha_customer_uuid'] = NULL;
+                    $customer_query->row['pezesha_identifier'] = NULL;
+                }
+                /* SET CUSTOMER PEZESHA */
+                $customer_query->row['jwt_token'] = $jwt;
+                $this->customer->setVariables($customer_query->row);
+            }
+
+            $json['token'] = $jwt; //json_encode($unencodedArray);
+            $json['status'] = true;
+
+            $json['data'] = $customer_info;
+        } else {
+            $json['status'] = 1; //user not found
+        }
+        $log = new Log('error.log');
+        $log->write('TOKEN_REFRESH');
+        return $json;
+    }
+
+    public function getCurrentUserDetails() {
+
+        $json = [];
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $customer['customer_id'] = $this->customer->getId();
+        $customer['customer_jwt_token'] = $this->customer->getCustomerJwtToken();
+        $customer['customer_name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
+        $customer['customer_email'] = $this->customer->getEmail();
+        $json['data'] = $customer;
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
