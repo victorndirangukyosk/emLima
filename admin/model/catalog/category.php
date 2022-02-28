@@ -605,4 +605,9 @@ class ModelCatalogCategory extends Model {
         }
     }
 
+    public function addCustomerCategory($category_id, $customer_id, $max_discount) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "category_to_customer SET max_discount = '" . $max_discount . "', category_id = '" . (int) $category_id . "', customer_id = '" . (int) $customer_id . "'");
+        return $this->db->getLastId();
+    }
+
 }

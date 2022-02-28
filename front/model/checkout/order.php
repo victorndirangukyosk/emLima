@@ -1354,7 +1354,7 @@ class ModelCheckoutOrder extends Model {
             $log->write('INVALID ORDER STATUS ID');
 
             try {
-                $subject = 'Order Status Is Zero';
+                $subject = $order_id . 'Order Status Is Zero';
                 $message = 'Order ID : ' . $order_id . ' ' . ' Order Status:' . $order_status_id;
 
                 $mail = new mail($this->config->get('config_mail'));
