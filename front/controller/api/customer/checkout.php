@@ -1466,7 +1466,7 @@ class ControllerApiCustomerCheckout extends Controller {
         if ($this->customer->isLogged()) {
             $data = [];
 
-            $rangeonestart = "10:00:00";
+            $rangeonestart = "09:00:00";
             $rangeoneend = "18:59:59";
 
             $rangetwostart = "19:00:00";
