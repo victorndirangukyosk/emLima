@@ -1347,6 +1347,12 @@ class ModelCheckoutOrder extends Model {
 
     public function InvalidOrderStatus($order_id, $order_status_id) {
         if ($order_status_id <= 0 || $order_status_id == '' || $order_status_id == NULL) {
+            $log = new Log('error.log');
+            $log->write('INVALID ORDER STATUS ID');
+            $log->write('ORDER ID :' . $order_id);
+            $log->write('ORDER STATUS ID :' . $order_status_id);
+            $log->write('INVALID ORDER STATUS ID');
+
             try {
                 $subject = 'Order Status Is Zero';
                 $message = 'Order ID : ' . $order_id . ' ' . ' Order Status:' . $order_status_id;
