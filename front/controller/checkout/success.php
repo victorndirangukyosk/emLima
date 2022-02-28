@@ -162,6 +162,8 @@ class ControllerCheckoutSuccess extends Controller {
 
                 $order_info = $this->model_checkout_order->getOrder($order_id);
 
+                $this->model_checkout_order->InvalidOrderStatus($order_info['order_id'], $order_info['order_status_id']);
+
                 $recommedation = $this->getOrderRecommendation($order_id);
 
                 $total = $order_info['total'];

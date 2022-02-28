@@ -58,12 +58,12 @@ class ControllerPaymentCod extends Controller {
 
             $order_id = NULL;
             foreach ($this->session->data['order_id'] as $key => $value) {
-                if ($key == 75) {
+                //if ($key == 75) {
                     $order_id = $value;
                     $log->write('cod loop:2' . $order_id);
 
                     $this->model_checkout_order->UpdateParentApproval($order_id);
-                }
+                //}
             }
             foreach ($this->session->data['order_id'] as $key => $value) {
                 //if ($key == 75) {
