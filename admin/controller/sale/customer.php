@@ -2394,6 +2394,17 @@ class ControllerSaleCustomer extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
+        $this->load->model('catalog/category');
+        $data['store_categories'] = $this->model_catalog_category->getCategoryByStore($this->config->get('config_active_store_id'));
+        $data['top_categories'] = $this->model_catalog_category->getTopCategories();
+        foreach ($data['top_categories'] as $top_categories) {
+            $log = new Log('error.log');
+            $selected_categories = $this->model_catalog_category->getCategoryByStoreByCategoryId($this->config->get('config_active_store_id'), $top_categories['category_id']);
+            if ($selected_categories == NULL) {
+                $data['un_selected_top_categories'][] = $top_categories;
+            }
+        }
+
         $this->response->setOutput($this->load->view('sale/customer_form.tpl', $data));
     }
 
