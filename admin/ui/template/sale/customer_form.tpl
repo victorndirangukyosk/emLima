@@ -806,7 +806,20 @@
 
                                 
                         </div>
-                    </div>        
+                    </div>
+                            
+                   <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-product-categories">Product Categories</label>
+                        <div class="col-sm-10">
+                            <select class="selectpicker storeCategories" name="storeCategories[]" multiple data-selected-text-format="countSelectedText">
+									<?php foreach($top_categories as $category){ ?>
+									 		<option value="<?php echo $category['category_id']; ?>"> 
+									 			<?php echo $category['name']; ?>
+									 		</option>
+									<?php	} ?>
+                            </select>
+                        </div>
+                    </div>         
             <div class="text-right">
 
              <?php if ($this->user->hasPermission('modify', 'sale/customer_configuration')) {?>
