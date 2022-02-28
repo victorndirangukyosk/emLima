@@ -812,7 +812,7 @@
                                 <label class="col-sm-2 control-label" for="input-product-categories">Product Categories</label>
                         <div class="col-sm-10">
                             <select class="selectpicker storeCategories" name="storeCategories[]" multiple data-selected-text-format="countSelectedText">
-									<?php foreach($top_categories as $category){ ?>
+									<?php foreach($un_selected_top_categories as $category){ ?>
 									 		<option value="<?php echo $category['category_id']; ?>"> 
 									 			<?php echo $category['name']; ?>
 									 		</option>
