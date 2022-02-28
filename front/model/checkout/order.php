@@ -510,6 +510,7 @@ class ModelCheckoutOrder extends Model {
         $log = new Log('error.log');
         $log->write('mod loop addOrderHistory' . $order_id);
         $log->write('mod loop addOrderHistory' . $comment);
+        $this->InvalidOrderStatus($order_id, $order_status_id);
         $this->trigger->fire('pre.order.history.add', $order_id);
 
         $order_info = $this->getOrder($order_id);
@@ -1330,6 +1331,25 @@ class ModelCheckoutOrder extends Model {
             try {
                 $subject = 'Order Total Value Zero';
                 $message = 'Order ID : ' . $order_id . ' ' . ' Order Total:' . $data['total'];
+
+                $mail = new mail($this->config->get('config_mail'));
+                $mail->setTo('bugs.kwikbasket@yopmail.com');
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSubject($subject);
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setHtml($message);
+                $mail->send();
+            } catch (Exception $e) {
+                
+            }
+        }
+    }
+
+    public function InvalidOrderStatus($order_id, $order_status_id) {
+        if ($order_status_id <= 0 || $order_status_id == '' || $order_status_id == NULL) {
+            try {
+                $subject = 'Order Status Is Zero';
+                $message = 'Order ID : ' . $order_id . ' ' . ' Order Status:' . $order_status_id;
 
                 $mail = new mail($this->config->get('config_mail'));
                 $mail->setTo('bugs.kwikbasket@yopmail.com');
