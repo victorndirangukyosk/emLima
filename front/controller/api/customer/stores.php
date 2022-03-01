@@ -1,9 +1,8 @@
 <?php
 
-class ControllerApiCustomerStores extends Controller
-{
-    public function getFindStoresbyCategoryId($args = [])
-    {
+class ControllerApiCustomerStores extends Controller {
+
+    public function getFindStoresbyCategoryId($args = []) {
         $this->load->model('setting/store');
         $this->load->language('information/locations');
         $this->load->model('assets/category');
@@ -15,7 +14,7 @@ class ControllerApiCustomerStores extends Controller
         //$data =array();
         foreach ($stores as $store) {
             $tempStore = $store;
-            $tempStore['href'] = $this->model_setting_store->getSeoUrl('store_id='.$store['store_id']);
+            $tempStore['href'] = $this->model_setting_store->getSeoUrl('store_id=' . $store['store_id']);
             $tempStore['thumb'] = $this->model_tool_image->resize($store['logo'], 300, 300);
             $tempStore['categorycount'] = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'], $args['category_id']);
 
@@ -119,8 +118,7 @@ class ControllerApiCustomerStores extends Controller
         $this->response->setOutput(json_encode($data));
     }
 
-    public function getStoreType()
-    {
+    public function getStoreType() {
         $this->load->model('tool/image');
         $this->load->model('assets/category');
         $store_types = $this->model_assets_category->getStoreTypes();
@@ -134,8 +132,7 @@ class ControllerApiCustomerStores extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getStore($args = [])
-    {
+    public function getStore($args = []) {
         $this->load->language('api/products');
 
         $json = [];
@@ -154,8 +151,122 @@ class ControllerApiCustomerStores extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getStoreShippingMethods()
-    {
+    public function getStores($args = []) {
+        $this->load->language('api/products');
+
+        $json = [];
+
+        //echo "getStores";
+        $this->load->model('api/stores');
+
+        $this->load->model('setting/setting');
+
+        if (isset($this->request->get['filter_city'])) {
+            $filter_city = $this->request->get['filter_city'];
+        } else {
+            $filter_city = '';
+        }
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        if (isset($args['limit'])) {
+            $limit = $args['limit'];
+        } else {
+            $limit = 10;
+        }
+
+        if (isset($args['start'])) {
+            $start = $args['start'];
+        } else {
+            $start = 0;
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $filter_status = $this->request->get['filter_status'];
+        } else {
+            $filter_status = null;
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = '';
+        }
+
+        if (isset($this->request->get['filter_vendor'])) {
+            $filter_vendor = $this->request->get['filter_vendor'];
+        } else {
+            $filter_vendor = '';
+        }
+
+        if (isset($this->request->get['filter_vendor_id'])) {
+            $filter_vendor_id = $this->request->get['filter_vendor_id'];
+        } else {
+            $filter_vendor_id = '';
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'pd.name';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $data['stores'] = [];
+
+        $filter_data = [
+            'filter_name' => $filter_name,
+            'filter_vendor_id' => $filter_vendor_id,
+            'filter_city' => $filter_city,
+            'filter_date_added' => $filter_date_added,
+            'filter_vendor' => $filter_vendor,
+            'filter_status' => $filter_status,
+            'sort' => $sort,
+            'order' => $order,
+            'start' => $start,
+            'limit' => $limit,
+        ];
+
+        $results = $this->model_api_stores->getStores($filter_data);
+        $total = $this->model_api_stores->getTotalStores($filter_data);
+
+        $json['stores_count'] = $total;
+        foreach ($results as $result) {
+            $json['stores'][] = [
+                'store_id' => $result['store_id'],
+                'name' => $result['name'],
+                'city' => $result['city'],
+                'address' => $result['address'],
+                'zipcode' => $result['zipcode'],
+                'status' => $result['status'],
+                'min_order_cod' => $result['min_order_cod'],
+                'min_order_amount' => $result['min_order_amount'],
+            ];
+        }
+
+
+        //echo "<pre>";print_r($json);die;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getStoreShippingMethods() {
         $log = new Log('error.log');
 
         $log->write('getStoreShippingMethods');
@@ -215,10 +326,10 @@ class ControllerApiCustomerStores extends Controller
 
             //echo "<pre>";print_r($results);die;
             foreach ($results as $result) {
-                if ($this->config->get($result['code'].'_status')) {
+                if ($this->config->get($result['code'] . '_status')) {
                     if ('normal' == $result['code']) {
-                        $this->load->model('shipping/'.$result['code']);
-                        $quote = $this->{'model_shipping_'.$result['code']}->getShippingCharegApiQuote($cost, $store_info['name'], $this->request->get['subtotal'], $this->request->get['total'], $this->request->get['shipping_address_id'], $store_id);
+                        $this->load->model('shipping/' . $result['code']);
+                        $quote = $this->{'model_shipping_' . $result['code']}->getShippingCharegApiQuote($cost, $store_info['name'], $this->request->get['subtotal'], $this->request->get['total'], $this->request->get['shipping_address_id'], $store_id);
                         if ($quote) {
                             $method_data[$result['code']] = [
                                 'title' => $quote['title'],
@@ -229,8 +340,8 @@ class ControllerApiCustomerStores extends Controller
                         }
                     } elseif ('express' == $result['code']) {
                         //echo "<pre>";print_r('express');die;
-                        $this->load->model('shipping/'.$result['code']);
-                        $quote = $this->{'model_shipping_'.$result['code']}->getShippingCharegApiQuote($cost, $store_info['name'], $this->request->get['subtotal'], $this->request->get['total'], $this->request->get['shipping_address_id'], $store_id, $store_id);
+                        $this->load->model('shipping/' . $result['code']);
+                        $quote = $this->{'model_shipping_' . $result['code']}->getShippingCharegApiQuote($cost, $store_info['name'], $this->request->get['subtotal'], $this->request->get['total'], $this->request->get['shipping_address_id'], $store_id, $store_id);
 
                         if ($quote) {
                             $method_data[$result['code']] = [
@@ -242,8 +353,8 @@ class ControllerApiCustomerStores extends Controller
                         }
                     } elseif ('store_delivery' == $result['code']) {
                         if ($delivery_by_owner) {
-                            $this->load->model('shipping/'.$result['code']);
-                            $quote = $this->{'model_shipping_'.$result['code']}->getShippingCharegApiQuote($cost, $store_info['name'], $this->request->get['subtotal'], $this->request->get['total'], $this->request->get['shipping_address_id'], $store_id);
+                            $this->load->model('shipping/' . $result['code']);
+                            $quote = $this->{'model_shipping_' . $result['code']}->getShippingCharegApiQuote($cost, $store_info['name'], $this->request->get['subtotal'], $this->request->get['total'], $this->request->get['shipping_address_id'], $store_id);
                             if ($quote) {
                                 $method_data[$result['code']] = [
                                     'title' => 'Standard Delivery', //$quote['title'],
@@ -255,8 +366,8 @@ class ControllerApiCustomerStores extends Controller
                         }
                     } elseif ('pickup' == $result['code']) {
                         if ($pickup_delivery) {
-                            $this->load->model('shipping/'.$result['code']);
-                            $quote = $this->{'model_shipping_'.$result['code']}->getShippingCharegApiQuote($cost, $store_info['name'], $this->request->get['subtotal'], $this->request->get['total'], $this->request->get['shipping_address_id'], $store_id);
+                            $this->load->model('shipping/' . $result['code']);
+                            $quote = $this->{'model_shipping_' . $result['code']}->getShippingCharegApiQuote($cost, $store_info['name'], $this->request->get['subtotal'], $this->request->get['total'], $this->request->get['shipping_address_id'], $store_id);
                             if ($quote) {
                                 $method_data[$result['code']] = [
                                     'title' => $quote['title'],
@@ -268,8 +379,8 @@ class ControllerApiCustomerStores extends Controller
                         }
                     } else {
                         //echo "<pre>";print_r('express');die;
-                        $this->load->model('shipping/'.$result['code']);
-                        $quote = $this->{'model_shipping_'.$result['code']}->getShippingCharegApiQuote($cost, $store_info['name'], $this->request->get['subtotal'], $this->request->get['total'], $this->request->get['shipping_address_id'], $store_id);
+                        $this->load->model('shipping/' . $result['code']);
+                        $quote = $this->{'model_shipping_' . $result['code']}->getShippingCharegApiQuote($cost, $store_info['name'], $this->request->get['subtotal'], $this->request->get['total'], $this->request->get['shipping_address_id'], $store_id);
                         if ($quote) {
                             $method_data[$result['code']] = [
                                 'title' => $quote['title'],
@@ -337,10 +448,10 @@ class ControllerApiCustomerStores extends Controller
 
             //echo "<pre>";print_r($results);die;
             foreach ($results as $result) {
-                if ($this->config->get($result['code'].'_status')) {
+                if ($this->config->get($result['code'] . '_status')) {
                     if ('normal' == $result['code']) {
-                        $this->load->model('shipping/'.$result['code']);
-                        $quote = $this->{'model_shipping_'.$result['code']}->getQuote($cost, $store_info['name']);
+                        $this->load->model('shipping/' . $result['code']);
+                        $quote = $this->{'model_shipping_' . $result['code']}->getQuote($cost, $store_info['name']);
                         if ($quote) {
                             $method_data[$result['code']] = [
                                 'title' => $quote['title'],
@@ -351,8 +462,8 @@ class ControllerApiCustomerStores extends Controller
                         }
                     } elseif ('express' == $result['code']) {
                         //echo "<pre>";print_r('express');die;
-                        $this->load->model('shipping/'.$result['code']);
-                        $quote = $this->{'model_shipping_'.$result['code']}->getQuote($cost, $store_info['name'], $store_id);
+                        $this->load->model('shipping/' . $result['code']);
+                        $quote = $this->{'model_shipping_' . $result['code']}->getQuote($cost, $store_info['name'], $store_id);
 
                         if ($quote) {
                             $method_data[$result['code']] = [
@@ -364,8 +475,8 @@ class ControllerApiCustomerStores extends Controller
                         }
                     } elseif ('store_delivery' == $result['code']) {
                         if ($delivery_by_owner) {
-                            $this->load->model('shipping/'.$result['code']);
-                            $quote = $this->{'model_shipping_'.$result['code']}->getQuote($cost, $store_info['name']);
+                            $this->load->model('shipping/' . $result['code']);
+                            $quote = $this->{'model_shipping_' . $result['code']}->getQuote($cost, $store_info['name']);
                             if ($quote) {
                                 $method_data[$result['code']] = [
                                     'title' => 'Standard Delivery', //$quote['title'],
@@ -377,8 +488,8 @@ class ControllerApiCustomerStores extends Controller
                         }
                     } elseif ('pickup' == $result['code']) {
                         if ($pickup_delivery) {
-                            $this->load->model('shipping/'.$result['code']);
-                            $quote = $this->{'model_shipping_'.$result['code']}->getQuote($cost, $store_info['name']);
+                            $this->load->model('shipping/' . $result['code']);
+                            $quote = $this->{'model_shipping_' . $result['code']}->getQuote($cost, $store_info['name']);
                             if ($quote) {
                                 $method_data[$result['code']] = [
                                     'title' => $quote['title'],
@@ -390,8 +501,8 @@ class ControllerApiCustomerStores extends Controller
                         }
                     } else {
                         //echo "<pre>";print_r('express');die;
-                        $this->load->model('shipping/'.$result['code']);
-                        $quote = $this->{'model_shipping_'.$result['code']}->getQuote($cost, $store_info['name']);
+                        $this->load->model('shipping/' . $result['code']);
+                        $quote = $this->{'model_shipping_' . $result['code']}->getQuote($cost, $store_info['name']);
                         if ($quote) {
                             $method_data[$result['code']] = [
                                 'title' => $quote['title'],
@@ -434,8 +545,7 @@ class ControllerApiCustomerStores extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getFindStores($args = [])
-    {
+    public function getFindStores($args = []) {
         $json = [];
 
         $this->load->language('information/locations');
@@ -489,8 +599,7 @@ class ControllerApiCustomerStores extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getFilterStores($args = [])
-    {
+    public function getFilterStores($args = []) {
         $json = [];
 
         $this->load->language('information/locations');
@@ -528,8 +637,7 @@ class ControllerApiCustomerStores extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getStoreHome($args = [])
-    {
+    public function getStoreHome($args = []) {
         $json = [];
 
         //echo "<pre>";print_r("re");die;
@@ -570,8 +678,7 @@ class ControllerApiCustomerStores extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getAllOfferProducts($args = [])
-    {
+    public function getAllOfferProducts($args = []) {
         $json = [];
 
         //echo "<pre>";print_r("re");die;
@@ -612,8 +719,7 @@ class ControllerApiCustomerStores extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function stores($args = [])
-    {
+    public function stores($args = []) {
         $this->load->language('information/locations');
         $this->load->model('setting/store');
         $this->load->model('assets/category');
@@ -655,7 +761,7 @@ class ControllerApiCustomerStores extends Controller
             $log->write($rows);
 
             foreach ($rows as $row) {
-                if (!empty($row) && is_file(DIR_IMAGE.$row['image'])) {
+                if (!empty($row) && is_file(DIR_IMAGE . $row['image'])) {
                     $row['image'] = $this->model_tool_image->resize($row['image'], $this->config->get('config_app_notice_image_location_height'), $this->config->get('config_app_notice_image_location_width'));
                 }
 
@@ -692,8 +798,8 @@ class ControllerApiCustomerStores extends Controller
                     $temp_store['name'] = htmlspecialchars_decode($temp_store['name']);
 
                     //echo "<pre>";print_r($temp_store);die;
-                    /*$temp_store['rating'] = 4.5;
-                    $temp_store['review_count'] = 102;*/
+                    /* $temp_store['rating'] = 4.5;
+                      $temp_store['review_count'] = 102; */
 
                     $ratingDetails = $this->model_setting_store->getStoreRatingReviewCount($temp_store['store_id']);
 
@@ -705,12 +811,12 @@ class ControllerApiCustomerStores extends Controller
                     //echo '<pre>';print_r($store_open_hours);exit;
                     $temp_store['store_note'] = 'Same Prices as in Store';
 
-                    /*if($store_open_hours && isset($store_open_hours['timeslot'])) {
-                        $temp_store['store_note'] = $store_open_hours['timeslot'];
-                    }*/
-                    /*if(isset($temp_store['min_order_cod'])) {
-                        $temp_store['store_note'] = 'Free Delivery above '.$this->currency->format($temp_store['min_order_cod']);
-                    }*/
+                    /* if($store_open_hours && isset($store_open_hours['timeslot'])) {
+                      $temp_store['store_note'] = $store_open_hours['timeslot'];
+                      } */
+                    /* if(isset($temp_store['min_order_cod'])) {
+                      $temp_store['store_note'] = 'Free Delivery above '.$this->currency->format($temp_store['min_order_cod']);
+                      } */
 
                     $deliveryTypesResponse = $this->getDeliveryMethods($temp_store['store_id']);
 
@@ -724,7 +830,7 @@ class ControllerApiCustomerStores extends Controller
                     $deliveryTypeMethod = null;
 
                     if (count($deliveryTypesResponse) > 1) {
-                        $deliveryTypes = $deliveryTypesResponse[0]['title'].'...';
+                        $deliveryTypes = $deliveryTypesResponse[0]['title'] . '...';
                         $deliveryTypeMethod = $deliveryTypesResponse[0]['code'];
                     } elseif (1 == count($deliveryTypesResponse)) {
                         $deliveryTypes = $deliveryTypesResponse[0]['title'];
@@ -793,8 +899,7 @@ class ControllerApiCustomerStores extends Controller
         return $data;
     }
 
-    public function getDeliveryMethods($store_id)
-    {
+    public function getDeliveryMethods($store_id) {
         $this->load->language('checkout/checkout');
 
         // Shipping Methods
@@ -816,9 +921,9 @@ class ControllerApiCustomerStores extends Controller
 
         $cost = 0;
         foreach ($results as $result) {
-            if ($this->config->get($result['code'].'_status')) {
-                $this->load->model('shipping/'.$result['code']);
-                $quote = $this->{'model_shipping_'.$result['code']}->getQuote($cost, $store_info['name']);
+            if ($this->config->get($result['code'] . '_status')) {
+                $this->load->model('shipping/' . $result['code']);
+                $quote = $this->{'model_shipping_' . $result['code']}->getQuote($cost, $store_info['name']);
                 if ($quote) {
                     $method_data[] = [
                         'title' => $quote['title'],
@@ -839,8 +944,7 @@ class ControllerApiCustomerStores extends Controller
         return $method_data;
     }
 
-    public function getNextTimeslotForStore($store_id, $deliveryTypeMethod)
-    {
+    public function getNextTimeslotForStore($store_id, $deliveryTypeMethod) {
         //$data['shipping_method'] = 'express';//$deliveryTypeMethod;
         $data['shipping_method'] = $deliveryTypeMethod;
         $data['store_id'] = $store_id;
@@ -858,7 +962,7 @@ class ControllerApiCustomerStores extends Controller
                 $time = $timeInMin;
             }
 
-            return $time.$text;
+            return $time . $text;
         } else {
             $time = $timeInMin;
 
@@ -866,9 +970,8 @@ class ControllerApiCustomerStores extends Controller
         }
     }
 
-    public function getDistanceFromZipcode($pickup_lat, $pickup_lng, $dropoff_zipcode)
-    {
-        $url = 'http://maps.googleapis.com/maps/api/geocode/json?address='.$dropoff_zipcode.'&sensor=false';
+    public function getDistanceFromZipcode($pickup_lat, $pickup_lng, $dropoff_zipcode) {
+        $url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . $dropoff_zipcode . '&sensor=false';
         $details = file_get_contents($url);
         $result = json_decode($details, true);
 
@@ -880,7 +983,7 @@ class ControllerApiCustomerStores extends Controller
             $distance = $this->distance($pickup_lat, $pickup_lng, $dropoff_lat, $dropoff_lng, 'K');
 
             //return $distance;
-            return round($distance, 2).' Km';
+            return round($distance, 2) . ' Km';
         } else {
             return '--';
         }
@@ -888,8 +991,7 @@ class ControllerApiCustomerStores extends Controller
         return $distance;
     }
 
-    public function distance($lat1, $lon1, $lat2, $lon2, $unit)
-    {
+    public function distance($lat1, $lon1, $lat2, $lon2, $unit) {
         $theta = $lon1 - $lon2;
         $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
         $dist = acos($dist);
@@ -906,8 +1008,7 @@ class ControllerApiCustomerStores extends Controller
         }
     }
 
-    public function getStoreHomeData($store_id)
-    {
+    public function getStoreHomeData($store_id) {
         //echo "<pre>";print_r("Cer");die;
         $data['status'] = false;
 
@@ -965,7 +1066,7 @@ class ControllerApiCustomerStores extends Controller
         $store_info = $this->model_tool_image->getStore($store_id);
 
         if (isset($store_info['latitude']) && isset($store_info['longitude'])) {
-            $storeLocation = $store_info['latitude'].','.$store_info['longitude'];
+            $storeLocation = $store_info['latitude'] . ',' . $store_info['longitude'];
         } else {
             $storeLocation = 0;
         }
@@ -973,7 +1074,7 @@ class ControllerApiCustomerStores extends Controller
         $rows = $this->model_assets_category->getFullNoticeData($storeLocation);
 
         foreach ($rows as $row) {
-            if (!empty($row) && is_file(DIR_IMAGE.$row['image'])) {
+            if (!empty($row) && is_file(DIR_IMAGE . $row['image'])) {
                 $row['image'] = $this->model_tool_image->resize($row['image'], $this->config->get('config_app_notice_image_location_height'), $this->config->get('config_app_notice_image_location_width'));
             }
 
@@ -989,6 +1090,7 @@ class ControllerApiCustomerStores extends Controller
         $data['lists'] = [];
 
         if (false) {
+            
         } else {
             //get listes
             //$data['lists'] = $this->model_assets_category->getUserLists();
@@ -996,17 +1098,17 @@ class ControllerApiCustomerStores extends Controller
 
         //echo "<pre>";print_r($data['lists']);die;
         //if ( $store_info['logo'] ) {
-        if (file_exists(DIR_IMAGE.$store_info['logo'])) {
+        if (file_exists(DIR_IMAGE . $store_info['logo'])) {
             $data['thumb'] = $this->model_tool_image->resize($store_info['logo'], $this->config->get('config_app_image_category_width'), $this->config->get('config_app_image_category_height'));
         } else {
             $data['thumb'] = '';
         }
 
-        /*if ( $store_info['banner_logo'] ) {
-            $data['banner_logo'] = $this->model_tool_image->resize( $store_info['banner_logo'],800,450);
-        } else {
-            $data['banner_logo'] = $this->model_tool_image->resize( 'placeholder.png',800,450);
-        }*/
+        /* if ( $store_info['banner_logo'] ) {
+          $data['banner_logo'] = $this->model_tool_image->resize( $store_info['banner_logo'],800,450);
+          } else {
+          $data['banner_logo'] = $this->model_tool_image->resize( 'placeholder.png',800,450);
+          } */
         $tmp_slid = [];
 
         $slider_image = $this->model_assets_category->getStoreSlider($store_id);
@@ -1035,19 +1137,19 @@ class ControllerApiCustomerStores extends Controller
         $url = '';
 
         if (isset($this->request->get['filter'])) {
-            $url .= '&filter='.$this->request->get['filter'];
+            $url .= '&filter=' . $this->request->get['filter'];
         }
 
         if (isset($this->request->get['sort'])) {
-            $url .= '&sort='.$this->request->get['sort'];
+            $url .= '&sort=' . $this->request->get['sort'];
         }
 
         if (isset($this->request->get['order'])) {
-            $url .= '&order='.$this->request->get['order'];
+            $url .= '&order=' . $this->request->get['order'];
         }
 
         if (isset($this->request->get['limit'])) {
-            $url .= '&limit='.$this->request->get['limit'];
+            $url .= '&limit=' . $this->request->get['limit'];
         }
 
         $data['categories'] = [];
@@ -1073,21 +1175,21 @@ class ControllerApiCustomerStores extends Controller
             //echo "<pre>";print_r($children);die;
             foreach ($children as $child) {
                 //if(!empty($child['image'])) {
-                if (file_exists(DIR_IMAGE.$child['image'])) {
+                if (file_exists(DIR_IMAGE . $child['image'])) {
                     $image = $this->model_tool_image->resize($child['image'], $this->config->get('config_app_image_category_width'), $this->config->get('config_app_image_category_height'));
                 } else {
                     $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_app_image_category_width'), $this->config->get('config_app_image_category_height'));
                 }
 
                 $children_data[] = [
-                            'name' => htmlspecialchars_decode($child['name']),
-                            'id' => $child['category_id'],
-                            'href' => $this->url->link('product/category', 'category='.$result['category_id'].'_'.$child['category_id']),
-                            'next_category_call_id' => $result['category_id'].'_'.$child['category_id'],
-                            'thumb' => $image,
-                            //'note' => $this->language->get( 'sub_category_note' ),
-                            'note' => $child['max_discount'] >= 5 ? sprintf($this->language->get('sub_category_note'), (int) $child['max_discount'].'%') : '',
-                    ];
+                    'name' => htmlspecialchars_decode($child['name']),
+                    'id' => $child['category_id'],
+                    'href' => $this->url->link('product/category', 'category=' . $result['category_id'] . '_' . $child['category_id']),
+                    'next_category_call_id' => $result['category_id'] . '_' . $child['category_id'],
+                    'thumb' => $image,
+                    //'note' => $this->language->get( 'sub_category_note' ),
+                    'note' => $child['max_discount'] >= 5 ? sprintf($this->language->get('sub_category_note'), (int) $child['max_discount'] . '%') : '',
+                ];
 
                 array_push($csvSubCategories, $child['name']);
             }
@@ -1104,24 +1206,24 @@ class ControllerApiCustomerStores extends Controller
                 'name' => htmlspecialchars_decode($result['name']),
                 'id' => $result['category_id'],
                 //'products' => $this->getProducts( $filter_data ),
-                'href' => $this->url->link('product/category', 'category='.$result['category_id'].$url),
+                'href' => $this->url->link('product/category', 'category=' . $result['category_id'] . $url),
                 'thumb' => $image,
                 'sub_category' => $children_data,
                 //'csv_sub_category' => htmlspecialchars_decode(strlen($csvSubCategoriesData) > 50 ? substr($csvSubCategoriesData,0,50)."..." : $csvSubCategoriesData),
                 'csv_sub_category' => htmlspecialchars_decode($csvSubCategoriesData),
                 //'note' => $this->language->get( 'category_note' ),
-                'note' => $result['max_discount'] >= 5 ? sprintf($this->language->get('category_note'), (int) $result['max_discount'].'%') : '',
+                'note' => $result['max_discount'] >= 5 ? sprintf($this->language->get('category_note'), (int) $result['max_discount'] . '%') : '',
             ];
         }
 
         $url = '';
 
         if (isset($this->request->get['filter'])) {
-            $url .= '&filter='.$this->request->get['filter'];
+            $url .= '&filter=' . $this->request->get['filter'];
         }
 
         if (isset($this->request->get['limit'])) {
-            $url .= '&limit='.$this->request->get['limit'];
+            $url .= '&limit=' . $this->request->get['limit'];
         }
 
         $data['offer_show'] = $this->config->get('config_offer_status');
@@ -1145,8 +1247,7 @@ class ControllerApiCustomerStores extends Controller
         return $data;
     }
 
-    public function allOfferProducts($store_id)
-    {
+    public function allOfferProducts($store_id) {
         $data['status'] = false;
 
         if (isset($store_id)) {
@@ -1205,11 +1306,11 @@ class ControllerApiCustomerStores extends Controller
         $url = '';
 
         if (isset($this->request->get['filter'])) {
-            $url .= '&filter='.$this->request->get['filter'];
+            $url .= '&filter=' . $this->request->get['filter'];
         }
 
         if (isset($this->request->get['limit'])) {
-            $url .= '&limit='.$this->request->get['limit'];
+            $url .= '&limit=' . $this->request->get['limit'];
         }
 
         $data['offer_show'] = $this->config->get('config_offer_status');
@@ -1233,8 +1334,7 @@ class ControllerApiCustomerStores extends Controller
         return $data;
     }
 
-    public function getOfferProductsBySpecialPrice($filter_data)
-    {
+    public function getOfferProductsBySpecialPrice($filter_data) {
         $this->load->model('assets/product');
         $this->load->model('tool/image');
 
@@ -1249,7 +1349,7 @@ class ControllerApiCustomerStores extends Controller
                 continue;
             }
 
-            if (file_exists(DIR_IMAGE.$result['image'])) {
+            if (file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
@@ -1342,48 +1442,47 @@ class ControllerApiCustomerStores extends Controller
                 ];
             } else {
                 $data['products'][] = [
-                'key' => $key,
-                /*'qty_in_cart' => $qty_in_cart,
-                'variations' => $this->model_assets_product->getVariations( $result['product_store_id'] ),
-                'store_product_variation_id' => 0,
-                */'product_id' => $result['product_id'],
-                'product_store_id' => $result['product_store_id'],
-                'variations' => $this->model_assets_product->getVariations($result['product_store_id']),
-                //'default_variation_name' => $result['default_variation_name'],
-                'thumb' => $image,
-                'name' => html_entity_decode($name),
-                'unit' => $result['unit'],
-                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
-                'price' => $price,
-                'special' => $special_price,
-                'percent_off' => number_format($percent_off, 0),
-                'left_symbol_currency' => $this->currency->getSymbolLeft(),
-                'right_symbol_currency' => $this->currency->getSymbolRight(),
-                'variations' => [
-                    [
-                        'variation_id' => $result['product_store_id'],
-                        'unit' => $result['unit'],
-                        'weight' => floatval($result['weight']),
-                        'price' => $price,
-                        'special' => $special_price,
-                        'percent_off' => number_format($percent_off, 0),
-                        'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                    'key' => $key,
+                    /* 'qty_in_cart' => $qty_in_cart,
+                      'variations' => $this->model_assets_product->getVariations( $result['product_store_id'] ),
+                      'store_product_variation_id' => 0,
+                     */ 'product_id' => $result['product_id'],
+                    'product_store_id' => $result['product_store_id'],
+                    'variations' => $this->model_assets_product->getVariations($result['product_store_id']),
+                    //'default_variation_name' => $result['default_variation_name'],
+                    'thumb' => $image,
+                    'name' => html_entity_decode($name),
+                    'unit' => $result['unit'],
+                    'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
+                    'price' => $price,
+                    'special' => $special_price,
+                    'percent_off' => number_format($percent_off, 0),
+                    'left_symbol_currency' => $this->currency->getSymbolLeft(),
+                    'right_symbol_currency' => $this->currency->getSymbolRight(),
+                    'variations' => [
+                        [
+                            'variation_id' => $result['product_store_id'],
+                            'unit' => $result['unit'],
+                            'weight' => floatval($result['weight']),
+                            'price' => $price,
+                            'special' => $special_price,
+                            'percent_off' => number_format($percent_off, 0),
+                            'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                        ],
                     ],
-                ],
-                'tax' => $result['tax_percentage'],
-                //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
-                'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
-                'rating' => 0,
-                'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
-            ];
+                    'tax' => $result['tax_percentage'],
+                    //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
+                    'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                    'rating' => 0,
+                    'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
+                ];
             }
         }
 
         return $data['products'];
     }
 
-    public function getOfferProducts($filter_data)
-    {
+    public function getOfferProducts($filter_data) {
         $this->load->model('assets/product');
         $this->load->model('tool/image');
 
@@ -1398,7 +1497,7 @@ class ControllerApiCustomerStores extends Controller
                 continue;
             }
 
-            if (file_exists(DIR_IMAGE.$result['image'])) {
+            if (file_exists(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_app_image_product_width'), $this->config->get('config_app_image_product_height'));
@@ -1477,30 +1576,30 @@ class ControllerApiCustomerStores extends Controller
 
             $data['products'][] = [
                 'key' => $key,
-                /*'qty_in_cart' => $qty_in_cart,
-                'variations' => $this->model_assets_product->getVariations( $result['product_store_id'] ),
-                'store_product_variation_id' => 0,
-                */'product_id' => $result['product_id'],
+                /* 'qty_in_cart' => $qty_in_cart,
+                  'variations' => $this->model_assets_product->getVariations( $result['product_store_id'] ),
+                  'store_product_variation_id' => 0,
+                 */ 'product_id' => $result['product_id'],
                 'product_store_id' => $result['product_store_id'],
                 //'default_variation_name' => $result['default_variation_name'],
                 'thumb' => $image,
                 'name' => html_entity_decode($name),
                 'unit' => $result['unit'],
-                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')).'..',
+                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
                 'price' => $price,
                 'special' => $special_price,
                 'percent_off' => number_format($percent_off, 0),
                 'left_symbol_currency' => $this->currency->getSymbolLeft(),
                 'right_symbol_currency' => $this->currency->getSymbolRight(),
-
                 'tax' => $result['tax_percentage'],
                 //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
                 'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
                 'rating' => 0,
-                'href' => $this->url->link('product/product', '&product_store_id='.$result['product_store_id']),
+                'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
             ];
         }
 
         return $data['products'];
     }
+
 }
