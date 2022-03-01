@@ -2391,4 +2391,19 @@ class ModelSaleCustomer extends Model {
         return $query->rows;
     }
 
+    public function addCustomerCategories($customer_id, $customer_categories) {
+        $this->db->query('DELETE FROM ' . DB_PREFIX . "category_to_customer WHERE customer_id = '" . (int) $customer_id . "'");
+        if ($customer_categories != NULL) {
+            $customer_categories_array = explode(',', $customer_categories);
+            foreach ($customer_categories_array as $customer_category) {
+                $this->db->query('INSERT INTO ' . DB_PREFIX . "category_to_customer SET customer_id = '" . (int) $customer_id . "', category_id = '" . (int) $customer_category . "', max_discount = '" . (int) 0.00 . "'");
+            }
+        }
+    }
+
+    public function getCustomerCategories($customer_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "category_to_customer WHERE customer_id = '" . (int) $customer_id . "'");
+        return $query->rows;
+    }
+
 }

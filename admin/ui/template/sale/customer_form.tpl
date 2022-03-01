@@ -2126,7 +2126,7 @@ $.ajax({
     url: 'index.php?path=sale/customer/configuration&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
     type: 'post',
     dataType: 'json',
-    data: 'customer_category=' + encodeURIComponent($('#tab-configuration select[name=\'customer_category\']').val()) + '&account_manager=' + encodeURIComponent($('#tab-configuration select[name=\'account_manager\']').val())+ '&customer_experience=' + encodeURIComponent($('#tab-configuration select[name=\'customer_experience\']').val())+'&payment_terms=' + encodeURIComponent($('#tab-configuration select[name=\'payment_terms\']').val())+'&statement_duration=' + encodeURIComponent($('#tab-configuration select[name=\'statement_duration\']').val())+'&customer_id=<?php echo $customer_id; ?>',
+    data: 'customer_category=' + encodeURIComponent($('#tab-configuration select[name=\'customer_category\']').val()) + '&account_manager=' + encodeURIComponent($('#tab-configuration select[name=\'account_manager\']').val())+ '&customer_experience=' + encodeURIComponent($('#tab-configuration select[name=\'customer_experience\']').val())+'&payment_terms=' + encodeURIComponent($('#tab-configuration select[name=\'payment_terms\']').val())+'&statement_duration=' + encodeURIComponent($('#tab-configuration select[name=\'statement_duration\']').val())+'&customer_categories=' + encodeURIComponent($('#tab-configuration select[name=\'storeCategories[]\']').val())+'&customer_id=<?php echo $customer_id; ?>',
     beforeSend: function() {
       $('#button-configuration').button('loading');
          },
@@ -2341,6 +2341,14 @@ $.ajax({
     
     }
   });
+});
+
+$(document).ready(function(){
+	<?php if(isset($category_for_store)){ ?>
+		$('.storeCategories').selectpicker('val',<?php echo $category_for_store; ?>);
+	<?php } else { ?>
+		$('.storeCategories').selectpicker('val',['']);
+	<?php } ?>
 });
 </script>
 </body>
