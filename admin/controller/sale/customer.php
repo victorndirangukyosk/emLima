@@ -2125,6 +2125,15 @@ class ControllerSaleCustomer extends Controller {
                 $data['customer_experince_phone'] = $customer_customer_experience_info['telephone'];
             }
 
+            $category_for_store = [];
+            $data['store_categories'] = $this->model_sale_customer->getCustomerCategories($this->request->get['customer_id']);
+            foreach ($data['store_categories'] as $cat) {
+                array_push($category_for_store, $cat['category_id']);
+            }
+            $category_for_store = implode("','", $category_for_store);
+            $category_for_store = "['" . $category_for_store . "']";
+            $data['category_for_store'] = $category_for_store;
+
             //$log = new Log('error.log');
             //$log->write($customer_parent_info);
         }
@@ -2854,6 +2863,7 @@ class ControllerSaleCustomer extends Controller {
         $log->write('customer configuration');
 
         $this->model_sale_customer->editCustomerConfiguration($this->request->post['customer_id'], $data);
+        $this->model_sale_customer->addCustomerCategories($this->request->post['customer_id'], $this->request->post['customer_categories']);
         $json['success'] = true;
         $json['message'] = 'Customer Configuration Saved!';
         $this->response->addHeader('Content-Type: application/json');

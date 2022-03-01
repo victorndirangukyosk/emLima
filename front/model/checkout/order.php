@@ -510,7 +510,7 @@ class ModelCheckoutOrder extends Model {
         $log = new Log('error.log');
         $log->write('mod loop addOrderHistory' . $order_id);
         $log->write('mod loop addOrderHistory' . $comment);
-        $this->InvalidOrderStatus($order_id, $order_status_id);
+        //$this->InvalidOrderStatus($order_id, $order_status_id);
         $this->trigger->fire('pre.order.history.add', $order_id);
 
         $order_info = $this->getOrder($order_id);
