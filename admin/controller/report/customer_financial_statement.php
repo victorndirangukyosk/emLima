@@ -97,9 +97,10 @@ class ControllerReportCustomerFinancialStatement extends Controller
             'limit' => $this->config->get('config_limit_admin'),
         ];
         if ('' != $filter_customer || '' != $filter_company) {
-            $customer_total = $this->model_report_customer->getTotalCustomerOrdersByID($filter_data);
-
-            $results = $this->model_report_customer->getCustomerOrdersByID($filter_data);
+            $customer_total0 = $this->model_report_customer->getTotalCustomerOrdersByID($filter_data);
+            $customer_total1 = $this->model_report_customer->getTotalCustomerWalletCreditsByID($filter_data);
+            $customer_total=$customer_total0+ $customer_total1;
+            $results = $this->model_report_customer->getCustomerFinancialStatementByID($filter_data);
         } else {
             $customer_total = 0;
             $results = null;
@@ -140,10 +141,22 @@ class ControllerReportCustomerFinancialStatement extends Controller
                 //     $result['amountpaid']=$sub_total;
                 //     $result['pendingamount']=$sub_total-$result['amountpaid'];
                 // }
+
+                if($result['credit_debit']=='Credit')
+                {
+                    $result['reference_document']='';
+                    $result['total']='-'.$result['total'];
+                    $result['updated_total']= '-'.$result['updated_total'];
+                }
+                else{
+                    $result['reference_document']='KB'.$result['order_id'];
+
+                }
                 $data['orders'][] = [
-                'company' => $result['company'],
+                'company' => $result['company_name'],
                 'fiscal_year' => $result['fiscal_year'],
                 'posting_date' => $result['posting_date'],
+                'reference_document' => $result['reference_document'],
                 'Document_type' => $result['Document_type'],
                 'credit_debit' => $result['credit_debit'],
                 'currency' => $result['currency'],

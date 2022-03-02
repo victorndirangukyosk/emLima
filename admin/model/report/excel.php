@@ -10431,7 +10431,7 @@ class ModelReportExcel extends Model {
 
 
 
-        $results = $this->model_report_customer->getCustomerOrdersByID($data);
+        $results = $this->model_report_customer->getCustomerFinancialStatementByID($data);
 
         $this->load->model('sale/order');
 
@@ -10478,10 +10478,21 @@ class ModelReportExcel extends Model {
             //     $result['pendingamount'] = $sub_total - $result['amountpaid'];
             // }
 
-            $data['orders'][] = [
+            if($result['credit_debit']=='Credit')
+                {
+                    $result['reference_document']='';
+                    $result['total']='-'.$result['total'];
+                    $result['updated_total']= '-'.$result['updated_total'];
+                }
+                else{
+                    $result['reference_document']='KB'.$result['order_id'];
+
+                }
+                $data['orders'][] = [
                 'company' => $result['company_name'],
                 'fiscal_year' => $result['fiscal_year'],
                 'posting_date' => $result['posting_date'],
+                'reference_document' => $result['reference_document'],
                 'Document_type' => $result['Document_type'],
                 'credit_debit' => $result['credit_debit'],
                 'currency' => $result['currency'],
@@ -10625,7 +10636,7 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['fiscal_year']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['posting_date']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['Document_type']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, 'KB'.$result['order_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['reference_document']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['credit_debit']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['currency']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['updated_total']);
@@ -10649,7 +10660,7 @@ class ModelReportExcel extends Model {
            $sheetIndex = 1;
            $objPHPExcel->createSheet($sheetIndex);
            $objPHPExcel->setActiveSheetIndex($sheetIndex);
-           $worksheetName = 'Sheet2';
+           $worksheetName = 'Summary';
 
            // A fatal error is thrown for worksheet titles with more than 30 character
            if (strlen($worksheetName) > 30) {
@@ -10660,45 +10671,28 @@ class ModelReportExcel extends Model {
 
         $sheet_title = $worksheetName;
        
-        $objPHPExcel->getActiveSheet()->setCellValue('A1', '');
-        $objPHPExcel->getActiveSheet()->setCellValue('B1', '');
+        // $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Summary');
        
-        $objPHPExcel->getActiveSheet()->getStyle('A1:D1')->applyFromArray(['font' => ['bold' => true], 'color' => [
-                'rgb' => '51AB66',
-        ]]);
-        $objPHPExcel->getActiveSheet()->getStyle('A2:D2')->applyFromArray(['font' => ['bold' => true], 'color' => [
-                'rgb' => '51AB66',
-        ]]);
-        $objPHPExcel->getActiveSheet()->getStyle('A3:D3')->applyFromArray(['font' => ['bold' => true], 'color' => [
-            'rgb' => '51AB66',
-    ]]);
+        // $objPHPExcel->getActiveSheet()->getStyle('A1:D1')->applyFromArray(['font' => ['bold' => true], 'color' => [
+        //         'rgb' => '51AB66',
+        // ]]);
+        
 
-    $objPHPExcel->getActiveSheet()->getStyle('A4:D4')->applyFromArray(['font' => ['bold' => true], 'color' => [
-            'rgb' => '51AB66',
-    ]]);
-    $objPHPExcel->getActiveSheet()->getStyle('A5:D5')->applyFromArray(['font' => ['bold' => true], 'color' => [
-            'rgb' => '51AB66',
-    ]]);
-
-    $objPHPExcel->getActiveSheet()->getStyle('A6:D6')->applyFromArray(['font' => ['bold' => true], 'color' => [
-            'rgb' => '51AB66',
-    ]]);
-
-    $row = 7;
-    $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
+    $row = 2;
+    // $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
       
              
               
               
     
-        $objPHPExcel->getActiveSheet()->mergeCells('A5:D5');
-        $objPHPExcel->getActiveSheet()->setCellValue('A5', 'Summary : ' . $sheet_subtitle_1);
+        $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
+        $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Summary : ' . $sheet_subtitle_1);
         $row = 6;
-        $objPHPExcel->getActiveSheet()->getStyle('A6:E6')->applyFromArray(['font' => ['bold' => true], 'color' => [
-                'rgb' => '51AB66',
-        ]]);
+        // $objPHPExcel->getActiveSheet()->getStyle('A6:E6')->applyFromArray(['font' => ['bold' => true], 'color' => [
+        //         'rgb' => '51AB66',
+        // ]]);
         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 6, 'Sum of amount in local currency');
-        //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Produce Type');
+        //$objPHPExcel->g   etActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Produce Type');
 
         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 6, 'Credit');
         $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 6, 'Debit ');
@@ -10735,10 +10729,29 @@ class ModelReportExcel extends Model {
 
    
 
-           foreach ($data['orders'] as $order) {
-               
-           }
-
+    foreach ($data['orders'] as $result) {
+        /* if($result['pt']) {
+          $amount = $result['pt'];
+          }else{
+          $amount = 0;
+          } */
+        $log->write('RESULT download_customer_financial_statement_excel');
+        $log->write($result);
+        $log->write('RESULT download_customer_financial_statement_excel');
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['fiscal_year']);
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['posting_date']);
+ 
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['credit_debit']);
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['updated_total']);
+        $objPHPExcel->getActiveSheet()->getRowDimension($row)->setOutlineLevel(1);
+        $objPHPExcel->getActiveSheet()->getRowDimension($row)->setVisible(false);
+        // $Amount = $Amount + $result['subtotalvalue'];
+        // $PendingAmountTotal = $PendingAmountTotal + $result['pendingamountvalue'];
+        ++$row;
+    }
+//     $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setOutlineLevel(1);
+//     $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setCollapsed(true);
+// $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setVisible(false);
 
            //end region
             $objPHPExcel->setActiveSheetIndex(0);
@@ -10746,10 +10759,10 @@ class ModelReportExcel extends Model {
             // Sending headers to force the user to download the file
             //header('Content-Type: application/vnd.ms-excel');
             //header("Content-type: application/octet-stream");
-            $log->write($data['customers'][0]['customer'] . 'RESULT2 download_customer_statement_excel');
+            $log->write($data['orders'][0]['customer'] . 'RESULT2 download_customer_statement_excel');
             $log->write('download_customer_statement_excel');
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-            $filename = 'Customer_order_statement_' . $data['customers'][0]['customer'] . '.xlsx';
+            $filename = 'Customer_financial_statement_' . $data['orders'][0]['customer'] . '.xlsx';
 
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="' . $filename . '"');
