@@ -104,6 +104,7 @@ $_['text_tax_class'] = 'Tax Classes';
 $_['text_tax_rate'] = 'Tax Rates';
 $_['text_tools'] = 'Tools';
 $_['text_report_customer_statement'] = 'Statement';
+$_['text_report_customer_financial_statement'] = 'Financial Statement';
 $_['text_report_customer_order_pattern'] = 'Order Pattern';
 $_['text_report_customer_order_count'] = 'Order Count';
 $_['text_report_inventory_daily_prices'] = 'Inventory Prices';
