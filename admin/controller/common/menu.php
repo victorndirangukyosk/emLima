@@ -173,6 +173,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_customer_reward'] = $this->url->link('report/customer_reward', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_credit'] = $this->url->link('report/customer_credit', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_statement'] = $this->url->link('report/customer_order/statement', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_financial_statement'] = $this->url->link('report/customer_financial_statement', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_boughtproducts'] = $this->url->link('report/customer_boughtproducts', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_count'] = $this->url->link('report/customer_order_count', 'token=' . $this->session->data['token'], 'SSL');
@@ -565,6 +566,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_customer_reward'] = $this->url->link('report/customer_reward', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_credit'] = $this->url->link('report/customer_credit', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_statement'] = $this->url->link('report/customer_order/statement', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_financial_statement'] = $this->url->link('report/customer_financial_statement', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_boughtproducts'] = $this->url->link('report/customer_boughtproducts', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_count'] = $this->url->link('report/customer_order_count', 'token=' . $this->session->data['token'], 'SSL');
@@ -655,6 +657,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_customer_reward'] = $this->user->hasPermission('access', 'report/customer_reward');
         $data['preturn_customer_credit'] = $this->user->hasPermission('access', 'report/customer_credit');
         $data['preturn_customer_statement'] = $this->user->hasPermission('access', 'report/customer_statement');
+        $data['preturn_customer_financial_statement'] = $this->user->hasPermission('access', 'report/customer_financial_statement');
         $data['preturn_customer_boughtproducts'] = $this->user->hasPermission('access', 'report/customer_boughtproducts');
         $data['preturn_customer_order_pattern'] = $this->user->hasPermission('access', 'report/customer_order_pattern');
         $data['preturn_customer_order_count'] = $this->user->hasPermission('access', 'report/customer_order_count');

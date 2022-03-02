@@ -1488,4 +1488,93 @@ class ModelReportCustomer extends Model {
         return $results;
     }
 
+
+    
+    public function getCustomerOrdersByID($data = []) {
+        $sql = "SELECT year(o.delivery_date) as fiscal_year,date(o.delivery_date) as posting_date,'DR'as Document_type,'Debit' as credit_debit,'KES' as currency,c.SAP_customer_no, o.delivery_date  as delivery_date,c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer,c.company_name, c.email,  c.status, o.order_id,o.po_number,o.date_added,o.order_status_id,  o.total AS total,ot.value as updated_total,o.amount_partialy_paid,o.paid FROM `" . DB_PREFIX . 'order` o LEFT JOIN `'  . DB_PREFIX . 'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `' . DB_PREFIX . "order_total` ot ON (o.order_id=ot.order_id)  WHERE o.customer_id > 0 AND ot.title = 'Total'";
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        } else {
+            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";//
+        }
+
+
+        if (!empty($data['statement_duration'])) {
+            $sql .= " AND c.statement_duration= '" . $this->db->escape($data['statement_duration']) . "'";
+        }
+
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            // $sql .= " AND   c.customer_id   = '" .(int) $this->db->escape($data['filter_customer']) . "'";
+            $sql .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND c.company_name   LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        $sql .= ' GROUP BY o.order_id ORDER BY o.delivery_date asc';
+
+        //$sql = "SELECT t.customer_id, t.customer, t.email, t.customer_group, t.status, COUNT(DISTINCT t.order_id) AS orders, SUM(t.products) AS products, SUM(t.total) AS total FROM (" . $sql . ") AS t GROUP BY t.customer_id ORDER BY total DESC";
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        // echo  ($sql);die;
+
+
+        return $query->rows;
+    }
+
+
+    
+    public function getTotalCustomerOrdersByID($data = []) {
+        $sql = 'SELECT COUNT(DISTINCT o.order_id) AS total FROM `' . DB_PREFIX . 'order` o  LEFT JOIN `' . DB_PREFIX . "customer` c ON (o.customer_id = c.customer_id) WHERE o.customer_id > '0'";
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        } else {
+            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";//AND  o.order_status_id != '6'
+        }
+
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            // $sql .= " AND o.customer_id = '" . (int)$data['filter_customer'] . "'";
+            $sql .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND  c.company_name  LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
 }

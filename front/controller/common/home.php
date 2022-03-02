@@ -1007,6 +1007,12 @@ class ControllerCommonHome extends Controller {
         $data['categories'] = [];
         $this->load->controller('product/store');
         $new_categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+        $customer_categories = $this->model_assets_category->getCustomerCategoryById(ACTIVE_STORE_ID, 0);
+        foreach ($customer_categories as $customer_category) {
+            $new_categories[] = $customer_category;
+        }
+        $new_categories = array_map("unserialize", array_unique(array_map("serialize", $new_categories)));
+
         $data['categories_new'] = $new_categories;
         //$categories = $this->model_assets_category->getCategoriesNoRelationStore();
         $selected_categoory_id = isset($this->request->get['filter_category']) && $this->request->get['filter_category'] > 0 ? $this->request->get['filter_category'] : 0;
@@ -1018,8 +1024,14 @@ class ControllerCommonHome extends Controller {
 
         /* $log = new Log('error.log');
           $log->write('categories');
+          $log->write($customer_categories);
           $log->write($categories);
           $log->write('categories'); */
+
+        foreach ($customer_categories as $customer_category) {
+            $categories[] = $customer_category;
+        }
+        $categories = array_map("unserialize", array_unique(array_map("serialize", $categories)));
 
         $selectedProducts = [];
         foreach ($categories as $category) {
