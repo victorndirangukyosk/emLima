@@ -15,6 +15,12 @@ class ModelAssetsCategory extends Model
 
         return $this->db->query($sql)->rows;
     }
+    
+    public function getCustomerCategoryById($store_id, $parent_id)
+    {
+        $sql = 'SELECT *,ctc.category_id  FROM '.DB_PREFIX.'category c LEFT JOIN '.DB_PREFIX.'category_description cd ON (c.category_id = cd.category_id) JOIN '.DB_PREFIX.'category_to_customer ctc ON (c.category_id = ctc.category_id) LEFT JOIN '.DB_PREFIX."category_to_store c2s ON (c.category_id = c2s.category_id) WHERE c.parent_id = '".(int) $parent_id."' AND cd.language_id = '".(int) $this->config->get('config_language_id')."'  AND c.status = '1' ORDER BY c.sort_order, LCASE(cd.name)";
+        return $this->db->query($sql)->rows;
+    }
 
     public function getCategoryByStore($parent_id = 0)
     {
