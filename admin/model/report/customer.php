@@ -1708,7 +1708,7 @@ class ModelReportCustomer extends Model {
 
 
     public function getCustomerFinancialStatementByGroup1($data = []) {
-        $sql = "SELECT year(o.delivery_date) as fiscal_year,month(o.delivery_date) as fiscal_month,o.total AS total,ot.value as updated_total ,0 as wallet_total FROM `" . DB_PREFIX . 'order` o LEFT JOIN `'  . DB_PREFIX . 'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `' . DB_PREFIX . "order_total` ot ON (o.order_id=ot.order_id)  WHERE o.customer_id > 0 AND ot.title = 'Total'";
+        $sql = "SELECT year(o.delivery_date) as fiscal_year,month(o.delivery_date) as fiscal_month,sum(o.total) AS total,sum(ot.value) as updated_total ,0 as wallet_total FROM `" . DB_PREFIX . 'order` o LEFT JOIN `'  . DB_PREFIX . 'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `' . DB_PREFIX . "order_total` ot ON (o.order_id=ot.order_id)  WHERE o.customer_id > 0 AND ot.title = 'Total'";
 
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
@@ -1746,7 +1746,7 @@ class ModelReportCustomer extends Model {
 
     public function getCustomerFinancialStatementByGroup2($data = []) {
 
-        $sqlcredit = "SELECT year(cc.date_added) as fiscal_year,month(cc.date_added) as fiscal_month, cc.amount AS total,cc.amount as updated_total,0 as wallet_total FROM `" . DB_PREFIX . "customer_credit` cc LEFT JOIN `"  . DB_PREFIX . "customer` c ON (cc.customer_id = c.customer_id)     WHERE cc.customer_id > 0 AND cc.amount >0";
+        $sqlcredit = "SELECT year(cc.date_added) as fiscal_year,month(cc.date_added) as fiscal_month, 0 AS total,sum(cc.amount) as updated_total,0 as wallet_total FROM `" . DB_PREFIX . "customer_credit` cc LEFT JOIN `"  . DB_PREFIX . "customer` c ON (cc.customer_id = c.customer_id)     WHERE cc.customer_id > 0 AND cc.amount >0";
 
         
  
