@@ -2,6 +2,7 @@
 
 require_once DIR_SYSTEM . '/vendor/autoload.php'; // Loads the library
 require DIR_SYSTEM . '/vendor/twilio-php-master/Twilio/autoload.php';
+require_once DIR_SYSTEM . '/vendor/aws/aws-autoloader.php';
 
 use AfricasTalking\SDK\AfricasTalking;
 use paragraph1\phpFCM\Client as FCMClient;
@@ -2085,6 +2086,7 @@ class Emailtemplate {
         $to = $country_prefix . '' . $to;
 
         if ('awssns' == $this->config->get('config_sms_protocol')) {
+            $log->write('AWSNS');
             $sdk = new Aws\Sns\SnsClient([
                 'region' => 'us-east-2',
                 'version' => 'latest',
