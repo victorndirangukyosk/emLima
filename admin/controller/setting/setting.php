@@ -2578,6 +2578,9 @@ class ControllerSettingSetting extends Controller {
                         'StringValue' => 'KWIKBASKET'
                     ]
             ]]);
+            $log->write('AWS SNS RESULT');
+            $log->write($result);
+            $log->write('AWS SNS RESULT');
         } elseif ('africastalking' == $this->config->get('config_sms_protocol')) {
             $username = $this->config->get('config_africastalking_sms_username');
             $apiKey = $this->config->get('config_africastalking_sms_api_key');
