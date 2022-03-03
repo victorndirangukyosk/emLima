@@ -1,7 +1,6 @@
 <?php
 
 require_once DIR_SYSTEM . '/vendor/autoload.php'; // Loads the library
-require_once DIR_SYSTEM . '/vendor/aws/aws-autoloader.php';
 
 use Twilio\Rest\Client;
 

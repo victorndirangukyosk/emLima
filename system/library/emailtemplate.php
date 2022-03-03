@@ -2,7 +2,6 @@
 
 require_once DIR_SYSTEM . '/vendor/autoload.php'; // Loads the library
 require DIR_SYSTEM . '/vendor/twilio-php-master/Twilio/autoload.php';
-require_once DIR_SYSTEM . '/vendor/aws/aws-autoloader.php';
 
 use AfricasTalking\SDK\AfricasTalking;
 use paragraph1\phpFCM\Client as FCMClient;
