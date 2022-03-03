@@ -1492,7 +1492,7 @@ class ModelReportCustomer extends Model {
     
     public function getCustomerFinancialStatementByID($data = []) {
         $sql = "SELECT year(o.delivery_date) as fiscal_year,date(o.delivery_date) as posting_date,'DR'as Document_type,'Debit' as credit_debit,'KES' as currency,c.SAP_customer_no, o.delivery_date  as delivery_date,c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer,c.company_name, c.email,  c.status, o.order_id,o.date_added,o.order_status_id,  o.total AS total,ot.value as updated_total,o.amount_partialy_paid,o.paid FROM `" . DB_PREFIX . 'order` o LEFT JOIN `'  . DB_PREFIX . 'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `' . DB_PREFIX . "order_total` ot ON (o.order_id=ot.order_id)  WHERE o.customer_id > 0 AND ot.title = 'Total'";
-        $sqlcredit = "SELECT year(cc.date_added) as fiscal_year,date(cc.date_added) as posting_date,'CR'as Document_type,'Credit' as credit_debit,'KES' as currency,c.SAP_customer_no, cc.date_added  as delivery_date,c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer,c.company_name, c.email,  c.status, 0 as order_id,cc.date_added,'' as order_status_id,  cc.amount AS total,cc.amount as updated_total,0 as amount_partialy_paid,'' as paid FROM `" . DB_PREFIX . "customer_Credit` cc LEFT JOIN `"  . DB_PREFIX . "customer` c ON (cc.customer_id = c.customer_id)     WHERE cc.customer_id > 0 AND cc.amount >0";
+        $sqlcredit = "SELECT year(cc.date_added) as fiscal_year,date(cc.date_added) as posting_date,'CR'as Document_type,'Credit' as credit_debit,'KES' as currency,c.SAP_customer_no, cc.date_added  as delivery_date,c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer,c.company_name, c.email,  c.status, 0 as order_id,cc.date_added,'' as order_status_id,  cc.amount AS total,cc.amount as updated_total,0 as amount_partialy_paid,'' as paid FROM `" . DB_PREFIX . "customer_credit` cc LEFT JOIN `"  . DB_PREFIX . "customer` c ON (cc.customer_id = c.customer_id)     WHERE cc.customer_id > 0 AND cc.amount >0";
 
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
@@ -1649,7 +1649,7 @@ class ModelReportCustomer extends Model {
 
     public function getCustomerFinancialStatementByGroup($data = []) {
         $sql = "SELECT year(o.delivery_date) as fiscal_year,month(o.delivery_date) as fiscal_month,'DR'as Document_type,'Debit' as credit_debit,'KES' as currency,c.SAP_customer_no, o.delivery_date  as delivery_date,c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer,c.company_name, c.email,  c.status, o.order_id,o.date_added,o.order_status_id,  o.total AS total,ot.value as updated_total,o.amount_partialy_paid,o.paid FROM `" . DB_PREFIX . 'order` o LEFT JOIN `'  . DB_PREFIX . 'customer` c ON (o.customer_id = c.customer_id) LEFT JOIN `' . DB_PREFIX . "order_total` ot ON (o.order_id=ot.order_id)  WHERE o.customer_id > 0 AND ot.title = 'Total'";
-        $sqlcredit = "SELECT year(cc.date_added) as fiscal_year,month(cc.date_added) as fiscal_month,'CR'as Document_type,'Credit' as credit_debit,'KES' as currency,c.SAP_customer_no, cc.date_added  as delivery_date,c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer,c.company_name, c.email,  c.status, 0 as order_id,cc.date_added,'' as order_status_id,  cc.amount AS total,cc.amount as updated_total,0 as amount_partialy_paid,'' as paid FROM `" . DB_PREFIX . "customer_Credit` cc LEFT JOIN `"  . DB_PREFIX . "customer` c ON (cc.customer_id = c.customer_id)     WHERE cc.customer_id > 0 AND cc.amount >0";
+        $sqlcredit = "SELECT year(cc.date_added) as fiscal_year,month(cc.date_added) as fiscal_month,'CR'as Document_type,'Credit' as credit_debit,'KES' as currency,c.SAP_customer_no, cc.date_added  as delivery_date,c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer,c.company_name, c.email,  c.status, 0 as order_id,cc.date_added,'' as order_status_id,  cc.amount AS total,cc.amount as updated_total,0 as amount_partialy_paid,'' as paid FROM `" . DB_PREFIX . "customer_credit` cc LEFT JOIN `"  . DB_PREFIX . "customer` c ON (cc.customer_id = c.customer_id)     WHERE cc.customer_id > 0 AND cc.amount >0";
 
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
@@ -1746,7 +1746,7 @@ class ModelReportCustomer extends Model {
 
     public function getCustomerFinancialStatementByGroup2($data = []) {
 
-        $sqlcredit = "SELECT year(cc.date_added) as fiscal_year,month(cc.date_added) as fiscal_month, cc.amount AS total,cc.amount as updated_total,0 as wallet_total FROM `" . DB_PREFIX . "customer_Credit` cc LEFT JOIN `"  . DB_PREFIX . "customer` c ON (cc.customer_id = c.customer_id)     WHERE cc.customer_id > 0 AND cc.amount >0";
+        $sqlcredit = "SELECT year(cc.date_added) as fiscal_year,month(cc.date_added) as fiscal_month, cc.amount AS total,cc.amount as updated_total,0 as wallet_total FROM `" . DB_PREFIX . "customer_credit` cc LEFT JOIN `"  . DB_PREFIX . "customer` c ON (cc.customer_id = c.customer_id)     WHERE cc.customer_id > 0 AND cc.amount >0";
 
         
  
