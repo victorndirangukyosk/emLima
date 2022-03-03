@@ -2085,6 +2085,7 @@ class Emailtemplate {
         $to = $country_prefix . '' . $to;
 
         if ('awssns' == $this->config->get('config_sms_protocol')) {
+            $log->write('AWSNS');
             $sdk = new Aws\Sns\SnsClient([
                 'region' => 'us-east-2',
                 'version' => 'latest',
