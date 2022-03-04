@@ -59,7 +59,17 @@
 	    $('#loading').show();
 
 	    $('#error_msg').hide();
-
+            
+            $('.alert-warning').remove();
+            var payment_method = $('input[name=\'payment_method\']:checked').attr('value');
+            var payment_wallet_method = $('input[name=\'payment_wallet_method\']:checked').attr('value');
+            if(payment_method == null && payment_wallet_method == null) {
+            $('#payment-method-wrapper').prepend('<div class="alert alert-warning">' + 'Please Select Atleast One Payment Method!' + '<button type="button" class="close" data-dismiss="alert" style="width:1% !important;">&times;</button></div>');
+            $('#button-confirm').removeAttr('disabled');
+            $('#button-confirm').button('reset');
+            $('#loading').hide();
+            return false;
+            }
 	    if($('#mpesa_phone_number').val().length >= 9) {
 	    	$.ajax({
 		        type: 'post',

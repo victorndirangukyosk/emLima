@@ -931,14 +931,14 @@ __kdt.push({"post_on_load": false});
     </script>
     <script type="text/javascript">
 
-    $("#sidebarss").stick_in_parent();
+    /*$("#sidebarss").stick_in_parent();
 
 
     if(window.screen.availWidth < 450 || window.screen.availHeight < 732) {
         $("#sidebarss").trigger("sticky_kit:detach");
     } else {
         $("#sidebarss").stick_in_parent();
-    }
+    }*/
 
     $('.add-to-list').on('click', function (e) {
 

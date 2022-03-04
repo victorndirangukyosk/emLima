@@ -117,7 +117,7 @@
                 <td class="text-left"><?php echo $order['fiscal_year']; ?></td>
                 <td class="text-right"><?php echo $order['posting_date']; ?></td> 
                 <td class="text-left"><?php echo $order['Document_type']; ?></td>
-                <td class="text-left">KB<?php echo $order['order_id']; ?></td>
+                <td class="text-left"><?php echo $order['reference_document']; ?></td>
                 <td class="text-left"><?php echo $order['credit_debit']; ?></td>
                 <td class="text-left"><?php echo $order['currency']; ?></td>                
                 <td class="text-right"><?php echo $order['updated_total']; ?></td>
