@@ -387,7 +387,7 @@ class ControllerApiCustomerCart extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addCartProducts() { //add to addCartProducts
+    public function addCartProduct() { //add to addCartProducts
         $this->load->language('api/cart');
         $json = [];
 
