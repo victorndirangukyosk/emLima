@@ -129,15 +129,20 @@
               <div class="col-sm-3">
 
               
-  <div class="form-group">
+                <div class="form-group">
                       <label class="control-label" for="input-account-manager-name">Account Manager Name</label>
                       <input type="text" name="filter_account_manager_name" value="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_name; } ?>" placeholder="<?php echo $entry_account_manager_name; ?>" id="input-account-manager-name" class="form-control" data-account-manager-id="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_id; } ?>" />
-              </div>
+                </div>
+                
+                <div class="form-group">
+                      <label class="control-label" for="input-customer-experience">Customer Experience</label>
+                      <input type="text" name="filter_customer_experience" value="<?php if($filter_customer_experience != NULL && $filter_customer_experience_id != NULL) { echo $filter_customer_experience; } ?>" placeholder="<?php echo $entry_customer_experience; ?>" id="input-customer-experience" class="form-control" data-customer-experience-id="<?php if($filter_customer_experience != NULL && $filter_customer_experience_id != NULL) { echo $filter_customer_experience_id; } ?>" />
+                </div>
                  
               </div>
              <div class="col-sm-3">
            
- <div class="form-group">
+              <div class="form-group">
                 <label class="control-label" for="input-date-added">Date Added From</label>
                 <div class="input-group date" style="max-width: 321px;">
                   <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="Date Added From" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
@@ -145,6 +150,17 @@
                   <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                   </span></div>
               </div>
+              
+              <div class="form-group">
+                <label class="control-label" for="input-payment-terms">Payment Terms</label>
+                <select name="filter_payment_terms" id="input-payment-terms" class="form-control">
+                            <option value=""></option>
+                            <option value="Payment On Delivery" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == 'Payment On Delivery') { ?> selected="selected" <?php } ?> >Payment On Delivery</option>
+                            <option value="7 Days Credit" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == '7 Days Credit') { ?> selected="selected" <?php } ?> >7 Days Credit</option>
+                            <option value="15 Days Credit" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == '15 Days Credit') { ?> selected="selected" <?php } ?> >15 Days Credit</option>
+                            <option value="30 Days Credit" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == '30 Days Credit') { ?> selected="selected" <?php } ?> >30 Days Credit</option>
+                </select>
+              </div>   
 
 
              </div>
@@ -160,16 +176,33 @@
                   <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                   </span></div>
               </div>
-
+               
+               <div class="form-group">
+                <label class="control-label" for="input-customer-price-category">Price Category</label>
+                <select name="filter_customer_price_category" id="input-customer-price-category" class="form-control">
+                            <option value="">Select Category</option>
+                            <?php foreach ($price_categories as $category) { ?>
+                            <?php if(isset($filter_customer_price_category) && ($filter_customer_price_category== $category['price_category'])){?>
+                            <option selected="selected" value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
+                            <?php }else {?>
+                             <option  value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
+                             <?php } ?>
+                            <?php } ?>
+                </select>
+              </div>   
+                  
+                  
               </div>
               <div class="col-sm-3" style="margin-top:25px;">
               <div class="form-group">
                   <label><input type="checkbox" name="filter_sub_customer_show[]" value="<?php echo $filter_sub_customer_show; ?>" <?php if($filter_sub_customer_show == 1) { ?> checked="" <?php } ?>> Show Sub Customer </label>
-
-                  <label class="control-label"></label>
-                  <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
               </div>
-            </div>
+              
+              <div class="form-group" style="margin-top:43px;">
+               <button type="button" id="button-filter" class="btn btn-primary"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>  
+              </div>
+              </div>
+              
           </div>
         </div>
         <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-customer">
@@ -299,6 +332,19 @@ $('#button-filter').on('click', function() {
     url += '&filter_account_manager_id=' + encodeURIComponent(filter_account_manager_id);
   }
   
+    var filter_customer_experience = $('input[name=\'filter_customer_experience\']').val();
+
+   if (filter_customer_experience) {
+     url += '&filter_customer_experience=' + encodeURIComponent(filter_customer_experience);
+   }
+   
+  var filter_customer_experience_id = $('input[name=\'filter_customer_experience\']').attr("data-customer-experience-id");
+  //alert(filter_customer_experience_id);
+  
+  if (filter_customer_experience_id) {
+    url += '&filter_customer_experience_id=' + encodeURIComponent(filter_customer_experience_id);
+  }
+  
   var filter_sub_customer_show = 0;
   
   if ($('input[name=\'filter_sub_customer_show[]\']').is(':checked')) {
@@ -330,7 +376,19 @@ $('#button-filter').on('click', function() {
   
   if (filter_status != '*') {
     url += '&filter_status=' + encodeURIComponent(filter_status); 
+  }
+  
+  var filter_payment_terms = $('select[name=\'filter_payment_terms\']').val();
+  
+  if (filter_payment_terms != '*') {
+    url += '&filter_payment_terms=' + encodeURIComponent(filter_payment_terms); 
   } 
+  
+  var filter_customer_price_category = $('select[name=\'filter_customer_price_category\']').val();
+  
+  if (filter_customer_price_category != '*') {
+    url += '&filter_customer_price_category=' + encodeURIComponent(filter_customer_price_category); 
+  }
   
   var filter_telephone = $('input[name=\'filter_telephone\']').val();
   
@@ -461,7 +519,28 @@ $('input[name=\'filter_parent_customer\']').autocomplete({
                 $('input[name=\'filter_account_manager_name\']').val(item['label']);
                 $('input[name=\'filter_account_manager_name\']').attr("data-account-manager-id", item['value']);
             }
- });      
+ });
+ 
+  $('input[name=\'filter_customer_experience\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=dropdowns/dropdowns/getcustomerexperienceteam&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['user_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'filter_customer_experience\']').val(item['label']);
+                $('input[name=\'filter_customer_experience\']').attr("data-customer-experience-id", item['value']);
+            }
+ }); 
 
 $('input[name=\'filter_email\']').autocomplete({
   'source': function(request, response) {
@@ -516,6 +595,19 @@ function excel() {
     url += '&filter_account_manager_id=' + encodeURIComponent(filter_account_manager_id);
   }
   
+  var filter_customer_experience = $('input[name=\'filter_customer_experience\']').val();
+
+   if (filter_customer_experience) {
+     url += '&filter_customer_experience=' + encodeURIComponent(filter_customer_experience);
+   }
+   
+  var filter_customer_experience_id = $('input[name=\'filter_customer_experience\']').attr("data-customer-experience-id");
+  //alert(filter_customer_experience_id);
+  
+  if (filter_customer_experience_id) {
+    url += '&filter_customer_experience_id=' + encodeURIComponent(filter_customer_experience_id);
+  }
+  
   var filter_sub_customer_show = 0;
   
   if ($('input[name=\'filter_sub_customer_show[]\']').is(':checked')) {
@@ -548,6 +640,18 @@ function excel() {
   if (filter_status != '*') {
     url += '&filter_status=' + encodeURIComponent(filter_status); 
   } 
+  
+  var filter_payment_terms = $('select[name=\'filter_payment_terms\']').val();
+  
+  if (filter_payment_terms != '*') {
+    url += '&filter_payment_terms=' + encodeURIComponent(filter_payment_terms); 
+  }
+  
+  var filter_customer_price_category = $('select[name=\'filter_customer_price_category\']').val();
+  
+  if (filter_customer_price_category != '*') {
+    url += '&filter_customer_price_category=' + encodeURIComponent(filter_customer_price_category); 
+  }
   
   var filter_telephone = $('input[name=\'filter_telephone\']').val();
   
