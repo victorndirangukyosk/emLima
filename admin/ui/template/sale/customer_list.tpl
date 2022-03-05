@@ -176,16 +176,32 @@
                   <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                   </span></div>
               </div>
-
+               
+               <div class="form-group">
+                <label class="control-label" for="input-customer-price-category">Price Category</label>
+                <select name="filter_customer_price_category" id="input-customer-price-category" class="form-control">
+                            <option value="">Select Category</option>
+                            <?php foreach ($price_categories as $category) { ?>
+                            <?php if(isset($filter_customer_price_category) && ($filter_customer_price_category== $category['price_category'])){?>
+                            <option selected="selected" value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
+                            <?php }else {?>
+                             <option  value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
+                             <?php } ?>
+                            <?php } ?>
+                </select>
+              </div>   
+                  
+                  
               </div>
               <div class="col-sm-3" style="margin-top:25px;">
               <div class="form-group">
                   <label><input type="checkbox" name="filter_sub_customer_show[]" value="<?php echo $filter_sub_customer_show; ?>" <?php if($filter_sub_customer_show == 1) { ?> checked="" <?php } ?>> Show Sub Customer </label>
-
-                  <label class="control-label"></label>
-                  <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>    
               </div>
-            </div>
+              
+              <div class="form-group" style="margin-top:43px;">
+               <button type="button" id="button-filter" class="btn btn-primary"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>  
+              </div>
+              </div>
               
           </div>
         </div>
@@ -367,6 +383,12 @@ $('#button-filter').on('click', function() {
   if (filter_payment_terms != '*') {
     url += '&filter_payment_terms=' + encodeURIComponent(filter_payment_terms); 
   } 
+  
+  var filter_customer_price_category = $('select[name=\'filter_customer_price_category\']').val();
+  
+  if (filter_customer_price_category != '*') {
+    url += '&filter_customer_price_category=' + encodeURIComponent(filter_customer_price_category); 
+  }
   
   var filter_telephone = $('input[name=\'filter_telephone\']').val();
   
@@ -623,7 +645,13 @@ function excel() {
   
   if (filter_payment_terms != '*') {
     url += '&filter_payment_terms=' + encodeURIComponent(filter_payment_terms); 
-  } 
+  }
+  
+  var filter_customer_price_category = $('select[name=\'filter_customer_price_category\']').val();
+  
+  if (filter_customer_price_category != '*') {
+    url += '&filter_customer_price_category=' + encodeURIComponent(filter_customer_price_category); 
+  }
   
   var filter_telephone = $('input[name=\'filter_telephone\']').val();
   

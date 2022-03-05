@@ -76,6 +76,12 @@ class ControllerSaleCustomer extends Controller {
             $filter_payment_terms = null;
         }
 
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $filter_customer_price_category = $this->request->get['filter_customer_price_category'];
+        } else {
+            $filter_customer_price_category = null;
+        }
+
         if (isset($this->request->get['filter_status'])) {
             $filter_status = $this->request->get['filter_status'];
         } else {
@@ -177,6 +183,7 @@ class ControllerSaleCustomer extends Controller {
             'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
             'filter_payment_terms' => $filter_payment_terms,
+            'filter_customer_price_category' => $filter_customer_price_category,
             'filter_approved' => $filter_approved,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_to' => $filter_date_added_to,
@@ -261,6 +268,10 @@ class ControllerSaleCustomer extends Controller {
 
             if (isset($this->request->get['filter_payment_terms'])) {
                 $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+            }
+
+            if (isset($this->request->get['filter_customer_price_category'])) {
+                $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
             }
 
             if (isset($this->request->get['filter_approved'])) {
@@ -407,6 +418,10 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
             }
 
+            if (isset($this->request->get['filter_customer_price_category'])) {
+                $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+            }
+
             if (isset($this->request->get['filter_approved'])) {
                 $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
@@ -533,6 +548,10 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
             }
 
+            if (isset($this->request->get['filter_customer_price_category'])) {
+                $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+            }
+
             if (isset($this->request->get['filter_approved'])) {
                 $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
@@ -657,6 +676,10 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
             }
 
+            if (isset($this->request->get['filter_customer_price_category'])) {
+                $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+            }
+
             if (isset($this->request->get['filter_approved'])) {
                 $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
@@ -755,6 +778,10 @@ class ControllerSaleCustomer extends Controller {
 
             if (isset($this->request->get['filter_payment_terms'])) {
                 $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+            }
+
+            if (isset($this->request->get['filter_customer_price_category'])) {
+                $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
             }
 
             if (isset($this->request->get['filter_approved'])) {
@@ -862,6 +889,12 @@ class ControllerSaleCustomer extends Controller {
             $filter_payment_terms = $this->request->get['filter_payment_terms'];
         } else {
             $filter_payment_terms = null;
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $filter_customer_price_category = $this->request->get['filter_customer_price_category'];
+        } else {
+            $filter_customer_price_category = null;
         }
 
         if (isset($this->request->get['filter_approved'])) {
@@ -985,6 +1018,10 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
 
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -1070,6 +1107,7 @@ class ControllerSaleCustomer extends Controller {
             'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
             'filter_payment_terms' => $filter_payment_terms,
+            'filter_customer_price_category' => $filter_customer_price_category,
             'filter_approved' => $filter_approved,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_to' => $filter_date_added_to,
@@ -1236,6 +1274,10 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
 
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -1327,6 +1369,10 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
 
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -1396,6 +1442,7 @@ class ControllerSaleCustomer extends Controller {
         $data['filter_customer_group_id'] = $filter_customer_group_id;
         $data['filter_status'] = $filter_status;
         $data['filter_payment_terms'] = $filter_payment_terms;
+        $data['filter_customer_price_category'] = $filter_customer_price_category;
         $data['filter_approved'] = $filter_approved;
         $data['filter_ip'] = $filter_ip;
         $data['filter_parent_customer'] = $filter_parent_customer;
@@ -1411,6 +1458,7 @@ class ControllerSaleCustomer extends Controller {
         $this->load->model('sale/customer_group');
 
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
+        $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
 
         $this->load->model('setting/store');
 
@@ -1471,6 +1519,12 @@ class ControllerSaleCustomer extends Controller {
             $filter_payment_terms = $this->request->get['filter_payment_terms'];
         } else {
             $filter_payment_terms = null;
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $filter_customer_price_category = $this->request->get['filter_customer_price_category'];
+        } else {
+            $filter_customer_price_category = null;
         }
 
         if (isset($this->request->get['filter_approved'])) {
@@ -1593,6 +1647,10 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
 
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -1674,6 +1732,7 @@ class ControllerSaleCustomer extends Controller {
             'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
             'filter_payment_terms' => $filter_payment_terms,
+            'filter_customer_price_category' => $filter_customer_price_category,
             'filter_approved' => $filter_approved,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_to' => $filter_date_added_to,
@@ -1828,6 +1887,10 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
 
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -1919,6 +1982,10 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
 
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -1988,6 +2055,7 @@ class ControllerSaleCustomer extends Controller {
         $data['filter_customer_group_id'] = $filter_customer_group_id;
         $data['filter_status'] = $filter_status;
         $data['filter_payment_terms'] = $filter_payment_terms;
+        $data['filter_customer_price_category'] = $filter_customer_price_category;
         $data['filter_approved'] = $filter_approved;
         $data['filter_ip'] = $filter_ip;
         $data['filter_parent_customer'] = $filter_parent_customer;
@@ -2225,6 +2293,10 @@ class ControllerSaleCustomer extends Controller {
 
         if (isset($this->request->get['filter_payment_terms'])) {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
         }
 
         if (isset($this->request->get['filter_approved'])) {
@@ -2508,6 +2580,14 @@ class ControllerSaleCustomer extends Controller {
             $data['payment_terms'] = true;
         }
 
+        if (isset($this->request->post['customer_price_category'])) {
+            $data['customer_price_category'] = $this->request->post['customer_price_category'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_price_category'] = $customer_info['customer_price_category'];
+        } else {
+            $data['customer_price_category'] = true;
+        }
+
         if (isset($this->request->post['approved'])) {
             $data['approved'] = $this->request->post['approved'];
         } elseif (!empty($customer_info)) {
@@ -2598,6 +2678,14 @@ class ControllerSaleCustomer extends Controller {
             $data['payment_terms'] = $customer_info['payment_terms'];
         } else {
             $data['payment_terms'] = '';
+        }
+
+        if (isset($this->request->post['customer_price_category'])) {
+            $data['customer_price_category'] = $this->request->post['customer_price_category'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_price_category'] = $customer_info['customer_price_category'];
+        } else {
+            $data['customer_price_category'] = '';
         }
 
         if (isset($this->request->post['statement_duration'])) {
@@ -3753,6 +3841,10 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
 
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -4162,6 +4254,12 @@ class ControllerSaleCustomer extends Controller {
             $filter_payment_terms = null;
         }
 
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $filter_customer_price_category = $this->request->get['filter_customer_price_category'];
+        } else {
+            $filter_customer_price_category = null;
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $filter_approved = $this->request->get['filter_approved'];
         } else {
@@ -4266,6 +4364,7 @@ class ControllerSaleCustomer extends Controller {
             'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
             'filter_payment_terms' => $filter_payment_terms,
+            'filter_customer_price_category' => $filter_customer_price_category,
             'filter_approved' => $filter_approved,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_to' => $filter_date_added_to,
@@ -4381,6 +4480,7 @@ class ControllerSaleCustomer extends Controller {
         $data['filter_customer_group_id'] = $filter_customer_group_id;
         $data['filter_status'] = $filter_status;
         $data['filter_payment_terms'] = $filter_payment_terms;
+        $data['filter_customer_price_category'] = $filter_customer_price_category;
         $data['filter_approved'] = $filter_approved;
         $data['filter_ip'] = $filter_ip;
         $data['filter_parent_customer'] = $filter_parent_customer;
@@ -4834,13 +4934,21 @@ class ControllerSaleCustomer extends Controller {
         } else {
             $data['status'] = true;
         }
-        
+
         if (isset($this->request->post['payment_terms'])) {
             $data['payment_terms'] = $this->request->post['payment_terms'];
         } elseif (!empty($customer_info)) {
             $data['payment_terms'] = $customer_info['payment_terms'];
         } else {
             $data['payment_terms'] = true;
+        }
+        
+        if (isset($this->request->post['customer_price_category'])) {
+            $data['customer_price_category'] = $this->request->post['customer_price_category'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_price_category'] = $customer_info['customer_price_category'];
+        } else {
+            $data['customer_price_category'] = true;
         }
 
         if (isset($this->request->post['approved'])) {
@@ -4933,6 +5041,14 @@ class ControllerSaleCustomer extends Controller {
             $data['payment_terms'] = $customer_info['payment_terms'];
         } else {
             $data['payment_terms'] = '';
+        }
+        
+        if (isset($this->request->post['customer_price_category'])) {
+            $data['customer_price_category'] = $this->request->post['customer_price_category'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_price_category'] = $customer_info['customer_price_category'];
+        } else {
+            $data['customer_price_category'] = '';
         }
 
         if (isset($this->request->post['statement_duration'])) {
