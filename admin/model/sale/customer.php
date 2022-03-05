@@ -208,6 +208,18 @@ class ModelSaleCustomer extends Model {
         if (isset($data['filter_account_manager_name']) && !is_null($data['filter_account_manager_id'])) {
             $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
+        
+        if (isset($data['filter_payment_terms']) && !is_null($data['filter_payment_terms']) && $data['filter_payment_terms'] != NULL) {
+            $implode[] = "c.payment_terms = '" . $data['filter_payment_terms'] . "'";
+        }
+        
+        if (isset($data['filter_customer_price_category']) && !is_null($data['filter_customer_price_category']) && $data['filter_customer_price_category'] != NULL) {
+            $implode[] = "c.customer_category = '" . $data['filter_customer_price_category'] . "'";
+        }
+        
+        if (!empty($data['filter_customer_experience_id']) && !empty($data['filter_customer_experience_id'])) {
+            $implode[] = "customer_experience_id = '" . $this->db->escape($data['filter_customer_experience_id']) . "'";
+        }
 
         if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !isset($data['filter_parent_customer_id'])) {//!array_key_exists('filter_parent_customer_id', $data)
             $implode[] = "(parent = 0 OR parent IS NULL)";
@@ -945,6 +957,18 @@ class ModelSaleCustomer extends Model {
 
         if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
             $implode[] = "account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
+        }
+        
+        if (!empty($data['filter_customer_experience_id']) && !empty($data['filter_customer_experience_id'])) {
+            $implode[] = "customer_experience_id = '" . $this->db->escape($data['filter_customer_experience_id']) . "'";
+        }
+        
+        if (!empty($data['filter_payment_terms']) && !empty($data['filter_payment_terms']) && $data['filter_payment_terms'] != NULL) {
+            $implode[] = "payment_terms = '" . $this->db->escape($data['filter_payment_terms']) . "'";
+        }
+        
+        if (!empty($data['filter_customer_price_category']) && !empty($data['filter_customer_price_category']) && $data['filter_customer_price_category'] != NULL) {
+            $implode[] = "customer_category = '" . $this->db->escape($data['filter_customer_price_category']) . "'";
         }
 
         if (($data['filter_sub_customer_show'] == 0 || $data['filter_sub_customer_show'] == NULL || !array_key_exists('filter_sub_customer_show', $data)) && !isset($data['filter_parent_customer_id'])) {//!array_key_exists('filter_parent_customer_id', $data)

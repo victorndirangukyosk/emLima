@@ -70,6 +70,18 @@ class ControllerSaleCustomer extends Controller {
             $filter_customer_group_id = null;
         }
 
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $filter_payment_terms = $this->request->get['filter_payment_terms'];
+        } else {
+            $filter_payment_terms = null;
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $filter_customer_price_category = $this->request->get['filter_customer_price_category'];
+        } else {
+            $filter_customer_price_category = null;
+        }
+
         if (isset($this->request->get['filter_status'])) {
             $filter_status = $this->request->get['filter_status'];
         } else {
@@ -106,10 +118,22 @@ class ControllerSaleCustomer extends Controller {
             $filter_account_manager_name = null;
         }
 
+        if (isset($this->request->get['filter_customer_experince'])) {
+            $filter_customer_experince = $this->request->get['filter_customer_experince'];
+        } else {
+            $filter_customer_experince = null;
+        }
+
         if (isset($this->request->get['filter_account_manager_id'])) {
             $filter_account_manager_id = $this->request->get['filter_account_manager_id'];
         } else {
             $filter_account_manager_id = null;
+        }
+
+        if (isset($this->request->get['filter_customer_experince_id'])) {
+            $filter_customer_experince_id = $this->request->get['filter_customer_experince_id'];
+        } else {
+            $filter_customer_experince_id = null;
         }
 
         if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -158,6 +182,8 @@ class ControllerSaleCustomer extends Controller {
             'filter_telephone' => $filter_telephone,
             'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
+            'filter_payment_terms' => $filter_payment_terms,
+            'filter_customer_price_category' => $filter_customer_price_category,
             'filter_approved' => $filter_approved,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_to' => $filter_date_added_to,
@@ -165,7 +191,9 @@ class ControllerSaleCustomer extends Controller {
             'filter_parent_customer' => $filter_parent_customer,
             'filter_parent_customer_id' => $filter_parent_customer_id,
             'filter_account_manager_name' => $filter_account_manager_name,
+            'filter_customer_experince' => $filter_customer_experince,
             'filter_account_manager_id' => $filter_account_manager_id,
+            'filter_customer_experience_id' => $filter_customer_experience_id,
             'filter_sub_customer_show' => $filter_sub_customer_show,
             'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
@@ -238,6 +266,14 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
+            if (isset($this->request->get['filter_payment_terms'])) {
+                $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+            }
+
+            if (isset($this->request->get['filter_customer_price_category'])) {
+                $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+            }
+
             if (isset($this->request->get['filter_approved'])) {
                 $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
@@ -258,12 +294,16 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
             }
 
-            if (isset($this->request->get['filter_sub_customer_show'])) {
-                $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
+            if (isset($this->request->get['filter_customer_experince'])) {
+                $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
             }
 
             if (isset($this->request->get['filter_account_manager_id'])) {
                 $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+            }
+
+            if (isset($this->request->get['filter_customer_experience_id'])) {
+                $url .= '&filter_customer_experience_id=' . $this->request->get['filter_customer_experience_id'];
             }
 
             if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -374,6 +414,14 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
+            if (isset($this->request->get['filter_payment_terms'])) {
+                $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+            }
+
+            if (isset($this->request->get['filter_customer_price_category'])) {
+                $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+            }
+
             if (isset($this->request->get['filter_approved'])) {
                 $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
@@ -394,12 +442,16 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
             }
 
-            if (isset($this->request->get['filter_sub_customer_show'])) {
-                $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
+            if (isset($this->request->get['filter_customer_experience'])) {
+                $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
             }
 
             if (isset($this->request->get['filter_account_manager_id'])) {
                 $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+            }
+
+            if (isset($this->request->get['filter_customer_experince_id'])) {
+                $url .= '&filter_customer_experince_id=' . $this->request->get['filter_customer_experince_id'];
             }
 
             if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -492,6 +544,14 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
+            if (isset($this->request->get['filter_payment_terms'])) {
+                $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+            }
+
+            if (isset($this->request->get['filter_customer_price_category'])) {
+                $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+            }
+
             if (isset($this->request->get['filter_approved'])) {
                 $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
@@ -512,8 +572,16 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
             }
 
+            if (isset($this->request->get['filter_customer_experience'])) {
+                $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
+            }
+
             if (isset($this->request->get['filter_account_manager_id'])) {
                 $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+            }
+
+            if (isset($this->request->get['filter_customer_experince_id'])) {
+                $url .= '&filter_customer_experince_id=' . $this->request->get['filter_customer_experince_id'];
             }
 
             if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -604,6 +672,14 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
+            if (isset($this->request->get['filter_payment_terms'])) {
+                $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+            }
+
+            if (isset($this->request->get['filter_customer_price_category'])) {
+                $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+            }
+
             if (isset($this->request->get['filter_approved'])) {
                 $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
@@ -624,8 +700,16 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
             }
 
+            if (isset($this->request->get['filter_customer_experience'])) {
+                $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
+            }
+
             if (isset($this->request->get['filter_account_manager_id'])) {
                 $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+            }
+
+            if (isset($this->request->get['filter_customer_experience_id'])) {
+                $url .= '&filter_customer_experience_id=' . $this->request->get['filter_customer_experience_id'];
             }
 
             if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -692,6 +776,14 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
+            if (isset($this->request->get['filter_payment_terms'])) {
+                $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+            }
+
+            if (isset($this->request->get['filter_customer_price_category'])) {
+                $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+            }
+
             if (isset($this->request->get['filter_approved'])) {
                 $url .= '&filter_approved=' . $this->request->get['filter_approved'];
             }
@@ -712,12 +804,20 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
             }
 
+            if (isset($this->request->get['filter_customer_experience'])) {
+                $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
+            }
+
             if (isset($this->request->get['filter_sub_customer_show'])) {
                 $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
             }
 
             if (isset($this->request->get['filter_account_manager_id'])) {
                 $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+            }
+
+            if (isset($this->request->get['filter_customer_experience_id'])) {
+                $url .= '&filter_customer_experience_id=' . $this->request->get['filter_customer_experience_id'];
             }
 
             if (isset($this->request->get['filter_date_added'])) {
@@ -785,6 +885,18 @@ class ControllerSaleCustomer extends Controller {
             $filter_status = null;
         }
 
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $filter_payment_terms = $this->request->get['filter_payment_terms'];
+        } else {
+            $filter_payment_terms = null;
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $filter_customer_price_category = $this->request->get['filter_customer_price_category'];
+        } else {
+            $filter_customer_price_category = null;
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $filter_approved = $this->request->get['filter_approved'];
         } else {
@@ -815,10 +927,22 @@ class ControllerSaleCustomer extends Controller {
             $filter_account_manager_name = null;
         }
 
+        if (isset($this->request->get['filter_customer_experience'])) {
+            $filter_customer_experience = $this->request->get['filter_customer_experience'];
+        } else {
+            $filter_customer_experience = null;
+        }
+
         if (isset($this->request->get['filter_account_manager_id'])) {
             $filter_account_manager_id = $this->request->get['filter_account_manager_id'];
         } else {
             $filter_account_manager_id = null;
+        }
+
+        if (isset($this->request->get['filter_customer_experience_id'])) {
+            $filter_customer_experience_id = $this->request->get['filter_customer_experience_id'];
+        } else {
+            $filter_customer_experience_id = null;
         }
 
         if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -890,6 +1014,14 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -910,8 +1042,16 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
         }
 
+        if (isset($this->request->get['filter_customer_experience'])) {
+            $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
+        }
+
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience_id'])) {
+            $url .= '&filter_customer_experience_id=' . $this->request->get['filter_customer_experience_id'];
         }
 
         if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -966,6 +1106,8 @@ class ControllerSaleCustomer extends Controller {
             'filter_telephone' => $filter_telephone,
             'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
+            'filter_payment_terms' => $filter_payment_terms,
+            'filter_customer_price_category' => $filter_customer_price_category,
             'filter_approved' => $filter_approved,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_to' => $filter_date_added_to,
@@ -973,7 +1115,9 @@ class ControllerSaleCustomer extends Controller {
             'filter_parent_customer' => $filter_parent_customer,
             'filter_parent_customer_id' => $filter_parent_customer_id,
             'filter_account_manager_name' => $filter_account_manager_name,
+            'filter_customer_experince' => $filter_customer_experience,
             'filter_account_manager_id' => $filter_account_manager_id,
+            'filter_customer_experience_id' => $filter_customer_experience_id,
             'filter_sub_customer_show' => $filter_sub_customer_show,
             'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
@@ -1063,6 +1207,7 @@ class ControllerSaleCustomer extends Controller {
         $data['entry_ip'] = $this->language->get('entry_ip');
         $data['entry_parent_customer'] = 'Parent Customer Name';
         $data['entry_account_manager_name'] = 'Account Manager Name';
+        $data['entry_customer_experience'] = 'Customer Experience';
         $data['entry_date_added'] = $this->language->get('entry_date_added');
 
         $data['button_approve'] = $this->language->get('button_approve');
@@ -1125,6 +1270,14 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -1145,8 +1298,16 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
         }
 
+        if (isset($this->request->get['filter_customer_experience'])) {
+            $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
+        }
+
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience_id'])) {
+            $url .= '&filter_customer_experience_id=' . $this->request->get['filter_customer_experience_id'];
         }
 
         if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -1204,6 +1365,14 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -1224,8 +1393,16 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
         }
 
+        if (isset($this->request->get['filter_customer_experience'])) {
+            $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
+        }
+
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience_id'])) {
+            $url .= '&filter_customer_experience_id=' . $this->request->get['filter_customer_experience_id'];
         }
 
         if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -1264,12 +1441,16 @@ class ControllerSaleCustomer extends Controller {
         $data['filter_telephone'] = $filter_telephone;
         $data['filter_customer_group_id'] = $filter_customer_group_id;
         $data['filter_status'] = $filter_status;
+        $data['filter_payment_terms'] = $filter_payment_terms;
+        $data['filter_customer_price_category'] = $filter_customer_price_category;
         $data['filter_approved'] = $filter_approved;
         $data['filter_ip'] = $filter_ip;
         $data['filter_parent_customer'] = $filter_parent_customer;
         $data['filter_parent_customer_id'] = $filter_parent_customer_id;
         $data['filter_account_manager_name'] = $filter_account_manager_name;
+        $data['filter_customer_experience'] = $filter_customer_experience;
         $data['filter_account_manager_id'] = $filter_account_manager_id;
+        $data['filter_customer_experience_id'] = $filter_customer_experience_id;
         $data['filter_sub_customer_show'] = $filter_sub_customer_show;
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_date_added_to'] = $filter_date_added_to;
@@ -1277,6 +1458,7 @@ class ControllerSaleCustomer extends Controller {
         $this->load->model('sale/customer_group');
 
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
+        $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
 
         $this->load->model('setting/store');
 
@@ -1333,6 +1515,18 @@ class ControllerSaleCustomer extends Controller {
             $filter_status = null;
         }
 
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $filter_payment_terms = $this->request->get['filter_payment_terms'];
+        } else {
+            $filter_payment_terms = null;
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $filter_customer_price_category = $this->request->get['filter_customer_price_category'];
+        } else {
+            $filter_customer_price_category = null;
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $filter_approved = $this->request->get['filter_approved'];
         } else {
@@ -1363,10 +1557,22 @@ class ControllerSaleCustomer extends Controller {
             $filter_account_manager_name = null;
         }
 
+        if (isset($this->request->get['filter_customer_experience'])) {
+            $filter_customer_experience = $this->request->get['filter_customer_experience'];
+        } else {
+            $filter_customer_experience = null;
+        }
+
         if (isset($this->request->get['filter_account_manager_id'])) {
             $filter_account_manager_id = $this->request->get['filter_account_manager_id'];
         } else {
             $filter_account_manager_id = null;
+        }
+
+        if (isset($this->request->get['filter_customer_experience_id'])) {
+            $filter_customer_experience_id = $this->request->get['filter_customer_experience_id'];
+        } else {
+            $filter_customer_experience_id = null;
         }
 
         if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -1437,6 +1643,14 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -1459,6 +1673,14 @@ class ControllerSaleCustomer extends Controller {
 
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience'])) {
+            $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience_id'])) {
+            $url .= '&filter_customer_experience_id=' . $this->request->get['filter_customer_experience_id'];
         }
 
         if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -1509,6 +1731,8 @@ class ControllerSaleCustomer extends Controller {
             'filter_telephone' => $filter_telephone,
             'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
+            'filter_payment_terms' => $filter_payment_terms,
+            'filter_customer_price_category' => $filter_customer_price_category,
             'filter_approved' => $filter_approved,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_to' => $filter_date_added_to,
@@ -1517,6 +1741,8 @@ class ControllerSaleCustomer extends Controller {
             'filter_parent_customer_id' => $filter_parent_customer_id,
             'filter_account_manager_name' => $filter_account_manager_name,
             'filter_account_manager_id' => $filter_account_manager_id,
+            'filter_customer_experience' => $filter_customer_experience,
+            'filter_customer_experience_id' => $filter_customer_experience_id,
             'filter_sub_customer_show' => $filter_sub_customer_show,
             'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
@@ -1594,6 +1820,7 @@ class ControllerSaleCustomer extends Controller {
         $data['entry_ip'] = $this->language->get('entry_ip');
         $data['entry_parent_customer'] = 'Parent Customer Name';
         $data['entry_account_manager_name'] = 'Account Manager Name';
+        $data['entry_customer_experience'] = 'Customer Experience';
         $data['entry_date_added'] = $this->language->get('entry_date_added');
 
         $data['button_approve'] = $this->language->get('button_approve');
@@ -1656,6 +1883,14 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -1678,6 +1913,14 @@ class ControllerSaleCustomer extends Controller {
 
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience'])) {
+            $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience_id'])) {
+            $url .= '&filter_customer_experience_id=' . $this->request->get['filter_customer_experience_id'];
         }
 
         if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -1735,6 +1978,14 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -1757,6 +2008,14 @@ class ControllerSaleCustomer extends Controller {
 
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience'])) {
+            $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience_id'])) {
+            $url .= '&filter_customer_experience_id=' . $this->request->get['filter_customer_experience_id'];
         }
 
         if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -1795,12 +2054,16 @@ class ControllerSaleCustomer extends Controller {
         $data['filter_telephone'] = $filter_telephone;
         $data['filter_customer_group_id'] = $filter_customer_group_id;
         $data['filter_status'] = $filter_status;
+        $data['filter_payment_terms'] = $filter_payment_terms;
+        $data['filter_customer_price_category'] = $filter_customer_price_category;
         $data['filter_approved'] = $filter_approved;
         $data['filter_ip'] = $filter_ip;
         $data['filter_parent_customer'] = $filter_parent_customer;
         $data['filter_parent_customer_id'] = $filter_parent_customer_id;
         $data['filter_account_manager_name'] = $filter_account_manager_name;
         $data['filter_account_manager_id'] = $filter_account_manager_id;
+        $data['filter_customer_experience'] = $filter_customer_experience;
+        $data['filter_customer_experience_id'] = $filter_customer_experience_id;
         $data['filter_sub_customer_show'] = $filter_sub_customer_show;
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_date_added_to'] = $filter_date_added_to;
@@ -2028,6 +2291,14 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -2046,6 +2317,14 @@ class ControllerSaleCustomer extends Controller {
 
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience'])) {
+            $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience_id'])) {
+            $url .= '&filter_customer_experience_id=' . $this->request->get['filter_customer_experience_id'];
         }
 
         if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -2293,6 +2572,22 @@ class ControllerSaleCustomer extends Controller {
             $data['status'] = true;
         }
 
+        if (isset($this->request->post['payment_terms'])) {
+            $data['payment_terms'] = $this->request->post['payment_terms'];
+        } elseif (!empty($customer_info)) {
+            $data['payment_terms'] = $customer_info['payment_terms'];
+        } else {
+            $data['payment_terms'] = true;
+        }
+
+        if (isset($this->request->post['customer_price_category'])) {
+            $data['customer_price_category'] = $this->request->post['customer_price_category'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_price_category'] = $customer_info['customer_price_category'];
+        } else {
+            $data['customer_price_category'] = true;
+        }
+
         if (isset($this->request->post['approved'])) {
             $data['approved'] = $this->request->post['approved'];
         } elseif (!empty($customer_info)) {
@@ -2383,6 +2678,14 @@ class ControllerSaleCustomer extends Controller {
             $data['payment_terms'] = $customer_info['payment_terms'];
         } else {
             $data['payment_terms'] = '';
+        }
+
+        if (isset($this->request->post['customer_price_category'])) {
+            $data['customer_price_category'] = $this->request->post['customer_price_category'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_price_category'] = $customer_info['customer_price_category'];
+        } else {
+            $data['customer_price_category'] = '';
         }
 
         if (isset($this->request->post['statement_duration'])) {
@@ -3534,6 +3837,14 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $url .= '&filter_approved=' . $this->request->get['filter_approved'];
         }
@@ -3552,6 +3863,14 @@ class ControllerSaleCustomer extends Controller {
 
         if (isset($this->request->get['filter_account_manager_id'])) {
             $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience'])) {
+            $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
+        }
+
+        if (isset($this->request->get['filter_customer_experience_id'])) {
+            $url .= '&filter_customer_experience_id=' . $this->request->get['filter_customer_experience_id'];
         }
 
         if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -3929,6 +4248,18 @@ class ControllerSaleCustomer extends Controller {
             $filter_status = null;
         }
 
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $filter_payment_terms = $this->request->get['filter_payment_terms'];
+        } else {
+            $filter_payment_terms = null;
+        }
+
+        if (isset($this->request->get['filter_customer_price_category'])) {
+            $filter_customer_price_category = $this->request->get['filter_customer_price_category'];
+        } else {
+            $filter_customer_price_category = null;
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $filter_approved = $this->request->get['filter_approved'];
         } else {
@@ -3963,6 +4294,18 @@ class ControllerSaleCustomer extends Controller {
             $filter_account_manager_id = $this->request->get['filter_account_manager_id'];
         } else {
             $filter_account_manager_id = null;
+        }
+
+        if (isset($this->request->get['filter_customer_experience'])) {
+            $filter_customer_experience = $this->request->get['filter_customer_experience'];
+        } else {
+            $filter_customer_experience = null;
+        }
+
+        if (isset($this->request->get['filter_customer_experience_id'])) {
+            $filter_customer_experience_id = $this->request->get['filter_customer_experience_id'];
+        } else {
+            $filter_customer_experience_id = null;
         }
 
         if (isset($this->request->get['filter_sub_customer_show'])) {
@@ -4020,6 +4363,8 @@ class ControllerSaleCustomer extends Controller {
             'filter_telephone' => $filter_telephone,
             'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
+            'filter_payment_terms' => $filter_payment_terms,
+            'filter_customer_price_category' => $filter_customer_price_category,
             'filter_approved' => $filter_approved,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_to' => $filter_date_added_to,
@@ -4028,6 +4373,8 @@ class ControllerSaleCustomer extends Controller {
             'filter_parent_customer_id' => $filter_parent_customer_id,
             'filter_account_manager_name' => $filter_account_manager_name,
             'filter_account_manager_id' => $filter_account_manager_id,
+            'filter_customer_experience' => $filter_customer_experience,
+            'filter_customer_experience_id' => $filter_customer_experience_id,
             'filter_sub_customer_show' => $filter_sub_customer_show,
             'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,
@@ -4132,12 +4479,16 @@ class ControllerSaleCustomer extends Controller {
         $data['filter_telephone'] = $filter_telephone;
         $data['filter_customer_group_id'] = $filter_customer_group_id;
         $data['filter_status'] = $filter_status;
+        $data['filter_payment_terms'] = $filter_payment_terms;
+        $data['filter_customer_price_category'] = $filter_customer_price_category;
         $data['filter_approved'] = $filter_approved;
         $data['filter_ip'] = $filter_ip;
         $data['filter_parent_customer'] = $filter_parent_customer;
         $data['filter_parent_customer_id'] = $filter_parent_customer_id;
         $data['filter_account_manager_name'] = $filter_account_manager_name;
         $data['filter_account_manager_id'] = $filter_account_manager_id;
+        $data['filter_customer_experience'] = $filter_customer_experience;
+        $data['filter_customer_experience_id'] = $filter_customer_experience_id;
         $data['filter_sub_customer_show'] = $filter_sub_customer_show;
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_date_added_to'] = $filter_date_added_to;
@@ -4584,6 +4935,22 @@ class ControllerSaleCustomer extends Controller {
             $data['status'] = true;
         }
 
+        if (isset($this->request->post['payment_terms'])) {
+            $data['payment_terms'] = $this->request->post['payment_terms'];
+        } elseif (!empty($customer_info)) {
+            $data['payment_terms'] = $customer_info['payment_terms'];
+        } else {
+            $data['payment_terms'] = true;
+        }
+        
+        if (isset($this->request->post['customer_price_category'])) {
+            $data['customer_price_category'] = $this->request->post['customer_price_category'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_price_category'] = $customer_info['customer_price_category'];
+        } else {
+            $data['customer_price_category'] = true;
+        }
+
         if (isset($this->request->post['approved'])) {
             $data['approved'] = $this->request->post['approved'];
         } elseif (!empty($customer_info)) {
@@ -4674,6 +5041,14 @@ class ControllerSaleCustomer extends Controller {
             $data['payment_terms'] = $customer_info['payment_terms'];
         } else {
             $data['payment_terms'] = '';
+        }
+        
+        if (isset($this->request->post['customer_price_category'])) {
+            $data['customer_price_category'] = $this->request->post['customer_price_category'];
+        } elseif (!empty($customer_info)) {
+            $data['customer_price_category'] = $customer_info['customer_price_category'];
+        } else {
+            $data['customer_price_category'] = '';
         }
 
         if (isset($this->request->post['statement_duration'])) {
