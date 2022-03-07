@@ -426,7 +426,7 @@ class ControllerApiCustomerCart extends Controller {
     public function getCartProduct() {
         
         $this->load->model('account/customer');
-        //$this->cart->clearcart();
+        $this->cart->clearcart();
         $this->model_account_customer->getDBCart();
         $totalQuantity = 0;
         $json = [];
