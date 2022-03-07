@@ -279,7 +279,7 @@ class ControllerApiCustomerCart extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getProducts() {//renamed function products to getProducts
+    public function getProduct() {//renamed function products to getProducts
         echo 'cart/products';
         $this->load->language('api/cart');
 
