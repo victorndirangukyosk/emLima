@@ -279,7 +279,7 @@ class ControllerApiCustomerCart extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getProduct() {//renamed function products to getProducts
+    public function getProducts() {//renamed function products to getProducts
         echo 'cart/products';
         $this->load->language('api/cart');
 
@@ -426,7 +426,7 @@ class ControllerApiCustomerCart extends Controller {
     public function getCartProduct() {
         
         $this->load->model('account/customer');
-        $this->cart->clearcart();
+        //$this->cart->clearcart();
         $this->model_account_customer->getDBCart();
         $totalQuantity = 0;
         $json = [];
