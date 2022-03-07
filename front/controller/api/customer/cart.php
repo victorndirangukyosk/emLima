@@ -423,7 +423,7 @@ class ControllerApiCustomerCart extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getCartProducts() {
+    public function getCartProduct() {
         
         $this->load->model('account/customer');
         $this->cart->clearcart();
