@@ -4163,6 +4163,14 @@ class ControllerApiCustomerOrder extends Controller {
             $this->error['payment_method_code'] = $this->language->get('error_payment_method_code');
         }
 
+        if (array_key_exists('payment_method', $args) && $args['payment_method'] == 'mPesa Online' && !array_key_exists('mpesa_refrence_id', $args)) {
+            $this->error['mpesa_refrence_id'] = 'Mpesa Reference ID Required!';
+        }
+
+        if (array_key_exists('payment_method_code', $args) && $args['payment_method_code'] == 'mpesa' && !array_key_exists('mpesa_refrence_id', $args)) {
+            $this->error['mpesa_refrence_id'] = 'Mpesa Reference ID Required!';
+        }
+
         if (empty($args['shipping_address_id'])) {
             $this->error['shipping_address_id'] = $this->language->get('error_shipping_address_id');
         }
