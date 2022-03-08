@@ -4187,6 +4187,38 @@ class ControllerApiCustomerOrder extends Controller {
             $this->error['error_products'] = $this->language->get('error_products');
         }
 
+        if (!empty($args['products']) && is_array($args['products'])) {
+            foreach ($args['products'] as $product) {
+                if (!array_key_exists('product_store_id', $product)) {
+                    $this->error['product_store_id'] = 'Product Store ID Required!';
+                }
+
+                if (!array_key_exists('store_id', $product)) {
+                    $this->error['store_id'] = 'Store ID Required!';
+                }
+
+                if (!array_key_exists('store_product_variation_id', $product)) {
+                    $this->error['store_product_variation_id'] = 'Product Store Variation ID Required!';
+                }
+
+                if (!array_key_exists('product_type', $product)) {
+                    $this->error['product_type'] = 'Product Type Required!';
+                }
+
+                if (!array_key_exists('product_note', $product)) {
+                    $this->error['product_note'] = 'Product Note Required!';
+                }
+
+                if (!array_key_exists('quantity', $product)) {
+                    $this->error['quantity'] = 'Product Quantity Required!';
+                }
+
+                if (!array_key_exists('price', $product)) {
+                    $this->error['price'] = 'Product Price Required!';
+                }
+            }
+        }
+
         $vendor_terms = json_decode($this->getCheckOtherVendorOrderExist(), true);
         if ($vendor_terms['modal_open'] == TRUE) {
             $this->error['vendor_terms'] = 'Please accept vendor terms!';
