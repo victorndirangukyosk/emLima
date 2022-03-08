@@ -4219,6 +4219,58 @@ class ControllerApiCustomerOrder extends Controller {
             }
         }
 
+        if (!empty($args['stores']) && is_array($args['stores'])) {
+            foreach ($args['stores'] as $store) {
+                if (!array_key_exists('store_id', $store)) {
+                    $this->error['store_id'] = 'Store ID Required!';
+                }
+
+                if (!array_key_exists('timeslot', $store)) {
+                    $this->error['timeslot'] = 'Store TimeSlot Required!';
+                }
+
+                if (!array_key_exists('timeslot_selected', $store)) {
+                    $this->error['timeslot_selected'] = 'Store TimeSlot Selected Required!';
+                }
+
+                if (!array_key_exists('dates', $store)) {
+                    $this->error['dates'] = 'Store TimeSlot Selected Required!';
+                }
+
+                if (!array_key_exists('delivery_date', $store)) {
+                    $this->error['delivery_date'] = 'Store Delivery Date Required!';
+                }
+
+                if (!array_key_exists('comment', $store)) {
+                    $this->error['comment'] = 'Store Comment Required!';
+                }
+
+                if (!array_key_exists('shipping_code', $store)) {
+                    $this->error['shipping_code'] = 'Store Shipping Code Required!';
+                }
+
+                if (!array_key_exists('shipping_method', $store)) {
+                    $this->error['shipping_method'] = 'Store Shipping Method Required!';
+                }
+
+                if (!array_key_exists('sub_total', $store)) {
+                    $this->error['sub_total'] = 'Store Sub Total Required!';
+                }
+
+                if (!array_key_exists('total', $store)) {
+                    $this->error['total'] = 'Store Total Required!';
+                }
+
+                if (!array_key_exists('weight', $store)) {
+                    $this->error['weight'] = 'Store Weight Required!';
+                }
+
+                if (!array_key_exists('order_reference_number', $store)) {
+                    $this->error['order_reference_number'] = 'Store Order Reference Number Required!';
+                }
+            }
+        }
+
         $vendor_terms = json_decode($this->getCheckOtherVendorOrderExist(), true);
         if ($vendor_terms['modal_open'] == TRUE) {
             $this->error['vendor_terms'] = 'Please accept vendor terms!';
