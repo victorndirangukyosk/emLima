@@ -4179,11 +4179,11 @@ class ControllerApiCustomerOrder extends Controller {
         //     $this->error['error_shipping_city_id'] = $this->language->get('error_shipping_city_id');
         // }
 
-        if (empty($args['stores'])) {
+        if (empty($args['stores']) || !is_array($args['stores'])) {
             $this->error['error_stores'] = $this->language->get('error_stores');
         }
 
-        if (empty($args['products'])) {
+        if (empty($args['products']) || !is_array($args['products'])) {
             $this->error['error_products'] = $this->language->get('error_products');
         }
 
