@@ -696,7 +696,7 @@ class ControllerReportVendorOrdersCategory extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'] . $url, 'SSL'),
             'separator' => ' :: ',
         ];
 
@@ -872,17 +872,17 @@ class ControllerReportVendorOrdersCategory extends Controller {
             $data['order'] = 'DESC';
         }
 
-        $data['sort_orders'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=orders' . $url, 'SSL');
-        $data['sort_products'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=products' . $url, 'SSL');
-        $data['sort_total'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=total' . $url, 'SSL');
-        $data['sort_subtotal'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=subtotal' . $url, 'SSL');
+        $data['sort_orders'] = $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'] . '&sort=orders' . $url, 'SSL');
+        $data['sort_products'] = $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'] . '&sort=products' . $url, 'SSL');
+        $data['sort_total'] = $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'] . '&sort=total' . $url, 'SSL');
+        $data['sort_subtotal'] = $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'] . '&sort=subtotal' . $url, 'SSL');
 
         $pagination = new Pagination();
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
         $pagination->text = $this->language->get('text_pagination');
-        $pagination->url = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
