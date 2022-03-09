@@ -44,6 +44,7 @@ class EventAppApi extends Event {
             $log = new Log('error.log');
             $log->write('route  api');
             $log->write($this->session->getId());
+            $log->write($this->customer->getId());
             $log->write($route);
 
             // route  api
