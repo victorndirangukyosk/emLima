@@ -511,6 +511,11 @@
                     <?php if($preturn_report_store_sales != false){ ?>
                     <li><a href="<?= $report_store_sales ?>">Store Sales</a></li>
                     <?php } ?>
+
+                     <?php if($preturn_report_vendor_orders_category != false){ ?>
+                    <li><a href="<?= $report_vendor_orders_category ?>">Order Products By Category</a></li>
+                    <?php } ?>
+
                 </ul>
             </li>               
             <?php } ?>

@@ -1,6 +1,6 @@
 <?php
 
-class ControllerReportVendorOrders extends Controller {
+class ControllerReportVendorOrdersCategory extends Controller {
 
     public function getUserByName($name) {
         if ($name) {
@@ -696,7 +696,7 @@ class ControllerReportVendorOrders extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'] . $url, 'SSL'),
             'separator' => ' :: ',
         ];
 
@@ -872,17 +872,17 @@ class ControllerReportVendorOrders extends Controller {
             $data['order'] = 'DESC';
         }
 
-        $data['sort_orders'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=orders' . $url, 'SSL');
-        $data['sort_products'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=products' . $url, 'SSL');
-        $data['sort_total'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=total' . $url, 'SSL');
-        $data['sort_subtotal'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . '&sort=subtotal' . $url, 'SSL');
+        $data['sort_orders'] = $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'] . '&sort=orders' . $url, 'SSL');
+        $data['sort_products'] = $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'] . '&sort=products' . $url, 'SSL');
+        $data['sort_total'] = $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'] . '&sort=total' . $url, 'SSL');
+        $data['sort_subtotal'] = $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'] . '&sort=subtotal' . $url, 'SSL');
 
         $pagination = new Pagination();
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
         $pagination->text = $this->language->get('text_pagination');
-        $pagination->url = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -906,7 +906,7 @@ class ControllerReportVendorOrders extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('report/vendor_orders.tpl', $data));
+        $this->response->setOutput($this->load->view('report/vendor_orders_category.tpl', $data));
     }
 
     public function consolidatedOrderSheet() {
@@ -1278,57 +1278,49 @@ class ControllerReportVendorOrders extends Controller {
         foreach ($results as $index => $order) {
             $data['orders'][$index] = $order;
             $orderProducts = $this->model_sale_order->getOrderAndRealOrderProducts($data['orders'][$index]['order_id']);
-            // $data['orders'][$index]['products'] = $orderProducts;
-            $orderProductsnew=[];
-            $category_ids_order=[];
-            foreach ($orderProducts as $product) 
-            {
-                
-                    if($product['general_product_id']==null || $product['general_product_id']==0 || $product['general_product_id']=='' )
-                    {
-                    $product_category=$this->model_sale_order->getProductCategoryByProductID($product['product_id']);
-                    }
-                    else{
-                        $product_category=$this->model_sale_order->getProductCategoryByGeneralProductID($product['general_product_id']);
+            $data['orders'][$index]['products'] = $orderProducts;
 
-                    }
+            foreach ($orderProducts as $product) {
+                if($product['general_product_id']==null || $product['general_product_id']==0 || $product['general_product_id']=='' )
+                {
+                $product_category=$this->model_sale_order->getProductCategoryByProductID($product['product_id']);
+                }
+                else{
+                    $product_category=$this->model_sale_order->getProductCategoryByGeneralProductID($product['general_product_id']);
 
-                    if($product_category!=null)
-                    {
-                        $product['category']=$product_category['category']??'sadasd';
-                        $product['category_id']=$product_category['category_id']??0;
-                        // echo "<pre>";print_r($product);die;                    
-                    }
-
-                    $category_ids_order[] = ['category_id'=>$product['category_id'],'category_name'=>$product['category']];
-
-                    
+                }
+                if($product_category!=null)
+                {
                     $unconsolidatedProducts[] = [
                         'name' => $product['name'],
                         'unit' => $product['unit'],
                         'quantity' => $product['quantity'],
                         'note' => $product['product_note'],
                         'produce_type' => $product['produce_type'],
-                        'product_category' => $product['category'],
-                        'product_category_id' => $product['category_id'],
+                        'product_category' => $product_category['category'],
+                        'product_category_id' => $product_category['category_id'],
                     ];
-                    array_push($orderProductsnew,$product);
-                
-            }   
-            
-                // echo "<pre>";print_r($orderProductsnew);die;
-            $uniquecategory_ids_order= array_unique($category_ids_order,SORT_REGULAR);
+                }
+                else
+                {
+                    $unconsolidatedProducts[] = [
+                        'name' => $product['name'],
+                        'unit' => $product['unit'],
+                        'quantity' => $product['quantity'],
+                        'note' => $product['product_note'],
+                        'produce_type' => $product['produce_type'],
+                        'product_category' => '',
+                        'product_category_id' => 0,
+                    ];
 
-                $data['orders'][$index]['categories'] = $uniquecategory_ids_order;
+                 }
             
-                $data['orders'][$index]['products'] = $orderProductsnew;
             }
+        }
 
         $consolidatedProducts = [];
 
-       
         foreach ($unconsolidatedProducts as $product) {
-            $category_ids[] = ['category_id'=>$product['product_category_id'],'category_name'=>$product['product_category']];
             $productName = $product['name'];
             $productUnit = $product['unit'];
             $productQuantity = $product['quantity'];
@@ -1384,22 +1376,12 @@ class ControllerReportVendorOrders extends Controller {
         $productCat = array_column($consolidatedProducts, 'product_category_id');
         array_multisort(  $productCat,SORT_ASC,$consolidatedProducts);
 
-        // array_unique(array_column($category_ids, 'category_id'));
-        $uniquecategory_ids= array_unique($category_ids,SORT_REGULAR);
+        // echo "<pre>";print_r($consolidatedProducts);die;
 
-        // array_multisort(  $uniquecategory_ids,SORT_ASC);
-        // echo "<pre>";print_r($category_ids);
-        // echo "<pre>";print_r($uniquecategory_ids);die;
-
-
-
-        // echo "<pre>";print_r($data);die;
-
-        $data['uniquecategory_ids'] = $uniquecategory_ids;
         $data['products'] = $consolidatedProducts;
         // echo "<pre>";print_r($data);die;
 
         $this->load->model('report/excel');
-        $this->model_report_excel->download_consolidated_order_sheet_excel_category($data);
+        $this->model_report_excel->download_consolidated_order_sheet_excel($data);
     }
 }

@@ -4163,6 +4163,14 @@ class ControllerApiCustomerOrder extends Controller {
             $this->error['payment_method_code'] = $this->language->get('error_payment_method_code');
         }
 
+        if (array_key_exists('payment_method', $args) && $args['payment_method'] == 'mPesa Online' && !array_key_exists('mpesa_refrence_id', $args)) {
+            $this->error['mpesa_refrence_id'] = 'Mpesa Reference ID Required!';
+        }
+
+        if (array_key_exists('payment_method_code', $args) && $args['payment_method_code'] == 'mpesa' && !array_key_exists('mpesa_refrence_id', $args)) {
+            $this->error['mpesa_refrence_id'] = 'Mpesa Reference ID Required!';
+        }
+
         if (empty($args['shipping_address_id'])) {
             $this->error['shipping_address_id'] = $this->language->get('error_shipping_address_id');
         }
@@ -4171,12 +4179,96 @@ class ControllerApiCustomerOrder extends Controller {
         //     $this->error['error_shipping_city_id'] = $this->language->get('error_shipping_city_id');
         // }
 
-        if (empty($args['stores'])) {
+        if (empty($args['stores']) || !is_array($args['stores'])) {
             $this->error['error_stores'] = $this->language->get('error_stores');
         }
 
-        if (empty($args['products'])) {
+        if (empty($args['products']) || !is_array($args['products'])) {
             $this->error['error_products'] = $this->language->get('error_products');
+        }
+
+        if (!empty($args['products']) && is_array($args['products'])) {
+            foreach ($args['products'] as $product) {
+                if (!array_key_exists('product_store_id', $product)) {
+                    $this->error['product_store_id'] = 'Product Store ID Required!';
+                }
+
+                if (!array_key_exists('store_id', $product)) {
+                    $this->error['store_id'] = 'Store ID Required!';
+                }
+
+                if (!array_key_exists('store_product_variation_id', $product)) {
+                    $this->error['store_product_variation_id'] = 'Product Store Variation ID Required!';
+                }
+
+                if (!array_key_exists('product_type', $product)) {
+                    $this->error['product_type'] = 'Product Type Required!';
+                }
+
+                if (!array_key_exists('product_note', $product)) {
+                    $this->error['product_note'] = 'Product Note Required!';
+                }
+
+                if (!array_key_exists('quantity', $product)) {
+                    $this->error['quantity'] = 'Product Quantity Required!';
+                }
+
+                if (!array_key_exists('price', $product)) {
+                    $this->error['price'] = 'Product Price Required!';
+                }
+            }
+        }
+
+        if (!empty($args['stores']) && is_array($args['stores'])) {
+            foreach ($args['stores'] as $store) {
+                if (!array_key_exists('store_id', $store)) {
+                    $this->error['store_id'] = 'Store ID Required!';
+                }
+
+                if (!array_key_exists('timeslot', $store)) {
+                    $this->error['timeslot'] = 'Store TimeSlot Required!';
+                }
+
+                if (!array_key_exists('timeslot_selected', $store)) {
+                    $this->error['timeslot_selected'] = 'Store TimeSlot Selected Required!';
+                }
+
+                if (!array_key_exists('dates', $store)) {
+                    $this->error['dates'] = 'Store TimeSlot Selected Required!';
+                }
+
+                if (!array_key_exists('delivery_date', $store)) {
+                    $this->error['delivery_date'] = 'Store Delivery Date Required!';
+                }
+
+                if (!array_key_exists('comment', $store)) {
+                    $this->error['comment'] = 'Store Comment Required!';
+                }
+
+                if (!array_key_exists('shipping_code', $store)) {
+                    $this->error['shipping_code'] = 'Store Shipping Code Required!';
+                }
+
+                if (!array_key_exists('shipping_method', $store)) {
+                    $this->error['shipping_method'] = 'Store Shipping Method Required!';
+                }
+
+                if (!array_key_exists('sub_total', $store)) {
+                    $this->error['sub_total'] = 'Store Sub Total Required!';
+                }
+
+                if (!array_key_exists('total', $store)) {
+                    $this->error['total'] = 'Store Total Required!';
+                }
+
+                if (!array_key_exists('weight', $store)) {
+                    $this->error['weight'] = 'Store Weight Required!';
+                }
+
+                if (!array_key_exists('order_reference_number', $store)) {
+                    $this->error['order_reference_number'] = 'Store Order Reference Number Required!';
+                }
+            }
         }
 
         $vendor_terms = json_decode($this->getCheckOtherVendorOrderExist(), true);
