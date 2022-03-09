@@ -1225,4 +1225,163 @@ class ControllerReportVendorOrders extends Controller {
         $this->model_report_excel->download_consolidated_order_sheet_excel($data);
     }
 
+    public function consolidatedOrderSheetGroupByCategory() {
+
+
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $deliveryDate = $this->request->get['filter_delivery_date'];
+            $deliveryTime = isset($this->request->get['filter_delivery_time_slot']) && $this->request->get['filter_delivery_time_slot'] != NULL ? $this->request->get['filter_delivery_time_slot'] : '';
+
+            $filter_data = [
+                'filter_delivery_date' => $deliveryDate,
+                'filter_delivery_time' => $deliveryTime,
+            ];
+            $this->load->model('sale/order');
+            // $results = $this->model_sale_order->getOrders($filter_data);
+            // $results = $this->model_sale_order->getNonCancelledOrderswithPending($filter_data);
+            $results = $this->model_sale_order->getOrderswithProcessing($filter_data);
+        } else {
+            $deliveryDate = null;
+        }
+        //below if ondition for fast orders, not required in sheduler
+        if (isset($this->request->get['filter_order_day'])) {
+            $filter_order_day = $this->request->get['filter_order_day'];
+            if (isset($this->request->get['filter_order_status'])) {
+                $filter_order_status = $this->request->get['filter_order_status'];
+            } else {
+                $filter_order_status = null;
+            }
+
+
+            if (isset($this->request->get['selected_order_id'])) {
+                $orders = $this->request->get['selected_order_id'];
+            } else {
+                $orders = null;
+            }
+
+            $filter_data = [
+                'filter_order_day' => $filter_order_day,
+                'filter_order_status' => $filter_order_status,
+                'filter_orders' => $orders
+            ];
+            $this->load->model('sale/order');
+
+            $results = $this->model_sale_order->getFastOrders($filter_data);
+        } else {
+            $filter_order_day = null;
+        }//end of if 
+
+
+        $data = [];
+        $unconsolidatedProducts = [];
+
+        foreach ($results as $index => $order) {
+            $data['orders'][$index] = $order;
+            $orderProducts = $this->model_sale_order->getOrderAndRealOrderProducts($data['orders'][$index]['order_id']);
+            $data['orders'][$index]['products'] = $orderProducts;
+
+            foreach ($orderProducts as $product) {
+                if($product['general_product_id']==null || $product['general_product_id']==0 || $product['general_product_id']=='' )
+                {
+                $product_category=$this->model_sale_order->getProductCategoryByProductID($product['product_id']);
+                }
+                else{
+                    $product_category=$this->model_sale_order->getProductCategoryByGeneralProductID($product['general_product_id']);
+
+                }
+                if($product_category!=null)
+                {
+                    $unconsolidatedProducts[] = [
+                        'name' => $product['name'],
+                        'unit' => $product['unit'],
+                        'quantity' => $product['quantity'],
+                        'note' => $product['product_note'],
+                        'produce_type' => $product['produce_type'],
+                        'product_category' => $product_category['category'],
+                        'product_category_id' => $product_category['category_id'],
+                    ];
+                }
+                else
+                {
+                    $unconsolidatedProducts[] = [
+                        'name' => $product['name'],
+                        'unit' => $product['unit'],
+                        'quantity' => $product['quantity'],
+                        'note' => $product['product_note'],
+                        'produce_type' => $product['produce_type'],
+                        'product_category' => '',
+                        'product_category_id' => 0,
+                    ];
+
+                 }
+            
+            }
+        }
+
+        $consolidatedProducts = [];
+
+        foreach ($unconsolidatedProducts as $product) {
+            $productName = $product['name'];
+            $productUnit = $product['unit'];
+            $productQuantity = $product['quantity'];
+            $productNote = isset($product['product_note']) ? $product['product_note'] : '';
+            $produceType = $product['produce_type'];
+            $product_category = $product['product_category'];
+            $product_category_id = $product['product_category_id'];
+
+            $consolidatedProductNames = array_column($consolidatedProducts, 'name');
+            if (false !== array_search($productName, $consolidatedProductNames)) {
+                $indexes = array_keys($consolidatedProductNames, $productName);
+
+                $foundExistingProductWithSimilarUnit = false;
+                foreach ($indexes as $index) {
+                    if ($productUnit == $consolidatedProducts[$index]['unit']) {
+                        if ($consolidatedProducts[$index]['produce_type']) {
+                            $produceType = $consolidatedProducts[$index]['produce_type'] . ' / ' . $produceType . ' ';
+                        }
+
+                        $consolidatedProducts[$index]['quantity'] += $productQuantity;
+                        $consolidatedProducts[$index]['produce_type'] = $produceType;
+                        $foundExistingProductWithSimilarUnit = true;
+                        break;
+                    }
+                }
+
+                if (!$foundExistingProductWithSimilarUnit) {
+                    $consolidatedProducts[] = [
+                        'name' => $productName,
+                        'unit' => $productUnit,
+                        'quantity' => $productQuantity,
+                        'note' => $productNote,
+                        'produce_type' => $produceType,
+                        'product_category' => $product_category,
+                        'product_category_id' => $product_category_id,
+
+                    ];
+                }
+            } else {
+                $consolidatedProducts[] = [
+                    'name' => $productName,
+                    'unit' => $productUnit,
+                    'quantity' => $productQuantity,
+                    'note' => $productNote,
+                    'produce_type' => $produceType,
+                    'product_category' => $product_category,
+                    'product_category_id' => $product_category_id,
+
+
+                ];
+            }
+        }
+        $productCat = array_column($consolidatedProducts, 'product_category_id');
+        array_multisort(  $productCat,SORT_ASC,$consolidatedProducts);
+
+        // echo "<pre>";print_r($consolidatedProducts);die;
+
+        $data['products'] = $consolidatedProducts;
+        // echo "<pre>";print_r($data);die;
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_consolidated_order_sheet_excel_category($data);
+    }
 }
