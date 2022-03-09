@@ -11586,9 +11586,19 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(20);
                 $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(25);
                 // $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(25);
+                foreach ($order['categories'] as $cat) {
 
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, 'Category : '.$cat['category_name']);
+                    //merge row
+                    $objPHPExcel->getActiveSheet()->mergeCells('A' . $row . ':D' . $row);
+                    $objPHPExcel->getActiveSheet()->getStyle('A' . $row . ':D' . $row)->applyFromArray(['font' => ['bold' => true], 'color' => [
+                        'rgb' => '51AB66',
+                ]]);
+        
+                    ++$row;
 
                 foreach ($order['products'] as $product) {
+                    if($product['category_id']==$cat['category_id']){
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $product['name']);
                     //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $product['produce_type']);
 
@@ -11598,7 +11608,9 @@ class ModelReportExcel extends Model {
                     //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, '');
 
                     ++$row;
+                    }
                 }
+            }
                 if ($sheet_subtitle_1_new != "" && $sheet_subtitle_1_new != null && $row > 6) {
                     // $objPHPExcel->getActiveSheet()->mergeCells('A4:E4');
                     $objPHPExcel->getActiveSheet()->mergeCells('A' . $row . ':D' . $row);
