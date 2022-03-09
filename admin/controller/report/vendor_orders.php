@@ -1320,7 +1320,9 @@ class ControllerReportVendorOrders extends Controller {
 
         $consolidatedProducts = [];
 
+       
         foreach ($unconsolidatedProducts as $product) {
+            $category_ids[] = ['category_id'=>$product['product_category_id'],'category_name'=>$product['product_category']];
             $productName = $product['name'];
             $productUnit = $product['unit'];
             $productQuantity = $product['quantity'];
@@ -1376,8 +1378,18 @@ class ControllerReportVendorOrders extends Controller {
         $productCat = array_column($consolidatedProducts, 'product_category_id');
         array_multisort(  $productCat,SORT_ASC,$consolidatedProducts);
 
+        // array_unique(array_column($category_ids, 'category_id'));
+        $uniquecategory_ids= array_unique($category_ids,SORT_REGULAR);
+
+        // array_multisort(  $uniquecategory_ids,SORT_ASC);
+        // echo "<pre>";print_r($category_ids);
+        // echo "<pre>";print_r($uniquecategory_ids);die;
+
+
+
         // echo "<pre>";print_r($consolidatedProducts);die;
 
+        $data['uniquecategory_ids'] = $uniquecategory_ids;
         $data['products'] = $consolidatedProducts;
         // echo "<pre>";print_r($data);die;
 
