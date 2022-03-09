@@ -954,4 +954,153 @@ class Cart {
         return $product_query->row['price'];
     }
 
+    public function getProductsByStoreId($store_id) {
+        $log = new Log('error.log');
+        $log->write('get product');
+
+        if (!$this->data) {
+            $log->write('get product if');
+
+            foreach ($this->session->data['cart'] as $keys => $data) {
+                $product = unserialize(base64_decode($keys));
+
+                $product_store_id = $product['product_store_id'];
+
+                $stock = true;
+
+                // Options
+                if (!empty($product['option'])) {
+                    $options = $product['option'];
+                } else {
+                    $options = [];
+                }
+
+                // Profile
+                if (!empty($product['recurring_id'])) {
+                    $recurring_id = $product['recurring_id'];
+                } else {
+                    $recurring_id = 0;
+                }
+
+                if (!empty($data['product_type'])) {
+                    $product_type = $data['product_type'];
+                } else {
+                    $product_type = 'replacable';
+                }
+
+                if (!empty($data['product_note'])) {
+                    $product_note = $data['product_note'];
+                } else {
+                    $product_note = '';
+                }
+
+                if (!empty($data['produce_type'])) {
+                    $produce_type = $data['produce_type'];
+                } else {
+                    $produce_type = '';
+                }
+
+                $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+                $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+                $this->db->where('product.status', 1);
+                $this->db->where('product_description.language_id', (int) $this->config->get('config_language_id'));
+                $this->db->where('product_to_store.product_store_id', $product_store_id);
+                $product_query = $this->db->get('product_to_store');
+
+                if ($product_query->num_rows) {
+
+                    if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $data['quantity'])) {
+                        $stock = false;
+                    }
+
+                    //override for variation
+
+                    if (!empty($product['store_product_variation_id'])) {
+
+                        $this->db->join('product', 'product.product_id = variation_to_product_store.variation_id', 'left');
+                        $this->db->where('product_variation_store_id', $product['store_product_variation_id'], false);
+                        $row = $this->db->get('variation_to_product_store')->row;
+
+                        //override price, image
+                        if ($row['special_price']) {
+                            $price = $row['special_price'];
+                            $orignal_price = $row['price'];
+                        } else {
+                            $orignal_price = null;
+                            $price = $row['price'];
+                        }
+
+                        $image = $row['image'];
+                        $store_product_variation_id = $product['store_product_variation_id'];
+
+                        //old below
+                        $variation = ' - ' . $row['unit'];
+                    } else {
+                        $price = $product_query->row['price'];
+                        $orignal_price = $price;
+
+                        // Product Specials
+                        if ($product_query->row['special_price'] > 0) {
+                            $price = $product_query->row['special_price'];
+                        } else {
+                            $orignal_price = null;
+                        }
+
+                        $store_product_variation_id = 0;
+                        $variation = $product_query->row['unit'] ? ' - ' . $product_query->row['unit'] : '';
+                        $image = $product_query->row['image'];
+                    }
+
+                    if (CATEGORY_PRICE_ENABLED == true) {
+                        $cat_price = $this->getCategoryPriceProduct($product_query->row['product_store_id'], $product['store_id'], $_SESSION['customer_category']);
+                        $orignal_price = isset($cat_price) ? $this->getCategoryPriceProduct($product_query->row['product_store_id'], $product['store_id'], $_SESSION['customer_category']) : $price;
+                        $price = $orignal_price;
+                    }
+
+                    if ($product['store_id'] == $store_id) {
+                        $this->data[$keys] = [
+                            'key' => $keys,
+                            'product_store_id' => $product_query->row['product_store_id'],
+                            'store_product_variation_id' => $store_product_variation_id,
+                            'store_id' => $product['store_id'],
+                            'product_id' => $product_query->row['product_id'],
+                            'name' => $product_query->row['name'],
+                            'product_type' => $product_type,
+                            'produce_type' => $produce_type,
+                            'product_note' => $product_note,
+                            'unit' => $product_query->row['unit'],
+                            'model' => $product_query->row['model'],
+                            'shipping' => 0,
+                            'image' => $image,
+                            'option' => [],
+                            'download' => [],
+                            'quantity' => $data['quantity'],
+                            'minimum' => $product_query->row['min_quantity'],
+                            'subtract' => $product_query->row['subtract_quantity'],
+                            'stock' => $stock,
+                            'price' => $price,
+                            'special_price' => $orignal_price,
+                            'total' => $price * $data['quantity'],
+                            'reward' => 0,
+                            'points' => 0,
+                            'tax_class_id' => $product_query->row['tax_class_id'],
+                            'tax_percentage' => $product_query->row['tax_percentage'],
+                            'weight' => 0,
+                            'weight_class_id' => 0,
+                            'length' => 0,
+                            'width' => 0,
+                            'height' => 0,
+                            'length_class_id' => 0,
+                            'recurring' => false,
+                        ];
+                    }
+                } else {
+                    $this->remove($keys);
+                }
+            }
+        }
+
+        return $this->data;
+    }
+
 }

@@ -234,6 +234,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_vendor_order'] = $this->url->link('report/vendor_order', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_vendor_orders'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_vendor_orders_category'] = $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_vendor_returns'] = $this->url->link('report/vendor_returns', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -425,6 +426,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_report_vendor_order'] = $this->user->hasPermission('access', 'report/vendor_order');
 
         $data['preturn_report_vendor_orders'] = $this->user->hasPermission('access', 'report/vendor_orders');
+        $data['preturn_report_vendor_orders_category'] = $this->user->hasPermission('access', 'report/vendor_orders_category');
 
         $data['preturn_report_vendor_returns'] = $this->user->hasPermission('access', 'report/vendor_returns');
 
@@ -587,6 +589,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_vendor_order'] = $this->url->link('report/vendor_order', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_vendor_orders'] = $this->url->link('report/vendor_orders', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_vendor_orders_category'] = $this->url->link('report/vendor_orders_category', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_vendor_returns'] = $this->url->link('report/vendor_returns', 'token=' . $this->session->data['token'], 'SSL');
 
@@ -668,6 +671,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_report_vendor_order'] = $this->user->hasPermission('access', 'report/vendor_order');
 
         $data['preturn_report_vendor_orders'] = $this->user->hasPermission('access', 'report/vendor_orders');
+        $data['preturn_report_vendor_orders_category'] = $this->user->hasPermission('access', 'report/vendor_orders_category');
         $data['preturn_report_vendor_returns'] = $this->user->hasPermission('access', 'report/vendor_returns');
         $data['preturn_report_combined_report'] = $this->user->hasPermission('access', 'report/combined_report');
 
