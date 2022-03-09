@@ -1278,45 +1278,51 @@ class ControllerReportVendorOrders extends Controller {
         foreach ($results as $index => $order) {
             $data['orders'][$index] = $order;
             $orderProducts = $this->model_sale_order->getOrderAndRealOrderProducts($data['orders'][$index]['order_id']);
-            $data['orders'][$index]['products'] = $orderProducts;
+            // $data['orders'][$index]['products'] = $orderProducts;
+            $orderProductsnew=[];
+            $category_ids_order=[];
+            foreach ($orderProducts as $product) 
+            {
+                
+                    if($product['general_product_id']==null || $product['general_product_id']==0 || $product['general_product_id']=='' )
+                    {
+                    $product_category=$this->model_sale_order->getProductCategoryByProductID($product['product_id']);
+                    }
+                    else{
+                        $product_category=$this->model_sale_order->getProductCategoryByGeneralProductID($product['general_product_id']);
 
-            foreach ($orderProducts as $product) {
-                if($product['general_product_id']==null || $product['general_product_id']==0 || $product['general_product_id']=='' )
-                {
-                $product_category=$this->model_sale_order->getProductCategoryByProductID($product['product_id']);
-                }
-                else{
-                    $product_category=$this->model_sale_order->getProductCategoryByGeneralProductID($product['general_product_id']);
+                    }
 
-                }
-                if($product_category!=null)
-                {
+                    if($product_category!=null)
+                    {
+                        $product['category']=$product_category['category']??'sadasd';
+                        $product['category_id']=$product_category['category_id']??0;
+                        // echo "<pre>";print_r($product);die;                    
+                    }
+
+                    $category_ids_order[] = ['category_id'=>$product['category_id'],'category_name'=>$product['category']];
+
+                    
                     $unconsolidatedProducts[] = [
                         'name' => $product['name'],
                         'unit' => $product['unit'],
                         'quantity' => $product['quantity'],
                         'note' => $product['product_note'],
                         'produce_type' => $product['produce_type'],
-                        'product_category' => $product_category['category'],
-                        'product_category_id' => $product_category['category_id'],
+                        'product_category' => $product['category'],
+                        'product_category_id' => $product['category_id'],
                     ];
-                }
-                else
-                {
-                    $unconsolidatedProducts[] = [
-                        'name' => $product['name'],
-                        'unit' => $product['unit'],
-                        'quantity' => $product['quantity'],
-                        'note' => $product['product_note'],
-                        'produce_type' => $product['produce_type'],
-                        'product_category' => '',
-                        'product_category_id' => 0,
-                    ];
-
-                 }
+                    array_push($orderProductsnew,$product);
+                
+            }   
             
+                // echo "<pre>";print_r($orderProductsnew);die;
+            $uniquecategory_ids_order= array_unique($category_ids_order,SORT_REGULAR);
+
+                $data['orders'][$index]['categories'] = $uniquecategory_ids_order;
+            
+                $data['orders'][$index]['products'] = $orderProductsnew;
             }
-        }
 
         $consolidatedProducts = [];
 
@@ -1387,7 +1393,7 @@ class ControllerReportVendorOrders extends Controller {
 
 
 
-        // echo "<pre>";print_r($consolidatedProducts);die;
+        // echo "<pre>";print_r($data);die;
 
         $data['uniquecategory_ids'] = $uniquecategory_ids;
         $data['products'] = $consolidatedProducts;
