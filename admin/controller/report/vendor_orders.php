@@ -965,40 +965,13 @@ class ControllerReportVendorOrders extends Controller {
             $data['orders'][$index]['products'] = $orderProducts;
 
             foreach ($orderProducts as $product) {
-                if($product['general_product_id']==null || $product['general_product_id']==0 || $product['general_product_id']=='' )
-                {
-                $product_category=$this->model_sale_order->getProductCategoryByProductID($product['product_id']);
-                }
-                else{
-                    $product_category=$this->model_sale_order->getProductCategoryByGeneralProductID($product['general_product_id']);
-
-                }
-                if($product_category!=null)
-                {
-                    $unconsolidatedProducts[] = [
-                        'name' => $product['name'],
-                        'unit' => $product['unit'],
-                        'quantity' => $product['quantity'],
-                        'note' => $product['product_note'],
-                        'produce_type' => $product['produce_type'],
-                        'product_category' => $product_category['category'],
-                        'product_category_id' => $product_category['category_id'],
-                    ];
-                }
-                else
-                {
-                    $unconsolidatedProducts[] = [
-                        'name' => $product['name'],
-                        'unit' => $product['unit'],
-                        'quantity' => $product['quantity'],
-                        'note' => $product['product_note'],
-                        'produce_type' => $product['produce_type'],
-                        'product_category' => '',
-                        'product_category_id' => 0,
-                    ];
-
-                 }
-            
+                $unconsolidatedProducts[] = [
+                    'name' => $product['name'],
+                    'unit' => $product['unit'],
+                    'quantity' => $product['quantity'],
+                    'note' => $product['product_note'],
+                    'produce_type' => $product['produce_type'],
+                ];
             }
         }
 
@@ -1010,8 +983,6 @@ class ControllerReportVendorOrders extends Controller {
             $productQuantity = $product['quantity'];
             $productNote = isset($product['product_note']) ? $product['product_note'] : '';
             $produceType = $product['produce_type'];
-            $product_category = $product['product_category'];
-            $product_category_id = $product['product_category_id'];
 
             $consolidatedProductNames = array_column($consolidatedProducts, 'name');
             if (false !== array_search($productName, $consolidatedProductNames)) {
@@ -1038,9 +1009,6 @@ class ControllerReportVendorOrders extends Controller {
                         'quantity' => $productQuantity,
                         'note' => $productNote,
                         'produce_type' => $produceType,
-                        'product_category' => $product_category,
-                        'product_category_id' => $product_category_id,
-
                     ];
                 }
             } else {
@@ -1050,17 +1018,10 @@ class ControllerReportVendorOrders extends Controller {
                     'quantity' => $productQuantity,
                     'note' => $productNote,
                     'produce_type' => $produceType,
-                    'product_category' => $product_category,
-                    'product_category_id' => $product_category_id,
-
-
                 ];
             }
         }
-        $productCat = array_column($consolidatedProducts, 'product_category_id');
-        array_multisort(  $productCat,SORT_ASC,$consolidatedProducts);
-
-        // echo "<pre>";print_r($consolidatedProducts);die;
+        //echo "<pre>";print_r($consolidatedProducts);die;
 
         $data['products'] = $consolidatedProducts;
         // echo "<pre>";print_r($data);die;
