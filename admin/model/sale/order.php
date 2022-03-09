@@ -2347,9 +2347,9 @@ class ModelSaleOrder extends Model {
     }
 
     public function getOrderAndRealOrderProducts($order_id, $store_id = 0) {
-        $sql1 = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
+        $sql1 = "SELECT * ,'0' as quantity_updated,'0' as unit_updated,0 as category_id,'' as category FROM " . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
 
-        $sql2 = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'";
+        $sql2 = "SELECT * ,'0' as quantity_updated,'0' as unit_updated,0 as category_id,'' as category FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'";
 
         if ($store_id) {
             $sql1 .= " AND store_id='" . $store_id . "'";
