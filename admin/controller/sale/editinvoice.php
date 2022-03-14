@@ -184,19 +184,19 @@ class ControllerSaleEditinvoice extends Controller {
                         'model' => $product['model'],
                         'unit' => $product['unit'],
                         'option' => $option_data,
-                        'quantity' => $product['quantity'],
+                        'quantity' => $product['quantity']-$required_quantity,
                         'produce_type' => $product['produce_type'],
                         'product_note' => $product['product_note'],
                         /* OLD PRICE WITH TAX */ //'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
                         'price' => number_format((float) $product['price'], 2, '.', ''),
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
                         /* OLD TOTAL WITH TAX */ //'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
-                        'total' => ($product['price'] * ($product['quantity'])),
+                        'total' => ($product['price'] * ($product['quantity']-$required_quantity)),
                         'variations' => $variations,
                         'missed_quantity' => isset($missed_quantity) && count($missed_quantity) > 0 ? $missed_quantity['quantity_required'] : 0,
                     ];
-                    $sub_total += ($product['price'] * ($product['quantity']));
-                    $tax += $product['tax'] * ($product['quantity']);
+                    $sub_total += ($product['price'] * ($product['quantity']-$required_quantity));
+                    $tax += $product['tax'] * ($product['quantity']-$required_quantity);
                 }
                 $new_total = $sub_total + $tax;
 
