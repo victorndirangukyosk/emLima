@@ -74,6 +74,12 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $filter_delivery_date = null;
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $filter_delivery_time_slot = $this->request->get['filter_delivery_time_slot'];
+        } else {
+            $filter_delivery_time_slot = null;
+        }
+
         if (isset($this->request->get['filter_payment'])) {
             $filter_payment = $this->request->get['filter_payment'];
         } else {
@@ -177,6 +183,10 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
@@ -242,6 +252,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             'filter_store_name' => $filter_store_name,
             'filter_delivery_method' => $filter_delivery_method,
             'filter_delivery_date' => $filter_delivery_date,
+            'filter_delivery_time_slot' => $filter_delivery_time_slot,
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
             'filter_order_type' => $filter_order_type,
@@ -333,8 +344,8 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
                     'price' => $result['price'],
                     'tax' => $result['tax'],
                     'download_invoice' => $this->url->link('sale/order/missing_products_order_invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL'),
-                    // 'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
-                    //'order_product_id' => $result['order_product_id'],
+                        // 'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+                        //'order_product_id' => $result['order_product_id'],
                 ];
 
                 //$result_status_tmp = $result['status'];
@@ -356,6 +367,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $data['text_no_results'] = $this->language->get('text_no_results');
         $data['text_confirm'] = $this->language->get('text_confirm');
         $data['text_missing'] = $this->language->get('text_missing');
+        $data['column_delivery_time_slot'] = 'Delivery Time Slot';
 
         $data['column_order_id'] = $this->language->get('column_order_id');
         $data['column_customer'] = $this->language->get('column_customer');
@@ -453,6 +465,10 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
@@ -542,6 +558,10 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
@@ -598,6 +618,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $data['filter_store_name'] = $filter_store_name;
         $data['filter_delivery_method'] = $filter_delivery_method;
         $data['filter_delivery_date'] = $filter_delivery_date;
+        $data['filter_delivery_time_slot'] = $filter_delivery_time_slot;
         $data['filter_payment'] = $filter_payment;
 
         $data['filter_order_status'] = $filter_order_status;
@@ -629,6 +650,9 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $this->load->model('orderprocessinggroup/orderprocessinggroup');
         $order_processing_groups = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
         $data['order_processing_groups'] = $order_processing_groups;
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $data['time_slots'] = $deliveryTimeslots;
 
         $this->response->setOutput($this->load->view('sale/order_product_missing_products_list.tpl', $data));
     }

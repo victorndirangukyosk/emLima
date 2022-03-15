@@ -69,7 +69,16 @@
                                     
                                 </div>
                             </div>
-
+                            
+                            <div class="form-group">
+                                <label class="control-label" for="input-delivery-date">Delivery Date</label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_delivery_date" value="<?php echo $filter_delivery_date; ?>" placeholder="<?php echo $column_delivery_date; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
 
                         </div>
 
@@ -80,7 +89,21 @@
                            <div class="form-group">
                                 <label class="control-label" for="input-company">Company Name</label>
                                 <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
-                            </div> 
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="control-label" for="input-delivery-date">Delivery Time Slot</label>
+                                    <select name="filter_delivery_time_slot" id="input-delivery-time-slot" class="form-control">
+                                    <option value="">Select <?php echo $column_delivery_time_slot; ?></option>
+                                    <?php foreach ($time_slots as $time_slot) { ?>
+                                    <?php if ($time_slot['timeslot'] == $filter_delivery_time_slot) { ?>
+                                    <option value="<?php echo $time_slot['timeslot']; ?>" selected="selected"><?php echo $time_slot['timeslot']; ?></option>
+                                    <?php } else { ?>
+                                    <option value="<?php echo $time_slot['timeslot']; ?>"><?php echo $time_slot['timeslot']; ?></option>
+                                    <?php } ?>
+                                    <?php } ?>
+                                </select>
+                            </div>
                             
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
 
@@ -207,7 +230,18 @@
             if (filter_customer) {
                 url += '&filter_customer=' + encodeURIComponent(filter_customer);
             }
-      
+            
+            var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
+
+            if (filter_delivery_date) {
+                url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
+            }
+            
+            var filter_delivery_time_slot = $('select[name=\'filter_delivery_time_slot\']').val();
+
+            if (filter_delivery_time_slot) {
+                url += '&filter_delivery_time_slot=' + encodeURIComponent(filter_delivery_time_slot);
+            }
 
             location = url;
         });
