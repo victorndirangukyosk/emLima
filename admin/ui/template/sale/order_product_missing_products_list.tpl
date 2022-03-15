@@ -2,7 +2,8 @@
 <div id="content">
    <div class="page-header">
       <div class="container-fluid">
-               <div class="pull-right">                  
+            <div class="pull-right">
+                <button type="button" onclick="downloadmissingproducts();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Missing Products Excel"><i class="fa fa-download"></i></button>
             </div>
             <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
@@ -193,9 +194,8 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript">  
-
-   $('#button-filter').on('click', function () {
+<script type="text/javascript">  
+$('#button-filter').on('click', function () {
             url = 'index.php?path=sale/order_product_missing_products&token=<?php echo $token; ?>';
 
              var filter_company = $('input[name=\'filter_company\']').val();
@@ -245,7 +245,59 @@
 
             location = url;
         });
-        </script>
+
+function downloadmissingproducts() {
+
+            url = 'index.php?path=sale/order_product_missing_products/downloadmissingproducts&token=<?php echo $token; ?>';
+
+             var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company) {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+  
+ 
+            
+            var filter_order_id = $('input[name=\'filter_order_id\']').val();
+
+            if (filter_order_id) {
+                url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
+            }
+
+              var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
+
+            if (filter_order_from_id) {
+                url += '&filter_order_from_id=' + encodeURIComponent(filter_order_from_id);
+            }
+
+
+             var filter_order_to_id = $('input[name=\'filter_order_to_id\']').val();
+
+            if (filter_order_to_id) {
+                url += '&filter_order_to_id=' + encodeURIComponent(filter_order_to_id);
+            }
+
+            var filter_customer = $('input[name=\'filter_customer\']').val();
+
+            if (filter_customer) {
+                url += '&filter_customer=' + encodeURIComponent(filter_customer);
+            }
+            
+            var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
+
+            if (filter_delivery_date) {
+                url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
+            }
+            
+            var filter_delivery_time_slot = $('select[name=\'filter_delivery_time_slot\']').val();
+
+            if (filter_delivery_time_slot) {
+                url += '&filter_delivery_time_slot=' + encodeURIComponent(filter_delivery_time_slot);
+            }
+
+            location = url;
+}    
+</script>
     <script type="text/javascript">       
              
          $companyName="";
