@@ -120,7 +120,7 @@
                                 <?php foreach ($all_orders as $key => $orderLoop ) { ?>
 
                                  
-                                <tr class="header">  <td colspan="11"><center><h3 class="my-order-title label" style="background-color: #ff2a00a8;display: block;line-height: 2;" id="order-status-id" data-download-invoice="<?= $this->url->link('sale/order/missing_products_order_invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $key, 'SSL')?>" ><?= $key?> </h3>   </center></td> </tr>
+                                <!--<tr class="header">  <td colspan="11"><center><h3 class="my-order-title label" style="background-color: #ff2a00a8;display: block;line-height: 2;" id="order-status-id" data-download-invoice="<?= $this->url->link('sale/order/missing_products_order_invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $key, 'SSL')?>" ><?= $key?> </h3>   </center></td> </tr>-->
                                     
                         <?php foreach ($orderLoop['orders'] as $order) { ?>
                                 <tr>
