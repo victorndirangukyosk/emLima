@@ -4346,6 +4346,10 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_delivery_date'])) {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
+        
+        if (!empty($data['filter_delivery_time_slot']) && $data['filter_delivery_time_slot'] != 'undefined') {
+            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
+        }
 
         if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
@@ -4646,6 +4650,10 @@ class ModelSaleOrder extends Model {
 
         if (!empty($data['filter_delivery_date'])) {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
+        }
+        
+        if (!empty($data['filter_delivery_time_slot']) && $data['filter_delivery_time_slot'] != 'undefined') {
+            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
         }
 
         if (!empty($data['filter_total'])) {
