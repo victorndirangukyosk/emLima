@@ -10,7 +10,7 @@
                         <button type="" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
                 <?php endif ?>  
 
-                
+                d
                 <button type="" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
                 <button type="" id="button-invoice-pdf" form="form-order" formaction="<?php echo $invoicepdf; ?>" data-toggle="tooltip" title="Download Invoice" class="btn btn-default"><i class="fa fa-print"></i></button>
                 <button type="button" onclick="downloadOrderStickers();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders List"><i class="fa fa-download"></i></button>

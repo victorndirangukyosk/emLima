@@ -74,6 +74,12 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $filter_delivery_date = null;
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $filter_delivery_time_slot = $this->request->get['filter_delivery_time_slot'];
+        } else {
+            $filter_delivery_time_slot = null;
+        }
+
         if (isset($this->request->get['filter_payment'])) {
             $filter_payment = $this->request->get['filter_payment'];
         } else {
@@ -177,6 +183,10 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
@@ -242,6 +252,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             'filter_store_name' => $filter_store_name,
             'filter_delivery_method' => $filter_delivery_method,
             'filter_delivery_date' => $filter_delivery_date,
+            'filter_delivery_time_slot' => $filter_delivery_time_slot,
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
             'filter_order_type' => $filter_order_type,
@@ -333,8 +344,8 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
                     'price' => $result['price'],
                     'tax' => $result['tax'],
                     'download_invoice' => $this->url->link('sale/order/missing_products_order_invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL'),
-                    // 'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
-                    //'order_product_id' => $result['order_product_id'],
+                        // 'addmissingproduct' => $this->url->link('sale/order_product_missing/addtomissingproduct', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+                        //'order_product_id' => $result['order_product_id'],
                 ];
 
                 //$result_status_tmp = $result['status'];
@@ -356,6 +367,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $data['text_no_results'] = $this->language->get('text_no_results');
         $data['text_confirm'] = $this->language->get('text_confirm');
         $data['text_missing'] = $this->language->get('text_missing');
+        $data['column_delivery_time_slot'] = 'Delivery Time Slot';
 
         $data['column_order_id'] = $this->language->get('column_order_id');
         $data['column_customer'] = $this->language->get('column_customer');
@@ -453,6 +465,10 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
@@ -542,6 +558,10 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $url .= '&filter_delivery_date=' . urlencode(html_entity_decode($this->request->get['filter_delivery_date'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $url .= '&filter_delivery_time_slot=' . urlencode(html_entity_decode($this->request->get['filter_delivery_time_slot'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_payment'])) {
             $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
@@ -598,6 +618,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $data['filter_store_name'] = $filter_store_name;
         $data['filter_delivery_method'] = $filter_delivery_method;
         $data['filter_delivery_date'] = $filter_delivery_date;
+        $data['filter_delivery_time_slot'] = $filter_delivery_time_slot;
         $data['filter_payment'] = $filter_payment;
 
         $data['filter_order_status'] = $filter_order_status;
@@ -629,6 +650,9 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $this->load->model('orderprocessinggroup/orderprocessinggroup');
         $order_processing_groups = $this->model_orderprocessinggroup_orderprocessinggroup->getOrderProcessingGroups();
         $data['order_processing_groups'] = $order_processing_groups;
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $data['time_slots'] = $deliveryTimeslots;
 
         $this->response->setOutput($this->load->view('sale/order_product_missing_products_list.tpl', $data));
     }
@@ -639,6 +663,220 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
 
             return $query->row['user_id'];
         }
+    }
+
+    public function downloadmissingproducts() {
+
+        if (isset($this->request->get['filter_city'])) {
+            $filter_city = $this->request->get['filter_city'];
+        } else {
+            $filter_city = null;
+        }
+
+        if (isset($this->request->get['filter_order_id'])) {
+            $filter_order_id = $this->request->get['filter_order_id'];
+        } else {
+            $filter_order_id = null;
+        }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $filter_order_from_id = $this->request->get['filter_order_from_id'];
+        } else {
+            $filter_order_from_id = null;
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $filter_order_to_id = $this->request->get['filter_order_to_id'];
+        } else {
+            $filter_order_to_id = null;
+        }
+
+
+        if (isset($this->request->get['filter_company'])) {
+            $filter_company = $this->request->get['filter_company'];
+        } else {
+            $filter_company = null;
+        }
+
+        if (isset($this->request->get['filter_customer'])) {
+            $filter_customer = $this->request->get['filter_customer'];
+        } else {
+            $filter_customer = null;
+        }
+
+        if (isset($this->request->get['filter_vendor'])) {
+            $filter_vendor = $this->request->get['filter_vendor'];
+        } else {
+            $filter_vendor = null;
+        }
+
+        if (isset($this->request->get['filter_store_name'])) {
+            $filter_store_name = $this->request->get['filter_store_name'];
+        } else {
+            $filter_store_name = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_method'])) {
+            $filter_delivery_method = $this->request->get['filter_delivery_method'];
+        } else {
+            $filter_delivery_method = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $filter_delivery_date = $this->request->get['filter_delivery_date'];
+        } else {
+            $filter_delivery_date = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $filter_delivery_time_slot = $this->request->get['filter_delivery_time_slot'];
+        } else {
+            $filter_delivery_time_slot = null;
+        }
+
+        if (isset($this->request->get['filter_payment'])) {
+            $filter_payment = $this->request->get['filter_payment'];
+        } else {
+            $filter_payment = null;
+        }
+
+        if (isset($this->request->get['filter_order_status'])) {
+            $filter_order_status = $this->request->get['filter_order_status'];
+        } else {
+            $filter_order_status = null;
+        }
+
+        if (isset($this->request->get['filter_order_type'])) {
+            $filter_order_type = $this->request->get['filter_order_type'];
+        } else {
+            $filter_order_type = null;
+        }
+
+        if (isset($this->request->get['filter_total'])) {
+            $filter_total = $this->request->get['filter_total'];
+        } else {
+            $filter_total = null;
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $filter_date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $filter_date_added_end = null;
+        }
+
+        if (isset($this->request->get['filter_date_modified'])) {
+            $filter_date_modified = $this->request->get['filter_date_modified'];
+        } else {
+            $filter_date_modified = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'o.order_id';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'DESC';
+        }
+
+        $filter_data = [
+            'filter_city' => $filter_city,
+            'filter_order_id' => $filter_order_id,
+            'filter_order_from_id' => $filter_order_from_id,
+            'filter_order_to_id' => $filter_order_to_id,
+            'filter_customer' => $filter_customer,
+            'filter_company' => $filter_company,
+            'filter_vendor' => $this->getUserByName($filter_vendor),
+            'filter_store_name' => $filter_store_name,
+            'filter_delivery_method' => $filter_delivery_method,
+            'filter_delivery_date' => $filter_delivery_date,
+            'filter_delivery_time_slot' => $filter_delivery_time_slot,
+            'filter_payment' => $filter_payment,
+            'filter_order_status' => $filter_order_status,
+            'filter_order_type' => $filter_order_type,
+            'filter_total' => $filter_total,
+            'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
+            'filter_date_modified' => $filter_date_modified,
+            'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
+            'sort' => $sort,
+            'order' => $order,
+        ];
+
+        $order_total_final = [];
+        $results_final = [];
+        $data = NULL;
+
+        $this->load->model('sale/order');
+        $filter_order_id_temp = $this->model_sale_order->getOrderedMissingProductsOnlyOrder($filter_data);
+
+        if (!empty($filter_order_id_temp)) {
+
+            foreach ($filter_order_id_temp as $tmp) {
+                $tmp = $tmp['order_id'];
+
+                $filter_data['filter_order_id'] = $tmp;
+
+                $order_total = $this->model_sale_order->getTotalOrderedMissingProducts($filter_data);
+
+                $results = $this->model_sale_order->getOrderedMissingProducts($filter_data);
+
+                array_push($order_total_final, $order_total);
+                array_push($results_final, $results);
+            }
+
+            $order_total = array_sum($order_total_final);
+        } else {
+            $order_total = 0;
+            $results = [];
+        }
+
+        foreach ($results_final as $key => $results) {
+            $result_order_tmp = null;
+            foreach ($results as $result) {
+
+                if ($this->user->isVendor()) {
+                    $result['customer'] = strtok($result['firstname'], ' ');
+                }
+
+                if ($result['company_name']) {
+                    $result['company_name'] = ' (' . $result['company_name'] . ')';
+                } else {
+                    $result['company_name'] = "(NA)";
+                }
+
+                $this->load->model('localisation/order_status');
+                $data['orders'][] = [
+                    'order_id' => $result['order_id'],
+                    'id' => $result['id'],
+                    'customer' => $result['customer'],
+                    'company_name' => $result['company_name'],
+                    'product_store_id' => $result['product_store_id'],
+                    'name' => $result['name'],
+                    'unit' => $result['unit'],
+                    'quantity' => $result['quantity'],
+                    'quantity_required' => $result['quantity_required'],
+                    'delivery_date' => $result['delivery_date'],
+                    'delivery_timeslot' => $result['delivery_timeslot'],
+                    'total' => $result['total'],
+                    'price' => $result['price'],
+                    'tax' => $result['tax'],
+                    'download_invoice' => $this->url->link('sale/order/missing_products_order_invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL'),
+                ];
+            }
+        }
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_missing_order_products_excel($data['orders']);
     }
 
 }
