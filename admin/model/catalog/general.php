@@ -99,6 +99,13 @@ class ModelCatalogGeneral extends Model
     {
         $this->trigger->fire('pre.admin.product.edit', $data);
 
+        $prev_data_query=$this->db->query('Select status from  '.DB_PREFIX."product WHERE product_id = '".(int) $product_id."'");
+       
+        if ($prev_data_query->num_rows) {
+            $prev_data_status = $prev_data_query->row['status'];
+        }
+            // echo "<pre>";print_r($prev_data_status);die;
+       
         $this->db->query('UPDATE '.DB_PREFIX."product SET default_price = '".$this->db->escape($data['product_price'])."', unit = '".$this->db->escape($data['unit'])."', weight = '".$this->db->escape($data['weight'])."', model = '".$this->db->escape($data['model'])."', status = '".(int) $data['status']."' ,sort_order = '".(int) $data['sort_order']."', date_modified = NOW() WHERE product_id = '".(int) $product_id."'");
 
         if (isset($data['image'])) {
@@ -179,6 +186,32 @@ class ModelCatalogGeneral extends Model
         }
 
         $this->cache->delete('product');
+
+
+         // Add to activity log
+         if($prev_data_status!==$data['status']){
+
+         $log = new Log('error.log');
+         $this->load->model('user/user_activity');
+
+         $activity_data = [
+             'user_id' => $this->user->getId(),
+             'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+             'user_group_id' => $this->user->getGroupId(),
+             'product_id' => $product_id,
+         ];
+         $log->write('executive add');
+         if($data['status']==0)
+         {
+         $this->model_user_user_activity->addActivity('product_disabled', $activity_data);
+         }
+         else{
+            $this->model_user_user_activity->addActivity('product_enabled', $activity_data);
+
+         }
+         $log->write('executive add');
+        }
+
 
         $this->trigger->fire('post.admin.product.edit', $product_id);
     }
