@@ -61,6 +61,10 @@ class ControllerCatalogGeneral extends Controller {
                 $url .= '&filter_product_id_from=' . urlencode(html_entity_decode($this->request->get['filter_product_id_from'], ENT_QUOTES, 'UTF-8'));
             }
 
+            if (isset($this->request->get['filter_product_id'])) {
+                $url .= '&filter_product_id=' . urlencode(html_entity_decode($this->request->get['filter_product_id'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_product_id_to'])) {
                 $url .= '&filter_product_id_to=' . urlencode(html_entity_decode($this->request->get['filter_product_id_to'], ENT_QUOTES, 'UTF-8'));
             }
@@ -163,6 +167,10 @@ class ControllerCatalogGeneral extends Controller {
                 $url .= '&filter_product_id_from=' . urlencode(html_entity_decode($this->request->get['filter_product_id_from'], ENT_QUOTES, 'UTF-8'));
             }
 
+            if (isset($this->request->get['filter_product_id'])) {
+                $url .= '&filter_product_id=' . urlencode(html_entity_decode($this->request->get['filter_product_id'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_product_id_to'])) {
                 $url .= '&filter_product_id_to=' . urlencode(html_entity_decode($this->request->get['filter_product_id_to'], ENT_QUOTES, 'UTF-8'));
             }
@@ -235,6 +243,11 @@ class ControllerCatalogGeneral extends Controller {
             if (isset($this->request->get['filter_product_id_from'])) {
                 $url .= '&filter_product_id_from=' . urlencode(html_entity_decode($this->request->get['filter_product_id_from'], ENT_QUOTES, 'UTF-8'));
             }
+
+            if (isset($this->request->get['filter_product_id'])) {
+                $url .= '&filter_product_id=' . urlencode(html_entity_decode($this->request->get['filter_product_id'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_product_id_to'])) {
                 $url .= '&filter_product_id_to=' . urlencode(html_entity_decode($this->request->get['filter_product_id_to'], ENT_QUOTES, 'UTF-8'));
             }
@@ -302,6 +315,10 @@ class ControllerCatalogGeneral extends Controller {
                 $url .= '&filter_product_id_from=' . urlencode(html_entity_decode($this->request->get['filter_product_id_from'], ENT_QUOTES, 'UTF-8'));
             }
 
+            if (isset($this->request->get['filter_product_id'])) {
+                $url .= '&filter_product_id=' . urlencode(html_entity_decode($this->request->get['filter_product_id'], ENT_QUOTES, 'UTF-8'));
+            }
+
             if (isset($this->request->get['filter_product_id_to'])) {
                 $url .= '&filter_product_id_to=' . urlencode(html_entity_decode($this->request->get['filter_product_id_to'], ENT_QUOTES, 'UTF-8'));
             }
@@ -357,6 +374,12 @@ class ControllerCatalogGeneral extends Controller {
             $filter_product_id_from = $this->request->get['filter_product_id_from'];
         } else {
             $filter_product_id_from = null;
+        }
+
+        if (isset($this->request->get['filter_product_id'])) {
+            $filter_product_id = $this->request->get['filter_product_id'];
+        } else {
+            $filter_product_id = null;
         }
 
         if (isset($this->request->get['filter_product_id_to'])) {
@@ -421,6 +444,10 @@ class ControllerCatalogGeneral extends Controller {
             $url .= '&filter_product_id_from=' . urlencode(html_entity_decode($this->request->get['filter_product_id_from'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_product_id'])) {
+            $url .= '&filter_product_id=' . urlencode(html_entity_decode($this->request->get['filter_product_id'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_product_id_to'])) {
             $url .= '&filter_product_id_to=' . urlencode(html_entity_decode($this->request->get['filter_product_id_to'], ENT_QUOTES, 'UTF-8'));
         }
@@ -475,6 +502,7 @@ class ControllerCatalogGeneral extends Controller {
             'filter_name' => $filter_name,
             'filter_model' => $filter_model,
             'filter_product_id_from' => $filter_product_id_from,
+            'filter_product_id' => $filter_product_id,
             'filter_product_id_to' => $filter_product_id_to,
             'filter_price' => $filter_price,
             'filter_category' => $filter_category,
@@ -616,6 +644,10 @@ class ControllerCatalogGeneral extends Controller {
             $url .= '&filter_product_id_from=' . urlencode(html_entity_decode($this->request->get['filter_product_id_from'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_product_id'])) {
+            $url .= '&filter_product_id=' . urlencode(html_entity_decode($this->request->get['filter_product_id'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_product_id_to'])) {
             $url .= '&filter_product_id_to=' . urlencode(html_entity_decode($this->request->get['filter_product_id_to'], ENT_QUOTES, 'UTF-8'));
         }
@@ -671,6 +703,10 @@ class ControllerCatalogGeneral extends Controller {
             $url .= '&filter_product_id_from=' . urlencode(html_entity_decode($this->request->get['filter_product_id_from'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_product_id'])) {
+            $url .= '&filter_product_id=' . urlencode(html_entity_decode($this->request->get['filter_product_id'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_product_id_to'])) {
             $url .= '&filter_product_id_to=' . urlencode(html_entity_decode($this->request->get['filter_product_id_to'], ENT_QUOTES, 'UTF-8'));
         }
@@ -718,6 +754,7 @@ class ControllerCatalogGeneral extends Controller {
         $data['filter_name'] = $filter_name;
         $data['filter_model'] = $filter_model;
         $data['filter_product_id_from'] = $filter_product_id_from;
+        $data['filter_product_id'] = $filter_product_id;
         $data['filter_product_id_to'] = $filter_product_id_to;
 
         $data['filter_price'] = $filter_price;
@@ -842,6 +879,10 @@ class ControllerCatalogGeneral extends Controller {
 
         if (isset($this->request->get['filter_product_id_from'])) {
             $url .= '&filter_product_id_from=' . urlencode(html_entity_decode($this->request->get['filter_product_id_from'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_product_id'])) {
+            $url .= '&filter_product_id=' . urlencode(html_entity_decode($this->request->get['filter_product_id'], ENT_QUOTES, 'UTF-8'));
         }
 
         if (isset($this->request->get['filter_product_id_to'])) {

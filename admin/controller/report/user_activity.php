@@ -163,6 +163,7 @@ class ControllerReportUserActivity extends Controller {
                 'vehicle_id=',
                 'farmer_id=',
                 'feedback_id=',
+                'product_id=',
             ];
 
             $replace = [
@@ -176,6 +177,7 @@ class ControllerReportUserActivity extends Controller {
                 $this->url->link('vehicles/vehicles_list/edit', 'token=' . $this->session->data['token'] . '&vehicle_id=', 'SSL'),
                 $this->url->link('sale/farmer/edit', 'token=' . $this->session->data['token'] . '&farmer_id=', 'SSL'),
                 $this->url->link('sale/customer_feedback', 'token=' . $this->session->data['token'] . '&feedback_id=', 'SSL'),
+                $this->url->link('catalog/general', 'token=' . $this->session->data['token'] . '&filter_product_id=', 'SSL'),
             ];
 
             $data['activities'][] = [
