@@ -306,6 +306,10 @@ class ModelCatalogGeneral extends Model
             $sql .= " AND p.product_id >= '".(int) $data['filter_product_id_from']."'";
         }
 
+        if (!empty($data['filter_product_id'])) {
+            $sql .= " AND p.product_id = '".(int) $data['filter_product_id']."'";
+        }
+
         if (!empty($data['filter_product_id_to'])) {
             $sql .= " AND p.product_id <= '".(int) $data['filter_product_id_to']."'";
         }
@@ -706,6 +710,10 @@ class ModelCatalogGeneral extends Model
 
         if (!empty($data['filter_product_id_from'])) {
             $sql .= " AND p.product_id >= '".(int) $data['filter_product_id_from']."'";
+        }
+
+        if (!empty($data['filter_product_id'])) {
+            $sql .= " AND p.product_id = '".(int) $data['filter_product_id']."'";
         }
 
         if (!empty($data['filter_product_id_to'])) {

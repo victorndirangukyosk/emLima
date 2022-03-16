@@ -57,6 +57,8 @@ $_['text_order_assigned_to_processor'] =  '<a href="user_id=%d">%s</a> assigned 
 $_['text_vehicle_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="vehicle_id=%d">vehicle</a>.';
 $_['text_vehicle_add'] = '<a href="user_id=%d">%s</a> created a new <a href="vehicle_id=%d">vehicle</a>.';
 $_['text_vehicle_delete'] = '<a href="user_id=%d">%s</a> deleted a <a href="vehicle_id=%d">vehicle</a>.';
+$_['text_product_enabled'] = '<a href="user_id=%d">%s</a> enabled   <a href="product_id=%d">product</a>.';
+$_['text_product_disabled'] = '<a href="user_id=%d">%s</a> disabled  <a href="product_id=%d">product</a>.';
 
 
 $_['text_Issue_Accepted'] = '<a href="user_id=%d">%s</a> accepted  <a href="feedback_id=%d">Issue</a>.';
