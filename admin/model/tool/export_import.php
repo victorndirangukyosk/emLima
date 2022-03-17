@@ -3082,15 +3082,70 @@ class ModelToolExportImport extends Model
             /* Update */
             $sql = 'UPDATE `'.DB_PREFIX."product_category_prices` SET price='".$data['price']."',product_name='".$data['product_name']."',status='".$data['status']."' WHERE product_store_id = '".$product_store_id."' AND price_category = '".$price_category."' AND  store_id = '".$store_id."' ";
             $this->db->query($sql);
+            
+            $status_text = $data['status'] == 0 ? 'Disabled' : 'Enabled';
+            $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'category_pricing_name' => $price_category,
+            'description' => $status_text . ' ' . $data['product_name'] . ' in ' . $price_category . ' Category',
+            'category_pricing_vendor_product_storeid' => $product_store_id,
+            'product_name' => $data['product_name'],
+            ];
+            $this->addActivity('vendor_product_category_pricing_updated_through_xl_sheet', $activity_data);
         //echo "<pre>";print_r($sql);
         } else {
             /* Add */
             $matstring = implode("','", $data);
             $sql = 'INSERT INTO `'.DB_PREFIX."product_category_prices` (`product_store_id`, `product_id`, `product_name`, `store_id`, `price_category`, `price`, `status`) VALUES ('$matstring')";
             $this->db->query($sql);
+                        
+            $status_text = $data['status'] == 0 ? 'Disabled' : 'Enabled';
+            $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'category_pricing_name' => $price_category,
+            'description' => $status_text . ' ' . $data['product_name'] . ' in ' . $price_category . ' Category',
+            'category_pricing_vendor_product_storeid' => $product_store_id,
+            'product_name' => $data['product_name'],
+            ];
+            $this->addActivity('vendor_product_category_pricing_created_through_xl_sheet', $activity_data);
             //echo "<pre>";print_r($sql);
             //$this->db->query($sql);
         }
+    }
+    
+    public function addActivity($key, $data) {
+        $dat = $data;
+        if (isset($data['user_id'])) {
+            $user_id = $data['user_id'];
+        } else {
+            $user_id = 0;
+        }
+        if (isset($data['customer_id'])) {
+            $customer_id = $data['customer_id'];
+        } else {
+            $customer_id = 0;
+        }
+        if (isset($data['order_id'])) {
+            $order_id = $data['order_id'];
+        } else {
+            $order_id = 0;
+        }
+        if ($order_id > 0 && $customer_id == 0) {
+            //get customerid from order id
+            $query = $this->db->query('SELECT customer_id FROM ' . DB_PREFIX . "order WHERE order_id = '" . (int) $order_id . "'");
+            // echo '<pre>';print_r('SELECT customer_id FROM ' . DB_PREFIX . "order WHERE order_id = '" . (int) $order_id . "'");
+
+            $customer_id = $query->row['customer_id'];
+        }
+
+
+        unset($dat['user_group_id']);
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "user_activity` SET `user_id` = '" . (int) $user_id . "', `user_group_id` = '" . (int) $data['user_group_id'] . "', `key` = '" . $this->db->escape($key) . "', `data` = '" . $this->db->escape(serialize($dat)) . "', `ip` = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', `date_added` = NOW(), `customer_id` = '" . (int) $customer_id . "', `order_id` = '" . (int) $order_id . "'");
+        return $this->db->getLastId();
     }
 
     protected function cacheProductPrices($store_id)
