@@ -69,7 +69,8 @@ $_['text_Issue_Closed'] = '<a href="user_id=%d">%s</a> closed  <a href="feedback
 
 $_['text_vendor_product_category_pricing_status_disabled_edit'] = '<a href="user_id=%d">%s</a> <a href="category_pricing_name=%s">%s</a>.';
 $_['text_vendor_product_category_pricing_status_enabled_edit'] = '<a href="user_id=%d">%s</a> <a href="category_pricing_name=%s">%s</a>.';
-
+$_['text_vendor_product_category_pricing_created_through_xl_sheet'] = '<a href="user_id=%d">%s</a> <a href="category_pricing_name=%s">%s</a>.';
+$_['text_vendor_product_category_pricing_updated_through_xl_sheet'] = '<a href="user_id=%d">%s</a> <a href="category_pricing_name=%s">%s</a>.';
 
 // Column
 $_['column_user'] = 'User';
