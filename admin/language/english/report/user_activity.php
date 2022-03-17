@@ -60,6 +60,9 @@ $_['text_vehicle_delete'] = '<a href="user_id=%d">%s</a> deleted a <a href="vehi
 $_['text_product_enabled'] = '<a href="user_id=%d">%s</a> enabled   <a href="product_id=%d">product</a>.';
 $_['text_product_disabled'] = '<a href="user_id=%d">%s</a> disabled  <a href="product_id=%d">product</a>.';
 
+$_['text_vendor_product_enabled'] = '<a href="user_id=%d">%s</a> enabled   <a href="product_store_id=%d">vendor product</a>.';
+$_['text_vendor_product_disabled'] = '<a href="user_id=%d">%s</a> disabled  <a href="product_store_id=%d">vendor product</a>.';
+
 
 $_['text_Issue_Accepted'] = '<a href="user_id=%d">%s</a> accepted  <a href="feedback_id=%d">Issue</a>.';
 $_['text_Issue_Closed'] = '<a href="user_id=%d">%s</a> closed  <a href="feedback_id=%d">Issue</a>.';
