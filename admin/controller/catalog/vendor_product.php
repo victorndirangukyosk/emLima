@@ -124,6 +124,37 @@ class ControllerCatalogVendorProduct extends Controller {
         $res = $this->model_catalog_vendor_product->addVendorProductToCategoryPrices($data);
         $json = $res;
         $this->load->controller('catalog/product/cacheProductPrices', 75);
+
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $status_text = 'Enabled';
+        $status = 1;
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'category_pricing_name' => $data['price_category'],
+            'description' => $status_text . ' ' . $data['name'] . ' in ' . $data['price_category'] . ' Category',
+            'category_pricing_vendor_product_storeid' => $data['product_store_id'],
+            'product_name' => $data['name'],
+        ];
+        if ($status == 0) {
+            $log->write('vendor product category pricing status edit');
+
+            $this->model_user_user_activity->addActivity('vendor_product_category_pricing_status_disabled_edit', $activity_data);
+
+            $log->write('vendor product category pricing status edit');
+        }
+        if ($status == 1) {
+            $log->write('vendor product category pricing status edit');
+
+            $this->model_user_user_activity->addActivity('vendor_product_category_pricing_status_enabled_edit', $activity_data);
+
+            $log->write('vendor product category pricing status edit');
+        }
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

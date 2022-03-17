@@ -3080,7 +3080,7 @@ class ModelToolExportImport extends Model
         //echo "<pre>";print_r($result);
         if (count($result->rows)) {
             /* Update */
-            $sql = 'UPDATE `'.DB_PREFIX."product_category_prices` SET price='".$data['price']."',product_name='".$data['product_name']."',status='".$data['status']."' WHERE product_store_id = '".$product_store_id."' AND price_category = '".$price_category."' AND  store_id = '".$store_id."' ";
+            $sql = 'UPDATE `'.DB_PREFIX."product_category_prices` SET price='".$data['price']."',product_name='".$this->db->escape($data['product_name'])."',status='".$data['status']."' WHERE product_store_id = '".$product_store_id."' AND price_category = '".$price_category."' AND  store_id = '".$store_id."' ";
             $this->db->query($sql);
             
             $status_text = $data['status'] == 0 ? 'Disabled' : 'Enabled';
@@ -3097,6 +3097,7 @@ class ModelToolExportImport extends Model
         //echo "<pre>";print_r($sql);
         } else {
             /* Add */
+            $data['product_name'] = $this->db->escape($data['product_name']);
             $matstring = implode("','", $data);
             $sql = 'INSERT INTO `'.DB_PREFIX."product_category_prices` (`product_store_id`, `product_id`, `product_name`, `store_id`, `price_category`, `price`, `status`) VALUES ('$matstring')";
             $this->db->query($sql);

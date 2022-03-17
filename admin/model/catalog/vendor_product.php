@@ -1082,10 +1082,10 @@ class ModelCatalogVendorProduct extends Model {
         if (count($res->rows) > 0) {
             $query = 'UPDATE ' . DB_PREFIX . "product_category_prices SET price = '" . $price . "' WHERE product_store_id ='" . (int) $data['product_store_id'] . "' AND price_category='$category'";
         } else {
-            $query = 'INSERT INTO ' . DB_PREFIX . "product_category_prices SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['name'] . "', store_id = 75, price_category = '" . $category . "',price = '" . $price . "', status = 1";
+            $query = 'INSERT INTO ' . DB_PREFIX . "product_category_prices SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $this->db->escape($data['name']) . "', store_id = 75, price_category = '" . $category . "',price = '" . $price . "', status = 1";
         }
         $res = $this->db->query($query);
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_category_prices_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['name'] . "',price_category = '" . $category . "',price = '" . $price . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_by = '" . $this->db->escape($this->user->getId()) . "', updated_by_name = '" . $this->db->escape($this->user->getUserName()) . "'");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_category_prices_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $this->db->escape($data['name']) . "',price_category = '" . $category . "',price = '" . $price . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_by = '" . $this->db->escape($this->user->getId()) . "', updated_by_name = '" . $this->db->escape($this->user->getUserName()) . "'");
         $log = new Log('error.log');
         $log->write($res);
         return $res;
