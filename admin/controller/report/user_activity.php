@@ -148,9 +148,9 @@ class ControllerReportUserActivity extends Controller {
         foreach ($results as $result) {
             $comment = vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
 
-            $log = new Log('error.log');
+            /*$log = new Log('error.log');
             $log->write($this->language->get('text_' . $result['key']));
-            $log->write(unserialize($result['data']));
+            $log->write(unserialize($result['data']));*/
             $find = [
                 'user_id=',
                 'order_id=',
@@ -182,11 +182,11 @@ class ControllerReportUserActivity extends Controller {
                 $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&filter_product_id_from=', 'SSL'),
                 $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&filter_category_price=', 'SSL'),
             ];
-            $log->write('Hi');
+            /*$log->write('Hi');
             $log->write($find);
             $log->write($replace);
             $log->write($comment);
-            $log->write('Hi');
+            $log->write('Hi');*/
 
             $data['activities'][] = [
                 'comment' => str_replace($find, $replace, $comment),

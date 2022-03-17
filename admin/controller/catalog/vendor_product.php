@@ -2382,11 +2382,13 @@ class ControllerCatalogVendorProduct extends Controller {
         $log = new Log('error.log');
         $this->load->model('user/user_activity');
 
+        $status_text = $status == 0 ? 'Disabled' : 'Enabled';
         $activity_data = [
             'user_id' => $this->user->getId(),
             'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
             'user_group_id' => $this->user->getGroupId(),
             'category_pricing_name' => $price_category,
+            'description' => $status_text . ' ' . $product_name . ' in ' . $price_category . ' Category',
             'category_pricing_vendor_product_storeid' => $product_store_id,
             'product_name' => $product_name,
         ];
