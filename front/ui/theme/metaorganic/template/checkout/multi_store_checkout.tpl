@@ -1718,6 +1718,16 @@ $.ajax({
             url: 'index.php?path=checkout/payment_method/clearpaymentmethod',
             dataType: 'json',
             cache: false,
+            beforeSend: function() {
+              $('#button-confirm').prop('disabled', true);
+              $('input[name=\'payment_method\']').attr("disabled",true);
+              $('input[name=\'payment_wallet_method\']').attr("disabled",true);
+            },
+            complete: function() {
+              $('#button-confirm').prop('disabled', false);
+              $('input[name=\'payment_method\']').attr("disabled",false);
+              $('input[name=\'payment_wallet_method\']').attr("disabled",false);
+            },
             success: function (json) {
             }
 
