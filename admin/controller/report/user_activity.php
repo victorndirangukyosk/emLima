@@ -148,9 +148,9 @@ class ControllerReportUserActivity extends Controller {
         foreach ($results as $result) {
             $comment = vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
 
-            /* $log = new Log('error.log');
-              $log->write($this->language->get('text_'.$result['key']));
-              $log->write(unserialize($result['data'])); */
+            $log = new Log('error.log');
+            $log->write($this->language->get('text_' . $result['key']));
+            $log->write(unserialize($result['data']));
             $find = [
                 'user_id=',
                 'order_id=',
@@ -164,7 +164,7 @@ class ControllerReportUserActivity extends Controller {
                 'feedback_id=',
                 'product_id=',
                 'product_store_id=',
-                'category_pricing_product_store_id=',
+                'category_pricing_name=',
             ];
 
             $replace = [
@@ -180,8 +180,13 @@ class ControllerReportUserActivity extends Controller {
                 $this->url->link('sale/customer_feedback', 'token=' . $this->session->data['token'] . '&feedback_id=', 'SSL'),
                 $this->url->link('catalog/general', 'token=' . $this->session->data['token'] . '&filter_product_id=', 'SSL'),
                 $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&filter_product_id_from=', 'SSL'),
-                $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&filter_product_id_from=', 'SSL'),
+                $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&filter_category_price=', 'SSL'),
             ];
+            $log->write('Hi');
+            $log->write($find);
+            $log->write($replace);
+            $log->write($comment);
+            $log->write('Hi');
 
             $data['activities'][] = [
                 'comment' => str_replace($find, $replace, $comment),

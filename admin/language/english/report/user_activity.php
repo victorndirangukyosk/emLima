@@ -67,8 +67,8 @@ $_['text_vendor_product_disabled'] = '<a href="user_id=%d">%s</a> disabled  <a h
 $_['text_Issue_Accepted'] = '<a href="user_id=%d">%s</a> accepted  <a href="feedback_id=%d">Issue</a>.';
 $_['text_Issue_Closed'] = '<a href="user_id=%d">%s</a> closed  <a href="feedback_id=%d">Issue</a>.';
 
-$_['text_vendor_product_category_pricing_status_disabled_edit'] = '<a href="user_id=%d">%s</a> disabled   <a href="product_store_id=%d">product in category pricing</a>.';
-$_['text_vendor_product_category_pricing_status_enabled_edit'] = '<a href="user_id=%d">%s</a> enabled   <a href="product_store_id=%d">product in category pricing</a>.';
+$_['text_vendor_product_category_pricing_status_disabled_edit'] = '<a href="user_id=%d">%s</a> disabled   <a href="category_pricing_name=%s">product in category pricing</a>.';
+$_['text_vendor_product_category_pricing_status_enabled_edit'] = '<a href="user_id=%d">%s</a> enabled   <a href="category_pricing_name=%s">product in category pricing</a>.';
 
 
 // Column

@@ -2386,8 +2386,8 @@ class ControllerCatalogVendorProduct extends Controller {
             'user_id' => $this->user->getId(),
             'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
             'user_group_id' => $this->user->getGroupId(),
-            'product_store_id' => $product_store_id,
-            'pricing_category_name' => $price_category,
+            'category_pricing_name' => $price_category,
+            'category_pricing_vendor_product_storeid' => $product_store_id,
             'product_name' => $product_name,
         ];
         if ($status == 0) {
