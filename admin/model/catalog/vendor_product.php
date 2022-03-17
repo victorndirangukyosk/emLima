@@ -46,6 +46,12 @@ class ModelCatalogVendorProduct extends Model {
         $saturday = in_array("saturday", $data['product_delivery']) ? 1 : 0;
         $sunday = in_array("sunday", $data['product_delivery']) ? 1 : 0;
 
+        $prev_data_query=$this->db->query('Select status from  '.DB_PREFIX."product_to_store WHERE product_store_id = '".(int) $store_product_id."'");
+       
+        if ($prev_data_query->num_rows) {
+            $prev_data_status = $prev_data_query->row['status'];
+        }
+            // echo "<pre>";print_r($prev_data_status);die;
         $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $data['merchant_id'] . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
 
         $this->db->query($query);
@@ -58,6 +64,33 @@ class ModelCatalogVendorProduct extends Model {
                 $this->db->query('INSERT INTO ' . DB_PREFIX . "variation_to_product_store SET  variation_id = '" . $value . "', product_store_id = '" . $store_product_id . "', price = '" . $this->request->post['product_variation']['price'][$prv] . "',special_price = '" . $this->request->post['product_variation']['special_price'][$prv] . "'");
             }
         }
+
+        // Add to activity log
+        if($prev_data_status!==$data['status'])
+        {
+
+           $log = new Log('error.log');
+           $this->load->model('user/user_activity');
+
+           $activity_data = [
+               'user_id' => $this->user->getId(),
+               'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+               'user_group_id' => $this->user->getGroupId(),
+               'product_store_id' => $store_product_id,
+           ];
+                   //  $log->write('product status modified');
+
+           if($data['status']==0)
+           {
+           $this->model_user_user_activity->addActivity('vendor_product_disabled', $activity_data);
+           }
+           else{
+               $this->model_user_user_activity->addActivity('vendor_product_enabled', $activity_data);
+
+           }
+           //  $log->write('product status modified');
+        }
+
         $this->trigger->fire('post.admin.product.edit', $store_product_id);
 
         return $product_id;
