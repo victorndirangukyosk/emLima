@@ -2377,6 +2377,32 @@ class ControllerCatalogVendorProduct extends Controller {
         $price_category = $this->request->get['price_category'];
 
         $this->model_catalog_vendor_product->updateCategoryPricesStatuss($product_store_id, $product_id, $product_name, $status, $price_category);
+
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'product_store_id' => $product_store_id,
+        ];
+        if ($status == 0) {
+            $log->write('vendor product category pricing status edit');
+
+            $this->model_user_user_activity->addActivity('vendor_product_category_pricing_status_disabled_edit', $activity_data);
+
+            $log->write('vendor product category pricing status edit');
+        }
+        if ($status == 1) {
+            $log->write('vendor product category pricing status edit');
+
+            $this->model_user_user_activity->addActivity('vendor_product_category_pricing_status_enabled_edit', $activity_data);
+
+            $log->write('vendor product category pricing status edit');
+        }
+
         $json['warning'] = 'Product Category Pricing Status Updated!';
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -2415,7 +2441,7 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $filter_date_added = null;
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $filter_date_added_end = $this->request->get['filter_date_added_end'];
         } else {
@@ -2457,7 +2483,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
@@ -2593,7 +2619,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
@@ -2624,7 +2650,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
@@ -2678,13 +2704,13 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $filter_store_id = null;
         }
-        
+
         if (isset($this->request->get['filter_date_added'])) {
             $filter_date_added = $this->request->get['filter_date_added'];
         } else {
             $filter_date_added = null;
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $filter_date_added_end = $this->request->get['filter_date_added_end'];
         } else {
@@ -2739,7 +2765,7 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $filter_date_added = null;
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $filter_date_added_end = $this->request->get['filter_date_added_end'];
         } else {
@@ -2785,7 +2811,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
-        
+
         if (isset($this->request->get['sort'])) {
             $url .= '&sort=' . $this->request->get['sort'];
         }
@@ -2915,7 +2941,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
@@ -2946,7 +2972,7 @@ class ControllerCatalogVendorProduct extends Controller {
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
@@ -3000,13 +3026,13 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $filter_store_id = null;
         }
-        
+
         if (isset($this->request->get['filter_date_added'])) {
             $filter_date_added = $this->request->get['filter_date_added'];
         } else {
             $filter_date_added = null;
         }
-        
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $filter_date_added_end = $this->request->get['filter_date_added_end'];
         } else {
