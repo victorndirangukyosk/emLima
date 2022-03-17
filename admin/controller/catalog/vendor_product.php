@@ -2387,6 +2387,8 @@ class ControllerCatalogVendorProduct extends Controller {
             'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
             'user_group_id' => $this->user->getGroupId(),
             'product_store_id' => $product_store_id,
+            'pricing_category_name' => $price_category,
+            'product_name' => $product_name,
         ];
         if ($status == 0) {
             $log->write('vendor product category pricing status edit');

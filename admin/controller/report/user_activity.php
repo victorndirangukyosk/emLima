@@ -12,7 +12,7 @@ class ControllerReportUserActivity extends Controller {
         } else {
             $filter_user = null;
         }
-        
+
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
         } else {
@@ -39,7 +39,7 @@ class ControllerReportUserActivity extends Controller {
 
         if (isset($this->request->get['filter_key'])) {
             $filter_key = $this->request->get['filter_key'];
-        } else { 
+        } else {
             $filter_key = null;
         }
 
@@ -74,7 +74,7 @@ class ControllerReportUserActivity extends Controller {
         if (isset($this->request->get['filter_user'])) {
             $url .= '&filter_user=' . urlencode($this->request->get['filter_user']);
         }
-        
+
         if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name=' . urlencode($this->request->get['filter_name']);
         }
@@ -92,26 +92,26 @@ class ControllerReportUserActivity extends Controller {
         }
 
         if (isset($this->request->get['filter_key'])) {
-            $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
+            $url .= '&filter_key=' . urlencode($this->request->get['filter_key']);
         }
 
 
         if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company='.urlencode($this->request->get['filter_company']);
+            $url .= '&filter_company=' . urlencode($this->request->get['filter_company']);
         }
         if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer='.urlencode($this->request->get['filter_customer']);
+            $url .= '&filter_customer=' . urlencode($this->request->get['filter_customer']);
         }
-        
+
 
         if (isset($this->request->get['filter_order'])) {
-            $url .= '&filter_order='.urlencode($this->request->get['filter_order']);
+            $url .= '&filter_order=' . urlencode($this->request->get['filter_order']);
         }
         if (isset($this->request->get['page'])) {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['breadcrumbs'] = []; 
+        $data['breadcrumbs'] = [];
 
         $data['breadcrumbs'][] = [
             'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
@@ -141,7 +141,6 @@ class ControllerReportUserActivity extends Controller {
             'limit' => 20,
         ];
 
-
         $activity_total = $this->model_report_user->getTotalUserActivities($filter_data);
 
         $results = $this->model_report_user->getUserActivities($filter_data);
@@ -165,6 +164,7 @@ class ControllerReportUserActivity extends Controller {
                 'feedback_id=',
                 'product_id=',
                 'product_store_id=',
+                'category_pricing_product_store_id=',
             ];
 
             $replace = [
@@ -180,6 +180,7 @@ class ControllerReportUserActivity extends Controller {
                 $this->url->link('sale/customer_feedback', 'token=' . $this->session->data['token'] . '&feedback_id=', 'SSL'),
                 $this->url->link('catalog/general', 'token=' . $this->session->data['token'] . '&filter_product_id=', 'SSL'),
                 $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&filter_product_id_from=', 'SSL'),
+                $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&filter_product_id_from=', 'SSL'),
             ];
 
             $data['activities'][] = [
@@ -216,7 +217,7 @@ class ControllerReportUserActivity extends Controller {
         if (isset($this->request->get['filter_user'])) {
             $url .= '&filter_user=' . urlencode($this->request->get['filter_user']);
         }
-        
+
         if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name=' . urlencode($this->request->get['filter_name']);
         }
@@ -234,19 +235,19 @@ class ControllerReportUserActivity extends Controller {
         }
 
         if (isset($this->request->get['filter_key'])) {
-            $url .= '&filter_key='.urlencode($this->request->get['filter_key']);
+            $url .= '&filter_key=' . urlencode($this->request->get['filter_key']);
         }
 
         if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company='.urlencode($this->request->get['filter_company']);
+            $url .= '&filter_company=' . urlencode($this->request->get['filter_company']);
         }
 
         if (isset($this->request->get['filter_customer'])) {
-            $url .= '&filter_customer='.urlencode($this->request->get['filter_customer']);
+            $url .= '&filter_customer=' . urlencode($this->request->get['filter_customer']);
         }
 
         if (isset($this->request->get['filter_order'])) {
-            $url .= '&filter_order='.urlencode($this->request->get['filter_order']);
+            $url .= '&filter_order=' . urlencode($this->request->get['filter_order']);
         }
         $pagination = new Pagination();
         $pagination->total = $activity_total;
@@ -267,7 +268,6 @@ class ControllerReportUserActivity extends Controller {
         $data['filter_company'] = $filter_company;
         $data['filter_customer'] = $filter_customer;
         $data['filter_order'] = $filter_order;
-
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
