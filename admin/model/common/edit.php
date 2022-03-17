@@ -4,6 +4,10 @@ class ModelCommonEdit extends Model
 {
     public function changeStatus($type, $ids, $status, $extension = false)
     {
+
+            // echo "<pre>";print_r($extension);
+            // echo "<pre>";print_r($type);die;
+
         if ($extension) {
             foreach ($ids as $id) {
                 $this->db->query('UPDATE '.DB_PREFIX."setting SET `value` = {$status} WHERE `code` = '{$id}' AND `key` = '{$id}_status'", 'query');
@@ -47,7 +51,7 @@ class ModelCommonEdit extends Model
                 'user_id' => $this->user->getId(),
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
-                'vendor_product' => $id,
+                'product_store_id' => $id,
             ];
                  //  $log->write('product status modified');
 
