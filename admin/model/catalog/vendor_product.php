@@ -46,6 +46,12 @@ class ModelCatalogVendorProduct extends Model {
         $saturday = in_array("saturday", $data['product_delivery']) ? 1 : 0;
         $sunday = in_array("sunday", $data['product_delivery']) ? 1 : 0;
 
+        $prev_data_query=$this->db->query('Select status from  '.DB_PREFIX."product_to_store WHERE product_store_id = '".(int) $store_product_id."'");
+       
+        if ($prev_data_query->num_rows) {
+            $prev_data_status = $prev_data_query->row['status'];
+        }
+            // echo "<pre>";print_r($prev_data_status);die;
         $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $data['merchant_id'] . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
 
         $this->db->query($query);
@@ -58,6 +64,33 @@ class ModelCatalogVendorProduct extends Model {
                 $this->db->query('INSERT INTO ' . DB_PREFIX . "variation_to_product_store SET  variation_id = '" . $value . "', product_store_id = '" . $store_product_id . "', price = '" . $this->request->post['product_variation']['price'][$prv] . "',special_price = '" . $this->request->post['product_variation']['special_price'][$prv] . "'");
             }
         }
+
+        // Add to activity log
+        if($prev_data_status!==$data['status'])
+        {
+
+           $log = new Log('error.log');
+           $this->load->model('user/user_activity');
+
+           $activity_data = [
+               'user_id' => $this->user->getId(),
+               'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+               'user_group_id' => $this->user->getGroupId(),
+               'product_store_id' => $store_product_id,
+           ];
+                   //  $log->write('product status modified');
+
+           if($data['status']==0)
+           {
+           $this->model_user_user_activity->addActivity('vendor_product_disabled', $activity_data);
+           }
+           else{
+               $this->model_user_user_activity->addActivity('vendor_product_enabled', $activity_data);
+
+           }
+           //  $log->write('product status modified');
+        }
+
         $this->trigger->fire('post.admin.product.edit', $store_product_id);
 
         return $product_id;
@@ -67,6 +100,12 @@ class ModelCatalogVendorProduct extends Model {
         $query = $this->db->query('SELECT DISTINCT p.*,pd.name,v.user_id as vendor_id FROM ' . DB_PREFIX . 'product_to_store p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = p.store_id) LEFT JOIN ' . DB_PREFIX . "user v ON (v.user_id = st.vendor_id) WHERE p.product_store_id = '" . (int) $store_product_id . "' AND pd.language_id = '" . (int) $this->config->get('config_language_id') . "'");
 
         $data = $query->row;
+
+         
+        if ($query->num_rows) {
+            $prev_data_status = $query->row['status'];
+        }
+            // echo "<pre>";print_r($prev_data_status);die;
         $log = new Log('error.log');
         $log->write('enabledisablevendorproducts');
         $log->write($data);
@@ -91,6 +130,32 @@ class ModelCatalogVendorProduct extends Model {
             }
         }
         $this->trigger->fire('post.admin.product.edit', $store_product_id);
+
+          // Add to activity log
+          if($prev_data_status!==$status)
+          {
+ 
+             $log = new Log('error.log');
+             $this->load->model('user/user_activity');
+ 
+             $activity_data = [
+                 'user_id' => $this->user->getId(),
+                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                 'user_group_id' => $this->user->getGroupId(),
+                 'product_store_id' => $store_product_id,
+             ];
+                     //  $log->write('product status modified');
+ 
+             if($status==0)
+             {
+             $this->model_user_user_activity->addActivity('vendor_product_disabled', $activity_data);
+             }
+             else{
+                 $this->model_user_user_activity->addActivity('vendor_product_enabled', $activity_data);
+ 
+             }
+             //  $log->write('product status modified');
+          }
 
         return $product_id;
     }
@@ -146,8 +211,11 @@ class ModelCatalogVendorProduct extends Model {
             }
         }
 
-        if (!empty($data['filter_product_id_from'])) {
+        if (!empty($data['filter_product_id_from']) && !empty($data['filter_product_id_to'])) {
             $sql .= " AND ps.product_store_id >= '" . (int) $data['filter_product_id_from'] . "'";
+        }
+        else if (!empty($data['filter_product_id_from']) && empty($data['filter_product_id_to'])) {
+            $sql .= " AND ps.product_store_id = '" . (int) $data['filter_product_id_from'] . "'";
         }
 
         if (!empty($data['filter_category_price_prods'])) {
@@ -264,8 +332,12 @@ class ModelCatalogVendorProduct extends Model {
             }
         }
 
-        if (!empty($data['filter_product_id_from'])) {
+
+        if (!empty($data['filter_product_id_from']) && !empty($data['filter_product_id_to'])) {
             $sql .= " AND ps.product_store_id >= '" . (int) $data['filter_product_id_from'] . "'";
+        }
+        else if (!empty($data['filter_product_id_from']) && empty($data['filter_product_id_to'])) {
+            $sql .= " AND ps.product_store_id = '" . (int) $data['filter_product_id_from'] . "'";
         }
 
         if (!empty($data['filter_product_id_to'])) {
@@ -369,8 +441,13 @@ class ModelCatalogVendorProduct extends Model {
             $sql .= " AND (ps.price = '" . $this->db->escape($data['filter_price']) . "' or ps.special_price = '" . $this->db->escape($data['filter_price']) . "' )";
         }
 
-        if (!empty($data['filter_product_id_from'])) {
+        
+
+        if (!empty($data['filter_product_id_from']) && !empty($data['filter_product_id_to'])) {
             $sql .= " AND ps.product_store_id >= '" . (int) $data['filter_product_id_from'] . "'";
+        }
+        else if (!empty($data['filter_product_id_from']) && empty($data['filter_product_id_to'])) {
+            $sql .= " AND ps.product_store_id = '" . (int) $data['filter_product_id_from'] . "'";
         }
 
         if (!empty($data['filter_product_id_to'])) {
@@ -1005,10 +1082,10 @@ class ModelCatalogVendorProduct extends Model {
         if (count($res->rows) > 0) {
             $query = 'UPDATE ' . DB_PREFIX . "product_category_prices SET price = '" . $price . "' WHERE product_store_id ='" . (int) $data['product_store_id'] . "' AND price_category='$category'";
         } else {
-            $query = 'INSERT INTO ' . DB_PREFIX . "product_category_prices SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['name'] . "', store_id = 75, price_category = '" . $category . "',price = '" . $price . "', status = 1";
+            $query = 'INSERT INTO ' . DB_PREFIX . "product_category_prices SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $this->db->escape($data['name']) . "', store_id = 75, price_category = '" . $category . "',price = '" . $price . "', status = 1";
         }
         $res = $this->db->query($query);
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_category_prices_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $data['name'] . "',price_category = '" . $category . "',price = '" . $price . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_by = '" . $this->db->escape($this->user->getId()) . "', updated_by_name = '" . $this->db->escape($this->user->getUserName()) . "'");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_category_prices_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $data['product_store_id'] . "', product_name = '" . $this->db->escape($data['name']) . "',price_category = '" . $category . "',price = '" . $price . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_by = '" . $this->db->escape($this->user->getId()) . "', updated_by_name = '" . $this->db->escape($this->user->getUserName()) . "'");
         $log = new Log('error.log');
         $log->write($res);
         return $res;

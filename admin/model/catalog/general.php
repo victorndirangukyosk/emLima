@@ -189,28 +189,30 @@ class ModelCatalogGeneral extends Model
 
 
          // Add to activity log
-         if($prev_data_status!==$data['status']){
-
-         $log = new Log('error.log');
-         $this->load->model('user/user_activity');
-
-         $activity_data = [
-             'user_id' => $this->user->getId(),
-             'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
-             'user_group_id' => $this->user->getGroupId(),
-             'product_id' => $product_id,
-         ];
-         $log->write('executive add');
-         if($data['status']==0)
+         if($prev_data_status!==$data['status'])
          {
-         $this->model_user_user_activity->addActivity('product_disabled', $activity_data);
-         }
-         else{
-            $this->model_user_user_activity->addActivity('product_enabled', $activity_data);
 
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'product_id' => $product_id,
+            ];
+                    //  $log->write('product status modified');
+
+            if($data['status']==0)
+            {
+            $this->model_user_user_activity->addActivity('product_disabled', $activity_data);
+            }
+            else{
+                $this->model_user_user_activity->addActivity('product_enabled', $activity_data);
+
+            }
+            //  $log->write('product status modified');
          }
-         $log->write('executive add');
-        }
 
 
         $this->trigger->fire('post.admin.product.edit', $product_id);
