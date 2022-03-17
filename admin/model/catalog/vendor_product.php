@@ -211,8 +211,11 @@ class ModelCatalogVendorProduct extends Model {
             }
         }
 
-        if (!empty($data['filter_product_id_from'])) {
+        if (!empty($data['filter_product_id_from']) && !empty($data['filter_product_id_to'])) {
             $sql .= " AND ps.product_store_id >= '" . (int) $data['filter_product_id_from'] . "'";
+        }
+        else if (!empty($data['filter_product_id_from']) && empty($data['filter_product_id_to'])) {
+            $sql .= " AND ps.product_store_id = '" . (int) $data['filter_product_id_from'] . "'";
         }
 
         if (!empty($data['filter_category_price_prods'])) {
@@ -329,8 +332,12 @@ class ModelCatalogVendorProduct extends Model {
             }
         }
 
-        if (!empty($data['filter_product_id_from'])) {
+
+        if (!empty($data['filter_product_id_from']) && !empty($data['filter_product_id_to'])) {
             $sql .= " AND ps.product_store_id >= '" . (int) $data['filter_product_id_from'] . "'";
+        }
+        else if (!empty($data['filter_product_id_from']) && empty($data['filter_product_id_to'])) {
+            $sql .= " AND ps.product_store_id = '" . (int) $data['filter_product_id_from'] . "'";
         }
 
         if (!empty($data['filter_product_id_to'])) {
@@ -434,8 +441,13 @@ class ModelCatalogVendorProduct extends Model {
             $sql .= " AND (ps.price = '" . $this->db->escape($data['filter_price']) . "' or ps.special_price = '" . $this->db->escape($data['filter_price']) . "' )";
         }
 
-        if (!empty($data['filter_product_id_from'])) {
+        
+
+        if (!empty($data['filter_product_id_from']) && !empty($data['filter_product_id_to'])) {
             $sql .= " AND ps.product_store_id >= '" . (int) $data['filter_product_id_from'] . "'";
+        }
+        else if (!empty($data['filter_product_id_from']) && empty($data['filter_product_id_to'])) {
+            $sql .= " AND ps.product_store_id = '" . (int) $data['filter_product_id_from'] . "'";
         }
 
         if (!empty($data['filter_product_id_to'])) {
