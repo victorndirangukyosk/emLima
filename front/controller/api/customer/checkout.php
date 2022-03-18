@@ -289,7 +289,7 @@ class ControllerApiCustomerCheckout extends Controller {
             $total = $this->request->get['total'];
             if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
                 foreach ($results as $result) {
-                    if ($result['code'] == 'cod' || $result['code'] == 'wallet' || $result['code'] != 'mod' || $result['code'] != 'pesapal' || $result['code'] != 'interswitch') {
+                    if ($result['code'] == 'wallet' || $result['code'] == 'mod' || $result['code'] == 'mpesa' || $result['code'] == 'pesapal' || $result['code'] == 'interswitch') {
                         if ($this->config->get($result['code'] . '_status')) {
                             $this->load->model('payment/' . $result['code']);
 
