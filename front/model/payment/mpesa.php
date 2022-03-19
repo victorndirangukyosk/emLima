@@ -126,6 +126,11 @@ class ModelPaymentMpesa extends Model {
         return $result;
     }
 
+    public function getMpesaTopupNew($request_id) {
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_transaction_id` WHERE `transaction_id` = '" . $this->db->escape($request_id) . "'")->rows;
+        return $result;
+    }
+
     public function getAllMpesaOrder($request_id) {
         $result = $this->db->query('SELECT `order_id` FROM `' . DB_PREFIX . "mpesa_order` WHERE `request_id` = '" . $this->db->escape($request_id) . "'")->rows;
 

@@ -1559,7 +1559,11 @@ class ControllerPaymentMpesa extends Controller {
             }
         }
         //$manifest_id = $this->model_payment_mpesa->getMpesaTopup($stkCallback->MerchantRequestID);
-        $manifest_id = $this->model_payment_mpesa->getMpesaTopup($MpesaReceiptNumber);
+        $manifest_id_res = $this->model_payment_mpesa->getMpesaTopupNew($MpesaReceiptNumber);
+        $log->write('manifest_id_res');
+        $log->write($manifest_id_res);
+        $log->write('div id in transaction id table');
+        
         if (is_array($manifest_id) && count($manifest_id) > 0) {
             return 1;
         } else {
