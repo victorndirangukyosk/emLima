@@ -143,6 +143,15 @@ class ControllerCheckoutPaymentMethod extends Controller {
 
         $log->write('getPaymentTerms');
         $log->write($this->customer->getPaymentTerms());
+
+        if ($this->session->data['adminlogin']) {
+            foreach ($data['payment_methods'] as $wallet_payment_method) {
+                if ($wallet_payment_method['code'] == 'wallet') {
+                    unset($data['payment_methods'][$wallet_payment_method['code']]);
+                }
+            }
+        }
+
         if ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) {
             foreach ($data['payment_methods'] as $payment_method) {
                 if ($payment_method['code'] == 'wallet') {
