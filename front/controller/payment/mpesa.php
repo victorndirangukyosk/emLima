@@ -1544,7 +1544,22 @@ class ControllerPaymentMpesa extends Controller {
         $log = new Log('error.log');
         $MpesaReceiptNumber = NULL;
         $this->load->model('payment/mpesa');
-        $manifest_id = $this->model_payment_mpesa->getMpesaTopup($stkCallback->MerchantRequestID);
+        $manifest_id = $this->model_payment_mpesa->getMpesaOrders($stkCallback->MerchantRequestID);
+        if (is_array($manifest_id) && count($manifest_id) > 0) {
+            foreach ($manifest_id as $manifest_ids) {
+                if (isset($stkCallback->CallbackMetadata->Item)) {
+                    foreach ($stkCallback->CallbackMetadata->Item as $key => $value) {
+                        $log->write($value);
+
+                        if ('MpesaReceiptNumber' == $value->Name) {
+                            $MpesaReceiptNumber = $value->Value;
+                        }
+                    }
+                }
+            }
+        }
+        //$manifest_id = $this->model_payment_mpesa->getMpesaTopup($stkCallback->MerchantRequestID);
+        $manifest_id = $this->model_payment_mpesa->getMpesaTopup($MpesaReceiptNumber);
         if (is_array($manifest_id) && count($manifest_id) > 0) {
             return 1;
         } else {
