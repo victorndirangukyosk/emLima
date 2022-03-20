@@ -172,9 +172,10 @@ class ModelPaymentMpesa extends Model {
         $log->write('result');
         $log->write($result->rows);
         $log->write('result');
-        if (count($result->rows) > 0) {
+        $res = $result->rows;
+        /*if (count($result->rows) > 0) {
             $res = $result->rows[$result->num_rows - 1];
-        }
+        }*/
         //  echo '<pre>';print_r($res);exit;
         return $res;
     }
