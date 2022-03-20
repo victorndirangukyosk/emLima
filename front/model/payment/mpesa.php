@@ -164,7 +164,7 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function getMpesaByCustomerId($customer_id) {
-        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "mpesa_order` WHERE `order_id` = 0 and customer_id='" . $this->db->escape($customer_id) . "' order by date_added desc");
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "mpesa_order` WHERE `order_id` = 0 and customer_id='" . $this->db->escape($customer_id) . "' order by date_added asc");
         $log = new Log('error.log');
         // echo '<pre>';print_r('SELECT * FROM `' . DB_PREFIX . "mpesa_order` WHERE `order_id` = 0 and customer_id='" . $this->db->escape($customer_id) . "' order by date_added desc");exit;
 

@@ -778,6 +778,9 @@ class ControllerPaymentMpesa extends Controller {
             if ($this->request->post['payment_type'] == 'topup') {
 
                 $mpesaDetails = $this->model_payment_mpesa->getMpesaByCustomerId($this->customer->getId());
+                $log->write('GET CUSTOMER RECENT MPESA REQUESTS');
+                $log->write($mpesaDetails);
+                $log->write('GET CUSTOMER RECENT MPESA REQUESTS');
 
                 $live = true;
 
@@ -797,11 +800,11 @@ class ControllerPaymentMpesa extends Controller {
                     $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
 
                     // Void the order first
-                    $log->write('STKPushSimulation');
+                    $log->write('STKPushSimulation WALLET');
                     $log->write($stkPushSimulation);
 
                     $stkPushSimulation = json_decode($stkPushSimulation);
-                    $log->write('STKPushSimulation JSON ARRAY');
+                    $log->write('STKPushSimulation WALLET JSON ARRAY');
                     $log->write($stkPushSimulation);
                     if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
                         $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
