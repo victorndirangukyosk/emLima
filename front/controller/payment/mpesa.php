@@ -313,9 +313,7 @@ class ControllerPaymentMpesa extends Controller {
                     $this->session->data['mpesa_payments_request'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID);
                     $this->session->data['mpesa_payments_response'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID);
                 } else {
-                    $log->write('WALLET_TOPUP');
-                    $log->write($stkPushSimulation);
-                    $log->write('WALLET_TOPUP');
+
                     $this->model_payment_mpesa->addOrder(0, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, $this->customer->getId(), $amount);
                     $this->session->data['mpesa_topups_request'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID, 'merchant_request_id' => $stkPushSimulation->MerchantRequestID);
 // $this->session->data['mpesa_topups_response'] = array('checkout_request_id' => $stkPushSimulation->CheckoutRequestID);
@@ -799,11 +797,11 @@ class ControllerPaymentMpesa extends Controller {
                     $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
 
                     // Void the order first
-                    $log->write('STKPushSimulation');
+                    $log->write('STKPushSimulation WALLET');
                     $log->write($stkPushSimulation);
 
                     $stkPushSimulation = json_decode($stkPushSimulation);
-                    $log->write('STKPushSimulation JSON ARRAY');
+                    $log->write('STKPushSimulation WALLET JSON ARRAY');
                     $log->write($stkPushSimulation);
                     if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
                         $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
