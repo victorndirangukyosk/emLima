@@ -778,6 +778,9 @@ class ControllerPaymentMpesa extends Controller {
             if ($this->request->post['payment_type'] == 'topup') {
 
                 $mpesaDetails = $this->model_payment_mpesa->getMpesaByCustomerId($this->customer->getId());
+                $log->write('GET CUSTOMER RECENT MPESA REQUESTS');
+                $log->write($mpesaDetails);
+                $log->write('GET CUSTOMER RECENT MPESA REQUESTS');
 
                 $live = true;
 
