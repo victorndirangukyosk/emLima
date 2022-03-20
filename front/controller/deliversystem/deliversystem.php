@@ -769,7 +769,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $log->write('above is merchant request');
 
         $manifest_ids = $this->model_payment_mpesa->getMpesaOrders($stkCallback->stkCallback->MerchantRequestID);
-        $log->write('order_id' . $manifest_ids);
+        $log->write('order_id' . json_encode($manifest_ids));
 
         if (count($manifest_ids) == 0 || $manifest_ids == NULL) {
             $manifest_id_customer = $this->model_payment_mpesa->getMpesaCustomer($stkCallback->stkCallback->MerchantRequestID);
