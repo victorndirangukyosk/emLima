@@ -355,7 +355,16 @@ $(document).ready(function() {
                                                     <i class="fa fa-money"></i><?= $text_cash ?> </a>
                                                 </li>
                                             <?php } ?>
-                                            
+                                            <?php if($this->config->get('pezesha_status') && ($this->customer->getCustomerPezeshaId() <= 0 || $this->customer->getCustomerPezeshaId() == NULL) && $this->customer->getCustomerPezeshauuId() == NULL && empty($_SESSION['parent'])) { ?>
+                                            <li role="presentation">
+                                                    <?php if(strpos( $register_pezesha,$_SERVER["REQUEST_URI"]) !== false) { ?>
+                                                        <a href="<?php echo $register_pezesha; ?>" class="active">
+                                                    <?php } else { ?>
+                                                        <a href="<?php echo $register_pezesha; ?>">
+                                                    <?php } ?>
+                                                    <i class="fa fa-bank"></i>Apply For Pezesha</a>
+                                            </li>
+                                            <?php } ?>
                                             <?php if($this->config->get('pezesha_status') && $this->customer->getCustomerPezeshaId() > 0 && $this->customer->getCustomerPezeshauuId() != NULL) { ?>
                                             <li role="presentation">
                                                     <?php if(strpos( $pezesha,$_SERVER["REQUEST_URI"]) !== false) { ?>
