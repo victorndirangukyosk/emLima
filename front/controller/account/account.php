@@ -280,7 +280,8 @@ class ControllerAccountAccount extends Controller {
         $data['entry_confirmpassword'] = $this->language->get('entry_confirmpassword');
 
         $data['entry_firstname'] = $this->language->get('entry_firstname');
-        $data['entry_national_id'] = 'National ID';
+        $data['entry_national_id'] = $this->language->get('entry_national_id');
+        $data['entry_date_of_birth'] = $this->language->get('entry_date_of_birth');
         $data['entry_lastname'] = $this->language->get('entry_lastname');
         $data['entry_email'] = $this->language->get('entry_email');
         $data['entry_telephone'] = $this->language->get('entry_telephone');
