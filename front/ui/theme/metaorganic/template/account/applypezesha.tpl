@@ -13,9 +13,11 @@
                 <div class="col-md-6" id="pay_with" >
                     Copy Of Certificate Of Incorporation 
                 </div>
-                <div class="col-md-6" id="pay_with" >
+                <div class="col-md-4" id="pay_with" >
                     <input id="po" name="po" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
-                </div>                                  
+                </div>
+                <div class="col-md-4" id="pay_with" >
+                </div>
 
             </div>
 
@@ -23,19 +25,22 @@
                 <div class="col-md-6" id="pay_with" >
                     Copy Of Bussiness Operating Permit
                 </div>
-                <div class="col-md-6" id="pay_with" >
+                <div class="col-md-4" id="pay_with" >
                      <input id="po" name="po" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>                                  
-
+                <div class="col-md-4" id="pay_with" >
+                </div>
             </div>
 
             <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
                 <div class="col-md-6" id="pay_with" >
                     Copy Of ID Of Bussiness Owner / Managing Director
                 </div>
-                <div class="col-md-6" id="pay_with" >
+                <div class="col-md-4" id="pay_with" >
                      <input id="po" name="po" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
-                </div>                                  
+                </div>
+                <div class="col-md-4" id="pay_with" >
+                </div>
             </div>
 
             <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;" id="loan_offers">
