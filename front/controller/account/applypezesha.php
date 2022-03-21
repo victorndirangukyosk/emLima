@@ -132,7 +132,7 @@ class ControllerAccountApplypezesha extends Controller {
                 'ACL' => 'private',
             ]);
             $this->load->model('account/customer');
-            //$this->model_account_customer->SaveCustomerFiles($this->customer->getId(), '', 'PEZESHA');
+            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $result['ObjectURL'], 'PEZESHA');
             $log->write($result['ObjectURL']);
         } catch (S3Exception $e) {
             $log = new Log('error.log');
@@ -187,8 +187,8 @@ class ControllerAccountApplypezesha extends Controller {
                 'ACL' => 'private',
             ]);
             $this->load->model('account/customer');
-            //$this->model_account_customer->SaveCustomerFiles($this->customer->getId(), '', 'PEZESHA');
-            $log->write($result);
+            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $result['ObjectURL'], 'PEZESHA');
+            $log->write($result['ObjectURL']);
         } catch (S3Exception $e) {
             $log = new Log('error.log');
             $log->write($e->getMessage());
@@ -242,8 +242,8 @@ class ControllerAccountApplypezesha extends Controller {
                 'ACL' => 'private',
             ]);
             $this->load->model('account/customer');
-            //$this->model_account_customer->SaveCustomerFiles($this->customer->getId(), '', 'PEZESHA');
-            $log->write('result');
+            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $result['ObjectURL'], 'PEZESHA');
+            $log->write($result['ObjectURL']);
             $log->write($result);
             $log->write('result');
         } catch (S3Exception $e) {
