@@ -131,6 +131,9 @@ class ControllerAccountApplypezesha extends Controller {
                 'SourceFile' => $temp_file_location,
                 'ACL' => 'private',
             ]);
+            $this->load->model('account/customer');
+            //$this->model_account_customer->SaveCustomerFiles($this->customer->getId(), '', 'PEZESHA');
+            $log->write($result);
         } catch (S3Exception $e) {
             $log = new Log('error.log');
             $log->write($e->getMessage());
