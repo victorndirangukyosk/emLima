@@ -4665,12 +4665,17 @@ class ModelSaleOrder extends Model {
         return $query->row['total'];
     }
 
-    public function addOrderProductToMissingProduct($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model) {
-        $sql = 'Select * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
-
+    public function addOrderProductToMissingProduct($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model, $order_id) {
+        $sql = 'Select * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "' AND order_id = '" . (int) $order_id . "'";
         $query = $this->db->query($sql);
-
         $productinfo = $query->row;
+
+        if ($productinfo == NULL) {
+            $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_product_id = '" . (int) $order_product_id . "' AND order_id = '" . (int) $order_id . "'";
+            $query = $this->db->query($sql);
+            $productinfo = $query->row;
+        }
+
         if ($productinfo != null) {
             $sql = 'Delete FROM ' . DB_PREFIX . "missing_products WHERE order_id = '" . (int) $productinfo['order_id'] . "' and product_store_id = '" . (int) $productinfo['product_id'] . "'";
 
@@ -4689,14 +4694,14 @@ class ModelSaleOrder extends Model {
         }
     }
 
-    public function addOrderProductToMissingProducts($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model) {
+    public function addOrderProductToMissingProducts($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model, $order_id) {
         $log = new Log('error.log');
-        $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "' AND order_id = '" . (int) $order_id . "'";
         $query = $this->db->query($sql);
         $productinfo = $query->row;
 
         if ($productinfo == NULL) {
-            $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
+            $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_product_id = '" . (int) $order_product_id . "' AND order_id = '" . (int) $order_id . "'";
             $query = $this->db->query($sql);
             $productinfo = $query->row;
         }
