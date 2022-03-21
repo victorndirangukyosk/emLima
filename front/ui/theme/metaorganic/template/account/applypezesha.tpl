@@ -137,28 +137,26 @@
 </script>
 <?php } ?>
 <script type="text/javascript">
-    $('#pezesha-button-loan').on('click', function () {
-        $.ajax({
-            type: 'get',
-            url: 'index.php?path=payment/pezesha/loanoffers',
-            dataType: 'html',
+$('#copy_of_certificate_of_incorporation_button').on('click', function(e) {
+    e.preventDefault();
+    var file_data = $('#copy_of_certificate_of_incorporation').prop('files')[0];
+    var form_data = new FormData();
+    form_data.append("file", file_data);
+    alert(form_data);
+    $.ajax({
+            type: 'post',
+            url: 'index.php?path=account/applypezesha/pezeshafiles',
+            data: form_data,
             cache: false,
-            success: function (html) {
-                $('#loan_offers').html(html);
+            contentType: false,
+            processData: false,
+            success: function (response) {
+            console.log(response);
             }
 
-        });
-
     });
+});    
 </script>
-
-
-<?php if($redirect_coming) { ?>
-<script type="text/javascript">
-    $('#save-button').click();
-</script>
-<?php } ?>
-
 <style>
     .option_pay {
         margin-top:-3px !important;
