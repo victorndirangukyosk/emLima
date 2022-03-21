@@ -16,7 +16,8 @@
                 <div class="col-md-4" id="pay_with" >
                     <input id="po" name="po" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>
-                <div class="col-md-4" id="pay_with" >
+                <div class="col-md-2" id="pay_with">
+                    <button type="button" class="btn btn-primary">UPLOAD</button>
                 </div>
 
             </div>
@@ -28,7 +29,8 @@
                 <div class="col-md-4" id="pay_with" >
                      <input id="po" name="po" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>                                  
-                <div class="col-md-4" id="pay_with" >
+                <div class="col-md-2" id="pay_with">
+                    <button type="button" class="btn btn-primary">UPLOAD</button>
                 </div>
             </div>
 
@@ -39,7 +41,8 @@
                 <div class="col-md-4" id="pay_with" >
                      <input id="po" name="po" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>
-                <div class="col-md-4" id="pay_with" >
+                <div class="col-md-2" id="pay_with">
+                    <button type="button" class="btn btn-primary">UPLOAD</button>
                 </div>
             </div>
 
