@@ -96,7 +96,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+            <div class="form-group" <?php if(!empty($_SESSION['parent']) && $_SESSION['parent'] > 0) { ?> style="display:none"  <?php } ?> >
             <label class="col-sm-3 control-label" for="input-date-added"><?php echo $entry_dob; ?></label>
             <div class="col-sm-6 col-xs-12">
                 <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="<?php echo $entry_dob; ?>" data-date-format="dd/mm/YYYY" id="input-date-added" class="form-control date" />
@@ -118,7 +118,7 @@
                 </div>
             </div>
             
-            <div class="form-group">
+            <div class="form-group" <?php if(!empty($_SESSION['parent']) && $_SESSION['parent'] > 0) { ?> style="display:none"  <?php } ?>>
                 <label for="name" class="col-sm-3 control-label"><?= $entry_kra ?></label>
                 <div class="col-sm-6">
                     <input type="text" value="<?php echo $kra; ?>" size="30" placeholder="KRA PIN" value="<?php echo $kra ?>" name="kra" maxlength="100" id="kra" class="form-control input-lg" />
@@ -142,7 +142,7 @@
           </div> -->
           <input type="hidden" name="tax" id="tax_number" value="" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" />
 
-          <div class="form-group">
+          <div class="form-group" <?php if(!empty($_SESSION['parent']) && $_SESSION['parent'] > 0) { ?> style="display:none"  <?php } ?>>
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>
             <div class="col-sm-6 col-xs-12">
                 <label class="control control--radio" style="display: initial !important;"> 
@@ -179,7 +179,7 @@
             </div>
           </div>
           
-          <div class="form-group">
+          <div class="form-group" <?php if(!empty($_SESSION['parent']) && $_SESSION['parent'] > 0) { ?> style="display:none"  <?php } ?>>
             <label class="col-sm-3 control-label" for="input-nationalid"><?php echo $entry_national_id; ?></label>
             <div class="col-sm-6 col-xs-12">
                 <input type="text" name="national_id" id="national_id" placeholder="<?php echo $entry_national_id; ?>" value="<?php echo $national_id; ?>" class="form-control input-lg" />
