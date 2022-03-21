@@ -861,7 +861,7 @@ class ControllerAccountAccount extends Controller {
         $change_pass_count = $this->model_account_changepass->check_customer_previous_password($this->customer->getId(), $this->request->post['password']);
         $change_current_pass_count = $this->model_account_changepass->check_customer_current_password($this->customer->getId(), $this->request->post['password']);
 
-        if ($change_pass_count > 0 || $change_current_pass_count > 0) {
+        if ($this->request->post['password'] != NULL && ($change_pass_count > 0 || $change_current_pass_count > 0)) {
             $this->error['password'] = 'Password must not match previous 3 passwords';
         }
 
