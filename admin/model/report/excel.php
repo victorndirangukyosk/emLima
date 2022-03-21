@@ -11659,4 +11659,97 @@ class ModelReportExcel extends Model {
         }
     }
 
+
+    public function download_customer_order_monthly_average_excel($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Customers Monthly Average')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:H2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Customers Monthly Average order value');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:H2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Customer ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Customer');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Company');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Payment Terms');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Monthly Average');
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+            
+            // Fetching the table data
+            $row = 5;
+
+            $i = 1;
+            foreach ($data as $result) {
+                
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['customer']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['payment_terms']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['monthly_average']);
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+            header('Content-Disposition: attachment;filename="Customer_Orders_Monthly Average.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
 }
