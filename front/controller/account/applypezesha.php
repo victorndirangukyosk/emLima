@@ -243,7 +243,7 @@ class ControllerAccountApplypezesha extends Controller {
             ]);
             $this->load->model('account/customer');
             //$this->model_account_customer->SaveCustomerFiles($this->customer->getId(), '', 'PEZESHA');
-            $log->write($result);
+            $log->write($result['ObjectURL']);
         } catch (S3Exception $e) {
             $log = new Log('error.log');
             $log->write($e->getMessage());
