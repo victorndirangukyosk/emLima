@@ -176,7 +176,7 @@ class ControllerSaleEditinvoice extends Controller {
                     }
 
                     $variations = $this->model_sale_order->getProductVariationsNew($product['name'], 75, $order_id);
-                    $missed_quantity = $this->model_sale_order->getMissingProductQuantityByProductIdOrderId($order_id, $product['product_id'], 1);
+                    $missed_quantity = $this->model_sale_order->getMissingProductQuantityByProductIdOrderId($order_id, $product['product_id'], 0);
                     $required_quantity = isset($missed_quantity) && count($missed_quantity) > 0 ? $missed_quantity['quantity_required'] : 0;
                     $product_data[] = [
                         'name' => $product['name'],
