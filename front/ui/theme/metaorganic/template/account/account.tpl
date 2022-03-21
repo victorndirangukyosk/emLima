@@ -172,7 +172,7 @@
           <div class="form-group">
             <label class="col-sm-3 control-label" for="input-nationalid"><?php echo $entry_national_id; ?></label>
             <div class="col-sm-6 col-xs-12">
-                <input type="text" name="national_id" id="national_id" placeholder="<?php echo $entry_national_id; ?>" class="form-control input-lg" />
+                <input type="text" name="national_id" id="national_id" placeholder="<?php echo $entry_national_id; ?>" value="<?php echo $national_id; ?>" class="form-control input-lg" />
               <?php if ($error_national_id) { ?>
               <div class="text-danger"><?php echo $error_national_id; ?></div>
               <?php } ?>

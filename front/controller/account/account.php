@@ -406,6 +406,12 @@ class ControllerAccountAccount extends Controller {
         } else {
             $data['error_dob'] = '';
         }
+        
+        if (isset($this->error['national_id'])) {
+            $data['error_national_id'] = $this->error['national_id'];
+        } else {
+            $data['error_dob'] = '';
+        }
 
         if (isset($this->error['custom_field'])) {
             $data['error_custom_field'] = $this->error['custom_field'];
@@ -438,13 +444,21 @@ class ControllerAccountAccount extends Controller {
         } else {
             $data['dob'] = '01/01/1990';
         }
-
+        
         if (isset($this->request->post['firstname'])) {
             $data['firstname'] = $this->request->post['firstname'];
         } elseif (!empty($customer_info)) {
             $data['firstname'] = $customer_info['firstname'];
         } else {
             $data['firstname'] = '';
+        }
+
+        if (isset($this->request->post['national_id'])) {
+            $data['national_id'] = $this->request->post['national_id'];
+        } elseif (!empty($customer_info)) {
+            $data['national_id'] = $customer_info['national_id'];
+        } else {
+            $data['national_id'] = '';
         }
 
         if (isset($this->request->post['companyname'])) {
@@ -809,8 +823,8 @@ class ControllerAccountAccount extends Controller {
           $this->error['error_tax'] = $this->language->get( 'error_tax' );
           } */
         
-        if ((utf8_strlen(trim($this->request->post['national_id'])) < 1) || (utf8_strlen(trim($this->request->post['national_id'])) > 32)) {
-            $this->error['national_id'] = $this->language->get('error_national_id');
+        if ($this->request->post['national_id'] != NULL && !preg_match('/^[0-9]{8}$/', $this->request->post['national_id'])) {
+            $this->error['national_id'] = $this->language->get('error_invalid_national_id');
         }
 
         if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 6) || (utf8_strlen($this->request->post['password']) > 20)) {
