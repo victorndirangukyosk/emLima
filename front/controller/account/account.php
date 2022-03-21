@@ -831,7 +831,7 @@ class ControllerAccountAccount extends Controller {
             $this->error['dob'] = $this->language->get('error_invalid_dob');
         }
 
-        if (utf8_strlen($this->request->post['confirmpassword']) >= 1 && (utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password'] < 6) || utf8_strlen($this->request->post['password']) > 20)) {
+        if (utf8_strlen($this->request->post['confirmpassword']) >= 1 && utf8_strlen($this->request->post['password']) >= 1 && (utf8_strlen($this->request->post['password'] < 6) && utf8_strlen($this->request->post['password']) > 20)) {
             $this->error['password'] = $this->language->get('error_password');
         }
 
