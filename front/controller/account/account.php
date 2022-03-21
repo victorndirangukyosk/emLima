@@ -406,7 +406,7 @@ class ControllerAccountAccount extends Controller {
         } else {
             $data['error_dob'] = '';
         }
-        
+
         if (isset($this->error['national_id'])) {
             $data['error_national_id'] = $this->error['national_id'];
         } else {
@@ -444,7 +444,7 @@ class ControllerAccountAccount extends Controller {
         } else {
             $data['dob'] = NULL;
         }
-        
+
         if (isset($this->request->post['firstname'])) {
             $data['firstname'] = $this->request->post['firstname'];
         } elseif (!empty($customer_info)) {
@@ -822,24 +822,24 @@ class ControllerAccountAccount extends Controller {
         /* if (strpos($this->request->post['fax'], '#') !== false || empty($this->request->post['fax'])) {
           $this->error['error_tax'] = $this->language->get( 'error_tax' );
           } */
-        
+
         if ($this->request->post['national_id'] != NULL && !preg_match('/^[0-9]{8}$/', $this->request->post['national_id'])) {
             $this->error['national_id'] = $this->language->get('error_invalid_national_id');
         }
-        
+
         if ($this->request->post['dob'] != NULL && !preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $this->request->post['dob'])) {
             $this->error['dob'] = $this->language->get('error_invalid_dob');
         }
 
-        if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 6) || (utf8_strlen($this->request->post['password']) > 20)) {
+        if (utf8_strlen($this->request->post['confirmpassword']) >= 1 && (utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password'] < 6) || utf8_strlen($this->request->post['password']) > 20)) {
             $this->error['password'] = $this->language->get('error_password');
         }
 
-        if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
+        if (utf8_strlen($this->request->post['password']) >= 1 && !preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
             $this->error['password'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
         }
 
-        if ((utf8_strlen($this->request->post['confirmpassword']) >= 1) && (utf8_strlen($this->request->post['confirmpassword']) < 6) || (utf8_strlen($this->request->post['confirmpassword']) > 20)) {
+        if (utf8_strlen($this->request->post['password']) >= 1 && (utf8_strlen($this->request->post['confirmpassword']) >= 1) && (utf8_strlen($this->request->post['confirmpassword']) < 6 || utf8_strlen($this->request->post['confirmpassword']) > 20)) {
             $this->error['confirmpassword'] = $this->language->get('error_confirmpassword');
         }
 
