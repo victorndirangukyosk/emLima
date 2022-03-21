@@ -4665,7 +4665,7 @@ class ModelSaleOrder extends Model {
         return $query->row['total'];
     }
 
-    public function addOrderProductToMissingProduct($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model, $order_id) {
+    public function addOrderProductToMissingProduct($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model, $order_id, $removed_from_invoice) {
         $sql = 'Select * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "' AND order_id = '" . (int) $order_id . "'";
         $query = $this->db->query($sql);
         $productinfo = $query->row;
@@ -4686,7 +4686,7 @@ class ModelSaleOrder extends Model {
 
             // echo "<pre>";print_r($required_quantity);die;
 
-            $sql = 'INSERT into ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', name = '" . $name . "', unit = '" . $unit . "', product_note = '" . $product_note . "', model = '" . $model . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', created_by = '" . $this->user->getId() . "'";
+            $sql = 'INSERT into ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', name = '" . $name . "', unit = '" . $unit . "', product_note = '" . $product_note . "', model = '" . $model . "', removed_from_invoice = '" . $removed_from_invoice . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', created_by = '" . $this->user->getId() . "'";
             //  echo "<pre>";print_r($sql);die;
 
 
@@ -4694,7 +4694,7 @@ class ModelSaleOrder extends Model {
         }
     }
 
-    public function addOrderProductToMissingProducts($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model, $order_id) {
+    public function addOrderProductToMissingProducts($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model, $order_id, $removed_from_invoice) {
         $log = new Log('error.log');
         $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "' AND order_id = '" . (int) $order_id . "'";
         $query = $this->db->query($sql);
@@ -4717,11 +4717,11 @@ class ModelSaleOrder extends Model {
                 $required_quantity = $productinfo['quantity'];
             }
             if ($missing_product_info != NULL) {
-                $sql3 = 'UPDATE ' . DB_PREFIX . "missing_products SET quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', name = '" . $name . "', unit = '" . $unit . "', product_note = '" . $product_note . "', model = '" . $model . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_by = '" . $this->user->getId() . "' WHERE id = '" . $missing_product_info['id'] . "'";
+                $sql3 = 'UPDATE ' . DB_PREFIX . "missing_products SET quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', name = '" . $name . "', unit = '" . $unit . "', product_note = '" . $product_note . "', model = '" . $model . "', removed_from_invoice = '" . $removed_from_invoice . "',  updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_by = '" . $this->user->getId() . "' WHERE id = '" . $missing_product_info['id'] . "'";
 
                 $query3 = $this->db->query($sql3);
             } else {
-                $sql4 = 'INSERT INTO ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', name = '" . $name . "', unit = '" . $unit . "', product_note = '" . $product_note . "', model = '" . $model . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', created_by = '" . $this->user->getId() . "'";
+                $sql4 = 'INSERT INTO ' . DB_PREFIX . "missing_products SET order_id = '" . $productinfo['order_id'] . "', product_store_id = '" . $productinfo['product_id'] . "' , product_id = '" . $productinfo['general_product_id'] . "', quantity = '" . $productinfo['quantity'] . "', price = '" . $productinfo['price'] . "', tax = '" . $productinfo['tax'] . "', total = '" . $productinfo['price'] * $required_quantity . "',  quantity_required = '" . $required_quantity . "', name = '" . $name . "', unit = '" . $unit . "', product_note = '" . $product_note . "', model = '" . $model . "', removed_from_invoice = '" . $removed_from_invoice . "', created_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_at = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', created_by = '" . $this->user->getId() . "'";
 
                 $query4 = $this->db->query($sql4);
             }
