@@ -192,17 +192,17 @@ class ControllerAccountAccount extends Controller {
         $this->load->model('account/changepass');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
-            // $date = $this->request->post['dob'];
+            $date = $this->request->post['dob'];
 
             $log = new Log('error.log');
             $log->write('account edit');
 
-            // if(isset($date)) {
-            //     $date = DateTime::createFromFormat('d/m/Y', $date);
-            //     $this->request->post['dob'] = $date->format('Y-m-d');
-            // } else {
-            $this->request->post['dob'] = null;
-            // }
+            if (isset($date)) {
+                $date = DateTime::createFromFormat('d/m/Y', $date);
+                $this->request->post['dob'] = $date->format('Y-m-d');
+            } else {
+                $this->request->post['dob'] = null;
+            }
 
             $this->model_account_customer->editCustomer($this->request->post);
 
