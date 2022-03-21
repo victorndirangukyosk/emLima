@@ -108,12 +108,22 @@
           
   
 
- <div class="form-group  has-feedback">
+            <div class="form-group  has-feedback">
                 <label for="name" class="col-sm-3 control-label"><?= $entry_fax ?></label>
                 <div class="col-sm-6">
                     <input type="text" value="<?php echo $fax; ?>" size="30" placeholder="Tax No" name="fax" maxlength="100" id="name" class="form-control input-lg" />
                      <?php if(isset($error_fax) && $error_fax) { ?>
                       <div class="text-danger"><?php echo $error_fax; ?></div>
+                      <?php } ?>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="name" class="col-sm-3 control-label"><?= $entry_kra ?></label>
+                <div class="col-sm-6">
+                    <input type="text" value="<?php echo $kra; ?>" size="30" placeholder="KRA PIN" value="<?php echo $kra ?>" name="kra" maxlength="100" id="kra" class="form-control input-lg" />
+                     <?php if(isset($error_kra) && $error_kra) { ?>
+                      <div class="text-danger"><?php echo $error_kra; ?></div>
                       <?php } ?>
                 </div>
             </div>

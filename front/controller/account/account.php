@@ -296,7 +296,7 @@ class ControllerAccountAccount extends Controller {
         $data['button_save'] = $this->language->get('button_save');
 
         $data['entry_gender'] = $this->language->get('entry_gender');
-
+        $data['entry_kra'] = $this->language->get('entry_kra');
         $data['text_my_account'] = $this->language->get('text_my_account');
         $data['text_my_orders'] = $this->language->get('text_my_orders');
         $data['text_my_newsletter'] = $this->language->get('text_my_newsletter');
@@ -400,6 +400,12 @@ class ControllerAccountAccount extends Controller {
         } else {
             $data['error_tax'] = '';
         }
+        
+        if (isset($this->error['kra'])) {
+            $data['error_kra'] = $this->error['kra'];
+        } else {
+            $data['error_kra'] = '';
+        }
 
         if (isset($this->error['dob'])) {
             $data['error_dob'] = $this->error['dob'];
@@ -459,6 +465,14 @@ class ControllerAccountAccount extends Controller {
             $data['national_id'] = $customer_info['national_id'];
         } else {
             $data['national_id'] = '';
+        }
+        
+        if (isset($this->request->post['kra'])) {
+            $data['kra'] = $this->request->post['kra'];
+        } elseif (!empty($customer_info)) {
+            $data['kra'] = $customer_info['kra'];
+        } else {
+            $data['kra'] = '';
         }
 
         if (isset($this->request->post['companyname'])) {
@@ -825,6 +839,10 @@ class ControllerAccountAccount extends Controller {
 
         if ($this->request->post['national_id'] != NULL && !preg_match('/^[0-9]{8}$/', $this->request->post['national_id'])) {
             $this->error['national_id'] = $this->language->get('error_invalid_national_id');
+        }
+        
+        if ($this->request->post['kra'] != NULL && !preg_match('/^[A-Z0-9]{11}$/', $this->request->post['kra'])) {
+            $this->error['kra'] = $this->language->get('error_invalid_kra');
         }
 
         if ($this->request->post['dob'] != NULL && !preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $this->request->post['dob'])) {
