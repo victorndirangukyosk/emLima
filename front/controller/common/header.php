@@ -477,6 +477,7 @@ class ControllerCommonHeader extends Controller {
         $data['contactus_modal'] = $this->load->controller('information/contact');
         $data['reportissue_modal'] = $this->load->controller('information/reportissue');
         $data['wallet_url'] = $this->url->link('account/credit', '', 'SSL');
+        $data['register_pezesha'] = $this->url->link('account/applypezesha', '', 'SSL');
         $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['pezesha_loans'] = $this->url->link('account/pezeshaloans', '', 'SSL');
         $data['wallet_amount'] = $this->load->controller('account/credit/getWalletTotal');
