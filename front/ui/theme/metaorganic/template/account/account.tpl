@@ -132,7 +132,7 @@
           </div> -->
           <input type="hidden" name="tax" id="tax_number" value="" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" />
 
-          <div class="form-group required" style="display:none">
+          <div class="form-group">
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>
             <div class="col-sm-6 col-xs-12">
                 <label class="control control--radio" style="display: initial !important;"> 
@@ -175,16 +175,6 @@
                 <input type="text" name="national_id" id="national_id" placeholder="<?php echo $entry_national_id; ?>" class="form-control input-lg" />
               <?php if ($error_national_id) { ?>
               <div class="text-danger"><?php echo $error_national_id; ?></div>
-              <?php } ?>
-            </div>
-          </div>
-                    
-          <div class="form-group">
-            <label class="col-sm-3 control-label" for="input-dob"><?php echo $entry_date_of_birth; ?></label>
-            <div class="col-sm-6 col-xs-12">
-                <input type="text" name="dob" id="dob" placeholder="<?php echo $entry_date_of_birth; ?>" class="form-control input-lg" />
-              <?php if ($error_date_of_birth) { ?>
-              <div class="text-danger"><?php echo $error_date_of_birth; ?></div>
               <?php } ?>
             </div>
           </div>          
