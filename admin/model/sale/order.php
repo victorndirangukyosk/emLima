@@ -5679,8 +5679,8 @@ class ModelSaleOrder extends Model {
         return $new_order_query->row;
     }
 
-    public function getMissingProductQuantityByProductIdOrderId($order_id, $product_id) {
-        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND product_store_id = '" . (int) $product_id . "'");
+    public function getMissingProductQuantityByProductIdOrderId($order_id, $product_id, $removed_from_invoice) {
+        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND product_store_id = '" . (int) $product_id . "' AND removed_from_invoice = '" . (int) $removed_from_invoice . "'");
         return $new_order_query->row;
     }
 
