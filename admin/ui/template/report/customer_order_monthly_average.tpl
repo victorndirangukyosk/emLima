@@ -58,13 +58,11 @@
                   
                   <?php if ('Credit' == $filter_payment_terms) { ?>
                   <option value="Credit" selected="selected">Credit</option>
-                  <?php } else { ?>
                   <option value="Payment On Delivery">Payment On Delivery</option>
                   <?php } ?>
                   
                   <?php if ('Payment On Delivery' == $filter_payment_terms) { ?>
                   <option value="Payment On Delivery" selected="selected">Payment On Delivery</option>
-                  <?php } else { ?>
                   <option value="Credit">Credit</option>
                   <?php } ?>
 
