@@ -177,6 +177,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_customer_boughtproducts'] = $this->url->link('report/customer_boughtproducts', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_count'] = $this->url->link('report/customer_order_count', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_order_monthly_average'] = $this->url->link('report/customer_order_monthly_average', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_inventory_daily_prices'] = $this->url->link('report/inventory_daily_prices', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_marketing'] = $this->url->link('report/marketing', 'token=' . $this->session->data['token'], 'SSL');
@@ -471,6 +472,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_account_manager_customer_order'] = $this->user->hasPermission('access', 'report/account_manager_customer_order');
         $data['preturn_customer_order_pattern'] = $this->user->hasPermission('access', 'report/customer_order_pattern');
         $data['preturn_customer_order_count'] = $this->user->hasPermission('access', 'report/customer_order_count');
+        $data['preturn_customer_order_monthly_average'] = $this->user->hasPermission('access', 'report/customer_order_monthly_average');
         $data['preturn_inventory_daily_prices'] = $this->user->hasPermission('access', 'report/inventory_daily_prices');
 
         $data['preturn_customer_reward'] = $this->user->hasPermission('access', 'report/customer_reward');
@@ -572,6 +574,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_customer_boughtproducts'] = $this->url->link('report/customer_boughtproducts', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_count'] = $this->url->link('report/customer_order_count', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_customer_order_monthly_average'] = $this->url->link('report/customer_order_monthly_average', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_inventory_daily_prices'] = $this->url->link('report/inventory_daily_prices', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_marketing'] = $this->url->link('report/marketing', 'token=' . $this->session->data['token'], 'SSL');
@@ -664,6 +667,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_customer_boughtproducts'] = $this->user->hasPermission('access', 'report/customer_boughtproducts');
         $data['preturn_customer_order_pattern'] = $this->user->hasPermission('access', 'report/customer_order_pattern');
         $data['preturn_customer_order_count'] = $this->user->hasPermission('access', 'report/customer_order_count');
+        $data['preturn_customer_order_monthly_average'] = $this->user->hasPermission('access', 'report/customer_order_monthly_average');
         $data['preturn_inventory_daily_prices'] = $this->user->hasPermission('access', 'report/inventory_daily_prices');
 
         $data['preturn_marketing'] = $this->user->hasPermission('access', 'report/marketing');
