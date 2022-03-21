@@ -4346,7 +4346,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_delivery_date'])) {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
-        
+
         if (!empty($data['filter_delivery_time_slot']) && $data['filter_delivery_time_slot'] != 'undefined') {
             $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
         }
@@ -4651,7 +4651,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_delivery_date'])) {
             $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
         }
-        
+
         if (!empty($data['filter_delivery_time_slot']) && $data['filter_delivery_time_slot'] != 'undefined') {
             $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
         }
@@ -4728,14 +4728,14 @@ class ModelSaleOrder extends Model {
         }
     }
 
-    public function deleteOrderProductToMissingProducts($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model) {
+    public function deleteOrderProductToMissingProducts($order_product_id, $required_quantity = 0, $name, $unit, $product_note, $model, $order_id) {
         $log = new Log('error.log');
-        $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE order_product_id = '" . (int) $order_product_id . "' AND order_id = '" . (int) $order_id . "'";
         $query = $this->db->query($sql);
         $productinfo = $query->row;
 
         if ($productinfo == NULL) {
-            $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_product_id = '" . (int) $order_product_id . "'";
+            $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_product_id = '" . (int) $order_product_id . "' AND order_id = '" . (int) $order_id . "'";
             $query = $this->db->query($sql);
             $productinfo = $query->row;
         }
@@ -5689,20 +5689,19 @@ class ModelSaleOrder extends Model {
         return $new_order_query->rows;
     }
 
-
     public function getProductCategoryByGeneralProductID($general_product_id) {
         $sql = "SELECT p.category_id,c.name as category FROM " . DB_PREFIX . "category_description c join " . DB_PREFIX . "product_to_category p on c.category_id =p.category_id and p.product_id = '" . (int) $general_product_id . "'";
- 
+
         $query = $this->db->query($sql);
-       // echo "<pre>";print_r( $query->rows);die;
+        // echo "<pre>";print_r( $query->rows);die;
         return $query->row;
     }
 
     public function getProductCategoryByProductID($product_id) {
         $sql = "SELECT p.category_id,c.name as category FROM " . DB_PREFIX . "category_description c join " . DB_PREFIX . "product_to_category p on c.category_id =p.category_id join hf7_product_to_store ps on ps.product_id =p.product_id and ps.product_store_id = '" . (int) $product_id . "'";
- 
+
         $query = $this->db->query($sql);
-       // echo "<pre>";print_r( $query->rows);die;
+        // echo "<pre>";print_r( $query->rows);die;
         return $query->row;
     }
 
