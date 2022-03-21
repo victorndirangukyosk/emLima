@@ -410,7 +410,7 @@ class ControllerAccountAccount extends Controller {
         if (isset($this->error['national_id'])) {
             $data['error_national_id'] = $this->error['national_id'];
         } else {
-            $data['error_dob'] = '';
+            $data['error_national_id'] = '';
         }
 
         if (isset($this->error['custom_field'])) {
@@ -437,12 +437,12 @@ class ControllerAccountAccount extends Controller {
             $data['gender'] = 'male';
         }
 
-        if (isset($this->request->post['dob']) && '' != trim($this->request->post['dob'])) {
+        if (isset($this->request->post['dob']) && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $this->request->post['dob'])) {
             $data['dob'] = date('d/m/Y', strtotime($this->request->post['dob']));
         } elseif (!empty($customer_info['dob'])) {
             $data['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
         } else {
-            $data['dob'] = '01/01/1990';
+            $data['dob'] = NULL;
         }
         
         if (isset($this->request->post['firstname'])) {
@@ -825,6 +825,10 @@ class ControllerAccountAccount extends Controller {
         
         if ($this->request->post['national_id'] != NULL && !preg_match('/^[0-9]{8}$/', $this->request->post['national_id'])) {
             $this->error['national_id'] = $this->language->get('error_invalid_national_id');
+        }
+        
+        if ($this->request->post['dob'] != NULL && !preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $this->request->post['dob'])) {
+            $this->error['dob'] = $this->language->get('error_invalid_dob');
         }
 
         if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 6) || (utf8_strlen($this->request->post['password']) > 20)) {

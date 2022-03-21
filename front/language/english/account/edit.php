@@ -37,6 +37,7 @@ $_['entry_mandatory_products'] = 'Mandatory Veggies/ Furits';
 $_['error_location'] = 'Location is required';
 $_['error_national_id'] = 'National ID is required';
 $_['error_invalid_national_id'] = 'Invalid National ID';
+$_['error_invalid_dob'] = 'Invalid DOB';
 $_['error_requirement'] = 'Avg Requirement per week is required';
 $_['error_mandatory_products'] = 'Mandatory Veggies/ Furits is required';
 
