@@ -11,30 +11,30 @@
 
             <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
                 <div class="col-md-6" id="pay_with" >
-                    Pezesha Customer ID
+                    Copy Of Certificate Of Incorporation 
                 </div>
                 <div class="col-md-6" id="pay_with" >
-                    <?php echo $this->customer->getCustomerPezeshaId(); ?>
+                    <input id="po" name="po" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>                                  
 
             </div>
 
             <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
                 <div class="col-md-6" id="pay_with" >
-                    Pezesha Customer UU-ID
+                    Copy Of Bussiness Operating Permit
                 </div>
                 <div class="col-md-6" id="pay_with" >
-                    <?php echo $this->customer->getCustomerPezeshauuId(); ?>
+                     <input id="po" name="po" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>                                  
 
             </div>
 
             <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
                 <div class="col-md-6" id="pay_with" >
-                    Fetch Pezesha Laon Offers
+                    Copy Of ID Of Bussiness Owner / Managing Director
                 </div>
                 <div class="col-md-6" id="pay_with" >
-                    <button type="button" id="pezesha-button-loan" class="btn btn-default">FETCH LOAN OFFERS</button>
+                     <input id="po" name="po" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>                                  
             </div>
 

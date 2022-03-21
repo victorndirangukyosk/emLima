@@ -41,7 +41,7 @@ class ControllerAccountApplypezesha extends Controller {
         $data['label_address'] = $this->language->get('label_address');
         $data['heading_title'] = $this->language->get('heading_title');
         $data['text_order'] = $this->language->get('text_order');
-        $data['text_balance'] = $this->language->get('text_balance');
+        $data['text_balance'] = $this->language->get('text_apply_pezesha');
         $data['text_activity'] = $this->language->get('text_activity');
         $data['text_report_issue'] = $this->language->get('text_report_issue');
 
@@ -88,10 +88,10 @@ class ControllerAccountApplypezesha extends Controller {
         $data['header'] = $this->load->controller('common/header/information');
 
         // echo "<pre>";print_r($data['credits']);die;
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/pezesha.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/pezesha.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/applypezesha.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/applypezesha.tpl', $data));
         } else {
-            $this->response->setOutput($this->load->view('default/template/account/pezesha.tpl', $data));
+            $this->response->setOutput($this->load->view('default/template/account/applypezesha.tpl', $data));
         }
     }
 
