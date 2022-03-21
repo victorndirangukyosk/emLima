@@ -17,6 +17,8 @@ $_['entry_dob'] = 'DOB';
 
 // Entry
 $_['entry_firstname'] = 'First Name';
+$_['entry_national_id'] = 'National ID';
+$_['entry_date_of_birth'] = 'Date Of Birth';
 $_['entry_lastname'] = 'Last Name';
 $_['entry_email'] = 'E-Mail';
 $_['entry_telephone'] = 'Telephone';
@@ -33,6 +35,9 @@ $_['entry_mandatory_products'] = 'Mandatory Veggies/ Furits';
 
 // Error
 $_['error_location'] = 'Location is required';
+$_['error_national_id'] = 'National ID is required';
+$_['error_invalid_national_id'] = 'Invalid National ID';
+$_['error_invalid_dob'] = 'Invalid DOB';
 $_['error_requirement'] = 'Avg Requirement per week is required';
 $_['error_mandatory_products'] = 'Mandatory Veggies/ Furits is required';
 

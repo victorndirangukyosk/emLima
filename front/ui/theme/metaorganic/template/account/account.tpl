@@ -96,7 +96,7 @@
             </div>
           </div>
 
-         <!-- <div class="form-group required">
+          <div class="form-group">
             <label class="col-sm-3 control-label" for="input-date-added"><?php echo $entry_dob; ?></label>
             <div class="col-sm-6 col-xs-12">
                 <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="<?php echo $entry_dob; ?>" data-date-format="dd/mm/YYYY" id="input-date-added" class="form-control date" />
@@ -104,7 +104,7 @@
               <div class="text-danger"><?php echo $error_dob; ?></div>
               <?php } ?>
             </div>
-          </div>--!>
+          </div>
           
   
 
@@ -132,7 +132,7 @@
           </div> -->
           <input type="hidden" name="tax" id="tax_number" value="" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" />
 
-          <div class="form-group required" style="display:none">
+          <div class="form-group">
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>
             <div class="col-sm-6 col-xs-12">
                 <label class="control control--radio" style="display: initial !important;"> 
@@ -168,7 +168,17 @@
                  </label>
             </div>
           </div>
-
+          
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="input-nationalid"><?php echo $entry_national_id; ?></label>
+            <div class="col-sm-6 col-xs-12">
+                <input type="text" name="national_id" id="national_id" placeholder="<?php echo $entry_national_id; ?>" value="<?php echo $national_id; ?>" class="form-control input-lg" />
+              <?php if ($error_national_id) { ?>
+              <div class="text-danger"><?php echo $error_national_id; ?></div>
+              <?php } ?>
+            </div>
+          </div>          
+                    
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_password; ?></label>
             <div class="col-sm-6 col-xs-12">
@@ -381,12 +391,12 @@ $('button[id^=\'button-custom-field\']').on('click', function() {
 
     
 
-   <!-- $('.date').datepicker({
+    $('.date').datepicker({
         pickTime: false,
         format: 'dd/mm/yyyy',
         todayHighlight: true,
         autoclose: true,
-    }); --!>   
+    });   
 </script> 
                  
 

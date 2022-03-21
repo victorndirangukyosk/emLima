@@ -676,7 +676,7 @@ class ControllerSaleOrderProductMissing extends Controller {
                         $ordered_products = $products = $this->model_sale_order->getOrderProductById($this->request->post['order_id'], $order_product_id);
                     }
 
-                    $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model'], $this->request->post['order_id']);
+                    $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model'], $this->request->post['order_id'], 0);
                     $i++;
                 }
 //$this->editinvocebymissingproducts($this->request->post);
