@@ -280,6 +280,7 @@ class ControllerAccountAccount extends Controller {
         $data['entry_confirmpassword'] = $this->language->get('entry_confirmpassword');
 
         $data['entry_firstname'] = $this->language->get('entry_firstname');
+        $data['entry_national_id'] = 'National ID';
         $data['entry_lastname'] = $this->language->get('entry_lastname');
         $data['entry_email'] = $this->language->get('entry_email');
         $data['entry_telephone'] = $this->language->get('entry_telephone');
@@ -806,6 +807,10 @@ class ControllerAccountAccount extends Controller {
         /* if (strpos($this->request->post['fax'], '#') !== false || empty($this->request->post['fax'])) {
           $this->error['error_tax'] = $this->language->get( 'error_tax' );
           } */
+        
+        if ((utf8_strlen(trim($this->request->post['national_id'])) < 1) || (utf8_strlen(trim($this->request->post['national_id'])) > 32)) {
+            $this->error['national_id'] = $this->language->get('error_national_id');
+        }
 
         if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 6) || (utf8_strlen($this->request->post['password']) > 20)) {
             $this->error['password'] = $this->language->get('error_password');

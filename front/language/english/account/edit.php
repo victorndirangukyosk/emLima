@@ -17,6 +17,7 @@ $_['entry_dob'] = 'DOB';
 
 // Entry
 $_['entry_firstname'] = 'First Name';
+$_['entry_national_id'] = 'National ID';
 $_['entry_lastname'] = 'Last Name';
 $_['entry_email'] = 'E-Mail';
 $_['entry_telephone'] = 'Telephone';
