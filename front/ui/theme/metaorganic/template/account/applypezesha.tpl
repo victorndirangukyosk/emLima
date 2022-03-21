@@ -155,7 +155,45 @@ $('#copy_of_certificate_of_incorporation_button').on('click', function(e) {
             }
 
     });
-});    
+});
+$('#copy_of_bussiness_operating_permit_button').on('click', function(e) {
+    e.preventDefault();
+    var file_data = $('#copy_of_bussiness_operating_permit').prop('files')[0];
+    var form_data = new FormData();
+    form_data.append("file", file_data);
+    alert(form_data);
+    $.ajax({
+            type: 'post',
+            url: 'index.php?path=account/applypezesha/pezeshafilestwo',
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+            console.log(response);
+            }
+
+    });
+});
+$('#copy_of_id_of_bussiness_owner_managing_director_button').on('click', function(e) {
+    e.preventDefault();
+    var file_data = $('#copy_of_id_of_bussiness_owner_managing_director').prop('files')[0];
+    var form_data = new FormData();
+    form_data.append("file", file_data);
+    alert(form_data);
+    $.ajax({
+            type: 'post',
+            url: 'index.php?path=account/applypezesha/pezeshafilesthree',
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+            console.log(response);
+            }
+
+    });
+});
 </script>
 <style>
     .option_pay {
