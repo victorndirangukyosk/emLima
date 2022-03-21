@@ -123,6 +123,7 @@ class ControllerAccountApplypezesha extends Controller {
         $s3Client = $sdk->createS3();
 
         try {
+            $s3Client->createBucket(['Bucket' => 'kwikbasket-pezesha-files']);
             $bucket = 'kwikbasket-pezesha-files';
             $result = $s3Client->putObject([
                 'Bucket' => $bucket,
