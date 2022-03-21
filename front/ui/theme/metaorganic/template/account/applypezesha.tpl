@@ -8,7 +8,7 @@
                 </div>
             </div>
 
-
+        <form method="POST" enctype="multipart/form-data" id="copy_of_certificate_of_incorporation_form">
             <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
                 <div class="col-md-6" id="pay_with" >
                     Copy Of Certificate Of Incorporation 
@@ -17,11 +17,12 @@
                     <input id="copy_of_certificate_of_incorporation" name="copy_of_certificate_of_incorporation" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>
                 <div class="col-md-2" id="pay_with">
-                    <button type="button" id="copy_of_certificate_of_incorporation_button" name="copy_of_certificate_of_incorporation_button" class="btn btn-primary">UPLOAD</button>
+                    <button type="submit" id="copy_of_certificate_of_incorporation_button" name="copy_of_certificate_of_incorporation_button" class="btn btn-primary">UPLOAD</button>
                 </div>
-
             </div>
+        </form>    
 
+        <form method="POST" enctype="multipart/form-data" id="copy_of_bussiness_operating_permit_form">
             <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
                 <div class="col-md-6" id="pay_with" >
                     Copy Of Bussiness Operating Permit
@@ -30,10 +31,12 @@
                      <input id="copy_of_bussiness_operating_permit" name="copy_of_bussiness_operating_permit" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>                                  
                 <div class="col-md-2" id="pay_with">
-                    <button type="button" id="copy_of_bussiness_operating_permit_button" name="copy_of_bussiness_operating_permit_button" class="btn btn-primary">UPLOAD</button>
+                    <button type="submit" id="copy_of_bussiness_operating_permit_button" name="copy_of_bussiness_operating_permit_button" class="btn btn-primary">UPLOAD</button>
                 </div>
             </div>
+        </form>    
 
+        <form method="POST" enctype="multipart/form-data" id="copy_of_id_of_bussiness_owner_managing_director_form">    
             <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
                 <div class="col-md-6" id="pay_with" >
                     Copy Of ID Of Bussiness Owner / Managing Director
@@ -42,9 +45,10 @@
                      <input id="copy_of_id_of_bussiness_owner_managing_director" name="copy_of_id_of_bussiness_owner_managing_director" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>
                 <div class="col-md-2" id="pay_with">
-                    <button type="button" id="copy_of_id_of_bussiness_owner_managing_director_button" name="copy_of_id_of_bussiness_owner_managing_director_button" class="btn btn-primary">UPLOAD</button>
+                    <button type="submit" id="copy_of_id_of_bussiness_owner_managing_director_button" name="copy_of_id_of_bussiness_owner_managing_director_button" class="btn btn-primary">UPLOAD</button>
                 </div>
             </div>
+        </form>
 
             <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;" id="loan_offers">
 
