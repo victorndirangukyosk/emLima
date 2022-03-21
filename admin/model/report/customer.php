@@ -1776,4 +1776,94 @@ class ModelReportCustomer extends Model {
 
         return $query_credit->rows;
     }
+
+
+    public function getCustomerMonthlyAverage($data = []) {
+        $sql = "SELECT c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer, c.payment_terms, c.company_name, sum(ot.value) as average, count(distinct month(o.date_added)) as months ,'' as monthly_average FROM `" . DB_PREFIX . 'customer` c LEFT JOIN `' . DB_PREFIX . 'order` o ON (o.customer_id = c.customer_id) LEFT JOIN `' . DB_PREFIX . "order_total` ot ON (ot.order_id = o.order_id) WHERE ot.code = 'total' and o.order_status_id not in (0,6,8,16)";
+
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.date_added) < '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+        if (!empty($data['filter_payment_terms'])) {
+            if($data['filter_payment_terms']=='Payment On Delivery')
+            {
+            $sql .= " AND (c.payment_terms) = '" . $this->db->escape($data['filter_payment_terms']) . "'";
+            }
+            else
+            {
+            $sql .= " AND (c.payment_terms) != '" . $this->db->escape($data['filter_payment_terms']) . "'";
+
+            }
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= "c.customer_id > 0 AND CONCAT(c.company_name) LIKE '" . $this->db->escape($data['filter_company']) . "'";
+        }
+
+        $sql .= ' GROUP BY c.customer_id ORDER BY c.customer_id ASC';
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        // echo "<pre>";print_r($sql);die;
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function getTotalMonthlyAverage($data = []) {
+        $sql = "SELECT COUNT(DISTINCT c.customer_id) as total From " . DB_PREFIX . "customer c LEFT JOIN " . DB_PREFIX . "order o ON (o.customer_id = c.customer_id)  WHERE  o.order_status_id not in (0,6,8,16)";
+
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.date_added) < '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+        if (!empty($data['filter_payment_terms'])) {
+            if($data['filter_payment_terms']=='Payment On Delivery')
+            {
+            $sql .= " AND (c.payment_terms) = '" . $this->db->escape($data['filter_payment_terms']) . "'";
+            }
+            else
+            {
+            $sql .= " AND (c.payment_terms) != '" . $this->db->escape($data['filter_payment_terms']) . "'";
+
+            }
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= "c.customer_id > 0 AND CONCAT(c.company_name) LIKE '" . $this->db->escape($data['filter_company']) . "'";
+        }
+
+        // echo "<pre>";print_r($sql);die;
+
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
 }
