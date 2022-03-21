@@ -14,10 +14,10 @@
                     Copy Of Certificate Of Incorporation 
                 </div>
                 <div class="col-md-4" id="pay_with" >
-                    <input id="po" name="po" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
+                    <input id="copy_of_certificate_of_incorporation" name="copy_of_certificate_of_incorporation" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>
                 <div class="col-md-2" id="pay_with">
-                    <button type="button" class="btn btn-primary">UPLOAD</button>
+                    <button type="button" id="copy_of_certificate_of_incorporation_button" name="copy_of_certificate_of_incorporation_button" class="btn btn-primary">UPLOAD</button>
                 </div>
 
             </div>
@@ -27,10 +27,10 @@
                     Copy Of Bussiness Operating Permit
                 </div>
                 <div class="col-md-4" id="pay_with" >
-                     <input id="po" name="po" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
+                     <input id="copy_of_bussiness_operating_permit" name="copy_of_bussiness_operating_permit" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>                                  
                 <div class="col-md-2" id="pay_with">
-                    <button type="button" class="btn btn-primary">UPLOAD</button>
+                    <button type="button" id="copy_of_bussiness_operating_permit_button" name="copy_of_bussiness_operating_permit_button" class="btn btn-primary">UPLOAD</button>
                 </div>
             </div>
 
@@ -39,10 +39,10 @@
                     Copy Of ID Of Bussiness Owner / Managing Director
                 </div>
                 <div class="col-md-4" id="pay_with" >
-                     <input id="po" name="po" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
+                     <input id="copy_of_id_of_bussiness_owner_managing_director" name="copy_of_id_of_bussiness_owner_managing_director" class="form-control" type="file" accept=".png,.jpg, .jpeg" required>
                 </div>
                 <div class="col-md-2" id="pay_with">
-                    <button type="button" class="btn btn-primary">UPLOAD</button>
+                    <button type="button" id="copy_of_id_of_bussiness_owner_managing_director_button" name="copy_of_id_of_bussiness_owner_managing_director_button" class="btn btn-primary">UPLOAD</button>
                 </div>
             </div>
 
