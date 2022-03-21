@@ -19,10 +19,10 @@ class ControllerReportCustomerOrderMonthlyAverage extends Controller
         } else {
             $filter_date_end = '';
         }
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $filter_payment_terms = $this->request->get['filter_payment_terms'];
         } else {
-            $filter_order_status_id = 0;
+            $filter_payment_terms = 'Payment On Delivery';
         }
         // if (isset($this->request->get['filter_customer'])) {
         //     $filter_customer = $this->request->get['filter_customer'];
@@ -46,8 +46,8 @@ class ControllerReportCustomerOrderMonthlyAverage extends Controller
         if (isset($this->request->get['filter_date_end'])) {
             $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $url .= '&filter_payment_terms='.$this->request->get['filter_payment_terms'];
         }
         // if (isset($this->request->get['filter_customer'])) {
         //     $url .= '&filter_customer='.$this->request->get['filter_customer'];
@@ -76,21 +76,21 @@ class ControllerReportCustomerOrderMonthlyAverage extends Controller
         $filter_data = [
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
-            'filter_order_status_id' => $filter_order_status_id,
+            'filter_payment_terms' => $filter_payment_terms,
             //'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
         ];
+        //    echo "<pre>";print_r($filter_data);die;
+
 
         if ('' != $filter_date_start && '' != $filter_date_end) {
-            $company_total =  $this->model_report_customer->getTotalValidCompanies($filter_data);
+            
+        $company_total = $this->model_report_customer->getTotalMonthlyAverage($filter_data);
 
-        //$results = $this->model_report_customer->getValidCompanyOrders($filter_data);
-          $customerresults = $this->model_report_customer->getValidCompanies($filter_data);
-        // echo "<pre>";print_r($customerresults);die;
-          $months = $this->model_report_customer->getmonths($filter_data);//need to check simple way
-        //    echo "<pre>";print_r($months);die;
+        $customerresults = $this->model_report_customer->getCustomerMonthlyAverage($filter_data);
+        //    echo "<pre>";print_r($customerresults);die;
         } else {
             $company_total = 0;
             $customerresults = null;
@@ -98,42 +98,23 @@ class ControllerReportCustomerOrderMonthlyAverage extends Controller
 
          
         $this->load->model('sale/order');
+        $monthly_average_array = [];
+
         if (is_array($customerresults) && count($customerresults) > 0) {
             $log = new Log('error.log');
             $log->write('Yes It Is Array');
-            $i=0;
+            
             foreach ($customerresults as $result) {               
-                $totalpermonth=0;
-                $data['customers'][] = [
-                    'Company Name' => $result['company'],                  
-                    ];
-                $totalOrders=0;
-                $OrdersValue=0;
-                foreach ($months as $month) {
-                    $totalpermonth=$this->model_report_customer->getCompanyTotal($filter_data,$month['month'],$result['company']);
-                    $monthname=$this->getmonthname($month['month']);
-                    $totalOrders= $totalOrders+$totalpermonth['TotalOrders'];
-                    $OrdersValue=$OrdersValue+$totalpermonth['Total'];
-                    //$data['customers'][$i][$monthname]=$this->currency->format($totalpermonth['Total'], $this->config->get('config_currency'));
-                    // $data['customers'][$i][$monthname]=number_format($totalpermonth['Total'],2)??0;
-                    $data['customers'][$i][$monthname]=number_format($totalpermonth['TotalOrders'],0)??0;
-               }
-                $data['customers'][$i]['Total Order Count']= $totalOrders;
-                $data['customers'][$i]['Total Order Value']= number_format($OrdersValue);
-
-                if($OrdersValue>0 && $totalOrders>0)
-                {
-                $data['customers'][$i]['Avg. Order Value']= number_format(($OrdersValue/$totalOrders),2);
-                }
-                else
-                {
-                    $data['customers'][$i]['Avg. Order Value']=0;
-                }
-                // echo "<pre>";print_r($data['customers']);die;
-                $i++;
+                
+                    $result['monthly_average']=($result['average']/$result['months']);
+                // echo "<pre>";print_r($result);die;
+                array_push($monthly_average_array, $result);
             }
         }
             //    echo "<pre>";print_r($data['customers']);die;
+        $data['customers'] = $monthly_average_array;
+            //    echo "<pre>";print_r($data['customers']);die;
+
         $data['heading_title'] = $this->language->get('heading_title');
         $data['text_list'] = $this->language->get('text_list');
         $data['text_no_results'] = $this->language->get('text_no_results');
@@ -159,8 +140,8 @@ class ControllerReportCustomerOrderMonthlyAverage extends Controller
         $data['button_hide_filter'] = $this->language->get('button_hide_filter');
 
         $data['token'] = $this->session->data['token'];
-        $this->load->model('localisation/order_status');
-        $data['order_statuses'] = $this->model_localisation_order_status->getValidOrderStatuses();
+        // $this->load->model('localisation/order_status');
+        // $data['order_statuses'] = $this->model_localisation_order_status->getValidOrderStatuses();
 
         $this->load->model('sale/customer');
         // $data['customer_names'] = $this->model_sale_customer->getCustomers(null);
@@ -171,8 +152,8 @@ class ControllerReportCustomerOrderMonthlyAverage extends Controller
         if (isset($this->request->get['filter_date_end'])) {
             $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $url .= '&filter_order_status_id='.$this->request->get['filter_order_status_id'];
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $url .= '&filter_payment_terms='.$this->request->get['filter_payment_terms'];
         }
         // if (isset($this->request->get['filter_customer'])) {
         //     $url .= '&filter_customer='.$this->request->get['filter_customer'];
@@ -191,7 +172,7 @@ class ControllerReportCustomerOrderMonthlyAverage extends Controller
 
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
-        $data['filter_order_status_id'] = $filter_order_status_id;
+        $data['filter_payment_terms'] = $filter_payment_terms;
         // $data['filter_customer'] = $filter_customer;
         $data['filter_company'] = $filter_company;
         $data['header'] = $this->load->controller('common/header');
@@ -283,10 +264,10 @@ class ControllerReportCustomerOrderMonthlyAverage extends Controller
             $filter_date_end = date('Y-m-d');
         }
 
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        if (isset($this->request->get['filter_payment_terms'])) {
+            $filter_payment_terms = $this->request->get['filter_payment_terms'];
         } else {
-            $filter_order_status_id = 0;
+            $filter_payment_terms = 'Payment On Delivery';
         }
 
         // if (isset($this->request->get['filter_customer'])) {
@@ -305,60 +286,33 @@ class ControllerReportCustomerOrderMonthlyAverage extends Controller
         $filter_data = [
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
-            'filter_order_status_id' => $filter_order_status_id,
+            'filter_payment_terms' => $filter_payment_terms,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
         ];
 
         if ('' != $filter_date_start && '' != $filter_date_end) {
-            $company_total =  $this->model_report_customer->getTotalValidCompanies($filter_data);
+            // $company_total = $this->model_report_customer->getTotalMonthlyAverage($filter_data);
 
-        //$results = $this->model_report_customer->getValidCompanyOrders($filter_data);
-          $customerresults = $this->model_report_customer->getValidCompanies($filter_data);
-        // echo "<pre>";print_r($customerresults);die;
-          $months = $this->model_report_customer->getmonths($filter_data);//need to check simple way
-        //    echo "<pre>";print_r($months);die;
+            $customerresults = $this->model_report_customer->getCustomerMonthlyAverage($filter_data);
+            //    echo "<pre>";print_r($customerresults);die;
+           
      } else {
-            $company_total = 0;
+            // $company_total = 0;
             $customerresults = null;
         }
 
         $this->load->model('sale/order');
+        $monthly_average_array=[];
         if (is_array($customerresults) && count($customerresults) > 0) {
-            $log = new Log('error.log');
-            $log->write('Yes It Is Array');
-            $i=0;
             foreach ($customerresults as $result) {               
-                $totalpermonth=0;
-                $data['customers'][] = [
-                    'Company Name' => $result['company'],                  
-                    ];
-                $totalOrders=0;
-                $OrdersValue=0;
-                foreach ($months as $month) {
-                    $totalpermonth=$this->model_report_customer->getCompanyTotal($filter_data,$month['month'],$result['company']);
-                    $monthname=$this->getmonthname($month['month']);
-                    $totalOrders= $totalOrders+$totalpermonth['TotalOrders'];
-                    $OrdersValue=$OrdersValue+$totalpermonth['Total'];
-                    //$data['customers'][$i][$monthname]=$this->currency->format($totalpermonth['Total'], $this->config->get('config_currency'));
-                    // $data['customers'][$i][$monthname]=number_format($totalpermonth['Total'],2);
-                    $data['customers'][$i][$monthname]=number_format($totalpermonth['TotalOrders'],2);
-               }
-               $data['customers'][$i]['Total Order Count']= $totalOrders;
-
-                $data['customers'][$i]['Total Order Value']=number_format($OrdersValue);
-                if($OrdersValue>0 && $totalOrders>0)
-                {
-                $data['customers'][$i]['Avg. Order Value']= number_format(($OrdersValue/$totalOrders),2);
-                }
-                else
-                {
-                    $data['customers'][$i]['Avg. Order Value']=0;
-                }
-                // echo "<pre>";print_r($data['customers']);die;
-                $i++;
-            }
+                
+                $result['monthly_average']=($result['average']/$result['months']);
+            // echo "<pre>";print_r($result);die;
+            array_push($monthly_average_array, $result);
         }
+        }
+        $data['customers']=$monthly_average_array;
             //    echo "<pre>";print_r($data['customers']);die;
             // echo "<pre>";print_r($data['customers']);die;
 
