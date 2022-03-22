@@ -391,13 +391,10 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             dataType: 'json',
             cache: false,
             async: false,
-            success: function (response) {
-            console.log('updatecustomerinfo response');
-            console.log(response);
-            console.log('updatecustomerinfo response');
-            }
-    });
-    $.ajax({
+            beforeSend: function() {
+            },
+            complete: function() {
+            $.ajax({
             type: 'get',
             url: 'index.php?path=account/applypezesha/userregistration',
             cache: false,
@@ -433,7 +430,8 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             },
             success: function (response) {
             console.log('user registration response');
-            if(response.data.status == 422) {    
+            if(response.data.status == 422) {
+            console.log(response.errors);
             $.each(response.errors, function (key, data) {
             $('#error_msg').html(data);
             $('#error_msg').show();
@@ -448,6 +446,13 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             console.log('user registration response');
             }
 
+            });    
+            },
+            success: function (response) {
+            console.log('updatecustomerinfo response');
+            console.log(response);
+            console.log('updatecustomerinfo response');
+            }
     });
 });
 </script>
