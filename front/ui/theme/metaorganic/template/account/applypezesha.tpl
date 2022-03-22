@@ -357,7 +357,33 @@ $('#copy_of_id_of_bussiness_owner_managing_director_button').on('click', functio
     });
 });
 $('#submit_info_to_pezesha').on('click', function(e) {
+    $('#success_msg').hide();
+    $('#error_msg').hide(); 
     e.preventDefault();
+    if($("input[name=dob]").val() == ''){
+    $('#error_msg').html('DOB Sholud Not Be Empty!');
+    $('#error_msg').show(); 
+    return false;
+    }
+    
+    if($("input[name=kra]").val() == ''){
+    $('#error_msg').html('KRA PIN Sholud Not Be Empty!');
+    $('#error_msg').show(); 
+    return false;
+    }
+    
+    if($("input[name=national_id]").val() == ''){
+    $('#error_msg').html('Nation ID Sholud Not Be Empty!');
+    $('#error_msg').show(); 
+    return false;
+    }
+    
+    if($("input[name='gender']:checked").val() == ''){
+    $('#error_msg').html('Please Select Gender!');
+    $('#error_msg').show(); 
+    return false;
+    }
+    
     $.ajax({
             type: 'post',
             url: 'index.php?path=account/applypezesha/updatecustomerinfo',
