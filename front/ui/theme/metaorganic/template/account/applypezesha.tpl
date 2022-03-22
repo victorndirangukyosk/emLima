@@ -50,9 +50,9 @@
             </div>
         </form>
 
-            <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;" id="loan_offers">
-
-            </div>
+        <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available; text-align: center;" id="loan_offers">
+            <button type="submit" id="submit_info_to_pezesha" name="submit_info_to_pezesha" class="btn btn-primary">SUBMIT TO PEZESHA</button>
+        </div>
 
         </div>
 
