@@ -1,6 +1,6 @@
 <?php
 
-require_once DIR_SYSTEM . '/vendor/autoload.php'; // Loads the library
+//require_once DIR_SYSTEM . '/vendor/autoload.php'; // Loads the library
 require DIR_SYSTEM . '/vendor/twilio-php-master/Twilio/autoload.php';
 
 use AfricasTalking\SDK\AfricasTalking;
