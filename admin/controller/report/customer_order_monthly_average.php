@@ -106,7 +106,9 @@ class ControllerReportCustomerOrderMonthlyAverage extends Controller
             
             foreach ($customerresults as $result) {               
                 
-                    $result['monthly_average']=($result['average']/$result['months']);
+                    // $result['monthly_average']=($result['average']/$result['months']);
+                $result['monthly_average']=round(($result['average']/$result['months']),2);
+
                 // echo "<pre>";print_r($result);die;
                 array_push($monthly_average_array, $result);
             }
@@ -307,7 +309,7 @@ class ControllerReportCustomerOrderMonthlyAverage extends Controller
         if (is_array($customerresults) && count($customerresults) > 0) {
             foreach ($customerresults as $result) {               
                 
-                $result['monthly_average']=($result['average']/$result['months']);
+                $result['monthly_average']=round(($result['average']/$result['months']),2);
             // echo "<pre>";print_r($result);die;
             array_push($monthly_average_array, $result);
         }
