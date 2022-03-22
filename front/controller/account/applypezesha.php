@@ -335,7 +335,13 @@ class ControllerAccountApplypezesha extends Controller {
         $result = json_decode($result, true);
         $log->write($result);
         $json = $result;
-        return $json;
+        //return $json;
+
+        $json['status'] = true;
+        $json['data'] = $result;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
     public function dataingestion() {
@@ -391,13 +397,13 @@ class ControllerAccountApplypezesha extends Controller {
         $result = json_decode($result, true);
         $log->write($result);
         $json = $result;
-        return $json;
+        //return $json;
 
-        /* $json['status'] = true;
-          $json['data'] = $result;
+        $json['status'] = true;
+        $json['data'] = $result;
 
-          $this->response->addHeader('Content-Type: application/json');
-          $this->response->setOutput(json_encode($json)); */
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
