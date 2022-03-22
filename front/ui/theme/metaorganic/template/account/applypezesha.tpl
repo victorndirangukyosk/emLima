@@ -198,13 +198,25 @@ $('#submit_info_to_pezesha').on('click', function(e) {
     e.preventDefault();
     $.ajax({
             type: 'get',
-            url: 'index.php?path=account/applypezesha/accrptterms',
+            url: 'index.php?path=account/applypezesha/userregistration',
             cache: false,
             contentType: false,
             processData: false,
             beforeSend: function() {
             },
             complete: function() {
+            $.ajax({
+            type: 'get',
+            url: 'index.php?path=account/applypezesha/accrptterms',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+            console.log('accept terms response');
+            console.log(response);
+            console.log('accept terms response');
+            }
+            });    
             $.ajax({
             type: 'get',
             url: 'index.php?path=account/applypezesha/dataingestion',
@@ -219,9 +231,9 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             });    
             },
             success: function (response) {
-            console.log('accept terms response');
+            console.log('user registration response');
             console.log(response);
-            console.log('accept terms response');
+            console.log('user registration response');
             }
 
     });
