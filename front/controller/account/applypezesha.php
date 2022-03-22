@@ -357,6 +357,7 @@ class ControllerAccountApplypezesha extends Controller {
         $this->load->model('account/customer');
         $this->load->model('sale/order');
         $customer_device_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $customer_documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
 
         $data['filter_customer_id'] = $this->customer->getId();
         $data['filter_paid'] = 'Y';
