@@ -97,7 +97,7 @@ class ControllerAccountApplypezesha extends Controller {
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         $data['national_id'] = $customer_info['national_id'];
         $data['kra'] = $customer_info['kra'];
-        $data['dob'] = $customer_info['dob'];
+        $data['dob'] = $customer_info['dob'] != NULL ? date('d/m/Y', strtotime($customer_info['dob'])) : NULL;
         $data['gender'] = $customer_info['gender'];
 
         // echo "<pre>";print_r($data['credits']);die;
