@@ -401,7 +401,7 @@ class ControllerAccountApplypezesha extends Controller {
 
         $json['status'] = true;
         $json['data'] = $result;
-        $this->SendDocuments();
+        //$this->SendDocuments();
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
