@@ -1522,7 +1522,7 @@ class ModelAccountCustomer extends Model {
 
     public function getCustomerDocuments($customer_id) {
         $doc_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_files WHERE customer_id = '" . (int) $customer_id . "'");
-        $document_info = $doc_info->rows;
+        return $document_info = $doc_info->rows;
     }
 
 }
