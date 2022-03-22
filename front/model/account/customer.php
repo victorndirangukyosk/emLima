@@ -1559,9 +1559,9 @@ class ModelAccountCustomer extends Model {
         return $customer_id;
     }
 
-    public function getPezeshaCustomer($customer_id) {
+    /*public function getPezeshaCustomer($customer_id) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_id . "'");
         return $query->row;
-    }
+    }*/
 
 }
