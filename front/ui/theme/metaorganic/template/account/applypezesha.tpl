@@ -7,7 +7,68 @@
                 <div class="cash-info" style="padding-bottom: 50px;padding-top: 50px;"><h1><?= $text_balance ?></h1>
                 </div>
             </div>
+        
+        <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
+                <div class="col-md-6" id="pay_with" >
+                    DOB / Date Of Incorporation 
+                </div>
+                <div class="col-md-6" id="pay_with" >
+                   <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="DOB / Date Of Incorporation" data-date-format="dd/mm/YYYY" id="input-date-added" class="form-control date" autocomplete="off" required/>
+                </div>
+        </div>
+            
+        <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
+                <div class="col-md-6" id="pay_with" >
+                    KRA PIN
+                </div>
+                <div class="col-md-6" id="pay_with" >
+                    <input type="text" value="<?php echo $kra; ?>" size="30" placeholder="KRA PIN" value="<?php echo $kra ?>" name="kra" maxlength="100" id="kra" class="form-control input-lg" />
+                </div>
+        </div>
+            
+        <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
+                <div class="col-md-6" id="pay_with" >
+                    Gender
+                </div>
+                <div class="col-md-6" id="pay_with" >
+                <label class="control control--radio" style="display: initial !important;"> 
+                    <?php if($gender == 'male') {?> 
+                        <input type="radio" name="gender" data-id="8" value="male" checked="checked"> Male 
+                    <?php } else {?>
+                    <input type="radio" name="gender" data-id="8" value="male"> Male
+                    <?php } ?>
+                    <div class="control__indicator"></div>
+                </label>
 
+                <label class="control control--radio" style="display: initial !important;">
+                    <?php if($gender == 'female') {?> 
+                        <input type="radio" name="gender" data-id="9" value="female" checked="checked"> Female
+                    <?php } else {?>
+                    <input type="radio" name="gender" data-id="9" value="female"> Female
+                    <?php } ?>                   
+                    <div class="control__indicator"></div>
+                </label>
+
+                <label class="control control--radio" style="display: initial !important;">
+                    <?php if($gender == 'other') {?> 
+                        <input type="radio" name="gender" data-id="8" value="other" checked="checked"> Other
+                    <?php } else {?>
+                    <input type="radio" name="gender" data-id="8" value="other"> Other
+                    <?php } ?>
+                    <div class="control__indicator"></div>
+                </label>
+                </div>
+        </div>    
+        
+        <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
+                <div class="col-md-6" id="pay_with" >
+                    National ID
+                </div>
+                <div class="col-md-6" id="pay_with" >
+                    <input type="text" name="national_id" id="national_id" placeholder="National ID" value="<?php echo $national_id; ?>" class="form-control input-lg" />
+                </div>
+        </div>              
+                    
         <form method="POST" enctype="multipart/form-data" id="copy_of_certificate_of_incorporation_form">
             <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
                 <div class="col-md-6" id="pay_with" >
@@ -51,7 +112,7 @@
         </form>
 
         <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available; text-align: center;" id="loan_offers">
-            <button type="submit" id="submit_info_to_pezesha" name="submit_info_to_pezesha" class="btn btn-primary">SUBMIT TO PEZESHA</button>
+            <button type="submit" id="submit_info_to_pezesha" name="submit_info_to_pezesha" class="btn btn-primary">SUBMIT FOR CREDIT APPROVAL THROUGH PEZESHA</button>
         </div>
 
         </div>
@@ -237,6 +298,17 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             }
 
     });
+});
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+<script type="text/javascript">
+$('.date').datepicker({
+        pickTime: false,
+        format: 'dd/mm/yyyy',
+        todayHighlight: true,
+        autoclose: true,
 });
 </script>
 <style>
