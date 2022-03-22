@@ -132,7 +132,7 @@ class ControllerAccountApplypezesha extends Controller {
                 'ACL' => 'private',
             ]);
             $this->load->model('account/customer');
-            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $result['ObjectURL'], 'PEZESHA');
+            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $result['ObjectURL'], 'PEZESHA', 'Copy Of Certificate Of Incorporation');
             $log->write($result['ObjectURL']);
         } catch (S3Exception $e) {
             $log = new Log('error.log');
@@ -187,7 +187,7 @@ class ControllerAccountApplypezesha extends Controller {
                 'ACL' => 'private',
             ]);
             $this->load->model('account/customer');
-            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $result['ObjectURL'], 'PEZESHA');
+            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $result['ObjectURL'], 'PEZESHA', 'Copy Of Bussiness Operating Permit');
             $log->write($result['ObjectURL']);
         } catch (S3Exception $e) {
             $log = new Log('error.log');
@@ -242,7 +242,7 @@ class ControllerAccountApplypezesha extends Controller {
                 'ACL' => 'private',
             ]);
             $this->load->model('account/customer');
-            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $result['ObjectURL'], 'PEZESHA');
+            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $result['ObjectURL'], 'PEZESHA', 'Copy Of ID Of Bussiness Owner / Managing Director');
             $log->write($result['ObjectURL']);
             $log->write($result);
             $log->write('result');

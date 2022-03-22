@@ -1505,9 +1505,19 @@ class ModelAccountCustomer extends Model {
         $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_pezesha_loans SET customer_id = '" . (int) $customer_id . "', loan_id = '" . (int) $loan_id . "', order_id = '" . (int) $order_id . "', loan_type = '" . $loan_type . "', created_at = NOW()");
     }
 
-    public function SaveCustomerFiles($customer_id, $path, $partner) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_files SET customer_id = '" . (int) $customer_id . "', path = '" . $path . "', partner = '" . $partner . "'");
-        return $this->db->getLastId();
+    public function SaveCustomerFiles($customer_id, $path, $partner, $doc_type) {
+        $doc_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_files WHERE customer_id = '" . (int) $customer_id . "' AND name = '" . $doc_type . "'");
+        $document_info = $doc_info->row;
+        $log = new Log('error.log');
+        $log->write('SaveCustomerFiles');
+        $log->write($document_info);
+        $log->write('SaveCustomerFiles');
+        if (!$doc_info->num_rows) {
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_files SET customer_id = '" . (int) $customer_id . "', path = '" . $path . "', partner = '" . $partner . "', name = '" . $doc_type . "'");
+            return $this->db->getLastId();
+        } else {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer_files SET path = '" . $path . "' WHERE customer_id = '" . (int) $customer_id . "' AND name = '" . $doc_type . "'");
+        }
     }
 
 }
