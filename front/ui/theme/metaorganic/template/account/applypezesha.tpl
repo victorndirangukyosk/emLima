@@ -213,8 +213,9 @@ $('#copy_of_certificate_of_incorporation_button').on('click', function(e) {
     $('#error_msg').show();
     return false;
     }
-     const fi = document.getElementById('copy_of_certificate_of_incorporation');
-     if (fi.files.length > 0) {
+    
+    const fi = document.getElementById('copy_of_certificate_of_incorporation');
+    if (fi.files.length > 0) {
             for (var i = 0; i <= fi.files.length - 1; i++) {
   
                 const fsize = fi.files.item(i).size;
@@ -227,6 +228,15 @@ $('#copy_of_certificate_of_incorporation_button').on('click', function(e) {
                 }
             }
     }
+    
+    var fileInput = document.getElementById('copy_of_certificate_of_incorporation');
+    var filePath = fileInput.value;
+    var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.pdf)$/i;
+    if (!allowedExtensions.exec(filePath)) {
+    $('#error_msg').html('Copy Of Certificate Of Incorporation File Type Invalid!!');
+    $('#error_msg').show();            
+    return false;
+    } 
     
     var file_data = $('#copy_of_certificate_of_incorporation').prop('files')[0];
     var form_data = new FormData();
@@ -269,6 +279,15 @@ $('#copy_of_bussiness_operating_permit_button').on('click', function(e) {
             }
     }
     
+    var fileInput = document.getElementById('copy_of_bussiness_operating_permit');
+    var filePath = fileInput.value;
+    var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.pdf)$/i;
+    if (!allowedExtensions.exec(filePath)) {
+    $('#error_msg').html('Copy Of Bussiness Operating Permit File Type Invalid!!');
+    $('#error_msg').show();            
+    return false;
+    }
+    
     var file_data = $('#copy_of_bussiness_operating_permit').prop('files')[0];
     var form_data = new FormData();
     form_data.append("file", file_data);
@@ -309,6 +328,15 @@ $('#copy_of_id_of_bussiness_owner_managing_director_button').on('click', functio
                 return false;
                 }
             }
+    }
+    
+    var fileInput = document.getElementById('copy_of_id_of_bussiness_owner_managing_director');
+    var filePath = fileInput.value;
+    var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.pdf)$/i;
+    if (!allowedExtensions.exec(filePath)) {
+    $('#error_msg').html('Copy Of ID Of Bussiness Owner / Managing Director File Type Invalid!!');
+    $('#error_msg').show();            
+    return false;
     }
     
     var file_data = $('#copy_of_id_of_bussiness_owner_managing_director').prop('files')[0];
