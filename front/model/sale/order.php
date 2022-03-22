@@ -504,6 +504,14 @@ class ModelSaleOrder extends Model {
             $implode[] = "c.customer_id IN (" . $data['filter_customer_id_array'] . ")";
         }
 
+        if (!empty($data['filter_customer_id'])) {
+            $sql .= " AND o.customer_id = '" . $data['filter_customer_id'] . "'";
+        }
+
+        if (!empty($data['filter_paid'])) {
+            $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
+        }
+
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
             $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
         }

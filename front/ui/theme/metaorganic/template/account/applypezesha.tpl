@@ -194,6 +194,20 @@ $('#copy_of_id_of_bussiness_owner_managing_director_button').on('click', functio
 
     });
 });
+$('#submit_info_to_pezesha').on('click', function(e) {
+    e.preventDefault();
+    $.ajax({
+            type: 'get',
+            url: 'index.php?path=account/applypezesha/dataingestion',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+            console.log(response);
+            }
+
+    });
+});
 </script>
 <style>
     .option_pay {
