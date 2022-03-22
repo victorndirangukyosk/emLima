@@ -43,6 +43,7 @@ class ControllerAccountApplypezesha extends Controller {
         ];
 
         $this->load->model('account/credit');
+        $this->load->model('account/customer');
 
         $data['label_address'] = $this->language->get('label_address');
         $data['heading_title'] = $this->language->get('heading_title');
@@ -92,6 +93,12 @@ class ControllerAccountApplypezesha extends Controller {
         $data['content_bottom'] = $this->load->controller('common/content_bottom');
         $data['footer'] = $this->load->controller('common/footer');
         $data['header'] = $this->load->controller('common/header/information');
+
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $data['national_id'] = $customer_info['national_id'];
+        $data['kra'] = $customer_info['kra'];
+        $data['dob'] = $customer_info['dob'];
+        $data['gender'] = $customer_info['gender'];
 
         // echo "<pre>";print_r($data['credits']);die;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/applypezesha.tpl')) {
