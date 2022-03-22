@@ -439,6 +439,11 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             $('#error_msg').show();
             })
             }
+            
+            if(response.data.status == 200) {    
+            $('#success_msg').html('You have been successfully registred for pezesha credit. Your application is under review.');
+            $('#success_msg').show();
+            }
             console.log(response);
             console.log('user registration response');
             }
