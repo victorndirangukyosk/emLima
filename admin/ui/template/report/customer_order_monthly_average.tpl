@@ -94,10 +94,10 @@
               <tr>
                 <td class="text-left"><?php echo $customer['customer_id']; ?></td>
                 <td class="text-left"><?php echo $customer['customer']; ?></td>
-                <td class="text-left"><?php echo $customer['company']; ?></td>
+                <td class="text-left"><?php echo $customer['company_name']; ?></td>
                 
                 <td class="text-left"><?php echo $customer['payment_terms']; ?></td>
-                <td class="text-left"><?php echo $customer['monthly_average']; ?></td>
+                <td class="text-right"><?php echo $customer['monthly_average']; ?></td>
               </tr>
               <?php } ?>
               <?php } else { ?>
