@@ -136,6 +136,14 @@ class ModelSaleOrder extends Model {
             $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
+        if (!empty($data['filter_customer_id'])) {
+            $sql .= " AND o.customer_id = '" . $data['filter_customer_id'] . "'";
+        }
+
+        if (!empty($data['filter_paid'])) {
+            $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
+        }
+
         if (!empty($data['filter_date_added'])) {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
@@ -502,14 +510,6 @@ class ModelSaleOrder extends Model {
 
         if (isset($data['filter_customer_id_array']) && !is_null($data['filter_customer_id_array'])) {
             $implode[] = "c.customer_id IN (" . $data['filter_customer_id_array'] . ")";
-        }
-
-        if (!empty($data['filter_customer_id'])) {
-            $sql .= " AND o.customer_id = '" . $data['filter_customer_id'] . "'";
-        }
-
-        if (!empty($data['filter_paid'])) {
-            $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
         }
 
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
