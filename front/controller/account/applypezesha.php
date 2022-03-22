@@ -417,50 +417,60 @@ class ControllerAccountApplypezesha extends Controller {
     public function userregistration() {
 
         $this->load->model('account/customer');
-        $this->load->model('account/customer_group');
-        $customer_device_info = $this->model_account_customer->getCustomer($this->customer->getId());
-        $customer_group_info = $this->model_account_customer_group->getCustomerGroup($customer_device_info['customer_group_id']);
-        $auth_response = $this->auth();
-        $log = new Log('error.log');
-        $log->write('auth_response');
-        $log->write($auth_response);
-        $log->write($customer_device_info);
-        $log->write('auth_response');
-        $meta_data = array('key' => 'customer_group', 'value' => $customer_group_info['description']);
-        $body = array('channel' => $this->config->get('pezesha_channel'), 'terms' => TRUE, 'full_names' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'], 'phone' => '254' . '' . $customer_device_info['telephone'], 'other_phone_nos' => array('254' . '' . $customer_device_info['telephone'], '254' . '' . $customer_device_info['telephone']), 'national_id' => $customer_device_info['national_id'], 'dob' => date('Y-m-d', strtotime($customer_device_info['dob'])), 'email' => $customer_device_info['email'], 'merchant_id' => $customer_device_info['customer_id'], 'merchant_reg_date' => date('Y-m-d', strtotime($customer_device_info['date_added'])), 'location' => $customer_device_info['company_name'] . '' . $customer_device_info['company_address'], 'geo_location' => array('long' => $customer_device_info['longitude'], 'lat' => $customer_device_info['latitude']), 'meta_data' => $meta_data);
-        //$body = http_build_query($body);
-        $body = json_encode($body);
-        $log->write($body);
-        $curl = curl_init();
-        if ($this->config->get('pezesha_environment') == 'live') {
-            curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers');
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authentication:Bearer ' . $auth_response]);
+        $customer_documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
+        if ($customer_documents != NULL && count($customer_documents) > 0) {
+            $this->load->model('account/customer_group');
+            $customer_device_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $customer_group_info = $this->model_account_customer_group->getCustomerGroup($customer_device_info['customer_group_id']);
+            $auth_response = $this->auth();
+            $log = new Log('error.log');
+            $log->write('auth_response');
+            $log->write($auth_response);
+            $log->write($customer_device_info);
+            $log->write('auth_response');
+            $meta_data = array('key' => 'customer_group', 'value' => $customer_group_info['description']);
+            $body = array('channel' => $this->config->get('pezesha_channel'), 'terms' => TRUE, 'full_names' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'], 'phone' => '254' . '' . $customer_device_info['telephone'], 'other_phone_nos' => array('254' . '' . $customer_device_info['telephone'], '254' . '' . $customer_device_info['telephone']), 'national_id' => $customer_device_info['national_id'], 'dob' => date('Y-m-d', strtotime($customer_device_info['dob'])), 'email' => $customer_device_info['email'], 'merchant_id' => $customer_device_info['customer_id'], 'merchant_reg_date' => date('Y-m-d', strtotime($customer_device_info['date_added'])), 'location' => $customer_device_info['company_name'] . '' . $customer_device_info['company_address'], 'geo_location' => array('long' => $customer_device_info['longitude'], 'lat' => $customer_device_info['latitude']), 'meta_data' => $meta_data);
+            //$body = http_build_query($body);
+            $body = json_encode($body);
+            $log->write($body);
+            $curl = curl_init();
+            if ($this->config->get('pezesha_environment') == 'live') {
+                curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authentication:Bearer ' . $auth_response]);
+            } else {
+                curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authentication:Bearer ' . $auth_response]);
+            }
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            $result = curl_exec($curl);
+
+            $log->write($result);
+            curl_close($curl);
+            $result = json_decode($result, true);
+            $log->write($result);
+            if (is_array($result) && array_key_exists('status', $result) && array_key_exists('response_code', $result) && array_key_exists('data', $result) && $result['response_code'] == 0 && $result['status'] == 200) {
+                $data['customer_id'] = $result['data']['merchant_id'];
+                $data['pezesha_customer_id'] = $result['data']['customer_id'];
+                $data['customer_uuid'] = $result['data']['customer_uuid'];
+                $customer_device_info = $this->model_account_customer->addPezeshaCustomer($data);
+            }
+            $json = $result;
+            //return $json;
+
+            $json['status'] = true;
+            $json['data'] = $result;
         } else {
-            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers');
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authentication:Bearer ' . $auth_response]);
+            $json['status'] = false;
+            $result['status'] = 422;
+            $result['message'] = 'Validation Error';
+            $result['errors']['documents'] = array('Documents Required!');
+            $json['data'] = $result;
+            $json['errors']['documents'] = array('Documents Required!');
         }
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-        $result = curl_exec($curl);
-
-        $log->write($result);
-        curl_close($curl);
-        $result = json_decode($result, true);
-        $log->write($result);
-        if (is_array($result) && array_key_exists('status', $result) && array_key_exists('response_code', $result) && array_key_exists('data', $result) && $result['response_code'] == 0 && $result['status'] == 200) {
-            $data['customer_id'] = $result['data']['merchant_id'];
-            $data['pezesha_customer_id'] = $result['data']['customer_id'];
-            $data['customer_uuid'] = $result['data']['customer_uuid'];
-            $customer_device_info = $this->model_account_customer->addPezeshaCustomer($data);
-        }
-        $json = $result;
-        //return $json;
-
-        $json['status'] = true;
-        $json['data'] = $result;
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
