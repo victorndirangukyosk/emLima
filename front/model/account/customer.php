@@ -1525,4 +1525,32 @@ class ModelAccountCustomer extends Model {
         return $document_info = $doc_info->rows;
     }
 
+    public function SendDocuments() {
+        $log = new Log('error.log');
+        $documents = $this->getCustomerDocuments($this->customer->getId());
+        $customer_info = $this->getCustomer($this->customer->getId());
+        if ($documents != NULL && count($documents) > 0) {
+            try {
+                $message = '';
+                $subject = $customer_info['firstname'] . ' ' . $customer_info['lastname'] . ' Documents.';
+                foreach ($documents as $document) {
+                    $message .= $document['name'] . ':' . $document['path'];
+                }
+                $log->write('SEND_DOCUMENTS');
+                $log->write($message);
+                $log->write($subject);
+                $log->write('SEND_DOCUMENTS');
+                $mail = new mail($this->config->get('config_mail'));
+                $mail->setTo('documents.kwikbasket@yopmail.com');
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSubject($subject);
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setHtml($message);
+                $mail->send();
+            } catch (Exception $e) {
+                
+            }
+        }
+    }
+
 }
