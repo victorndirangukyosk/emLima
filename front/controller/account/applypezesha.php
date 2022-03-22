@@ -465,4 +465,24 @@ class ControllerAccountApplypezesha extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function updatecustomerinfo() {
+        $log = new Log('error.log');
+        $log->write($this->request->post);
+        $this->load->model('account/customer');
+        $data['gender'] = $this->request->post['gender'];
+        $data['kra'] = $this->request->post['kra'];
+        $data['national_id'] = $this->request->post['national_id'];
+
+        $date = $this->request->post['dob'];
+        if (isset($date) && $date != NULL) {
+            $date = DateTime::createFromFormat('d/m/Y', $date);
+            $this->request->post['dob'] = $date->format('Y-m-d');
+        } else {
+            $this->request->post['dob'] = null;
+        }
+        $data['dob'] = $this->request->post['dob'];
+
+        $this->model_account_customer->updatecustomerinfo($this->customer->getId(), $data);
+    }
+
 }

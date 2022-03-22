@@ -1559,9 +1559,13 @@ class ModelAccountCustomer extends Model {
         return $customer_id;
     }
 
-    /*public function getPezeshaCustomer($customer_id) {
-        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_id . "'");
-        return $query->row;
-    }*/
+    /* public function getPezeshaCustomer($customer_id) {
+      $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_id . "'");
+      return $query->row;
+      } */
+
+    public function updatecustomerinfo($customer_id, $data) {
+        $this->db->query('UPDATE ' . DB_PREFIX . "customer SET dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', national_id = '" . $data['national_id'] . "', kra = '" . $data['kra'] . "' WHERE customer_id = '" . (int) $customer_id . "'");
+    }
 
 }

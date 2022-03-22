@@ -359,6 +359,19 @@ $('#copy_of_id_of_bussiness_owner_managing_director_button').on('click', functio
 $('#submit_info_to_pezesha').on('click', function(e) {
     e.preventDefault();
     $.ajax({
+            type: 'post',
+            url: 'index.php?path=account/applypezesha/updatecustomerinfo',
+            data : { dob : $("input[name=dob]").val(), kra : $("input[name=kra]").val(), national_id : $("input[name=national_id]").val(), gender : $("input[name='gender']:checked").val() },
+            dataType: 'json',
+            cache: false,
+            async: false,
+            success: function (response) {
+            console.log('updatecustomerinfo response');
+            console.log(response);
+            console.log('updatecustomerinfo response');
+            }
+    });
+    $.ajax({
             type: 'get',
             url: 'index.php?path=account/applypezesha/userregistration',
             cache: false,
