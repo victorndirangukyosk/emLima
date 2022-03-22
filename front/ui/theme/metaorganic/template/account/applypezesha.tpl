@@ -414,7 +414,7 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             processData: false,
             success: function (response) {
             console.log('accept terms response');
-            console.log(response);
+            console.log(response.data);
             console.log('accept terms response');
             }
             });    
@@ -433,6 +433,12 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             },
             success: function (response) {
             console.log('user registration response');
+            if(response.data.status == 422) {    
+            $.each(response.errors, function (key, data) {
+            $('#error_msg').html(data);
+            $('#error_msg').show();
+            })
+            }
             console.log(response);
             console.log('user registration response');
             }
