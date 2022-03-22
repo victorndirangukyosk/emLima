@@ -401,9 +401,38 @@ class ControllerAccountApplypezesha extends Controller {
 
         $json['status'] = true;
         $json['data'] = $result;
-
+        $this->SendDocuments($this->customer->getId());
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function SendDocuments($customer_id) {
+        $this->load->model('account/customer');
+        $documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        if ($documents != NULL && count($documents) > 0) {
+            $log = new Log('error.log');
+            try {
+                $message = '';
+                $subject = $customer_info['firstname'] . ' ' . $customer_info['lastname'] . ' Documents.';
+                foreach ($documents as $document) {
+                    $message .= $document['name'] . ':' . $document['path'];
+                }
+                $log->write('SEND_DOCUMENTS');
+                $log->write($message);
+                $log->write($subject);
+                $log->write('SEND_DOCUMENTS');
+                $mail = new mail($this->config->get('config_mail'));
+                $mail->setTo('documents.kwikbasket@yopmail.com');
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSubject($subject);
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setHtml($message);
+                $mail->send();
+            } catch (Exception $e) {
+                
+            }
+        }
     }
 
 }
