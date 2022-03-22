@@ -114,7 +114,11 @@
         <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available; text-align: center;" id="loan_offers">
             <button type="submit" id="submit_info_to_pezesha" name="submit_info_to_pezesha" class="btn btn-primary">SUBMIT FOR CREDIT APPROVAL THROUGH PEZESHA</button>
         </div>
-
+        <div class="col-md-12">   
+        <div class="alert alert-danger" id="error_msg" style="margin-bottom: 7px;">
+        </div>    
+        <div class="alert alert-success" style="font-size: 14px;" id="success_msg" style="margin-bottom: 7px;"></div>
+        </div>    
         </div>
 
 
@@ -198,12 +202,35 @@
 </script>
 <?php } ?>
 <script type="text/javascript">
+$('#success_msg').hide();
+$('#error_msg').hide();    
 $('#copy_of_certificate_of_incorporation_button').on('click', function(e) {
     e.preventDefault();
+    $('#success_msg').hide();
+    $('#error_msg').hide();
+    if( document.getElementById("copy_of_certificate_of_incorporation").files.length == 0 ){
+    $('#error_msg').html('Copy Of Certificate Of Incorporation Sholud Not Be Empty!');
+    $('#error_msg').show();
+    return false;
+    }
+     const fi = document.getElementById('copy_of_certificate_of_incorporation');
+     if (fi.files.length > 0) {
+            for (var i = 0; i <= fi.files.length - 1; i++) {
+  
+                const fsize = fi.files.item(i).size;
+                const file = Math.round((fsize / 1024));
+                // The size of the file.
+                if (file > 2048) {
+                    $('#error_msg').html('Copy Of Certificate Of Incorporation Sholud Be Less Than 2 MB!');
+                    $('#error_msg').show();
+                return false;
+                }
+            }
+    }
+    
     var file_data = $('#copy_of_certificate_of_incorporation').prop('files')[0];
     var form_data = new FormData();
     form_data.append("file", file_data);
-    alert(form_data);
     $.ajax({
             type: 'post',
             url: 'index.php?path=account/applypezesha/pezeshafiles',
@@ -219,6 +246,29 @@ $('#copy_of_certificate_of_incorporation_button').on('click', function(e) {
 });
 $('#copy_of_bussiness_operating_permit_button').on('click', function(e) {
     e.preventDefault();
+    $('#success_msg').hide();
+    $('#error_msg').hide();
+    if( document.getElementById("copy_of_bussiness_operating_permit").files.length == 0 ){
+    $('#error_msg').html('Copy Of Bussiness Operating Permit Sholud Not Be Empty!');
+    $('#error_msg').show();    
+    return false;
+    }
+    
+    const fi = document.getElementById('copy_of_bussiness_operating_permit');
+    if (fi.files.length > 0) {
+            for (var i = 0; i <= fi.files.length - 1; i++) {
+  
+                const fsize = fi.files.item(i).size;
+                const file = Math.round((fsize / 1024));
+                // The size of the file.
+                if (file > 2048) {
+                    $('#error_msg').html('Copy Of Bussiness Operating Permit Sholud Be Less Than 2 MB!');
+                    $('#error_msg').show();
+                return false;
+                }
+            }
+    }
+    
     var file_data = $('#copy_of_bussiness_operating_permit').prop('files')[0];
     var form_data = new FormData();
     form_data.append("file", file_data);
@@ -238,6 +288,29 @@ $('#copy_of_bussiness_operating_permit_button').on('click', function(e) {
 });
 $('#copy_of_id_of_bussiness_owner_managing_director_button').on('click', function(e) {
     e.preventDefault();
+    $('#success_msg').hide();
+    $('#error_msg').hide();
+    if( document.getElementById("copy_of_id_of_bussiness_owner_managing_director").files.length == 0 ){
+    $('#error_msg').html('Copy Of ID Of Bussiness Owner / Managing Director Sholud Not Be Empty!');
+    $('#error_msg').show();    
+    return false;
+    }
+    
+    const fi = document.getElementById('copy_of_id_of_bussiness_owner_managing_director');
+    if (fi.files.length > 0) {
+            for (var i = 0; i <= fi.files.length - 1; i++) {
+  
+                const fsize = fi.files.item(i).size;
+                const file = Math.round((fsize / 1024));
+                // The size of the file.
+                if (file > 2048) {
+                    $('#error_msg').html('Copy Of ID Of Bussiness Owner / Managing Director Sholud Be Less Than 2 MB!');
+                    $('#error_msg').show();
+                return false;
+                }
+            }
+    }
+    
     var file_data = $('#copy_of_id_of_bussiness_owner_managing_director').prop('files')[0];
     var form_data = new FormData();
     form_data.append("file", file_data);
