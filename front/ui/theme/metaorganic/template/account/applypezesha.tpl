@@ -213,10 +213,24 @@ $('#copy_of_certificate_of_incorporation_button').on('click', function(e) {
     $('#error_msg').show();
     return false;
     }
+     const fi = document.getElementById('copy_of_certificate_of_incorporation');
+     if (fi.files.length > 0) {
+            for (var i = 0; i <= fi.files.length - 1; i++) {
+  
+                const fsize = fi.files.item(i).size;
+                const file = Math.round((fsize / 1024));
+                // The size of the file.
+                if (file > 2048) {
+                    $('#error_msg').html('Copy Of Certificate Of Incorporation Sholud Be Less Than 2 MB!');
+                    $('#error_msg').show();
+                return false;
+                }
+            }
+    }
+    
     var file_data = $('#copy_of_certificate_of_incorporation').prop('files')[0];
     var form_data = new FormData();
     form_data.append("file", file_data);
-    alert(form_data);
     $.ajax({
             type: 'post',
             url: 'index.php?path=account/applypezesha/pezeshafiles',
@@ -239,6 +253,22 @@ $('#copy_of_bussiness_operating_permit_button').on('click', function(e) {
     $('#error_msg').show();    
     return false;
     }
+    
+    const fi = document.getElementById('copy_of_bussiness_operating_permit');
+    if (fi.files.length > 0) {
+            for (var i = 0; i <= fi.files.length - 1; i++) {
+  
+                const fsize = fi.files.item(i).size;
+                const file = Math.round((fsize / 1024));
+                // The size of the file.
+                if (file > 2048) {
+                    $('#error_msg').html('Copy Of Bussiness Operating Permit Sholud Be Less Than 2 MB!');
+                    $('#error_msg').show();
+                return false;
+                }
+            }
+    }
+    
     var file_data = $('#copy_of_bussiness_operating_permit').prop('files')[0];
     var form_data = new FormData();
     form_data.append("file", file_data);
@@ -265,6 +295,22 @@ $('#copy_of_id_of_bussiness_owner_managing_director_button').on('click', functio
     $('#error_msg').show();    
     return false;
     }
+    
+    const fi = document.getElementById('copy_of_id_of_bussiness_owner_managing_director');
+    if (fi.files.length > 0) {
+            for (var i = 0; i <= fi.files.length - 1; i++) {
+  
+                const fsize = fi.files.item(i).size;
+                const file = Math.round((fsize / 1024));
+                // The size of the file.
+                if (file > 2048) {
+                    $('#error_msg').html('Copy Of ID Of Bussiness Owner / Managing Director Sholud Be Less Than 2 MB!');
+                    $('#error_msg').show();
+                return false;
+                }
+            }
+    }
+    
     var file_data = $('#copy_of_id_of_bussiness_owner_managing_director').prop('files')[0];
     var form_data = new FormData();
     form_data.append("file", file_data);
