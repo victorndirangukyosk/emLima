@@ -268,4 +268,136 @@ class ControllerAccountApplypezesha extends Controller {
         }
     }
 
+    public function auth() {
+
+        $log = new Log('error.log');
+
+        $body = array('grant_type' => 'client_credentials', 'provider' => 'users', 'client_secret' => $this->config->get('pezesha_client_secret'), 'client_id' => $this->config->get('pezesha_client_id'), 'merchant _key' => $this->config->get('pezesha_merchant_key'));
+        $body = http_build_query($body);
+        $curl = curl_init();
+        if ($this->config->get('pezesha_environment') == 'live') {
+            curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/oauth/token');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+        } else {
+            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/oauth/token');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+        }
+
+        //$log->write($body);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+
+        //$log->write($result);
+        curl_close($curl);
+        $result = json_decode($result, true);
+        return $result['access_token'];
+        /* $json['status'] = true;
+          $json['data'] = $result;
+
+          $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($json)); */
+    }
+
+    public function accrptterms() {
+
+        $log = new Log('error.log');
+        $this->load->model('account/customer');
+        $customer_device_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $auth_response = $this->auth();
+        $log->write('auth_response');
+        $log->write($auth_response);
+        $log->write($customer_device_info);
+        $log->write('auth_response');
+        $body = array('channel' => $this->config->get('pezesha_channel'), 'identifier' => $customer_device_info['national_id'], 'terms' => TRUE);
+        $body = http_build_query($body);
+        //$body = json_encode($body);
+        $curl = curl_init();
+        if ($this->config->get('pezesha_environment') == 'live') {
+            curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/terms');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded', 'Authentication:Bearer ' . $auth_response]);
+        } else {
+            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/terms');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded', 'Authentication:Bearer ' . $auth_response]);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+
+        $log->write($result);
+        curl_close($curl);
+        $result = json_decode($result, true);
+        $log->write($result);
+        $json = $result;
+        return $json;
+    }
+
+    public function dataingestion() {
+
+        $log = new Log('error.log');
+        $this->load->model('account/customer');
+        $this->load->model('sale/order');
+        $customer_device_info = $this->model_account_customer->getCustomer($this->customer->getId());
+
+        $data['filter_customer_id'] = $this->customer->getId();
+        $data['filter_paid'] = 'Y';
+
+        $customer_order_info = $this->model_sale_order->getOrders($data);
+        $transactions_details = array();
+
+        foreach ($customer_order_info as $order_info) {
+            $order_transaction_info = $this->model_sale_order->getOrderTransactionId($order_info['order_id']);
+            $transactions['transaction_id'] = $order_transaction_info['transaction_id'];
+            $transactions['merchant_id'] = $this->customer->getId();
+            $transactions['face_amount'] = $order_info['total'];
+            $transactions['transaction_time'] = $order_info['date_added'];
+            $transactions['other_details'] = array('key' => 'Organization_id', 'value' => $customer_device_info['customer_id'], 'key' => 'payee_type', 'value' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'] . ' ' . $customer_device_info['company_name']);
+            $transactions_details[] = $transactions;
+        }
+        $log->write($transactions_details);
+
+        $auth_response = $this->auth();
+        $log->write('auth_response');
+        $log->write($auth_response);
+        $log->write($customer_device_info);
+        $log->write('auth_response');
+        $body = array('channel' => $this->config->get('pezesha_channel'), 'transactions' => $transactions_details);
+        //$body = http_build_query($body);
+        $body = json_encode($body);
+        $log->write($body);
+        $curl = curl_init();
+        if ($this->config->get('pezesha_environment') == 'live') {
+            curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1.1/data');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+        } else {
+            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1.1/data');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+
+        $log->write($result);
+        curl_close($curl);
+        $result = json_decode($result, true);
+        $log->write($result);
+        $json = $result;
+        return $json;
+
+        /* $json['status'] = true;
+          $json['data'] = $result;
+
+          $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($json)); */
+    }
+
 }
