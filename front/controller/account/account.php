@@ -197,7 +197,7 @@ class ControllerAccountAccount extends Controller {
             $log = new Log('error.log');
             $log->write('account edit');
 
-            if (isset($date)) {
+            if (isset($date) && $date != NULL) {
                 $date = DateTime::createFromFormat('d/m/Y', $date);
                 $this->request->post['dob'] = $date->format('Y-m-d');
             } else {
