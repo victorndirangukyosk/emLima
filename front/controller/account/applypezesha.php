@@ -292,7 +292,7 @@ class ControllerAccountApplypezesha extends Controller {
 
         $json['status'] = true;
         $json['data'] = $result;
-        //$this->model_account_customer->SendDocuments();
+        $this->SendDocuments();
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -377,6 +377,68 @@ class ControllerAccountApplypezesha extends Controller {
         $data['dob'] = $this->request->post['dob'];
 
         $this->model_account_customer->updatecustomerinfo($this->customer->getId(), $data);
+    }
+
+    public function SendDocuments() {
+        $log = new Log('error.log');
+        $this->load->model('account/customer');
+        $documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        if ($documents != NULL && count($documents) > 0) {
+
+            $customer_pezehsa['firstname'] = $customer_info['firstname'];
+            $customer_pezehsa['lastname'] = $customer_info['lastname'];
+            $customer_pezehsa['companyname'] = $customer_info['company_name'];
+            $customer_pezehsa['companyname'] = $customer_info['company_name'];
+            $customer_pezehsa['pezesha_documents'] = $this->getPezeshaDocumentsTemplate();
+
+            $log->write('EMAIL SENDING');
+            $log->write($customer_pezehsa);
+            $log->write('EMAIL SENDING');
+
+            $subject = $this->emailtemplate->getSubject('Customer', 'customer_97', $customer_pezehsa);
+            $message = $this->emailtemplate->getMessage('Customer', 'customer_97', $customer_pezehsa);
+            try {
+                $mail = new Mail($this->config->get('config_mail'));
+                $mail->setTo('documents.kwikbasket@yopmail.com');
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setSubject($subject);
+                $mail->setHTML($message);
+                $mail->send();
+            } catch (Exception $e) {
+                
+            }
+        }
+    }
+
+    public function getPezeshaDocumentsTemplate() {
+        $log = new Log('error.log');
+
+        $this->load->model('account/customer');
+        $customer_documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
+
+        $html = '';
+        $html .= '<table class="table table-bordered" style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;border-collapse: collapse!important;border-spacing: 0;background-color: transparent;width: 100%;max-width: 100%;margin-bottom: 20px;border: 1px solid #ddd;">';
+        $html .= '<thead class="thead-bg" style="background: #EC7122;color: #fff;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;display: table-header-group;">'
+                . '<tr style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;page-break-inside: avoid;">'
+                . '<th scope="col" style="background-color: #EC7122 !important;color: #000;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: bottom;border-top: 1px solid #ddd;border-bottom: 2px solid #ddd;border: 1px solid #ddd!important;border-bottom-width: 2px;">S.NO</th>'
+                . '<th scope="col" style="background-color: #EC7122 !important;color: #000;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: bottom;border-top: 1px solid #ddd;border-bottom: 2px solid #ddd;border: 1px solid #ddd!important;border-bottom-width: 2px;">DOCUMENT</th>'
+                . '<th scope="col" style="background-color: #EC7122 !important;color: #000;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: bottom;border-top: 1px solid #ddd;border-bottom: 2px solid #ddd;border: 1px solid #ddd!important;border-bottom-width: 2px;">ACTION</th>'
+                . '</tr>'
+                . '</thead>';
+        $html .= '<tbody style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;">';
+        $count = 1;
+        foreach ($customer_documents as $customer_document) {
+            $html .= '<tr style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;page-break-inside: avoid;">
+            <th scope="row" style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $count . '</th>
+            <td style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $customer_document['name'] . '</td>
+            <td style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $customer_document['path'] . '</td>
+        </tr>';
+            $count++;
+        }
+        $html .= '</tbody></table>';
+        return $html;
     }
 
 }
