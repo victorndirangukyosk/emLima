@@ -21,6 +21,7 @@ $_['button_continue'] = 'Continue';
 $_['text_order'] = 'My Orders';
 $_['text_signout'] = 'Signout';
 $_['text_balance'] = 'Your Pezesha Details';
+$_['text_apply_pezesha'] = 'Apply For Pezesha';
 $_['text_shopping'] = 'Start Shopping';
 $_['text_report_issue'] = 'Report an issue';
 $_['text_activity'] = 'Activity on';

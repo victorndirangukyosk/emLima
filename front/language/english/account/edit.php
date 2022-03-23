@@ -17,6 +17,8 @@ $_['entry_dob'] = 'DOB';
 
 // Entry
 $_['entry_firstname'] = 'First Name';
+$_['entry_national_id'] = 'National ID';
+$_['entry_date_of_birth'] = 'Date Of Birth';
 $_['entry_lastname'] = 'Last Name';
 $_['entry_email'] = 'E-Mail';
 $_['entry_telephone'] = 'Telephone';
@@ -27,12 +29,17 @@ $_['entry_companyaddress'] = 'Company Address';
 $_['entry_phone'] = 'Phone';
 $_['entry_gender'] = 'Gender';
 $_['entry_fax'] = 'Tax No.';
+$_['entry_kra'] = 'KRA PIN';
 $_['entry_location'] = 'Location';
 $_['entry_requirement'] = 'Avg Requirement per week';
 $_['entry_mandatory_products'] = 'Mandatory Veggies/ Furits';
 
 // Error
 $_['error_location'] = 'Location is required';
+$_['error_national_id'] = 'National ID is required';
+$_['error_invalid_national_id'] = 'Invalid National ID';
+$_['error_invalid_kra'] = 'Invalid KRA PIN';
+$_['error_invalid_dob'] = 'Invalid DOB';
 $_['error_requirement'] = 'Avg Requirement per week is required';
 $_['error_mandatory_products'] = 'Mandatory Veggies/ Furits is required';
 

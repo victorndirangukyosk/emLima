@@ -192,17 +192,17 @@ class ControllerAccountAccount extends Controller {
         $this->load->model('account/changepass');
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
-            // $date = $this->request->post['dob'];
+            $date = $this->request->post['dob'];
 
             $log = new Log('error.log');
             $log->write('account edit');
 
-            // if(isset($date)) {
-            //     $date = DateTime::createFromFormat('d/m/Y', $date);
-            //     $this->request->post['dob'] = $date->format('Y-m-d');
-            // } else {
-            $this->request->post['dob'] = null;
-            // }
+            if (isset($date) && $date != NULL) {
+                $date = DateTime::createFromFormat('d/m/Y', $date);
+                $this->request->post['dob'] = $date->format('Y-m-d');
+            } else {
+                $this->request->post['dob'] = null;
+            }
 
             $this->model_account_customer->editCustomer($this->request->post);
 
@@ -280,6 +280,8 @@ class ControllerAccountAccount extends Controller {
         $data['entry_confirmpassword'] = $this->language->get('entry_confirmpassword');
 
         $data['entry_firstname'] = $this->language->get('entry_firstname');
+        $data['entry_national_id'] = $this->language->get('entry_national_id');
+        $data['entry_date_of_birth'] = $this->language->get('entry_date_of_birth');
         $data['entry_lastname'] = $this->language->get('entry_lastname');
         $data['entry_email'] = $this->language->get('entry_email');
         $data['entry_telephone'] = $this->language->get('entry_telephone');
@@ -294,7 +296,7 @@ class ControllerAccountAccount extends Controller {
         $data['button_save'] = $this->language->get('button_save');
 
         $data['entry_gender'] = $this->language->get('entry_gender');
-
+        $data['entry_kra'] = $this->language->get('entry_kra');
         $data['text_my_account'] = $this->language->get('text_my_account');
         $data['text_my_orders'] = $this->language->get('text_my_orders');
         $data['text_my_newsletter'] = $this->language->get('text_my_newsletter');
@@ -398,11 +400,23 @@ class ControllerAccountAccount extends Controller {
         } else {
             $data['error_tax'] = '';
         }
+        
+        if (isset($this->error['kra'])) {
+            $data['error_kra'] = $this->error['kra'];
+        } else {
+            $data['error_kra'] = '';
+        }
 
         if (isset($this->error['dob'])) {
             $data['error_dob'] = $this->error['dob'];
         } else {
             $data['error_dob'] = '';
+        }
+
+        if (isset($this->error['national_id'])) {
+            $data['error_national_id'] = $this->error['national_id'];
+        } else {
+            $data['error_national_id'] = '';
         }
 
         if (isset($this->error['custom_field'])) {
@@ -429,12 +443,12 @@ class ControllerAccountAccount extends Controller {
             $data['gender'] = 'male';
         }
 
-        if (isset($this->request->post['dob']) && '' != trim($this->request->post['dob'])) {
+        if (isset($this->request->post['dob']) && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $this->request->post['dob'])) {
             $data['dob'] = date('d/m/Y', strtotime($this->request->post['dob']));
         } elseif (!empty($customer_info['dob'])) {
             $data['dob'] = date('d/m/Y', strtotime($customer_info['dob']));
         } else {
-            $data['dob'] = '01/01/1990';
+            $data['dob'] = NULL;
         }
 
         if (isset($this->request->post['firstname'])) {
@@ -443,6 +457,22 @@ class ControllerAccountAccount extends Controller {
             $data['firstname'] = $customer_info['firstname'];
         } else {
             $data['firstname'] = '';
+        }
+
+        if (isset($this->request->post['national_id'])) {
+            $data['national_id'] = $this->request->post['national_id'];
+        } elseif (!empty($customer_info)) {
+            $data['national_id'] = $customer_info['national_id'];
+        } else {
+            $data['national_id'] = '';
+        }
+        
+        if (isset($this->request->post['kra'])) {
+            $data['kra'] = $this->request->post['kra'];
+        } elseif (!empty($customer_info)) {
+            $data['kra'] = $customer_info['kra'];
+        } else {
+            $data['kra'] = '';
         }
 
         if (isset($this->request->post['companyname'])) {
@@ -807,15 +837,27 @@ class ControllerAccountAccount extends Controller {
           $this->error['error_tax'] = $this->language->get( 'error_tax' );
           } */
 
-        if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 6) || (utf8_strlen($this->request->post['password']) > 20)) {
+        if ($this->request->post['national_id'] != NULL && !preg_match('/^[0-9]{8}$/', $this->request->post['national_id'])) {
+            $this->error['national_id'] = $this->language->get('error_invalid_national_id');
+        }
+        
+        if ($this->request->post['kra'] != NULL && !preg_match('/^[A-Z0-9]{11}$/', $this->request->post['kra'])) {
+            $this->error['kra'] = $this->language->get('error_invalid_kra');
+        }
+
+        if ($this->request->post['dob'] != NULL && !preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $this->request->post['dob'])) {
+            $this->error['dob'] = $this->language->get('error_invalid_dob');
+        }
+
+        if (utf8_strlen($this->request->post['confirmpassword']) >= 1 && utf8_strlen($this->request->post['password']) >= 1 && (utf8_strlen($this->request->post['password'] < 6) && utf8_strlen($this->request->post['password']) > 20)) {
             $this->error['password'] = $this->language->get('error_password');
         }
 
-        if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
+        if (utf8_strlen($this->request->post['password']) >= 1 && !preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
             $this->error['password'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
         }
 
-        if ((utf8_strlen($this->request->post['confirmpassword']) >= 1) && (utf8_strlen($this->request->post['confirmpassword']) < 6) || (utf8_strlen($this->request->post['confirmpassword']) > 20)) {
+        if (utf8_strlen($this->request->post['password']) >= 1 && (utf8_strlen($this->request->post['confirmpassword']) >= 1) && (utf8_strlen($this->request->post['confirmpassword']) < 6 || utf8_strlen($this->request->post['confirmpassword']) > 20)) {
             $this->error['confirmpassword'] = $this->language->get('error_confirmpassword');
         }
 
@@ -837,7 +879,7 @@ class ControllerAccountAccount extends Controller {
         $change_pass_count = $this->model_account_changepass->check_customer_previous_password($this->customer->getId(), $this->request->post['password']);
         $change_current_pass_count = $this->model_account_changepass->check_customer_current_password($this->customer->getId(), $this->request->post['password']);
 
-        if ($change_pass_count > 0 || $change_current_pass_count > 0) {
+        if ($this->request->post['password'] != NULL && ($change_pass_count > 0 || $change_current_pass_count > 0)) {
             $this->error['password'] = 'Password must not match previous 3 passwords';
         }
 

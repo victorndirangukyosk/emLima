@@ -642,6 +642,13 @@
                     <li><a href="<?php echo $report_customer_wallet; ?>"><?php echo $text_report_customer_wallet; ?></a></li>
                     <?php } ?>
 
+
+
+                     <?php if($preturn_customer_order_monthly_average) { ?>
+                    <li><a href="<?php echo $report_customer_order_monthly_average; ?>"><?php echo $text_report_customer_order_monthly_average; ?></a></li>
+                    <?php } ?>
+
+
                 </ul>
             </li>
             <?php }?>

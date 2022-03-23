@@ -254,7 +254,7 @@ class ModelAccountCustomer extends Model {
 //if(isset($data['dob'])) {
         //$this->db->query('UPDATE ' . DB_PREFIX . "customer SET  customer_group_id = '" . (int) $data['customer_group_id'] . "' , firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', modified_by = '" . $this->customer->getId() . "', modifier_role = 'customer', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
 //}
-        $this->db->query('UPDATE ' . DB_PREFIX . "customer SET firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', modified_by = '" . $this->customer->getId() . "', modifier_role = 'customer', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+        $this->db->query('UPDATE ' . DB_PREFIX . "customer SET firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', national_id = '" . $data['national_id'] . "', kra = '" . $data['kra'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', modified_by = '" . $this->customer->getId() . "', modifier_role = 'customer', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
 
         $this->trigger->fire('post.customer.edit', $customer_id);
     }
@@ -1503,6 +1503,41 @@ class ModelAccountCustomer extends Model {
         $log->write($loan_type);
         $log->write('loan_type');
         $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_pezesha_loans SET customer_id = '" . (int) $customer_id . "', loan_id = '" . (int) $loan_id . "', order_id = '" . (int) $order_id . "', loan_type = '" . $loan_type . "', created_at = NOW()");
+    }
+
+    public function SaveCustomerFiles($customer_id, $path, $partner, $doc_type) {
+        $doc_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_files WHERE customer_id = '" . (int) $customer_id . "' AND name = '" . $doc_type . "'");
+        $document_info = $doc_info->row;
+        $log = new Log('error.log');
+        $log->write('SaveCustomerFiles');
+        $log->write($document_info);
+        $log->write('SaveCustomerFiles');
+        if (!$doc_info->num_rows) {
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_files SET customer_id = '" . (int) $customer_id . "', path = '" . $path . "', partner = '" . $partner . "', name = '" . $doc_type . "'");
+            return $this->db->getLastId();
+        } else {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer_files SET path = '" . $path . "' WHERE customer_id = '" . (int) $customer_id . "' AND name = '" . $doc_type . "'");
+        }
+    }
+
+    public function getCustomerDocuments($customer_id) {
+        $doc_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_files WHERE customer_id = '" . (int) $customer_id . "'");
+        return $document_info = $doc_info->rows;
+    }
+
+    public function addPezeshaCustomer($data) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "pezesha_customers SET customer_id = '" . (int) $data['customer_id'] . "', customer_uuid = '" . $this->db->escape($data['customer_uuid']) . "', pezesha_customer_id = '" . $this->db->escape($data['pezesha_customer_id']) . "', created_at = NOW()");
+        $customer_id = $this->db->getLastId();
+        return $customer_id;
+    }
+
+    /* public function getPezeshaCustomer($customer_id) {
+      $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_id . "'");
+      return $query->row;
+      } */
+
+    public function updatecustomerinfo($customer_id, $data) {
+        $this->db->query('UPDATE ' . DB_PREFIX . "customer SET dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', national_id = '" . $data['national_id'] . "', kra = '" . $data['kra'] . "' WHERE customer_id = '" . (int) $customer_id . "'");
     }
 
 }

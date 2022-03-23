@@ -96,7 +96,7 @@
             </div>
           </div>
 
-         <!-- <div class="form-group required">
+            <div class="form-group" <?php if(!empty($_SESSION['parent']) && $_SESSION['parent'] > 0) { ?> style="display:none"  <?php } ?> >
             <label class="col-sm-3 control-label" for="input-date-added"><?php echo $entry_dob; ?></label>
             <div class="col-sm-6 col-xs-12">
                 <input type="text" name="dob" value="<?php echo $dob; ?>" placeholder="<?php echo $entry_dob; ?>" data-date-format="dd/mm/YYYY" id="input-date-added" class="form-control date" />
@@ -104,16 +104,26 @@
               <div class="text-danger"><?php echo $error_dob; ?></div>
               <?php } ?>
             </div>
-          </div>--!>
+          </div>
           
   
 
- <div class="form-group  has-feedback">
+            <div class="form-group  has-feedback">
                 <label for="name" class="col-sm-3 control-label"><?= $entry_fax ?></label>
                 <div class="col-sm-6">
                     <input type="text" value="<?php echo $fax; ?>" size="30" placeholder="Tax No" name="fax" maxlength="100" id="name" class="form-control input-lg" />
                      <?php if(isset($error_fax) && $error_fax) { ?>
                       <div class="text-danger"><?php echo $error_fax; ?></div>
+                      <?php } ?>
+                </div>
+            </div>
+            
+            <div class="form-group" <?php if(!empty($_SESSION['parent']) && $_SESSION['parent'] > 0) { ?> style="display:none"  <?php } ?>>
+                <label for="name" class="col-sm-3 control-label"><?= $entry_kra ?></label>
+                <div class="col-sm-6">
+                    <input type="text" value="<?php echo $kra; ?>" size="30" placeholder="KRA PIN" value="<?php echo $kra ?>" name="kra" maxlength="100" id="kra" class="form-control input-lg" />
+                     <?php if(isset($error_kra) && $error_kra) { ?>
+                      <div class="text-danger"><?php echo $error_kra; ?></div>
                       <?php } ?>
                 </div>
             </div>
@@ -132,7 +142,7 @@
           </div> -->
           <input type="hidden" name="tax" id="tax_number" value="" placeholder="<?php echo $taxnumber_mask; ?>" class="form-control" />
 
-          <div class="form-group required" style="display:none">
+          <div class="form-group" <?php if(!empty($_SESSION['parent']) && $_SESSION['parent'] > 0) { ?> style="display:none"  <?php } ?>>
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_gender; ?></label>
             <div class="col-sm-6 col-xs-12">
                 <label class="control control--radio" style="display: initial !important;"> 
@@ -168,7 +178,17 @@
                  </label>
             </div>
           </div>
-
+          
+          <div class="form-group" <?php if(!empty($_SESSION['parent']) && $_SESSION['parent'] > 0) { ?> style="display:none"  <?php } ?>>
+            <label class="col-sm-3 control-label" for="input-nationalid"><?php echo $entry_national_id; ?></label>
+            <div class="col-sm-6 col-xs-12">
+                <input type="text" name="national_id" id="national_id" placeholder="<?php echo $entry_national_id; ?>" value="<?php echo $national_id; ?>" class="form-control input-lg" />
+              <?php if ($error_national_id) { ?>
+              <div class="text-danger"><?php echo $error_national_id; ?></div>
+              <?php } ?>
+            </div>
+          </div>          
+                    
           <div class="form-group required">
             <label class="col-sm-3 control-label" for="input-telephone"><?php echo $entry_password; ?></label>
             <div class="col-sm-6 col-xs-12">
@@ -381,12 +401,12 @@ $('button[id^=\'button-custom-field\']').on('click', function() {
 
     
 
-   <!-- $('.date').datepicker({
+    $('.date').datepicker({
         pickTime: false,
         format: 'dd/mm/yyyy',
         todayHighlight: true,
         autoclose: true,
-    }); --!>   
+    });   
 </script> 
                  
 
