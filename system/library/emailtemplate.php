@@ -429,7 +429,7 @@ class Emailtemplate {
 
     // Customer
     public function getCustomerFind() {
-        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{deliveryexecutivename}', '{deliveryexecutivephone}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}', '{order_id}', '{status}', '{mpesa_receipt_number}', '{bulk_notification_subject}', '{bulk_notification_email_description}', '{bulk_notification_sms_description}', '{bulk_notification_mobile_title}', '{bulk_notification_mobile_message}', '{delivery_timeslot}', '{companyname}',  '{pezesha_documents}'];
+        $result = ['{firstname}', '{lastname}', '{branchname}', '{subuserfirstname}', '{subuserlastname}', '{subuserorderid}', '{drivername}', '{driverphone}', '{vehicle}', '{deliveryexecutivename}', '{deliveryexecutivephone}', '{date}', '{store_name}', '{email}', '{password}', '{account_href}', '{activate_href}', '{order_link}', '{site_url}', '{logo}', '{system_name}', '{year}', '{help_center}', '{white_logo}', '{terms}', '{privacy_policy}', '{system_email}', '{system_phone}', '{amount}', '{transfer_type}', '{ip_address}', '{order_id}', '{status}', '{mpesa_receipt_number}', '{bulk_notification_subject}', '{bulk_notification_email_description}', '{bulk_notification_sms_description}', '{bulk_notification_mobile_title}', '{bulk_notification_mobile_message}', '{delivery_timeslot}', '{companyname}', '{pezesha_documents}'];
 
         return $result;
     }
@@ -481,7 +481,7 @@ class Emailtemplate {
             'bulk_notification_mobile_message' => isset($data['bulk_notification_mobile_message']) ? $data['bulk_notification_mobile_message'] : '',
             'delivery_timeslot' => isset($data['delivery_timeslot']) ? $data['delivery_timeslot'] : '',
             'companyname' => isset($data['companyname']) ? $data['companyname'] : '',
-            'delivery_timeslot' => isset($data['pezesha_documents']) ? $data['pezesha_documents'] : '',
+            'pezesha_documents' => isset($data['pezesha_documents']) ? $data['pezesha_documents'] : '',
         ];
 
         return $result;

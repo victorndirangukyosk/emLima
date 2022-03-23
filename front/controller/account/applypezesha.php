@@ -385,22 +385,26 @@ class ControllerAccountApplypezesha extends Controller {
         $documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         if ($documents != NULL && count($documents) > 0) {
+
+            $customer_pezehsa['firstname'] = $customer_info['firstname'];
+            $customer_pezehsa['lastname'] = $customer_info['lastname'];
+            $customer_pezehsa['companyname'] = $customer_info['company_name'];
+            $customer_pezehsa['companyname'] = $customer_info['company_name'];
+            $customer_pezehsa['pezesha_documents'] = $this->getPezeshaDocumentsTemplate();
+
+            $log->write('EMAIL SENDING');
+            $log->write($customer_pezehsa);
+            $log->write('EMAIL SENDING');
+
+            $subject = $this->emailtemplate->getSubject('Customer', 'customer_97', $customer_pezehsa);
+            $message = $this->emailtemplate->getMessage('Customer', 'customer_97', $customer_pezehsa);
             try {
-                $message = '';
-                $subject = $customer_info['firstname'] . ' ' . $customer_info['lastname'] . ' Documents.';
-                foreach ($documents as $document) {
-                    $message .= $document['name'] . ':' . $document['path'];
-                }
-                $log->write('SEND_DOCUMENTS');
-                $log->write($message);
-                $log->write($subject);
-                $log->write('SEND_DOCUMENTS');
-                $mail = new mail($this->config->get('config_mail'));
+                $mail = new Mail($this->config->get('config_mail'));
                 $mail->setTo('documents.kwikbasket@yopmail.com');
                 $mail->setFrom($this->config->get('config_from_email'));
-                $mail->setSubject($subject);
                 $mail->setSender($this->config->get('config_name'));
-                $mail->setHtml($message);
+                $mail->setSubject($subject);
+                $mail->setHTML($message);
                 $mail->send();
             } catch (Exception $e) {
                 
@@ -408,7 +412,7 @@ class ControllerAccountApplypezesha extends Controller {
         }
     }
 
-    public function getOrderProductListTemplate() {
+    public function getPezeshaDocumentsTemplate() {
         $log = new Log('error.log');
 
         $this->load->model('account/customer');
