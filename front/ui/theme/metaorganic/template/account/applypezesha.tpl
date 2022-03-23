@@ -291,7 +291,7 @@ $('#copy_of_bussiness_operating_permit_button').on('click', function(e) {
     var file_data = $('#copy_of_bussiness_operating_permit').prop('files')[0];
     var form_data = new FormData();
     form_data.append("file", file_data);
-    alert(form_data);
+    //alert(form_data);
     $.ajax({
             type: 'post',
             url: 'index.php?path=account/applypezesha/pezeshafilestwo',
@@ -342,7 +342,7 @@ $('#copy_of_id_of_bussiness_owner_managing_director_button').on('click', functio
     var file_data = $('#copy_of_id_of_bussiness_owner_managing_director').prop('files')[0];
     var form_data = new FormData();
     form_data.append("file", file_data);
-    alert(form_data);
+    //alert(form_data);
     $.ajax({
             type: 'post',
             url: 'index.php?path=account/applypezesha/pezeshafilesthree',
