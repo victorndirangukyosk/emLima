@@ -1,11 +1,5 @@
 <?php
 
-require_once DIR_SYSTEM . '/vendor/aws/aws-autoloader.php';
-
-use Aws\S3\S3Client;
-use Aws\Exception\AwsException;
-use Aws\S3\Exception\S3Exception;
-
 class ControllerAccountApplypezesha extends Controller {
 
     public function index() {
@@ -115,51 +109,14 @@ class ControllerAccountApplypezesha extends Controller {
         $temp_file_location = $this->request->files['file']['tmp_name'];
 
         $log->write($this->request->files);
-
-        // Create an SDK class used to share configuration across clients.
-        $sdk = new Aws\Sdk([
-            'region' => 'ap-south-1',
-            'version' => 'latest',
-            'credentials' => [
-                'key' => 'AKIAUWRTJZVBHL7IDH6T',
-                'secret' => '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'
-            ]
-        ]);
-
-        // Use an Aws\Sdk class to create the S3Client object.
-        $s3Client = $sdk->createS3();
-
-        try {
-            //$s3Client->createBucket(['Bucket' => 'kwikbasket-pezesha-files']);
-            $bucket = 'kwikbasket-pezesha-files';
-            $result = $s3Client->putObject([
-                'Bucket' => $bucket,
-                'Key' => $this->customer->getId() . '/copy_of_certificate_of_incorporation_' . $this->customer->getId() . '_' . strtotime("now"),
-                'SourceFile' => $temp_file_location,
-                'ACL' => 'private',
-            ]);
+        $mail = new Mail();
+        $sthree_doc_url = $mail->UploadToSThree($file_name, $temp_file_location, 'copy_of_certificate_of_incorporation', $this->customer->getId());
+        $log->write('sthree_doc_url');
+        $log->write($sthree_doc_url);
+        $log->write('sthree_doc_url');
+        if ($sthree_doc_url != NULL) {
             $this->load->model('account/customer');
-            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $result['ObjectURL'], 'PEZESHA', 'Copy Of Certificate Of Incorporation');
-            $log->write($result['ObjectURL']);
-        } catch (S3Exception $e) {
-            $log = new Log('error.log');
-            $log->write($e->getMessage());
-            // Catch an S3 specific exception.
-            echo $e->getMessage();
-        } catch (AwsException $e) {
-            $log = new Log('error.log');
-            $log->write($e->getAwsRequestId());
-            $log->write($e->getAwsErrorType());
-            $log->write($e->getAwsErrorCode());
-            // This catches the more generic AwsException. You can grab information
-            // from the exception using methods of the exception object.
-            echo $e->getAwsRequestId() . "\n";
-            echo $e->getAwsErrorType() . "\n";
-            echo $e->getAwsErrorCode() . "\n";
-
-            // This dumps any modeled response data, if supported by the service
-            // Specific members can be accessed directly (e.g. $e['MemberName'])
-            var_dump($e->toArray());
+            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $sthree_doc_url, 'PEZESHA', 'Copy Of Certificate Of Incorporation');
         }
     }
 
@@ -171,50 +128,15 @@ class ControllerAccountApplypezesha extends Controller {
 
         $log->write($this->request->files);
 
-        // Create an SDK class used to share configuration across clients.
-        $sdk = new Aws\Sdk([
-            'region' => 'ap-south-1',
-            'version' => 'latest',
-            'credentials' => [
-                'key' => 'AKIAUWRTJZVBHL7IDH6T',
-                'secret' => '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'
-            ]
-        ]);
+        $mail = new Mail();
+        $sthree_doc_url = $mail->UploadToSThree($file_name, $temp_file_location, 'copy_of_bussiness_operating_permit', $this->customer->getId());
+        $log->write('sthree_doc_url');
+        $log->write($sthree_doc_url);
+        $log->write('sthree_doc_url');
 
-        // Use an Aws\Sdk class to create the S3Client object.
-        $s3Client = $sdk->createS3();
-
-        try {
-            //$s3Client->createBucket(['Bucket' => 'kwikbasket-pezesha-files']);
-            $bucket = 'kwikbasket-pezesha-files';
-            $result = $s3Client->putObject([
-                'Bucket' => $bucket,
-                'Key' => $this->customer->getId() . '/copy_of_certificate_of_incorporation_' . $this->customer->getId() . '_' . strtotime("now"),
-                'SourceFile' => $temp_file_location,
-                'ACL' => 'private',
-            ]);
+        if ($sthree_doc_url != NULL) {
             $this->load->model('account/customer');
-            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $result['ObjectURL'], 'PEZESHA', 'Copy Of Bussiness Operating Permit');
-            $log->write($result['ObjectURL']);
-        } catch (S3Exception $e) {
-            $log = new Log('error.log');
-            $log->write($e->getMessage());
-            // Catch an S3 specific exception.
-            echo $e->getMessage();
-        } catch (AwsException $e) {
-            $log = new Log('error.log');
-            $log->write($e->getAwsRequestId());
-            $log->write($e->getAwsErrorType());
-            $log->write($e->getAwsErrorCode());
-            // This catches the more generic AwsException. You can grab information
-            // from the exception using methods of the exception object.
-            echo $e->getAwsRequestId() . "\n";
-            echo $e->getAwsErrorType() . "\n";
-            echo $e->getAwsErrorCode() . "\n";
-
-            // This dumps any modeled response data, if supported by the service
-            // Specific members can be accessed directly (e.g. $e['MemberName'])
-            var_dump($e->toArray());
+            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $sthree_doc_url, 'PEZESHA', 'Copy Of Bussiness Operating Permit');
         }
     }
 
@@ -226,53 +148,14 @@ class ControllerAccountApplypezesha extends Controller {
 
         $log->write($this->request->files);
 
-        // Create an SDK class used to share configuration across clients.
-        $sdk = new Aws\Sdk([
-            'region' => 'ap-south-1',
-            'version' => 'latest',
-            'credentials' => [
-                'key' => 'AKIAUWRTJZVBHL7IDH6T',
-                'secret' => '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'
-            ]
-        ]);
+        $mail = new Mail();
+        $sthree_doc_url = $mail->UploadToSThree($file_name, $temp_file_location, 'copy_of_id_of_bussiness_owner_managing_director', $this->customer->getId());
+        $log->write('sthree_doc_url');
+        $log->write($sthree_doc_url);
+        $log->write('sthree_doc_url');
 
-        // Use an Aws\Sdk class to create the S3Client object.
-        $s3Client = $sdk->createS3();
-
-        try {
-            //$s3Client->createBucket(['Bucket' => 'kwikbasket-pezesha-files']);
-            $bucket = 'kwikbasket-pezesha-files';
-            $result = $s3Client->putObject([
-                'Bucket' => $bucket,
-                'Key' => $this->customer->getId() . '/copy_of_certificate_of_incorporation_' . $this->customer->getId() . '_' . strtotime("now"),
-                'SourceFile' => $temp_file_location,
-                'ACL' => 'private',
-            ]);
-            $this->load->model('account/customer');
-            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $result['ObjectURL'], 'PEZESHA', 'Copy Of ID Of Bussiness Owner / Managing Director');
-            $log->write($result['ObjectURL']);
-            $log->write($result);
-            $log->write('result');
-        } catch (S3Exception $e) {
-            $log = new Log('error.log');
-            $log->write($e->getMessage());
-            // Catch an S3 specific exception.
-            echo $e->getMessage();
-        } catch (AwsException $e) {
-            $log = new Log('error.log');
-            $log->write($e->getAwsRequestId());
-            $log->write($e->getAwsErrorType());
-            $log->write($e->getAwsErrorCode());
-            // This catches the more generic AwsException. You can grab information
-            // from the exception using methods of the exception object.
-            echo $e->getAwsRequestId() . "\n";
-            echo $e->getAwsErrorType() . "\n";
-            echo $e->getAwsErrorCode() . "\n";
-
-            // This dumps any modeled response data, if supported by the service
-            // Specific members can be accessed directly (e.g. $e['MemberName'])
-            var_dump($e->toArray());
-        }
+        $this->load->model('account/customer');
+        $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $sthree_doc_url, 'PEZESHA', 'Copy Of ID Of Bussiness Owner / Managing Director');
     }
 
     public function auth() {

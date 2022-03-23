@@ -441,6 +441,23 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             if(response.data.status == 200) {    
             $('#success_msg').html('You have been successfully registred for pezesha credit. Your application is under review.');
             $('#success_msg').show();
+            
+            $("#dob").prop("readonly", true);
+            $("#kra").prop("readonly", true);
+            $("#gender").prop("readonly", true);
+            $("#national_id").prop("readonly", true);
+            
+            $("#copy_of_certificate_of_incorporation").prop("disabled", true);
+            $("#copy_of_bussiness_operating_permit").prop("disabled", true);
+            $("#copy_of_id_of_bussiness_owner_managing_director").prop("disabled", true);
+            
+            $("#copy_of_certificate_of_incorporation_button").prop("disabled", true);
+            $("#copy_of_bussiness_operating_permit_button").prop("disabled", true);
+            $("#copy_of_id_of_bussiness_owner_managing_director_button").prop("disabled", true);
+            
+            $("#submit_info_to_pezesha").prop("disabled", true);
+            
+            setInterval(function(){ window.location.replace('/'); }, 10000);
             }
             console.log(response);
             console.log('user registration response');
