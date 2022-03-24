@@ -1022,6 +1022,35 @@
             </div>
         </div>
     </div>
+     
+     
+    <div class="modal fade" id="missingproductsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body" style="height:150px;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="store-find-block">
+                                <div class="store-find">
+                                    <div class="store-head">
+                                        <h2>Missing Order Products</h2>
+                                          </br> 
+                                    </div>
+                                    <div id="driverModal-messages" style="color: red;text-align:center;font-size: 15px;">This Order Have Missing Products, Please Update Order Invoice.</div>
+                                </div>
+                            <!-- next div code -->
+                            <div class="form-group">
+                                <div class="col-md-6"> 
+                                    <button type="button" id="missing-buttons" name="missing-buttons" class="btn btn-lg btn-success" data-dismiss="modal" style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+                                </div>
+                                <div class="col-md-6"> 
+                                    <button id="missing-button" data-orderid="" data-order-invoice="" name="missing-button" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Edit Invoice</button>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>                                                   
                                                         
      <div class="modal fade" id="driverModal_new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
@@ -2084,7 +2113,13 @@ $('input[name=\'order_delivery_executive\']').autocomplete({
     $('input[name=\'order_delivery_executive\']').attr('data_delivery_executive_id',item['value']);
   } 
 });
-
+$('button[id^=\'missing-button\']').on('click', function (e) {
+e.preventDefault();
+console.log('EDIT INVOICE');
+var edit_invoice = $(this).attr("data-order-invoice");
+var order_id = $(this).attr("data-orderid");
+window.open('index.php?path=sale/editinvoice/EditInvoice&token=<?php echo $token; ?>&order_id='+order_id, '_blank');
+});
 $('a[id^=\'updated_new_print_invoice\']').on('click', function (e) {
 e.preventDefault();
 var invoice = $(this).attr("data-order-invoice");
@@ -2125,7 +2160,30 @@ var currentdate_js = new Date(yyyy, mm, dd);
 console.log(currentdate);
 console.log(order_delivery_date_js);
 console.log(currentdate_js);
-if(new Date(yyyy2, mm2, dd2) > new Date(yyyy, mm, dd)) {
+$.ajax({
+      url: 'index.php?path=sale/order/getmissingorderproducts&token=<?php echo $token; ?>',
+      dataType: 'json',
+      cache: false,
+      type: 'post',
+      async: true,
+      data: { 'order_id' : order_id },
+      beforeSend: function() {
+              
+      },
+      complete: function() {
+              
+      },
+      success: function (json) {
+      console.log('MISSING_PRODUCTS');        
+      console.log(json);
+      console.log('MISSING_PRODUCTS');
+      if(json.data.missing_products_count > 0) {
+      $('#missingproductsModal').modal('toggle');
+      $('#missing-button').attr('data-orderid', order_id);
+      $('#missing-button').attr('data-order-invoice', json.data.edit_invoice_url)
+      return false;
+      } else {
+      if(new Date(yyyy2, mm2, dd2) > new Date(yyyy, mm, dd)) {
  if (confirm("Do you want to modify delivery date to current date")) {
  //continue;
 updateDeliveryDate=1;
@@ -2203,8 +2261,10 @@ $.ajax({
 			 
 		}
 });
- 
- 
+      }
+              
+      }
+}); 
 console.log($(this).attr("data-order-id"));
 });
 
