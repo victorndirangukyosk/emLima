@@ -64,7 +64,8 @@ class ModelCatalogVendorProduct extends Model {
                 $this->db->query('INSERT INTO ' . DB_PREFIX . "variation_to_product_store SET  variation_id = '" . $value . "', product_store_id = '" . $store_product_id . "', price = '" . $this->request->post['product_variation']['price'][$prv] . "',special_price = '" . $this->request->post['product_variation']['special_price'][$prv] . "'");
             }
         }
-
+        
+        $product_details = $this->getProduct($store_product_id);
         // Add to activity log
         if($prev_data_status!==$data['status'])
         {
@@ -77,15 +78,16 @@ class ModelCatalogVendorProduct extends Model {
                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                'user_group_id' => $this->user->getGroupId(),
                'product_store_id' => $store_product_id,
+               'product_name' => $product_details['name'],
            ];
                    //  $log->write('product status modified');
 
            if($data['status']==0)
            {
-           $this->model_user_user_activity->addActivity('vendor_product_disabled', $activity_data);
+           $this->model_user_user_activity->addActivity('new_vendor_product_disabled', $activity_data);
            }
            else{
-               $this->model_user_user_activity->addActivity('vendor_product_enabled', $activity_data);
+           $this->model_user_user_activity->addActivity('new_vendor_product_enabled', $activity_data);
 
            }
            //  $log->write('product status modified');
@@ -110,6 +112,7 @@ class ModelCatalogVendorProduct extends Model {
         $log->write('enabledisablevendorproducts');
         $log->write($data);
         $log->write('enabledisablevendorproducts');
+        $product_details = $this->getProduct($store_product_id);
 
         $this->trigger->fire('pre.admin.product.edit', $data);
 
@@ -143,18 +146,16 @@ class ModelCatalogVendorProduct extends Model {
                  'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                  'user_group_id' => $this->user->getGroupId(),
                  'product_store_id' => $store_product_id,
+                 'product_name' => $product_details['name']
              ];
                      //  $log->write('product status modified');
  
-             if($status==0)
-             {
-             $this->model_user_user_activity->addActivity('vendor_product_disabled', $activity_data);
-             }
-             else{
-                 $this->model_user_user_activity->addActivity('vendor_product_enabled', $activity_data);
- 
-             }
-             //  $log->write('product status modified');
+            if ($status == 0) {
+                $this->model_user_user_activity->addActivity('new_vendor_product_disabled', $activity_data);
+            } else {
+                $this->model_user_user_activity->addActivity('new_vendor_product_enabled', $activity_data);
+            }
+            //  $log->write('product status modified');
           }
 
         return $product_id;

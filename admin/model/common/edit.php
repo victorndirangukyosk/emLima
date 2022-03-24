@@ -16,7 +16,8 @@ class ModelCommonEdit extends Model
             foreach ($ids as $id) {
                 $this->db->query('UPDATE '.DB_PREFIX."{$type} SET status = {$status} WHERE {$type}_id = {$id}", 'query');
             
-             // Add to activity log
+         $product_details = $this->getProduct($id);
+         // Add to activity log
          if($type=='product')
          {
 
@@ -52,15 +53,16 @@ class ModelCommonEdit extends Model
                 'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                 'user_group_id' => $this->user->getGroupId(),
                 'product_store_id' => $id,
+                'product_name' => $product_details['name']
             ];
                  //  $log->write('product status modified');
 
             if($status==0)
             {
-            $this->model_user_user_activity->addActivity('vendor_product_disabled', $activity_data);
+            $this->model_user_user_activity->addActivity('new_vendor_product_disabled', $activity_data);
             }
             else{
-                $this->model_user_user_activity->addActivity('vendor_product_enabled', $activity_data);
+                $this->model_user_user_activity->addActivity('new_vendor_product_enabled', $activity_data);
 
             }
             //  $log->write('product status modified');
@@ -79,7 +81,7 @@ class ModelCommonEdit extends Model
         } else {
             foreach ($ids as $id) {
                 $this->db->query('UPDATE '.DB_PREFIX."product_to_store SET status = {$status} WHERE product_store_id = {$id}", 'query');
-            
+                $product_details = $this->getProduct($id);
                 if($type=='product_to_store')
                 {
        
@@ -91,20 +93,29 @@ class ModelCommonEdit extends Model
                        'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
                        'user_group_id' => $this->user->getGroupId(),
                        'product_store_id' => $id,
+                       'product_name' => $product_details['name']
                    ];
                         //  $log->write('product status modified');
        
                    if($status==0)
                    {
-                   $this->model_user_user_activity->addActivity('vendor_product_disabled', $activity_data);
+                   $this->model_user_user_activity->addActivity('new_vendor_product_disabled', $activity_data);
                    }
                    else{
-                       $this->model_user_user_activity->addActivity('vendor_product_enabled', $activity_data);
+                       $this->model_user_user_activity->addActivity('new_vendor_product_enabled', $activity_data);
        
                    }
                    //  $log->write('product status modified');
                 }
             }
         }
+    }
+    
+        public function getProduct($product_store_id) {
+        $query = $this->db->query('SELECT DISTINCT p.*,pd.name,v.user_id as vendor_id FROM ' . DB_PREFIX . 'product_to_store p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = p.store_id) LEFT JOIN ' . DB_PREFIX . "user v ON (v.user_id = st.vendor_id) WHERE p.product_store_id = '" . (int) $product_store_id . "' AND pd.language_id = '" . (int) $this->config->get('config_language_id') . "'");
+
+        $product = $query->row;
+
+        return $product;
     }
 }
