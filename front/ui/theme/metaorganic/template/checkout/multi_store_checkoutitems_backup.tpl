@@ -1794,7 +1794,7 @@ function loadUnpaidorders() {
         url: 'index.php?path=checkout/checkoutitems/getunpaidorders',
         type: 'get',
         dataType: 'json',
-        cache: false,
+        cache: true,
         async: true,
         beforeSend: function() {
         },
