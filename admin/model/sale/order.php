@@ -5688,6 +5688,11 @@ class ModelSaleOrder extends Model {
         $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "'");
         return $new_order_query->rows;
     }
+    
+    public function getMissingProductsByOrderIdNew($order_id, $removed_from_invoice) {
+        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND removed_from_invoice = '" . (int) $removed_from_invoice . "'");
+        return $new_order_query->rows;
+    }
 
     public function getProductCategoryByGeneralProductID($general_product_id) {
         $sql = "SELECT p.category_id,c.name as category FROM " . DB_PREFIX . "category_description c join " . DB_PREFIX . "product_to_category p on c.category_id =p.category_id and p.product_id = '" . (int) $general_product_id . "'";

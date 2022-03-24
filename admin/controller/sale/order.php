@@ -10156,5 +10156,19 @@ class ControllerSaleOrder extends Controller {
 
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
+    
+    public function getmissingorderproducts() {
+
+        $order_id = $this->request->post['order_id'];
+        $this->load->model('sale/order');
+        $missing_products = $this->model_sale_order->getMissingProductsByOrderIdNew($order_id, 0);
+
+        $json['data'][] = $missing_products;
+        $json['data']['missing_products_count'] = count($missing_products);
+        $json['data']['order_id'] = $order_id;
+        $json['data']['edit_invoice_url'] = $this->url->link('sale/editinvoice/EditInvoice','order_id='.$order_id .'&token='.$this->session->data['token'], 'SSL');
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 
 }
