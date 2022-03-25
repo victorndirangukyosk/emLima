@@ -1068,7 +1068,7 @@
                             <!-- next div code -->
                             <div class="form-group">
                                 <div class="col-md-6"> 
-                                    <button type="button" id="missing-buttons" name="missing-buttons" class="btn btn-lg btn-success" data-dismiss="modal" style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Close</button>
+                                    <button type="button" id="missing-close-buttons" name="missing-close-buttons" class="btn btn-lg btn-success" data-dismiss="modal" style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Close</button>
                                 </div>
                                 <div class="col-md-6"> 
                                     <button id="missing-button" data-orderid="" data-order-invoice="" name="missing-button" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Edit Invoice</button>
