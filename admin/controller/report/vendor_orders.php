@@ -142,6 +142,12 @@ class ControllerReportVendorOrders extends Controller {
         } else {
             $filter_payment = null;
         }
+        
+        if (isset($this->request->get['filter_paid'])) {
+            $filter_paid = $this->request->get['filter_paid'];
+        } else {
+            $filter_paid = null;
+        }
 
         if (isset($this->request->get['filter_order_status'])) {
             $filter_order_status = $this->request->get['filter_order_status'];
@@ -216,6 +222,7 @@ class ControllerReportVendorOrders extends Controller {
             'filter_delivery_date' => $filter_delivery_date,
             'filter_delivery_time_slot' => $filter_delivery_time_slot,
             'filter_payment' => $filter_payment,
+            'filter_paid' => $filter_paid,
             'filter_order_status' => $filter_order_status,
             'filter_order_type' => $filter_order_type,
             'filter_total' => $filter_total,
@@ -472,6 +479,12 @@ class ControllerReportVendorOrders extends Controller {
         } else {
             $filter_payment = null;
         }
+        
+        if (isset($this->request->get['filter_paid'])) {
+            $filter_paid = $this->request->get['filter_paid'];
+        } else {
+            $filter_paid = null;
+        }
 
         if (isset($this->request->get['filter_order_status'])) {
             $filter_order_status = $this->request->get['filter_order_status'];
@@ -546,6 +559,7 @@ class ControllerReportVendorOrders extends Controller {
             'filter_delivery_date' => $filter_delivery_date,
             'filter_delivery_time_slot' => $filter_delivery_time_slot,
             'filter_payment' => $filter_payment,
+            'filter_paid' => $filter_paid,
             'filter_order_status' => $filter_order_status,
             'filter_order_type' => $filter_order_type,
             'filter_total' => $filter_total,

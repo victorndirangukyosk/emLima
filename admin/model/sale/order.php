@@ -2761,6 +2761,10 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_payment'])) {
             $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
         }
+        
+        if (!empty($data['filter_paid'])) {
+            $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
+        }
 
         if (!empty($data['filter_delivery_method'])) {
             $sql .= " AND o.shipping_method LIKE '%" . $data['filter_delivery_method'] . "%'";
