@@ -88,8 +88,33 @@ class ControllerApiCustomerApplypezesha extends Controller {
             return;
         }
 
+        if($this->request->files['copy_of_certificate_of_incorporation']==null ||$this->request->files['copy_of_bussiness_operating_permit']==null || $this->request->files['copy_of_id_of_bussiness_owner_managing_director']==null  )
+        {
+            $json['status'] = 10013;
+            $json['message'][] = ['type' => 'error', 'body' => 'Please Upload appropriate three mentioned files '];
+            http_response_code(400);
+            return;
+        }
+
 
      $this->model_account_customer->updatecustomerinfo($this->customer->getId(), $data);
+    //  echo "<pre>";print_r($this->request->files['copy_of_certificate_of_incorporation']);
+    //  echo "<pre>";print_r($this->request->files['copy_of_bussiness_operating_permit']);
+    //  echo "<pre>";print_r($this->request->files['copy_of_id_of_bussiness_owner_managing_director']);die;
+     
+     $file_upload_status = $this->pezeshafiles($this->request->files['copy_of_certificate_of_incorporation'],$this->request->files['copy_of_bussiness_operating_permit'],$this->request->files['copy_of_id_of_bussiness_owner_managing_director']);
+     if ($file_upload_status==false)
+     {
+        $json['status'] = 10013;
+
+        $json['uploadstatus']    = false;
+        $json['message'][] = ['type' => 'error', 'body' => 'Please upload correct file and data'];
+        http_response_code(400);
+        return;
+    }
+
+
+     
      $json['message'][] = ['type' => 'success', 'body' => 'Updated'];
     //  $data['asd']=$this->addpezesha();
      $json['data'] = $data;
@@ -108,7 +133,7 @@ class ControllerApiCustomerApplypezesha extends Controller {
     }
 
     public function addpezesha() {
-        $json = [];$userregistration=[];
+        $json = [];
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
@@ -121,6 +146,8 @@ class ControllerApiCustomerApplypezesha extends Controller {
             return;
 
             }
+
+            
         $log = new Log('error.log');
         $log->write($this->request->post);
         $val=1;
@@ -132,7 +159,7 @@ class ControllerApiCustomerApplypezesha extends Controller {
         $data['accrptterms'] = $this->load->controller('account/applypezesha/accrptterms',1);
         $data['dataingestion'] = $this->load->controller('account/applypezesha/dataingestion',1);
 
-    //    $json['message'][] = ['type' => 'success', 'body' => 'Updated'];
+     //    $json['message'][] = ['type' => 'success', 'body' => 'Updated'];
         $json['data'] = $data;
 
         }
@@ -148,66 +175,76 @@ class ControllerApiCustomerApplypezesha extends Controller {
         }
     }
 
-    public function SendDocuments() {
-        $log = new Log('error.log');
-        $this->load->model('account/customer');
-        $documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
-        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-        if ($documents != NULL && count($documents) > 0) {
-
-            $customer_pezehsa['firstname'] = $customer_info['firstname'];
-            $customer_pezehsa['lastname'] = $customer_info['lastname'];
-            $customer_pezehsa['companyname'] = $customer_info['company_name'];
-            $customer_pezehsa['companyname'] = $customer_info['company_name'];
-            $customer_pezehsa['pezesha_documents'] = $this->getPezeshaDocumentsTemplate();
-
-            $log->write('EMAIL SENDING');
-            $log->write($customer_pezehsa);
-            $log->write('EMAIL SENDING');
-
-            $subject = $this->emailtemplate->getSubject('Customer', 'customer_97', $customer_pezehsa);
-            $message = $this->emailtemplate->getMessage('Customer', 'customer_97', $customer_pezehsa);
-            try {
-                $mail = new Mail($this->config->get('config_mail'));
-                $mail->setTo('documents.kwikbasket@yopmail.com');
-                $mail->setFrom($this->config->get('config_from_email'));
-                $mail->setSender($this->config->get('config_name'));
-                $mail->setSubject($subject);
-                $mail->setHTML($message);
-                $mail->send();
-            } catch (Exception $e) {
-
-            }
-        }
-    }
-
-    public function getPezeshaDocumentsTemplate() {
+   
+    public function pezeshafiles($file_data1,$file_data2,$file_data3) {
         $log = new Log('error.log');
 
-        $this->load->model('account/customer');
-        $customer_documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
+        try{
+        // echo "<pre>";print_r($file_datas);die;
 
-        $html = '';
-        $html .= '<table class="table table-bordered" style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;border-collapse: collapse!important;border-spacing: 0;background-color: transparent;width: 100%;max-width: 100%;margin-bottom: 20px;border: 1px solid #ddd;">';
-        $html .= '<thead class="thead-bg" style="background: #EC7122;color: #fff;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;display: table-header-group;">'
-                . '<tr style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;page-break-inside: avoid;">'
-                . '<th scope="col" style="background-color: #EC7122 !important;color: #000;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: bottom;border-top: 1px solid #ddd;border-bottom: 2px solid #ddd;border: 1px solid #ddd!important;border-bottom-width: 2px;">S.NO</th>'
-                . '<th scope="col" style="background-color: #EC7122 !important;color: #000;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: bottom;border-top: 1px solid #ddd;border-bottom: 2px solid #ddd;border: 1px solid #ddd!important;border-bottom-width: 2px;">DOCUMENT</th>'
-                . '<th scope="col" style="background-color: #EC7122 !important;color: #000;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: bottom;border-top: 1px solid #ddd;border-bottom: 2px solid #ddd;border: 1px solid #ddd!important;border-bottom-width: 2px;">ACTION</th>'
-                . '</tr>'
-                . '</thead>';
-        $html .= '<tbody style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;">';
-        $count = 1;
-        foreach ($customer_documents as $customer_document) {
-            $html .= '<tr style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;page-break-inside: avoid;">
-            <th scope="row" style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $count . '</th>
-            <td style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $customer_document['name'] . '</td>
-            <td style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;"><a href="'.$customer_document['path'].'">View Document</a></td>
-        </tr>';
-            $count++;
+        if ((isset($file_data1)) && (is_uploaded_file($file_data1['tmp_name']))) {
+        
+        $file_name = $file_data1['name'];
+        $temp_file_location = $file_data1['tmp_name'];
+
+        $log->write($this->request->files);
+        $mail = new Mail();
+        $sthree_doc_url = $mail->UploadToSThree($file_name, $temp_file_location, 'copy_of_certificate_of_incorporation', $this->customer->getId());
+        $log->write('sthree_doc_url');
+        $log->write($sthree_doc_url);
+        $log->write('sthree_doc_url');
+        if ($sthree_doc_url != NULL) {
+            $this->load->model('account/customer');
+            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $sthree_doc_url, 'PEZESHA', 'Copy Of Certificate Of Incorporation');
         }
-        $html .= '</tbody></table>';
-        return $html;
     }
+    if ((isset($file_data2)) && (is_uploaded_file($file_data2['tmp_name']))) 
+
+    {
+        $file_name = $file_data2['name'];
+        $temp_file_location = $file_data2['tmp_name'];
+
+        $log->write($this->request->files);
+
+        $mail = new Mail();
+        $sthree_doc_url = $mail->UploadToSThree($file_name, $temp_file_location, 'copy_of_bussiness_operating_permit', $this->customer->getId());
+        $log->write('sthree_doc_url');
+        $log->write($sthree_doc_url);
+        $log->write('sthree_doc_url');
+
+        if ($sthree_doc_url != NULL) {
+            $this->load->model('account/customer');
+            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $sthree_doc_url, 'PEZESHA', 'Copy Of Bussiness Operating Permit');
+        }
+
+    }
+    if ((isset($file_data3)) && (is_uploaded_file($file_data3['tmp_name']))) {
+
+        $file_name = $file_data3['name'];
+        $temp_file_location = $file_data3['tmp_name'];
+
+        $log->write($this->request->files);
+
+        $mail = new Mail();
+        $sthree_doc_url = $mail->UploadToSThree($file_name, $temp_file_location, 'copy_of_id_of_bussiness_owner_managing_director', $this->customer->getId());
+        $log->write('sthree_doc_url');
+        $log->write($sthree_doc_url);
+        $log->write('sthree_doc_url');
+
+        $this->load->model('account/customer');
+        $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $sthree_doc_url, 'PEZESHA', 'Copy Of ID Of Bussiness Owner / Managing Director');
+   
+
+    }
+    return true;
+}
+catch(exception $e)
+{
+    return false;
+}
+
+
+    }  
+
 
 }
