@@ -2761,6 +2761,10 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_payment'])) {
             $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
         }
+        
+        if (!empty($data['filter_paid'])) {
+            $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
+        }
 
         if (!empty($data['filter_delivery_method'])) {
             $sql .= " AND o.shipping_method LIKE '%" . $data['filter_delivery_method'] . "%'";
@@ -5686,6 +5690,11 @@ class ModelSaleOrder extends Model {
 
     public function getMissingProductsByOrderId($order_id) {
         $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "'");
+        return $new_order_query->rows;
+    }
+    
+    public function getMissingProductsByOrderIdNew($order_id, $removed_from_invoice) {
+        $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND removed_from_invoice = '" . (int) $removed_from_invoice . "'");
         return $new_order_query->rows;
     }
 

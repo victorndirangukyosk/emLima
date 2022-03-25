@@ -992,6 +992,12 @@ class ControllerSaleOrder extends Controller {
             } else {
                 $filter_order_type = null;
             }
+            
+            if (isset($this->request->get['filter_paid'])) {
+                $filter_paid = $this->request->get['filter_paid'];
+            } else {
+                $filter_paid = null;
+            }
 
             if (isset($this->request->get['filter_total'])) {
                 $url .= '&filter_total=' . $this->request->get['filter_total'];
@@ -1108,6 +1114,12 @@ class ControllerSaleOrder extends Controller {
         } else {
             $filter_order_type = null;
         }
+        
+        if (isset($this->request->get['filter_paid'])) {
+            $filter_paid = $this->request->get['filter_paid'];
+        } else {
+            $filter_paid = null;
+        }
 
         if (isset($this->request->get['filter_total'])) {
             $filter_total = $this->request->get['filter_total'];
@@ -1209,6 +1221,10 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
+        
+        if (isset($this->request->get['filter_paid'])) {
+            $url .= '&filter_paid=' . $this->request->get['filter_paid'];
+        }
 
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total=' . $this->request->get['filter_total'];
@@ -1274,6 +1290,7 @@ class ControllerSaleOrder extends Controller {
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
             'filter_order_type' => $filter_order_type,
+            'filter_paid' => $filter_paid,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_end' => $filter_date_added_end,
@@ -1392,6 +1409,7 @@ class ControllerSaleOrder extends Controller {
         $data['entry_total'] = $this->language->get('entry_total');
         $data['entry_city'] = $this->language->get('entry_city');
         $data['entry_date_added'] = $this->language->get('entry_date_added');
+        $data['entry_payment_status'] = $this->language->get('entry_payment_status');
         $data['entry_date_added_end'] = $this->language->get('entry_date_added_end');
         $data['entry_date_modified'] = $this->language->get('entry_date_modified');
         $data['entry_store_name'] = $this->language->get('entry_store_name');
@@ -1483,6 +1501,10 @@ class ControllerSaleOrder extends Controller {
 
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
+        }
+        
+        if (isset($this->request->get['filter_paid'])) {
+            $url .= '&filter_paid=' . $this->request->get['filter_paid'];
         }
 
         if (isset($this->request->get['filter_total'])) {
@@ -1577,6 +1599,10 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
+        
+        if (isset($this->request->get['filter_paid'])) {
+            $url .= '&filter_paid=' . $this->request->get['filter_paid'];
+        }
 
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total=' . $this->request->get['filter_total'];
@@ -1627,6 +1653,7 @@ class ControllerSaleOrder extends Controller {
 
         $data['filter_order_status'] = $filter_order_status;
         $data['filter_order_type'] = $filter_order_type;
+        $data['filter_paid'] = $filter_paid;
         $data['filter_total'] = $filter_total;
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_date_added_end'] = $filter_date_added_end;
@@ -1841,6 +1868,10 @@ class ControllerSaleOrder extends Controller {
 
         if (isset($this->request->get['filter_order_status'])) {
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
+        }
+        
+        if (isset($this->request->get['filter_paid'])) {
+            $url .= '&filter_paid=' . $this->request->get['filter_paid'];
         }
 
         // if (isset($this->request->get['filter_order_type'])) {
@@ -2443,7 +2474,10 @@ class ControllerSaleOrder extends Controller {
             if (isset($this->request->get['filter_order_status'])) {
                 $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
             }
-
+            
+            if (isset($this->request->get['filter_paid'])) {
+                $url .= '&filter_paid=' . $this->request->get['filter_paid'];
+            }
 
 
             if (isset($this->request->get['filter_total'])) {
@@ -10155,6 +10189,20 @@ class ControllerSaleOrder extends Controller {
           $mpdf->Output("KwikBasket Invoice # ".$order_id.".pdf", 'D'); */
 
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
+    }
+    
+    public function getmissingorderproducts() {
+
+        $order_id = $this->request->post['order_id'];
+        $this->load->model('sale/order');
+        $missing_products = $this->model_sale_order->getMissingProductsByOrderIdNew($order_id, 0);
+
+        $json['data'][] = $missing_products;
+        $json['data']['missing_products_count'] = count($missing_products);
+        $json['data']['order_id'] = $order_id;
+        $json['data']['edit_invoice_url'] = $this->url->link('sale/editinvoice/EditInvoice','order_id='.$order_id .'&token='.$this->session->data['token'], 'SSL');
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
