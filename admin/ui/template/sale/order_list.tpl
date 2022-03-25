@@ -106,8 +106,30 @@
                                         <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                     </span>
                                 </div>
+                          </div>
+                          
+                            <div class="form-group">
+                                <label class="control-label" for="input-payment-status"><?php echo $entry_payment_status; ?></label>
+                                <select name="filter_paid" id="input-paid" class="form-control">
+                                    <option value="*">Select Payment Status</option>
+                                    <?php if (isset($filter_paid) && $filter_paid == 'P') { ?>
+                                    <option value="P" selected="selected">Partially Paid</option>
+                                    <?php } else { ?>
+                                    <option value="P">Partially Paid</option>
+                                    <?php } ?>
+                                    <?php if(isset($filter_paid) && $filter_paid == 'Y') { ?>
+                                    <option value="Y" selected="selected">Paid</option>
+                                    <?php } else { ?>
+                                    <option value="Y">Paid</option>
+                                    <?php } ?>
+                                    <?php if(isset($filter_paid) && $filter_paid == 'N') { ?>
+                                    <option value="N" selected="selected">Unpaid</option>
+                                    <?php } else { ?>
+                                    <option value="N">Unpaid</option>
+                                    <?php } ?>
+                                </select>    
                             </div>
-
+                              
                             
                         </div>
                         <div class="col-sm-4">
@@ -673,10 +695,16 @@
             }
 
 
-              var filter_order_type = $('select[name=\'filter_order_type\']').val();
+            var filter_order_type = $('select[name=\'filter_order_type\']').val();
 
             if (filter_order_type != '*') {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
+            }
+            
+            var filter_paid = $('select[name=\'filter_paid\']').val();
+
+            if (filter_paid != '*' && filter_paid != '') {
+                url += '&filter_paid=' + encodeURIComponent(filter_paid);
             }
 
 
@@ -2324,6 +2352,12 @@ function downloadOrdersonsolidated() {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
             }
             
+            var filter_paid = $('select[name=\'filter_paid\']').val();
+
+            if (filter_paid != '*' && filter_paid != '') {
+                url += '&filter_paid=' + encodeURIComponent(filter_paid);
+            }
+            
             var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
 
             if (filter_order_from_id != '*' && filter_order_from_id != '') {
@@ -2460,6 +2494,12 @@ function downloadOrders() {
 
             if (filter_order_type != '*' && filter_order_type != '') {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
+            }
+            
+            var filter_paid = $('select[name=\'filter_paid\']').val();
+
+            if (filter_paid != '*' && filter_paid != '') {
+                url += '&filter_paid=' + encodeURIComponent(filter_paid);
             }
             
             var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
@@ -2599,6 +2639,12 @@ function downloadOrderStickers() {
 
             if (filter_order_type != '*' && filter_order_type != '') {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
+            }
+            
+            var filter_paid = $('select[name=\'filter_paid\']').val();
+
+            if (filter_paid != '*' && filter_paid != '') {
+                url += '&filter_paid=' + encodeURIComponent(filter_paid);
             }
             
             var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();

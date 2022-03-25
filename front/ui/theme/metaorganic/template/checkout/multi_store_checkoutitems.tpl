@@ -866,7 +866,7 @@ $.ajax({
             type: 'get',
             url: 'index.php?path=payment/pezesha/loanoffers',
             dataType: 'json',
-            cache: false,
+            cache: true,
             success: function (json) {
             }
 
@@ -885,7 +885,7 @@ $.ajax({
         url: 'index.php?path=checkout/checkoutitems/getunpaidorders',
         type: 'get',
         dataType: 'json',
-        cache: false,
+        cache: true,
         async: true,
         beforeSend: function() {
         },
@@ -1718,7 +1718,7 @@ function loadUnpaidorders() {
         url: 'index.php?path=checkout/checkoutitems/getunpaidorders',
         type: 'get',
         dataType: 'json',
-        cache: false,
+        cache: true,
         async: true,
         beforeSend: function() {
         },
