@@ -1526,6 +1526,15 @@ class ControllerSaleOrderProductMissing extends Controller {
             $mail->setHTML($message);
             $mail->send();
 
+            
+            // $log->write('SMS SENDING');
+            // send message here
+            // if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_8')) {
+                $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+            // }
+
+           
+
             $log = new Log('error.log');
             $log->write('subject');
             $log->write($subject);
