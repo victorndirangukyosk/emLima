@@ -287,7 +287,7 @@ class ControllerPaymentPezesha extends Controller {
         $this->response->setOutput(json_encode($json));
     }
     
-    public function pezeshaorders() {
+    public function applyloanone() {
         $json['status'] = false;
         $this->loanoffers();
 
@@ -414,5 +414,4 @@ class ControllerPaymentPezesha extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-
 }

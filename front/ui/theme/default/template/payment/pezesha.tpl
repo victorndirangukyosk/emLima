@@ -30,7 +30,7 @@ $('#button-pezesha-confirm').on('click', function() {
     }
     $.ajax({
         type: 'get',
-        url: 'index.php?path=payment/pezesha/applyloan',
+        url: 'index.php?path=payment/pezesha/applyloanone',
         dataType: 'json',
         cache: false,
         beforeSend: function() {
