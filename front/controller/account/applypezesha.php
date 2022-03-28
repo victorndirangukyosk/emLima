@@ -414,13 +414,15 @@ class ControllerAccountApplypezesha extends Controller {
 
             $log->write('EMAIL SENDING');
             $log->write($customer_pezehsa);
+            $log->write($this->config->get('pezesha_email'));
             $log->write('EMAIL SENDING');
 
             $subject = $this->emailtemplate->getSubject('Customer', 'customer_97', $customer_pezehsa);
             $message = $this->emailtemplate->getMessage('Customer', 'customer_97', $customer_pezehsa);
             try {
                 $mail = new Mail($this->config->get('config_mail'));
-                $mail->setTo('documents.kwikbasket@yopmail.com');
+                // $mail->setTo('documents.kwikbasket@yopmail.com');
+                $mail->setTo($this->config->get('pezesha_email'));
                 $mail->setFrom($this->config->get('config_from_email'));
                 $mail->setSender($this->config->get('config_name'));
                 $mail->setSubject($subject);
