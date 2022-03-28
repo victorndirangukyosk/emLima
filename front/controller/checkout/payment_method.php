@@ -149,6 +149,9 @@ class ControllerCheckoutPaymentMethod extends Controller {
                 if ($wallet_payment_method['code'] == 'wallet') {
                     unset($data['payment_methods'][$wallet_payment_method['code']]);
                 }
+                if ($payment_method['code'] == 'pezesha') {
+                    unset($data['payment_methods'][$payment_method['code']]);
+                }
             }
         }
 
