@@ -677,7 +677,32 @@ class ControllerSaleOrderProductMissing extends Controller {
                     }
 
                     $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model'], $this->request->post['order_id'], 0);
+
+                    // echo "<pre>";print_r($ordered_products);die; 
+                    
+                    try{
+
+                        $this->load->model('user/user_activity');
+                        $activity_data = [
+                            'user_id' => $this->user->getId(),
+                            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                            'order_id' => $this->request->post['order_id'],
+                            'product_id' => $ordered_products['product_id'],
+                            'missing_quantity' => $ordersquantityrequired[$i],
+                            'user_group_id' => $this->user->getGroupId(),
+
+                        ];
+                            $this->model_user_user_activity->addActivity('missing_product_insert', $activity_data);
+            
+                    }
+                    catch(exception $ex)
+                    {
+                        $log = new Log('error.log');
+                        $log->write('Missing Product Insterted ('.$this->request->post['order_id'].'-'.$order_product_id.') .By - '.$this->user->getId());
+                    }
+
                     $i++;
+
                 }
 //$this->editinvocebymissingproducts($this->request->post);
                 $json['status'] = 200;

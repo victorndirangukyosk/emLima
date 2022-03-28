@@ -75,6 +75,8 @@ $_['text_vendor_product_category_pricing_status_enabled_edit'] = '<a href="user_
 $_['text_vendor_product_category_pricing_created_through_xl_sheet'] = '<a href="user_id=%d">%s</a> <a href="category_pricing_name=%s">%s</a>.';
 $_['text_vendor_product_category_pricing_updated_through_xl_sheet'] = '<a href="user_id=%d">%s</a> <a href="category_pricing_name=%s">%s</a>.';
 
+$_['text_missing_product_insert'] = '<a href="user_id=%d">%s</a> added missing  product <a href="product_name=%s&filter_prod_id=%s">Product</a>.';
+
 // Column
 $_['column_user'] = 'User';
 $_['column_comment'] = 'User Activity';

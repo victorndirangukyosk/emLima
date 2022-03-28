@@ -192,7 +192,7 @@ class ControllerAccountApplypezesha extends Controller {
           $this->response->setOutput(json_encode($json)); */
     }
 
-    public function accrptterms() {
+    public function accrptterms($isAPI=0) {
 
         $log = new Log('error.log');
         $this->load->model('account/customer');
@@ -232,13 +232,20 @@ class ControllerAccountApplypezesha extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+
+        if($isAPI==1)
+        {
+        return $json;
+        }
     }
 
-    public function dataingestion() {
+    public function dataingestion($isAPI=0) {
 
         $log = new Log('error.log');
         $this->load->model('account/customer');
         $this->load->model('sale/order');
+        $log->write('sdassssssssssssssssssssss');
+
         $customer_device_info = $this->model_account_customer->getCustomer($this->customer->getId());
         $customer_documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
 
@@ -295,9 +302,14 @@ class ControllerAccountApplypezesha extends Controller {
         $this->SendDocuments();
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+
+        if($isAPI==1)
+        {
+        return $json;
+        }
     }
 
-    public function userregistration() {
+    public function userregistration($isAPI=0) {
 
         $this->load->model('account/customer');
         $customer_documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
@@ -357,6 +369,14 @@ class ControllerAccountApplypezesha extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+        // echo "<pre>";print_r($isAPI);die;
+
+        if($isAPI==1)
+        {
+        return $json;
+        }
+        // echo "<pre>";print_r(json_encode($json));die;
+
     }
 
     public function updatecustomerinfo() {
@@ -394,13 +414,15 @@ class ControllerAccountApplypezesha extends Controller {
 
             $log->write('EMAIL SENDING');
             $log->write($customer_pezehsa);
+            $log->write($this->config->get('pezesha_email'));
             $log->write('EMAIL SENDING');
 
             $subject = $this->emailtemplate->getSubject('Customer', 'customer_97', $customer_pezehsa);
             $message = $this->emailtemplate->getMessage('Customer', 'customer_97', $customer_pezehsa);
             try {
                 $mail = new Mail($this->config->get('config_mail'));
-                $mail->setTo('documents.kwikbasket@yopmail.com');
+                // $mail->setTo('documents.kwikbasket@yopmail.com');
+                $mail->setTo($this->config->get('pezesha_email'));
                 $mail->setFrom($this->config->get('config_from_email'));
                 $mail->setSender($this->config->get('config_name'));
                 $mail->setSubject($subject);
