@@ -576,11 +576,11 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                     curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
                     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                    curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                     $json = curl_exec($curl);
                     $log->write('json');
-                    $log->write($url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                    $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                     $log->write($json);
                     curl_close($curl);
@@ -746,7 +746,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         return $response;
     }
-    
+
     public function mpesaOrderStatus() {
         $response['status'] = false;
 
@@ -851,11 +851,11 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                         curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
                         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                        curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                         $json = curl_exec($curl);
                         $log->write('json deliversystem');
-                        $log->write($url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                        $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                         $log->write($json);
                         curl_close($curl);
@@ -913,7 +913,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         return $response;
     }
-    
+
     public function hybridmpesaOrderStatus() {
         $response['status'] = false;
 
@@ -1339,11 +1339,11 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                 $json = curl_exec($curl);
                 $log->write('json');
-                $log->write($url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                 $log->write($json);
                 curl_close($curl);
@@ -2533,6 +2533,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $data['button_submit'] = $this->language->get('button_submit');
         $data['button_back'] = $this->language->get('button_back');
         $data['action'] = $this->url->link('account/return/multipleproducts', '', 'SSL');
+        $this->load->language('checkout/success');
+        $data['heading_title'] = sprintf($this->language->get('heading_title'), "#" . implode(' #', $data['order_ids']));
         $data['returnProductCount'] = $returnProductCount;
         if ($this->config->get('config_return_id')) {
             $this->load->model('assets/information');
