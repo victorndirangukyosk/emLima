@@ -142,6 +142,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
           } else { */
 
         $log->write('getPaymentTerms');
+        $log->write($data['payment_methods']);
         $log->write($this->customer->getPaymentTerms());
 
         if (isset($this->session->data['adminlogin']) && $this->session->data['adminlogin']) {
@@ -186,6 +187,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
                     unset($data['payment_methods'][$payment_method['code']]);
                 }
             }
+            $log->write($data['payment_methods']);
         }
         $log->write('getPaymentTerms');
         //}
