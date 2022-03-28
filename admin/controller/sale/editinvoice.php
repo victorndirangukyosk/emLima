@@ -370,7 +370,11 @@ class ControllerSaleEditinvoice extends Controller {
             $allProductIds = $this->model_sale_order->getOrderProductsIds($order_id);
             foreach ($allProductIds as $deletePro) {
                 if (!isset($datas['products'][$deletePro['product_id']])) {
+                    $log->write('DELETE PRODUCT');
+                    $log->write($deletePro['product_id']);
+                    $log->write('DELETE PRODUCT');
                     $products = $this->model_sale_order->deleteOrderProduct($order_id, $deletePro['product_id']);
+                    $order_missing_product_info = $this->model_sale_order->deleteOrderProductToMissingProductsFromInvoice($deletePro['product_id'], $order_id);
                 } else {
                     //$log->write("set");
                 }
