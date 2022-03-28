@@ -145,8 +145,13 @@ class ControllerReportUserActivity extends Controller {
 
         $results = $this->model_report_user->getUserActivities($filter_data);
 
+        
+
         foreach ($results as $result) {
             $comment = vsprintf($this->language->get('text_' . $result['key']), unserialize($result['data']));
+            // echo "<pre>";print_r(unserialize($result['data'])); 
+            // echo "<pre>";print_r(($result)); 
+            // echo "<pre>";print_r(($comment));die; 
 
             /*$log = new Log('error.log');
             $log->write($this->language->get('text_' . $result['key']));
@@ -165,6 +170,8 @@ class ControllerReportUserActivity extends Controller {
                 'product_id=',
                 'product_store_id=',
                 'category_pricing_name=',
+                'product_name=',
+
             ];
 
             $replace = [
@@ -181,7 +188,10 @@ class ControllerReportUserActivity extends Controller {
                 $this->url->link('catalog/general', 'token=' . $this->session->data['token'] . '&filter_product_id=', 'SSL'),
                 $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&filter_product_id_from=', 'SSL'),
                 $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&filter_category_price=', 'SSL'),
+                $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . '&order_id=', 'SSL'),
             ];
+
+
             /*$log->write('Hi');
             $log->write($find);
             $log->write($replace);
