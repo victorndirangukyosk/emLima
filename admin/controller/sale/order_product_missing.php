@@ -677,7 +677,35 @@ class ControllerSaleOrderProductMissing extends Controller {
                     }
 
                     $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model'], $this->request->post['order_id'], 0);
+
+                    // echo "<pre>";print_r($order_product_info);die; 
+                    
+                    try{
+
+                        $this->load->model('user/user_activity');
+                        $activity_data = [
+                            'user_id' => $this->user->getId(),
+                            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                            'user_group_id' => $this->user->getGroupId(),
+                            'user_id' => $this->user->getId(),                           
+                            'product_name' => $ordered_products['name'],
+                            'product_unit' => $ordered_products['unit'],
+                            'order_id' => $this->request->post['order_id'],
+                            // 'order_product_id' => $order_product_id,
+                            'missing_quantity' => $ordersquantityrequired[$i],
+
+                        ];
+                            $this->model_user_user_activity->addActivity('missing_product_insert', $activity_data);
+            
+                    }
+                    catch(exception $ex)
+                    {
+                        $log = new Log('error.log');
+                        $log->write('Missing Product Insterted ('.$this->request->post['order_id'].'-'.$order_product_id.') .By - '.$this->user->getId());
+                    }
+
                     $i++;
+
                 }
 //$this->editinvocebymissingproducts($this->request->post);
                 $json['status'] = 200;
