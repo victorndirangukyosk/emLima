@@ -2535,6 +2535,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $data['action'] = $this->url->link('account/return/multipleproducts', '', 'SSL');
         $this->load->language('checkout/success');
         $data['heading_title'] = sprintf($this->language->get('heading_title'), "#" . implode(' #', $data['order_ids']));
+        $this->document->setTitle(sprintf($this->language->get('heading_title'), "#" . implode(' #', $data['order_ids'])));
         $data['returnProductCount'] = $returnProductCount;
         if ($this->config->get('config_return_id')) {
             $this->load->model('assets/information');
