@@ -145,6 +145,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
         $log->write($this->customer->getPaymentTerms());
 
         if (isset($this->session->data['adminlogin']) && $this->session->data['adminlogin']) {
+            $log->write('ADMIN_LOGIN');
             foreach ($data['payment_methods'] as $wallet_payment_method) {
                 if ($wallet_payment_method['code'] == 'wallet') {
                     unset($data['payment_methods'][$wallet_payment_method['code']]);
@@ -156,6 +157,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
         }
 
         if ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) {
+            $log->write('PAYMENT_ON_DELIVERY_CUSTOMER');
             foreach ($data['payment_methods'] as $payment_method) {
                 if ($payment_method['code'] == 'wallet') {
                     $data['payment_wallet_methods'] = $payment_method;
@@ -165,6 +167,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
                 }
             }
         } if (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) {
+            $log->write('CREDIT_CUSTOMER');
             foreach ($data['payment_methods'] as $payment_method) {
                 if ($payment_method['code'] == 'wallet') {
                     $data['payment_wallet_methods'] = $payment_method;
@@ -174,6 +177,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
                 }
             }
         } if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status')) {
+            $log->write('PEZESHA_CUSTOMER');
             foreach ($data['payment_methods'] as $payment_method) {
                 if ($payment_method['code'] == 'wallet') {
                     $data['payment_wallet_methods'] = $payment_method;
