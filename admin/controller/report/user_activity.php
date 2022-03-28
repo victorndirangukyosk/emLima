@@ -188,7 +188,7 @@ class ControllerReportUserActivity extends Controller {
                 $this->url->link('catalog/general', 'token=' . $this->session->data['token'] . '&filter_product_id=', 'SSL'),
                 $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&filter_product_id_from=', 'SSL'),
                 $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&filter_category_price=', 'SSL'),
-                $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . '&order_id=', 'SSL'),
+                $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'] . '&filter_order_id=', 'SSL'),
             ];
 
 
