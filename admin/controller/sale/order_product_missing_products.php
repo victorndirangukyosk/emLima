@@ -25,6 +25,13 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $filter_order_id = null;
         }
 
+
+        if (isset($this->request->get['filter_prod_id'])) {
+            $filter_prod_id = $this->request->get['filter_prod_id'];
+        } else {
+            $filter_prod_id = null;
+        }
+
         if (isset($this->request->get['filter_order_from_id'])) {
             $filter_order_from_id = $this->request->get['filter_order_from_id'];
         } else {
@@ -150,6 +157,10 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
         }
 
+        if (isset($this->request->get['filter_prod_id'])) {
+            $url .= '&filter_prod_id=' . $this->request->get['filter_prod_id'];
+        }
+
         if (isset($this->request->get['filter_order_from_id'])) {
             $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
         }
@@ -244,6 +255,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $filter_data = [
             'filter_city' => $filter_city,
             'filter_order_id' => $filter_order_id,
+            'filter_prod_id' => $filter_prod_id,
             'filter_order_from_id' => $filter_order_from_id,
             'filter_order_to_id' => $filter_order_to_id,
             'filter_customer' => $filter_customer,
@@ -435,6 +447,10 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
         }
 
+        if (isset($this->request->get['filter_prod_id'])) {
+            $url .= '&filter_prod_id=' . $this->request->get['filter_prod_id'];
+        }
+
         if (isset($this->request->get['filter_order_from_id'])) {
             $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
         }
@@ -525,6 +541,10 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $url .= '&filter_order_id=' . $this->request->get['filter_order_id'];
         }
 
+        if (isset($this->request->get['filter_prod_id'])) {
+            $url .= '&filter_prod_id=' . $this->request->get['filter_prod_id'];
+        }
+
         if (isset($this->request->get['filter_order_from_id'])) {
             $url .= '&filter_order_from_id=' . $this->request->get['filter_order_from_id'];
         }
@@ -610,6 +630,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
 
         $data['filter_city'] = $filter_city;
         $data['filter_order_id'] = $filter_order_id;
+        $data['filter_prod_id'] = $filter_prod_id;
         $data['filter_order_from_id'] = $filter_order_from_id;
         $data['filter_order_to_id'] = $filter_order_to_id;
         $data['filter_company'] = $filter_company;
@@ -677,6 +698,12 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
             $filter_order_id = $this->request->get['filter_order_id'];
         } else {
             $filter_order_id = null;
+        }
+
+        if (isset($this->request->get['filter_prod_id'])) {
+            $filter_prod_id = $this->request->get['filter_prod_id'];
+        } else {
+            $filter_prod_id = null;
         }
 
         if (isset($this->request->get['filter_order_from_id'])) {
@@ -791,6 +818,7 @@ class ControllerSaleOrderProductMissingProducts extends Controller {
         $filter_data = [
             'filter_city' => $filter_city,
             'filter_order_id' => $filter_order_id,
+            'filter_prod_id' => $filter_prod_id,
             'filter_order_from_id' => $filter_order_from_id,
             'filter_order_to_id' => $filter_order_to_id,
             'filter_customer' => $filter_customer,
