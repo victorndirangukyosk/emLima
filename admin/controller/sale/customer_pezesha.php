@@ -92,7 +92,7 @@ class ControllerSaleCustomerPezesha extends Controller {
     }
 
     public function applyloanfordeliveredorder() {
-
+        $log = new Log('error.log');
         $order_id = isset($this->request->post['order_id']) && $this->request->post['order_id'] > 0 ? $this->request->post['order_id'] : 0;
 
         if ($order_id != NULL && $order_id > 0) {
@@ -104,7 +104,7 @@ class ControllerSaleCustomerPezesha extends Controller {
             $pezesha_order_info = $this->model_pezesha_pezesha->getCustomerPezeshaLoan($order_id, $order_info['customer_id']);
 
             if ($order_info != NULL && $pezesha_order_info != NULL && $pezesha_order_info['customer_id'] == $order_info['customer_id'] && $pezesha_order_info['loan_id'] > 0 && $pezesha_order_info['order_id'] == $order_info['order_id']) {
-
+                $log->write('applyloanfordeliveredorder');
                 $customer_info['customer_id'] = $order_info['customer_id'];
                 $customer_info['amount'] = $order_info['total'];
                 $customer_info['order_id'] = $order_info['order_id'];
@@ -114,6 +114,7 @@ class ControllerSaleCustomerPezesha extends Controller {
                 $customer_device_info = $this->model_sale_customer->getCustomer($order_info['customer_id']);
                 $response = NULL;
                 if (is_array($customer_device_info) && count($customer_device_info) > 0) {
+                    $log->write('applyloanfordeliveredorder_2');
                     $response = $this->load->controller('pezesha/pezesha/applyloanfordeliveredorder', $customer_info);
                 }
 
