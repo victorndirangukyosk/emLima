@@ -2014,16 +2014,8 @@ $.ajax({
 		type: 'post',
 		dataType: 'json',
 		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1',
-		success: function(json) {	 
-                    console.log(json);
-                    $('.alert').html('Order status updated successfully!');
-                    $(".alert").attr('class', 'alert alert-success');
-                    $(".alert").show();
-                    if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()!='Order Processing')
-                    {
-                    setTimeout(function(){ window.location.reload(false); }, 1500);    
-                    }
-                    if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text() == 'Delivered')
+		beforeSend: function() {
+                if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text() == 'Delivered')
                     {
                     $.ajax({
                     url: 'index.php?path=sale/customer_pezesha/applyloanfordeliveredorder&token=<?php echo $token; ?>',
@@ -2043,6 +2035,19 @@ $.ajax({
     
                     }
                     });    
+                    }
+                },
+                complete: function() {
+              
+                },
+                success: function(json) {	 
+                    console.log(json);
+                    $('.alert').html('Order status updated successfully!');
+                    $(".alert").attr('class', 'alert alert-success');
+                    $(".alert").show();
+                    if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text()!='Order Processing')
+                    {
+                    setTimeout(function(){ window.location.reload(false); }, 1500);    
                     }
                     //setTimeout(function(){ window.location.reload(false); }, 1500);
 		},			

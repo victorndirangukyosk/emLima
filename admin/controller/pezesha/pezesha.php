@@ -299,10 +299,11 @@ class ControllerPezeshaPezesha extends Controller {
           $this->response->addHeader('Content-Type: application/json');
           $this->response->setOutput(json_encode($json)); */
     }
-    
+
     public function applyloanfordeliveredorder($customer_info) {
 
         $log = new Log('error.log');
+        $log->write('applyloanfordeliveredorder_2');
         $this->load->model('sale/customer');
         $this->load->model('pezesha/pezesha');
 
