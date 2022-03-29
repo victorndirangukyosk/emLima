@@ -2017,6 +2017,7 @@ $.ajax({
 		beforeSend: function() {
                 if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text() == 'Delivered')
                     {
+                    alert('pezesha');
                     $.ajax({
                     url: 'index.php?path=sale/customer_pezesha/applyloanfordeliveredorder&token=<?php echo $token; ?>',
                     type: 'post',
