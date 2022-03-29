@@ -2,7 +2,7 @@
 
 class ControllerApiStock extends Controller {
 
-    public function getAvaiableproducts($args = []) {
+    public function getproductsStock($args = []) {
         
         $json = [];
 

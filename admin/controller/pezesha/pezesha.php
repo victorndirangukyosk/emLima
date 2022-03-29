@@ -354,7 +354,12 @@ class ControllerPezeshaPezesha extends Controller {
 
         $json['status'] = true;
         $json['data'] = $result;
-
+        if ($result['status'] == 200 && $result['response_code'] == 0 && !$result['error']) {
+            $this->load->model('pezesha/pezesha');
+            $loan_type = strtoupper(str_replace(' ', '_', $result['message']));
+            $loan_id = $result['data']['loan_id'];
+            $this->model_pezesha_pezesha->UpdateCustomerLoans($customer_id, $order_id, $loan_id, $loan_type, $amount);
+        }
         // Add to activity log
         $log->write('pezesha apply loan');
         $this->load->model('user/user_activity');
