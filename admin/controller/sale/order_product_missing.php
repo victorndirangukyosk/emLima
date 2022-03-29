@@ -1481,6 +1481,7 @@ class ControllerSaleOrderProductMissing extends Controller {
     }
 
     public function sendmailwithmissingproducts($order_id) {
+        $log = new Log('error.log');
         $order_info = $this->model_sale_order->getOrder($order_id);
 
         $address = '';
@@ -1513,6 +1514,8 @@ class ControllerSaleOrderProductMissing extends Controller {
         );
 
         try {
+            $log = new Log('error.log');
+            $log->write('MISSING_ORDER_PRODUCT_MAIL_SENDING');
             $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
             $subject = $this->emailtemplate->getSubject('OrderAll', 'order_21', $data);
             $message = $this->emailtemplate->getMessage('OrderAll', 'order_21', $data);
