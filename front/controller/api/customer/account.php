@@ -44,7 +44,24 @@ class ControllerApiCustomerAccount extends Controller
             $stripe_customer = $this->model_payment_stripe->getCustomer($this->customer->getId());
 
             $customer_info['stripe_details'] = $stripe_customer;
-
+            $customer_info['pezesha_status'] = $this->config->get('pezesha_status');
+            /* SET CUSTOMER PEZESHA */
+            if ($customer_info['customer_id'] > 0 && ($customer_info['parent'] == NULL || $customer_info['parent'] == 0)) {
+                $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_info['customer_id'] . "'");
+            }
+            if ($customer_info['customer_id'] > 0 && $customer_info['parent'] > 0) {
+                $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_info['parent'] . "'");
+            }
+            if ($customer_info['customer_id'] > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
+                $customer_info['pezesha_customer_id'] = $pezesha_customer_query->row['pezesha_customer_id'];
+                $customer_info['pezesha_customer_uuid'] = $pezesha_customer_query->row['customer_uuid'];
+                $customer_info['pezesha_identifier'] = $pezesha_customer_query->row['customer_id'];
+            } else {
+                $customer_info['pezesha_customer_id'] = NULL;
+                $customer_info['pezesha_customer_uuid'] = NULL;
+                $customer_info['pezesha_identifier'] = NULL;
+            }
+            /* SET CUSTOMER PEZESHA */
             $json['data'] = $customer_info;
         } else {
             $json['status'] = 10013;
