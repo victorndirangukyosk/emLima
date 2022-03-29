@@ -350,13 +350,31 @@ class ControllerPezeshaPezesha extends Controller {
         $result = json_decode($result, true);
         $log->write($result);
         $json = $result;
-        return $json;
+        //return $json;
 
-        /* $json['status'] = true;
-          $json['data'] = $result;
+        $json['status'] = true;
+        $json['data'] = $result;
 
-          $this->response->addHeader('Content-Type: application/json');
-          $this->response->setOutput(json_encode($json)); */
+        // Add to activity log
+        $log->write('pezesha apply loan');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'customer_id' => $customer_id,
+            'order_id' => $order_id,
+            'amount' => $amount
+        ];
+        $log->write('pezesha apply loan');
+
+        $this->model_user_user_activity->addActivity('pezesha_apply_loan', $activity_data);
+
+        $log->write('customer edit');
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
