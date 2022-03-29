@@ -96,6 +96,7 @@ class ControllerSaleCustomerPezesha extends Controller {
         $order_id = isset($this->request->post['order_id']) && $this->request->post['order_id'] > 0 ? $this->request->post['order_id'] : 0;
 
         if ($order_id != NULL && $order_id > 0) {
+            $log->write('applyloanfordeliveredorder');
             $this->load->model('sale/customer');
             $this->load->model('sale/order');
             $this->load->model('pezesha/pezesha');
