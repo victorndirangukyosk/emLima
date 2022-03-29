@@ -2023,6 +2023,27 @@ $.ajax({
                     {
                     setTimeout(function(){ window.location.reload(false); }, 1500);    
                     }
+                    if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text() == 'Delivered')
+                    {
+                    $.ajax({
+                    url: 'index.php?path=sale/customer_pezesha/applyloanfordeliveredorder&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data: { order_id : clicked_orderid },
+                    success: function(json) {
+                    if(json.status == 422) {    
+                    $.each(json.errors, function (key, data) {
+                    alert(key+' : '+data);
+                    })
+                    }
+    
+                    if(json.status == 200 && json.response_code == 0) {    
+                    alert(json.message);
+                    }
+    
+                    }
+                    });    
+                    }
                     //setTimeout(function(){ window.location.reload(false); }, 1500);
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
