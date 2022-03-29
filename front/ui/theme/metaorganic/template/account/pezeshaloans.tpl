@@ -183,10 +183,10 @@
                 tr.append("<td class='order_id'>" + displayRecords[i].loan_id + "</td>");
                 tr.append("<td class='order_id'>" + displayRecords[i].order_id + "</td>");
                 if(displayRecords[i].amount > 0) {
-                tr.append("<td class='amount'>" + displayRecords[i].amount + "</td>");   
+                tr.append("<td class='amount'>" + displayRecords[i].amount_formatted + "</td>");   
                 }
                 if(displayRecords[i].amount <= 0) {
-                tr.append("<td class='total'>" + displayRecords[i].total + "</td>");
+                tr.append("<td class='total'>" + displayRecords[i].total_formatted + "</td>");
                 }
                 tr.append("<td class='amount'>" + displayRecords[i].loan_type + "</td>");
                 tr.append("<td class='order_id'>" + displayRecords[i].created_at + "</td>");
