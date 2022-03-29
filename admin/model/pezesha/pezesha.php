@@ -21,6 +21,14 @@ class ModelPezeshaPezesha extends Model {
         $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_pezesha_loans SET customer_id = '" . (int) $customer_id . "', loan_id = '" . (int) $loan_id . "', order_id = '" . (int) $order_id . "', loan_type = '" . $loan_type . "', created_at = NOW()");
     }
 
+    public function UpdateCustomerLoans($customer_id, $order_id, $loan_id, $loan_type, $amount) {
+        $log = new Log('error.log');
+        $log->write('loan_type');
+        $log->write($loan_type);
+        $log->write('loan_type');
+        $this->db->query('UPDATE ' . DB_PREFIX . "customer_pezesha_loans SET loan_id = '" . (int) $loan_id . "', amount = '" . $amount . "', loan_type = '" . $loan_type . "', updated_at = NOW() WHERE customer_id = '" . (int) $customer_id . "' AND order_id = '" . (int) $order_id . "'");
+    }
+
     public function getCustomerPezeshaLoan($order_id, $customer_id) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_id . "' AND order_id = '" . (int) $order_id . "'");
         return $query->row;
