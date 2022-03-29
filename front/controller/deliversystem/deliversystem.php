@@ -2049,65 +2049,68 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $i = 0;
             foreach ($products as $product) {
                 $product_info = $this->model_assets_product->getProduct($product['product_store_id'], true);
+                if ($product_info != NULL) {
 
-                if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
-                    $image = $this->model_tool_image->resize($product_info['image'], 80, 100);
-                } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
-                    $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
+                    if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
+                        $image = $this->model_tool_image->resize($product_info['image'], 80, 100);
+                    } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
+                        $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
+                    }
+
+                    $data['products'][] = [
+                        'order_id' => $order_id,
+                        'product_id' => $product['product_id'],
+                        'general_product_id' => $product_info['product_id'],
+                        'variation_id' => 0,
+                        'vendor_id' => $product_info['merchant_id'],
+                        'store_id' => $product_info['store_id'],
+                        'name' => $product_info['name'],
+                        'unit' => $product_info['unit'],
+                        'model' => $product_info['model'],
+                        'image' => $image,
+                        'quantity' => $product['quantity_required'],
+                        'price' => $product['mp_price'],
+                        'total' => $product['mp_price'] * $product['quantity_required'],
+                        'tax' => $this->tax->getTax($product['mp_price'], $product_info['tax_class_id']),
+                        'reward' => 0,
+                        'product_type' => 'replacable',
+                        'product_note' => $product['product_note'],
+                    ];
+                    $sub_total += $product['mp_price'] * $product['quantity_required'];
+                    $tax += $product['mp_tax'] * $product['quantity_required'];
+                    $i++;
                 }
-
-                $data['products'][] = [
-                    'order_id' => $order_id,
-                    'product_id' => $product['product_id'],
-                    'general_product_id' => $product_info['product_id'],
-                    'variation_id' => 0,
-                    'vendor_id' => $product_info['merchant_id'],
-                    'store_id' => $product_info['store_id'],
-                    'name' => $product_info['name'],
-                    'unit' => $product_info['unit'],
-                    'model' => $product_info['model'],
-                    'image' => $image,
-                    'quantity' => $product['quantity_required'],
-                    'price' => $product['mp_price'],
-                    'total' => $product['mp_price'] * $product['quantity_required'],
-                    'tax' => $this->tax->getTax($product['mp_price'], $product_info['tax_class_id']),
-                    'reward' => 0,
-                    'product_type' => 'replacable',
-                    'product_note' => $product['product_note'],
-                ];
-                $sub_total += $product['mp_price'] * $product['quantity_required'];
-                $tax += $product['mp_tax'] * $product['quantity_required'];
-                $i++;
             }
 
             foreach ($products as $product) {
                 $product_info = $this->model_assets_product->getProduct($product['product_store_id'], true);
+                if ($product_info != NULL) {
+                    if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
+                        $image = $this->model_tool_image->resize($product_info['image'], 80, 100);
+                    } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
+                        $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
+                    }
 
-                if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
-                    $image = $this->model_tool_image->resize($product_info['image'], 80, 100);
-                } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
-                    $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
+                    $data['new_products'][] = [
+                        'order_id' => $order_id,
+                        'product_id' => $product['product_id'],
+                        'general_product_id' => $product_info['product_id'],
+                        'variation_id' => 0,
+                        'vendor_id' => $product_info['merchant_id'],
+                        'store_id' => $product_info['store_id'],
+                        'name' => $product_info['name'],
+                        'unit' => $product_info['unit'],
+                        'model' => $product_info['model'],
+                        'image' => $image,
+                        'quantity' => $product['quantity_required'],
+                        'price' => $this->currency->format($this->tax->calculate($product['mp_price'], $product_info['tax_class_id'], $this->config->get('config_tax'))),
+                        'total' => $this->currency->format($this->tax->calculate($product['mp_price'], $product_info['tax_class_id'], $this->config->get('config_tax')) * $product['quantity_required']),
+                        'tax' => $this->tax->getTax($product['mp_price'], $product_info['tax_class_id']),
+                        'reward' => 0,
+                        'product_type' => 'replacable',
+                        'product_note' => $product['product_note'],
+                    ];
                 }
-
-                $data['new_products'][] = [
-                    'order_id' => $order_id,
-                    'product_id' => $product['product_id'],
-                    'general_product_id' => $product_info['product_id'],
-                    'variation_id' => 0,
-                    'vendor_id' => $product_info['merchant_id'],
-                    'store_id' => $product_info['store_id'],
-                    'name' => $product_info['name'],
-                    'unit' => $product_info['unit'],
-                    'model' => $product_info['model'],
-                    'image' => $image,
-                    'quantity' => $product['quantity_required'],
-                    'price' => $this->currency->format($this->tax->calculate($product['mp_price'], $product_info['tax_class_id'], $this->config->get('config_tax'))),
-                    'total' => $this->currency->format($this->tax->calculate($product['mp_price'], $product_info['tax_class_id'], $this->config->get('config_tax')) * $product['quantity_required']),
-                    'tax' => $this->tax->getTax($product['mp_price'], $product_info['tax_class_id']),
-                    'reward' => 0,
-                    'product_type' => 'replacable',
-                    'product_note' => $product['product_note'],
-                ];
             }
 
             $new_total = $sub_total + $tax;
