@@ -30,7 +30,7 @@ class ModelPezeshaPezesha extends Model {
     }
 
     public function getCustomerPezeshaLoan($order_id, $customer_id) {
-        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_id . "' AND order_id = '" . (int) $order_id . "'");
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_pezesha_loans WHERE customer_id = '" . (int) $customer_id . "' AND order_id = '" . (int) $order_id . "'");
         return $query->row;
     }
 
