@@ -464,7 +464,7 @@ $('#submit_info_to_pezesha').on('click', function(e) {
     $.ajax({
             type: 'post',
             url: 'index.php?path=account/applypezesha/updatecustomerinfo',
-            data : { dob : $("input[name=dob]").val(), kra : $("input[name=kra]").val(), national_id : $("input[name=national_id]").val(), gender : $("input[name='gender']:checked").val() },
+            data : { dob : $("input[name=dob]").val(), kra : $("input[name=kra]").val(), national_id : $("input[name=national_id]").val(), gender : $("input[name='gender']:checked").val(), credit_period : $("select[name='credit_period']").val() },
             dataType: 'json',
             cache: false,
             async: false,
@@ -472,8 +472,10 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             },
             complete: function() {
             $.ajax({
-            type: 'get',
+            type: 'post',
             url: 'index.php?path=account/applypezesha/userregistration',
+            data : { credit_period : $("select[name='credit_period']").val() },
+            dataType: 'json',
             cache: false,
             contentType: false,
             processData: false,
