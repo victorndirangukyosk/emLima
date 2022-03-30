@@ -351,6 +351,7 @@ class ControllerAccountApplypezesha extends Controller {
                 $data['customer_id'] = $result['data']['merchant_id'];
                 $data['pezesha_customer_id'] = $result['data']['customer_id'];
                 $data['customer_uuid'] = $result['data']['customer_uuid'];
+                $data['credit_period'] = $this->request->post['credit_period'];
                 $customer_device_info = $this->model_account_customer->addPezeshaCustomer($data);
             }
             $json = $result;
