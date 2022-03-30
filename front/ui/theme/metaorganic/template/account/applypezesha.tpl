@@ -302,8 +302,26 @@ $('#copy_of_certificate_of_incorporation_button').on('click', function(e) {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function() {
+            $('#copy_of_certificate_of_incorporation_button').prop('disabled', true);   
+            },
+            complete: function() {
+            setInterval(function(){
+            $('#copy_of_certificate_of_incorporation_button').prop('disabled', false);
+            $('#copy_of_certificate_of_incorporation_button').html('UPLOAD');
+            }, 1000);
+            },
             success: function (response) {
             console.log(response);
+            
+            if(response.status == 200) {
+            $('#copy_of_certificate_of_incorporation_button').html('<i class="fa fa-check" aria-hidden="true"></i>');   
+            }
+            
+            if(response.status == 500) {
+            $('#copy_of_certificate_of_incorporation_button').html('<i class="fa fa-times" aria-hidden="true"></i>');
+            }
+            
             }
 
     });
@@ -353,8 +371,26 @@ $('#copy_of_bussiness_operating_permit_button').on('click', function(e) {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function() {
+            $('#copy_of_bussiness_operating_permit_button').prop('disabled', true);   
+            },
+            complete: function() {
+            setInterval(function(){
+            $('#copy_of_bussiness_operating_permit_button').prop('disabled', false);
+            $('#copy_of_bussiness_operating_permit_button').html('UPLOAD');
+            }, 1000);
+            },
             success: function (response) {
             console.log(response);
+            
+            if(response.status == 200) {
+            $('#copy_of_bussiness_operating_permit_button').html('<i class="fa fa-check" aria-hidden="true"></i>');   
+            }
+            
+            if(response.status == 500) {
+            $('#copy_of_bussiness_operating_permit_button').html('<i class="fa fa-times" aria-hidden="true"></i>');
+            }
+            
             }
 
     });
@@ -404,8 +440,26 @@ $('#copy_of_id_of_bussiness_owner_managing_director_button').on('click', functio
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function() {
+            $('#copy_of_id_of_bussiness_owner_managing_director_button').prop('disabled', true);   
+            },
+            complete: function() {
+            setInterval(function(){
+            $('#copy_of_id_of_bussiness_owner_managing_director_button').prop('disabled', false);
+            $('#copy_of_id_of_bussiness_owner_managing_director_button').html('UPLOAD');
+            }, 1000);
+            },
             success: function (response) {
             console.log(response);
+            
+            if(response.status == 200) {
+            $('#copy_of_id_of_bussiness_owner_managing_director_button').html('<i class="fa fa-check" aria-hidden="true"></i>');   
+            }
+            
+            if(response.status == 500) {
+            $('#copy_of_id_of_bussiness_owner_managing_director_button').html('<i class="fa fa-times" aria-hidden="true"></i>');
+            }
+            
             }
 
     });
