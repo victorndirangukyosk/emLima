@@ -320,6 +320,7 @@ class mail
                 'SourceFile' => $temp_file_location,
                 'ACL' => 'private',
             ]);
+            $log->write($result);
             $log->write($result['ObjectURL']);
             return $result['ObjectURL'];
         } catch (S3Exception $e) {
