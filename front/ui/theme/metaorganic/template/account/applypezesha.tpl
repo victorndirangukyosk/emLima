@@ -158,7 +158,7 @@
                         </div>
                         <div class="addnews-address-form">
 
-                            <div class="form-group">
+                            <div class="form-group" style="height:300px; overflow: auto;">
                                 <div class="col-md-12">
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mattis nunc sed blandit libero volutpat sed cras ornare arcu. Nec ullamcorper sit amet risus nullam eget felis eget nunc. Feugiat pretium nibh ipsum consequat nisl vel pretium. Sapien nec sagittis aliquam malesuada. Eu volutpat odio facilisis mauris sit amet massa. At in tellus integer feugiat scelerisque varius morbi enim. Bibendum ut tristique et egestas quis. Sem nulla pharetra diam sit amet nisl suscipit adipiscing bibendum. Ultrices vitae auctor eu augue. Nibh mauris cursus mattis molestie a iaculis. Leo in vitae turpis massa sed elementum. Nam aliquam sem et tortor. Nec sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae. Euismod lacinia at quis risus sed vulputate odio. Venenatis a condimentum vitae sapien. Elementum nisi quis eleifend quam adipiscing vitae proin. Enim nunc faucibus a pellentesque sit amet porttitor. Orci dapibus ultrices in iaculis.
                                 </div>
