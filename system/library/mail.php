@@ -320,13 +320,14 @@ class mail
                 'SourceFile' => $temp_file_location,
                 'ACL' => 'private',
             ]);
+            $log->write($result);
             $log->write($result['ObjectURL']);
             return $result['ObjectURL'];
         } catch (S3Exception $e) {
             $log = new Log('error.log');
             $log->write($e->getMessage());
             // Catch an S3 specific exception.
-            echo $e->getMessage();
+            //echo $e->getMessage();
         } catch (AwsException $e) {
             $log = new Log('error.log');
             $log->write($e->getAwsRequestId());
@@ -334,13 +335,13 @@ class mail
             $log->write($e->getAwsErrorCode());
             // This catches the more generic AwsException. You can grab information
             // from the exception using methods of the exception object.
-            echo $e->getAwsRequestId() . "\n";
-            echo $e->getAwsErrorType() . "\n";
-            echo $e->getAwsErrorCode() . "\n";
+            //echo $e->getAwsRequestId() . "\n";
+            //echo $e->getAwsErrorType() . "\n";
+            //echo $e->getAwsErrorCode() . "\n";
 
             // This dumps any modeled response data, if supported by the service
             // Specific members can be accessed directly (e.g. $e['MemberName'])
-            var_dump($e->toArray());
+            //var_dump($e->toArray());
         }
     }
 

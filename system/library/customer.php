@@ -21,6 +21,7 @@ class Customer {
     private $pezesha_customer_id;
     private $pezesha_customer_uuid;
     private $pezesha_identifier;
+    private $credit_period;
     private $jwt_token;
 
     public function __construct($registry) {
@@ -62,10 +63,12 @@ class Customer {
                     $this->pezesha_customer_id = $pezesha_customer_query->row['pezesha_customer_id'];
                     $this->pezesha_customer_uuid = $pezesha_customer_query->row['customer_uuid'];
                     $this->pezesha_identifier = $pezesha_customer_query->row['customer_id'];
+                    $this->credit_period = $pezesha_customer_query->row['credit_period'];
                 } else {
                     $this->pezesha_customer_id = NULL;
                     $this->pezesha_customer_uuid = NULL;
                     $this->pezesha_identifier = NULL;
+                    $this->credit_period = NULL;
                 }
                 /* SET CUSTOMER PEZESHA */
                 /* SET CUSTOMER PEZESHA */
@@ -139,10 +142,12 @@ class Customer {
                 $this->pezesha_customer_id = $pezesha_customer_query->row['pezesha_customer_id'];
                 $this->pezesha_customer_uuid = $pezesha_customer_query->row['customer_uuid'];
                 $this->pezesha_identifier = $pezesha_customer_query->row['customer_id'];
+                $this->credit_period = $pezesha_customer_query->row['credit_period'];
             } else {
                 $this->pezesha_customer_id = NULL;
                 $this->pezesha_customer_uuid = NULL;
                 $this->pezesha_identifier = NULL;
+                $this->credit_period = NULL;
             }
             /* SET CUSTOMER PEZESHA */
 
@@ -236,10 +241,12 @@ class Customer {
                 $this->pezesha_customer_id = $pezesha_customer_query->row['pezesha_customer_id'];
                 $this->pezesha_customer_uuid = $pezesha_customer_query->row['customer_uuid'];
                 $this->pezesha_identifier = $pezesha_customer_query->row['customer_id'];
+                $this->credit_period = $pezesha_customer_query->row['credit_period'];
             } else {
                 $this->pezesha_customer_id = NULL;
                 $this->pezesha_customer_uuid = NULL;
                 $this->pezesha_identifier = NULL;
+                $this->credit_period = NULL;
             }
             /* SET CUSTOMER PEZESHA */
             /* if ($customer_query->row['cart'] && is_string($customer_query->row['cart'])) {
@@ -313,6 +320,7 @@ class Customer {
         $this->pezesha_customer_id = '';
         $this->pezesha_customer_uuid = '';
         $this->pezesha_identifier = '';
+        $this->credit_period = '';
     }
 
     public function isLogged() {
@@ -406,7 +414,11 @@ class Customer {
     public function getCustomerPezeshaIdentifier() {
         return $this->pezesha_identifier;
     }
-    
+
+    public function getCustomerPezeshaCreditPeriod() {
+        return $this->credit_period;
+    }
+
     public function getCustomerJwtToken() {
         return $this->jwt_token;
     }
@@ -431,6 +443,7 @@ class Customer {
         $this->pezesha_customer_id = $data['pezesha_customer_id'];
         $this->pezesha_customer_uuid = $data['pezesha_customer_uuid'];
         $this->pezesha_identifier = $data['pezesha_identifier'];
+        $this->credit_period = $data['credit_period'];
         $this->jwt_token = $data['jwt_token'];
     }
 

@@ -93,6 +93,7 @@ class ControllerApiCustomerLogin extends Controller {
             $customer_info['pezesha_customer_id'] = $this->customer->getCustomerPezeshaId();
             $customer_info['pezesha_customer_uuid'] = $this->customer->getCustomerPezeshauuId();
             $customer_info['pezesha_identifier'] = $this->customer->getCustomerPezeshaIdentifier();
+            $customer_info['credit_period'] = $this->customer->getCustomerPezeshaCreditPeriod();
             $customer_info['devices'] = $this->model_account_customer->getCustomerDevices($api_info['customer_id']);
 
             // Add to activity log
@@ -625,10 +626,12 @@ class ControllerApiCustomerLogin extends Controller {
                     $customer_query->row['pezesha_customer_id'] = $pezesha_customer_query->row['pezesha_customer_id'];
                     $customer_query->row['pezesha_customer_uuid'] = $pezesha_customer_query->row['customer_uuid'];
                     $customer_query->row['pezesha_identifier'] = $pezesha_customer_query->row['customer_id'];
+                    $customer_query->row['credit_period'] = $pezesha_customer_query->row['credit_period'];
                 } else {
                     $customer_query->row['pezesha_customer_id'] = NULL;
                     $customer_query->row['pezesha_customer_uuid'] = NULL;
                     $customer_query->row['pezesha_identifier'] = NULL;
+                    $customer_query->row['credit_period'] = NULL;
                 }
                 /* SET CUSTOMER PEZESHA */
                 $customer_query->row['jwt_token'] = $jwt;
