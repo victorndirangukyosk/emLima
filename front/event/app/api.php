@@ -556,10 +556,12 @@ class EventAppApi extends Event {
                             $customer_query->row['pezesha_customer_id'] = $pezesha_customer_query->row['pezesha_customer_id'];
                             $customer_query->row['pezesha_customer_uuid'] = $pezesha_customer_query->row['customer_uuid'];
                             $customer_query->row['pezesha_identifier'] = $pezesha_customer_query->row['customer_id'];
+                            $customer_query->row['credit_period'] = $pezesha_customer_query->row['credit_period'];
                         } else {
                             $customer_query->row['pezesha_customer_id'] = NULL;
                             $customer_query->row['pezesha_customer_uuid'] = NULL;
                             $customer_query->row['pezesha_identifier'] = NULL;
+                            $customer_query->row['credit_period'] = NULL;
                         }
                         /* SET CUSTOMER PEZESHA */
                         $customer_query->row['jwt_token'] = $matches[0];
