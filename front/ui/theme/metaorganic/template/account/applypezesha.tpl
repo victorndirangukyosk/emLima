@@ -158,8 +158,8 @@
                         </div>
                         <div class="addnews-address-form">
 
-                            <div class="form-group" style="height:300px; overflow: auto;">
-                                <div class="col-md-12">
+                            <div class="form-group" id="parent_terms_conditions" style="height:300px; overflow: auto;">
+                                <div class="col-md-12" id="terms_conditions">
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mattis nunc sed blandit libero volutpat sed cras ornare arcu. Nec ullamcorper sit amet risus nullam eget felis eget nunc. Feugiat pretium nibh ipsum consequat nisl vel pretium. Sapien nec sagittis aliquam malesuada. Eu volutpat odio facilisis mauris sit amet massa. At in tellus integer feugiat scelerisque varius morbi enim. Bibendum ut tristique et egestas quis. Sem nulla pharetra diam sit amet nisl suscipit adipiscing bibendum. Ultrices vitae auctor eu augue. Nibh mauris cursus mattis molestie a iaculis. Leo in vitae turpis massa sed elementum. Nam aliquam sem et tortor. Nec sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae. Euismod lacinia at quis risus sed vulputate odio. Venenatis a condimentum vitae sapien. Elementum nisi quis eleifend quam adipiscing vitae proin. Enim nunc faucibus a pellentesque sit amet porttitor. Orci dapibus ultrices in iaculis.
                                 </div>
                             </div>
@@ -167,7 +167,7 @@
                             <!-- Button -->
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    <button id="singlebutton" name="singlebutton" data-terms="0" type="button" class="btn btn-primary" data-dismiss="modal">AGREE</button>
+                                    <button id="singlebutton" name="singlebutton" data-terms="0" type="button" class="btn btn-primary" data-dismiss="modal" disabled>AGREE</button>
                                     <button id="cancelbutton" name="cancelbutton" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
                                 </div>
                             </div>
@@ -549,6 +549,13 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             }
     });
 });
+
+$('#parent_terms_conditions').scroll(function() {
+  console.log('SCROLLING');
+  var disable = $('#terms_conditions').height() != ($(this).scrollTop() + $(this).height());
+  $('#singlebutton').prop('disabled', disable);
+});
+
 </script>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
