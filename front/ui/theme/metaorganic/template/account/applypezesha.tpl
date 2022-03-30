@@ -477,8 +477,7 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             data : { credit_period : $("select[name='credit_period']").val() },
             dataType: 'json',
             cache: false,
-            contentType: false,
-            processData: false,
+            async: false,
             beforeSend: function() {
             },
             complete: function() {

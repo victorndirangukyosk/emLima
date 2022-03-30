@@ -318,7 +318,7 @@ class mail
                 'Bucket' => $bucket,
                 'Key' => $customer_id . '/' . $custom_file_name . '_' . $customer_id . '_' . strtotime("now"),
                 'SourceFile' => $temp_file_location,
-                'ACL' => 'public-read',
+                'ACL' => 'private',
             ]);
             $log->write($result['ObjectURL']);
             return $result['ObjectURL'];
