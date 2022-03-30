@@ -184,19 +184,19 @@ class ControllerSaleEditinvoice extends Controller {
                         'model' => $product['model'],
                         'unit' => $product['unit'],
                         'option' => $option_data,
-                        'quantity' => $product['quantity']-$required_quantity,
+                        'quantity' => $product['quantity'] - $required_quantity,
                         'produce_type' => $product['produce_type'],
                         'product_note' => $product['product_note'],
                         /* OLD PRICE WITH TAX */ //'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
                         'price' => number_format((float) $product['price'], 2, '.', ''),
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
                         /* OLD TOTAL WITH TAX */ //'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
-                        'total' => ($product['price'] * ($product['quantity']-$required_quantity)),
+                        'total' => ($product['price'] * ($product['quantity'] - $required_quantity)),
                         'variations' => $variations,
                         'missed_quantity' => isset($missed_quantity) && count($missed_quantity) > 0 ? $missed_quantity['quantity_required'] : 0,
                     ];
-                    $sub_total += ($product['price'] * ($product['quantity']-$required_quantity));
-                    $tax += $product['tax'] * ($product['quantity']-$required_quantity);
+                    $sub_total += ($product['price'] * ($product['quantity'] - $required_quantity));
+                    $tax += $product['tax'] * ($product['quantity'] - $required_quantity);
                 }
                 $new_total = $sub_total + $tax;
 
@@ -315,394 +315,400 @@ class ControllerSaleEditinvoice extends Controller {
             }
         }
 
-        $uniqueIds = array_keys($datas['products']);
-        $log->write($datas);
+        $data_valid = $this->validateform($datas['products']);
+        if ($data_valid['error'] == false) {
+            $uniqueIds = array_keys($datas['products']);
+            $log->write($datas);
 
-        $order_id = $this->request->get['order_id'];
+            $order_id = $this->request->get['order_id'];
 
-        $order_info = $this->model_sale_order->getOrder($order_id);
+            $order_info = $this->model_sale_order->getOrder($order_id);
 
-        $store_id = 0;
+            $store_id = 0;
 
-        if (!empty($order_info)) {
-            $store_id = $order_info['store_id'];
-        }
-
-        $shipping_city_id = 0;
-
-        if (!empty($order_info)) {
-            $shipping_city_id = $order_info['shipping_city_id'];
-        }
-
-        //echo "<pre>";print_r($datas);die;
-        if ($this->validate() && $allp_id) {
-            // Store
-
-            if (isset($order_info['total'])) {
-                $old_total = $order_info['total'];
+            if (!empty($order_info)) {
+                $store_id = $order_info['store_id'];
             }
 
-            $old_sub_total = 0;
+            $shipping_city_id = 0;
 
-            /* if($this->model_sale_order->hasRealOrderProducts($order_id)) {
-              $log->write('edited again');
-              $totals = $this->model_sale_order->getOrderTotals($order_id);
-              } else {
-              $totals = $this->model_sale_order->getOrderTotals($order_id);
-              } */
+            if (!empty($order_info)) {
+                $shipping_city_id = $order_info['shipping_city_id'];
+            }
 
-            //echo "<pre>";print_r($order_id);die;
-            $totals = $this->model_sale_order->getOrderTotals($order_id);
+            //echo "<pre>";print_r($datas);die;
+            if ($this->validate() && $allp_id) {
+                // Store
 
-            //echo "<pre>";print_r($totals);die;
-            foreach ($totals as $total) {
-                if ('sub_total' == $total['code']) {
-                    $old_sub_total = $total['value'];
+                if (isset($order_info['total'])) {
+                    $old_total = $order_info['total'];
                 }
 
-                if ('total' == $total['code']) {
-                    $old_total = $total['value'];
-                }
-            }
+                $old_sub_total = 0;
 
-            //echo "<pre>";print_r($old_sub_total);die;
+                /* if($this->model_sale_order->hasRealOrderProducts($order_id)) {
+                  $log->write('edited again');
+                  $totals = $this->model_sale_order->getOrderTotals($order_id);
+                  } else {
+                  $totals = $this->model_sale_order->getOrderTotals($order_id);
+                  } */
 
-            $allProductIds = $this->model_sale_order->getOrderProductsIds($order_id);
-            foreach ($allProductIds as $deletePro) {
-                if (!isset($datas['products'][$deletePro['product_id']])) {
-                    $log->write('DELETE PRODUCT');
-                    $log->write($deletePro['product_id']);
-                    $log->write('DELETE PRODUCT');
-                    $products = $this->model_sale_order->deleteOrderProduct($order_id, $deletePro['product_id']);
-                    $order_missing_product_info = $this->model_sale_order->deleteOrderProductToMissingProductsFromInvoice($deletePro['product_id'], $order_id);
-                } else {
-                    //$log->write("set");
-                }
-            }
+                //echo "<pre>";print_r($order_id);die;
+                $totals = $this->model_sale_order->getOrderTotals($order_id);
 
-            $sumTotal = 0;
-
-            $tempProds['products'] = [];
-
-            //$log->write($datas['products']);
-
-            $vendor_id = $this->model_sale_order->getVendorId($store_id);
-
-            $this->load->model('account/customer');
-            $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
-            /* IF CUSTOMER SUB CUSTOMER */
-            $parent_customer_info = NULL;
-            $pricing_category = NULL;
-            if (isset($customer_info) && $customer_info['parent'] > 0) {
-                $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
-            }
-
-            if ($parent_customer_info == NULL && isset($customer_info['customer_category']) && $customer_info['customer_category'] != NULL) {
-                $pricing_category = $customer_info['customer_category'];
-            }
-
-            if ($parent_customer_info != NULL && isset($parent_customer_info) && isset($parent_customer_info['customer_category']) && $parent_customer_info['customer_category'] != NULL) {
-                $pricing_category = $parent_customer_info['customer_category'];
-            }
-
-            //echo "<pre>";print_r($datas['products']);die;
-            foreach ($datas['products'] as $p_id_key => $updateProduct) {
-                $updateProduct['quantity'] = $updateProduct['quantity'];
-                $updateProduct['store_id'] = $store_id;
-                $updateProduct['vendor_id'] = $vendor_id;
-                $custom_price = $updateProduct['price'];
-
-                if (is_numeric($p_id_key)) {
-                    $updateProduct_tax_total = NULL;
-                    //echo "<pre>";print_r($datas['products']);die;
-                    $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category, $custom_price);
-                    $products = $this->model_sale_order->updateOrderProduct($order_id, $p_id_key, $updateProduct, $updateProduct_tax_total);
-                } else {
-                    $updateProduct_tax_total = NULL;
-                    //echo "<pre>";print_r($updateProduct);die;
-                    $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category, $custom_price);
-                    $products = $this->model_sale_order->updateOrderNewProduct($order_id, $updateProduct['product_id'], $updateProduct, $updateProduct_tax_total);
-                }
-
-                $sumTotal += ($updateProduct['price'] * $updateProduct['quantity']);
-
-                array_push($tempProds['products'], $updateProduct);
-
-                if ($updateProduct['quantity_missed'] != NULL && $updateProduct['quantity_missed'] > 0) {
-                    $ordered_products = $this->model_sale_order->getRealOrderProductStoreId($order_id, $updateProduct['product_id']);
-                    if ($ordered_products == NULL) {
-                        $ordered_products = $this->model_sale_order->getOrderProductStoreId($order_id, $updateProduct['product_id']);
+                //echo "<pre>";print_r($totals);die;
+                foreach ($totals as $total) {
+                    if ('sub_total' == $total['code']) {
+                        $old_sub_total = $total['value'];
                     }
 
-                    $order_missing_product_info = $this->model_sale_order->addOrderProductToMissingProducts($ordered_products['order_product_id'], $updateProduct['quantity_missed'], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model'], $order_id, 1);
-                }
-
-                if ($updateProduct['quantity_missed'] != NULL && $updateProduct['quantity_missed'] <= 0) {
-                    $ordered_products = $this->model_sale_order->getRealOrderProductStoreId($order_id, $updateProduct['product_id']);
-                    if ($ordered_products == NULL) {
-                        $ordered_products = $this->model_sale_order->getOrderProductStoreId($order_id, $updateProduct['product_id']);
-                    }
-
-                    $order_missing_product_info = $this->model_sale_order->deleteOrderProductToMissingProducts($ordered_products['order_product_id'], $updateProduct['quantity_missed'], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model'], $order_id);
-                }
-            }
-
-            $subTotal = $sumTotal;
-
-            //$log->write("tax_total start ");
-            $tax_total = $this->model_tool_image->getTaxTotal($tempProds, $store_id, $pricing_category, $custom_price);
-
-            //echo "<pre>";print_r($tax_total);die;
-
-            /* $log->write("tax_total");
-              $log->write($tax_total); */
-
-            if (count($tax_total) > 0) {
-                foreach ($tax_total as $x => $tmpV) {
-                    array_push($datas['totals'], $tmpV);
-                }
-            }
-
-            //unset totals coming from web
-            if (isset($datas['totals']['tax'])) {
-                unset($datas['totals']['tax']);
-            }
-
-            if (!isset($datas['totals'])) {
-                $datas['totals'] = [];
-            }
-
-            $log->write('datastotals');
-            $log->write($datas['totals']);
-
-            //echo "<pre>";print_r($datas['totals']);die;
-            //$log->write($datas['totals']);
-            //die;
-            //saving order total below
-
-            $this->model_sale_order->deleteOrderTotal($order_id);
-
-            foreach ($datas['totals'] as $p_id_code => $tot) {
-                $sumTotal += $tot['value'];
-            }
-
-            $orderTotal = $sumTotal;
-
-            //get shipping method and get price
-            //echo "<pre>";print_r($order_info);die;
-            $tmp = explode('.', $order_info['shipping_code']);
-
-            $shipping_price = [];
-
-            if ('normal' == $tmp[0] || 'store_delivery' == $tmp[0]) {
-                $p = $tmp[0] . '_free_delivery_amount';
-                $free_delivery_amount = $this->config->get($p);
-
-                if (isset($store_id) && $store_id) {
-                    $store_info = $this->model_tool_image->getStore($store_id);
-
-                    if ($store_info) {
-                        $free_delivery_amount = $store_info['min_order_cod'];
+                    if ('total' == $total['code']) {
+                        $old_total = $total['value'];
                     }
                 }
 
-                //echo "<pre>";print_r($free_delivery_amount);print_r($old_sub_total);die;
-                $log->write($old_sub_total);
-                $log->write($free_delivery_amount);
-                $log->write($subTotal);
+                //echo "<pre>";print_r($old_sub_total);die;
 
-                if ($subTotal < $free_delivery_amount) {
-                    $log->write('shipping_price if');
+                $allProductIds = $this->model_sale_order->getOrderProductsIds($order_id);
+                foreach ($allProductIds as $deletePro) {
+                    if (!isset($datas['products'][$deletePro['product_id']])) {
+                        $log->write('DELETE PRODUCT');
+                        $log->write($deletePro['product_id']);
+                        $log->write('DELETE PRODUCT');
+                        $products = $this->model_sale_order->deleteOrderProduct($order_id, $deletePro['product_id']);
+                        $order_missing_product_info = $this->model_sale_order->deleteOrderProductToMissingProductsFromInvoice($deletePro['product_id'], $order_id);
+                    } else {
+                        //$log->write("set");
+                    }
+                }
 
-                    $this->load->model('shipping/' . $tmp[0]);
-                    $shipping_price = $this->{'model_shipping_' . $tmp[0]}->getPrice($store_id, $subTotal, $subTotal, $order_info['latitude'], $order_info['longitude'], $shipping_city_id);
+                $sumTotal = 0;
 
-                    $log->write($shipping_price);
+                $tempProds['products'] = [];
 
-                    $value_coming_tmp = 0;
+                //$log->write($datas['products']);
 
-                    if ((isset($datas['totals']) && array_key_exists('shipping', $datas['totals']))) {
-                        $value_coming_tmp = $datas['totals']['shipping']['value'];
+                $vendor_id = $this->model_sale_order->getVendorId($store_id);
+
+                $this->load->model('account/customer');
+                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                /* IF CUSTOMER SUB CUSTOMER */
+                $parent_customer_info = NULL;
+                $pricing_category = NULL;
+                if (isset($customer_info) && $customer_info['parent'] > 0) {
+                    $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
+                }
+
+                if ($parent_customer_info == NULL && isset($customer_info['customer_category']) && $customer_info['customer_category'] != NULL) {
+                    $pricing_category = $customer_info['customer_category'];
+                }
+
+                if ($parent_customer_info != NULL && isset($parent_customer_info) && isset($parent_customer_info['customer_category']) && $parent_customer_info['customer_category'] != NULL) {
+                    $pricing_category = $parent_customer_info['customer_category'];
+                }
+
+                //echo "<pre>";print_r($datas['products']);die;
+                foreach ($datas['products'] as $p_id_key => $updateProduct) {
+                    $updateProduct['quantity'] = $updateProduct['quantity'];
+                    $updateProduct['store_id'] = $store_id;
+                    $updateProduct['vendor_id'] = $vendor_id;
+                    $custom_price = $updateProduct['price'];
+
+                    if (is_numeric($p_id_key)) {
+                        $updateProduct_tax_total = NULL;
+                        //echo "<pre>";print_r($datas['products']);die;
+                        $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category, $custom_price);
+                        $products = $this->model_sale_order->updateOrderProduct($order_id, $p_id_key, $updateProduct, $updateProduct_tax_total);
+                    } else {
+                        $updateProduct_tax_total = NULL;
+                        //echo "<pre>";print_r($updateProduct);die;
+                        $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category, $custom_price);
+                        $products = $this->model_sale_order->updateOrderNewProduct($order_id, $updateProduct['product_id'], $updateProduct, $updateProduct_tax_total);
+                    }
+
+                    $sumTotal += ($updateProduct['price'] * $updateProduct['quantity']);
+
+                    array_push($tempProds['products'], $updateProduct);
+
+                    if ($updateProduct['quantity_missed'] != NULL && $updateProduct['quantity_missed'] > 0) {
+                        $ordered_products = $this->model_sale_order->getRealOrderProductStoreId($order_id, $updateProduct['product_id']);
+                        if ($ordered_products == NULL) {
+                            $ordered_products = $this->model_sale_order->getOrderProductStoreId($order_id, $updateProduct['product_id']);
+                        }
+
+                        $order_missing_product_info = $this->model_sale_order->addOrderProductToMissingProducts($ordered_products['order_product_id'], $updateProduct['quantity_missed'], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model'], $order_id, 1);
+                    }
+
+                    if ($updateProduct['quantity_missed'] != NULL && $updateProduct['quantity_missed'] <= 0) {
+                        $ordered_products = $this->model_sale_order->getRealOrderProductStoreId($order_id, $updateProduct['product_id']);
+                        if ($ordered_products == NULL) {
+                            $ordered_products = $this->model_sale_order->getOrderProductStoreId($order_id, $updateProduct['product_id']);
+                        }
+
+                        $order_missing_product_info = $this->model_sale_order->deleteOrderProductToMissingProducts($ordered_products['order_product_id'], $updateProduct['quantity_missed'], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model'], $order_id);
+                    }
+                }
+
+                $subTotal = $sumTotal;
+
+                //$log->write("tax_total start ");
+                $tax_total = $this->model_tool_image->getTaxTotal($tempProds, $store_id, $pricing_category, $custom_price);
+
+                //echo "<pre>";print_r($tax_total);die;
+
+                /* $log->write("tax_total");
+                  $log->write($tax_total); */
+
+                if (count($tax_total) > 0) {
+                    foreach ($tax_total as $x => $tmpV) {
+                        array_push($datas['totals'], $tmpV);
+                    }
+                }
+
+                //unset totals coming from web
+                if (isset($datas['totals']['tax'])) {
+                    unset($datas['totals']['tax']);
+                }
+
+                if (!isset($datas['totals'])) {
+                    $datas['totals'] = [];
+                }
+
+                $log->write('datastotals');
+                $log->write($datas['totals']);
+
+                //echo "<pre>";print_r($datas['totals']);die;
+                //$log->write($datas['totals']);
+                //die;
+                //saving order total below
+
+                $this->model_sale_order->deleteOrderTotal($order_id);
+
+                foreach ($datas['totals'] as $p_id_code => $tot) {
+                    $sumTotal += $tot['value'];
+                }
+
+                $orderTotal = $sumTotal;
+
+                //get shipping method and get price
+                //echo "<pre>";print_r($order_info);die;
+                $tmp = explode('.', $order_info['shipping_code']);
+
+                $shipping_price = [];
+
+                if ('normal' == $tmp[0] || 'store_delivery' == $tmp[0]) {
+                    $p = $tmp[0] . '_free_delivery_amount';
+                    $free_delivery_amount = $this->config->get($p);
+
+                    if (isset($store_id) && $store_id) {
+                        $store_info = $this->model_tool_image->getStore($store_id);
+
+                        if ($store_info) {
+                            $free_delivery_amount = $store_info['min_order_cod'];
+                        }
+                    }
+
+                    //echo "<pre>";print_r($free_delivery_amount);print_r($old_sub_total);die;
+                    $log->write($old_sub_total);
+                    $log->write($free_delivery_amount);
+                    $log->write($subTotal);
+
+                    if ($subTotal < $free_delivery_amount) {
+                        $log->write('shipping_price if');
+
+                        $this->load->model('shipping/' . $tmp[0]);
+                        $shipping_price = $this->{'model_shipping_' . $tmp[0]}->getPrice($store_id, $subTotal, $subTotal, $order_info['latitude'], $order_info['longitude'], $shipping_city_id);
+
+                        $log->write($shipping_price);
+
+                        $value_coming_tmp = 0;
+
+                        if ((isset($datas['totals']) && array_key_exists('shipping', $datas['totals']))) {
+                            $value_coming_tmp = $datas['totals']['shipping']['value'];
+
+                            $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
+                        }
+                    } else {
+                        $value_coming_tmp = 0;
+
+                        if ((isset($datas['totals']) && array_key_exists('shipping', $datas['totals']))) {
+                            $value_coming_tmp = $datas['totals']['shipping']['value'];
+                        }
+
+                        $datas['totals']['shipping'] = [];
+                        $datas['totals']['shipping']['code'] = 'shipping';
+                        $datas['totals']['shipping']['title'] = 'Shipping charge';
+                        $datas['totals']['shipping']['value'] = $value_coming_tmp;
+                        $datas['totals']['shipping']['actual_value'] = $value_coming_tmp;
 
                         $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
                     }
-                } else {
-                    $value_coming_tmp = 0;
+                }
 
-                    if ((isset($datas['totals']) && array_key_exists('shipping', $datas['totals']))) {
-                        $value_coming_tmp = $datas['totals']['shipping']['value'];
+                $p = 2;
+
+                //$log->write("datas_totals");
+
+                /* if(count($datas['totals']) < 1 || (isset($datas['totals']) && !array_key_exists("shipping",$datas['totals'])) ) {
+
+                  $datas['totals']['shipping'] =[];
+                  $datas['totals']['shipping']['code'] = 'shipping';
+                  $datas['totals']['shipping']['title'] = 'Shipping charge';
+                  $datas['totals']['shipping']['value'] = 0;
+                  $datas['totals']['shipping']['actual_value'] = 0;
+
+                  } */
+
+                $log->write('datas_totals');
+
+                $log->write($datas['totals']);
+
+                $log->write($orderTotal);
+                $log->write($shipping_price);
+
+                $wallet_amount_positive = 0;
+
+                foreach ($datas['totals'] as $p_id_code => $tot) {
+                    // echo "<pre>";print_r($tot);die;
+
+                    /* $log->write("updatetotals");
+                      $log->write($tot); */
+                    $tot['sort'] = $p;
+                    $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
+                    if ($tot['code'] == "credit") {
+                        $wallet_amount_positive = abs($tot['value']);
+                    }
+                    /* if ('shipping' == $tot['code']) {
+                      if (count($shipping_price) > 0 && isset($shipping_price['cost']) && isset($shipping_price['actual_cost'])) {
+                      if ((array_key_exists('value_coming', $tot))) {
+                      $orderTotal -= $tot['value_coming'];
+                      }
+
+                      $orderTotal += $shipping_price['cost'];
+                      } else {
+                      //$orderTotal -= $tot['value'];
+
+                      if ((array_key_exists('value_coming', $tot))) {
+                      $orderTotal -= $tot['value_coming'];
+                      }
+                      }
+                      } */
+
+                    ++$p;
+                }
+                // if($wallet_amount_positive>0)
+                // {
+                // $orderTotal +=$wallet_amount_positive;
+                // }
+                $orderTotal = round($orderTotal, 2);
+                $subTotal = round($subTotal, 2);
+
+                $this->model_sale_order->insertOrderSubTotalAndTotal($order_id, $subTotal, $orderTotal, $p);
+                $log->write($orderTotal);
+                //die;
+                // editDeliveryRequest
+                $this->editDeliveryRequest($order_id);
+
+                //$this->sendNewInvoice($order_id);
+                // echo "<pre>";print_r($this->request->get['settle']);die;
+
+
+                if ($this->request->get['settle']) {
+                    //settle and  update
+                    $log->write('if settle');
+                    $customer_id = $this->request->get['customer_id'];
+                    $final_amount = $orderTotal;
+
+                    $log->write($final_amount);
+                    $log->write($old_total);
+
+                    if ($final_amount != $old_total) {
+
+                        //update Payment Paid status and pending amount
+                        $this->model_sale_order->updatePaymentStatus($order_id, $customer_id, $old_total, $final_amount);
+
+                        //$iuguData = $this->refundAndChargeNewTotalStripe($order_id,$customer_id,$final_amount);
+                    } else {
+                        $log->write('same amount settle');
                     }
 
-                    $datas['totals']['shipping'] = [];
-                    $datas['totals']['shipping']['code'] = 'shipping';
-                    $datas['totals']['shipping']['title'] = 'Shipping charge';
-                    $datas['totals']['shipping']['value'] = $value_coming_tmp;
-                    $datas['totals']['shipping']['actual_value'] = $value_coming_tmp;
+                    /* $iuguData = $this->model_sale_order->getOrderIuguAndTotal($order_id);
 
-                    $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
-                }
-            }
+                      if($iuguData) {
 
-            $p = 2;
+                      $log->write("if iugu");
 
-            //$log->write("datas_totals");
-
-            /* if(count($datas['totals']) < 1 || (isset($datas['totals']) && !array_key_exists("shipping",$datas['totals'])) ) {
-
-              $datas['totals']['shipping'] =[];
-              $datas['totals']['shipping']['code'] = 'shipping';
-              $datas['totals']['shipping']['title'] = 'Shipping charge';
-              $datas['totals']['shipping']['value'] = 0;
-              $datas['totals']['shipping']['actual_value'] = 0;
-
-              } */
-
-            $log->write('datas_totals');
-
-            $log->write($datas['totals']);
-
-            $log->write($orderTotal);
-            $log->write($shipping_price);
-
-            $wallet_amount_positive = 0;
-
-            foreach ($datas['totals'] as $p_id_code => $tot) {
-                // echo "<pre>";print_r($tot);die;
-
-                /* $log->write("updatetotals");
-                  $log->write($tot); */
-                $tot['sort'] = $p;
-                $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
-                if ($tot['code'] == "credit") {
-                    $wallet_amount_positive = abs($tot['value']);
-                }
-                /* if ('shipping' == $tot['code']) {
-                  if (count($shipping_price) > 0 && isset($shipping_price['cost']) && isset($shipping_price['actual_cost'])) {
-                  if ((array_key_exists('value_coming', $tot))) {
-                  $orderTotal -= $tot['value_coming'];
-                  }
-
-                  $orderTotal += $shipping_price['cost'];
-                  } else {
-                  //$orderTotal -= $tot['value'];
-
-                  if ((array_key_exists('value_coming', $tot))) {
-                  $orderTotal -= $tot['value_coming'];
-                  }
-                  }
-                  } */
-
-                ++$p;
-            }
-            // if($wallet_amount_positive>0)
-            // {
-            // $orderTotal +=$wallet_amount_positive;
-            // }
-            $orderTotal = round($orderTotal, 2);
-            $subTotal = round($subTotal, 2);
-
-            $this->model_sale_order->insertOrderSubTotalAndTotal($order_id, $subTotal, $orderTotal, $p);
-            $log->write($orderTotal);
-            //die;
-            // editDeliveryRequest
-            $this->editDeliveryRequest($order_id);
-
-            //$this->sendNewInvoice($order_id);
-            // echo "<pre>";print_r($this->request->get['settle']);die;
+                      $description = 'On Order #'.$order_id;
 
 
-            if ($this->request->get['settle']) {
-                //settle and  update
-                $log->write('if settle');
-                $customer_id = $this->request->get['customer_id'];
-                $final_amount = $orderTotal;
+                      if($this->request->get['charge']) {
 
-                $log->write($final_amount);
-                $log->write($old_total);
+                      //new invoice is charged
 
-                if ($final_amount != $old_total) {
+                      $userCharged = $this->chargeCustomer($customer_id,$description,$final_amount,$order_id);
 
-                    //update Payment Paid status and pending amount
-                    $this->model_sale_order->updatePaymentStatus($order_id, $customer_id, $old_total, $final_amount);
+                      if(isset($order_id) && isset($final_amount) && $userCharged) {
 
-                    //$iuguData = $this->refundAndChargeNewTotalStripe($order_id,$customer_id,$final_amount);
+                      $this->model_sale_order->settle_payment($order_id, $final_amount);
+                      }
+
+                      } else {
+
+                      //refund is done
+                      $userCharged = $this->refundCustomer($customer_id,$description,$final_amount,$order_id);
+                      }
+
+                      $json['success'] = $this->language->get('text_settlement');
+
+                      } else {
+                      $log->write("else iugu");
+
+                      } */
                 } else {
-                    $log->write('same amount settle');
+                    //not settle only update so reset column settlement_amount
+                    $this->model_sale_order->settle_payment($order_id, $orderTotal);
                 }
-
-                /* $iuguData = $this->model_sale_order->getOrderIuguAndTotal($order_id);
-
-                  if($iuguData) {
-
-                  $log->write("if iugu");
-
-                  $description = 'On Order #'.$order_id;
-
-
-                  if($this->request->get['charge']) {
-
-                  //new invoice is charged
-
-                  $userCharged = $this->chargeCustomer($customer_id,$description,$final_amount,$order_id);
-
-                  if(isset($order_id) && isset($final_amount) && $userCharged) {
-
-                  $this->model_sale_order->settle_payment($order_id, $final_amount);
-                  }
-
-                  } else {
-
-                  //refund is done
-                  $userCharged = $this->refundCustomer($customer_id,$description,$final_amount,$order_id);
-                  }
-
-                  $json['success'] = $this->language->get('text_settlement');
-
-                  } else {
-                  $log->write("else iugu");
-
-                  } */
+                $filter['filter_order_id'] = $order_id;
+                $products = $this->model_sale_order->getOrderedMissingProducts($filter);
+                $log->write('MISSING PRODUCTS COUNT');
+                $log->write(count($products));
+                $log->write($order_info['delivery_timeslot']);
+                $log->write('MISSING PRODUCTS COUNT');
+                if (is_array($products) && count($products) > 0 /* && ($order_info['delivery_timeslot'] == '06:00am - 08:00am' || $order_info['delivery_timeslot'] == '08:00am - 10:00am' || $order_info['delivery_timeslot'] == '10:00am - 12:00am') */) {
+                    try {
+                        $this->load->controller('sale/order_product_missing/sendmailwithmissingproducts', $order_id);
+                    } catch (exception $ex) {
+                        $log = new Log('error.log');
+                        $log->write('EDIT INVOICE EXCEPTION');
+                        $log->write($ex);
+                        $log->write('EDIT INVOICE EXCEPTION');
+                    }
+                }
             } else {
-                //not settle only update so reset column settlement_amount
-                $this->model_sale_order->settle_payment($order_id, $orderTotal);
+                $json['status'] = false;
             }
-            $filter['filter_order_id'] = $order_id;
-            $products = $this->model_sale_order->getOrderedMissingProducts($filter);
-            $log->write('MISSING PRODUCTS COUNT');
-            $log->write(count($products));
-            $log->write($order_info['delivery_timeslot']);
-            $log->write('MISSING PRODUCTS COUNT');
-            if (is_array($products) && count($products) > 0 /* && ($order_info['delivery_timeslot'] == '06:00am - 08:00am' || $order_info['delivery_timeslot'] == '08:00am - 10:00am' || $order_info['delivery_timeslot'] == '10:00am - 12:00am') */) {
-                try {
-                    $this->load->controller('sale/order_product_missing/sendmailwithmissingproducts', $order_id);
-                } catch (exception $ex) {
-                    $log = new Log('error.log');
-                    $log->write('EDIT INVOICE EXCEPTION');
-                    $log->write($ex);
-                    $log->write('EDIT INVOICE EXCEPTION');
-                }
-            }
+
+            $json = json_encode($json);
+
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $order_id,
+            ];
+            $log->write('user update_invoice');
+
+            $this->model_user_user_activity->addActivity('update_invoice', $activity_data);
+
+            $log->write('user update_invoice');
         } else {
-            $json['status'] = false;
+            $json = $data_valid;
+            $json = json_encode($json);
         }
-
-        $json = json_encode($json);
-
-        // Add to activity log
-        $log = new Log('error.log');
-        $this->load->model('user/user_activity');
-
-        $activity_data = [
-            'user_id' => $this->user->getId(),
-            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
-            'user_group_id' => $this->user->getGroupId(),
-            'order_id' => $order_id,
-        ];
-        $log->write('user update_invoice');
-
-        $this->model_user_user_activity->addActivity('update_invoice', $activity_data);
-
-        $log->write('user update_invoice');
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput($json);
@@ -733,6 +739,41 @@ class ControllerSaleEditinvoice extends Controller {
         return !$this->error;
 
         //        return true;
+    }
+
+    protected function validateform($products) {
+
+        $i = 1;
+        $data['error'] = false;
+        $data['message'] = NULL;
+        $data['status'] = true;
+        foreach ($products as $form_products) {
+            if (!array_key_exists('name', $form_products)) {
+                $data['message'] = 'Product Name Should Not Be Empty In ' . $i . ' Row!';
+                $data['error'] = true;
+                $data['status'] = false;
+            } elseif (!array_key_exists('unit', $form_products)) {
+                $data['message'] = 'Product Unit Should Not Be Empty In ' . $i . ' Row!';
+                $data['error'] = true;
+                $data['status'] = false;
+                $data['status'] = false;
+            } elseif (!array_key_exists('quantity', $form_products)) {
+                $data['message'] = 'Product Quantity Should Not Be Empty In ' . $i . ' Row!';
+                $data['error'] = true;
+                $data['status'] = false;
+            } elseif (!array_key_exists('price', $form_products)) {
+                $data['message'] = 'Product Price Should Not Be Empty In ' . $i . ' Row!';
+                $data['error'] = true;
+                $data['status'] = false;
+            }
+
+            $log = new Log('error.log');
+            $log->write('VALIDATE_FORM');
+            $log->write($form_products);
+            $log->write('VALIDATE_FORM');
+            $i++;
+        }
+        return $data;
     }
 
     public function editDeliveryRequest($order_id) {
