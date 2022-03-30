@@ -110,6 +110,12 @@
                 </div>
             </div>
         </form>
+        
+        <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
+                <div class="col-md-12" id="pay_with" >
+                    <a href="#" type="button" class="btn-link text_green" data-toggle="modal" data-target="#addressModal"><i class="fa fa-check-square-o"></i> Terms & Condtions</a>
+                </div>
+        </div>
 
         <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available; text-align: center;" id="loan_offers">
             <button type="submit" id="submit_info_to_pezesha" name="submit_info_to_pezesha" class="btn btn-primary">SUBMIT FOR CREDIT APPROVAL THROUGH PEZESHA</button>
@@ -126,6 +132,45 @@
     </div>
 </div>
 <?php echo $footer; ?>
+
+<div class="addressModal">
+    <div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2>Terms & Condtions</h2>
+                        </div>
+                        <div id="address-message" class="col-md-12" style="color: red">
+                        </div>
+                        <div id="address-success-message" style="color: green">
+                        </div>
+                        <div class="addnews-address-form">
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mattis nunc sed blandit libero volutpat sed cras ornare arcu. Nec ullamcorper sit amet risus nullam eget felis eget nunc. Feugiat pretium nibh ipsum consequat nisl vel pretium. Sapien nec sagittis aliquam malesuada. Eu volutpat odio facilisis mauris sit amet massa. At in tellus integer feugiat scelerisque varius morbi enim. Bibendum ut tristique et egestas quis. Sem nulla pharetra diam sit amet nisl suscipit adipiscing bibendum. Ultrices vitae auctor eu augue. Nibh mauris cursus mattis molestie a iaculis. Leo in vitae turpis massa sed elementum. Nam aliquam sem et tortor. Nec sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae. Euismod lacinia at quis risus sed vulputate odio. Venenatis a condimentum vitae sapien. Elementum nisi quis eleifend quam adipiscing vitae proin. Enim nunc faucibus a pellentesque sit amet porttitor. Orci dapibus ultrices in iaculis.
+                                </div>
+                            </div>
+
+                            <!-- Button -->
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button id="singlebutton" name="singlebutton" data-terms="0" type="button" class="btn btn-primary" data-dismiss="modal">AGREE</button>
+                                    <button id="cancelbutton" name="cancelbutton" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="<?= $base ?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
 <script src="<?= $base ?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="<?= $base ?>front/ui/theme/mvgv2/js/html5lightbox.js"></script>
@@ -356,10 +401,27 @@ $('#copy_of_id_of_bussiness_owner_managing_director_button').on('click', functio
 
     });
 });
+$('#singlebutton').on('click', function(e) {
+e.preventDefault();
+$('#singlebutton').attr('data-terms', '1');
+});
+
+$('#cancelbutton').on('click', function(e) {
+e.preventDefault();
+$('#singlebutton').attr('data-terms', '0');
+});
+
 $('#submit_info_to_pezesha').on('click', function(e) {
     $('#success_msg').hide();
     $('#error_msg').hide(); 
     e.preventDefault();
+    
+    if($('#singlebutton').attr('data-terms') == '0' || $('#singlebutton').attr('data-terms') == ''){
+    $('#error_msg').html('Accept Terms & Conditions!');
+    $('#error_msg').show(); 
+    return false;
+    }
+    
     if($("input[name=dob]").val() == ''){
     $('#error_msg').html('DOB Sholud Not Be Empty!');
     $('#error_msg').show(); 
