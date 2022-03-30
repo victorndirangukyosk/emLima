@@ -67,7 +67,16 @@
                 <div class="col-md-6" id="pay_with" >
                     <input type="text" name="national_id" id="national_id" placeholder="National ID" value="<?php echo $national_id; ?>" class="form-control input-lg" />
                 </div>
-        </div>              
+        </div>
+       
+       <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
+                <div class="col-md-6" id="pay_with" >
+                    Credit Period
+                </div>
+                <div class="col-md-6" id="pay_with" >
+                    <select class="form-control input-lg" id="credit_period" name="credit_period"><option value="">Select Credit Period</option><option value="1 Month 7 Days">1 Month 7 Days</option><option value="1 Month 15 Days">1 Month 15 Days</option></select>
+                </div>
+        </div>                 
                     
         <form method="POST" enctype="multipart/form-data" id="copy_of_certificate_of_incorporation_form">
             <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
@@ -442,6 +451,12 @@ $('#submit_info_to_pezesha').on('click', function(e) {
     
     if($("input[name='gender']:checked").val() == ''){
     $('#error_msg').html('Please Select Gender!');
+    $('#error_msg').show(); 
+    return false;
+    }
+    
+    if($("select[name='credit_period']").val() == ''){
+    $('#error_msg').html('Please Select Credit Period!');
     $('#error_msg').show(); 
     return false;
     }
