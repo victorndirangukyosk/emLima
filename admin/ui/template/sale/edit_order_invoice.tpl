@@ -551,7 +551,11 @@ $('#button-settle-invoice-charge').on('click', function() {
    if($('#order_status_id').val() == 5) {
    alert('Delivered Orders Not Editable!');    
    return false;
-   } 
+   }
+   if($('#sub_total').val() <= 0) {
+   alert('Order Total Should Be Greater Than Zero!');    
+   return false;
+   }
   // update invoice call this
   if(!confirm('Are you sure?')) {
     return false;
