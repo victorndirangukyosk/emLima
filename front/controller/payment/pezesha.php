@@ -268,16 +268,16 @@ class ControllerPaymentPezesha extends Controller {
                             $log->write($order_info);
                             $log->write('order_info');
                             if ($order_info['paid'] == 'P') {
-                                $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, $result['data']['loan_id'], $loan_type);
-                                $this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $this->customer->getId());
-                                $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pezesha_order_status_id'), 'Paid With Pezesha', true, $this->customer->getId(), 'customer', '', 'Y');
+                                $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, 0/*$result['data']['loan_id']*/, $loan_type);
+                                //$this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $this->customer->getId());
+                                $ret = $this->model_checkout_order->addOrderHistory($order_id, 14/*$this->config->get('pezesha_order_status_id')*/, 'Applied For Pezesha Loan', true, $this->customer->getId(), 'customer', '', 'P');
                             }
                         }
                         /* WALLET */
                     } elseif (!isset($this->session->data['payment_wallet_method']['code']) || $this->session->data['payment_wallet_method']['code'] == 0 || $this->session->data['payment_wallet_method']['code'] != 'wallet' || $customer_wallet_total <= 0) {
-                        $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, $result['data']['loan_id'], $loan_type);
-                        $this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $this->customer->getId());
-                        $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pezesha_order_status_id'), 'Paid With Pezesha', true, $this->customer->getId(), 'customer', '', 'Y');
+                        $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, 0/*$result['data']['loan_id']*/, $loan_type);
+                        //$this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $this->customer->getId());
+                        $ret = $this->model_checkout_order->addOrderHistory($order_id, 14/*$this->config->get('pezesha_order_status_id')*/, 'Applied For Pezesha Loan', true, $this->customer->getId(), 'customer', '', 'N');
                     }
                 }
                 $json['status'] = true;
