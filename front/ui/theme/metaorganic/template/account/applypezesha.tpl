@@ -523,6 +523,8 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             cache: false,
             async: false,
             beforeSend: function() {
+            $("#submit_info_to_pezesha").prop("disabled", true); 
+            $('#submit_info_to_pezesha').html('<i class="fa fa-spinner" aria-hidden="true"></i>SUBMIT FOR CREDIT APPROVAL THROUGH PEZESHA');
             },
             complete: function() {
             $.ajax({
@@ -553,6 +555,12 @@ $('#submit_info_to_pezesha').on('click', function(e) {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function() {
+            },
+            complete: function() {
+            $("#submit_info_to_pezesha").prop("disabled", false); 
+            $('#submit_info_to_pezesha').html('SUBMIT FOR CREDIT APPROVAL THROUGH PEZESHA');    
+            },
             success: function (response) {
             console.log('data ingestion response');
             console.log(response);
