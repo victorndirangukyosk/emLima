@@ -294,7 +294,7 @@ class ControllerAccountApplypezesha extends Controller {
 
         foreach ($customer_order_info as $order_info) {
             $order_transaction_info = $this->model_sale_order->getOrderTransactionId($order_info['order_id']);
-            $transactions['transaction_id'] = $order_transaction_info['transaction_id'];
+            $transactions['transaction_id'] = $order_transaction_info['transaction_id'].$order_info['order_id'];
             $transactions['merchant_id'] = $this->customer->getId();
             $transactions['face_amount'] = $order_info['total'];
             $transactions['transaction_time'] = $order_info['date_added'];
