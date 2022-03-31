@@ -2659,6 +2659,12 @@ class ModelAssetsProduct extends Model {
                 $this->db->where('product_to_category.category_id', (int) $data['filter_category_id']);
             }
         }
+        if (!empty($data['filter_product_store_id'])) {             
+                $this->db->where('product_to_store.product_store_id', (int) $data['filter_product_store_id']);
+            }
+            if (!empty($data['filter_product_general_id'])) {             
+                $this->db->where('product_to_store.product_id', (int) $data['filter_product_general_id']);
+            }
 
         if (!empty($data['filter_name']) || !empty($data['filter_tag'])) {
             if (!empty($data['filter_name'])) {
