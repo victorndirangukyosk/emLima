@@ -158,9 +158,16 @@
                         </div>
                         <div class="addnews-address-form">
 
-                            <div class="form-group" id="parent_terms_conditions" style="height:300px; overflow: auto;">
+                            <div class="form-group" id="parent_terms_conditions" style="height:130px; overflow: auto;">
                                 <div class="col-md-12" id="terms_conditions">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mattis nunc sed blandit libero volutpat sed cras ornare arcu. Nec ullamcorper sit amet risus nullam eget felis eget nunc. Feugiat pretium nibh ipsum consequat nisl vel pretium. Sapien nec sagittis aliquam malesuada. Eu volutpat odio facilisis mauris sit amet massa. At in tellus integer feugiat scelerisque varius morbi enim. Bibendum ut tristique et egestas quis. Sem nulla pharetra diam sit amet nisl suscipit adipiscing bibendum. Ultrices vitae auctor eu augue. Nibh mauris cursus mattis molestie a iaculis. Leo in vitae turpis massa sed elementum. Nam aliquam sem et tortor. Nec sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae. Euismod lacinia at quis risus sed vulputate odio. Venenatis a condimentum vitae sapien. Elementum nisi quis eleifend quam adipiscing vitae proin. Enim nunc faucibus a pellentesque sit amet porttitor. Orci dapibus ultrices in iaculis.
+                                    <li>This is a financing facility from the Pezesha Africa LTD.</li>
+                                    <li>You can pay for the facility 30 days after delivery.</li>
+                                    <li>You can borrow up to "AVAILABLE LIMIT".</li>
+                                    <li>The facility(loan) attracts Ksh 150 service fee.</li>
+                                    <li>The facility(loan) attracts 1.5% interest over the loan tenure.</li>
+                                    <li>Pay on time to avoid late fees and penalties.</li>
+                                    <li>The terms and conditions apply.</li>
+                                    Press Continue to accept the above terms and conditions
                                 </div>
                             </div>
 
