@@ -3185,4 +3185,269 @@ class ControllerApiCustomerProducts extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getProductByID() {
+        $cachePrice_data = $this->cache->get('category_price_data');
+        $log = new Log('error.log');
+        $log->write('data');
+        $log->write($this->request->get);
+        $log->write($this->customer->getId());
+        $log->write($this->customer->getCustomerCategory());
+        $log->write($this->customer->getPaymentTerms());
+        $log->write('data');
+        $json = [];
+
+        if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
+            $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
+        } else {
+            $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id'] . "' AND status = '1'");
+        }
+        $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
+
+        $this->session->data['customer_category'] = !isset($this->session->data['customer_category']) || $this->session->data['customer_category'] == NULL ? $this->customer->getCustomerCategory() : $customer_details->row['customer_category'];
+        $log->write($this->session->data['customer_category']);
+        $log = new Log('error.log');
+        $log->write('api/getProductSearch');
+
+        $this->load->language('information/locations');
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('api/products');
+        $this->load->model('assets/category');
+        $this->load->model('assets/product');
+        $this->load->model('tool/image');
+
+                    if (isset($this->request->get['product_store_id'])) {
+                        $product_store_id = $this->request->get['product_store_id'];
+                    } else {
+                        $product_store_id = 0;
+                    }
+
+
+                    if (isset($this->request->get['product_id'])) {
+                        $product_id = $this->request->get['product_id'];
+                    } else {
+                        $product_id = 0;
+                    }
+                   
+               
+                $data['products'] = [];
+
+                if (isset($this->request->get['product_store_id']) ||isset($this->request->get['product_id']) ) {
+                    $filter_data = [                        
+                        'filter_product_store_id' => $product_store_id,
+                        'filter_product_general_id' => $product_id,
+                    ];                    
+
+                   
+
+                    $results = $this->model_assets_product->getProductsByApiNew($filter_data);
+                    
+                    // echo "<pre>";print_r($results);die;
+                    
+                    // if()
+                    foreach ($results as $result) {
+                        if (file_exists(DIR_IMAGE . $result['image'])) {
+                            $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+                        } else {
+                            $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+                        }
+
+                        //$result['special_price'] = 10;
+
+                        $s_price = 0;
+                        $o_price = 0;
+
+                        if (!$this->config->get('config_inclusiv_tax')) {
+                            //FOR CATEGORY PRICING
+                            $category_s_price = 0;
+                            $category_o_price = 0;
+                            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']])) {
+                                $category_s_price = $cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']];
+                                $category_o_price = $cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']];
+                                if ($category_s_price != NULL && $category_s_price > 0) {
+                                    $result['price'] = $category_s_price;
+                                    $result['special_price'] = $category_s_price;
+                                }
+                            }
+                            //FOR CATEGORY PRICING
+                            //get price html
+                            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                                //$price = $this->currency->format( $this->tax->calculate( $result['price'], $result['tax_class_id'], $this->config->get( 'config_tax' ) ) );
+                                $price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
+
+                                $o_price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
+                            } else {
+                                $price = false;
+                            }
+                            if ((float) $result['special_price']) {
+                                //$special_price = $this->currency->format( $this->tax->calculate( $result['special_price'], $result['tax_class_id'], $this->config->get( 'config_tax' ) ) );
+                                $special_price = $this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax'));
+
+                                $s_price = $this->tax->calculate($result['special_price'], $result['tax_class_id'], $this->config->get('config_tax'));
+                            } else {
+                                $special_price = false;
+                            }
+                        } else {
+                            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                                //$price = $result['price'];
+                                $price = $this->currency->formatWithoutCurrency($result['price']);
+                            } else {
+                                $price = $result['price'];
+                            }
+
+                            if ((float) $result['special_price']) {
+                                //$special_price = $result['special_price'];
+                                $special_price = $this->currency->formatWithoutCurrency($result['special_price']);
+                            } else {
+                                $special_price = $result['special_price'];
+                            }
+
+                            $s_price = $result['special_price'];
+                            $o_price = $result['price'];
+
+                            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']])) {
+                                $category_s_price = $cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']];
+                                $category_o_price = $cachePrice_data[$result['product_store_id'] . '_' . $this->customer->getCustomerCategory() . '_' . $result['store_id']];
+                                if ($category_s_price != NULL && $category_s_price > 0) {
+                                    $result['price'] = $category_s_price;
+                                    $result['special_price'] = $category_s_price;
+                                    $special_price = $category_s_price;
+                                    $price = $category_s_price;
+                                }
+                            }
+                        }
+
+                        $percent_off = null;
+                        if (isset($s_price) && isset($o_price) && 0 != $o_price && 0 != $s_price) {
+                            $percent_off = (($o_price - $s_price) / $o_price) * 100;
+                        }
+
+                        if (is_null($special_price) || !($special_price + 0)) {
+                            //$special_price = 0;
+                            $special_price = $price;
+                        }
+
+
+                        /* $cachePrice_data = $this->cache->get('category_price_data'); */
+                        // echo "<pre>";print_r($_SESSION['customer_category']);die;
+                        /* if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']])) {
+                          //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+                          $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']];
+                          $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']];
+                          $special_price = $s_price;
+                          $price = $o_price;
+                          // echo "<pre>";print_r($special_price);die;
+                          } */
+
+                        //get qty in cart
+                        $key = base64_encode(serialize(['product_store_id' => (int) $result['product_store_id'], 'store_id' => $store_id]));
+
+                        if (isset($this->session->data['cart'][$key])) {
+                            $qty_in_cart = $this->session->data['cart'][$key]['quantity'];
+                        } else {
+                            $qty_in_cart = 0;
+                        }
+
+                        //$result['name'] = strlen($result['name']) > 27 ? substr($result['name'],0,27)."..." : $result['name'];
+                        $name = $result['name'];
+                        //$name .= str_repeat('&nbsp;',30 - strlen($result['name']));
+
+                        $unit = $result['unit'] ? $result['unit'] : false;
+
+                        $productNames = array_column($data['products'], 'name');
+                        $price = strval($price);
+                        $special_price = strval($special_price);
+                        $product_category_data = $this->model_assets_category->getCategory($result['category_id']);
+                        $product_category_name = isset($product_category_data) && is_array($product_category_data) && count($product_category_data) > 0 ? $product_category_data['name'] : NULL;
+                        if (false !== array_search($result['name'], $productNames)) {
+                            // Add variation to existing product
+                            $productIndex = array_search($result['name'], $productNames);
+                            // TODO: Check for product variation duplicates
+                            $data['products'][$productIndex]['variations'][] = [
+                                'variation_id' => $result['product_store_id'],
+                                'unit' => $result['unit'],
+                                'weight' => floatval($result['weight']),
+                                'price' => $price,
+                                'special' => $special_price,
+                                'percent_off' => number_format($percent_off, 0),
+                                'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                            ];
+                        } else {
+                            $data['products'][] = [
+                                'key' => $key,
+                                'qty_in_cart' => $qty_in_cart,
+                                // 'variations' => $this->model_assets_product->getApiVariationsNew($result['product_store_id']),
+                                'store_product_variation_id' => 0,
+                                'store_id' => $result['store_id'],
+                                'product_id' => $result['product_id'],
+                                'product_store_id' => $result['product_store_id'],
+                                'default_variation_name' => $result['default_variation_name'],
+                                'thumb' => $image,
+                                'name' => htmlspecialchars_decode($name),
+                                'unit' => $unit,
+                                'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
+                                'price' => $price,
+                                'special' => $special_price,
+                                'percent_off' => number_format($percent_off, 0),
+                                'left_symbol_currency' => $this->currency->getSymbolLeft(),
+                                'right_symbol_currency' => $this->currency->getSymbolRight(),
+                                // 'variations' => [
+                                //     [
+                                //         'variation_id' => $result['product_store_id'],
+                                //         'unit' => $result['unit'],
+                                //         'weight' => floatval($result['weight']),
+                                //         'price' => $price,
+                                //         'special' => $special_price,
+                                //         'percent_off' => number_format($percent_off, 0),
+                                //         'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                                //     ],
+                                // ],
+                                'tax' => $result['tax_percentage'],
+                                //'minimum' => $result['min_quantity'] > 0 ? $result['min_quantity'] : 1,
+                                'max_qty' => $result['min_quantity'] > 0 ? $result['min_quantity'] : $result['quantity'],
+                                'rating' => 0,
+                                'href' => $this->url->link('product/product', '&product_store_id=' . $result['product_store_id']),
+                                'produce_type' => $result['produce_type'],
+                                'category_id' => $result['category_id'],
+                                'category_name' => $product_category_name
+                            ];
+                        }
+                    }
+
+                    $url = '';
+
+                     
+
+                    if (isset($this->request->get['product_store_id'])) {
+                        $url .= '&product_store_id=' . $this->request->get['product_store_id'];
+                    }
+ 
+                $json['data'] = $data;
+                    $json['message'][] = ['type' => 'Success', 'body' => 'Data Fetched Successfully'];
+                      
+                    // $data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $limit) + 1 : 0, ((($page - 1) * $limit) > ($product_total - $limit)) ? $product_total : ((($page - 1) * $limit) + $limit), $product_total, ceil($product_total / $limit));
+                }
+                else
+                {
+                    $json['status'] = 10005;
+
+                    $json['message'][] = ['type' => 'Error', 'body' => 'Product Store ID or Product ID is required'];
+        
+                    http_response_code(400);
+                }
+
+               
+                // $data['category_id'] = $category_id;
+                
+
+
+
+            
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
