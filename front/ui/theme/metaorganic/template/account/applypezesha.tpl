@@ -74,7 +74,7 @@
                     Credit Period
                 </div>
                 <div class="col-md-6" id="pay_with" >
-                    <select class="form-control input-lg" id="credit_period" name="credit_period"><option value="">Select Credit Period</option><option value="1 Month 7 Days">1 Month 7 Days</option><option value="1 Month 15 Days">1 Month 15 Days</option></select>
+                    <select class="form-control input-lg" id="credit_period" name="credit_period"><option value="">Select Credit Period</option><option value="30+7 days - 1.5%">30+7 days - 1.5%</option><option value="30+15 days - 2%">30+15 days - 2%</option></select>
                 </div>
         </div>                 
                     
