@@ -108,7 +108,7 @@ class ControllerSaleCustomerPezesha extends Controller {
             if ($order_info != NULL && $pezesha_order_info != NULL && $pezesha_order_info['customer_id'] == $order_info['customer_id'] && $pezesha_order_info['order_id'] == $order_info['order_id']) {
                 $log->write('applyloanfordeliveredorder');
                 $customer_info['customer_id'] = $order_info['customer_id'];
-                $customer_info['amount'] = $order_info['total'];
+                $customer_info['amount'] = $order_info['total'] - $order_info['amount_partialy_paid'];
                 $customer_info['order_id'] = $order_info['order_id'];
 
                 $log = new Log('error.log');
