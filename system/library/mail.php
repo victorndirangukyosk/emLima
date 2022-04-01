@@ -285,7 +285,7 @@ class mail
             } catch (Exception $e) {
                 $log = new Log('error.log');
                 $log->write('AWS SES EXCEPTION');
-                $log->write($e);
+                $log->write($e->getMessage());
                 $log->write('AWS SES EXCEPTION');
                 /*echo("The email was not sent. Error message: ");
                 echo($e->getMessage()."\n");
