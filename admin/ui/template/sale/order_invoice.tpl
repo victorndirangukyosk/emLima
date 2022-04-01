@@ -49,9 +49,9 @@
                                <img width="210" src="ui/images/pod.png" alt="POD" class="mb-2">
 
                                 <?php } else if($order['paid'] != 'Y' && $order['payment_method'] == 'Pezesha') { ?>
-                               <img width="210" src="ui/images/pezesha.png" alt="Pezesha" class="mb-2">
+                               <img width="210" src="ui/images/pezesha.jpg" alt="Pezesha" class="mb-2">
                                 <?php } else if($order['paid'] == 'Y' && $order['order_transcation_id']!= '' && $order['order_transcation_id'] !=NULL) { ?>
-                               <img width="210" src="ui/images/pre-paid.png" alt="Pre-Paid" class="mb-2">
+                               <img width="210" src="ui/images/pre-paid.jpg" alt="Pre-Paid" class="mb-2">
 
                                 <?php } else { ?>
                                 <ul class="list-block" style="margin-bottom:195px;">
