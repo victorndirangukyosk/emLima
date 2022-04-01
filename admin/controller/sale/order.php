@@ -4910,7 +4910,7 @@ class ControllerSaleOrder extends Controller {
                 }
                 $data['delivery_executive_name'] = $delivery_executive_name;
                 $data['delivery_executive_phone'] = $delivery_executive_phone;
-                $order_transcation_id = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                $order_transcation_id = $this->model_sale_order->getOrderTransactionId($order_info['order_id']);
                 if (!empty($order_transcation_id))
                 {
                     $transaction_id=$order_transcation_id['transaction_id'];
@@ -5567,7 +5567,7 @@ class ControllerSaleOrder extends Controller {
                     $data['delivery_executive_name'] = $delivery_executive_name;
                     $data['delivery_executive_phone'] = $delivery_executive_phone;
 
-                    $order_transcation_id = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                    $order_transcation_id = $this->model_sale_order->getOrderTransactionId($order_info['order_id']);
                     if (!empty($order_transcation_id))
                     {
                         $transaction_id=$order_transcation_id['transaction_id'];
