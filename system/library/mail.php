@@ -37,8 +37,8 @@ class mail
     /*ENABLE FOR MAILGUN*/
     //public $config_mail_smtp_hostname;
     public $config_mail_smtp_hostname = 'email-smtp.us-east-2.amazonaws.com';
-    public $config_mail_smtp_username;
-    public $config_mail_smtp_password;
+    public $config_mail_smtp_username = 'AKIAUWRTJZVBLGVVHCID';
+    public $config_mail_smtp_password = 'BIk4EHLeYvBml64zDqwLpL76YksJ+N1Nkkwh41jdUvgK';
     /*ENABLE FOR MAILGUN*/
     //public $config_mail_smtp_port = 25;
     public $config_mail_smtp_port = 587;
@@ -50,8 +50,8 @@ class mail
     /*ENABLE FOR MAILGUN*/
     //public $smtp_hostname;
     public $smtp_hostname = 'email-smtp.us-east-2.amazonaws.com';
-    public $smtp_username;
-    public $smtp_password;
+    public $smtp_username = 'AKIAUWRTJZVBLGVVHCID';
+    public $smtp_password = 'BIk4EHLeYvBml64zDqwLpL76YksJ+N1Nkkwh41jdUvgK';
     /*ENABLE FOR MAILGUN*/
     //public $smtp_port = 25;
     public $smtp_port = 587;
