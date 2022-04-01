@@ -2761,7 +2761,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_payment'])) {
             $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
         }
-        
+
         if (!empty($data['filter_paid'])) {
             $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
         }
@@ -4315,6 +4315,10 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
         }
 
+        if (!empty($data['filter_prod_id'])) {
+            $sql .= " AND mp.product_store_id = '" . (int) $data['filter_prod_id'] . "'";
+        }
+
         if (!empty($data['filter_order_from_id'])) {
             $sql .= " AND o.order_id >= '" . (int) $data['filter_order_from_id'] . "'";
         }
@@ -4600,6 +4604,9 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
         }
 
+        if (!empty($data['filter_prod_id'])) {
+            $sql .= " AND mp.product_store_id = '" . (int) $data['filter_prod_id'] . "'";
+        }
 
         if (!empty($data['filter_order_from_id'])) {
             $sql .= " AND o.order_id >= '" . (int) $data['filter_order_from_id'] . "'";
@@ -4756,6 +4763,30 @@ class ModelSaleOrder extends Model {
         }
     }
 
+    public function deleteOrderProductToMissingProductsFromInvoice($product_id, $order_id) {
+        $log = new Log('error.log');
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "order_product WHERE product_id = '" . (int) $product_id . "' AND order_id = '" . (int) $order_id . "'";
+        $query = $this->db->query($sql);
+        $productinfo = $query->row;
+
+        if ($productinfo == NULL) {
+            $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE product_id = '" . (int) $product_id . "' AND order_id = '" . (int) $order_id . "'";
+            $query = $this->db->query($sql);
+            $productinfo = $query->row;
+        }
+
+        if ($productinfo != NULL) {
+            $sql2 = 'SELECT * FROM ' . DB_PREFIX . "missing_products WHERE order_id = '" . (int) $productinfo['order_id'] . "' AND product_store_id = '" . (int) $productinfo['product_id'] . "'";
+            $query2 = $this->db->query($sql2);
+            $missing_product_info = $query2->row;
+
+            if ($missing_product_info != NULL) {
+                $sql3 = 'DELETE FROM ' . DB_PREFIX . "missing_products WHERE id = '" . $missing_product_info['id'] . "'";
+                $query3 = $this->db->query($sql3);
+            }
+        }
+    }
+
     //changes in this getOrderedMissingProducts need to chek 
     public function getOrderedMissingProductsOnlyOrder($data = []) {
         $sql = "SELECT distinct o.order_id FROM `" . DB_PREFIX . 'order` o ';
@@ -4820,6 +4851,10 @@ class ModelSaleOrder extends Model {
 
         if (!empty($data['filter_order_id'])) {
             $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
+        }
+
+        if (!empty($data['filter_prod_id'])) {
+            $sql .= " AND mp.product_store_id = '" . (int) $data['filter_prod_id'] . "'";
         }
 
         if (!empty($data['filter_order_from_id'])) {
@@ -5692,7 +5727,7 @@ class ModelSaleOrder extends Model {
         $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "'");
         return $new_order_query->rows;
     }
-    
+
     public function getMissingProductsByOrderIdNew($order_id, $removed_from_invoice) {
         $new_order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "missing_products` WHERE order_id = '" . (int) $order_id . "' AND removed_from_invoice = '" . (int) $removed_from_invoice . "'");
         return $new_order_query->rows;

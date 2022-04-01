@@ -1933,7 +1933,7 @@ class ModelAccountOrder extends Model {
             $sub_users_od = implode(',', $s_users);
         }
 
-        $pezesha_loans = $this->db->query('SELECT p.loan_id,p.order_id,p.customer_id,o.total,p.loan_type,p.created_at FROM ' . DB_PREFIX . "customer_pezesha_loans p join " . DB_PREFIX . "order o on p.order_id = o.order_id WHERE p.customer_id IN (" . $sub_users_od . ") ORDER BY p.id DESC");
+        $pezesha_loans = $this->db->query('SELECT p.loan_id,p.order_id,p.customer_id,o.total,p.amount,p.loan_type,p.created_at FROM ' . DB_PREFIX . "customer_pezesha_loans p join " . DB_PREFIX . "order o on p.order_id = o.order_id WHERE p.customer_id IN (" . $sub_users_od . ") ORDER BY p.id DESC");
         return $pezesha_loans->rows;
     }
 

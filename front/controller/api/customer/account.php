@@ -1,19 +1,18 @@
 <?php
 
-require_once DIR_SYSTEM.'/vendor/konduto/vendor/autoload.php';
+require_once DIR_SYSTEM . '/vendor/konduto/vendor/autoload.php';
 
-require_once DIR_SYSTEM.'/vendor/fcp-php/autoload.php';
+require_once DIR_SYSTEM . '/vendor/fcp-php/autoload.php';
 
-require DIR_SYSTEM.'vendor/Facebook/autoload.php';
+require DIR_SYSTEM . 'vendor/Facebook/autoload.php';
 
-require_once DIR_APPLICATION.'/controller/api/settings.php';
+require_once DIR_APPLICATION . '/controller/api/settings.php';
 
-class ControllerApiCustomerAccount extends Controller
-{
+class ControllerApiCustomerAccount extends Controller {
+
     private $error = [];
 
-    public function getUserDetails()
-    {
+    public function getUserDetails() {
         $json = [];
 
         $this->load->language('information/locations');
@@ -44,7 +43,26 @@ class ControllerApiCustomerAccount extends Controller
             $stripe_customer = $this->model_payment_stripe->getCustomer($this->customer->getId());
 
             $customer_info['stripe_details'] = $stripe_customer;
-
+            $customer_info['pezesha_status'] = $this->config->get('pezesha_status');
+            /* SET CUSTOMER PEZESHA */
+            if ($customer_info['customer_id'] > 0 && ($customer_info['parent'] == NULL || $customer_info['parent'] == 0)) {
+                $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_info['customer_id'] . "'");
+            }
+            if ($customer_info['customer_id'] > 0 && $customer_info['parent'] > 0) {
+                $pezesha_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_info['parent'] . "'");
+            }
+            if ($customer_info['customer_id'] > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
+                $customer_info['pezesha_customer_id'] = $pezesha_customer_query->row['pezesha_customer_id'];
+                $customer_info['pezesha_customer_uuid'] = $pezesha_customer_query->row['customer_uuid'];
+                $customer_info['pezesha_identifier'] = $pezesha_customer_query->row['customer_id'];
+                $customer_info['credit_period'] = $pezesha_customer_query->row['credit_period'];
+            } else {
+                $customer_info['pezesha_customer_id'] = NULL;
+                $customer_info['pezesha_customer_uuid'] = NULL;
+                $customer_info['pezesha_identifier'] = NULL;
+                $customer_info['credit_period'] = NULL;
+            }
+            /* SET CUSTOMER PEZESHA */
             $json['data'] = $customer_info;
         } else {
             $json['status'] = 10013;
@@ -58,8 +76,7 @@ class ControllerApiCustomerAccount extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function editUserdetail($args = [])
-    {
+    public function editUserdetail($args = []) {
         $json = [];
 
         //echo "<pre>";print_r($this->customer->getId());die;
@@ -93,25 +110,22 @@ class ControllerApiCustomerAccount extends Controller
             } else {
                 $args['dob'] = null;
             }
-            if(isset($newUI))
-            {
-            $this->model_account_customer->editCustomerNew($args);
-            }
-            else
-            {
-            $this->model_account_customer->editCustomer($args);
+            if (isset($newUI)) {
+                $this->model_account_customer->editCustomerNew($args);
+            } else {
+                $this->model_account_customer->editCustomer($args);
             }
 
-            /*if(isset($args['email']) && isset($args['password']) ) {
-                $this->model_account_customer->editPassword($args['email'],$args['password']);
-            }*/
+            /* if(isset($args['email']) && isset($args['password']) ) {
+              $this->model_account_customer->editPassword($args['email'],$args['password']);
+              } */
 
             // Add to activity log
             $this->load->model('account/activity');
 
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName().' '.$this->customer->getLastName(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             ];
 
             $json['message'][] = ['type' => '', 'body' => $this->language->get('text_success')];
@@ -143,8 +157,7 @@ class ControllerApiCustomerAccount extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    protected function validate($args)
-    {
+    protected function validate($args) {
         $this->load->language('account/edit');
 
         $this->load->model('account/customer');
@@ -178,26 +191,25 @@ class ControllerApiCustomerAccount extends Controller
 
 
 
-        if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 6) || (utf8_strlen($this->request->post['password']) > 20)) {
-            $this->error['password'] = $this->language->get('error_password');
-        }
+            if ((utf8_strlen($this->request->post['password']) >= 1) && (utf8_strlen($this->request->post['password']) < 6) || (utf8_strlen($this->request->post['password']) > 20)) {
+                $this->error['password'] = $this->language->get('error_password');
+            }
 
-        if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
-            $this->error['password'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
+            if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['password'])) {
+                $this->error['password'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
+            }
         }
-        
-        }
-        /*if ( ( utf8_strlen( $args['password'] ) >= 1 ) && ( utf8_strlen( $args['password'] ) < 4 ) || ( utf8_strlen( $args['password'] ) > 20 ) ) {
-            $this->error['password'] = $this->language->get( 'error_password' );
-        }
+        /* if ( ( utf8_strlen( $args['password'] ) >= 1 ) && ( utf8_strlen( $args['password'] ) < 4 ) || ( utf8_strlen( $args['password'] ) > 20 ) ) {
+          $this->error['password'] = $this->language->get( 'error_password' );
+          }
 
-        if ( ( utf8_strlen( $args['confirmpassword'] ) >= 1 ) && ( utf8_strlen( $args['confirmpassword'] ) < 4 ) || ( utf8_strlen( $args['confirmpassword'] ) > 20 ) ) {
-            $this->error['confirmpassword'] = $this->language->get( 'error_confirmpassword' );
-        }
+          if ( ( utf8_strlen( $args['confirmpassword'] ) >= 1 ) && ( utf8_strlen( $args['confirmpassword'] ) < 4 ) || ( utf8_strlen( $args['confirmpassword'] ) > 20 ) ) {
+          $this->error['confirmpassword'] = $this->language->get( 'error_confirmpassword' );
+          }
 
-        if ( $args['confirmpassword'] != $args['password'] ) {
-            $this->error['confirmpassword'] = $this->language->get('error_mismatch_password');
-        }*/
+          if ( $args['confirmpassword'] != $args['password'] ) {
+          $this->error['confirmpassword'] = $this->language->get('error_mismatch_password');
+          } */
 
         // if (!isset($args['dob'])) {
         //     $this->error['dob'] = $this->language->get('error_dob');
@@ -206,22 +218,18 @@ class ControllerApiCustomerAccount extends Controller
         //         $this->error['dob'] = $this->language->get('error_dob');
         //     }
         // }
-
         // if (empty($args['telephone'])) {
         //     $this->error['telephone'] = $this->language->get('error_telephone');
         // }
-
         // if (!isset($args['gender'])) {
         //     $this->error['gender'] = $this->language->get('error_gender');
         // }
-
         //echo "<pre>";print_r($this->error);die;
 
         return !$this->error;
     }
 
-    public function getUserRewards()
-    {
+    public function getUserRewards() {
         $json = [];
 
         $this->load->language('information/locations');
@@ -267,7 +275,7 @@ class ControllerApiCustomerAccount extends Controller
                     'points' => $result['points'],
                     'description' => $result['description'],
                     'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                    'href' => $this->url->link('account/order/info', 'order_id='.$result['order_id'], 'SSL'),
+                    'href' => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
                 ];
             }
 
@@ -290,8 +298,7 @@ class ControllerApiCustomerAccount extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getUserCash()
-    {
+    public function getUserCash() {
         $json = [];
 
         $this->load->language('information/locations');
@@ -371,8 +378,7 @@ class ControllerApiCustomerAccount extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addSendphonenumberotp()
-    {
+    public function addSendphonenumberotp() {
         //echo "<pre>";print_r( "addLoginByOtp");die;
         $json = [];
 
@@ -414,8 +420,7 @@ class ControllerApiCustomerAccount extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addVerifyphonenumberotp()
-    {
+    public function addVerifyphonenumberotp() {
         //echo "<pre>";print_r( "addLoginVerifyOtp");die;
 
         $json = [];
@@ -447,7 +452,6 @@ class ControllerApiCustomerAccount extends Controller
                     $customer_info['dob'] = '01/01/1990';
                 }
                 //$json['success'] = $this->language->get('text_valid_otp');
-
                 //$json['status'] = true;
 
                 $json['data'] = $customer_info;
@@ -473,8 +477,7 @@ class ControllerApiCustomerAccount extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addStripeUser()
-    {
+    public function addStripeUser() {
         $json = [];
 
         $this->load->language('information/locations');
@@ -497,8 +500,7 @@ class ControllerApiCustomerAccount extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    private function initStripe()
-    {
+    private function initStripe() {
         $this->load->library('stripe');
         if ('live' == $this->config->get('stripe_environment')) {
             $stripe_secret_key = $this->config->get('stripe_live_secret_key');
@@ -515,8 +517,7 @@ class ControllerApiCustomerAccount extends Controller
         return false;
     }
 
-    public function createCustomer($customerId)
-    {
+    public function createCustomer($customerId) {
         $log = new Log('error.log');
 
         $log->write($customerId);
@@ -539,19 +540,19 @@ class ControllerApiCustomerAccount extends Controller
 
                 if (isset($customer_info['email']) && !empty($customer_info['email'])) {
                     $stripe_customer = \Stripe\Customer::create([
-                        'email' => $customer_info['email'],
-                        'metadata' => [
-                            'customerId' => $customerId,
-                        ],
+                                'email' => $customer_info['email'],
+                                'metadata' => [
+                                    'customerId' => $customerId,
+                                ],
                     ]);
 
                     $log->write($stripe_customer);
                     $log->write('stripe_customer');
 
                     $this->model_payment_stripe->addCustomer(
-                        $stripe_customer,
-                        $customerId,
-                        $stripe_environment
+                            $stripe_customer,
+                            $customerId,
+                            $stripe_environment
                     );
                 }
             }
@@ -560,8 +561,7 @@ class ControllerApiCustomerAccount extends Controller
         return true;
     }
 
-    public function addLogout($args)
-    {
+    public function addLogout($args) {
         $log = new Log('error.log');
         $log->write('account addLogout');
         $log->write($args);
@@ -591,18 +591,13 @@ class ControllerApiCustomerAccount extends Controller
                 $this->load->model('account/activity');
 
                 $activity_data = [
-                    'customer_id' =>  $customer_info['customer_id'],
-                    'name' =>  $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+                    'customer_id' => $customer_info['customer_id'],
+                    'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
                 ];
 
                 $this->model_account_activity->addActivity('logout', $activity_data);
-                
-                
 
                 $this->model_setting_store->removeDeviceIdAll($args);
-
-                
-                
 
                 $this->customer->logout();
             }
@@ -620,9 +615,7 @@ class ControllerApiCustomerAccount extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-
-    public function addSendNewDeviceotp()
-    {
+    public function addSendNewDeviceotp() {
         //echo "<pre>";print_r( "addLoginByOtp");die;
         $json = [];
 
@@ -663,8 +656,7 @@ class ControllerApiCustomerAccount extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addVerifyNewDeviceotp()
-    {
+    public function addVerifyNewDeviceotp() {
         //echo "<pre>";print_r( "addLoginVerifyOtp");die;
 
         $json = [];
@@ -677,7 +669,7 @@ class ControllerApiCustomerAccount extends Controller
 
         $this->load->language('api/general');
 
-        if (isset($this->request->post['otp'])  && isset($this->request->post['customer_id'])) {
+        if (isset($this->request->post['otp']) && isset($this->request->post['customer_id'])) {
             $this->load->model('account/api');
             $this->load->model('account/customer');
 
@@ -685,7 +677,7 @@ class ControllerApiCustomerAccount extends Controller
 
             //echo "<pre>";print_r($api_info);die;
             if ($api_info['status']) {
-                 
+
                 $customer_info = $this->model_account_customer->getCustomer($this->request->post['customer_id']);
 
                 if (!empty($customer_info['dob'])) {
@@ -694,7 +686,6 @@ class ControllerApiCustomerAccount extends Controller
                     $customer_info['dob'] = '01/01/1990';
                 }
                 //$json['success'] = $this->language->get('text_valid_otp');
-
                 //$json['status'] = true;
 
                 $json['data'] = $customer_info;
@@ -720,38 +711,33 @@ class ControllerApiCustomerAccount extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-
     public function getWalletTotal() {
         $total = 0;
         // if (!$this->customer->isLogged()) {
         //     $this->session->data['redirect'] = $this->url->link('account/credit', '', 'SSL');
-
         //     $this->response->redirect($this->url->link('account/login', '', 'SSL'));
         // } 
-        $this->load->model('account/credit');         
+        $this->load->model('account/credit');
 
-        $result = $this->model_account_credit->getTotalAmount();       
-        $total=$this->currency->format($result, $this->config->get('config_currency'));
-       
+        $result = $this->model_account_credit->getTotalAmount();
+        $total = $this->currency->format($result, $this->config->get('config_currency'));
+
         // echo "<pre>";print_r($total);die; 
         $json = [];
 
         $json['status'] = 200;
-        $json['data'] =  $total;
+        $json['data'] = $total;
         $json['message'] = 'success';
-       
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getWallet() {
 
-    public function getWallet()
-    {
-         
-        $this->load->language('account/credit');  
+        $this->load->language('account/credit');
         $this->load->model('account/credit');
 
-        
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
@@ -774,40 +760,36 @@ class ControllerApiCustomerAccount extends Controller
         $results = $this->model_account_credit->getCredits($filter_data);
 
         foreach ($results as $result) {
-            $transaction_ID="";
-            if(isset($result['transaction_id']) && $result['transaction_id']!="" )
-            {
-                $transaction_ID='#Transaction ID '.$result['transaction_id'];
+            $transaction_ID = "";
+            if (isset($result['transaction_id']) && $result['transaction_id'] != "") {
+                $transaction_ID = '#Transaction ID ' . $result['transaction_id'];
             }
             $data['credits'][] = [
                 'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
                 'plain_amount' => $result['amount'],
-                'description' => $result['description'].' ' .$transaction_ID,
+                'description' => $result['description'] . ' ' . $transaction_ID,
                 'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
             ];
         }
 
-        
 
-        
+
+
         $data['total'] = $this->currency->format($this->customer->getBalance());
-       
+
         $data['records_count'] = $credit_total;
         $data['current_page'] = $page;
         $data['pagination_results'] = sprintf($this->language->get('text_pagination'), ($credit_total) ? (($page - 1) * 10) + 1 : 0, ((($page - 1) * 10) > ($credit_total - 10)) ? $credit_total : ((($page - 1) * 10) + 10), $credit_total, ceil($credit_total / 10));
-        
- 
 
         // echo "<pre>";print_r($data['credits']);die;
         $json = [];
 
         $json['status'] = 200;
-        $json['data'] =  $data;
+        $json['data'] = $data;
         $json['message'] = 'success';
-       
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-        
     }
 
 }

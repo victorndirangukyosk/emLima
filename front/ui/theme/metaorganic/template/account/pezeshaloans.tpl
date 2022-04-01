@@ -142,6 +142,11 @@
         text-align: center; 
         vertical-align: middle;
     }
+    .total
+    {
+        text-align: center; 
+        vertical-align: middle;
+    }
     .order_id
     {
         text-align: center; 
@@ -177,7 +182,12 @@
                 tr = $('<tr/>');
                 tr.append("<td class='order_id'>" + displayRecords[i].loan_id + "</td>");
                 tr.append("<td class='order_id'>" + displayRecords[i].order_id + "</td>");
-                tr.append("<td class='amount'>" + displayRecords[i].total + "</td>");
+                if(displayRecords[i].amount > 0) {
+                tr.append("<td class='amount'>" + displayRecords[i].amount_formatted + "</td>");   
+                }
+                if(displayRecords[i].amount <= 0) {
+                tr.append("<td class='total'>" + displayRecords[i].total_formatted + "</td>");
+                }
                 tr.append("<td class='amount'>" + displayRecords[i].loan_type + "</td>");
                 tr.append("<td class='order_id'>" + displayRecords[i].created_at + "</td>");
                 tr.append("<td><a class='btn btn-default' onclick='viewloan(" + displayRecords[i].order_id + ")'>View</a></td>");

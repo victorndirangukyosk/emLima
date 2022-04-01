@@ -3149,6 +3149,26 @@ class ControllerSaleCustomer extends Controller {
         $data['statement_duration'] = $this->request->post['statement_duration'];
         $data['customer_id'] = $this->request->post['customer_id'];
 
+        $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
+
+        if ($customer_info['payment_terms'] != $data['payment_terms']) {
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'customer_id' => $this->request->get['customer_id'],
+            ];
+            $log->write('customer payment_terms');
+
+            $this->model_user_user_activity->addActivity('customer_payment_terms_edit', $activity_data);
+
+            $log->write('customer payment_terms');
+        }
+
         // Add to activity log
         $log = new Log('error.log');
         $this->load->model('user/user_activity');
@@ -4942,7 +4962,7 @@ class ControllerSaleCustomer extends Controller {
         } else {
             $data['payment_terms'] = true;
         }
-        
+
         if (isset($this->request->post['customer_price_category'])) {
             $data['customer_price_category'] = $this->request->post['customer_price_category'];
         } elseif (!empty($customer_info)) {
@@ -5042,7 +5062,7 @@ class ControllerSaleCustomer extends Controller {
         } else {
             $data['payment_terms'] = '';
         }
-        
+
         if (isset($this->request->post['customer_price_category'])) {
             $data['customer_price_category'] = $this->request->post['customer_price_category'];
         } elseif (!empty($customer_info)) {

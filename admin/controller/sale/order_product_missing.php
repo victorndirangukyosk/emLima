@@ -677,7 +677,32 @@ class ControllerSaleOrderProductMissing extends Controller {
                     }
 
                     $order_product_info = $this->model_sale_order->addOrderProductToMissingProduct($order_product_id, $ordersquantityrequired[$i], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model'], $this->request->post['order_id'], 0);
+
+                    // echo "<pre>";print_r($ordered_products);die; 
+                    
+                    try{
+
+                        $this->load->model('user/user_activity');
+                        $activity_data = [
+                            'user_id' => $this->user->getId(),
+                            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                            'order_id' => $this->request->post['order_id'],
+                            'product_id' => $ordered_products['product_id'],
+                            'missing_quantity' => $ordersquantityrequired[$i],
+                            'user_group_id' => $this->user->getGroupId(),
+
+                        ];
+                            $this->model_user_user_activity->addActivity('missing_product_insert', $activity_data);
+            
+                    }
+                    catch(exception $ex)
+                    {
+                        $log = new Log('error.log');
+                        $log->write('Missing Product Insterted ('.$this->request->post['order_id'].'-'.$order_product_id.') .By - '.$this->user->getId());
+                    }
+
                     $i++;
+
                 }
 //$this->editinvocebymissingproducts($this->request->post);
                 $json['status'] = 200;
@@ -1456,6 +1481,7 @@ class ControllerSaleOrderProductMissing extends Controller {
     }
 
     public function sendmailwithmissingproducts($order_id) {
+        $log = new Log('error.log');
         $order_info = $this->model_sale_order->getOrder($order_id);
 
         $address = '';
@@ -1488,6 +1514,8 @@ class ControllerSaleOrderProductMissing extends Controller {
         );
 
         try {
+            $log = new Log('error.log');
+            $log->write('MISSING_ORDER_PRODUCT_MAIL_SENDING');
             $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
             $subject = $this->emailtemplate->getSubject('OrderAll', 'order_21', $data);
             $message = $this->emailtemplate->getMessage('OrderAll', 'order_21', $data);
@@ -1500,6 +1528,15 @@ class ControllerSaleOrderProductMissing extends Controller {
             $mail->setSubject($subject);
             $mail->setHTML($message);
             $mail->send();
+
+            
+            // $log->write('SMS SENDING');
+            // send message here
+            // if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_8')) {
+                $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+            // }
+
+           
 
             $log = new Log('error.log');
             $log->write('subject');

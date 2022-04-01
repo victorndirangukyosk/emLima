@@ -200,7 +200,7 @@ class ControllerPezeshaPezesha extends Controller {
 
         foreach ($customer_order_info as $order_info) {
             $order_transaction_info = $this->model_sale_order->getOrderTransactionId($order_info['order_id']);
-            $transactions['transaction_id'] = $order_transaction_info['transaction_id'];
+            $transactions['transaction_id'] = $order_transaction_info['transaction_id'].$order_info['order_id'];
             $transactions['merchant_id'] = $customer_id;
             $transactions['face_amount'] = $order_info['total'];
             $transactions['transaction_time'] = $order_info['date_added'];
@@ -298,6 +298,93 @@ class ControllerPezeshaPezesha extends Controller {
 
           $this->response->addHeader('Content-Type: application/json');
           $this->response->setOutput(json_encode($json)); */
+    }
+
+    public function applyloanfordeliveredorder($customer_info) {
+
+        $log = new Log('error.log');
+        $log->write('applyloanfordeliveredorder_2');
+        $this->load->model('sale/customer');
+        $this->load->model('pezesha/pezesha');
+
+        $customer_id = $customer_info['customer_id'];
+        $amount = $customer_info['amount'];
+        $order_id = $customer_info['order_id'];
+
+        $customer_device_info = $this->model_sale_customer->getCustomer($customer_id);
+        if ($customer_device_info != NULL && $customer_device_info['parent'] != NULL && $customer_device_info['parent'] > 0) {
+            $customer_pezesha_info = $this->model_pezesha_pezesha->getCustomer($customer_device_info['parent']);
+        }
+
+        if (($customer_device_info != NULL) && ($customer_device_info['parent'] == NULL || $customer_device_info['parent'] == 0 || $customer_device_info['parent'] == '')) {
+            $customer_pezesha_info = $this->model_pezesha_pezesha->getCustomer($customer_id);
+        }
+
+        $auth_response = $this->auth();
+        $log->write('auth_response');
+        $log->write($auth_response);
+        $log->write($customer_device_info);
+        $log->write('auth_response');
+        //$payment_details = array('type' => 'BUY_GOODS/PAYBILL', 'number' => $order_id, 'callback_url' => $this->url->link('deliversystem/deliversystem/pezeshacallback', '', 'SSL'));
+        $payment_details = NULL;
+        $body = array('order_id' => $order_id, 'pezesha_id' => $customer_pezesha_info['pezesha_customer_id'], 'amount' => $amount, 'duration' => $this->config->get('pezesha_loan_duration'), 'interest' => ceil(($this->config->get('pezesha_interest') / 100 * $amount)), 'rate' => $this->config->get('pezesha_interest'), 'fee' => $this->config->get('pezesha_processing_fee'), 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
+        //$body = http_build_query($body);
+        $body = json_encode($body);
+        $log->write($body);
+        $curl = curl_init();
+        if ($this->config->get('pezesha_environment') == 'live') {
+            curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/loans');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+        } else {
+            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/loans');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+
+        $log->write($result);
+        curl_close($curl);
+        $result = json_decode($result, true);
+        $log->write($result);
+        $json = $result;
+        //return $json;
+
+        $json['status'] = true;
+        $json['data'] = $result;
+        if ($result['status'] == 200 && $result['response_code'] == 0 && !$result['error']) {
+            $this->load->model('pezesha/pezesha');
+            $loan_type = strtoupper(str_replace(' ', '_', $result['message']));
+            $loan_id = $result['data']['loan_id'];
+            $this->model_pezesha_pezesha->UpdateCustomerLoans($customer_id, $order_id, $loan_id, $loan_type, $amount);
+            $this->model_pezesha_pezesha->addOrderHistory($order_id, 5, 'Pezesha', 'pezesha', $this->user->getId(), $this->user->getGroupName(), 0, 'Loan Approved From Pezesha ' . $loan_type);
+            $this->model_pezesha_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $customer_id);
+        } else {
+            $this->model_pezesha_pezesha->addOrderHistoryFailed($order_id, 8, 'Pezesha', 'pezesha', $this->user->getId(), $this->user->getGroupName(), 0, 'Loan Rejected From Pezesha ' . $loan_type);
+        }
+        // Add to activity log
+        $log->write('pezesha apply loan');
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'customer_id' => $customer_id,
+            'order_id' => $order_id,
+            'amount' => $amount
+        ];
+        $log->write('pezesha apply loan');
+
+        $this->model_user_user_activity->addActivity('pezesha_apply_loan', $activity_data);
+
+        $log->write('customer edit');
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }

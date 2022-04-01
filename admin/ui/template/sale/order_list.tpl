@@ -2014,7 +2014,33 @@ $.ajax({
 		type: 'post',
 		dataType: 'json',
 		data: 'order_status_id=' + encodeURIComponent($('select[id=\'input-order-status'+clicked_orderid+'\']').val()) + '&notify=1',
-		success: function(json) {	 
+		beforeSend: function() {
+                if($('select[id=\'input-order-status'+clicked_orderid+'\'] option:selected').text() == 'Delivered')
+                    {
+                    $.ajax({
+                    url: 'index.php?path=sale/customer_pezesha/applyloanfordeliveredorder&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data: { order_id : clicked_orderid },
+                    success: function(json) {
+                    if(json.status == 422) {    
+                    $.each(json.errors, function (key, data) {
+                    alert(key+' : '+data);
+                    })
+                    }
+    
+                    if(json.status == 200 && json.response_code == 0) {    
+                    alert(json.message);
+                    }
+    
+                    }
+                    });    
+                    }
+                },
+                complete: function() {
+              
+                },
+                success: function(json) {	 
                     console.log(json);
                     $('.alert').html('Order status updated successfully!');
                     $(".alert").attr('class', 'alert alert-success');

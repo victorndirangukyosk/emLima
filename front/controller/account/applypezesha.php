@@ -117,6 +117,18 @@ class ControllerAccountApplypezesha extends Controller {
         if ($sthree_doc_url != NULL) {
             $this->load->model('account/customer');
             $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $sthree_doc_url, 'PEZESHA', 'Copy Of Certificate Of Incorporation');
+
+            $json['status'] = 200;
+            $json['data'] = $sthree_doc_url;
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        } else {
+            $json['status'] = 500;
+            $json['data'] = '';
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
         }
     }
 
@@ -137,6 +149,18 @@ class ControllerAccountApplypezesha extends Controller {
         if ($sthree_doc_url != NULL) {
             $this->load->model('account/customer');
             $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $sthree_doc_url, 'PEZESHA', 'Copy Of Bussiness Operating Permit');
+
+            $json['status'] = 200;
+            $json['data'] = $sthree_doc_url;
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        } else {
+            $json['status'] = 500;
+            $json['data'] = '';
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
         }
     }
 
@@ -154,8 +178,22 @@ class ControllerAccountApplypezesha extends Controller {
         $log->write($sthree_doc_url);
         $log->write('sthree_doc_url');
 
-        $this->load->model('account/customer');
-        $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $sthree_doc_url, 'PEZESHA', 'Copy Of ID Of Bussiness Owner / Managing Director');
+        if ($sthree_doc_url != NULL) {
+            $this->load->model('account/customer');
+            $this->model_account_customer->SaveCustomerFiles($this->customer->getId(), $sthree_doc_url, 'PEZESHA', 'Copy Of ID Of Bussiness Owner / Managing Director');
+
+            $json['status'] = 200;
+            $json['data'] = $sthree_doc_url;
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        } else {
+            $json['status'] = 500;
+            $json['data'] = '';
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
     }
 
     public function auth() {
@@ -192,7 +230,7 @@ class ControllerAccountApplypezesha extends Controller {
           $this->response->setOutput(json_encode($json)); */
     }
 
-    public function accrptterms() {
+    public function accrptterms($isAPI = 0) {
 
         $log = new Log('error.log');
         $this->load->model('account/customer');
@@ -232,13 +270,19 @@ class ControllerAccountApplypezesha extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+
+        if ($isAPI == 1) {
+            return $json;
+        }
     }
 
-    public function dataingestion() {
+    public function dataingestion($isAPI = 0) {
 
         $log = new Log('error.log');
         $this->load->model('account/customer');
         $this->load->model('sale/order');
+        $log->write('sdassssssssssssssssssssss');
+
         $customer_device_info = $this->model_account_customer->getCustomer($this->customer->getId());
         $customer_documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
 
@@ -250,7 +294,7 @@ class ControllerAccountApplypezesha extends Controller {
 
         foreach ($customer_order_info as $order_info) {
             $order_transaction_info = $this->model_sale_order->getOrderTransactionId($order_info['order_id']);
-            $transactions['transaction_id'] = $order_transaction_info['transaction_id'];
+            $transactions['transaction_id'] = $order_transaction_info['transaction_id'].$order_info['order_id'];
             $transactions['merchant_id'] = $this->customer->getId();
             $transactions['face_amount'] = $order_info['total'];
             $transactions['transaction_time'] = $order_info['date_added'];
@@ -295,9 +339,13 @@ class ControllerAccountApplypezesha extends Controller {
         $this->SendDocuments();
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+
+        if ($isAPI == 1) {
+            return $json;
+        }
     }
 
-    public function userregistration() {
+    public function userregistration($isAPI = 0) {
 
         $this->load->model('account/customer');
         $customer_documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
@@ -339,6 +387,7 @@ class ControllerAccountApplypezesha extends Controller {
                 $data['customer_id'] = $result['data']['merchant_id'];
                 $data['pezesha_customer_id'] = $result['data']['customer_id'];
                 $data['customer_uuid'] = $result['data']['customer_uuid'];
+                $data['credit_period'] = $this->request->post['credit_period'];
                 $customer_device_info = $this->model_account_customer->addPezeshaCustomer($data);
             }
             $json = $result;
@@ -357,6 +406,12 @@ class ControllerAccountApplypezesha extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+        // echo "<pre>";print_r($isAPI);die;
+
+        if ($isAPI == 1) {
+            return $json;
+        }
+        // echo "<pre>";print_r(json_encode($json));die;
     }
 
     public function updatecustomerinfo() {
@@ -394,13 +449,15 @@ class ControllerAccountApplypezesha extends Controller {
 
             $log->write('EMAIL SENDING');
             $log->write($customer_pezehsa);
+            $log->write($this->config->get('pezesha_email'));
             $log->write('EMAIL SENDING');
 
             $subject = $this->emailtemplate->getSubject('Customer', 'customer_97', $customer_pezehsa);
             $message = $this->emailtemplate->getMessage('Customer', 'customer_97', $customer_pezehsa);
             try {
                 $mail = new Mail($this->config->get('config_mail'));
-                $mail->setTo('documents.kwikbasket@yopmail.com');
+                // $mail->setTo('documents.kwikbasket@yopmail.com');
+                $mail->setTo($this->config->get('pezesha_email'));
                 $mail->setFrom($this->config->get('config_from_email'));
                 $mail->setSender($this->config->get('config_name'));
                 $mail->setSubject($subject);
@@ -433,7 +490,7 @@ class ControllerAccountApplypezesha extends Controller {
             $html .= '<tr style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;page-break-inside: avoid;">
             <th scope="row" style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;text-align: left;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $count . '</th>
             <td style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;">' . $customer_document['name'] . '</td>
-            <td style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;"><a href="'.$customer_document['path'].'">View Document</a></td>
+            <td style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;padding: 8px;line-height: 1.42857143;vertical-align: top;border-top: 1px solid #ddd;border: 1px solid #ddd!important;background-color: #fff!important;"><a href="' . $customer_document['path'] . '">View Document</a></td>
         </tr>';
             $count++;
         }

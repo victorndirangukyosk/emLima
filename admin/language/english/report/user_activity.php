@@ -27,6 +27,7 @@ $_['text_farmer_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="farmer_i
 $_['text_customer_add'] = '<a href="user_id=%d">%s</a> created a new <a href="customer_id=%d">customer</a>.';
 $_['text_customer_delete'] = '<a href="user_id=%d">%s</a> deleted a <a href="customer_id=%d">customer</a>.';
 $_['text_customer_configuration_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="customer_id=%d">customer configuration</a>.';
+$_['text_customer_payment_terms_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="customer_id=%d">customer paymentterms</a>.';
 $_['text_customer_password_edit'] = '<a href="user_id=%d">%s</a> edited a <a href="customer_id=%d">customer password</a>.';
 $_['text_order_invoice_no'] = '<a href="user_id=%d">%s</a> generated <a href="order_id=%d">invoice</a>.';
 $_['text_order_transaction_id_added'] = '<a href="user_id=%d">%s</a> added <a href="order_id=%d">transaction id</a>.';
@@ -74,6 +75,8 @@ $_['text_vendor_product_category_pricing_status_disabled_edit'] = '<a href="user
 $_['text_vendor_product_category_pricing_status_enabled_edit'] = '<a href="user_id=%d">%s</a> <a href="category_pricing_name=%s">%s</a>.';
 $_['text_vendor_product_category_pricing_created_through_xl_sheet'] = '<a href="user_id=%d">%s</a> <a href="category_pricing_name=%s">%s</a>.';
 $_['text_vendor_product_category_pricing_updated_through_xl_sheet'] = '<a href="user_id=%d">%s</a> <a href="category_pricing_name=%s">%s</a>.';
+
+$_['text_missing_product_insert'] = '<a href="user_id=%d">%s</a> added missing  product <a href="product_name=%s&filter_prod_id=%s">Product</a>.';
 
 // Column
 $_['column_user'] = 'User';

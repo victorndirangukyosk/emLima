@@ -24,6 +24,7 @@ $_['help_total'] = 'The checkout total the order must reach before this payment 
 $_['error_permission'] = 'Warning: You do not have permission to modify payment Pezesha!';
 $_['error_payable'] = 'Payable To Required!';
 $_['error_merchant_key'] = 'Merchant Key Required!';
+$_['error_email'] = 'Email Required!';
 $_['error_client_secret'] = 'Client Secret Required!';
 $_['error_client_id'] = 'Client Id Required!';
 $_['error_channel'] = 'Channel Required!';
