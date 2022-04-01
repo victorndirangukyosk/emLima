@@ -277,8 +277,16 @@ class mail
                 $log->write($result);
                 $log->write($request);
                 $log->write($this->reply_to);*/
+                $log = new Log('error.log');
+                $log->write('AWS SES SEND');
+                $log->write($result);
+                $log->write('AWS SES SEND');
                 return $result;
             } catch (Exception $e) {
+                $log = new Log('error.log');
+                $log->write('AWS SES EXCEPTION');
+                $log->write($e);
+                $log->write('AWS SES EXCEPTION');
                 /*echo("The email was not sent. Error message: ");
                 echo($e->getMessage()."\n");
 
