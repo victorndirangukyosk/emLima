@@ -34,19 +34,27 @@ class mail
     protected $priority;
     public $config_mail_protocol = 'phpmail';
     public $config_mail_sendmail_path = '/usr/sbin/sendmail -bs';
-    public $config_mail_smtp_hostname;
+    /*ENABLE FOR MAILGUN*/
+    //public $config_mail_smtp_hostname;
+    public $config_mail_smtp_hostname = 'email-smtp.us-east-2.amazonaws.com';
     public $config_mail_smtp_username;
     public $config_mail_smtp_password;
-    public $config_mail_smtp_port = 25;
+    /*ENABLE FOR MAILGUN*/
+    //public $config_mail_smtp_port = 25;
+    public $config_mail_smtp_port = 587;
     public $config_mail_smtp_encryption = 'none';
     // Old variables, keeping for B/C
     public $protocol = 'phpmail';
     public $parameter = '';
     public $sendmail_path = '/usr/sbin/sendmail -bs';
-    public $smtp_hostname;
+    /*ENABLE FOR MAILGUN*/
+    //public $smtp_hostname;
+    public $smtp_hostname = 'email-smtp.us-east-2.amazonaws.com';
     public $smtp_username;
     public $smtp_password;
-    public $smtp_port = 25;
+    /*ENABLE FOR MAILGUN*/
+    //public $smtp_port = 25;
+    public $smtp_port = 587;
     public $smtp_timeout = 0;
     public $smtp_encryption = 'none';
 
