@@ -529,7 +529,8 @@ class ControllerAccountApplypezesha extends Controller {
                 $mail->setHTML($message);
                 $mail->send();
             } catch (Exception $e) {
-                
+            $log = new Log('error.log');  
+            $log->write('CUSTOMER PEZESHA REGISTRATION MAIL EXCEPTION');
             }
         }
     }
