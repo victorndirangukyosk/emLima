@@ -240,6 +240,13 @@ class mail
             $aws_id = $this->get('config_mail_aws_access_id');
             $aws_secret = $this->get('config_mail_aws_secret_key');
             $aws_region = $this->get('config_mail_aws_region');
+            
+            $log = new Log('error.log');
+            $log->write('AWS CREDS');
+            $log->write($aws_id);
+            $log->write($aws_secret);
+            $log->write($aws_region);
+            $log->write('AWS CREDS');
 
             $id = 'AWS_ACCESS_KEY_ID='.$aws_id;
             $secret = 'AWS_SECRET_ACCESS_KEY='.$aws_secret;
