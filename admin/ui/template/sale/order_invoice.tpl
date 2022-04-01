@@ -84,15 +84,16 @@
                                    <h6 class="bold mb-3">PAYMENT DETAILS</h6>                                
                                 <ul class="list-block" style="margin-bottom:60px;">
                                    
-                                 <?php if($order['order_transcation_id'] !=NULL && $order['order_transcation_id'] !='' && $order['paid'] =='Y') { ?>
+                                 <?php if($order['order_transcation_id']!=NULL && $order['order_transcation_id'] !='' && $order['paid'] =='Y') { ?>
                                     <li>Payment Method : <?= $order['payment_method'] ?></li>
                                     
                                     <li>Transaction ID : <?= $order['order_transcation_id'] ?></li>
                                      <?php } else { ?>
-                                      <li>Payment Method :  <input type="text" ></li>
+                                      <li>Payment Method</li>
+                                      <br>
                                       <li></li>
                                     
-                                    <li>Transaction ID :  <input type="text" ></li>
+                                    <li>Transaction ID </li>
                                      <?php }?>
                                 
                                     <li></li>
