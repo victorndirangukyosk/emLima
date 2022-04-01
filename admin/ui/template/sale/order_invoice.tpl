@@ -44,7 +44,7 @@
 
                                 </div>
                             </div>
-                            <div class="col-md-4 text-left">
+                            <div class="col-md-3 text-left">
                                 <?php if(($order['vendor_terms_cod'] == 1 || $order['payment_terms'] == 'Payment On Delivery') && $order['payment_method'] != 'Pezesha') { ?>
                                <img width="210" src="ui/images/pod.png" alt="POD" class="mb-2">
 
@@ -72,7 +72,7 @@
                                     <li><?= $order['shipping_method'] ?></li>
                                 </ul>
                             </div>
-                            <div class="col-md-4 text-right">
+                            <div class="col-md-5 text-right">
                                 <h6 class="bold">TAX INVOICE # <?= $order['order_id'] ?><?= $order['invoice_no'] ?></h6>
                                 <?php if($order['po_number']) { ?>
                                     <h6 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h6>
@@ -89,11 +89,11 @@
                                     
                                     <li>Transaction ID : <?= $order['order_transcation_id'] ?></li>
                                      <?php } else { ?>
-                                      <li>Payment Method</li>
+                                      <li>Payment Method : <label style="width:40px"></label> </li>
                                       <br>
                                       <li></li>
                                     
-                                    <li>Transaction ID </li>
+                                    <li>Transaction ID :  <label style="width:40px"></label> </li>
                                      <?php }?>
                                 
                                     <li></li>
