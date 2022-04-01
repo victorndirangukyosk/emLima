@@ -45,13 +45,13 @@
                                 </div>
                             </div>
                             <div class="col-md-4 text-left">
-                                <?php if($order['vendor_terms_cod'] == 1 || $order['payment_terms'] == 'Payment On Delivery') { ?>
+                                <?php if(($order['vendor_terms_cod'] == 1 || $order['payment_terms'] == 'Payment On Delivery') && $order['payment_method'] != 'Pezesha') { ?>
                                <img width="210" src="ui/images/pod.png" alt="POD" class="mb-2">
 
                                 <?php } else if($order['paid'] != 'Y' && $order['payment_method'] == 'Pezesha') { ?>
-                               <img width="210" src="ui/images/pezesha.png" alt="POD" class="mb-2">
+                               <img width="210" src="ui/images/pezesha.png" alt="Pezesha" class="mb-2">
                                 <?php } else if($order['paid'] == 'Y' && $order['order_transcation_id']!= '' && $order['order_transcation_id'] !=NULL) { ?>
-                               <img width="210" src="ui/images/pre-paid.png" alt="POD" class="mb-2">
+                               <img width="210" src="ui/images/pre-paid.png" alt="Pre-Paid" class="mb-2">
 
                                 <?php } else { ?>
                                 <ul class="list-block" style="margin-bottom:195px;">
@@ -84,7 +84,7 @@
                                    <h6 class="bold mb-3">PAYMENT DETAILS</h6>                                
                                 <ul class="list-block" style="margin-bottom:60px;">
                                    
-                                 <?php if($order['order_transcation_id'] !=NULL && $order['order_transcation_id'] !='') { ?>
+                                 <?php if($order['order_transcation_id'] !=NULL && $order['order_transcation_id'] !='' && $order['paid'] =='Y') { ?>
                                     <li>Payment Method : <?= $order['payment_method'] ?></li>
                                     
                                     <li>Transaction ID : <?= $order['order_transcation_id'] ?></li>
