@@ -9,8 +9,16 @@ class ModelPezeshaPezesha extends Model {
     }
 
     public function getCustomer($customer_id) {
-        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_id . "'");
-        return $query->row;
+        $customer_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'");
+        $cus_info = $customer_info->row;
+        if ($cus_info != NULL && ($cus_info['parent'] == 0 || $cus_info['parent'] == NULL)) {
+            $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $customer_id . "'");
+            return $query->row;
+        }
+        if ($cus_info != NULL && $cus_info['parent'] > 0) {
+            $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "pezesha_customers WHERE customer_id = '" . (int) $cus_info['parent'] . "'");
+            return $query->row;
+        }
     }
 
     public function SaveCustomerLoans($customer_id, $order_id, $loan_id, $loan_type) {
