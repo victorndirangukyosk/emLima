@@ -90,7 +90,7 @@
                                     <li>Transaction ID : <?= $order['order_transcation_id'] ?></li>
                                      <?php } else { ?>
                                       <li>Payment Method : <label style="width:40px"></label> </li>
-                                      <br>
+                                      
                                       <li></li>
                                     
                                     <li>Transaction ID :  <label style="width:40px"></label> </li>
