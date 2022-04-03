@@ -347,6 +347,7 @@
 					<td>Transaction ID</td>
                                         <td><input type="text" name="order_transaction_id" id="order_transaction_id" value="<?= $order_transaction_id ?>" > <button id="save_order_transaction_id" class="btn btn-primary" type="button" <?php if($order_status_id == 5 || !$this->user->hasPermission('modify', 'sale/order')) { ?> disabled <?php } ?> > Save </button></td>
 				  </tr>
+                                  <?php if ($this->user->hasPermission('modify', 'sale/pezesha_push_order_data')) { ?>
                                   <tr>
                                         <td>Push Order Data To Pezesha</td>
                                         <td><button data-order-id="<?=$order_id ?>" id="push_order_data_to_pezesha" class="btn btn-primary" type="button"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Push </button></td>
@@ -355,6 +356,7 @@
                                         <td>Apply For Pezesha Loan</td>
                                         <td><button data-order-id="<?=$order_id ?>" id="apply_for_pezesha_loan" class="btn btn-primary" type="button"><i class="fa fa-university" aria-hidden="true"></i> Apply Loan </button></td>
                                   </tr>
+                                  <?php } ?>
 				</table>
 			  </div>
 		  <?php } ?>
