@@ -1934,7 +1934,7 @@ if($('select[name=\'order_status_id\'] option:selected').text()=='Delivered')
                     url: 'index.php?path=sale/customer_pezesha/applyloanfordeliveredorder&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data: { order_id : $('select[id=\'input-order-status\']').attr("data-order-id"); },
+                    data: { order_id : $('select[id=\'input-order-status\']').attr("data-order-id") },
                     success: function(json) {
                     if(json.status == 422) {    
                     $.each(json.errors, function (key, data) {
