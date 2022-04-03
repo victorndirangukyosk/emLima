@@ -347,7 +347,14 @@
 					<td>Transaction ID</td>
                                         <td><input type="text" name="order_transaction_id" id="order_transaction_id" value="<?= $order_transaction_id ?>" > <button id="save_order_transaction_id" class="btn btn-primary" type="button" <?php if($order_status_id == 5 || !$this->user->hasPermission('modify', 'sale/order')) { ?> disabled <?php } ?> > Save </button></td>
 				  </tr>
-
+                                  <tr>
+                                        <td>Push Order Data To Pezesha</td>
+                                        <td><button data-order-id="<?=$order_id ?>" id="push_order_data_to_pezesha" class="btn btn-primary" type="button"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Push </button></td>
+                                  </tr>
+                                  <tr>
+                                        <td>Apply For Pezesha Loan</td>
+                                        <td><button data-order-id="<?=$order_id ?>" id="apply_for_pezesha_loan" class="btn btn-primary" type="button"><i class="fa fa-university" aria-hidden="true"></i> Apply Loan </button></td>
+                                  </tr>
 				</table>
 			  </div>
 		  <?php } ?>
@@ -2513,6 +2520,48 @@ console.log(present_location);
                 }); 
 
 });
+$(document).delegate('#push_order_data_to_pezesha', 'click', function(e) {
+e.preventDefault();
+    $.ajax({
+                url: 'index.php?path=sale/customer_pezesha/applyloanone&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: { 'order_id' : $('#push_order_data_to_pezesha').attr('data-order-id') },
+		beforeSend: function() {
+		    $('#push_order_data_to_pezesha').button('loading');			
+		},
+		complete: function() {
+		    $('#push_order_data_to_pezesha').button('reset');	
+		},
+                success: function(json) {	 
+                    if(json.status == 200) { }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+	           alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); 
+		}
+    });
+});
 
+$(document).delegate('#apply_for_pezesha_loan', 'click', function(e) {
+e.preventDefault();
+    $.ajax({
+                url: 'index.php?path=sale/customer_pezesha/applyloanfordeliveredorder&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: { 'order_id' : $('#apply_for_pezesha_loan').attr('data-order-id') },
+		beforeSend: function() {
+		    $('#apply_for_pezesha_loan').button('loading');			
+		},
+		complete: function() {
+		    $('#apply_for_pezesha_loan').button('reset');	
+		},
+                success: function(json) {	 
+                    if(json.status == 200) { }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {		
+	           alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); 
+		}
+    });
+});
 </script>
 <?php echo $footer; ?> 
