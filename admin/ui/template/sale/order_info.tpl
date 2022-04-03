@@ -1044,7 +1044,7 @@
 					<div class="form-group">
 					  <label class="col-sm-2 control-label" for="input-order-status"><?php echo $entry_order_status; ?></label>
 					  <div class="col-sm-10">
-						<select name="order_status_id" id="input-order-status" class="form-control">
+						<select name="order_status_id" id="input-order-status" class="form-control" data-order-id="<?php echo $order_id; ?>">
 						  <?php foreach ($order_statuses as $order_statuses) { ?>
 						  <?php if ($order_statuses['order_status_id'] == $order_status_id) { ?>
 						  <option value="<?php echo $order_statuses['order_status_id']; ?>" selected="selected"><?php echo $order_statuses['name']; ?></option>
@@ -1087,7 +1087,7 @@
 						<div class="form-group">
 						  <label class="col-sm-2 control-label" for="input-order-status"><?php echo $entry_order_status; ?></label>
 						  <div class="col-sm-10">
-							<select name="order_status_id" id="input-order-status" class="form-control">
+							<select name="order_status_id" id="input-order-status" class="form-control" data-order-id="<?php echo $order_id; ?>">
 							    <?php foreach ($order_statuses as $order_statuses) { ?>
 
 								  
@@ -1929,7 +1929,27 @@ if($('select[name=\'order_status_id\'] option:selected').text()=='Delivered')
 		url: 'index.php?path=sale/order/createinvoiceno&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>',
 		dataType: 'json',
 		beforeSend: function() {
-			$('#button-invoice').button('loading');			
+                
+                $.ajax({
+                    url: 'index.php?path=sale/customer_pezesha/applyloanfordeliveredorder&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data: { order_id : $('select[id=\'input-order-status\']').attr("data-order-id"); },
+                    success: function(json) {
+                    if(json.status == 422) {    
+                    $.each(json.errors, function (key, data) {
+                    alert(key+' : '+data);
+                    })
+                    }
+    
+                    if(json.status == 200 && json.response_code == 0) {    
+                    alert(json.message);
+                    }
+    
+                    }
+                });
+                
+	        $('#button-invoice').button('loading');			
 		},
 		
 		success: function(json) {
