@@ -757,6 +757,16 @@ class ControllerSaleEditinvoice extends Controller {
                 $data['error'] = true;
                 $data['status'] = false;
                 $data['status'] = false;
+            } elseif (array_key_exists('quantity_missed', $form_products) && $form_products['quantity_missed'] < 0) {
+                $data['message'] = 'Missed Quantity Should Not Be Less Than Zero In ' . $i . ' Row!';
+                $data['error'] = true;
+                $data['status'] = false;
+                $data['status'] = false;
+            } elseif (array_key_exists('quantity', $form_products) && $form_products['quantity'] < 0) {
+                $data['message'] = 'Ordered Quantity Should Not Be Less Than Zero In ' . $i . ' Row!';
+                $data['error'] = true;
+                $data['status'] = false;
+                $data['status'] = false;
             } elseif (!array_key_exists('quantity', $form_products)) {
                 $data['message'] = 'Product Quantity Should Not Be Empty In ' . $i . ' Row!';
                 $data['error'] = true;
