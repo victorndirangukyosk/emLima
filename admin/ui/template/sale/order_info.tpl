@@ -2553,7 +2553,7 @@ e.preventDefault();
 $(document).delegate('#apply_for_pezesha_loan', 'click', function(e) {
 e.preventDefault();
     $.ajax({
-                url: 'index.php?path=sale/customer_pezesha/applyloanfordeliveredorder&token=<?php echo $token; ?>',
+                url: 'index.php?path=sale/customer_pezesha/applyloanfordeliveredordernew&token=<?php echo $token; ?>',
 		type: 'post',
 		dataType: 'json',
 		data: { 'order_id' : $('#apply_for_pezesha_loan').attr('data-order-id') },
