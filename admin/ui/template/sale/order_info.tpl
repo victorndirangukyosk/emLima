@@ -2536,7 +2536,13 @@ e.preventDefault();
 		    $('#push_order_data_to_pezesha').button('reset');	
 		},
                 success: function(json) {	 
-                    if(json.status == 200) { }
+                    if(json.status == 200) {
+                    alert(json.message);
+                    }
+                    
+                    if(json.status != 200) {
+                    alert(json.message);
+                    }
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
 	           alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); 
