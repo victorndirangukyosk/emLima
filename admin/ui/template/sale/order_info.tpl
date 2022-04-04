@@ -2564,7 +2564,13 @@ e.preventDefault();
 		    $('#apply_for_pezesha_loan').button('reset');	
 		},
                 success: function(json) {	 
-                    if(json.status == 200) { }
+                    if(json.status == 200) {
+                    alert(json.message);
+                    }
+                    
+                    if(json.status != 200) {
+                    alert(json.message);
+                    }
 		},			
 		error: function(xhr, ajaxOptions, thrownError) {		
 	           alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText); 
