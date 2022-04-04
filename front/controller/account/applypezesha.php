@@ -389,6 +389,7 @@ class ControllerAccountApplypezesha extends Controller {
                 $data['customer_uuid'] = $result['data']['customer_uuid'];
                 $data['credit_period'] = $this->request->post['credit_period'];
                 $customer_device_info = $this->model_account_customer->addPezeshaCustomer($data);
+                $this->sendpezeshaemail();
             }
             $json = $result;
             //return $json;
@@ -496,6 +497,42 @@ class ControllerAccountApplypezesha extends Controller {
         }
         $html .= '</tbody></table>';
         return $html;
+    }
+    
+    public function sendpezeshaemail() {
+        $log = new Log('error.log');
+        $this->load->model('account/customer');
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $customer_pezesha_info = $this->model_account_customer->getPezeshaCustomer($this->customer->getId());
+        if ($customer_info != NULL && $customer_pezesha_info != NULL) {
+
+            $customer_pezehsa['firstname'] = $customer_info['firstname'];
+            $customer_pezehsa['lastname'] = $customer_info['lastname'];
+            $customer_pezehsa['companyname'] = $customer_info['company_name'];
+            $customer_pezehsa['pezesha_customer_id'] = $customer_pezesha_info['pezesha_customer_id'];
+            $customer_pezehsa['pezesha_customer_uuid'] = $customer_pezesha_info['customer_uuid'];
+            
+
+            $log->write('EMAIL SENDING');
+            $log->write($customer_pezehsa);
+            $log->write($this->config->get('pezesha_email'));
+            $log->write('EMAIL SENDING');
+
+            $subject = $this->emailtemplate->getSubject('Customer', 'customer_98', $customer_pezehsa);
+            $message = $this->emailtemplate->getMessage('Customer', 'customer_98', $customer_pezehsa);
+            try {
+                $mail = new Mail($this->config->get('config_mail'));
+                $mail->setTo($customer_info['email']);
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setSubject($subject);
+                $mail->setHTML($message);
+                $mail->send();
+            } catch (Exception $e) {
+            $log = new Log('error.log');  
+            $log->write('CUSTOMER PEZESHA REGISTRATION MAIL EXCEPTION');
+            }
+        }
     }
 
 }

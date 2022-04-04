@@ -1032,6 +1032,8 @@ class ModelSaleOrder extends Model {
                 'delivery_charge' => $order_query->row['delivery_charges'],
                 'vendor_terms_cod' => $order_query->row['vendor_terms_cod'],
                 'vendor_order_status_id' => $order_query->row['vendor_order_status_id'],
+                'paid' => $order_query->row['paid'],
+                'amount_partialy_paid' => $order_query->row['amount_partialy_paid'],
             ];
         } else {
             return;

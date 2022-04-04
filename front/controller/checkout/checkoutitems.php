@@ -1117,7 +1117,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
             $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
             if (count($results_orders) > 0) {
                 foreach ($results_orders as $order) {
-                    if (in_array($order['payment_method'], $PaymentFilter) && $order['order_status_id'] == 4) {
+                    if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
                         $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
                         if (empty($order['transcation_id'])) {
                             $data['pending_order_id'][] = $order['order_id'];

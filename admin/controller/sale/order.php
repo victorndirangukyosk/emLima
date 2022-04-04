@@ -4910,7 +4910,14 @@ class ControllerSaleOrder extends Controller {
                 }
                 $data['delivery_executive_name'] = $delivery_executive_name;
                 $data['delivery_executive_phone'] = $delivery_executive_phone;
-
+                $order_transcation_id = $this->model_sale_order->getOrderTransactionId($order_info['order_id']);
+                if (!empty($order_transcation_id))
+                {
+                    $transaction_id=$order_transcation_id['transaction_id'];
+                }
+                else{
+                    $transaction_id="";
+                }
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
@@ -4951,7 +4958,10 @@ class ControllerSaleOrder extends Controller {
                     'account_manager_name' => $customer_account_manager_first_last_name,
                     'account_manager_phone' => $customer_account_manager_phone,
                     'customer_experience_first_last_name' => $customer_experience_first_last_name,
-                    'customer_experince_phone' => $customer_experince_phone
+                    'customer_experince_phone' => $customer_experince_phone,
+                    'paid' => $order_info['paid'],
+                    'order_transcation_id' => $transaction_id,
+
                 ];
             }
         }
@@ -5557,6 +5567,14 @@ class ControllerSaleOrder extends Controller {
                     $data['delivery_executive_name'] = $delivery_executive_name;
                     $data['delivery_executive_phone'] = $delivery_executive_phone;
 
+                    $order_transcation_id = $this->model_sale_order->getOrderTransactionId($order_info['order_id']);
+                    if (!empty($order_transcation_id))
+                    {
+                        $transaction_id=$order_transcation_id['transaction_id'];
+                    }
+                    else{
+                        $transaction_id="";
+                    }
                     $data['orders'][] = [
                         'order_id' => $order_id,
                         'invoice_no' => $invoice_no,
@@ -5590,7 +5608,9 @@ class ControllerSaleOrder extends Controller {
                         'driver_name' => $driver_name,
                         'driver_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $driver_phone,
                         'delivery_executive_name' => $delivery_executive_name,
-                        'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $delivery_executive_phone
+                        'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $delivery_executive_phone,
+                        'paid' => $order_info['paid'],
+                        'order_transcation_id' => $transaction_id,
                     ];
                 }
             }

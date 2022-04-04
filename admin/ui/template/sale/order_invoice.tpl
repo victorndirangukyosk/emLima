@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="ui/stylesheet/print.css">
 </head>
 
-<body>
+<body>        
 <?php foreach($orders as $order) { ?>
     
 <div class="page">
@@ -44,9 +44,15 @@
 
                                 </div>
                             </div>
-                            <div class="col-md-4 text-left">
-                                <?php if($order['vendor_terms_cod'] == 1 || $order['payment_terms'] == 'Payment On Delivery') { ?>
+                            <div class="col-md-3 text-left">
+                                <?php if(($order['vendor_terms_cod'] == 1 || $order['payment_terms'] == 'Payment On Delivery') && $order['payment_method'] != 'Pezesha') { ?>
                                <img width="210" src="ui/images/pod.png" alt="POD" class="mb-2">
+
+                                <?php } else if($order['paid'] != 'Y' && $order['payment_method'] == 'Pezesha') { ?>
+                               <img width="210" src="ui/images/pezesha.jpg" alt="Pezesha" class="mb-2">
+                                <?php } else if($order['paid'] == 'Y' && $order['order_transcation_id']!= '' && $order['order_transcation_id'] !=NULL) { ?>
+                               <img width="210" src="ui/images/pre-paid.jpg" alt="Pre-Paid" class="mb-2">
+
                                 <?php } else { ?>
                                 <ul class="list-block" style="margin-bottom:195px;">
                                     <li></li>
@@ -66,7 +72,7 @@
                                     <li><?= $order['shipping_method'] ?></li>
                                 </ul>
                             </div>
-                            <div class="col-md-4 text-right">
+                            <div class="col-md-5 text-right">
                                 <h6 class="bold">TAX INVOICE # <?= $order['order_id'] ?><?= $order['invoice_no'] ?></h6>
                                 <?php if($order['po_number']) { ?>
                                     <h6 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h6>
@@ -75,7 +81,21 @@
 
                                 
                                 <br>
-                                <ul class="list-block" style="margin-bottom:140px;">
+                                   <h6 class="bold mb-3">PAYMENT DETAILS</h6>                                
+                                <ul class="list-block" style="margin-bottom:60px;">
+                                   
+                                 <?php if($order['order_transcation_id']!=NULL && $order['order_transcation_id'] !='' && $order['paid'] =='Y') { ?>
+                                    <li>Payment Method : <?= $order['payment_method'] ?></li>
+                                    
+                                    <li>Transaction ID : <?= $order['order_transcation_id'] ?></li>
+                                     <?php } else { ?>
+                                      <li>Payment Method : <label style="width:40px"></label> </li>
+                                      
+                                      <li></li>
+                                    
+                                    <li>Transaction ID :  <label style="width:40px"></label> </li>
+                                     <?php }?>
+                                
                                     <li></li>
                                     <li></li>
                                     <li></li>
@@ -98,6 +118,7 @@
                                 <ul class="list-block">
                                     <li>Name : <?= $order['delivery_executive_name'] ?></li>
                                     <li>Phone : <?= $order['delivery_executive_phone'] ?></li>
+                                    
                                 <!--<?php if($order['delivery_charge'] != NULL && $order['delivery_charge'] >0) { ?>
                                     <li>Delivery Charge : <?= $order['delivery_charge'] ?></li>
                                  <?php } ?>-->
