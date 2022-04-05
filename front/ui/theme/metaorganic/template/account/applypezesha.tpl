@@ -1249,7 +1249,7 @@
                             <!-- Button -->
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    <button id="singlebutton" name="singlebutton" data-terms="0" type="button" class="btn btn-primary" data-dismiss="modal" disabled>AGREE</button>
+                                    <button id="singlebutton" name="singlebutton" data-terms="0" type="button" class="btn btn-primary" data-dismiss="modal">AGREE</button>
                                     <button id="cancelbutton" name="cancelbutton" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
                                 </div>
                             </div>
@@ -1695,11 +1695,11 @@ $('#submit_info_to_pezesha').on('click', function(e) {
     });
 });
 
-$('#parent_terms_conditions').scroll(function() {
+/*$('#parent_terms_conditions').scroll(function() {
   console.log('SCROLLING');
   var disable = $('#terms_conditions').height() != ($(this).scrollTop() + $(this).height());
   $('#singlebutton').prop('disabled', disable);
-});
+});*/
 
 </script>
 
