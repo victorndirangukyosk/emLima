@@ -70,6 +70,8 @@ class ControllerApiCustomerApplypezesha extends Controller {
         $data['gender'] = $this->request->post['gender'];
         $data['kra'] = $this->request->post['kra'];
         $data['national_id'] = $this->request->post['national_id'];
+        $data['credit_period'] = $this->request->post['credit_period'];
+
         $data['customer_id'] =$this->customer->getId();
         $date = $this->request->post['dob'];
         if (isset($date) && $date != NULL) {
