@@ -96,6 +96,19 @@ class ControllerAccountOrder extends Controller {
         foreach ($results as $result) {
             $city_name = $this->model_account_order->getCityName($result['shipping_city_id']);
             $missing_order_product_link = $this->model_account_order->GetMissingOrderProductLink($result['order_id']);
+            if (isset($missing_order_product_link) && $missing_order_product_link['link'] != NULL) {
+                $timestamp1 = strtotime($missing_order_product_link['created_at']);
+                $timestamp2 = strtotime(date("Y-m-d h:i:s"));
+                $hourdiff = round((strtotime($timestamp1) - strtotime($timestamp2)) / 3600, 1);
+                $log = new Log('error.log');
+                $log->write('TIME');
+                $log->write(date("Y-m-d H:i:s"));
+                $log->write($hourdiff);
+                $log->write('TIME');
+                if ($hourdiff > 24) {
+                    $missing_order_product_link = NULL;
+                }
+            }
 
             $product_total = $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
             $products_total = $this->model_account_order->getTotalOrderedProductsByOrderId($result['order_id']);
