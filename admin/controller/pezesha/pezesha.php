@@ -218,6 +218,9 @@ class ControllerPezeshaPezesha extends Controller {
             $transactions['other_details'] = array('key' => 'Organization_id', 'value' => $customer_device_info['customer_id'], 'key' => 'payee_type', 'value' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'] . ' ' . $customer_device_info['company_name']);
             $transactions_details[] = $transactions;
         }
+        if (count($transactions_details) > 100) {
+            $transactions_details = array_slice($transactions_details, 0, 100);
+        }
         $log->write($transactions_details);
 
         $auth_response = $this->auth();
