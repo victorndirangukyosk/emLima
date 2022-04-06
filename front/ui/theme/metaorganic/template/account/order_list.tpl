@@ -94,6 +94,10 @@
                               <option disabled style="height: 1px !important;" ></option>
                               <!--<option value="<?=$order["order_id"] ?>" type="Report rejected products"  view_href=""  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Report Rejected Products</option>-->
                               <?php } ?>
+                              <?php if($order['missing_order_product_link'] != NULL) { ?>
+                              <option value="<?=$order["order_id"] ?>" type="Create Order WIth Missing Products"  view_href="<?php echo $order['missing_order_product_link']; ?>"  order-id="<?=$order["order_id"] ?>"  >&#xf179; &nbsp;Create Order WIth Missing Products</option>
+                              <option disabled style="height: 1px !important;" ></option>
+                              <?php } ?>
                                </select>
                                 <br/>
 
