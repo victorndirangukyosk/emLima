@@ -675,6 +675,7 @@ class ControllerSaleEditinvoice extends Controller {
                 $log->write($order_info['delivery_timeslot']);
                 $log->write('MISSING PRODUCTS COUNT');
                 if (is_array($products) && count($products) > 0 /* && ($order_info['delivery_timeslot'] == '06:00am - 08:00am' || $order_info['delivery_timeslot'] == '08:00am - 10:00am' || $order_info['delivery_timeslot'] == '10:00am - 12:00am') */) {
+                    $this->model_sale_order->SaveMissingOrderProductLink($order_id);
                     try {
                         $this->load->controller('sale/order_product_missing/sendmailwithmissingproducts', $order_id);
                     } catch (exception $ex) {

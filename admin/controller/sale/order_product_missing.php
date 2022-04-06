@@ -1512,6 +1512,7 @@ class ControllerSaleOrderProductMissing extends Controller {
             'order_products_list' => $this->getOrderProductListTemplate($order_id),
             'missed_products_order_link' => $order_info['store_url'] . 'index.php?path=deliversystem/deliversystem/createorderwithmissingproducts&order_id=' . base64_encode($order_info['order_id']),
         );
+        $this->model_sale_order->SaveMissingOrderProductLink($order_id, $data['missed_products_order_link']);
 
         try {
             $log = new Log('error.log');
