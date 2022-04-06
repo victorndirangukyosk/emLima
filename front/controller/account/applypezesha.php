@@ -299,6 +299,9 @@ class ControllerAccountApplypezesha extends Controller {
         $data['filter_paid'] = 'Y';
 
         $customer_order_info = $this->model_sale_order->getOrders($data);
+        $log->write('CUSTOMER_TRANSACTION_INFO');
+        $log->write($customer_order_info);
+        $log->write('CUSTOMER_TRANSACTION_INFO');
         $transactions_details = array();
 
         foreach ($customer_order_info as $order_info) {
