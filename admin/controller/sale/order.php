@@ -10224,13 +10224,4 @@ class ControllerSaleOrder extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
-    public function SaveMissingOrderProductLink($order_id, $link) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "missing_order_products_links SET order_id = '" . $order_id . "', link = '" . $link . "'");
-
-        $url_id = $this->db->getLastId();
-
-        return $url_id;
-    }
-
 }
