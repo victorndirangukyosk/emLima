@@ -2003,5 +2003,10 @@ class ModelAccountOrder extends Model {
             return false;
         }
     }
+        
+    public function GetMissingOrderProductLink($order_id) {
+        $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "missing_order_products_links` where `order_id` = '" . (int) $order_id . "'");
+        return $query->row;
+    }
 
 }

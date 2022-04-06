@@ -285,7 +285,7 @@ class ControllerApiCustomerCheckout extends Controller {
 
             $results = $this->model_extension_extension->getExtensions('payment');
 
-            //echo "<pre>";print_r($results);die;
+            // echo "<pre>";print_r($results);die;
             $total = $this->request->get['total'];
             if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
                 foreach ($results as $result) {
@@ -351,8 +351,8 @@ class ControllerApiCustomerCheckout extends Controller {
         } else {
             $json['status'] = 10013;
 
-            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_not_loggedin')];
-
+            $json['message'][] = ['type' => '', 'body' => 'Order total is required.'];
+            
             http_response_code(400);
         }
 
@@ -360,6 +360,126 @@ class ControllerApiCustomerCheckout extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getMixedPaymentMethods() {
+        //echo "<pre>";print_r('getStoreShippingMethods');die;
+        $json = [];
+
+        $this->load->language('information/locations');
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->language('api/general');
+
+        $this->load->model('assets/category');
+
+        $this->load->model('assets/product');
+
+        $this->load->model('tool/image');
+
+        if (isset($this->request->get['total'])) {
+
+            unset($this->session->data['pezesha_amount_limit']);
+            unset($this->session->data['pezesha_customer_amount_limit']);
+            //get the pezesha amount limit 
+            $this->load->controller('customer/getPezeshaLoanOffers');
+
+            // echo "<pre>";print_r($this->session->data['pezesha_amount_limit']);die;
+
+            
+            $this->load->language('checkout/checkout');
+            // Payment Methods
+            $method_data = [];
+
+            $this->load->model('extension/extension');
+
+            $results = $this->model_extension_extension->getExtensions('payment');
+
+            // echo "<pre>";print_r($this->customer);die;
+            $total = $this->request->get['total'];
+            // if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
+        if (($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) || ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0)) {
+
+                foreach ($results as $result) {
+                    if ($result['code'] == 'wallet' || $result['code'] == 'mod' || $result['code'] == 'mpesa' || $result['code'] == 'pesapal' || $result['code'] == 'interswitch') {
+                        if ($this->config->get($result['code'] . '_status')) {
+                            $this->load->model('payment/' . $result['code']);
+
+                            $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+
+                            if ($method) {
+                                $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
+                                //removed  (No Transaction Fee) from terms,as suggested
+                                //echo "<pre>";print_r($method);die;
+                                $method_data[] = $method;
+                            }
+                        }
+                    }
+                }
+            // } else if ($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') {
+        } if ((($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) || (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0))) {
+               
+                foreach ($results as $result) {
+                    if ($result['code'] == 'cod' || $result['code'] == 'wallet') {
+                        if ($this->config->get($result['code'] . '_status')) {
+                            $this->load->model('payment/' . $result['code']);
+
+                            $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+
+                            if ($method) {
+                                $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
+                                //removed  (No Transaction Fee) from terms,as suggested
+                                //echo "<pre>";print_r($method);die;
+                                $method_data[] = $method;
+                            }
+                        }
+                    }
+                }
+            // } else {
+        } if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status') && $this->session->data['pezesha_customer_amount_limit'] > 0) {
+
+                foreach ($results as $result) {
+                    if ($result['code'] == 'pezesha' || $result['code'] == 'wallet') {
+
+                    if ($this->config->get($result['code'] . '_status')) {
+                        $this->load->model('payment/' . $result['code']);
+
+                        $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+
+                        if ($method) {
+                            $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
+                            //removed  (No Transaction Fee) from terms,as suggested
+                            //echo "<pre>";print_r($method);die;
+                            $method_data[] = $method;
+                        }
+                    }
+                }
+                }
+            }
+
+            $sort_order = [];
+
+            foreach ($method_data as $key => $value) {
+                $sort_order[$key] = $value['sort_order'];
+            }
+
+            array_multisort($sort_order, SORT_ASC, $method_data);
+
+            //echo "<pre>";print_r($method_data);die;
+            $json['data'] = $method_data;
+        } else {
+            $json['status'] = 10013;
+
+            $json['message'][] = ['type' => '', 'body' => 'Order total is required.'];
+
+            http_response_code(400);
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+    
     public function addApplyCoupon() {
         //echo "<pre>";print_r('addApplyCoupon');die;
         $json = [];

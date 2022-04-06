@@ -95,6 +95,20 @@ class ControllerAccountOrder extends Controller {
         // echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $city_name = $this->model_account_order->getCityName($result['shipping_city_id']);
+            $missing_order_product_link = $this->model_account_order->GetMissingOrderProductLink($result['order_id']);
+            if (isset($missing_order_product_link) && $missing_order_product_link['link'] != NULL) {
+                $timestamp1 = strtotime($missing_order_product_link['created_at']);
+                $timestamp2 = strtotime(date("Y-m-d h:i:s"));
+                $hourdiff = round((strtotime($timestamp1) - strtotime($timestamp2)) / 3600, 1);
+                $log = new Log('error.log');
+                $log->write('TIME');
+                $log->write(date("Y-m-d H:i:s"));
+                $log->write($hourdiff);
+                $log->write('TIME');
+                if ($hourdiff > 24) {
+                    $missing_order_product_link = NULL;
+                }
+            }
 
             $product_total = $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
             $products_total = $this->model_account_order->getTotalOrderedProductsByOrderId($result['order_id']);
@@ -246,7 +260,8 @@ class ControllerAccountOrder extends Controller {
                 'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours <= 2 && $result['paid'] == 'N' && $result['payment_code'] == 'cod') ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
                 'paid' => $result['paid'],
                 'products_missed' => $result['delivery_date'] == date('Y-m-d') && ($result['order_status_id'] == 4 || $result['order_status_id'] == 5) ? 1 : 0,
-                'products_rejected' => $result['delivery_date'] == date('Y-m-d') && ($result['order_status_id'] == 4 || $result['order_status_id'] == 5) ? 1 : 0
+                'products_rejected' => $result['delivery_date'] == date('Y-m-d') && ($result['order_status_id'] == 4 || $result['order_status_id'] == 5) ? 1 : 0,
+                'missing_order_product_link' => $missing_order_product_link != NULL && $missing_order_product_link['link'] != NULL ? $missing_order_product_link['link'] : NULL,
             ];
         }
 

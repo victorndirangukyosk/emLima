@@ -190,9 +190,20 @@ class ControllerPezeshaPezesha extends Controller {
         $this->load->model('sale/order');
         $this->load->model('pezesha/pezesha');
         $customer_device_info = $this->model_sale_customer->getCustomer($customer_id);
+        
+        $all_customers = $customer_id;
+        $parent_customer['filter_parent_customer_id'] = $customer_id;
+        $parent_customer['filter_parent_customer'] = $customer_id;
+        $sub_customer = $this->model_sale_customer->getCustomers($parent_customer);
+        if (isset($sub_customer) && count($sub_customer) > 0) {
+            $sub_customer_ids = array_column($sub_customer, 'customer_id');
+            $all_customers = implode(',', $sub_customer_ids);
+            $all_customers = $all_customers . ',' . $customer_id;
+        }
+        
         $customer_pezesha_info = $this->model_pezesha_pezesha->getCustomer($customer_id);
 
-        $data['filter_customer_id'] = $customer_id;
+        $data['filter_customer_id_array'] = $all_customers;
         $data['filter_paid'] = 'Y';
 
         $customer_order_info = $this->model_sale_order->getOrders($data);

@@ -1482,6 +1482,8 @@ class ControllerSaleOrderProductMissing extends Controller {
 
     public function sendmailwithmissingproducts($order_id) {
         $log = new Log('error.log');
+        $this->load->model('sale/order');
+        $this->load->model('account/customer');
         $order_info = $this->model_sale_order->getOrder($order_id);
 
         $address = '';
@@ -1512,6 +1514,7 @@ class ControllerSaleOrderProductMissing extends Controller {
             'order_products_list' => $this->getOrderProductListTemplate($order_id),
             'missed_products_order_link' => $order_info['store_url'] . 'index.php?path=deliversystem/deliversystem/createorderwithmissingproducts&order_id=' . base64_encode($order_info['order_id']),
         );
+        $this->model_sale_order->SaveMissingOrderProductLink($order_id, $data['missed_products_order_link']);
 
         try {
             $log = new Log('error.log');

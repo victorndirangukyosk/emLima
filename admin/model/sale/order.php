@@ -1128,6 +1128,10 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_customer_id'])) {
             $sql .= " AND o.customer_id = '" . $data['filter_customer_id'] . "'";
         }
+        
+        if (isset($data['filter_customer_id_array']) && !is_null($data['filter_customer_id_array'])) {
+            $sql .= "AND o.customer_id IN (" . $data['filter_customer_id_array'] . ")";
+        }
 
         if (!empty($data['filter_paid'])) {
             $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
@@ -5749,6 +5753,14 @@ class ModelSaleOrder extends Model {
         $query = $this->db->query($sql);
         // echo "<pre>";print_r( $query->rows);die;
         return $query->row;
+    }
+    
+    public function SaveMissingOrderProductLink($order_id, $link) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "missing_order_products_links SET order_id = '" . $order_id . "', link = '" . $link . "'");
+
+        $url_id = $this->db->getLastId();
+
+        return $url_id;
     }
 
 }
