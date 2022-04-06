@@ -1482,6 +1482,8 @@ class ControllerSaleOrderProductMissing extends Controller {
 
     public function sendmailwithmissingproducts($order_id) {
         $log = new Log('error.log');
+        $this->load->model('sale/order');
+        $this->load->model('account/customer');
         $order_info = $this->model_sale_order->getOrder($order_id);
 
         $address = '';
