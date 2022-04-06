@@ -285,8 +285,17 @@ class ControllerAccountApplypezesha extends Controller {
 
         $customer_device_info = $this->model_account_customer->getCustomer($this->customer->getId());
         $customer_documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
+        
+        $all_customers = $this->customer->getId();
+        $sub_customer = $this->model_account_customer->getSubusersByParent($this->customer->getId());
+        if (isset($sub_customer) && count($sub_customer) > 0) {
+            $sub_customer_ids = array_column($sub_customer, 'customer_id');
+            $all_customers = implode(',', $sub_customer_ids);
+            $all_customers = $all_customers . ',' . $this->customer->getId();
+        }
 
-        $data['filter_customer_id'] = $this->customer->getId();
+        
+        $data['filter_customer_id_array'] = $all_customers;
         $data['filter_paid'] = 'Y';
 
         $customer_order_info = $this->model_sale_order->getOrders($data);

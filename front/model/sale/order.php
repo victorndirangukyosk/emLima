@@ -139,6 +139,10 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_customer_id'])) {
             $sql .= " AND o.customer_id = '" . $data['filter_customer_id'] . "'";
         }
+        
+        if (isset($data['filter_customer_id_array']) && !is_null($data['filter_customer_id_array'])) {
+            $sql .= "AND o.customer_id IN (" . $data['filter_customer_id_array'] . ")";
+        }
 
         if (!empty($data['filter_paid'])) {
             $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
