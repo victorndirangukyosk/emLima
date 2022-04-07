@@ -523,6 +523,9 @@ class ControllerApiCustomerCheckout extends Controller {
 
                $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
                 //    echo "<pre>";print_r($method);
+        $log->write($total);
+        $log->write('total calculated');
+
 
                if ($method) {
                    if ($recurring) {
@@ -543,6 +546,11 @@ class ControllerApiCustomerCheckout extends Controller {
 
        array_multisort($sort_order, SORT_ASC, $method_data);
         //   echo "<pre>";print_r($method_data);die;
+        $log->write($method_data);
+
+        $log->write('method_data is empty or not' );
+
+
 
 
        $this->session->data['payment_methods'] = $method_data;
