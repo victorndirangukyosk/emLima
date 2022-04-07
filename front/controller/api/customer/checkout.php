@@ -611,7 +611,7 @@ class ControllerApiCustomerCheckout extends Controller {
     $json['data'] =$data;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
-    }
+    } 
 
 
     public function getPezeshaLoanOffers() {
