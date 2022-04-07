@@ -5756,11 +5756,18 @@ class ModelSaleOrder extends Model {
     }
     
     public function SaveMissingOrderProductLink($order_id, $link) {
+        $orders = $this->db->query('SELECT * FROM ' . DB_PREFIX . "missing_order_products_links WHERE order_id = '" . $order_id . "'");
+        
+        if($orders->num_rows <= 0) {
         $this->db->query('INSERT INTO ' . DB_PREFIX . "missing_order_products_links SET order_id = '" . $order_id . "', link = '" . $link . "'");
 
         $url_id = $this->db->getLastId();
 
-        return $url_id;
+        return $url_id;    
+        }
+        
+        
+        
     }
 
 }
