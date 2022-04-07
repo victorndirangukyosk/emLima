@@ -263,17 +263,12 @@ class ControllerApiCustomerCheckout extends Controller {
         $json = [];
 
         $this->load->language('information/locations');
-
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
-
         $this->load->language('api/general');
-
         $this->load->model('assets/category');
-
         $this->load->model('assets/product');
-
         $this->load->model('tool/image');
 
         if (isset($this->request->get['total'])) {
@@ -481,13 +476,10 @@ class ControllerApiCustomerCheckout extends Controller {
     }
 
     public function getMixedPaymentMethods() {
-        //echo "<pre>";print_r('getStoreShippingMethods');die;
         $json = [];     
-
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
-
        // Totals
        $total_data = [];
        $total = 0;
@@ -530,7 +522,7 @@ class ControllerApiCustomerCheckout extends Controller {
                $this->load->model('payment/' . $result['code']);
 
                $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
-    //    echo "<pre>";print_r($method);
+                //    echo "<pre>";print_r($method);
 
                if ($method) {
                    if ($recurring) {
@@ -558,7 +550,7 @@ class ControllerApiCustomerCheckout extends Controller {
         //   echo "<pre>";print_r(empty($this->session->data['payment_methods']));die;
 
        if (empty($this->session->data['payment_methods'])) {
-        $data['error_warning'] = sprintf($this->language->get('error_no_payment'), $this->url->link('information/contact'));
+        $data['error_warning'] = 'No payment methods available.Please contact kwikbasket team';
     } else {
         $data['error_warning'] = '';
     }
@@ -573,8 +565,17 @@ class ControllerApiCustomerCheckout extends Controller {
         unset($this->session->data['pezesha_amount_limit']);
         unset($this->session->data['pezesha_customer_amount_limit']);
         //get the pezesha amount limit 
-        $this->load->controller('customer/getPezeshaLoanOffers');
+
+        // $a= $this->load->controller('api/customer/getPezeshaLoanOffers');
+        $a=$this->getPezeshaLoanOffers();
+
+        // echo "<pre>";print_r($this->session->data['pezesha_customer_amount_limit']);die;
         // echo "<pre>";print_r($data);die;
+        $log->write($this->customer->getPaymentTerms());
+        $log->write($this->customer->getCustomerPezeshaId());
+        $log->write($this->session->data['pezesha_customer_amount_limit']);
+        $log->write($this->session->data['pezesha_amount_limit']);
+        $log->write('pezesha data');
 
     
     if (($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) || ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0)) {
@@ -611,6 +612,63 @@ class ControllerApiCustomerCheckout extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+
+    public function getPezeshaLoanOffers() {
+
+    $log = new Log('error.log');
+    if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status')) {
+
+        $this->load->model('account/customer');
+
+        $customer_id = $this->customer->getId();
+
+        $customer_device_info = $this->model_account_customer->getCustomer($customer_id);
+        $customer_pezesha_info = $this->model_account_customer->getPezeshaCustomer($customer_id);
+
+        $auth_response = $this->auth();
+        $log->write('auth_response');
+        $log->write($auth_response);
+        $log->write($customer_device_info);
+        $log->write('auth_response');
+        $body = array('identifier' => $customer_pezesha_info['customer_id'], 'channel' => $this->config->get('pezesha_channel'));
+        //$body = http_build_query($body);
+        $body = json_encode($body);
+        $log->write($body);
+        $curl = curl_init();
+        if ($this->config->get('pezesha_environment') == 'live') {
+            curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/options');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+        } else {
+            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/options');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+
+        $log->write($result);
+        curl_close($curl);
+        $result = json_decode($result, true);
+        $log->write($result);
+        $json = $result;
+        if ($result['status'] == 200 && $result['response_code'] == 0 && $result['error'] == false) {
+            $this->session->data['pezesha_amount_limit'] = $this->currency->format($result['data']['amount'], $this->config->get('config_currency'));
+            $this->session->data['pezesha_customer_amount_limit'] = $result['data']['amount'];
+            $log->write('pezesha_amount_limit');
+            $log->write($result['data']['amount']);
+            $log->write('pezesha_amount_limit');
+        }
+    } else {
+        $result['message'] = 'Please Check Your Pezesha Details!';
+    }
+    $this->response->addHeader('Content-Type: application/json');
+    $this->response->setOutput(json_encode($result));
+}
+
     
     public function addApplyCoupon() {
         //echo "<pre>";print_r('addApplyCoupon');die;
