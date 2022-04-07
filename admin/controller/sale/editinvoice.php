@@ -370,6 +370,20 @@ class ControllerSaleEditinvoice extends Controller {
                 //echo "<pre>";print_r($old_sub_total);die;
 
                 $allProductIds = $this->model_sale_order->getOrderProductsIds($order_id);
+                $product_numbers = array_keys($datas['products']);
+                $product_numbers_string = implode(',', $product_numbers);
+
+                $not_in_invoice_products = $this->model_sale_order->getinvoiceproducts($product_numbers_string, $order_id);
+                $log->write('product_numbers_string');
+                $log->write($product_numbers_string);
+                $log->write($not_in_invoice_products);
+                if (count($not_in_invoice_products) > 0) {
+                    foreach ($not_in_invoice_products as $not_in_invoice_product) {
+                        $order_missing_product_info = $this->model_sale_order->deleteOrderProductToMissingProductsFromInvoice($not_in_invoice_product['product_store_id'], $order_id);
+                    }
+                }
+                $log->write('product_numbers_string');
+
                 foreach ($allProductIds as $deletePro) {
                     if (!isset($datas['products'][$deletePro['product_id']])) {
                         $log->write('DELETE PRODUCT');

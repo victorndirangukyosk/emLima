@@ -2576,7 +2576,11 @@ class ModelSaleOrder extends Model {
         $query = $this->db->query($sql);
 
         if (!$query->num_rows) {
-            $sql = 'INSERT into ' . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "',produce_type = '" . $data['produce_type'] . "',product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
+            $product_info = 'SELECT * FROM ' . DB_PREFIX . "product_to_store WHERE product_store_id = '" . (int) $product_id . "'";
+            $products_info = $this->db->query($product_info);
+            $products_info_new = $products_info->row;
+            
+            $sql = 'INSERT into ' . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "', general_product_id = '" . $products_info_new['product_id'] . "', produce_type = '" . $data['produce_type'] . "',product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
 
             $query = $this->db->query($sql);
         } else {
@@ -4758,7 +4762,7 @@ class ModelSaleOrder extends Model {
         }
 
         if ($productinfo != NULL) {
-            $sql2 = 'SELECT * FROM ' . DB_PREFIX . "missing_products WHERE order_id = '" . (int) $productinfo['order_id'] . "' AND product_store_id = '" . (int) $productinfo['product_id'] . "'";
+            $sql2 = 'SELECT * FROM ' . DB_PREFIX . "missing_products WHERE order_id = '" . (int) $productinfo['order_id'] . "' AND product_store_id = '" . (int) $productinfo['product_id'] . "' AND removed_from_invoice = 0";
             $query2 = $this->db->query($sql2);
             $missing_product_info = $query2->row;
 
@@ -5757,17 +5761,19 @@ class ModelSaleOrder extends Model {
     
     public function SaveMissingOrderProductLink($order_id, $link) {
         $orders = $this->db->query('SELECT * FROM ' . DB_PREFIX . "missing_order_products_links WHERE order_id = '" . $order_id . "'");
-        
-        if($orders->num_rows <= 0) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "missing_order_products_links SET order_id = '" . $order_id . "', link = '" . $link . "'");
 
-        $url_id = $this->db->getLastId();
+        if ($orders->num_rows <= 0) {
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "missing_order_products_links SET order_id = '" . $order_id . "', link = '" . $link . "'");
 
-        return $url_id;    
+            $url_id = $this->db->getLastId();
+
+            return $url_id;
         }
-        
-        
-        
+    }
+    
+    public function getinvoiceproducts($product_numbers_string, $order_id) {
+        $invoice_products = $this->db->query('SELECT * FROM ' . DB_PREFIX . "missing_products WHERE product_store_id NOT IN (".$product_numbers_string.")   AND order_id = '" . $order_id . "'");
+        return $invoice_products->rows;
     }
 
 }
