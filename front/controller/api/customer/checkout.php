@@ -360,7 +360,7 @@ class ControllerApiCustomerCheckout extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getMixedPaymentMethods() {
+    public function getMixedPaymentMethodsOld() {
         //echo "<pre>";print_r('getStoreShippingMethods');die;
         $json = [];
 
@@ -476,6 +476,138 @@ class ControllerApiCustomerCheckout extends Controller {
             http_response_code(400);
         }
 
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getMixedPaymentMethods() {
+        //echo "<pre>";print_r('getStoreShippingMethods');die;
+        $json = [];     
+
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+       // Totals
+       $total_data = [];
+       $total = 0;
+       $taxes = $this->cart->getTaxes();
+        // echo "<pre>";print_r($taxes);die;
+       $this->load->model('extension/extension');
+       $sort_order = [];
+       $results = $this->model_extension_extension->getExtensions('total');
+
+       foreach ($results as $key => $value) {
+           $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
+       }
+
+       array_multisort($sort_order, SORT_ASC, $results);
+
+       foreach ($results as $result) {
+           if ($this->config->get($result['code'] . '_status')) {
+               $this->load->model('total/' . $result['code']);
+
+               $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+           }
+       }
+
+       // Payment Methods
+       $method_data = [];
+
+       $this->load->model('extension/extension');
+
+       $results = $this->model_extension_extension->getExtensions('payment');
+
+    //    echo "<pre>";print_r($total);die;
+       $recurring = $this->cart->hasRecurringProducts();
+
+       foreach ($results as $result) {
+           $log = new Log('error.log');
+           $log->write('code');
+           $log->write($result['code']);
+           $log->write('code');
+           if ($this->config->get($result['code'] . '_status')) {
+               $this->load->model('payment/' . $result['code']);
+
+               $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+    //    echo "<pre>";print_r($method);
+
+               if ($method) {
+                   if ($recurring) {
+                       if (method_exists($this->{'model_payment_' . $result['code']}, 'recurringPayments') && $this->{'model_payment_' . $result['code']}->recurringPayments()) {
+                           $method_data[$result['code']] = $method;
+                       }
+                   } else {
+                       $method_data[$result['code']] = $method;
+                   }
+               }
+           }
+       }
+       $sort_order = [];
+
+       foreach ($method_data as $key => $value) {
+           $sort_order[$key] = $value['sort_order'];
+       }
+
+       array_multisort($sort_order, SORT_ASC, $method_data);
+        //   echo "<pre>";print_r($method_data);die;
+
+
+       $this->session->data['payment_methods'] = $method_data;
+
+        //   echo "<pre>";print_r(empty($this->session->data['payment_methods']));die;
+
+       if (empty($this->session->data['payment_methods'])) {
+        $data['error_warning'] = sprintf($this->language->get('error_no_payment'), $this->url->link('information/contact'));
+    } else {
+        $data['error_warning'] = '';
+    }
+    if (isset($this->session->data['payment_methods'])) {
+        $data['payment_methods'] = $this->session->data['payment_methods'];
+    } else {
+        $data['payment_methods'] = [];
+    }
+
+    $log->write('getPaymentTerms');
+    $log->write($this->customer->getPaymentTerms());
+        unset($this->session->data['pezesha_amount_limit']);
+        unset($this->session->data['pezesha_customer_amount_limit']);
+        //get the pezesha amount limit 
+        $this->load->controller('customer/getPezeshaLoanOffers');
+        // echo "<pre>";print_r($data);die;
+
+    
+    if (($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) || ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0)) {
+        foreach ($data['payment_methods'] as $payment_method) {
+            if ($payment_method['code'] == 'wallet') {
+                $data['payment_wallet_methods'] = $payment_method;
+            }
+            if (/* $payment_method['code'] != 'wallet' && */ $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa') {
+                unset($data['payment_methods'][$payment_method['code']]);
+            }
+        }
+    } if ((($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) || (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0))) {
+        foreach ($data['payment_methods'] as $payment_method) {
+            if ($payment_method['code'] == 'wallet') {
+                $data['payment_wallet_methods'] = $payment_method;
+            }
+            if ($payment_method['code'] != 'cod') {
+                unset($data['payment_methods'][$payment_method['code']]);
+            }
+        }
+    } if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status') && $this->session->data['pezesha_customer_amount_limit'] > 0) {
+        foreach ($data['payment_methods'] as $payment_method) {
+            if ($payment_method['code'] == 'wallet') {
+                $data['payment_wallet_methods'] = $payment_method;
+            }
+            if ($payment_method['code'] != 'pezesha') {
+                unset($data['payment_methods'][$payment_method['code']]);
+            }
+        }
+    }
+    $log->write('getPaymentTerms');
+    //}
+    $json['data'] =$data;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
