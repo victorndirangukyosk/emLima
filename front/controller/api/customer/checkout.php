@@ -480,6 +480,29 @@ class ControllerApiCustomerCheckout extends Controller {
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
+
+        if (isset($this->request->get['total'])) {
+
+            unset($this->session->data['pezesha_amount_limit']);
+            unset($this->session->data['pezesha_customer_amount_limit']);
+            //get the pezesha amount limit 
+            $this->load->controller('customer/getPezeshaLoanOffers');
+
+            // echo "<pre>";print_r($this->session->data['pezesha_amount_limit']);die;
+
+            
+            $this->load->language('checkout/checkout');
+            // Payment Methods
+            $method_data = [];
+
+            $this->load->model('extension/extension');
+
+            $results = $this->model_extension_extension->getExtensions('payment');
+
+            // echo "<pre>";print_r($this->customer);die;
+            $total = $this->request->get['total'];
+            // if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
+        
        // Totals
        $total_data = [];
        $total = 0;
@@ -512,7 +535,13 @@ class ControllerApiCustomerCheckout extends Controller {
 
     //    echo "<pre>";print_r($total);die;
        $recurring = $this->cart->hasRecurringProducts();
-
+    //    if($total !=$this->request->get['total'] )
+    //    {
+    //     $log = new Log('error.log');
+    //     $log->write('total in payment methods API not same as send amount');
+    //     $total =$this->request->get['total'];
+    //    }
+       
        foreach ($results as $result) {
            $log = new Log('error.log');
            $log->write('code');
@@ -523,6 +552,9 @@ class ControllerApiCustomerCheckout extends Controller {
 
                $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
                 //    echo "<pre>";print_r($method);
+        $log->write($total);
+        $log->write('total calculated');
+
 
                if ($method) {
                    if ($recurring) {
@@ -543,6 +575,11 @@ class ControllerApiCustomerCheckout extends Controller {
 
        array_multisort($sort_order, SORT_ASC, $method_data);
         //   echo "<pre>";print_r($method_data);die;
+        $log->write($method_data);
+
+        $log->write('method_data is empty or not' );
+
+
 
 
        $this->session->data['payment_methods'] = $method_data;
@@ -609,6 +646,14 @@ class ControllerApiCustomerCheckout extends Controller {
     $log->write('getPaymentTerms');
     //}
     $json['data'] =$data;
+} else {
+    $json['status'] = 10013;
+
+    $json['message'][] = ['type' => '', 'body' => 'Order total is required.'];
+
+    http_response_code(400);
+}
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     } 
