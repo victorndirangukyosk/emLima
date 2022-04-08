@@ -148,7 +148,7 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
         }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added']) && !is_null($data['filter_customer_id_array'])) {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
