@@ -535,12 +535,12 @@ class ControllerApiCustomerCheckout extends Controller {
 
     //    echo "<pre>";print_r($total);die;
        $recurring = $this->cart->hasRecurringProducts();
-       if($total !=$this->request->get['total'] )
-       {
-        $log = new Log('error.log');
-        $log->write('total in payment methods API not same as send amount');
-        $total =$this->request->get['total'];
-       }
+    //    if($total !=$this->request->get['total'] )
+    //    {
+    //     $log = new Log('error.log');
+    //     $log->write('total in payment methods API not same as send amount');
+    //     $total =$this->request->get['total'];
+    //    }
        
        foreach ($results as $result) {
            $log = new Log('error.log');
