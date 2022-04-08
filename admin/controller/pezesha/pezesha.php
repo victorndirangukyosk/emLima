@@ -204,6 +204,8 @@ class ControllerPezeshaPezesha extends Controller {
         $customer_pezesha_info = $this->model_pezesha_pezesha->getCustomer($customer_id);
 
         $data['filter_customer_id_array'] = $all_customers;
+        $data['filter_date_added'] = date("Y-m-d",strtotime("-3 Months"));
+        $data['filter_date_added_end'] = date("Y-m-d");
         /*$data['filter_paid'] = 'Y';*/
 
         $customer_order_info = $this->model_sale_order->getOrders($data);
