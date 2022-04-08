@@ -224,7 +224,7 @@ class ControllerPezeshaPezesha extends Controller {
             $transactions_details[] = $transactions;
         }
         if (count($transactions_details) > 100) {
-            $transactions_details = array_slice($transactions_details, 0, 100);
+            $transactions_details = array_slice(array_reverse($transactions_details), 0, 100);
         }
         $log->write($transactions_details);
 
