@@ -25,7 +25,7 @@ class ControllerApiCustomerCheckout extends Controller {
 
             $this->language->load('checkout/delivery_time');
 
-            $data['text_no_timeslot'] = $this->language->get('text_no_timeslot');
+            // $data['text_no_timeslot'] = $this->language->get('text_no_timeslot');
 
             $store_id = $this->request->get['store_id'];
             $shipping_method = $this->request->get['shipping_method'];
@@ -117,7 +117,7 @@ class ControllerApiCustomerCheckout extends Controller {
         } else {
             $json['status'] = 10013;
 
-            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_not_loggedin')];
+            $json['message'][] = ['type' => '', 'body' => 'Store Id and Shipping Method required'];
 
             http_response_code(400);
         }
