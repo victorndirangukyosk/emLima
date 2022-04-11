@@ -619,6 +619,22 @@ class ControllerSaleEditinvoice extends Controller {
 
                 $this->model_sale_order->insertOrderSubTotalAndTotal($order_id, $subTotal, $orderTotal, $p);
                 $log->write($orderTotal);
+                
+                /* UPDATE WALLET IF ORDER AMOUNT ALREADY PAID */
+                $order_transaction_id = NULL;
+                $order_transaction_data = $this->model_sale_order->getOrderTransactionId($order_id);
+                if (count($order_transaction_data) > 0) {
+                    $order_transaction_id = trim($order_transaction_data['transaction_id']);
+                }
+                if (($orderTotal < $old_total) && $order_transaction_id != NULL && ($order_info['paid'] == 'P') && (($order_info['payment_method'] == 'mPesa Online' && $order_info['payment_code'] == 'mpesa') || ($order_info['payment_method'] == 'Wallet Payment' && $order_info['payment_code'] == 'wallet') || ($order_info['payment_method'] == 'Credit/Debit Card Payment' && $order_info['payment_code'] == 'pesapal'))) {
+                    $this->load->model('sale/customer');
+                    $customer_id = $order_info['customer_id'];
+                    $description = '#' . $order_info['order_id'];
+                    $amount = $old_total - $orderTotal;
+                    $this->model_sale_order->addCredit($customer_id, $description, $amount, $order_id);
+                }
+                /* UPDATE WALLET IF ORDER AMOUNT ALREADY PAID */
+
                 //die;
                 // editDeliveryRequest
                 $this->editDeliveryRequest($order_id);
