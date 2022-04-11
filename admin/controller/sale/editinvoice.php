@@ -631,6 +631,9 @@ class ControllerSaleEditinvoice extends Controller {
                     $customer_id = $order_info['customer_id'];
                     $description = '#' . $order_info['order_id'];
                     $amount = $old_total - $orderTotal;
+                    $log->write('customer_wallet_updation');
+                    $log->write($customer_id . ' ' . $description . ' ' . $amount);
+                    $log->write('customer_wallet_updation');
                     $this->model_sale_order->addCredit($customer_id, $description, $amount, $order_id);
                 }
                 /* UPDATE WALLET IF ORDER AMOUNT ALREADY PAID */
