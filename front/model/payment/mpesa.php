@@ -66,9 +66,9 @@ class ModelPaymentMpesa extends Model {
         $log->write('order_id_transaction_id');
         $log->write($order_id . ' ' . $transaction_id);
         $log->write('order_id_transaction_id');
-        $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
+        /*$sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
 
-        $query = $this->db->query($sql);
+        $query = $this->db->query($sql);*/
 
         $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $order_id . "', customer_id = '" . $customer_id . "', amount = '" . $amount . "', transaction_id = '" . $transaction_id . "', created_at = NOW()";
 
@@ -257,9 +257,9 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function insertCustomerTransactionId($customer_id, $transaction_id, $merchant_requestid = 0, $amount = '') {
-        $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id='" . (int) $customer_id . "'and merchant_request_id ='" . $merchant_requestid . "'";
+        /*$sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id='" . (int) $customer_id . "'and merchant_request_id ='" . $merchant_requestid . "'";
 
-        $query = $this->db->query($sql);
+        $query = $this->db->query($sql);*/
         // $this->deleteCustomerTransactionId($customer_id, $transaction_id);
 
         $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = 0 ,customer_id='" . $customer_id . "', amount = '" . $amount . "', transaction_id = '" . $transaction_id . "', merchant_request_id = '" . $merchant_requestid . "', created_at = NOW()";
