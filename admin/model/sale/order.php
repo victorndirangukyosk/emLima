@@ -451,6 +451,108 @@ class ModelSaleOrder extends Model {
         return $returnData;
     }
 
+    public function getProductVariationsDisabled($product_name, $store_id, $order_id,$product_id, $price,$formated = false) {
+        $returnData = [];
+
+        $this->load->model('sale/order');
+        $this->load->model('account/customer');
+        $order_info = $this->model_sale_order->getOrder($order_id);
+        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
+        /* IF CUSTOMER SUB CUSTOMER */
+        $parent_customer_info = NULL;
+        if (isset($customer_info) && $customer_info['parent'] > 0) {
+            $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
+        }
+
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' and ps.product_store_id='$product_id'";//ps.status=1
+
+        $result = $this->db->query($all_variations);
+
+        foreach ($result->rows as $r) {
+            // if ($r['status'])
+             {
+                //REMOVED QUANTITY VALIDATION
+                //if ($r['quantity'] > 0 && $r['status']) {
+                $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
+
+                $r['key'] = $key;
+                $r['price']=$r['price']=$price;
+                $percent_off = null;
+                if (isset($r['special_price']) && isset($r['price']) && 0 != $r['price'] && 0 != $r['special_price']) {
+                    $percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
+                }
+
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $r['price'] = $this->currency->formatWithoutCurrency($r['price']);
+                }
+
+                if ((float) $r['special_price']) {
+                    $r['special_price'] = $this->currency->formatWithoutCurrency((float) $r['special_price']);
+                } else {
+                    $r['special_price'] = false;
+                }
+
+                if ($parent_customer_info == NULL && $customer_info != NULL && array_key_exists('customer_category', $customer_info) && $customer_info['customer_category'] != NULL) {
+                    $category_price_data = $this->getCategoryPrices($r['product_store_id'], $store_id, $customer_info['customer_category']);
+                    $log = new Log('error.log');
+                    $log->write($category_price_data);
+
+                    if (is_array($category_price_data) && count($category_price_data) > 0) {
+                        $category_price = $this->currency->formatWithoutCurrency((float) $category_price_data['price']);
+                        $category_price_status = $category_price_data['status'];
+                    } else {
+                        $category_price = 0;
+                        $category_price_status = 1;
+                    }
+                } elseif ($parent_customer_info != NULL && array_key_exists('customer_category', $parent_customer_info) && $parent_customer_info['customer_category'] != NULL) {
+                    $category_price_data = $this->getCategoryPrices($r['product_store_id'], $store_id, $parent_customer_info['customer_category']);
+                    $log = new Log('error.log');
+                    $log->write($category_price_data);
+
+                    if (is_array($category_price_data) && count($category_price_data) > 0) {
+                        $category_price = $this->currency->formatWithoutCurrency((float) $category_price_data['price']);
+                        $category_price_status = $category_price_data['status'];
+                    } else {
+                        $category_price = 0;
+                        $category_price_status = 1;
+                    }
+                } else {
+                    $category_price = 0;
+                    $category_price_status = 1;
+                }
+                $r['category_price'] = $category_price;
+                $r['category_price_status'] = $category_price_status;
+                $r['category_price_variant'] = $category_price > 0 && $category_price_status == 0 ? 'disabled' : '';
+                $r['model'] = $r['model'];
+
+                $res = [
+                    'variation_id' => $r['product_store_id'],
+                    'unit' => $r['unit'],
+                    'weight' => floatval($r['weight']),
+                    'price' => $r['price'],
+                    'special' => $r['special_price'],
+                    'percent_off' => number_format($percent_off, 0),
+                    'category_price' => $category_price,
+                    'category_price_status' => $category_price_status,
+                    'category_price_variant' => $category_price > 0 && $category_price_status == 0 ? 'disabled' : '',
+                    'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
+                    'qty_in_cart' => isset($r['qty_in_cart']) ? $r['qty_in_cart'] : NULL,
+                    'key' => $key,
+                    'model' => $r['model']
+                ];
+
+                if (true == $formated) {
+                    array_push($returnData, $res);
+                } else {
+                    array_push($returnData, $r);
+                }
+            }
+        }
+
+        return $returnData;
+    }
+
     public function getVendorProductVariationsNew($product_name, $store_id, $vendor_category_price_product, $formated = false) {
         $returnData = [];
 
