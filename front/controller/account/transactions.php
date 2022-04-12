@@ -800,7 +800,7 @@ class Controlleraccounttransactions extends Controller {
                 $merchant_reference = $this->request->get['pesapal_merchant_reference'];
                 $customer_id = $customer_info['customer_id'];
                 $this->model_payment_pesapal->insertOrderTransactionIdPesapal($ord_ar, $transaction_tracking_id, $merchant_reference, $customer_id);
-                $this->model_payment_pesapal->OrderTransaction($ord_ar, $transaction_tracking_id);
+                //$this->model_payment_pesapal->OrderTransaction($ord_ar, $transaction_tracking_id);
                 $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $ord_ar);
             }
         }
@@ -900,6 +900,7 @@ class Controlleraccounttransactions extends Controller {
                 } elseif ($response != null && $status != null && $status == 'PENDING') {
                     $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                 } elseif ($response != null && $status != null && $status == 'COMPLETED') {
+                    $this->model_payment_pesapal->OrderTransaction($order_id, $pesapalTrackingId, $order_info['customer_id'], abs($order_info['amount_partialy_paid'] - $order_info['total']));
                     $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                 } else {
                     $this->model_payment_pesapal->updateorderstatusipnOther($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
@@ -913,6 +914,7 @@ class Controlleraccounttransactions extends Controller {
                     $this->model_payment_pesapal->addOrderHistoryFailed($order_id, $this->config->get('pesapal_pending_order_status_id'), $customer_id, 'customer', $order_info['paid']);
                     $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                 } elseif ($response != null && $status != null && $status == 'COMPLETED') {
+                    $this->model_payment_pesapal->OrderTransaction($order_id, $pesapalTrackingId, $order_info['customer_id'], abs($order_info['amount_partialy_paid'] - $order_info['total']));
                     $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $order_info['paid']);
                     $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
                 }

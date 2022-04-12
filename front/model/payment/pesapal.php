@@ -210,8 +210,8 @@ class ModelPaymentPesapal extends Model {
         }
     }
 
-    public function OrderTransaction($order_id, $transaction_id) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $order_id . "', transaction_id = '" . $transaction_id . "'");
+    public function OrderTransaction($order_id, $transaction_id, $customer_id = '', $amount = '') {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $order_id . "', transaction_id = '" . $transaction_id . "', customer_id = '" . $customer_id . "', amount = '" . $amount . "', created_at = NOW()");
     }
 
     public function getPesapalOtherAmount($customer_id) {
