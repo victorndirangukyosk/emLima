@@ -753,6 +753,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $this->load->model('payment/mpesa');
         $this->load->model('account/order');
         $this->load->model('sale/order');
+        $this->load->model('checkout/order');
 
         $postData = file_get_contents('php://input');
 
@@ -801,7 +802,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                         if ('MpesaReceiptNumber' == $value->Name) {
                             $this->model_sale_order->UpdatePaymentMethod($manifest_id['order_id'], 'mPesa Online', 'mpesa');
-                            $this->model_payment_mpesa->insertOrderTransactionId($manifest_id['order_id'], $value->Value);
+                            $order_info = $this->model_checkout_order->getOrder($manifest_id['order_id']);
+                            $this->model_payment_mpesa->insertOrderTransactionId($manifest_id['order_id'], $value->Value, $order_info['customer_id'], abs($order_info['amount_partialy_paid'] - $order_info['total']));
                         }
                     }
                 }
@@ -871,9 +873,13 @@ class ControllerDeliversystemDeliversystem extends Controller {
             if (isset($stkCallback->stkCallback->CallbackMetadata->Item)) {
                 foreach ($stkCallback->stkCallback->CallbackMetadata->Item as $key => $value) {
                     $log->write($value);
+                    
+                    if ('Amount' == $value->Name) {
+                        $amount_topup = $value->Value;
+                    }
 
                     if ('MpesaReceiptNumber' == $value->Name) {
-                        $this->model_payment_mpesa->insertCustomerTransactionId($manifest_id_customer, $value->Value, $stkCallback->stkCallback->MerchantRequestID);
+                        $this->model_payment_mpesa->insertCustomerTransactionId($manifest_id_customer, $value->Value, $stkCallback->stkCallback->MerchantRequestID, $amount_topup);
                         // $transaction_id=$value->Value;wrong
                         $log->write('mpesa wallet customer id not coming');
                         $log->write($manifest_id_customer);
@@ -973,7 +979,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                         if ('MpesaReceiptNumber' == $value->Name) {
                             $MpesaReceiptNumber = $value->Value;
-                            $this->model_payment_mpesa->insertOrderTransactionId($manifest_ids['order_id'], $value->Value);
+                            $order_info = $this->model_checkout_order->getOrder($manifest_ids['order_id']);
+                            $this->model_payment_mpesa->insertOrderTransactionId($manifest_ids['order_id'], $value->Value, $order_info['customer_id'], abs($order_info['amount_partialy_paid'] - $order_info['total']));
                             $this->model_payment_mpesa->updateMpesaOrderByMerchant($manifest_ids['order_id'], $value->Value, $stkCallback->stkCallback->CheckoutRequestID);
                         }
                     }
