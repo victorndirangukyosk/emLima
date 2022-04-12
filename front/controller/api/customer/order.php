@@ -3987,8 +3987,25 @@ class ControllerApiCustomerOrder extends Controller {
                     $log->write($other_vendor_delivery_time);
                     $log->write('other_vendor_delivery_time');
                     //$other_vendor_delivery_time = $this->getothervendordeliverytime($store_id);
-                    $order_data[$store_id]['delivery_date'] = $other_vendor_delivery_time['selected_time_slot_date'];
+                    
+                    if($other_vendor_delivery_time!=null && $other_vendor_delivery_time['selected_time_slot_date']!=null && $other_vendor_delivery_time['selected_time_slot_date']!='')
+                    {
+                        $order_data[$store_id]['delivery_date'] = $other_vendor_delivery_time['selected_time_slot_date'];
                     $order_data[$store_id]['delivery_timeslot'] = $other_vendor_delivery_time['selected_time_slot_time'];
+                    }
+                    else
+                    {
+                        if (isset($args['stores'][$store_id]['dates'])) {
+                            $order_data[$store_id]['delivery_date'] = $args['stores'][$store_id]['dates'];
+                        } else {
+                            $order_data[$store_id]['delivery_date'] = date('d-m-Y');
+                        }
+
+                        if (isset($args['stores'][$store_id]['timeslot'])) {
+                            $order_data[$store_id]['delivery_timeslot'] = $args['stores'][$store_id]['timeslot'];
+                        }
+                        
+                    }
                 }
             }
             $order_data[$store_id]['login_latitude'] = $args['login_latitude'];
