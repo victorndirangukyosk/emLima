@@ -1883,7 +1883,7 @@ class ModelAccountOrder extends Model {
         $description = 'Wallet amount deducted#' . $order_id;
         $this->db->query('DELETE FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $customer_id . "' and  order_id = '" . (int) $order_id . "'");
         $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $description . "', amount = '" . (float) ($total * -1) . "', date_added = NOW()");
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', transaction_id = 'Paid from wallet amount'");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET customer_id = '" . (int) $customer_id . "', amount = '" . (float) $total . "', order_id = '" . (int) $order_id . "', transaction_id = 'Paid from wallet amount'");
 
         $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0 ,total='" . (float) $total . "'  WHERE order_id='" . (int) $order_id . "'");
 
