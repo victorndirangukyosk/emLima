@@ -235,10 +235,7 @@ class ModelAccountWishList extends Model
 
     public function getProductOfWishlist($wishlist_id, $product_id)
     {
-        $query = $this->db->query('Select wp.*,ps.store_id from `'.DB_PREFIX.'wishlist_products` wp join `'.DB_PREFIX.'product_to_store` ps on wp.product_id=ps.product_id where wp.wishlist_id = '.(int) $wishlist_id.' and wp.product_id ='.$product_id);
-        
-        // echo "<pre>";print_r($query);die;
-        // $store_product = $this->db->query('select * from `'.DB_PREFIX.'product_to_store` WHERE product_id="'.$wishlist['product_id'].'"')->row;
+        $query = $this->db->query('Select * from `'.DB_PREFIX.'wishlist_products` where wishlist_id = '.(int) $wishlist_id.' and product_id ='.$product_id);
 
         return $query->row;
     }
