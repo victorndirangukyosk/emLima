@@ -556,6 +556,7 @@ class ControllerApiCustomerWishlist extends Controller
     }
  
 
+    //below API not using in mobile APP, confirmed by SAmuel ,so Active StoreID not using
     public function getAvailableOrderProducts()
     {
 
