@@ -691,7 +691,7 @@ class ControllerAccountWishList extends Controller {
             $log->write('Wish List Products');
             $log->write($wishlist_product);
             $log->write('Wish List Products');
-            $store_data = $this->model_assets_product->getProductStoreId($product_id, 75);
+            $store_data = $this->model_assets_product->getProductStoreId($product_id, $wishlist_product['store_id']);
             $log->write('Store Details123');
             $log->write($store_data);
             $log->write('Store Details123');
