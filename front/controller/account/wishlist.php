@@ -643,7 +643,7 @@ class ControllerAccountWishList extends Controller {
                 $log->write($wishlist_product['product_id']);
                 $log->write('Wish List Products 2');
                 $this->load->model('assets/product');
-                $store_data = $this->model_assets_product->getProductStoreId($wishlist_product['product_id'], 75);
+                $store_data = $this->model_assets_product->getProductStoreId($wishlist_product['product_id'], $wishlist_product['store_id']);
                 $product_info = $this->model_assets_product->getDetailproduct($store_data['product_store_id']);
 
                 $category_status_price_details = $this->model_assets_product->getCategoryPriceStatusByProductStoreId($store_data['product_store_id']);
