@@ -73,6 +73,20 @@
               <input type="text" name="wallet_sort_order" value="<?php echo $wallet_sort_order; ?>" placeholder="<?php echo $entry_sort_order; ?>" id="input-sort-order" class="form-control" />
             </div>
           </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_refund_to_wallet; ?></label>
+            <div class="col-sm-10">
+              <select name="refund_to_wallet" id="input-refund-to-wallet" class="form-control">
+                <?php if ($refund_to_wallet) { ?>
+                <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+                <option value="0"><?php echo $text_disabled; ?></option>
+                <?php } else { ?>
+                <option value="1"><?php echo $text_enabled; ?></option>
+                <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+                <?php } ?>
+              </select>
+            </div>
+          </div>  
         </form>
       </div>
     </div>

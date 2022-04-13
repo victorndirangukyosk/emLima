@@ -41,6 +41,7 @@ class ControllerPaymentWallet extends Controller
         $data['entry_total'] = $this->language->get('entry_total');
         $data['entry_status'] = $this->language->get('entry_status');
         $data['entry_sort_order'] = $this->language->get('entry_sort_order');
+        $data['entry_refund_to_wallet'] = $this->language->get('entry_refund_to_wallet');
 
         $data['help_total'] = $this->language->get('help_total');
 
@@ -109,6 +110,12 @@ class ControllerPaymentWallet extends Controller
             $data['wallet_sort_order'] = $this->request->post['wallet_sort_order'];
         } else {
             $data['wallet_sort_order'] = $this->config->get('wallet_sort_order');
+        }
+        
+        if (isset($this->request->post['refund_to_wallet'])) {
+            $data['refund_to_wallet'] = $this->request->post['refund_to_wallet'];
+        } else {
+            $data['refund_to_wallet'] = $this->config->get('refund_to_wallet');
         }
 
         $data['header'] = $this->load->controller('common/header');
