@@ -180,10 +180,10 @@ class ControllerSaleEditinvoice extends Controller {
 
                     $variations = $this->model_sale_order->getProductVariationsNew($product['name'], 75, $order_id);
                     if (array_search($product['product_id'], array_column($variations, 'product_store_id')) !== FALSE) {
-                        echo 'FOUND!';
+                        //echo 'FOUND!';
                         $variationsold =$variations;
                       } else {
-                        echo 'NOT FOUND!';
+                        //echo 'NOT FOUND!';
                     $variation_disabled = $this->model_sale_order->getProductVariationsDisabled($product['name'], 75, $order_id,$product['product_id'],$product['price']);
                     $variationsold =array_merge($variations,$variation_disabled);
 
