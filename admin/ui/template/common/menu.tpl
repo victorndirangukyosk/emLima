@@ -73,6 +73,12 @@
              <?php if($preturn_inventory_wastage != false){ ?>
             
             <li><a href="<?php echo $inventory_wastage; ?>">Wastage</a></li>
+          <?php } ?>
+
+
+             <?php if($preturn_vendor_product_dispatch != false){ ?>
+
+            <li><a href="<?php echo $vendor_product_dispatch ; ?>">Dispatch</a></li>
             
           <?php } ?>
 
