@@ -141,8 +141,8 @@ $('#button-filter').on('click', function() {
   
   if(filter_customer==0 && filter_company==0)
   {
-    alert("Please select either customer or company ");
-    return;
+    //alert("Please select either customer or company ");
+    //return;
   }
 
 	
@@ -278,8 +278,8 @@ function excel() {
   
   if(filter_customer==0 && filter_company==0)
   {
-    alert("Please select either customer or company ");
-    return;
+   // alert("Please select either customer or company ");
+   // return;
   }
   
 
