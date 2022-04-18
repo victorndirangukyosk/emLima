@@ -68,6 +68,13 @@ class ControllerInventoryInventoryWastage extends Controller {
             $filter_date_added = null;
         }
 
+
+        if (isset($this->request->get['filter_date_added_to'])) {
+            $filter_date_added_to = $this->request->get['filter_date_added_to'];
+        } else {
+            $filter_date_added_to = null;
+        }
+
         if (isset($this->request->get['filter_group_by_date'])) {
             $filter_group_by_date = $this->request->get['filter_group_by_date'];
         } else {
@@ -104,6 +111,10 @@ class ControllerInventoryInventoryWastage extends Controller {
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+        }
+
+        if (isset($this->request->get['filter_date_added_to'])) {
+            $url .= '&filter_date_added_to=' . $this->request->get['filter_date_added_to'];
         }
 
         if (isset($this->request->get['filter_product_id_from'])) {
@@ -172,6 +183,7 @@ class ControllerInventoryInventoryWastage extends Controller {
             'filter_status' => $filter_status,
             'filter_group_by_date' => $filter_group_by_date,
             'filter_date_added' => $filter_date_added,
+            'filter_date_added_to' => $filter_date_added_to,
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -315,6 +327,10 @@ class ControllerInventoryInventoryWastage extends Controller {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
+        if (isset($this->request->get['filter_date_added_to'])) {
+            $url .= '&filter_date_added_to=' . $this->request->get['filter_date_added_to'];
+        }
+
         if (isset($this->request->get['filter_category'])) {
             $url .= '&filter_category=' . urlencode(html_entity_decode($this->request->get['filter_category'], ENT_QUOTES, 'UTF-8'));
         }
@@ -378,6 +394,10 @@ class ControllerInventoryInventoryWastage extends Controller {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
+        if (isset($this->request->get['filter_date_added_to'])) {
+            $url .= '&filter_date_added_to=' . $this->request->get['filter_date_added_to'];
+        }
+
         if (isset($this->request->get['filter_category'])) {
             $url .= '&filter_category=' . urlencode(html_entity_decode($this->request->get['filter_category'], ENT_QUOTES, 'UTF-8'));
         }
@@ -417,6 +437,7 @@ class ControllerInventoryInventoryWastage extends Controller {
         $data['filter_status'] = $filter_status;
         $data['filter_group_by_date'] = $filter_group_by_date;
         $data['filter_date_added'] = $filter_date_added;
+        $data['filter_date_added_to'] = $filter_date_added_to;
 
 
         $data['sort'] = $sort;
