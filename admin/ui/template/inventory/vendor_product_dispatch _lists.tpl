@@ -12,7 +12,7 @@
                 <button type="button" data-toggle="tooltip" title="Update Inventory" class="btn btn-default" onclick="updateinventory();"><i class="fa fa-floppy-o text-success"></i></button>
             
             </div>
-            <h1>Products Received By dispatch</h1>
+            <h1>Products Received By Dispatch</h1>
             <ul class="breadcrumb">
                 <?php foreach ($breadcrumbs as $breadcrumb) { ?>
                 <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
@@ -262,7 +262,7 @@
                                         <?php echo $product['status']; ?>
                                     </td>-->
                                     <td class="text-left">
-                                         <input style="max-width: 75px !important; text-align: right;" name="buying_price" type="text" onkeypress="return validateFloatKeyPress(this, event);" class="buying_price" data-general_product_id="<?php echo $product['product_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-buying-price="<?php echo $product['buying_price']; ?>" id="buying_price_<?php echo $product['product_store_id'];?>" value="<?php echo $product['buying_price']; ?>">
+                                         <input style="max-width: 75px !important; text-align: right;" name="buying_price" type="text" onkeypress="return validateFloatKeyPress(this, event);" class="buying_price" data-general_product_id="<?php echo $product['product_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-buying-price="<?php echo $product['buying_price']; ?>" id="buying_price_<?php echo $product['product_store_id'];?>" value="<?php echo $product['buying_price_source']; ?>">
                                    <!--</td>
 				    <td class="text-left">
                                         <input style="max-width: 75px !important;" name="source" type="text" class="source" id="source_<?php echo $product['product_store_id'];?>" data-current-source="<?php echo $product['source']; ?>" value="<?php echo $product['source']; ?>">
@@ -272,7 +272,7 @@
                                     <input style="max-width: 75px !important; text-align: right;" name="current_qty_in_warehouse" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="current_qty_in_warehouse" data-general_product_id="<?php echo $product['product_id']; ?>" data-product_store_id="<?php echo $product['product_store_id']; ?>"  data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="current_qty_in_warehouse_<?php echo $product['product_store_id'];?>" value="<?php echo $product['quantity'] ?>">
                                     </td>-->
                                     <td class="text-left">
-                                        <input style="max-width: 75px !important; text-align: right; " name="total_received_qty" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="procured_qty" data-general_product_id="<?php echo $product['product_id']; ?>" data-product_store_id="<?php echo $product['product_store_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="total_received_qty_<?php echo $product['product_store_id'];?>" value="">
+                                        <input style="max-width: 75px !important; text-align: right; " name="total_procured_qty" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="procured_qty" data-general_product_id="<?php echo $product['product_id']; ?>" data-product_store_id="<?php echo $product['product_store_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="total_procured_qty_<?php echo $product['product_store_id'];?>" value="">
                                     </td>
                                     <!--<td class="text-left">
                                         <input style="max-width: 75px !important; text-align: right; " name="rejected_qty" type="text" class="rejected_qty" onkeypress="return validateFloatKeyPress(this, event);" id="rejected_qty_<?php echo $product['product_store_id'];?>" data-product_store_id="<?php echo $product['product_store_id']; ?>" data-current-qty="<?php echo $product['quantity']; ?>" value="">
@@ -382,25 +382,25 @@
                             </div>   
                         </div>
                         <div class="col-sm-6">
-                            <div class="form-group required">
+                            <!--<div class="form-group required">
                                 <label for="source" class="col-form-label">Source</label>
                                 <input placeholder="Search Supplier/Farmer" type="text" class="form-control" id="new_buying_source" data-new-buying-source-id="" name="new_buying_source" style="max-width: 568px !important;">
-                            </div>   
+                            </div>-->   
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group required">
-                                <label for="procured-quantity" class="col-form-label">Procured Quantity</label>
+                                <label for="procured-quantity" class="col-form-label">Total Received Quantity</label>
                                 <input type="number" class="form-control" id="new_procured_quantity" name="new_procured_quantity" min="0.01" style="max-width: 568px !important;">
                             </div>   
                         </div>
-                        <div class="col-sm-6">
+                       <!-- <div class="col-sm-6">
                             <div class="form-group required">
                                 <label for="source" class="col-form-label">Rejected Quantity</label>
                                 <input type="number" class="form-control" id="new_rejected_quantity" name="new_rejected_quantity" min="0" value="0" style="max-width: 568px !important;">
                             </div>   
-                        </div>
+                        </div>-->
                     </div>
                 </form>
             </div>
@@ -409,8 +409,7 @@
                 </div>
                 <div class="alert alert-success" style="display:none;">
                 </div>
-                <div class="alert alert-success download" style="display:none;">
-                </div>
+                
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="update_inventory_form" name="update_inventory_form">Update Inventory</button>
             </div>
@@ -465,7 +464,7 @@ function submit_copy() {
     }
     
     if(!$error){        
-        $('form').attr('action','index.php?path=catalog/product/copy&token=<?= $token ?>').submit();
+        $('form').attr('action','index.php?path=inventory/vendor_product_dispatch/copy&token=<?= $token ?>').submit();
     } else{        
         $('.message_wrapper').html('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-label="Close">&times</button><ul class="list list-unstyled">'+$error+'</ul></div>');
     }
@@ -473,7 +472,7 @@ function submit_copy() {
 
   $('#button-filter').on('click', function() {
 
-            var url = 'index.php?path=catalog/vendor_product/inventory&token=<?php echo $token; ?>';
+            var url = 'index.php?path=inventory/vendor_product_dispatch/inventory&token=<?php echo $token; ?>';
 
             var filter_name = $('input[name=\'filter_name\']').val();
 
@@ -647,97 +646,9 @@ function getProductInventoryHistory(product_store_id){
         $('input[name=\'filter_vendor_name\']').val(item['label']);
     }
 });
+ 
 
-function ChangeProductInventory(product_store_id){
-    return false;
-    var data_array = [];
-    $(".procured_qty").each(function() {
-        var tempObj ={};
-        var procured_qty = $(this).val();
-        if(procured_qty != undefined){
-            
-            var vendor_product_id = $(this).attr('data-product_store_id');
-            var general_product_id = $(this).attr('data-general_product_id');
-            var product_name = $(this).attr('data-name');
-	    var current_qty = $(this).attr('data-current-qty');
-            var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();
-            
-            var current_buying_price = $('#buying_price_'+vendor_product_id).val();
-            var source = $('#source_'+vendor_product_id).val();
-            
-            tempObj.product_store_id = vendor_product_id;
-            tempObj.product_id = general_product_id;
-            tempObj.product_name = product_name;
-            tempObj.procured_qty = procured_qty;
-            tempObj.rejected_qty = rejected_qty;
-	    tempObj.current_qty = current_qty;
-            tempObj.current_buying_price = current_buying_price;
-            tempObj.source = source;
-            if(product_store_id==vendor_product_id)
-            data_array.push(tempObj);
-        }
-    });
-    console.log('data_array',data_array);
-    console.log('data_array_length',data_array.length);
-    if(data_array.length  > 0){
-           $.ajax({
-                    url: 'index.php?path=catalog/product/updateInventory&token=<?= $token ?>',
-                    dataType: 'json',
-                    data: {updated_products :data_array},
-                    success: function(json) {
-                        if (json) {
-                            $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
-                        }
-                        else {
-                            location.reload();
-                        }
-                  }
-         });
-    }
-
-}
-
-
-function ChangeInventory(){
-    var data_array = [];
-    $(".procured_qty").each(function() {
-        var tempObj ={};
-        var procured_qty = $(this).val();
-        if(procured_qty != undefined){
-            
-            var vendor_product_id = $(this).attr('data-product_store_id');
-            var general_product_id = $(this).attr('data-general_product_id');
-            var product_name = $(this).attr('data-name');
-	    var current_qty = $(this).attr('data-current-qty');
-            var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();
-            tempObj.product_store_id = vendor_product_id;
-            tempObj.product_id = general_product_id;
-            tempObj.product_name = product_name;
-            tempObj.procured_qty = procured_qty;
-            tempObj.rejected_qty = rejected_qty;
-	    tempObj.current_qty = current_qty;
-            data_array.push(tempObj);
-        }
-    });
-    console.log('data_array',data_array);
-    console.log('data_array_length',data_array.length);
-    if(data_array.length  > 0){
-           $.ajax({
-                    url: 'index.php?path=catalog/product/updateInventory&token=<?= $token ?>',
-                    dataType: 'json',
-                    data: {updated_products :data_array},
-                    success: function(json) {
-                        if (json) {
-                            $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
-                        }
-                        else {
-                            location.reload();
-                        }
-                  }
-         });
-    }
-
-}
+ 
 
 $('input.current_qty_in_warehouse').keyup(function(){
   	var current_qty_in_warehouse = $(this).val();
@@ -880,16 +791,16 @@ $('input[name="selected[]"]:checked').each(function() {
 var data_inventory = {};
 var vendor_product_id = $(this).val();
 var buying_price = $('#buying_price_'+vendor_product_id).val(); 
-var source = $('#source_'+vendor_product_id).val();  
-var current_qty = $('#current_qty_in_warehouse_'+vendor_product_id).val(); 
+//var source = $('#source_'+vendor_product_id).val();  
+//var current_qty = $('#current_qty_in_warehouse_'+vendor_product_id).val(); 
 var total_procured_qty = $('#total_procured_qty_'+vendor_product_id).val(); 
-var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();  
-var total_qty = $('#total_qty_'+vendor_product_id).val();   
+//var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();  
+//var total_qty = $('#total_qty_'+vendor_product_id).val();   
 
 var general_product_id = $('#buying_price_'+vendor_product_id).attr('data-general_product_id');
 var product_name = $('#buying_price_'+vendor_product_id).attr('data-name');
 
-data_inventory[vendor_product_id] = { 'vendor_product_id' : vendor_product_id, 'buying_price' : buying_price, 'source' : source, 'current_qty' : current_qty, 'total_procured_qty' : total_procured_qty, 'rejected_qty' : rejected_qty, 'total_qty' : total_qty, 'product_id' : general_product_id, 'product_name' : product_name};
+data_inventory[vendor_product_id] = { 'vendor_product_id' : vendor_product_id, 'buying_price' : buying_price,  'received_qty' : total_procured_qty,  'product_id' : general_product_id, 'product_name' : product_name};
 console.log(data_inventory);
 data_array.push(data_inventory);
 console.log(data_array);
@@ -897,7 +808,7 @@ console.log(data_array);
 
     if(data_array.length  > 0){
            $.ajax({
-                    url: 'index.php?path=catalog/product/updateMultiInventory&token=<?= $token ?>',
+                    url: 'index.php?path=inventory/vendor_product_dispatch/updateMultiInventory&token=<?= $token ?>',
                     dataType: 'json',
                     data: {updated_products :data_array},
                     success: function(json) {
@@ -916,13 +827,13 @@ console.log(data_array);
 
 $('input[name=\'new_vendor_product_name\']').autocomplete({
             'source': function(request, response) {
-                $.ajax({
-                    url: 'index.php?path=dropdowns/dropdowns/product_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                $.ajax({ 
+                    url: 'index.php?path=catalog/product/product_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function(json) {
                         response($.map(json, function(item) {
                             return {
-                                label: item['name']+' '+item['unit'],
+                                label: item['name'],
                                 value: item['product_store_id']
                             }
                         }));
@@ -932,11 +843,13 @@ $('input[name=\'new_vendor_product_name\']').autocomplete({
             'select': function(item) {
                 console.log(item['value']);
                 var selected_product_store_id = item['value'];
+                var selected_product_store_name = item['label'];
+
                 $('#new_vendor_product_name').attr('data-vendor-product-id', selected_product_store_id);
-                $('#new_vendor_product_name').attr('data-vendor-product-name', selected_product_store_id);
+                $('#new_vendor_product_name').attr('data-vendor-product-name', selected_product_store_name);
                 $('input[name=\'new_vendor_product_name\']').val(item['label']);
                 $.ajax({
-                url: 'index.php?path=dropdowns/dropdowns/getVendorProductVariantsInfo&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>',
+                url: 'index.php?path=catalog/product/getVendorProductVariantsInfo&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>',
                 dataType: 'json',     
                 success: function(json) {
                     console.log(json);
@@ -970,31 +883,30 @@ $('#new_vendor_product_name').attr('data-vendor-product-id', "");
 $('#new_vendor_product_name').attr('data-vendor-product-name', "");
 $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id', "");
 $('.alert.alert-success').html('');
-$('.alert.alert-success.download').html('');
 $('.alert.alert-danger').html('');
-$('.alert.alert-success.download').hide();
 $('.alert.alert-success').hide();
 $('.alert.alert-danger').hide();
 });
 
 $('button[id^=\'update_inventory_form\']').on('click', function (e) {
 var vendor_product_uom = $('#new_vendor_product_uom').val();
+//alert($( "#new_vendor_product_uom option:selected" ).attr('data-product_id'));
+
 var buying_price = $('#new_buying_price').val();
-var buying_source = $('#new_buying_source').val();
+//var buying_source = $('#new_buying_source').val();
 var procured_quantity = $('#new_procured_quantity').val();
-var rejected_quantity = $('#new_rejected_quantity').val();
-var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
-var buying_source_id = $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id');
+//var rejected_quantity = $('#new_rejected_quantity').val();
+//var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
+var vendor_product_id = $('#new_vendor_product_uom  option:selected').attr('data-product_id');
+//var buying_source_id = $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id');
 $('.alert.alert-success').html('');
-$('.alert.alert-success.download').html('');
 $('.alert.alert-danger').html(''); 
-$('.alert.alert-success.download').hide();
 $('.alert.alert-success').hide();
 $('.alert.alert-danger').hide();    
 $.ajax({
-        url: 'index.php?path=catalog/product/updateInventorysingle&token=<?= $token ?>',
+        url: 'index.php?path=inventory/vendor_product_dispatch/updateInventorysingle&token=<?= $token ?>',
         dataType: 'json',
-        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'buying_source_id' : buying_source_id, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_id' : vendor_product_id  },
+        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price,  'received_quantity' : total_procured_qty,  'vendor_product_id' : vendor_product_id  },
         async: true,
         beforeSend: function() {
         $('#update_inventory_form').prop('disabled', true);
@@ -1007,11 +919,10 @@ $.ajax({
         if (json) {
         if(json['status'] == '200') {
         $('.alert.alert-success').html('');
-        $('.alert.alert-success.download').html('');
         $('.alert.alert-success').html('<i class="fa fa-check-circle text-success">'+json['message']+'</i>');
-        $('.alert.alert-success.download').html('<button id="download_inventory_voucher" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Download Voucher" data-inventory-voucher="'+json['data']+'"><i class="fa fa-download text-success"></i></button>');
         $('.alert.alert-success').show();
-        $('.alert.alert-success.download').show();
+                    location.reload();
+
         console.log(json);
         }
         if(json['status'] == '400') {

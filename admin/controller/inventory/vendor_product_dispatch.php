@@ -1223,37 +1223,39 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
         $log->write($this->request->post);
         $log->write($this->request->get);
 
-        if ($this->request->get['vendor_product_id'] != NULL && $this->request->get['vendor_product_uom'] != NULL && $this->request->get['buying_price'] != NULL && $this->request->get['procured_quantity'] != NULL && $this->request->get['rejected_quantity'] != NULL) {
+        if ($this->request->get['vendor_product_id'] != NULL && $this->request->get['vendor_product_uom'] != NULL && $this->request->get['buying_price'] != NULL && $this->request->get['received_quantity'] != NULL ) {
             $this->load->language('catalog/product');
-            $this->load->model('catalog/vendor_product');
+            $this->load->language('catalog/product');
+            $this->load->model('inventory/vendor_product_dispatch');
             $this->load->model('user/farmer');
-            $this->load->model('user/supplier');
+            $this->load->model('catalog/vendor_product');
+            // $this->load->model('user/supplier');
 
-            $supplier_details = $this->model_user_supplier->getSupplier($this->request->get['buying_source_id']);
-            if ($supplier_details == NULL) {
-                $supplier_details = $this->model_user_farmer->getFarmer($this->request->get['buying_source_id']);
-            }
+            // $supplier_details = $this->model_user_supplier->getSupplier($this->request->get['buying_source_id']);
+            // if ($supplier_details == NULL) {
+            //     $supplier_details = $this->model_user_farmer->getFarmer($this->request->get['buying_source_id']);
+            // }
 
-            $log->write('supplier_details');
-            $log->write($supplier_details);
-            $log->write('supplier_details');
+            // $log->write('supplier_details');
+            // $log->write($supplier_details);
+            // $log->write('supplier_details');
 
             $product_details = $this->model_catalog_vendor_product->getProduct($this->request->get['vendor_product_id']);
             $log->write($product_details);
             $vendor_product_uom = $this->request->get['vendor_product_uom'];
             $buying_price = $this->request->get['buying_price'];
-            $buying_source = $this->request->get['buying_source'];
-            $buying_source_id = $this->request->get['buying_source_id'];
-            $procured_quantity = $this->request->get['procured_quantity'];
-            $rejected_quantity = $this->request->get['rejected_quantity'];
+            // $buying_source = $this->request->get['buying_source'];
+            // $buying_source_id = $this->request->get['buying_source_id'];
+            $received_quantity = $this->request->get['received_quantity'];
+            // $rejected_quantity = $this->request->get['rejected_quantity'];
             $vendor_product_id = $this->request->get['vendor_product_id'];
 
-            $product['rejected_qty'] = $rejected_quantity;
-            $product['procured_qty'] = $procured_quantity;
+            $product['received_quantity'] = $received_quantity;
+            // $product['procured_qty'] = $procured_quantity;
             $product['current_buying_price'] = $buying_price;
-            $product['source'] = $buying_source;
+            // $product['source'] = $buying_source;
             //$product['current_qty'] = $procured_quantity - $rejected_quantity;
-            $product['current_qty'] = $product_details['quantity'];
+            $product['current_qty'] = $product_details['quantity_store'];
             $product['product_name'] = $product_details['name'];
             $product['product_id'] = $product_details['product_id'];
 
@@ -1262,10 +1264,10 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
             $log->write('RESULT');
             $log->write($result);
             $log->write('RESULT');
-            $json['data'] = $this->url->link('catalog/vendor_product/inventoryvoucher', 'token=' . $this->session->data['token'] . '&product_history_id=' . $result, 'SSL');
+            $json['data'] = $this->url->link('inventory/vendor_product_dispatch/inventorydispatchvoucher', 'token=' . $this->session->data['token'] . '&product_history_id=' . $result, 'SSL');
             $json['status'] = '200';
-            $json['message'] = 'Products stocks modified successfully!';
-            $this->session->data['success'] = 'Products stocks modified successfully!';
+            $json['message'] = 'Products received data modified successfully!';
+            $this->session->data['success'] = 'Products received data modified successfully!';
         } else {
             $json['status'] = '400';
             $json['message'] = 'All fields are mandatory!';
@@ -1278,7 +1280,7 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
 
     public function updateMultiInventory() {
         $update_products = $this->request->get['updated_products'];
-        $this->load->model('inventory/vendor_product_');
+        $this->load->model('inventory/vendor_product_dispatch');
         $log = new Log('error.log');
         /* foreach ($update_products as $update_product) {
           $log->write($update_product['40839']);

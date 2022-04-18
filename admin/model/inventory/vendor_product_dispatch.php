@@ -642,17 +642,19 @@ class ModelInventoryVendorProductDispatch extends Model {
         $this->trigger->fire('pre.admin.product.edit', $data);
 
         $log = new Log('error.log');
-        $log->write($data['rejected_qty']);
-        $log->write($data['procured_qty']);
-        if (!isset($data['rejected_qty']) || $data['rejected_qty'] < 0 || $data['rejected_qty'] == NULL || $data['rejected_qty'] == '') {
-            $data['rejected_qty'] = 0;
+        $log->write($data['received_qty']);
+        
+        // $log->write($data['procured_qty']);
+        if (!isset($data['received_qty']) || $data['received_qty'] < 0 || $data['received_qty'] == NULL || $data['received_qty'] == '') {
+            $data['received_qty'] = 0;
         }
+       
 
-        if (!isset($data['procured_qty']) || $data['procured_qty'] < 0 || $data['procured_qty'] == NULL || $data['procured_qty'] == '') {
-            $data['procured_qty'] = 0;
-        }
+        // if (!isset($data['procured_qty']) || $data['procured_qty'] < 0 || $data['procured_qty'] == NULL || $data['procured_qty'] == '') {
+        //     $data['procured_qty'] = 0;
+        // }
 
-        $qty = $data['current_qty'] + ($data['procured_qty'] - $data['rejected_qty']);
+        $qty = $data['current_qty']  - $data['received_qty'];//+ ($data['procured_qty']
 
         $sel_query = 'SELECT * FROM ' . DB_PREFIX . "product_to_store WHERE product_store_id ='" . (int) $store_product_id . "'";
         $sel_query = $this->db->query($sel_query);
@@ -669,37 +671,28 @@ class ModelInventoryVendorProductDispatch extends Model {
             $data['current_buying_price'] = $data['current_buying_price'];
         }
 
-        $previous_source = $sel['source'];
-        if ($data['source'] == '' || $data['source'] == NULL) {
-            $data['source'] = $sel['source'];
-        } else {
-            $data['source'] = $data['source'];
-        }
+        // $previous_source = $sel['source'];
+        // if ($data['source'] == '' || $data['source'] == NULL) {
+        //     $data['source'] = $sel['source'];
+        // } else {
+        //     $data['source'] = $data['source'];
+        // }
 
-        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $qty . "', buying_price = '" . $data['current_buying_price'] . "', source = '" . $data['source'] . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
-        //echo $query;
-        $this->db->query($query);
+        echo $store_product_id;
+        echo $data;
 
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_inventory_history SET product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', product_name = '" . $data['product_name'] . "', procured_qty = '" . $data['procured_qty'] . "', prev_qty = '" . $previous_quantity . "', current_qty = '" . $qty . "', rejected_qty = '" . $data['rejected_qty'] . "', buying_price= '" . $data['current_buying_price'] . "', prev_buying_price= '" . $previous_buying_price . "',  source = '" . $data['source'] . "', prev_source = '" . $previous_source . "', added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', added_user = '" . $this->user->getFirstName() . ' ' . $this->user->getLastName() . "',  date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+        $query_update = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity_store = '" . $qty . "', buying_price_store = '" . $data['current_buying_price'] . "', source_store = '' WHERE product_store_id = '" .  $store_product_id . "';";
+        echo $query_update;//need to check
+        $this->db->query($query_update);
 
-        $this->trigger->fire('post.admin.product.edit', $store_product_id);
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_received_by_dispatch_history SET product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', product_name = '" . $data['product_name'] . "', procured_qty = '" . $data['received_qty'] . "', prev_qty = '" . $previous_quantity . "', current_qty = '" . $qty . "', rejected_qty = '" . $data['rejected_qty'] . "', buying_price= '" . $data['current_buying_price'] . "', prev_buying_price= '" . $previous_buying_price . "',  source = '" . $data['source'] . "', prev_source = '" . $previous_source . "', added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', added_user = '" . $this->user->getFirstName() . ' ' . $this->user->getLastName() . "',  date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+
+        // $this->trigger->fire('post.admin.product.edit', $store_product_id);
 
         return $this->db->getLastId();
     }
 
-    public function updateProductInventoryPricing($store_product_id, $data) {
-        $this->trigger->fire('pre.admin.product.edit', $data);
-
-        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET buying_price = '" . $data['buying_price'] . "', source = '" . $data['source'] . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
-        //echo $query;
-        $this->db->query($query);
-
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_inventory_price_history SET  product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', store_id = '" . $data['store_id'] . "', buying_price = '" . $data['buying_price'] . "', prev_buying_price = '" . $data['current_buying_price'] . "', source = '" . $data['source'] . "', prev_source = '" . $data['current_source'] . "', product_name = '" . $data['product_name'] . "', added_by = '" . $data['added_by'] . "', added_user_role = '" . $this->user->getGroupName() . "', added_user = '" . $this->user->getFirstName() . ' ' . $this->user->getLastName() . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
-
-        $this->trigger->fire('post.admin.product.edit', $store_product_id);
-
-        return $product_id;
-    }
+     
 
     public function productInventoryHistory($store_product_id) {
         $query = 'SELECT * FROM ' . DB_PREFIX . "product_inventory_history WHERE product_store_id ='" . (int) $store_product_id . "' order by date_added desc LIMIT 5";
