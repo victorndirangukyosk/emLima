@@ -64,9 +64,23 @@ class ModelInventoryInventoryWastage extends Model {
         //     $lGroup = true;
         // }
 
-        if (!empty($data['filter_date_added'])) {
-            $sql .= "DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
+        if (!empty($data['filter_date_added'])  && !empty($data['filter_date_added_to'])) {
+            $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(pw.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
         }
+        else if(!empty($data['filter_date_added']) && empty($data['filter_date_added_to']))
+        {
+            $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
+
+        }
+        else if(!empty($data['filter_date_added_to']) && empty($data['filter_date_added']))
+        {          
+            $sql .= "AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
+          
+        }
+
+
+     
+
 
         if (($data['filter_group_by_date'] == 0 || $data['filter_group_by_date'] == NULL || !array_key_exists('filter_group_by_date', $data)) && !isset($data['filter_group_by_date'])) {//!array_key_exists('filter_parent_customer_id', $data)
             //group by pending based on requirement
@@ -90,16 +104,19 @@ class ModelInventoryInventoryWastage extends Model {
 
         // $sql .= ' GROUP BY ps.product_store_id';
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            $sql .= ' ORDER BY ' . $data['sort'];
+            // $sql .= ' ORDER BY ' . $data['sort'];
+            $sql .= ' ORDER BY pw.date_added  DESC';
+
         } else {
-            $sql .= ' ORDER BY pd.name';
+            // $sql .= ' ORDER BY pd.name';
+            $sql .= 'ORDER BY  pw.date_added DESC ';
         }
 
-        if (isset($data['order']) && ('DESC' == $data['order'])) {
-            $sql .= ' DESC';
-        } else {
-            $sql .= ' ASC';
-        }
+        // if (isset($data['order']) && ('ASC' == $data['order'])) {
+        //     $sql .= ' ASC';
+        // } else {
+        //     $sql .= ' DESC';
+        // }
 
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
@@ -295,15 +312,24 @@ class ModelInventoryInventoryWastage extends Model {
         $log->write('wastage quantity updated');
 
         $query_cumm = 'SELECT sum(wastage_qty) as cummulative  FROM ' . DB_PREFIX . "product_wastage WHERE product_store_id ='" . (int) $product_store_id . "'  and date(date_added)=DATE(NOW())";
-        // echo "<pre>";print_r($query);die;
+        // echo "<pre>";print_r($query_cumm);die;
 
         $query_cumm = $this->db->query($query_cumm);
-        $cummulative=$query_cumm->row[0];
+        $cummulative=$query_cumm->row['cummulative'];
+
         $cummulative_current=$cummulative+$wastage_qty;
+
+        // echo "<pre>";print_r($cummulative_current);die;
+
+
+
 
         $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $current_quantity . "' WHERE product_store_id = '" . (int) $product_store_id . "'";
         //echo $query;
-        $this->db->query($query);       
+        $this->db->query($query);   
+        
+        $log->write($data['wastage_qty']);         
+        $log->write('product_to_store data modified with wastage quantity');         
         
         $this->db->query('INSERT INTO ' . DB_PREFIX . "product_wastage SET product_id = '" . $product_general_id . "', product_store_id = '" . $product_store_id . "',  wastage_qty = '" . $wastage_qty . "',  added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',cumulative_wastage='".$cummulative_current."'");
         
