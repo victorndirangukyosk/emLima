@@ -55,11 +55,21 @@
                                 <input type="text" name="filter_product_id_from" value="<?php echo $filter_product_id_from; ?>" placeholder="<?php echo $entry_product_id_from; ?>" id="input-model" class="form-control" />
                             </div>
 
-                            <div class="form-group">
+                           
+
+
                              <div class="form-group">
-                                <label class="control-label" for="input-model"><?= $entry_vendor_name ?></label>
-                                <input type="text" name="filter_vendor_name" value="<?php echo $filter_vendor_name; ?>" placeholder="Vendor Name" id="input-model" class="form-control" />
-                            </div>
+
+                             <label class="control-label" for="input-date-added">Date Added / From</label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="Date Added" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                                
+
+                               
                             </div>
 
                         </div>
@@ -80,6 +90,21 @@
                             
 
                               </div>
+
+                               <div class="form-group">
+
+                             <label class="control-label" for="input-date-added-to">Date Added To</label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added_to" value="<?php echo $filter_date_added_to; ?>" placeholder="Date Added To" data-date-format="YYYY-MM-DD" id="input-date-added-to" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                                
+
+                               
+                            </div>
+
                             
                         </div>
                         <?php endif ?>
@@ -104,18 +129,11 @@
                                     <?php } ?>
                                 </select>
                             </div>
-                            <div class="form-group">
-
-                             <label class="control-label" for="input-date-added">Date Added</label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $column_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                                
-
-                               
+                           <div class="form-group">
+                             <div class="form-group">
+                                <label class="control-label" for="input-model"><?= $entry_vendor_name ?></label>
+                                <input type="text" name="filter_vendor_name" value="<?php echo $filter_vendor_name; ?>" placeholder="Vendor Name" id="input-model" class="form-control" />
+                            </div>
                             </div>
 
 
@@ -378,6 +396,13 @@ $('input[name=\'filter_store_id\']').autocomplete({
             if (filter_date_added) {
                 url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
             }
+
+
+              var filter_date_added_to = $('input[name=\'filter_date_added_to\']').val();
+
+            if (filter_date_added_to) {
+                url += '&filter_date_added_to=' + encodeURIComponent(filter_date_added_to);
+            }
             
 
            
@@ -623,6 +648,8 @@ $.ajax({
         $('.alert.alert-success').html('<i class="fa fa-check-circle text-success">'+json['message']+'</i>');
         $('.alert.alert-success').show();
         console.log(json);
+                    location.reload();
+
         }
         if(json['status'] == '400') {
         $('.alert.alert-danger').html('');
