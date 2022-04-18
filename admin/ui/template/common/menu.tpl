@@ -69,6 +69,20 @@
             <ul>
             <li><a href="<?php echo $inventory_management; ?>">Inventory</a></li>
             <li><a href="<?php echo $inventory_management_update_history; ?>">Inventory History</a></li>
+            
+             <?php if($preturn_inventory_wastage != false){ ?>
+            
+            <li><a href="<?php echo $inventory_wastage; ?>">Wastage</a></li>
+          <?php } ?>
+
+
+             <?php if($preturn_vendor_product_dispatch != false){ ?>
+
+            <li><a href="<?php echo $vendor_product_dispatch ; ?>">Dispatch</a></li>
+            
+          <?php } ?>
+
+            
             </ul>
           <?php } ?>
           <?php if($preturn_vendor_product != falses){ ?>
@@ -78,6 +92,7 @@
             <li><a href="<?php echo $inventory_management_price; ?>">History</a></li>
             </ul>
           <?php } ?>
+          
         </ul>
     </li>
     <?php } ?>
