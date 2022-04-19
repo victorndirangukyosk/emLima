@@ -309,7 +309,8 @@ $('input[name=\'filter_email\']').autocomplete({
 //--></script> 
   <script type="text/javascript"><!--
 $('.date').datetimepicker({
-	pickTime: false
+	pickTime: false,
+             widgetParent: 'body'
 });
 
 function vendor_wallet_excel() {

@@ -462,10 +462,11 @@ $('input[name=\'filter_store_id\']').autocomplete({
 
 <script type="text/javascript"><!--
 
+ 
 
-$('.date').datetimepicker({
-            pickTime: false
-        });
+        $('.date').datetimepicker({
+	pickTime: false,  widgetParent: 'body'
+});
 
     setInterval(function() {
      location = location;
