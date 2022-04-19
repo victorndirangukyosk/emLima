@@ -47,6 +47,12 @@ class ControllerSaleTransactions extends Controller
             $filter_date_added = null;
         }
 
+        if (isset($this->request->get['filter_date_added_to'])) {
+            $filter_date_added_to = $this->request->get['filter_date_added_to'];
+        } else {
+            $filter_date_added_to = null;
+        }
+
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -87,6 +93,10 @@ class ControllerSaleTransactions extends Controller
             $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
+        if (isset($this->request->get['filter_date_added_to'])) {
+            $url .= '&filter_date_added_to='.$this->request->get['filter_date_added_to'];
+        }
+
         if (isset($this->request->get['sort'])) {
             $url .= '&sort='.$this->request->get['sort'];
         }
@@ -118,6 +128,7 @@ class ControllerSaleTransactions extends Controller
             'filter_customer' => $filter_customer,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
+            'filter_date_added_to' => $filter_date_added_to,
 
             'sort' => $sort,
             'order' => $order,
@@ -223,6 +234,10 @@ class ControllerSaleTransactions extends Controller
             $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
+        if (isset($this->request->get['filter_date_added_to'])) {
+            $url .= '&filter_date_added_to='.$this->request->get['filter_date_added_to'];
+        }
+
         if ('ASC' == $order) {
             $url .= '&order=DESC';
         } else {
@@ -255,6 +270,10 @@ class ControllerSaleTransactions extends Controller
             $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
+        if (isset($this->request->get['filter_date_added_to'])) {
+            $url .= '&filter_date_added_to='.$this->request->get['filter_date_added_to'];
+        }
+
         if (isset($this->request->get['sort'])) {
             $url .= '&sort='.$this->request->get['sort'];
         }
@@ -277,6 +296,7 @@ class ControllerSaleTransactions extends Controller
 
         $data['filter_total'] = $filter_total;
         $data['filter_date_added'] = $filter_date_added;
+        $data['filter_date_added_to'] = $filter_date_added_to;
         $data['filter_order_id'] = $filter_order_id;
 
         $data['sort'] = $sort;
@@ -319,6 +339,12 @@ class ControllerSaleTransactions extends Controller
             $filter_date_added = null;
         }
 
+        if (isset($this->request->get['filter_date_added_to'])) {
+            $filter_date_added_to = $this->request->get['filter_date_added_to'];
+        } else {
+            $filter_date_added_to = null;
+        }
+
         if (isset($this->request->get['sort'])) {
             $sort  = $this->request->get['sort'];
         }
@@ -338,6 +364,7 @@ class ControllerSaleTransactions extends Controller
             'filter_customer' => $filter_customer,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
+            'filter_date_added_to' => $filter_date_added_to,
             // 'sort' => $sort,
               'order' => $order,
              
