@@ -2180,7 +2180,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 return $a['sort_order'] <=> $b['sort_order'];
             });
 
-            if (($new_order_details == NULL || count($new_order_details) == 0) && $order_info != NULL && is_array($order_info) && count($order_info) > 0) {
+            if (($new_order_details == NULL || count($new_order_details) == 0) && $order_info != NULL && is_array($order_info) && count($order_info) > 0 && is_array($data['products'])&& count($data['products']) > 0) {
 
                 $transaction_details['customer_id'] = $order_info['customer_id'];
                 $transaction_details['no_of_products'] = $i;
@@ -2571,11 +2571,19 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $data['load_feedback_popup'] = "true";
         }
 
+        // echo "<pre>";print_r($data['order_ids']);die;
+            if($new_order_id )
+            {
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/common/success.tpl', $data));
         }
+    }
+    else {
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success_missing.tpl', $data));
+    
+    }
     }
 
 }
