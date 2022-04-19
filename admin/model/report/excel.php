@@ -3123,9 +3123,12 @@ class ModelReportExcel extends Model {
                 'product_name' => $OrignalProduct['name'],
                 'unit' => $OrignalProduct['unit'],
                 'product_id' => $OrignalProduct['product_id'],
-                'product_qty' => (float) $OrignalProduct['quantity'],
-                'product_total' => (float) $total,
-                'product_total_average' => (float) $product_total_average,
+                // 'product_qty' => (float) $OrignalProduct['quantity'],
+                // 'product_total' => (float) $total,
+                // 'product_total_average' => (float) $product_total_average,
+                'product_qty' => round($OrignalProduct['quantity'],2),
+                        'product_total' => round($total,2),
+                        'product_total_average' => round($product_total_average,2),
 
             ];
             ++$order_total;
