@@ -707,7 +707,7 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         } else {
-            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";
+            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id not in (6,8,9,16)";
         }
 
         if (!empty($data['filter_date_start'])) {
@@ -738,7 +738,7 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         } else {
-            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";
+            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id not in (6,8,9,16) ";
         }
 
 
@@ -1497,7 +1497,7 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         } else {
-            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";//
+            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id not in (0,16,6,8,9,10)";//
         }
 
  
@@ -1558,7 +1558,7 @@ class ModelReportCustomer extends Model {
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         } else {
-            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id != '6'";//AND  o.order_status_id != '6'
+            $sql .= " AND o.order_status_id > '0' AND  o.order_status_id not in (16,6,8,9,10)";//AND  o.order_status_id != '6'
         }
 
         if (!empty($data['filter_date_start'])) {
