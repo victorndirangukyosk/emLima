@@ -40,27 +40,13 @@
             <div class="panel-body">
                 <div class="well" style="display:none;">
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <div class="form-group">
                                 <label class="control-label" for="input-order-id"><?php echo $entry_order_id; ?></label>
                                 <input type="text" name="filter_order_id" value="<?php echo $filter_order_id; ?>" placeholder="<?php echo $entry_order_id; ?>" id="input-order-id" class="form-control" />
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
-                                <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
-                            </div>
-                            
-                           
-                            
-                        </div>
-                        <div class="col-sm-6">
-                            
-                            <div class="form-group">
-                                <label class="control-label" for="input-total"><?php echo $entry_total; ?></label>
-                                <input type="text" name="filter_total" value="<?php echo $filter_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
+                                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?> / From</label>
                                 <div class="input-group date">
                                     <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
                                     <span class="input-group-btn">
@@ -68,11 +54,38 @@
                                     </span>
                                 </div>
                             </div>
+                           
+                            
+                        </div>
+                        <div class="col-sm-4">
+                            
+                            <div class="form-group">
+                                <label class="control-label" for="input-total"><?php echo $entry_total; ?></label>
+                                <input type="text" name="filter_total" value="<?php echo $filter_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
+                            </div>
+                          
+                          
+
+                           <div class="form-group">
+                                <label class="control-label" for="input-date-added-to"><?php echo $entry_date_added; ?> To</label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added_to" value="<?php echo $filter_date_added_to; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added-to" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+
+
+
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
                         </div>
                         <div class="col-sm-4">
                             
-                            
+                             <div class="form-group">
+                                <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
+                                <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
+                            </div>
                             
                         </div>
                     </div>
@@ -187,6 +200,12 @@
                 url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
             }
 
+             var filter_date_added_to = $('input[name=\'filter_date_added_to\']').val();
+
+            if (filter_date_added_to) {
+                url += '&filter_date_added_to=' + encodeURIComponent(filter_date_added_to);
+            }
+
             
 
             location = url;
@@ -257,6 +276,13 @@ function excel() {
 
             if (filter_date_added) {
                 url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+
+
+              var filter_date_added_to = $('input[name=\'filter_date_added_to\']').val();
+
+            if (filter_date_added_to) {
+                url += '&filter_date_added_to=' + encodeURIComponent(filter_date_added_to);
             }
 
     
