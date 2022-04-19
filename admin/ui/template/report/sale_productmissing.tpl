@@ -84,7 +84,9 @@
                 <td class="text-left">Product ID</td>
                 <td class="text-left"><?php echo $column_product; ?></td>
                 <td class="text-left"><?php echo $column_unit; ?></td>
-                <td class="text-left"><?php echo $column_ordered_qty; ?></td
+                <td class="text-left"><?php echo $column_ordered_qty; ?></td>
+                <td class="text-left">Total Price</td>
+                <td class="text-left">Avg. Sale Price</td>
 
               </tr>
             </thead>
@@ -97,6 +99,8 @@
                 <td class="text-left"><?php echo $order['product_name']; ?></td>
                 <td class="text-left"><?php echo $order['unit']; ?></td>
                 <td class="text-left"><?php echo $order['product_qty']; ?></td>
+                <td class="text-right"><?php echo $order['product_total']; ?></td>
+                <td class="text-right"><?php echo $order['product_total_average']; ?></td>
                
 
 
