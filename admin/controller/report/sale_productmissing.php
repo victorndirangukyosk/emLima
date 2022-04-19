@@ -193,7 +193,7 @@ class ControllerReportSaleProductMissing extends Controller
         // $results = $this->model_report_sale->getstockoutOrders($filter_data);
 
         $OrignalProducts= $this->model_report_sale->getstockoutOrdersAndProducts($filter_data);
-
+ 
         //  echo "<pre>";print_r($results);die;
         // foreach ($results as $result) {
         //     $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
@@ -219,6 +219,8 @@ class ControllerReportSaleProductMissing extends Controller
             //     // }!$present &&
 
             //     if ( !empty($OrignalProduct['name'])) {
+                $total=$OrignalProduct['total']+$OrignalProduct['tax'];
+                $product_total_average=($total/$OrignalProduct['quantity']);
                     $data['torders'][] = [
                         'store' => $OrignalProduct['store_name'],
                         'model' => $OrignalProduct['product_id'],
@@ -226,6 +228,9 @@ class ControllerReportSaleProductMissing extends Controller
                         'unit' => $OrignalProduct['unit'],
                         'product_id' => $OrignalProduct['product_id'],
                         'product_qty' => (float) $OrignalProduct['quantity'],
+                        'product_total' => (float) $total,
+                        'product_total_average' => (float) $product_total_average,
+
                     ];
                     ++$order_total;
             //     }
