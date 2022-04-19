@@ -229,7 +229,8 @@ $('#button-filter').on('click', function() {
 //--></script></script> 
   <script type="text/javascript"><!--
 $('.date').datetimepicker({
-	pickTime: false
+	pickTime: false,
+             widgetParent: 'body'
 });
 //--></script>
   <script type="text/javascript"><!--
