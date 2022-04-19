@@ -221,8 +221,9 @@
     <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
     <script type="text/javascript"><!--
   $('.date').datetimepicker({
-            pickTime: false
-        });
+	            pickTime: false,
+                  widgetParent: 'body'
+});
         //-->
         
         
