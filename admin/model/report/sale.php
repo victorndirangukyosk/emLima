@@ -358,7 +358,7 @@ class ModelReportSale extends Model {
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " WHERE o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         } else {
-            $sql .= " WHERE o.order_status_id > '0'";
+            $sql .= " WHERE o.order_status_id not in (0,6,8,9,16)";
         }
 
         if (!empty($data['filter_city'])) {
