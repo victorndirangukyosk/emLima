@@ -144,7 +144,7 @@ class ControllerCommonMenu extends Controller {
 
         $data['report_sale_advanced'] = $this->url->link('report/sale_advanced', 'token=' . $this->session->data['token'] . '&filter_order_status_id=5', 'SSL');
 
-        $data['report_sale_productmissing'] = $this->url->link('report/sale_productmissing', 'token=' . $this->session->data['token'] . '&filter_order_status_id=5', 'SSL');
+        $data['report_sale_productmissing'] = $this->url->link('report/sale_productmissing', 'token=' . $this->session->data['token'] , 'SSL');
 
         $data['report_sale_tax'] = $this->url->link('report/sale_tax', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_sale_shipping'] = $this->url->link('report/sale_shipping', 'token=' . $this->session->data['token'], 'SSL');
