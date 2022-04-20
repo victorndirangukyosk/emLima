@@ -1539,6 +1539,7 @@ class ControllerSaleOrder extends Controller {
         $data['sort_status'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
         $data['sort_total'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url, 'SSL');
         $data['sort_date_added'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
+        $data['sort_delivery_date'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.delivery_date' . $url, 'SSL');
         $data['sort_date_modified'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url, 'SSL');
 
         $url = '';
