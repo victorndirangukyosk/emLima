@@ -149,7 +149,8 @@ class ModelSaleCustomer extends Model {
         }
 
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
-            $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
+            $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "' or c.customer_id = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
+       
         }
 
         if (!empty($data['filter_email'])) {
@@ -296,7 +297,8 @@ class ModelSaleCustomer extends Model {
         }
 
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
-            $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
+            $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "' or c.customer_id = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
+        
         }
 
         if (!empty($data['filter_email'])) {
@@ -656,7 +658,7 @@ class ModelSaleCustomer extends Model {
                 $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
             }
         }
-
+ 
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
             $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }
@@ -989,7 +991,7 @@ class ModelSaleCustomer extends Model {
         }
 
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
-            $implode[] = "parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
+            $implode[] = "parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "' or customer_id = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }
 
         if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
@@ -1266,7 +1268,7 @@ class ModelSaleCustomer extends Model {
         if (!empty($data['filter_ip'])) {
             $sql .= "And c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
         }
-
+ 
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
             $sql .= "And c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }
