@@ -78,6 +78,15 @@ class ModelPaymentWallet extends Model {
         // $description = 'Wallet amount deducted#' . $order_id;
         // $this->db->query('DELETE FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $customer_id . "' and  order_id = '" . (int) $order_id . "'");
         $transaction_id = (isset($amount_partialy_paid) && $amount_partialy_paid != NULL && $amount_partialy_paid > 0) ? 'Paid partialy from wallet amount (T)' : 'Paid from wallet amount (T)';
+        
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_transaction_id` WHERE `order_id` = '" . $this->db->escape($order_id) . "' AND `transaction_id` = '" . $this->db->escape($transaction_id) . "'");
+        $total_records = $result->num_rows;
+        
+        $log->write('order_id_transaction_id');
+        $log->write($total_records);
+        $log->write($order_id . ' ' . $transaction_id);
+        $log->write('order_id_transaction_id');
+        
         $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $description . "', amount = '" . (float) ($amount * -1) . "', date_added = NOW()");
         $this->db->query('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET customer_id = '" . (int) $customer_id . "', amount = '" . (float) $amount . "', order_id = '" . (int) $order_id . "', transaction_id = '" . $transaction_id . "', created_at = NOW()");
         $order_details = $this->getOrder($order_id);
