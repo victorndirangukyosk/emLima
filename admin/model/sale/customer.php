@@ -795,6 +795,43 @@ class ModelSaleCustomer extends Model {
         return $query->rows;
     }
 
+
+    public function getPayments($data = []) {
+        $sql = 'SELECT distinct code AS name FROM ' . DB_PREFIX . 'extension WHERE  type="payment"';
+
+        $implode = [];
+        if (!empty($data['filter_name'])) {
+            $implode[] = " code LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+        
+        if ($implode) {
+            $sql .= ' AND ' . implode(' AND ', $implode);
+        }
+        $sql .= ' ORDER BY code';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
     public function getParentCustomers($data = []) {
         $log = new Log('error.log');
         $parent_customer_ids = array();
