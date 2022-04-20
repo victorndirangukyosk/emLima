@@ -82,6 +82,7 @@ class ModelPaymentWallet extends Model {
         $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_transaction_id` WHERE `order_id` = '" . $this->db->escape($order_id) . "' AND `transaction_id` = '" . $this->db->escape($transaction_id) . "'");
         $total_records = $result->num_rows;
         
+        $log = new Log('error.log');
         $log->write('order_id_transaction_id');
         $log->write($total_records);
         $log->write($order_id . ' ' . $transaction_id);
