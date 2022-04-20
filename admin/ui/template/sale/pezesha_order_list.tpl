@@ -212,12 +212,17 @@
                                         <?php } ?></td>
                                     <td class="text-left">Mpesa Reference</td>
                                     <td class="text-left">
-                                        <?php if ($sort == 'o.date_added') { ?>
-                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
+                                        <?php if ($sort == 'o.created_at') { ?>
+                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>">Payment Received</a>
                                         <?php } else { ?>
-                                        <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
+                                        <a href="<?php echo $sort_date_added; ?>">Payment Received</a>
                                         <?php } ?>
                                     </td>
+
+                                    <td class="text-left">Order Date</td>
+                                    <td class="text-left">Delivery Date</td>
+                                        
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -242,7 +247,9 @@
                                     
                                     <td class="text-left"><?php echo $order['total']; ?></td>
                                     <td class="text-left"><?php echo $order['mpesa_reference']; ?></td>
+                                    <td class="text-left"><?php echo $order['created_at']; ?></td>
                                     <td class="text-left"><?php echo $order['date_added']; ?></td>
+                                    <td class="text-left"><?php echo $order['delivery_date']; ?></td>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
