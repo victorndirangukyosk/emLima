@@ -121,7 +121,7 @@
               </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group" style="display:none">
                 <label class="control-label" for="input-ip"><?php echo $entry_ip; ?></label>
                 <input type="text" name="filter_ip" value="<?php echo $filter_ip; ?>" placeholder="<?php echo $entry_ip; ?>" id="input-ip" class="form-control" />
               </div>
@@ -134,50 +134,15 @@
                       <input type="text" name="filter_account_manager_name" value="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_name; } ?>" placeholder="<?php echo $entry_account_manager_name; ?>" id="input-account-manager-name" class="form-control" data-account-manager-id="<?php if($filter_account_manager_name != NULL && $filter_account_manager_id != NULL) { echo $filter_account_manager_id; } ?>" />
                 </div>
                 
-                <div class="form-group">
-                      <label class="control-label" for="input-customer-experience">Customer Experience</label>
-                      <input type="text" name="filter_customer_experience" value="<?php if($filter_customer_experience != NULL && $filter_customer_experience_id != NULL) { echo $filter_customer_experience; } ?>" placeholder="<?php echo $entry_customer_experience; ?>" id="input-customer-experience" class="form-control" data-customer-experience-id="<?php if($filter_customer_experience != NULL && $filter_customer_experience_id != NULL) { echo $filter_customer_experience_id; } ?>" />
-                </div>
-                 
+ 
+               
               </div>
+  
+
              <div class="col-sm-3">
            
-              <div class="form-group">
-                <label class="control-label" for="input-date-added">Date Added From</label>
-                <div class="input-group date" style="max-width: 321px;">
-                  <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="Date Added From" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
-                  <span class="input-group-btn">
-                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                  </span></div>
-              </div>
-              
-              <div class="form-group">
-                <label class="control-label" for="input-payment-terms">Payment Terms</label>
-                <select name="filter_payment_terms" id="input-payment-terms" class="form-control">
-                            <option value=""></option>
-                            <option value="Payment On Delivery" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == 'Payment On Delivery') { ?> selected="selected" <?php } ?> >Payment On Delivery</option>
-                            <option value="7 Days Credit" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == '7 Days Credit') { ?> selected="selected" <?php } ?> >7 Days Credit</option>
-                            <option value="15 Days Credit" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == '15 Days Credit') { ?> selected="selected" <?php } ?> >15 Days Credit</option>
-                            <option value="30 Days Credit" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == '30 Days Credit') { ?> selected="selected" <?php } ?> >30 Days Credit</option>
-                </select>
-              </div>   
 
-
-             </div>
-
-             
-              <div class="col-sm-3">
-
-               <div class="form-group">
-                <label class="control-label" for="input-date-added-to">Date Added To</label>
-                <div class="input-group date" style="max-width: 321px;">
-                  <input type="text" name="filter_date_added_to" value="<?php echo $filter_date_added_to; ?>" placeholder="Date Added To" data-date-format="YYYY-MM-DD" id="input-date-added-to" class="form-control" />
-                  <span class="input-group-btn">
-                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                  </span></div>
-              </div>
-               
-               <div class="form-group">
+            <div class="form-group">
                 <label class="control-label" for="input-customer-price-category">Price Category</label>
                 <select name="filter_customer_price_category" id="input-customer-price-category" class="form-control">
                             <option value="">Select Category</option>
@@ -190,18 +155,78 @@
                             <?php } ?>
                 </select>
               </div>   
-                  
-                  
-              </div>
-              <div class="col-sm-3" style="margin-top:25px;">
-              <div class="form-group">
-                  <label><input type="checkbox" name="filter_sub_customer_show[]" value="<?php echo $filter_sub_customer_show; ?>" <?php if($filter_sub_customer_show == 1) { ?> checked="" <?php } ?>> Show Sub Customer </label>
+
+               <div class="form-group">
+                <label class="control-label" for="input-date-added">Date Added From</label>
+                <div class="input-group date" style="max-width: 321px;">
+                  <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="Date Added From" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                  <span class="input-group-btn">
+                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                  </span></div>
               </div>
               
+
+
+             </div>
+
+             
+              <div class="col-sm-3">
+
+               <div class="form-group">
+                <label class="control-label" for="input-payment-terms">Payment Terms</label>
+                <select name="filter_payment_terms" id="input-payment-terms" class="form-control">
+                            <option value=""></option>
+                            <option value="Payment On Delivery" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == 'Payment On Delivery') { ?> selected="selected" <?php } ?> >Payment On Delivery</option>
+                            <option value="7 Days Credit" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == '7 Days Credit') { ?> selected="selected" <?php } ?> >7 Days Credit</option>
+                            <option value="15 Days Credit" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == '15 Days Credit') { ?> selected="selected" <?php } ?> >15 Days Credit</option>
+                            <option value="30 Days Credit" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == '30 Days Credit') { ?> selected="selected" <?php } ?> >30 Days Credit</option>
+                </select>
+              </div>   
+
+               
+
+                <div class="form-group">
+                <label class="control-label" for="input-date-added-to">Date Added To</label>
+                <div class="input-group date" style="max-width: 321px;">
+                  <input type="text" name="filter_date_added_to" value="<?php echo $filter_date_added_to; ?>" placeholder="Date Added To" data-date-format="YYYY-MM-DD" id="input-date-added-to" class="form-control" />
+                  <span class="input-group-btn">
+                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                  </span></div>
+              </div>
+
+
+              
+                  
+                  
+              </div>
+              
+              <div class="col-sm-3" >
+
+               <div class="form-group">
+                      <label class="control-label" for="input-customer-experience">Customer Experience</label>
+                      <input type="text" name="filter_customer_experience" value="<?php if($filter_customer_experience != NULL && $filter_customer_experience_id != NULL) { echo $filter_customer_experience; } ?>" placeholder="<?php echo $entry_customer_experience; ?>" id="input-customer-experience" class="form-control" data-customer-experience-id="<?php if($filter_customer_experience != NULL && $filter_customer_experience_id != NULL) { echo $filter_customer_experience_id; } ?>" />
+                </div>
+
+             
+              
+
+              
+                 
+                 
               <div class="form-group" style="margin-top:43px;">
+
+               <div class="form-group">
+                  <label><input type="checkbox" name="filter_sub_customer_show[]" value="<?php echo $filter_sub_customer_show; ?>" <?php if($filter_sub_customer_show == 1) { ?> checked="" <?php } ?>> Show Sub Customer </label>
+              </div>
+
+              </div>
+              </div>
+
+              <div class="col-sm-3">
+
+              <div class="form-group" style="margin-top:20px;">
                <button type="button" id="button-filter" class="btn btn-primary"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>  
-              </div>
-              </div>
+</div> </div>
               
           </div>
         </div>
@@ -396,11 +421,11 @@ $('#button-filter').on('click', function() {
     url += '&filter_telephone=' + encodeURIComponent(filter_telephone);
   } 
   
-  var filter_ip = $('input[name=\'filter_ip\']').val();
+  //var filter_ip = $('input[name=\'filter_ip\']').val();
   
-  if (filter_ip) {
-    url += '&filter_ip=' + encodeURIComponent(filter_ip);
-  }
+  //if (filter_ip) {
+  //  url += '&filter_ip=' + encodeURIComponent(filter_ip);
+  //}
   
   var filter_parent_customer = $('input[name=\'filter_parent_customer\']').val();
   
@@ -659,11 +684,11 @@ function excel() {
     url += '&filter_telephone=' + encodeURIComponent(filter_telephone);
   } 
   
-  var filter_ip = $('input[name=\'filter_ip\']').val();
+  //var filter_ip = $('input[name=\'filter_ip\']').val();
   
-  if (filter_ip) {
-    url += '&filter_ip=' + encodeURIComponent(filter_ip);
-  }
+  //if (filter_ip) {
+  //  url += '&filter_ip=' + encodeURIComponent(filter_ip);
+  //}
   
   var filter_parent_customer = $('input[name=\'filter_parent_customer\']').val();
   
