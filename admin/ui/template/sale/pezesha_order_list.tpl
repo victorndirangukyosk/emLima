@@ -55,24 +55,7 @@
                                 </div>
                             <?php endif ?> 
                             
-                             <div class="form-group">
                              
-                                <label class="control-label" for="input-order-type">Order Type</label>
-                                <select name="filter_order_type" id="input-order-type" class="form-control">
-                                    <option value="*" selected></option> 
-                                    <?php if ($filter_order_type=='1') { ?>
-                                    <option value="1" selected="selected">Manual</option>
-                                    <?php } else { ?>
-                                    <option value="1">Manual</option>
-                                    <?php } ?>
-                                     <?php if ($filter_order_type=='0') { ?>
-                                    <option value="0" selected="selected">Online</option>
-                                    <?php } else { ?>
-                                    <option value="0">Online</option>
-                                    <?php } ?>
-                                     
-                                </select>
-                            </div>
                          
                           <div class="form-group">
                                 <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
@@ -87,7 +70,7 @@
                             
                         </div>
                         <div class="col-sm-4">
-                            <div class="form-group">
+                            <div class="form-group"  style="display:none">
                                 <label class="control-label" for="input-order-status"><?php echo $entry_order_status; ?></label>
                                 <select name="filter_order_status" id="input-order-status" class="form-control">
                                     <option value="*"></option>
@@ -106,11 +89,31 @@
                                 </select>
                             </div>
                             <?php if (!$this->user->isVendor()): ?>
-                                <div class="form-group">
+                                <div class="form-group" style="display:none">
                                     <label class="control-label" for="input-name"><?= $column_payment ?></label>
                                     <input type="text" name="filter_payment" value="<?php echo $filter_payment; ?>" placeholder="<?php echo $column_payment; ?>" id="input-name" class="form-control" />
                                 </div>
                             <?php endif ?> 
+
+
+                           <div class="form-group">
+                             
+                                <label class="control-label" for="input-order-type">Order Type</label>
+                                <select name="filter_order_type" id="input-order-type" class="form-control">
+                                    <option value="*" selected></option> 
+                                    <?php if ($filter_order_type=='1') { ?>
+                                    <option value="1" selected="selected">Manual</option>
+                                    <?php } else { ?>
+                                    <option value="1">Manual</option>
+                                    <?php } ?>
+                                     <?php if ($filter_order_type=='0') { ?>
+                                    <option value="0" selected="selected">Online</option>
+                                    <?php } else { ?>
+                                    <option value="0">Online</option>
+                                    <?php } ?>
+                                     
+                                </select>
+                            </div>
 
    
                                <div class="form-group">
@@ -159,7 +162,7 @@
                                 </div>
                             </div>
                             
-                            <div class="form-group">
+                            <div class="form-group"  style="display:none">
                                 <label class="control-label" for="input-delivery-date">Delivery Time Slot</label>
                                     <select name="filter_delivery_time_slot" id="input-delivery-time-slot" class="form-control">
                                     <option value="">Select <?php echo $column_delivery_time_slot; ?></option>
