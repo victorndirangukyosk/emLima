@@ -885,7 +885,13 @@ class ModelCatalogVendorProduct extends Model {
 
         if (!empty($data['filter_name'])) {
             $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
+        }        
+
+        if (!empty($data['filter_product_history_id'])) {
+            $implode[] = "product_history_id = '" . $this->db->escape($data['filter_product_history_id']) . "'";
         }
+
+
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
@@ -930,6 +936,10 @@ class ModelCatalogVendorProduct extends Model {
         $sql = "SELECT * FROM " . DB_PREFIX . 'product_inventory_history';
 
         $implode = [];
+         
+        if (!empty($data['filter_name'])) {
+            $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
+        }
 
         if (!empty($data['filter_store_id'])) {
             $implode[] = "product_store_id = '" . $this->db->escape($data['filter_store_id']) . "'";

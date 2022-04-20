@@ -69,7 +69,7 @@
                         </div>
                         
                         <div class="col-sm-3">
-                            <div class="form-group">
+                            <div class="form-group" hidden>
                                 <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
                                 <input type="text" name="filter_store_id" value="<?php echo $filter_store_id; ?>" placeholder="Store Name" id="input-store-name" class="form-control" />
                             </div>
