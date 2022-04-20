@@ -163,8 +163,11 @@
 
                             <?php if (!$this->user->isVendor()): ?>
                                 <div class="form-group">
-                                    <label class="control-label" for="input-name"><?= $column_payment ?></label>
+                                    <label class="control-label" for="input-payment"><?= $column_payment ?></label>
                                     <input type="text" name="filter_payment" value="<?php echo $filter_payment; ?>" placeholder="<?php echo $column_payment; ?>" id="input-name" class="form-control" />
+                               
+                                
+                               
                                 </div>
                             <?php endif ?> 
 
@@ -330,9 +333,9 @@
                                         <?php } ?></td>
                                     <td class="text-left">
                                         <?php if ($sort == 'o.date_added') { ?>
-                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
+                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>">Order Date</a>
                                         <?php } else { ?>
-                                        <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
+                                        <a href="<?php echo $sort_date_added; ?>">Order Date</a>
                                         <?php } ?>
                                     </td>
                                     <!-- <td class="text-left"><?php if ($sort == 'o.date_modified') { ?>
@@ -341,7 +344,15 @@
                                         <a href="<?php echo $sort_date_modified; ?>"><?php echo $column_date_modified; ?></a>
                                         <?php } ?></td> -->
 
-                                    <td class="text-left">Delivery Date</td>
+
+                                     <td class="text-left">
+                                        <?php if ($sort == 'o.delivery_date') { ?>
+                                        <a href="<?php echo $sort_delivery_date; ?>" class="<?php echo strtolower($order); ?>">Delivery Date</a>
+                                        <?php } else { ?>
+                                        <a href="<?php echo $sort_delivery_date; ?>">Delivery Date</a>
+                                        <?php } ?>
+                                    </td>
+
 
                                     <td class="text-left">Delivery Timeslot</td>
 
@@ -806,6 +817,27 @@
                 $('input[name=\'filter_company\']').val(item['label']);
                 $('input[name=\'filter_customer\']').val('');
                 $companyName=item['label'];
+            }
+        });
+
+
+           $('input[name=\'filter_payment\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletepayment&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['name']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'filter_payment\']').val(item['label']);
             }
         });
         
