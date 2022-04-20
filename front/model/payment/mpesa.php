@@ -74,10 +74,11 @@ class ModelPaymentMpesa extends Model {
         /*$sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
 
         $query = $this->db->query($sql);*/
-
+        if($total_records == 0) {
         $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $order_id . "', customer_id = '" . $customer_id . "', amount = '" . $amount . "', transaction_id = '" . $transaction_id . "', created_at = NOW()";
 
         $query = $this->db->query($sql);
+        }
     }
 
     public function insertOrderTransactionIdHybrid($order_id, $transaction_id, $customer_id = '', $amount = '') {
@@ -90,9 +91,10 @@ class ModelPaymentMpesa extends Model {
         $log->write($total_records);
         $log->write($order_id . ' ' . $transaction_id);
         $log->write('order_id_transaction_id');
-        
+        if($total_records == 0) {
         $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $order_id . "', customer_id = '" . $customer_id . "', amount = '" . $amount . "', transaction_id = '" . $transaction_id . "', created_at = NOW()";
         $query = $this->db->query($sql);
+        }
     }
 
     public function insertMobileCheckoutOrderTransactionId($order_reference_number, $mpesa_receipt_number) {
