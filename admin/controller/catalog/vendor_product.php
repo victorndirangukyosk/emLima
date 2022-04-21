@@ -3438,4 +3438,32 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->model_report_excel->download_categorypricelist_item_excel($data['products'], $filter_data);
     }
 
+
+    public function updateInventoryHistory() {
+        try{
+        $log = new Log('error.log');
+        $product_history_id = $this->request->post['product_history_id'];
+        $procured_qty = $this->request->post['procured_qty'];
+        $rejected_qty = $this->request->post['rejected_qty'];
+        $prev_qty = $this->request->post['prev_qty'];
+        $current_qty = $this->request->post['current_qty'];
+        $buying_price = $this->request->post['buying_price'];
+        $source = $this->request->post['source'];
+        $log->write($product_history_id);
+        $log->write('inventory history changed by '.$this->user->getId());
+        
+        $this->load->model('catalog/vendor_product');
+        $this->model_catalog_vendor_product->updateInventoryHistory($product_history_id, $procured_qty,$rejected_qty,$prev_qty,$current_qty,$buying_price,$source,$this->user->getId());
+        $json['status']=1;
+        }
+        catch(exception $e)
+        {
+        $json['status']=0;
+
+        }
+        finally{
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
+    }
 }
