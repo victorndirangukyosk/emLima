@@ -191,6 +191,27 @@
                                 </div>
                             </div>
 
+
+                             <div class="form-group">
+                             
+                                <label class="control-label" for="input-order-type">Order Placed From</label>
+                                <select name="filter_order_placed_from" id="input-order-placed-from" class="form-control">
+                                    <option value="*" selected></option> 
+                                    <?php if ($filter_order_placed_from=='Web') { ?>
+                                    <option value="Web" selected="selected">Web</option>
+                                    <?php } else { ?>
+                                    <option value="Web">Web</option>
+                                    <?php } ?>
+                                     <?php if ($filter_order_placed_from=='Mobile') { ?>
+                                    <option value="Mobile" selected="selected">Mobile</option>
+                                    <?php } else { ?>
+                                    <option value="Mobile">Mobile</option>
+                                    <?php } ?>
+                                     
+                                </select>
+                            </div>
+
+
                         </div>
 
 
@@ -710,6 +731,13 @@
 
             if (filter_order_type != '*') {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
+            }
+
+
+              var filter_order_placed_from = $('select[name=\'filter_order_placed_from\']').val();
+
+            if (filter_order_placed_from != '*') {
+                url += '&filter_order_placed_from=' + encodeURIComponent(filter_order_placed_from);
             }
             
             var filter_paid = $('select[name=\'filter_paid\']').val();
@@ -2412,6 +2440,15 @@ function downloadOrdersonsolidated() {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
             }
             
+
+              var filter_order_placed_from = $('select[name=\'filter_order_placed_from\']').val();
+
+            if (filter_order_placed_from != '*' && filter_order_placed_from != '') {
+                url += '&filter_order_placed_from=' + encodeURIComponent(filter_order_placed_from);
+            }
+            
+
+            
             var filter_paid = $('select[name=\'filter_paid\']').val();
 
             if (filter_paid != '*' && filter_paid != '') {
@@ -2555,6 +2592,13 @@ function downloadOrders() {
             if (filter_order_type != '*' && filter_order_type != '') {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
             }
+            
+              var filter_order_placed_from = $('select[name=\'filter_order_placed_from\']').val();
+
+            if (filter_order_placed_from != '*' && filter_order_placed_from != '') {
+                url += '&filter_order_placed_from=' + encodeURIComponent(filter_order_placed_from);
+            }
+            
             
             var filter_paid = $('select[name=\'filter_paid\']').val();
 
@@ -2700,6 +2744,13 @@ function downloadOrderStickers() {
             if (filter_order_type != '*' && filter_order_type != '') {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
             }
+            
+              var filter_order_placed_from = $('select[name=\'filter_order_placed_from\']').val();
+
+            if (filter_order_placed_from != '*' && filter_order_placed_from != '') {
+                url += '&filter_order_placed_from=' + encodeURIComponent(filter_order_placed_from);
+            }
+            
             
             var filter_paid = $('select[name=\'filter_paid\']').val();
 
