@@ -31,7 +31,7 @@
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_show_filter; ?>" class="btn btn-primary btn-sm" id="showFilter"><i class="fa fa-eye"></i></button>
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_hide_filter; ?>" class="btn btn-primary btn-sm" id="hideFilter"><i class="fa fa-eye-slash"></i></button>
 
-                </div>    
+                </div>     
             </div>
             <div class="panel-body">
                 <div class="well" style="display:none;">
@@ -96,6 +96,7 @@
                                         <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                                         <?php } ?></td>
                                     <td class="text-left"><?php echo $column_product_store_id; ?></td>
+                                    <td class="text-left">Unit</td>
                                     <td class="text-left">Buying Price</td>
                                     <td class="text-left">Source</td>
                                     <td class="text-left"><?php echo $column_procured_qty; ?></td>
@@ -123,6 +124,7 @@
                                         <?php } ?></td>
                                     <td class="text-left"><?php echo $histor['product_name']; ?></td>
                                     <td class="text-right"><?php echo $histor['product_store_id']; ?></td>
+                                    <td class="text-right"><?php echo $histor['unit']; ?></td>
                                     <td class="text-right"><?php echo $histor['buying_price']; ?></td>
                                     <td class="text-left"><?php echo $histor['source']; ?></td>
                                     <td class="text-right"><?php echo $histor['procured_qty']; ?></td>
