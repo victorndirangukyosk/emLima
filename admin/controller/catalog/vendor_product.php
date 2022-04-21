@@ -2570,7 +2570,7 @@ class ControllerCatalogVendorProduct extends Controller {
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
-        ];
+        ]; 
 
         $history_total = $this->model_catalog_vendor_product->getTotalProductInventoryHistory($filter_data);
 
@@ -2583,6 +2583,7 @@ class ControllerCatalogVendorProduct extends Controller {
                 'product_history_id' => $result['product_history_id'],
                 'product_store_id' => $result['product_store_id'],
                 'product_id' => $result['product_id'],
+                'unit' => $result['unit'],
                 'procured_qty' => $result['procured_qty'],
                 'rejected_qty' => $result['rejected_qty'],
                 'prev_qty' => $result['prev_qty'],
@@ -2726,7 +2727,7 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['filter_name'] = $filter_name;
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_date_added_end'] = $filter_date_added_end;
-        $data['filter_store_id'] = $filter_store_id;
+        $data['filter_store_id'] = $filter_store_id; 
 
         $data['sort'] = $sort;
         $data['order'] = $order;
