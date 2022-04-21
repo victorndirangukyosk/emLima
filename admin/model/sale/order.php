@@ -1170,7 +1170,19 @@ class ModelSaleOrder extends Model {
 
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
 
+        if (isset($data['filter_order_placed_from'])) {
 
+            if($data['filter_order_placed_from']=="Mobile")
+            {
+                $sql .= ' AND user_agent not like "%Mozilla%"';
+
+            }
+            else
+            {
+                $sql .= ' AND user_agent  like "%Mozilla%"';
+            }
+
+        }
         if (isset($data['filter_order_type'])) {
 
             $sql .= ' AND isadmin_login= ' . $data['filter_order_type'] . '';
@@ -2822,6 +2834,22 @@ class ModelSaleOrder extends Model {
         if (isset($data['filter_order_type'])) {
             $sql .= ' AND isadmin_login="' . $data['filter_order_type'] . '"';
         }
+        if (isset($data['filter_order_placed_from'])) {
+
+            if($data['filter_order_placed_from']=="Mobile")
+            {
+                $sql .= ' AND user_agent not like "%Mozilla%"';
+
+            }
+            else
+            {
+                $sql .= ' AND user_agent  like "%Mozilla%"';
+            }
+
+        }
+
+        // echo "<pre>";print_r($sql);die;
+
         //below if condition added for fast orders
         if (!empty($data['filter_order_day'])) {
             $current_date = date('Y-m-d');
