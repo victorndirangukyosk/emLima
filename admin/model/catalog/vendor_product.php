@@ -933,7 +933,7 @@ class ModelCatalogVendorProduct extends Model {
     }
 
     public function getProductInventoryHistory($data = []) {
-        $sql = "SELECT * FROM " . DB_PREFIX . 'product_inventory_history';
+        $sql = "SELECT ph.*,p.unit FROM " . DB_PREFIX . 'product_inventory_history ph join hf7_product p on ph.product_id =p.product_id ';
 
         $implode = [];
          
