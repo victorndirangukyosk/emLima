@@ -992,6 +992,15 @@ class ControllerSaleOrder extends Controller {
             } else {
                 $filter_order_type = null;
             }
+
+
+            if (isset($this->request->get['filter_order_placed_from'])) {
+                $filter_order_placed_from = $this->request->get['filter_order_placed_from'];
+            } else {
+                $filter_order_placed_from = null;
+            }
+
+            
             
             if (isset($this->request->get['filter_paid'])) {
                 $filter_paid = $this->request->get['filter_paid'];
@@ -1114,6 +1123,12 @@ class ControllerSaleOrder extends Controller {
         } else {
             $filter_order_type = null;
         }
+
+        if (isset($this->request->get['filter_order_placed_from'])) {
+            $filter_order_placed_from = $this->request->get['filter_order_placed_from'];
+        } else {
+            $filter_order_placed_from = null;
+        }
         
         if (isset($this->request->get['filter_paid'])) {
             $filter_paid = $this->request->get['filter_paid'];
@@ -1221,6 +1236,12 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
+
+        
+        if (isset($this->request->get['filter_order_placed_from'])) {
+            $url .= '&filter_order_placed_from=' . $this->request->get['filter_order_placed_from'];
+        }
+        
         
         if (isset($this->request->get['filter_paid'])) {
             $url .= '&filter_paid=' . $this->request->get['filter_paid'];
@@ -1290,6 +1311,7 @@ class ControllerSaleOrder extends Controller {
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
             'filter_order_type' => $filter_order_type,
+            'filter_order_placed_from' => $filter_order_placed_from,
             'filter_paid' => $filter_paid,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
@@ -1302,7 +1324,7 @@ class ControllerSaleOrder extends Controller {
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        // echo "<pre>";print_r($filter_data);die; 
+        // echo "<pre>";print_r($filter_data);die;  
 
         $order_total = $this->model_sale_order->getTotalOrders($filter_data);
 
@@ -1502,6 +1524,10 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
+
+        if (isset($this->request->get['filter_order_placed_from'])) {
+            $url .= '&filter_order_placed_from=' . $this->request->get['filter_order_placed_from'];
+        }
         
         if (isset($this->request->get['filter_paid'])) {
             $url .= '&filter_paid=' . $this->request->get['filter_paid'];
@@ -1600,6 +1626,10 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
+
+        if (isset($this->request->get['filter_order_placed_from'])) {
+            $url .= '&filter_order_placed_from=' . $this->request->get['filter_order_placed_from'];
+        }
         
         if (isset($this->request->get['filter_paid'])) {
             $url .= '&filter_paid=' . $this->request->get['filter_paid'];
@@ -1654,6 +1684,7 @@ class ControllerSaleOrder extends Controller {
 
         $data['filter_order_status'] = $filter_order_status;
         $data['filter_order_type'] = $filter_order_type;
+        $data['filter_order_placed_from'] = $filter_order_placed_from;
         $data['filter_paid'] = $filter_paid;
         $data['filter_total'] = $filter_total;
         $data['filter_date_added'] = $filter_date_added;
