@@ -1266,24 +1266,79 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
     }
 
     public function updateMultiInventory() {
-        $update_products = $this->request->get['updated_products'];
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $supplier_details = NULL;
+
+        $log = new Log('error.log');
+        $log->write($this->request->post);
+
+        // echo "<pre>";print_r('update_products');die;
+        $update_products = $this->request->post;
         $this->load->model('inventory/vendor_product_dispatch');
         $log = new Log('error.log');
-        /* foreach ($update_products as $update_product) {
+            // echo "<pre>";print_r($update_products);die;
+        $requisition_id= uniqid();
+
+        /* foreach ($update_products as $update_product) {this->get
           $log->write($update_product['40839']);
           } */
         foreach ($update_products as $key => $value) {
             foreach ($value as $ke => $val) {
-                $product = array('rejected_qty' => $val['rejected_qty'], 'procured_qty' => $val['total_procured_qty'], 'current_qty' => $val['current_qty'], 'current_buying_price' => $val['buying_price'], 'source' => $val['source'], 'product_id' => $val['product_id'], 'product_name' => $val['product_name']);
+                $log->write($val);
+                $product = array('requisition_id'=>$requisition_id,'quantity' => $val['quantity'], 'product_id' => $val['product_id'], 'product_store_id' => $val['product_store_id'], 'product_name' => $val['name'], 'added_by' => $this->user->getId());
                 $data[] = $this->model_inventory_vendor_product_dispatch->updateProductInventory($ke, $product);
             }
         }
-        $this->session->data['success'] = 'Products stocks modified successfully!';
-        echo 0;
-        exit();
+        $this->session->data['success'] = 'Requested products saved successfully!';
+          $json['status'] = '200';
+            $json['message'] = 'Requested products saved successfully!';
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+
     }
 
 
+
+    public function product_autocomplete() {
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        $this->load->model('inventory/vendor_product_dispatch');
+        $send = [];
+
+       
+         {
+            $data['store_id'] = $order_info['store_id'];
+            $json = $this->model_inventory_vendor_product_dispatch->getAllProducts($filter_name);
+            $log = new Log('error.log');
+            //$log->write('json');
+            //$log->write($json);
+            //$log->write('json');
+            //$send = $json;
+
+            foreach ($json as $j) {
+                
+
+                $j['name'] = htmlspecialchars_decode($j['name']);
+
+                $send[] = $j;
+            }
+
+            // echo "<pre>";print_r($json);die;
+
+            echo json_encode($send);
+        }
+    }
+
+    
     public function InventoryDispatchHistory() {
         $this->load->language('catalog/product');
 
