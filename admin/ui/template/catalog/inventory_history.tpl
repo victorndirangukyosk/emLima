@@ -129,7 +129,7 @@
                                     <td class="text-right"><?php echo $histor['product_store_id']; ?></td>
                                     <td class="text-right"><?php echo $histor['unit']; ?></td>
                                     
-                                      <?php if($this->user->getGroupName() == 'Administrator') { ?>
+                                      <?php if($this->user->hasPermission('access', 'inventory/inventory_history_updation')) { ?>
 
                                    
                                     <td class="text-left">
