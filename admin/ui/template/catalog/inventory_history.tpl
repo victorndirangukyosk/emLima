@@ -127,7 +127,7 @@
                                         <?php } ?></td>-->
                                     <td class="text-left"><?php echo $histor['product_name']; ?></td>
                                     <td class="text-right"><?php echo $histor['product_store_id']; ?></td>
-                                    <td class="text-right"><?php echo $histor['unit']; ?></td>
+                                    <td class="text-right" style="max-width: 50px !important; text-align: right;"><?php echo $histor['unit']; ?></td>
                                     
                                       <?php if($this->user->hasPermission('access', 'inventory/inventory_history_updation')) { ?>
 
@@ -162,7 +162,10 @@
                                     </td>
                                      <td class="text-left"><?php echo $histor['added_user']; ?></td>
                                    <!-- <td class="text-left"><?php echo $histor['added_user_role']; ?></td>-->
-                                    <td class="text-left"><?php echo $histor['date_added']; ?></td>
+                                   <!-- <td class="text-left"><?php echo $histor['date_added']; ?></td>-->
+                                   <td>
+                                    <input style="max-width: 85px !important; text-align: right;" name="date_added_edit" type="date"  class="date_added_edit"  id="date_added_<?php echo $histor['product_history_id'];?>" value="<?php echo $histor['date_added_date']; ?>">
+                                    </td>
                                     <td class="text-left"><button id="download_inventory_voucher" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Download Voucher" data-inventory-voucher="<?php echo $histor['voucher']; ?>"><i class="fa fa-download text-success"></i></button></td>
                                     <td class="text-left"><button id="update_inventory" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Update Inventory" data-inventory-update="<?php echo $histor['product_history_id']; ?>"><i class="fa fa-save text-success"></i></button></td>
 
@@ -373,12 +376,14 @@ var p_qty=encodeURIComponent($('input[id=\'total_procured_qty_'+update_inventory
 var r_qty=encodeURIComponent($('input[id=\'rejected_qty_'+update_inventory+'\']').val());
 var prev_qty=encodeURIComponent($('input[id=\'prev_qty_in_warehouse_'+update_inventory+'\']').val());
 var updated_qty=encodeURIComponent($('input[id=\'current_qty_'+update_inventory+'\']').val());
+var updated_date=encodeURIComponent($('input[id=\'date_added_'+update_inventory+'\']').val());
+ 
 
    $.ajax({
                     url: 'index.php?path=catalog/vendor_product/updateInventoryHistory&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ product_history_id : update_inventory, procured_qty : p_qty, rejected_qty : r_qty,prev_qty : prev_qty,current_qty : updated_qty,buying_price : buy_price, source    : src },
+                    data:{ product_history_id : update_inventory, procured_qty : p_qty, rejected_qty : r_qty,prev_qty : prev_qty,current_qty : updated_qty,buying_price : buy_price, source    : src,date_added_date:updated_date },
                     async: true,
                     success: function(json) {
                         console.log(json); 
