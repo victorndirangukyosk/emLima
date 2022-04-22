@@ -12,7 +12,7 @@
                 <button type="button" data-toggle="tooltip" title="Update Inventory" class="btn btn-default" onclick="updateinventory();"><i class="fa fa-floppy-o text-success"></i></button>
             
             </div>
-            <h1>Products Received By Dispatch</h1>
+            <h1>Products Requisition By Store</h1>
             <ul class="breadcrumb">
                 <?php foreach ($breadcrumbs as $breadcrumb) { ?>
                 <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
