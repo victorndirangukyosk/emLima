@@ -182,12 +182,12 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
         //echo $prices;exit;
         $data['breadcrumbs'][] = [
             'text' => ((false == $inventory) && (false == $prices)) ? $this->language->get('heading_title') : ((true == $prices) ? 'Products Category Prices' : 'Inventory Management'),
-            'href' => $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('inventory/vendor_product_dispatch', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        $data['add'] = $this->url->link('catalog/vendor_product/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['copy'] = $this->url->link('catalog/vendor_product/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('catalog/vendor_product/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('inventory/vendor_product_dispatch/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['copy'] = $this->url->link('inventory/vendor_product_dispatch/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('inventory/vendor_product_dispatch/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['products'] = [];
         $this->load->model('inventory/vendor_product_dispatch');
@@ -486,21 +486,8 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
         }
 
   
-            $data['sort_name'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-            $data['sort_model'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL');
-
-            $data['sort_store'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=st.name' . $url, 'SSL');
-
-            $data['sort_product_id'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL');
-
-            $data['sort_vproduct_id'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL');
-
-            $data['sort_category'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p2c.category' . $url, 'SSL');
-            $data['sort_price'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL');
-            $data['sort_quantity'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=ps.quantity' . $url, 'SSL');
-            $data['sort_status'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
-            $data['sort_order'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
-    
+            $data['sort_name'] = $this->url->link('inventory/vendor_product_dispatch', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+            
 
         $url = '';
 
@@ -570,7 +557,7 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
         $pagination->limit = $this->config->get('config_limit_admin');
 
         
-            $pagination->url = $this->url->link('inventory/vendor_product_dispatch/inventory', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+            $pagination->url = $this->url->link('inventory/vendor_product_dispatch', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
         
 
         $data['pagination'] = $pagination->render();
