@@ -4,12 +4,11 @@
         <div class="container-fluid">
             <div class="pull-right">
                 
-                <!--<?php if($this->user->getGroupName() == 'Administrator') { ?>  
-            <?php } ?>
-                -->
             
-                <button type="button" id="new_update_inventory" data-toggle="tooltip" title="Update Inventory" class="btn btn-primary"><i class="fa fa-plus"></i></button>
-                <button type="button" data-toggle="tooltip" title="Update Inventory" class="btn btn-default" onclick="updateinventory();"><i class="fa fa-floppy-o text-success"></i></button>
+            
+                <!--<button type="button" id="new_update_inventory" data-toggle="tooltip" title="Update Inventory" class="btn btn-primary"><i class="fa fa-plus"></i></button>-->
+
+                <button type="button" style="background:#63d17d;" data-toggle="tooltip" title="Save Requisition" class="btn btn-default" onclick="updateinventory();">Save Requisition</button>
             
             </div>
             <h1>Products Requisition By Store</h1>
@@ -34,15 +33,15 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-list"></i> <?php echo $text_list; ?></h3>
-                <div class="pull-right">
+                <div class="pull-right"  style="display:none;">
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_show_filter; ?>" class="btn btn-primary btn-sm" id="showFilter"><i class="fa fa-eye"></i></button>
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_hide_filter; ?>" class="btn btn-primary btn-sm" id="hideFilter"><i class="fa fa-eye-slash"></i></button>
                 </div>
             </div>
             <div class="panel-body">
 
-                <div class="well" style="display:none;">
-                    <div class="row">
+                <div class="well" style="display:block;">
+                    <div class="row" style="display:none;">
                          <div class="<?php echo $is_vendor ? 'col-sm-4' : 'col-sm-4' ?>">
                             <div class="form-group">
                                 <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
@@ -140,153 +139,41 @@
                         </div>
                     </div>
                 </div>
-                <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-product">
+
+                                        <!--<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">-->
+
+
+                <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form-product-requisition">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
+                        <table class="table table-bordered table-hover" id="myTable">
                             <thead>
-                                <tr>
-                                    <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
-                                    <td class="text-center"><?php echo $column_image; ?></td>
-                                    <!-- <td class="text-left"><?= $column_product_id ?></td> -->
-                                    
+                                <tr>                                     
 
-                                    <td class="text-left"><?php if ($sort == 'p.product_id') { ?>
-                                        <a href="<?php echo $sort_product_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_product_id; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_product_id; ?>"><?php echo $column_product_id; ?></a>
-                                        <?php } ?></td>
-
-                                    <!--<td class="text-left"><?= $column_vproduct_id ?></td> -->
-
-                                    <td class="text-left"><?php if ($sort == 'ps.product_store_id') { ?>
-                                        <a href="<?php echo $sort_vproduct_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_vproduct_id; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_vproduct_id; ?>"><?php echo $column_vproduct_id; ?></a>
-                                        <?php } ?></td>
-
-
-
-                                    <td class="text-left"><?php if ($sort == 'pd.name') { ?>
+                                    <th class="text-left"><?php if ($sort == 'pd.name') { ?>
                                         <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                                         <?php } ?>
-                                    </td>
 
-                                    <!-- <td><?= $entry_model ?></td> -->
-                                    <!--<td class="text-left"><?php if ($sort == 'p.model') { ?>
-                                        <a href="<?php echo $sort_model; ?>" class="<?php echo strtolower($order); ?>"><?php echo $entry_model; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_model; ?>"><?php echo $entry_model; ?></a>
-                                        <?php } ?></td>-->
+                                    </th>                                 
 
 
-                                    <td><?= $column_unit ?> (Unit Of measure)</td>
-
-                                    <!--<td class="text-left"><?php if ($sort == 'st.name') { ?>
-                                        <a href="<?php echo $sort_store; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_store_name; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_store; ?>"><?php echo $column_store_name; ?></a>
-                                        <?php } ?></td>-->
-
-                                    <!-- <td>Vendor Name</td> -->
-                                    <!--<td class="text-left"><?php if ($sort == 'p2c.category_id') { ?>
-                                        <a href="<?php echo $sort_category; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_category; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_category; ?>"><?php echo $column_category; ?></a>
-                                        <?php } ?></td>
-
-                                    <td class="text-left"><?php if ($sort == 'ps.quantity') { ?>
-                                        <a href="<?php echo $sort_quantity; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_quantity; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_quantity; ?>"><?php echo $column_quantity; ?></a>
-                                        <?php } ?></td>
-
-                                    <td><?= $column_price  ?></td>
-                                    <td class="text-left"><?php echo $column_status; ?></a>
-                                       </td>-->
-                                     <td class="text-left">Buying Price</td>
-                                     <!--<td class="text-left">Source</td>
-                                     <td class="text-left"><?php echo 'Current '.$column_quantity; ?></td>-->
-                                     <td class="text-left"><?php echo 'Total Qty Received'; ?></td>
-                                     <!--<td class="text-left"><?php echo 'Rejected Qty'; ?></td>
-									 <td class="text-right"><?php echo 'Total Qty'; ?></td>-->
-                                     <td class="text-right"><?php echo $column_action; ?></td>
-                                     
-                                    
+                                    <th><?= $column_unit ?> (Unit Of measure)</th>
+                                    <th class="text-left"><?php echo 'Total Qty Requested'; ?></th>
+                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if ($products) { ?>
-                                <?php foreach ($products as $product) { ?>
-                                <tr>
-                                    <td class="text-center"><?php if (in_array($product['product_store_id'], $selected)) { ?>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $product['product_store_id']; ?>" checked="checked" />
-                                        <?php } else { ?>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $product['product_store_id']; ?>" />
-                                        <?php } ?></td>
-                                    <td class="text-center"><?php if ($product['image']) { ?>
-                                        <a href="<?php echo $product['bigimage']; ?>" target="_blank"><img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>" class="img-thumbnail" /></a>
-                                        <?php } else { ?>
-                                        <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span>
-                                        <?php } ?></td>
-                                    <td class="text-right"><?php echo $product['product_id']; ?></td>
-                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>
-                                    <td class="text-left"><?php echo $product['name']; ?></td>
 
-                                    <!--<td class="text-left"><?php echo $product['model']; ?></td>-->
+                             <tr class="productsAdd">
+          <td colspan="3">
+          </td>
+          <td>
+              <button type="button" onclick="add();" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="Add Product"><i class="fa fa-plus-circle"></i></button>
+          </td>
+        </tr>
 
-                                    <td class="text-left"><?php echo $product['unit']; ?></td>
-                                    <!--<td class="text-left"><?php echo $product['store_name']; ?></td>->
-
-                                    
-                                    
-                                    <td class="text-left"><?php foreach ($categories as $category) { ?>
-                                        <?php if (in_array($category['category_id'], $product['category'])) { ?>
-                                        <?php echo $category['name'];?><br>
-                                        <?php } ?> <?php } ?></td>
-                                    
-                                    <td><?php echo $product['quantity'] ?></td>
-                                    <td>
-
-                                        <?php if (!(int)$product['special_price']){ ?>
-                                            <?php echo $product['price']; ?>
-                                        <?php } else { ?>
-                                            <del>
-                                            <?php echo $product['price'];?>
-                                            </del>
-                                            <?php echo "  " ,$product['special_price'] ?>
-                                                <?php } ?>
-                                    </td>
-                                    <td class="text-left">
-                                        <?php echo $product['status']; ?>
-                                    </td>-->
-                                    <td class="text-left">
-                                         <input style="max-width: 75px !important; text-align: right;" name="buying_price" type="text" onkeypress="return validateFloatKeyPress(this, event);" class="buying_price" data-general_product_id="<?php echo $product['product_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-buying-price="<?php echo $product['buying_price']; ?>" id="buying_price_<?php echo $product['product_store_id'];?>" value="<?php echo $product['buying_price_source']; ?>">
-                                   <!--</td>
-				    <td class="text-left">
-                                        <input style="max-width: 75px !important;" name="source" type="text" class="source" id="source_<?php echo $product['product_store_id'];?>" data-current-source="<?php echo $product['source']; ?>" value="<?php echo $product['source']; ?>">
-                                    </td>
-                                    <td class="text-left">
-                                        <?php //echo $product['quantity'] ?>
-                                    <input style="max-width: 75px !important; text-align: right;" name="current_qty_in_warehouse" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="current_qty_in_warehouse" data-general_product_id="<?php echo $product['product_id']; ?>" data-product_store_id="<?php echo $product['product_store_id']; ?>"  data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="current_qty_in_warehouse_<?php echo $product['product_store_id'];?>" value="<?php echo $product['quantity'] ?>">
-                                    </td>-->
-                                    <td class="text-left">
-                                        <input style="max-width: 75px !important; text-align: right; " name="total_procured_qty" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="procured_qty" data-general_product_id="<?php echo $product['product_id']; ?>" data-product_store_id="<?php echo $product['product_store_id']; ?>" data-name="<?php echo $product['name']; ?>" data-current-qty="<?php echo $product['quantity']; ?>"  id="total_procured_qty_<?php echo $product['product_store_id'];?>" value="">
-                                    </td>
-                                    <!--<td class="text-left">
-                                        <input style="max-width: 75px !important; text-align: right; " name="rejected_qty" type="text" class="rejected_qty" onkeypress="return validateFloatKeyPress(this, event);" id="rejected_qty_<?php echo $product['product_store_id'];?>" data-product_store_id="<?php echo $product['product_store_id']; ?>" data-current-qty="<?php echo $product['quantity']; ?>" value="">
-                                    </td>
-				    <td class="text-left">
-                                        <input style="max-width: 75px !important; text-align: right; " name="total_qty" disabled type="number"  id="total_qty_<?php echo $product['product_store_id'];?>" value="">
-                                    </td>-->
-                                    <td class="text-right"><?php if($this->user->getId() == 174) { ?><button type="button" onclick="ChangeProductInventory('<?php echo $product['product_store_id']; ?>');" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button><?php } ?>
-									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
-									data-toggle="modal" data-target="#<?php echo $product['product_store_id']; ?>historyModal"
-								    title="" class="btn btn-default" data-original-title="History"><i class="fa fa-history text-success"></i></button>
-									</td>
-                                    
-                                </tr>
+                             
 									<div id="<?php echo $product['product_store_id']; ?>historyModal" class="modal fade" role="dialog">
 									  <div class="modal-dialog">
 
@@ -307,12 +194,7 @@
 
 									  </div>
 									</div>
-                                <?php } ?>
-                                <?php } else { ?>
-                                <tr>
-                                    <td class="text-center" colspan="13"><?php echo $text_no_results; ?></td>
-                                </tr>
-                                <?php } ?>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -345,10 +227,7 @@
                     </div> <!-- /.modal -->
                 </form>
                
-                <div class="row">
-                    <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
-                    <div class="col-sm-6 text-right"><?php echo $results; ?></div>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -425,50 +304,94 @@ $(document).delegate('#store-list .fa-minus-circle','click', function(){
     $(this).parent().remove();
 });
 
-$('input[name=\'filter_store_id\']').autocomplete({
-    'source': function(request, response) {
-        $.ajax({
-            url: 'index.php?path=setting/store/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
-            dataType: 'json',
-            success: function(json) {
-                response($.map(json, function(item) {
-                    return {
-                        label: item['name'],
-                        value: item['store_id']
-                    }
-                }));
-            }
-        });
-    },
-    'select': function(item) {
-
-        
-        $('input[name=\'filter_store_id\']').val(item['label']);
-    }
-});
 
 
+function makeid() {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-function submit_copy() {
-    
-    $('.message_wrapper').html('');
-    
-    $error = '';
-    
-    if($('input[name="product_store[]"').length == 0){
-        $error += '<li>Select store(s).</li>';
-    }
-    
-    if($('input[name="selected[]"]:checked').length == 0){
-        $error += '<li>Select products.</li>';
-    }
-    
-    if(!$error){        
-        $('form').attr('action','index.php?path=inventory/vendor_product_dispatch/copy&token=<?= $token ?>').submit();
-    } else{        
-        $('.message_wrapper').html('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-label="Close">&times</button><ul class="list list-unstyled">'+$error+'</ul></div>');
-    }
+  for (var i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
 }
+function add() {
+   
+  noProduct = makeid();
+
+  $html  = '<tr>';        
+  $html += '<td class="text-right">';
+  $html += '<input type="text" class="form-control" name="products['+noProduct+'][name]" value=""/>';
+  
+  $html += '</td>';
+    
+ 
+  
+  $html += '<td class="text-right">';
+  $html += '<input type="text"  disabled name="products['+noProduct+'][unit]"  class="form-control" value=""></input>';
+  $html += '</td>';
+ 
+  
+  $html += '<td class="text-right">';
+  $html += '<input type="number" min="1" step="1"  class="form-control changeTotal changeQuantity text-right" name="products['+noProduct+'][quantity]" value="1"/>';
+  $html += '</td>';
+ 
+ 
+
+  $html += '<td>';
+  $html += '<button type="button" data-toggle="tooltip" title="" class="btn btn-danger remove" data-original-title="Remove"><i class="fa fa-minus-circle"></i></button>  <input type="hidden" name="products['+noProduct+'][product_id]" value=""/> <input type="hidden" name="products['+noProduct+'][product_store_id]" value=""/>';
+  $html += '</td>';
+
+  $html += '</tr>';
+  
+  $('.productsAdd').before($html);
+    
+  run(noProduct);
+}
+
+
+
+    $('input[name=\'filter_store_id\']').autocomplete({
+        'source': function(request, response) {
+            $.ajax({
+                url: 'index.php?path=setting/store/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        return {
+                            label: item['name'],
+                            value: item['store_id']
+                        }
+                    }));
+                }
+            });
+        },
+        'select': function(item) {
+
+            
+            $('input[name=\'filter_store_id\']').val(item['label']);
+        }
+    });
+
+    function myFunction() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+        }       
+    }
+    }
+ 
 
   $('#button-filter').on('click', function() {
 
@@ -531,7 +454,7 @@ function submit_copy() {
 
             location = url;
         });
-  //--></script> 
+    //--></script> 
     <script type="text/javascript"><!--
   $('input[name=\'filter_name\']').autocomplete({
             'source': function(request, response) {
@@ -550,6 +473,27 @@ function submit_copy() {
             },
             'select': function(item) {
                 $('input[name=\'filter_name\']').val(item['label']);
+            }
+        });
+
+
+        $('input[name=\'header_name\']').autocomplete({
+            'source': function(request, response) {
+                $.ajax({
+                    url: 'index.php?path=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function(json) {
+                        response($.map(json, function(item) {
+                            return {
+                                label: item['name'],
+                                value: item['product_id']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function(item) {
+                $('input[name=\'header_name\']').val(item['label']);
             }
         });
 
@@ -574,55 +518,9 @@ function submit_copy() {
         });
   //--></script></div>
 
+ 
 <script type="text/javascript"><!--
-function changeStatus(status) {
-        $.ajax({
-            url: 'index.php?path=common/edit/changeStatus&type=product&status=' + status + '&token=<?php echo $token; ?>',
-            dataType: 'json',
-            data: $("form[id^='form-']").serialize(),
-            success: function(json) {
-                if (json) {
-                    $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
-                }
-                else {
-                    location.reload();
-                }
-            }
-        });
-    }
-//--></script>
-<script type="text/javascript"><!--
-function changeStatus(status) {
-        $.ajax({
-            url: 'index.php?path=common/edit/changeStatus&type=vendor_product&status=' + status + '&token=<?php echo $token; ?>',
-            dataType: 'json',
-            data: $("form[id^='form-']").serialize(),
-            success: function(json) {
-                if (json) {
-                    $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
-                }
-                else {
-                    location.reload();
-                }
-            }
-        });
-    }
-
-function getProductInventoryHistory(product_store_id){
-	  $('.modal-body').html('');
-	   $.ajax({
-                    url: 'index.php?path=inventory/vendor_product_dispatch/getProductdispatchHistory&token=<?= $token ?>',
-                    dataType: 'html',
-                    data: {product_store_id :product_store_id},
-                    success: function(json) {
-					   $('.modal-body').html(json);
-                    },
-					error: function(json) {
-					 console.log('html',json);
-					  $('.modal-body').html(json);
-                    }
-         });
-}
+  
 
 
         $('input[name=\'filter_vendor_name\']').autocomplete({
@@ -647,71 +545,7 @@ function getProductInventoryHistory(product_store_id){
     }
 });
  
-
  
-
-$('input.current_qty_in_warehouse').keyup(function(){
-  	var current_qty_in_warehouse = $(this).val();
-        var product_store_id = $(this).attr('data-product_store_id');
-        $(this).attr('data-current-qty', current_qty_in_warehouse);
-        $('#current_qty_in_warehouse_'+product_store_id).attr('data-current-qty', current_qty_in_warehouse);
-        $('#total_procured_qty_'+product_store_id).attr('data-current-qty', current_qty_in_warehouse);
-        $('#rejected_qty_'+product_store_id).attr('data-current-qty', current_qty_in_warehouse);
-        
-        var current_qty = $(this).attr('data-current-qty');  
-
-	var procured_qty = $('#total_procured_qty_'+product_store_id).val();
-	var vendor_product_id = $(this).attr('data-product_store_id');
-        var rejected_qty = 0;
-        if ($('#rejected_qty_'+vendor_product_id).val().length != 0){
-        rejected_qty =$('#rejected_qty_'+vendor_product_id).val();
-        }
-     
-	var total = parseFloat(current_qty) + parseFloat(procured_qty)+parseFloat(rejected_qty);
-	$('#total_qty_'+vendor_product_id).val(total);
-});
-
-
-$('input.procured_qty').keyup(function(){
-
-    var current_qty = $(this).attr('data-current-qty');  
-
-    var procured_qty = $(this).val();
-    var vendor_product_id = $(this).attr('data-product_store_id');
-    var rejected_qty = 0;
-    if ($('#rejected_qty_'+vendor_product_id).val().length != 0){
-      rejected_qty =$('#rejected_qty_'+vendor_product_id).val();
-    }
-     
-	var total = parseFloat(current_qty) + parseFloat(procured_qty)+parseFloat(rejected_qty);
-	$('#total_qty_'+vendor_product_id).val(total);
-});
-
-
-
-$('input.rejected_qty').keyup(function(){
-    var current_qty = $(this).attr('data-current-qty');
-    var rejected_qty = $(this).val();
-    
-    var vendor_product_id = $(this).attr('data-product_store_id');
-     
-     var procured_qty = 0;
-     if ($('#total_procured_qty_'+vendor_product_id).val().length != 0){
-      procured_qty = $('#total_procured_qty_'+vendor_product_id).val();
-    }
-
-     if(parseFloat(procured_qty) < parseFloat(rejected_qty)){
-	alert("Rejected quantity should be less than procured quantity!");
-	$('#rejected_qty_'+vendor_product_id).val(0);
-	rejected_qty = 0;
-		
-    }
-	var total = parseFloat(current_qty) + ( parseFloat(procured_qty) - parseFloat(rejected_qty) );
-	$('#total_qty_'+vendor_product_id).val(total);
-});
-
-//-->
-
 function isNumberKey(txt,evt)
       {
           
@@ -780,49 +614,50 @@ function isNumberKey(txt,evt)
 	} else return o.selectionStart
 }
 
-function updateinventory() {
-console.log($('input[name="selected[]"]:checked').length);
-if($('input[name="selected[]"]:checked').length == 0) {
-alert('Please select atleaset one product!');
-return false;
-}
-var data_array = [];
-$('input[name="selected[]"]:checked').each(function() {
-var data_inventory = {};
-var vendor_product_id = $(this).val();
-var buying_price = $('#buying_price_'+vendor_product_id).val(); 
-//var source = $('#source_'+vendor_product_id).val();  
-//var current_qty = $('#current_qty_in_warehouse_'+vendor_product_id).val(); 
-var total_procured_qty = $('#total_procured_qty_'+vendor_product_id).val(); 
-//var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();  
-//var total_qty = $('#total_qty_'+vendor_product_id).val();   
+    function updateinventory() {
+       
+              
+         if($('#form-product-requisition').serialize().length<10) {
+             alert('please enter data')
+    return false;
+  }
 
-var general_product_id = $('#buying_price_'+vendor_product_id).attr('data-general_product_id');
-var product_name = $('#buying_price_'+vendor_product_id).attr('data-name');
 
-data_inventory[vendor_product_id] = { 'vendor_product_id' : vendor_product_id, 'buying_price' : buying_price,  'received_qty' : total_procured_qty,  'product_id' : general_product_id, 'product_name' : product_name};
-console.log(data_inventory);
-data_array.push(data_inventory);
-console.log(data_array);
-});
+         if(!confirm('Are you sure ?')) {
+    return false;
+  }
 
-    if(data_array.length  > 0){
-           $.ajax({
-                    url: 'index.php?path=inventory/vendor_product_dispatch/updateMultiInventory&token=<?= $token ?>',
-                    dataType: 'json',
-                    data: {updated_products :data_array},
-                    success: function(json) {
-                    if (json) {
-                    $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
-                    }
-                    else {
-                    location.reload();
-                    }    
-                    }
-         });
+
+   $.ajax({
+     
+                        url: 'index.php?path=inventory/vendor_product_dispatch/updateMultiInventory&token=<?= $token ?>',
+    type: 'post',
+    dataType: 'json',
+    data: $('#form-product-requisition').serialize(),
+    beforeSend: function() {
+          
+    },
+    complete: function() {
+   
+    },
+    success: function(json) {
+      console.log(json);
+      if (json['status']) {
+        alert('Requisition saved successfully'); 
+
+        location = location;
+      }     
+    },      
+    error: function(xhr, ajaxOptions, thrownError) {
+      //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        alert('Requisition Failed'); 
+
+      //location = location;
     }
+  });
 
-}
+       
+    }
 
 
 $('input[name=\'new_vendor_product_name\']').autocomplete({
@@ -874,71 +709,71 @@ $('input[name=\'new_vendor_product_name\']').autocomplete({
             }
 });                    
 
-                    
-$('button[id^=\'new_update_inventory\']').on('click', function (e) {
-$("form[id^='inventory_update']")[0].reset();
-$('#inventory_update')[0].reset();               
-$('#inventoryupdateModal').modal('toggle');
-$('#new_vendor_product_name').attr('data-vendor-product-id', "");
-$('#new_vendor_product_name').attr('data-vendor-product-name', "");
-$('input[name=\'new_buying_source\']').attr('data-new-buying-source-id', "");
-$('.alert.alert-success').html('');
-$('.alert.alert-danger').html('');
-$('.alert.alert-success').hide();
-$('.alert.alert-danger').hide();
-});
+                        
+    $('button[id^=\'new_update_inventory\']').on('click', function (e) {
+    $("form[id^='inventory_update']")[0].reset();
+    $('#inventory_update')[0].reset();               
+    $('#inventoryupdateModal').modal('toggle');
+    $('#new_vendor_product_name').attr('data-vendor-product-id', "");
+    $('#new_vendor_product_name').attr('data-vendor-product-name', "");
+    $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id', "");
+    $('.alert.alert-success').html('');
+    $('.alert.alert-danger').html('');
+    $('.alert.alert-success').hide();
+    $('.alert.alert-danger').hide();
+    });
 
-$('button[id^=\'update_inventory_form\']').on('click', function (e) {
-var vendor_product_uom = $('#new_vendor_product_uom').val();
-//alert($( "#new_vendor_product_uom option:selected" ).attr('data-product_id'));
+    $('button[id^=\'update_inventory_form\']').on('click', function (e) {
+    var vendor_product_uom = $('#new_vendor_product_uom').val();
+    //alert($( "#new_vendor_product_uom option:selected" ).attr('data-product_id'));
 
-var buying_price = $('#new_buying_price').val();
-//var buying_source = $('#new_buying_source').val();
-var procured_quantity = $('#new_procured_quantity').val();
-//var rejected_quantity = $('#new_rejected_quantity').val();
-//var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
-var vendor_product_id = $('#new_vendor_product_uom  option:selected').attr('data-product_id');
-//var buying_source_id = $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id');
-$('.alert.alert-success').html('');
-$('.alert.alert-danger').html(''); 
-$('.alert.alert-success').hide();
-$('.alert.alert-danger').hide();    
-$.ajax({
-        url: 'index.php?path=inventory/vendor_product_dispatch/updateInventorysingle&token=<?= $token ?>',
-        dataType: 'json',
-        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price,  'received_quantity' : total_procured_qty,  'vendor_product_id' : vendor_product_id  },
-        async: true,
-        beforeSend: function() {
-        $('#update_inventory_form').prop('disabled', true);
-        $('.alert.alert-success').html('<i class="fa fa-check-circle text-success">Please Wait Your Request Processing!</i>');
-        },
-        complete: function() {
-        $('#update_inventory_form').prop('disabled', false);
-        },
-        success: function(json) {
-        if (json) {
-        if(json['status'] == '200') {
-        $('.alert.alert-success').html('');
-        $('.alert.alert-success').html('<i class="fa fa-check-circle text-success">'+json['message']+'</i>');
-        $('.alert.alert-success').show();
-                    location.reload();
+    var buying_price = $('#new_buying_price').val();
+    //var buying_source = $('#new_buying_source').val();
+    var procured_quantity = $('#new_procured_quantity').val();
+    //var rejected_quantity = $('#new_rejected_quantity').val();
+    //var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
+    var vendor_product_id = $('#new_vendor_product_uom  option:selected').attr('data-product_id');
+    //var buying_source_id = $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id');
+    $('.alert.alert-success').html('');
+    $('.alert.alert-danger').html(''); 
+    $('.alert.alert-success').hide();
+    $('.alert.alert-danger').hide();    
+    $.ajax({
+            url: 'index.php?path=inventory/vendor_product_dispatch/updateInventorysingle&token=<?= $token ?>',
+            dataType: 'json',
+            data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price,  'received_quantity' : total_procured_qty,  'vendor_product_id' : vendor_product_id  },
+            async: true,
+            beforeSend: function() {
+            $('#update_inventory_form').prop('disabled', true);
+            $('.alert.alert-success').html('<i class="fa fa-check-circle text-success">Please Wait Your Request Processing!</i>');
+            },
+            complete: function() {
+            $('#update_inventory_form').prop('disabled', false);
+            },
+            success: function(json) {
+            if (json) {
+            if(json['status'] == '200') {
+            $('.alert.alert-success').html('');
+            $('.alert.alert-success').html('<i class="fa fa-check-circle text-success">'+json['message']+'</i>');
+            $('.alert.alert-success').show();
+                        location.reload();
 
-        console.log(json);
-        }
-        if(json['status'] == '400') {
-        $('.alert.alert-danger').html('');
-        $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger">'+json['message']+'</i>');
-        $('.alert.alert-danger').show();    
-        }
-        }
-        else {
-        $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger">Please try again later!</i>');
-        $('.alert.alert-danger').show();     
-        }
-        $('#update_inventory_form').prop('disabled', false);
-        }
-        });
-});
+            console.log(json);
+            }
+            if(json['status'] == '400') {
+            $('.alert.alert-danger').html('');
+            $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger">'+json['message']+'</i>');
+            $('.alert.alert-danger').show();    
+            }
+            }
+            else {
+            $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger">Please try again later!</i>');
+            $('.alert.alert-danger').show();     
+            }
+            $('#update_inventory_form').prop('disabled', false);
+            }
+            });
+    });
 
 $('input[name=\'new_buying_source\']').autocomplete({
             'source': function(request, response) {
@@ -961,12 +796,59 @@ $('input[name=\'new_buying_source\']').autocomplete({
             }
 });
 
-$(document).on('click', '#download_inventory_voucher', function(e){ 
-e.preventDefault();
-var inventory_voucher = $(this).attr("data-inventory-voucher");
-console.log(inventory_voucher);
-window.open(inventory_voucher, '_blank');
-});
+ 
+
+
+
+  function run(noProduct) {
+        
+      
+      $('input[name=\'products['+noProduct+'][name]\']').autocomplete({
+        'source': function(request, response) {                
+
+            console.log("sd source");
+            console.log(request);
+            console.log(response);
+
+            $.ajax({
+                url: 'index.php?path=inventory/vendor_product_dispatch/product_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+                dataType: 'json',     
+                success: function(json) {
+                    response($.map(json, function(item) {
+                        console.log(item);
+                        
+                        return {
+                            label: item['name']+' - '+item['unit'],
+                            value: item['name'],
+                            unit: item['unit'],
+                            model: item['model'],
+                            product_store_id: item['product_store_id'],
+                            product_id: item['product_id'],
+                        }
+                   
+                   
+                    }));
+ 
+                    console.log(json);
+                    console.log(name);
+                    console.log('sdsd');
+                }
+            });
+
+            //$('.product_name').val(request.term);
+        },
+         'select': function(item) {
+               
+             $('input[name=\'products['+noProduct+'][unit]').val(item.unit);          
+            $('input[name=\'products['+noProduct+'][name]').val(item.label);
+            $('input[name=\'products['+noProduct+'][product_id]').val(item.product_id);
+            $('input[name=\'products['+noProduct+'][product_store_id]').val(item.product_store_id);
+            }
+        
+      });
+    }
+    
+
 </script>
 <style>
 .bootstrap-select {
