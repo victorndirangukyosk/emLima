@@ -273,6 +273,105 @@ class ModelSaleOrder extends Model {
         return $ret2;
     }
 
+
+    //to get all products , irrespective of disable status
+    public function getProductsForEditInvoice_All($filter_name, $store_id, $order_id) {
+
+        $this->load->model('sale/order');
+        $this->load->model('account/customer');
+        $order_info = $this->model_sale_order->getOrder($order_id);
+        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
+        /* IF CUSTOMER SUB CUSTOMER */
+        $parent_customer_info = NULL;
+        if (isset($customer_info) && $customer_info['parent'] > 0) {
+            $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
+        }
+
+        $disabled_products_string = NULL;
+        if ($parent_customer_info == NULL && isset($customer_info['customer_category']) && $customer_info['customer_category'] != NULL) {
+            $category_pricing_disabled_products = $this->getCategoryPriceStatusByCategoryName($customer_info['customer_category'], 0);
+            //$log = new Log('error.log');
+            //$log->write('category_pricing_disabled_products');
+            $disabled_products = array_column($category_pricing_disabled_products, 'product_store_id');
+            $disabled_products_string = implode(',', $disabled_products);
+            //$log->write($disabled_products_string);
+            //$log->write('category_pricing_disabled_products');
+        } elseif ($parent_customer_info != NULL && isset($parent_customer_info) && isset($parent_customer_info['customer_category']) && $parent_customer_info['customer_category'] != NULL) {
+            $category_pricing_disabled_products = $this->getCategoryPriceStatusByCategoryName($parent_customer_info['customer_category'], 0);
+            //$log = new Log('error.log');
+            //$log->write('category_pricing_disabled_products');
+            $disabled_products = array_column($category_pricing_disabled_products, 'product_store_id');
+            $disabled_products_string = implode(',', $disabled_products);
+            //$log->write($disabled_products_string);
+            //$log->write('category_pricing_disabled_products');  
+        }
+
+        $store_id = $store_id;
+
+        $this->db->select('product_to_store.*,product_to_category.category_id,product.*,product_description.*,product_description.name as pd_name', false);
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+
+        if (!empty($filter_name)) {
+            $this->db->like('product_description.name', $this->db->escape($filter_name), 'both');
+        }
+
+        // if ($disabled_products_string != NULL) {
+        //     $this->db->where_not_in('product_to_store.product_store_id', $disabled_products_string);
+        // }
+
+        $limit = 18;
+        $offset = 0;
+
+        $sort_data = [
+            'product_description.name',
+            'product.model',
+            'product_to_store.quantity',
+            'product_to_store.price',
+            'product.sort_order',
+            'product.date_added',
+        ];
+
+        $this->db->group_by('product_description.name');
+        // $this->db->where('product_to_store.status', 1);
+        //REMOVED QUANTITY VALIDATION
+        //$this->db->where('product_to_store.quantity >=', 1);
+        $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
+        // $this->db->where('product.status', 1);
+        if ($store_id > 0) {
+            $this->db->where('product_to_store.store_id', $store_id);
+        }
+        $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
+        $ret2 = array();
+        foreach ($ret as $re) {
+            if ($parent_customer_info == NULL && isset($customer_info['customer_category']) && $customer_info['customer_category'] != NULL) {
+                $category_price_data = $this->getCategoryPrices($re['product_store_id'], $store_id, $customer_info['customer_category']);
+                $re['category_price'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['price'] : 0;
+                //$log = new Log('error.log');
+                //$log->write('category_price');
+            } elseif ($parent_customer_info != NULL && isset($parent_customer_info['customer_category']) && $parent_customer_info['customer_category'] != NULL) {
+                $category_price_data = $this->getCategoryPrices($re['product_store_id'], $store_id, $parent_customer_info['customer_category']);
+                $re['category_price'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['price'] : 0;
+                //$log = new Log('error.log');
+                //$log->write('category_price');
+            } else {
+                $re['category_price'] = 0;
+                //$log = new Log('error.log');
+                //$log->write('category_price_2');
+            }
+            $ret2[] = $re;
+        }
+        //$log = new Log('error.log');
+        //$log->write('ret2');
+        //$log->write($ret2);
+        //$log->write('ret2');
+        //$log->write($ret);
+        //return $ret;
+        return $ret2;
+    }
+
     public function getProductsForCategory($filter_name, $cateogry_price_products) {
 
 
@@ -369,7 +468,7 @@ class ModelSaleOrder extends Model {
         $result = $this->db->query($all_variations);
 
         foreach ($result->rows as $r) {
-            if ($r['status']) {
+            if ($r['status']) { 
                 //REMOVED QUANTITY VALIDATION
                 //if ($r['quantity'] > 0 && $r['status']) {
                 $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
