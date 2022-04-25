@@ -644,9 +644,10 @@ class ModelInventoryVendorProductRequisition extends Model {
         $log = new Log('error.log');
         $log->write($data['requisition_qty']);   
       
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_received_by_dispatch_history SET requisistion_id ='". $data['requisition_id']."',product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', product_name = '" . $data['product_name'] . "', requested_qty = '" . $data['quantity'] . "', added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', added_user = '" . $this->user->getFirstName() . ' ' . $this->user->getLastName() . "',  date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_received_by_dispatch_history SET requisition_id ='". $data['requisition_id']."',product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', product_name = '" . $data['product_name'] . "', requested_qty = '" . $data['quantity'] . "', added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', added_user = '" . $this->user->getFirstName() . ' ' . $this->user->getLastName() . "',  date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
 
         // $this->trigger->fire('post.admin.product.edit', $store_product_id);
+        $log->write('INSERT INTO ' . DB_PREFIX . "product_received_by_dispatch_history SET requisition_id ='". $data['requisition_id']."',product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', product_name = '" . $data['product_name'] . "', requested_qty = '" . $data['quantity'] . "', added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', added_user = '" . $this->user->getFirstName() . ' ' . $this->user->getLastName() . "',  date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");   
 
         return $this->db->getLastId();
     }
