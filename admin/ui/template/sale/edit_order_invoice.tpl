@@ -828,7 +828,7 @@ function addInBetween() {
             console.log(response);
 
             $.ajax({
-                url: 'index.php?path=sale/order/product_autocomplete&order_id=<?php echo $order_id; ?>&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+                url: 'index.php?path=sale/order/product_autocomplete_all&order_id=<?php echo $order_id; ?>&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
                 dataType: 'json',     
                 success: function(json) {
                     response($.map(json, function(item) {
