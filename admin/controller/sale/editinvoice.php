@@ -182,13 +182,12 @@ class ControllerSaleEditinvoice extends Controller {
                     if (array_search($product['product_id'], array_column($variations, 'product_store_id')) !== FALSE) {
                         //echo 'FOUND!';
                         $variationsold =$variations;
-                      } 
-                    //   else {
+                      } else {
                         //echo 'NOT FOUND!';
                     $variation_disabled = $this->model_sale_order->getProductVariationsDisabled($product['name'], 75, $order_id,$product['product_id'],$product['price']);
                     $variationsold =array_merge($variations,$variation_disabled);
 
-                    //   }
+                      }
 
                     // echo "<pre>";print_r($variationsold);
                     $missed_quantity = $this->model_sale_order->getMissingProductQuantityByProductIdOrderId($order_id, $product['product_id'], 0);
@@ -453,7 +452,6 @@ class ControllerSaleEditinvoice extends Controller {
                         //echo "<pre>";print_r($updateProduct);die;
                         $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category, $custom_price);
                         $products = $this->model_sale_order->updateOrderNewProduct($order_id, $updateProduct['product_id'], $updateProduct, $updateProduct_tax_total);
-                        
                     }
 
                     $sumTotal += ($updateProduct['price'] * $updateProduct['quantity']);
