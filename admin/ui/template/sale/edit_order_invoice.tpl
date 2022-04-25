@@ -128,19 +128,12 @@
           </td>
 		  <td class="text-right">
                       <select name="products[<?php echo $product['product_id']?>][unit]" class="form-control changeUnit" data-product_id="<?php echo $product['product_id']?>">
-                          <?php if (count($product['variations'])>0) {?>
                           <?php foreach($product['variations'] as $variant) { ?>
                           <?php if($variant['variation_id'] == $product['product_id']) { ?>
                           <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-special="<?php echo $variant['special_price'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> selected><?php echo $variant['unit']; ?></option>
                           <?php } else { ?>
                           <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-special="<?php echo $variant['special_price'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> ><?php echo $variant['unit']; ?></option>
                           <?php } } ?>
-
-                          <?php} else { ?>
-                          <option data-model="<?php echo $product['model'] ?>" data-categoryprice="<?php echo $product['price'] ?>" data-price="<?php echo $product['price'] ?>" data-special="<?php echo $product['price'] ?>" data-product_id="<?php echo $product['product_id'] ?>" ><?php echo $product['unit']; ?></option>
-
-
-                           <?php  } ?>
                       </select>
                       <!--<input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][unit]" value="<?php echo $product['unit']; ?>"/>-->
                   </td>
@@ -835,7 +828,7 @@ function addInBetween() {
             console.log(response);
 
             $.ajax({
-                url: 'index.php?path=sale/order/product_autocomplete_all&order_id=<?php echo $order_id; ?>&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+                url: 'index.php?path=sale/order/product_autocomplete&order_id=<?php echo $order_id; ?>&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
                 dataType: 'json',     
                 success: function(json) {
                     response($.map(json, function(item) {
