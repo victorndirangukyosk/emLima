@@ -1,6 +1,6 @@
 <?php
 
-class ControllerInventoryVendorProductDispatch  extends Controller {
+class ControllerInventoryVendorProductRequisition  extends Controller {
 
     private $error = [];
 
@@ -182,18 +182,18 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
         //echo $prices;exit;
         $data['breadcrumbs'][] = [
             'text' => ((false == $inventory) && (false == $prices)) ? $this->language->get('heading_title') : ((true == $prices) ? 'Products Category Prices' : 'Inventory Management'),
-            'href' => $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('inventory/vendor_product_requisition', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        $data['add'] = $this->url->link('catalog/vendor_product/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['copy'] = $this->url->link('catalog/vendor_product/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('catalog/vendor_product/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['add'] = $this->url->link('inventory/vendor_product_requisition/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['copy'] = $this->url->link('inventory/vendor_product_requisition/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('inventory/vendor_product_requisition/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['products'] = [];
-        $this->load->model('inventory/vendor_product_dispatch');
+        $this->load->model('inventory/vendor_product_requisition');
         $category_price_prods = NULL;
         if (isset($this->request->get['filter_category_price'])) {
-            $category_price_prods = $this->model_inventory_vendor_product_dispatch->getCategoryPriceDetailsByCategoryName(75, $this->request->get['filter_category_price']);
+            $category_price_prods = $this->model_inventory_vendor_product_requisition->getCategoryPriceDetailsByCategoryName(75, $this->request->get['filter_category_price']);
             $category_price_prods = array_column($category_price_prods, 'product_store_id');
             /* $log = new Log('error.log');
               $log->write('category_price_prods');
@@ -224,9 +224,9 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
 
         $this->load->model('tool/image');
 
-        $product_total = $this->model_inventory_vendor_product_dispatch->getTotalProducts($filter_data);
+        $product_total = $this->model_inventory_vendor_product_requisition->getTotalProducts($filter_data);
 
-        $results = $this->model_inventory_vendor_product_dispatch->getProducts($filter_data);
+        $results = $this->model_inventory_vendor_product_requisition->getProducts($filter_data);
         //echo '<pre>';print_r($results);
         if (isset($this->request->get['filter_category_price'])) {
             $modified_res = [];
@@ -258,7 +258,7 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
             //$product_total = count($results);
         }
 
-        $results_count = $this->model_inventory_vendor_product_dispatch->getProductsCount($filter_data);
+        $results_count = $this->model_inventory_vendor_product_requisition->getProductsCount($filter_data);
         if (isset($this->request->get['filter_category_price'])) {
             $modified_res_count = [];
             if (count($results_count) > 0) {
@@ -275,11 +275,11 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
 
         $this->load->model('catalog/category');
         $data['categories'] = $this->model_catalog_category->getCategories(0);
-        $this->load->model('inventory/vendor_product_dispatch');
+        $this->load->model('inventory/vendor_product_requisition');
 
         foreach ($results as $result) {
             if (isset($this->request->get['filter_price_category_status']) && $result['category_price_status'] == $this->request->get['filter_price_category_status']) {
-                $category = $this->model_inventory_vendor_product_dispatch->getProductCategories($result['product_id']);
+                $category = $this->model_inventory_vendor_product_requisition->getProductCategories($result['product_id']);
 
                 if (is_file(DIR_IMAGE . $result['image'])) {
                     $image = $this->model_tool_image->resize($result['image'], 40, 40);
@@ -316,7 +316,7 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
                 ];
             }
             if (!isset($this->request->get['filter_price_category_status'])) {
-                $category = $this->model_inventory_vendor_product_dispatch->getProductCategories($result['product_id']);
+                $category = $this->model_inventory_vendor_product_requisition->getProductCategories($result['product_id']);
 
                 if (is_file(DIR_IMAGE . $result['image'])) {
                     $image = $this->model_tool_image->resize($result['image'], 40, 40);
@@ -486,21 +486,8 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
         }
 
   
-            $data['sort_name'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-            $data['sort_model'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL');
-
-            $data['sort_store'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=st.name' . $url, 'SSL');
-
-            $data['sort_product_id'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL');
-
-            $data['sort_vproduct_id'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL');
-
-            $data['sort_category'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p2c.category' . $url, 'SSL');
-            $data['sort_price'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL');
-            $data['sort_quantity'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=ps.quantity' . $url, 'SSL');
-            $data['sort_status'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
-            $data['sort_order'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
-    
+            $data['sort_name'] = $this->url->link('inventory/vendor_product_requisition', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+            
 
         $url = '';
 
@@ -570,7 +557,7 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
         $pagination->limit = $this->config->get('config_limit_admin');
 
         
-            $pagination->url = $this->url->link('inventory/vendor_product_dispatch/inventory', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+            $pagination->url = $this->url->link('inventory/vendor_product_requisition', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
         
 
         $data['pagination'] = $pagination->render();
@@ -609,8 +596,8 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
         $data['category_prices'] = $category_prices;
         // echo '<pre>';print_r($cachePrice_data);exit;
         
-            $data['inventory_history'] = $this->url->link('inventory/vendor_product_dispatch/InventoryDispatchHistory', 'token=' . $this->session->data['token'], 'SSL');
-            $this->response->setOutput($this->load->view('inventory/vendor_product_dispatch _lists.tpl', $data));
+            $data['inventory_history'] = $this->url->link('inventory/vendor_product_requisition/InventoryDispatchHistory', 'token=' . $this->session->data['token'], 'SSL');
+            $this->response->setOutput($this->load->view('inventory/vendor_product_requisition _lists.tpl', $data));
        
     }
 
@@ -856,7 +843,7 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
         $data['categories'] = $this->model_catalog_category->getCategories(0);
 
         foreach ($results as $result) {
-            $category = $this->inventory_vendor_product_dispatch->getProductCategories($result['product_id']);
+            $category = $this->inventory_vendor_product_requisition->getProductCategories($result['product_id']);
 
             if (is_file(DIR_IMAGE . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], 40, 40);
@@ -1129,7 +1116,7 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
         $data['category_prices'] = $category_prices;
         //echo '<pre>';print_r($cachePrice_data);exit;
         
-            $this->response->setOutput($this->load->view('inventory/vendor_product_dispatch _lists.tpl', $data));
+            $this->response->setOutput($this->load->view('inventory/vendor_product_requisition_lists.tpl', $data));
         
     }
  
@@ -1226,7 +1213,7 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
         if ($this->request->get['vendor_product_id'] != NULL && $this->request->get['vendor_product_uom'] != NULL && $this->request->get['buying_price'] != NULL && $this->request->get['received_quantity'] != NULL ) {
             $this->load->language('catalog/product');
             $this->load->language('catalog/product');
-            $this->load->model('inventory/vendor_product_dispatch');
+            $this->load->model('inventory/vendor_product_requisition');
             $this->load->model('user/farmer');
             $this->load->model('catalog/vendor_product');
             // $this->load->model('user/supplier');
@@ -1259,12 +1246,12 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
             $product['product_name'] = $product_details['name'];
             $product['product_id'] = $product_details['product_id'];
 
-            $result = $this->model_inventory_vendor_product_dispatch->updateProductInventory($vendor_product_id, $product);
+            $result = $this->model_inventory_vendor_product_requisition->updateProductInventory($vendor_product_id, $product);
             //$ret = $this->emailtemplate->sendmessage($get_farmer_phone['mobile'], $sms_message);
             $log->write('RESULT');
             $log->write($result);
             $log->write('RESULT');
-            $json['data'] = $this->url->link('inventory/vendor_product_dispatch/inventorydispatchvoucher', 'token=' . $this->session->data['token'] . '&product_history_id=' . $result, 'SSL');
+            $json['data'] = $this->url->link('inventory/vendor_product_requisition/inventorydispatchvoucher', 'token=' . $this->session->data['token'] . '&product_history_id=' . $result, 'SSL');
             $json['status'] = '200';
             $json['message'] = 'Products received data modified successfully!';
             $this->session->data['success'] = 'Products received data modified successfully!';
@@ -1279,349 +1266,79 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
     }
 
     public function updateMultiInventory() {
-        $update_products = $this->request->get['updated_products'];
-        $this->load->model('inventory/vendor_product_dispatch');
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $supplier_details = NULL;
+
         $log = new Log('error.log');
-        /* foreach ($update_products as $update_product) {
+        $log->write($this->request->post);
+
+        // echo "<pre>";print_r('update_products');die;
+        $update_products = $this->request->post;
+        $this->load->model('inventory/vendor_product_requisition');
+        $log = new Log('error.log');
+            // echo "<pre>";print_r($update_products);die;
+        $requisition_id= uniqid();
+
+        /* foreach ($update_products as $update_product) {this->get
           $log->write($update_product['40839']);
           } */
         foreach ($update_products as $key => $value) {
             foreach ($value as $ke => $val) {
-                $product = array('rejected_qty' => $val['rejected_qty'], 'procured_qty' => $val['total_procured_qty'], 'current_qty' => $val['current_qty'], 'current_buying_price' => $val['buying_price'], 'source' => $val['source'], 'product_id' => $val['product_id'], 'product_name' => $val['product_name']);
-                $data[] = $this->model_inventory_vendor_product_dispatch->updateProductInventory($ke, $product);
+                $log->write($val);
+                $product = array('requisition_id'=>$requisition_id,'quantity' => $val['quantity'], 'product_id' => $val['product_id'], 'product_store_id' => $val['product_store_id'], 'product_name' => $val['name'], 'added_by' => $this->user->getId());
+                $data[] = $this->model_inventory_vendor_product_requisition->updateProductInventory($ke, $product);
             }
         }
-        $this->session->data['success'] = 'Products stocks modified successfully!';
-        echo 0;
-        exit();
+        $this->session->data['success'] = 'Requested products saved successfully!';
+          $json['status'] = '200';
+            $json['message'] = 'Requested products saved successfully!';
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+
     }
 
 
-    public function InventoryDispatchHistory() {
-        $this->load->language('catalog/product');
 
-        $this->document->setTitle($this->language->get('heading_page_title'));
-
-        $this->load->model('catalog/vendor_product');
-
-        $data['kondutoStatus'] = $this->config->get('config_konduto_status');
-        $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
-
+    public function product_autocomplete() {
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
         } else {
-            $filter_name = null;
+            $filter_name = '';
         }
 
-        if (isset($this->request->get['filter_store_id'])) {
-            $filter_store_id = $this->request->get['filter_store_id'];
-        } else {
-            $filter_store_id = null;
+        $this->load->model('inventory/vendor_product_requisition');
+        $send = [];
+
+       
+         {
+            $data['store_id'] = $order_info['store_id'];
+            $json = $this->model_inventory_vendor_product_requisition->getAllProducts($filter_name);
+            $log = new Log('error.log');
+            //$log->write('json');
+            //$log->write($json);
+            //$log->write('json');
+            //$send = $json;
+
+            foreach ($json as $j) {
+                
+
+                $j['name'] = htmlspecialchars_decode($j['name']);
+
+                $send[] = $j;
+            }
+
+            // echo "<pre>";print_r($json);die;
+
+            echo json_encode($send);
         }
-
-        if (isset($this->request->get['filter_model'])) {
-            $filter_model = $this->request->get['filter_model'];
-        } else {
-            $filter_model = null;
-        }
-
-        if (isset($this->request->get['filter_date_added'])) {
-            $filter_date_added = $this->request->get['filter_date_added'];
-        } else {
-            $filter_date_added = null;
-        }
-
-        if (isset($this->request->get['filter_date_added_end'])) {
-            $filter_date_added_end = $this->request->get['filter_date_added_end'];
-        } else {
-            $filter_date_added_end = null;
-        }
-
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
-        } else {
-            $sort = 'product_name';
-        }
-
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
-        } else {
-            $order = 'DESC';
-        }
-
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
-        } else {
-            $page = 1;
-        }
-
-        $url = '';
-
-        if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_store_id'])) {
-            $url .= '&filter_store_id=' . urlencode(html_entity_decode($this->request->get['filter_store_id'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_model'])) {
-            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-        }
-
-        if (isset($this->request->get['filter_date_added_end'])) {
-            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
-        }
-
-        if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
-        }
-
-        if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
-        }
-
-        if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
-        }
-
-        $data['breadcrumbs'] = [];
-
-        $data['breadcrumbs'][] = [
-            'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
-        ];
-
-        $data['breadcrumbs'][] = [
-            'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/vendor_product/InventoryHistory', 'token=' . $this->session->data['token'] . $url, 'SSL'),
-        ];
-
-        $data['history'] = [];
-
-        $filter_data = [
-            'filter_name' => $filter_name,
-            'filter_store_id' => $filter_store_id,
-            'filter_model' => $filter_model,
-            'filter_date_added' => $filter_date_added,
-            'filter_date_added_end' => $filter_date_added_end,
-            'sort' => $sort,
-            'order' => $order,
-            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin'),
-        ];
-
-        $history_total = $this->model_catalog_vendor_product->getTotalProductInventoryHistory($filter_data);
-
-        $results = $this->model_catalog_vendor_product->getProductInventoryHistory($filter_data);
-
-        //echo "<pre>";print_r($results);die;
-        foreach ($results as $result) {
-
-            $data['history'][] = [
-                'product_history_id' => $result['product_history_id'],
-                'product_store_id' => $result['product_store_id'],
-                'product_id' => $result['product_id'],
-                'procured_qty' => $result['procured_qty'],
-                'rejected_qty' => $result['rejected_qty'],
-                'prev_qty' => $result['prev_qty'],
-                'current_qty' => $result['current_qty'],
-                'product_name' => $result['product_name'],
-                'source' => $result['source'],
-                'buying_price' => $result['buying_price'],
-                'date_added' => $result['date_added'],
-                'added_by' => $result['added_by'],
-                'added_user_role' => $result['added_user_role'],
-                'added_user' => $result['added_user'],
-                'voucher' => $this->url->link('catalog/vendor_product/inventoryvoucher', 'token=' . $this->session->data['token'] . '&product_history_id=' . $result['product_history_id'] . $url, 'SSL'),
-            ];
-        }
-
-        $data['heading_title'] = $this->language->get('heading_page_title');
-
-        $data['text_list'] = $this->language->get('text_page_list');
-        $data['text_enabled'] = $this->language->get('text_enabled');
-        $data['text_disabled'] = $this->language->get('text_disabled');
-        $data['text_yes'] = $this->language->get('text_yes');
-        $data['text_no'] = $this->language->get('text_no');
-        $data['text_default'] = $this->language->get('text_default');
-        $data['text_no_results'] = $this->language->get('text_no_results');
-        $data['text_confirm'] = $this->language->get('text_confirm');
-
-        $data['column_name'] = $this->language->get('column_name');
-        $data['column_product_id'] = $this->language->get('column_product_id');
-        $data['column_product_store_id'] = $this->language->get('column_product_store_id');
-        $data['column_procured_qty'] = $this->language->get('column_procured_qty');
-        $data['column_rejected_qty'] = $this->language->get('column_rejected_qty');
-        $data['column_prev_quantity'] = $this->language->get('column_prev_quantity');
-        $data['column_updated_quantity'] = $this->language->get('column_updated_quantity');
-        $data['column_updation_date'] = $this->language->get('column_updation_date');
-        $data['column_updated_by'] = $this->language->get('column_updated_by');
-        $data['column_added_user_role'] = $this->language->get('column_added_user_role');
-        $data['column_date_added'] = $this->language->get('column_date_added');
-
-        $data['entry_name'] = $this->language->get('entry_product_name');
-        $data['entry_date_added'] = $this->language->get('entry_date_added');
-        $data['entry_date_added_end'] = 'To Date Added';
-        $data['entry_store_name'] = $this->language->get('entry_store_name');
-
-        $data['button_filter'] = $this->language->get('button_filter');
-        $data['button_show_filter'] = $this->language->get('button_show_filter');
-        $data['button_hide_filter'] = $this->language->get('button_hide_filter');
-
-        $data['token'] = $this->session->data['token'];
-
-        if (isset($this->error['warning'])) {
-            $data['error_warning'] = $this->error['warning'];
-        } else {
-            $data['error_warning'] = '';
-        }
-
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
-
-            unset($this->session->data['success']);
-        } else {
-            $data['success'] = '';
-        }
-
-        if (isset($this->request->post['selected'])) {
-            $data['selected'] = (array) $this->request->post['selected'];
-        } else {
-            $data['selected'] = [];
-        }
-
-        $url = '';
-
-        if (isset($this->request->get['filter_company'])) {
-            $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-        }
-
-        if (isset($this->request->get['filter_date_added_end'])) {
-            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
-        }
-
-        if (isset($this->request->get['filter_store_id'])) {
-            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
-        }
-
-        if ('ASC' == $order) {
-            $url .= '&order=DESC';
-        } else {
-            $url .= '&order=ASC';
-        }
-
-        if (isset($this->request->get['page'])) {
-            $url .= '&page=' . $this->request->get['page'];
-        }
-
-        $data['sort_name'] = $this->url->link('catalog/vendor_product/InventoryHistory', 'token=' . $this->session->data['token'] . '&sort=product_name' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('catalog/vendor_product/InventoryHistory', 'token=' . $this->session->data['token'] . '&sort=date_added' . $url, 'SSL');
-
-        $url = '';
-
-        if (isset($this->request->get['filter_name'])) {
-            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
-        }
-
-        if (isset($this->request->get['filter_date_added'])) {
-            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
-        }
-
-        if (isset($this->request->get['filter_date_added_end'])) {
-            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
-        }
-
-        if (isset($this->request->get['filter_store_id'])) {
-            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
-        }
-
-        if (isset($this->request->get['sort'])) {
-            $url .= '&sort=' . $this->request->get['sort'];
-        }
-
-        if (isset($this->request->get['order'])) {
-            $url .= '&order=' . $this->request->get['order'];
-        }
-
-        $pagination = new Pagination();
-        $pagination->total = $history_total;
-        $pagination->page = $page;
-        $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('catalog/vendor_product/InventoryHistory', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
-
-        $data['pagination'] = $pagination->render();
-
-        $data['results'] = sprintf($this->language->get('text_pagination'), ($history_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($history_total - $this->config->get('config_limit_admin'))) ? $history_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $history_total, ceil($history_total / $this->config->get('config_limit_admin')));
-
-        $data['filter_name'] = $filter_name;
-        $data['filter_date_added'] = $filter_date_added;
-        $data['filter_date_added_end'] = $filter_date_added_end;
-        $data['filter_store_id'] = $filter_store_id;
-
-        $data['sort'] = $sort;
-        $data['order'] = $order;
-
-        $data['header'] = $this->load->controller('common/header');
-        $data['column_left'] = $this->load->controller('common/column_left');
-        $data['footer'] = $this->load->controller('common/footer');
-
-        $this->response->setOutput($this->load->view('catalog/inventory_history.tpl', $data));
     }
 
-   
-    public function InventoryDispatchHistoryexcel() {
-        if (isset($this->request->get['filter_name'])) {
-            $filter_name = $this->request->get['filter_name'];
-        } else {
-            $filter_name = null;
-        }
-
-        if (isset($this->request->get['filter_store_id'])) {
-            $filter_store_id = $this->request->get['filter_store_id'];
-        } else {
-            $filter_store_id = null;
-        }
-
-        if (isset($this->request->get['filter_date_added'])) {
-            $filter_date_added = $this->request->get['filter_date_added'];
-        } else {
-            $filter_date_added = null;
-        }
-
-        if (isset($this->request->get['filter_date_added_end'])) {
-            $filter_date_added_end = $this->request->get['filter_date_added_end'];
-        } else {
-            $filter_date_added_end = null;
-        }
-
-        $filter_data = [
-            'filter_name' => $filter_name,
-            'filter_store_id' => $filter_store_id,
-            'filter_date_added' => $filter_date_added,
-            'filter_date_added_end' => $filter_date_added_end,
-        ];
-
-        // echo "<pre>";print_r($filter_data);die;
-
-        $data = [];
-        $this->load->model('report/excel');
-
-        $this->model_report_excel->download_inventoryhistoryexcel($data, $filter_data);
-    }
-
+         
     public function getUserByName($name) {
         if ($name) {
             $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '" . $this->db->escape($name) . "%'");
@@ -1630,87 +1347,5 @@ class ControllerInventoryVendorProductDispatch  extends Controller {
         }
     }
 
-
-    public function getProductDispatchHistory() {
-        $this->load->model('catalog/vendor_product');
-        $product_store_id = $this->request->get['product_store_id'];
-        $res = $this->model_catalog_vendor_product->productInventoryHistory($product_store_id);
-        $html = '';
-        if (count($res) > 0) {
-            $html .= '<div class="container"><table style="width:48%;" class="table table-bordered table-striped table-responsive">
-	   <thead>
-       <tr class="info">
-        <th>Procured Qty</th>
-		<th>Rejected Qty</th>
-		<th>Prev Qty</th>
-		<th>Updated Qty</th>
-                <th>Previous Buying Price</th>
-                <th>Buying Price</th>
-                <th>Previous Source</th>
-                <th>Source</th>
-		<th>Updated Date</th>
-                <th>Updated By</th>
-      </tr>
-      </thead>';
-        } else {
-            $html .= '<span>No History Found</span>';
-        }
-
-        if (count($res) > 0) {
-            $html .= '<tbody>';
-            foreach ($res as $product_history) {
-                $html .= '<tr>
-					<th>' . $product_history['procured_qty'] . '</th>
-					<th>' . $product_history['rejected_qty'] . '</th>
-					<th>' . $product_history['prev_qty'] . '</th>
-					<th>' . $product_history['current_qty'] . '</th>
-                                        <th>' . $product_history['prev_buying_price'] . '</th>
-                                        <th>' . $product_history['buying_price'] . '</th>
-                                        <th>' . $product_history['prev_source'] . '</th>
-					<th>' . $product_history['source'] . '</th>
-					<th>' . $product_history['date_added'] . '</th>
-                                        <th>' . $product_history['added_user'] . '</th>
-			   </tr>';
-            }
-
-            $html .= '</tbody></table><div>';
-        }
-        echo $html;
-        exit();
-    }
-
-
-    public function inventorydispatchvoucher() {
-        $inventory_history_id = $this->request->get['product_history_id'];
-        $this->load->model('catalog/vendor_product');
-
-        $filter_data = [
-            'filter_product_history_id' => $this->request->get['product_history_id']
-        ];
-        $results = $this->model_catalog_vendor_product->getProductInventoryHistory($filter_data);
-        $vendor_product_details = $this->model_catalog_vendor_product->getProduct($results[0]['product_store_id']);
-        $product_details = $this->model_catalog_vendor_product->getProductDetail($results[0]['product_id']);
-        $log = new Log('error.log');
-        $full_details = $results[0];
-        $full_details['model'] = $product_details['model'];
-        $full_details['unit'] = $product_details['unit'];
-        $full_details['sub_total'] = $this->currency->format($full_details['buying_price'] * $full_details['procured_qty'], $this->config->get('config_currency'));
-        $full_details['total'] = $this->currency->format($full_details['buying_price'] * $full_details['procured_qty'], $this->config->get('config_currency'));
-        $full_details['buying_price'] = $this->currency->format($full_details['buying_price'], $this->config->get('config_currency'));
-
-        try {
-            require_once DIR_ROOT . '/vendor/autoload.php';
-            $pdf = new \mikehaertl\wkhtmlto\Pdf;
-            $template = $this->load->view('catalog/inventory_voucher.tpl', $full_details);
-            $pdf->addPage($template);
-            if (!$pdf->send("Inventory Voucher #" . $inventory_history_id . ".pdf")) {
-                $error = $pdf->getError();
-                echo $error;
-                die;
-            }
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-    }
-
+  
 }

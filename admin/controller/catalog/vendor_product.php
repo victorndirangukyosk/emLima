@@ -2576,7 +2576,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $results = $this->model_catalog_vendor_product->getProductInventoryHistory($filter_data);
 
-        //echo "<pre>";print_r($results);die;
+        //echo "<pre>";print_r($results);die; 
         foreach ($results as $result) {
 
             $data['history'][] = [
@@ -2592,6 +2592,7 @@ class ControllerCatalogVendorProduct extends Controller {
                 'source' => $result['source'],
                 'buying_price' => $result['buying_price'],
                 'date_added' => $result['date_added'],
+                'date_added_date' => date('Y-m-d', strtotime($result['date_added'])),
                 'added_by' => $result['added_by'],
                 'added_user_role' => $result['added_user_role'],
                 'added_user' => $result['added_user'],
@@ -2735,6 +2736,9 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+
+        // echo "<pre>";print_r($data);die;
+
 
         $this->response->setOutput($this->load->view('catalog/inventory_history.tpl', $data));
     }
@@ -3449,11 +3453,12 @@ class ControllerCatalogVendorProduct extends Controller {
         $current_qty = $this->request->post['current_qty'];
         $buying_price = $this->request->post['buying_price'];
         $source = $this->request->post['source'];
+        $date_added = $this->request->post['date_added_date'];
         $log->write($product_history_id);
         $log->write('inventory history changed by '.$this->user->getId());
         
         $this->load->model('catalog/vendor_product');
-        $this->model_catalog_vendor_product->updateInventoryHistory($product_history_id, $procured_qty,$rejected_qty,$prev_qty,$current_qty,$buying_price,$source,$this->user->getId());
+        $this->model_catalog_vendor_product->updateInventoryHistory($product_history_id, $procured_qty,$rejected_qty,$prev_qty,$current_qty,$buying_price,$source,$date_added,$this->user->getId());
         $json['status']=1;
         }
         catch(exception $e)

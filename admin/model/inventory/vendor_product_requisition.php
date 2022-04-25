@@ -1,6 +1,6 @@
 <?php
 
-class ModelInventoryVendorProductDispatch extends Model {
+class ModelInventoryVendorProductRequisition extends Model {
 
    
     public function getProduct($product_store_id) {
@@ -642,50 +642,9 @@ class ModelInventoryVendorProductDispatch extends Model {
         $this->trigger->fire('pre.admin.product.edit', $data);
 
         $log = new Log('error.log');
-        $log->write($data['received_qty']);
-        
-        // $log->write($data['procured_qty']);
-        if (!isset($data['received_qty']) || $data['received_qty'] < 0 || $data['received_qty'] == NULL || $data['received_qty'] == '') {
-            $data['received_qty'] = 0;
-        }
-       
-
-        // if (!isset($data['procured_qty']) || $data['procured_qty'] < 0 || $data['procured_qty'] == NULL || $data['procured_qty'] == '') {
-        //     $data['procured_qty'] = 0;
-        // }
-
-        $qty = $data['current_qty']  - $data['received_qty'];//+ ($data['procured_qty']
-
-        $sel_query = 'SELECT * FROM ' . DB_PREFIX . "product_to_store WHERE product_store_id ='" . (int) $store_product_id . "'";
-        $sel_query = $this->db->query($sel_query);
-        $sel = $sel_query->row;
-        $log = new Log('error.log');
-        $log->write($sel['quantity']);
-        //$data['current_qty'];
-
-        $previous_quantity = $sel['quantity'];
-        $previous_buying_price = $sel['buying_price'];
-        if ($data['current_buying_price'] < 0 || $data['current_buying_price'] == '' || $data['current_buying_price'] == NULL) {
-            $data['current_buying_price'] = $sel['buying_price'];
-        } else {
-            $data['current_buying_price'] = $data['current_buying_price'];
-        }
-
-        // $previous_source = $sel['source'];
-        // if ($data['source'] == '' || $data['source'] == NULL) {
-        //     $data['source'] = $sel['source'];
-        // } else {
-        //     $data['source'] = $data['source'];
-        // }
-
-        echo $store_product_id;
-        echo $data;
-
-        $query_update = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity_store = '" . $qty . "', buying_price_store = '" . $data['current_buying_price'] . "', source_store = '' WHERE product_store_id = '" .  $store_product_id . "';";
-        echo $query_update;//need to check
-        $this->db->query($query_update);
-
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_received_by_dispatch_history SET product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', product_name = '" . $data['product_name'] . "', procured_qty = '" . $data['received_qty'] . "', prev_qty = '" . $previous_quantity . "', current_qty = '" . $qty . "', rejected_qty = '" . $data['rejected_qty'] . "', buying_price= '" . $data['current_buying_price'] . "', prev_buying_price= '" . $previous_buying_price . "',  source = '" . $data['source'] . "', prev_source = '" . $previous_source . "', added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', added_user = '" . $this->user->getFirstName() . ' ' . $this->user->getLastName() . "',  date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
+        $log->write($data['requisition_qty']);   
+      
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_received_by_dispatch_history SET requisistion_id ='". $data['requisition_id']."',product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', product_name = '" . $data['product_name'] . "', requested_qty = '" . $data['quantity'] . "', added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', added_user = '" . $this->user->getFirstName() . ' ' . $this->user->getLastName() . "',  date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
 
         // $this->trigger->fire('post.admin.product.edit', $store_product_id);
 
@@ -694,6 +653,57 @@ class ModelInventoryVendorProductDispatch extends Model {
 
      
 
+
+    public function getAllProducts($filter_name) {      
+
+       
+
+        $this->db->select('product_to_store.*,product.*,product_description.*,product_description.name as pd_name', false);
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        // $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+
+        if (!empty($filter_name)) {
+            $this->db->like('product_description.name', $this->db->escape($filter_name), 'both');
+        }
+
+         
+
+        $limit = 18;
+        $offset = 0;
+
+        // $sort_data = [
+        //     'product_description.name',
+        //     'product.model',
+        //     'product_to_store.quantity',
+        //     'product_to_store.price',
+        //     'product.sort_order',
+        //     'product.date_added',
+        // ];
+
+        // $this->db->group_by('product_description.name');
+        // $this->db->where('product_to_store.status', 1);
+        //REMOVED QUANTITY VALIDATION
+        //$this->db->where('product_to_store.quantity >=', 1);
+        $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
+        // $this->db->where('product.status', 1);
+        // if ($store_id > 0) {
+        //     $this->db->where('product_to_store.store_id', $store_id);
+        // }
+        $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
+         
+        //$log = new Log('error.log');
+        //$log->write('ret2');
+        //$log->write($ret2);
+        //$log->write('ret2');
+        //$log->write($ret);
+
+        // echo "<pre>";print_r($ret);die;
+
+        return $ret;
+        // return $ret2;
+    }
+
     public function productInventoryHistory($store_product_id) {
         $query = 'SELECT * FROM ' . DB_PREFIX . "product_inventory_history WHERE product_store_id ='" . (int) $store_product_id . "' order by date_added desc LIMIT 5";
         $query = $this->db->query($query);
@@ -701,8 +711,8 @@ class ModelInventoryVendorProductDispatch extends Model {
         return $query->rows;
     }
 
-    public function getTotalProductInventoryHistory($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'product_inventory_history';
+    public function getTotalHistory($data = []) {
+        $sql = 'SELECT COUNT(distinct requisition_id) AS total FROM ' . DB_PREFIX . 'product_received_by_dispatch_history';
 
         $implode = [];
 
@@ -726,43 +736,60 @@ class ModelInventoryVendorProductDispatch extends Model {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
 
+        // echo "<pre>";print_r($sql);die;
+
+
         $query = $this->db->query($sql);
 
-        //echo "<pre>";print_r($sql);die;
 
         return $query->row['total'];
     }
 
-    public function getTotalproductInventoryPriceHistory($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'product_inventory_price_history';
+    public function getHistorybyID($data = []) {
+        $sql = "SELECT requisition_id,	requested_qty,product_name ,added_user as requested_by,date(date_added) as date from " . DB_PREFIX . 'product_received_by_dispatch_history';
 
         $implode = [];
 
-        if (!empty($data['filter_store_id'])) {
-            $implode[] = "product_store_id = '" . $this->db->escape($data['filter_store_id']) . "'";
-        }
+        
 
-        if (!empty($data['filter_date_added'])) {
-            $implode[] = "date_added = '" . $this->db->escape($data['filter_date_added']) . "'";
-        }
-
-        if (!empty($data['filter_name'])) {
-            $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
+        if (!empty($data['requisition_id'])) {
+            $implode[] = "requisition_id = '" . $this->db->escape($data['requisition_id']) . "'";
         }
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
 
+        $sort_data = [
+            'product_store_id',
+        ];
+
+        // $sql .= ' Group by requisition_id ,added_user,date(date_added)' ;
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY date_added';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+
+         
+
+
         $query = $this->db->query($sql);
+        // echo "<pre>";print_r($sql);die;
 
-        //echo "<pre>";print_r($sql);die;
-
-        return $query->row['total'];
+        return $query->rows;
     }
 
-    public function getProductInventoryHistory($data = []) {
-        $sql = "SELECT * FROM " . DB_PREFIX . 'product_inventory_history';
+    public function getHistory($data = []) {
+        $sql = "SELECT requisition_id,added_user as requested_by,date(date_added) as date from " . DB_PREFIX . 'product_received_by_dispatch_history';
 
         $implode = [];
 
@@ -790,6 +817,8 @@ class ModelInventoryVendorProductDispatch extends Model {
             'product_store_id',
         ];
 
+        $sql .= ' Group by requisition_id ,added_user,date(date_added)' ;
+
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY ' . $data['sort'];
         } else {
@@ -801,6 +830,7 @@ class ModelInventoryVendorProductDispatch extends Model {
         } else {
             $sql .= ' ASC';
         }
+
 
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
@@ -814,8 +844,9 @@ class ModelInventoryVendorProductDispatch extends Model {
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
 
+
         $query = $this->db->query($sql);
-        //echo "<pre>";print_r($sql);die;
+        // echo "<pre>";print_r($sql);die;
 
         return $query->rows;
     }

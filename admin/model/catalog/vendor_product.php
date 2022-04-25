@@ -1140,9 +1140,9 @@ class ModelCatalogVendorProduct extends Model {
     }
 
 
-    public function updateInventoryHistory($product_history_id, $procured_qty,$rejected_qty,$prev_qty,$current_qty,$buying_price,$source,$altered_by) {
+    public function updateInventoryHistory($product_history_id, $procured_qty,$rejected_qty,$prev_qty,$current_qty,$buying_price,$source,$date_added,$altered_by) {
         
-        $query = 'UPDATE ' . DB_PREFIX . "product_inventory_history SET procured_qty = '" . $procured_qty . "',rejected_qty = '" . $rejected_qty . "',prev_qty = '" . $prev_qty . "',current_qty = '" . $current_qty . "',buying_price = '" . $buying_price . "',source = '" . rawurldecode($source) . "',altered_by_admin = 1  ,altered_by = '" . $altered_by . "' WHERE product_history_id = '" . (int) $product_history_id . "' ";
+        $query = 'UPDATE ' . DB_PREFIX . "product_inventory_history SET procured_qty = '" . $procured_qty . "',rejected_qty = '" . $rejected_qty . "',prev_qty = '" . $prev_qty . "',current_qty = '" . $current_qty . "',buying_price = '" . $buying_price . "',source = '" . rawurldecode($source) . "',date_added = '" . $date_added . "',altered_by_admin = 1  ,altered_by = '" . $altered_by . "' WHERE product_history_id = '" . (int) $product_history_id . "' ";
             // echo "<pre>";print_r($query);die;
 
         $this->db->query($query);
