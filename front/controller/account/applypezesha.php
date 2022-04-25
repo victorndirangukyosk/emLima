@@ -476,6 +476,7 @@ class ControllerAccountApplypezesha extends Controller {
                 $mail = new Mail($this->config->get('config_mail'));
                 // $mail->setTo('documents.kwikbasket@yopmail.com');
                 $mail->setTo($this->config->get('pezesha_email'));
+                $mail->setCc($this->config->get('pezesha_email_cc'));
                 $mail->setFrom($this->config->get('config_from_email'));
                 $mail->setSender($this->config->get('config_name'));
                 $mail->setSubject($subject);
