@@ -76,9 +76,9 @@
           <?php } ?>
 
 
-             <?php if($preturn_vendor_product_dispatch != false){ ?>
+             <?php if($preturn_vendor_product_requisition != false){ ?>
 
-            <li><a href="<?php echo $vendor_product_dispatch ; ?>">Store Requisition </a></li>
+            <li><a href="<?php echo $vendor_product_requisition ; ?>">Store Requisition </a></li>
             
           <?php } ?>
 
