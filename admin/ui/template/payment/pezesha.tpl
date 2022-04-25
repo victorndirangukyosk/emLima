@@ -204,6 +204,17 @@
                     </div>
 
 
+                     <div class="form-group required">
+                        <label class="col-sm-2 control-label" for="input-email-cc">Email (CC) </label>
+                        <div class="col-sm-10">
+                            <input type="text" name="pezesha_email_cc" value="<?php echo $pezesha_email_cc; ?>" placeholder=" CC Email" id="input-email-cc" class="form-control" />
+                            <?php if ($error_email_cc) { ?>
+                            <div class="text-danger"><?php echo $error_email_cc; ?></div>
+                            <?php } ?>
+                        </div>
+                    </div>
+
+
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_sort_order; ?></label>
                         <div class="col-sm-10">
