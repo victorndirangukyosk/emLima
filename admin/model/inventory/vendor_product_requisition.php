@@ -711,8 +711,8 @@ class ModelInventoryVendorProductRequisition extends Model {
         return $query->rows;
     }
 
-    public function getTotalProductInventoryHistory($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'product_inventory_history';
+    public function getTotalHistory($data = []) {
+        $sql = 'SELECT COUNT(distinct requisition_id) AS total FROM ' . DB_PREFIX . 'product_received_by_dispatch_history';
 
         $implode = [];
 
@@ -736,43 +736,60 @@ class ModelInventoryVendorProductRequisition extends Model {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
 
+        // echo "<pre>";print_r($sql);die;
+
+
         $query = $this->db->query($sql);
 
-        //echo "<pre>";print_r($sql);die;
 
         return $query->row['total'];
     }
 
-    public function getTotalproductInventoryPriceHistory($data = []) {
-        $sql = 'SELECT COUNT(*) AS total FROM ' . DB_PREFIX . 'product_inventory_price_history';
+    public function getHistorybyID($data = []) {
+        $sql = "SELECT requisition_id,	requested_qty,product_name ,added_user as requested_by,date(date_added) as date from " . DB_PREFIX . 'product_received_by_dispatch_history';
 
         $implode = [];
 
-        if (!empty($data['filter_store_id'])) {
-            $implode[] = "product_store_id = '" . $this->db->escape($data['filter_store_id']) . "'";
-        }
+        
 
-        if (!empty($data['filter_date_added'])) {
-            $implode[] = "date_added = '" . $this->db->escape($data['filter_date_added']) . "'";
-        }
-
-        if (!empty($data['filter_name'])) {
-            $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
+        if (!empty($data['requisition_id'])) {
+            $implode[] = "requisition_id = '" . $this->db->escape($data['requisition_id']) . "'";
         }
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
         }
 
+        $sort_data = [
+            'product_store_id',
+        ];
+
+        // $sql .= ' Group by requisition_id ,added_user,date(date_added)' ;
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY date_added';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+
+         
+
+
         $query = $this->db->query($sql);
+        // echo "<pre>";print_r($sql);die;
 
-        //echo "<pre>";print_r($sql);die;
-
-        return $query->row['total'];
+        return $query->rows;
     }
 
-    public function getProductInventoryHistory($data = []) {
-        $sql = "SELECT * FROM " . DB_PREFIX . 'product_inventory_history';
+    public function getHistory($data = []) {
+        $sql = "SELECT requisition_id,added_user as requested_by,date(date_added) as date from " . DB_PREFIX . 'product_received_by_dispatch_history';
 
         $implode = [];
 
@@ -800,6 +817,8 @@ class ModelInventoryVendorProductRequisition extends Model {
             'product_store_id',
         ];
 
+        $sql .= ' Group by requisition_id ,added_user,date(date_added)' ;
+
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY ' . $data['sort'];
         } else {
@@ -811,6 +830,7 @@ class ModelInventoryVendorProductRequisition extends Model {
         } else {
             $sql .= ' ASC';
         }
+
 
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
@@ -824,8 +844,9 @@ class ModelInventoryVendorProductRequisition extends Model {
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
 
+
         $query = $this->db->query($sql);
-        //echo "<pre>";print_r($sql);die;
+        // echo "<pre>";print_r($sql);die;
 
         return $query->rows;
     }
