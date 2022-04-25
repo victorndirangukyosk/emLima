@@ -65,6 +65,47 @@ class ControllerSaleOrder extends Controller {
         }
     }
 
+
+    public function product_autocomplete_all() {
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        $this->load->model('sale/order');
+
+        $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
+
+        $send = [];
+
+        if (!empty($order_info)) {
+            $data['store_id'] = $order_info['store_id'];
+            //$json = $this->model_sale_order->getProductDataByStoreFilter($filter_name, $data['store_id']);
+            // $json = $this->model_sale_order->getProductsForEditInvoice($filter_name, $data['store_id'], $this->request->get['order_id']);
+            $json = $this->model_sale_order->getProductsForEditInvoice_All($filter_name, $data['store_id'], $this->request->get['order_id']);
+            $log = new Log('error.log');
+            //$log->write('json');
+            //$log->write($json);
+            //$log->write('json');
+            //$send = $json;
+
+            foreach ($json as $j) {
+                if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
+                    $j['price'] = $j['special_price'];
+                }
+
+                $j['name'] = htmlspecialchars_decode($j['name']);
+
+                $send[] = $j;
+            }
+
+            //echo "<pre>";print_r($json);die;
+
+            echo json_encode($send);
+        }
+    }
+
     public function product_autocomplete_category() {
 
         if (isset($this->request->get['filter_name'])) {
