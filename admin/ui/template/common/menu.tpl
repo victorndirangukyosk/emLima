@@ -82,6 +82,12 @@
             
           <?php } ?>
 
+           <?php if($preturn_vendor_product_requisition_history != false){ ?>
+
+            <li><a href="<?php echo $vendor_product_requisition_history ; ?>">Requisition History</a></li>
+            
+          <?php } ?>
+
             
             </ul>
           <?php } ?>
