@@ -483,6 +483,8 @@ class Emailtemplate {
             'companyname' => isset($data['companyname']) ? $data['companyname'] : '',
             'pezesha_customer_id' => isset($data['pezesha_customer_id']) ? $data['pezesha_customer_id'] : '',
             'pezesha_customer_uuid' => isset($data['pezesha_customer_uuid']) ? $data['pezesha_customer_uuid'] : '',
+            'pezesha_documents'=>isset($data['pezesha_documents']) ? $data['pezesha_documents'] : '',
+
         ];
 
         return $result;
