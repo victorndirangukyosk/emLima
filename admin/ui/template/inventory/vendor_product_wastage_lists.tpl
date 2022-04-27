@@ -583,7 +583,7 @@ $('input[name=\'new_vendor_product_name\']').autocomplete({
                 $('#new_vendor_product_name').attr('data-vendor-product-name', selected_product_store_name);
                 $('input[name=\'new_vendor_product_name\']').val(item['label']);
                 $.ajax({
-                url: 'index.php?path=catalog/product/getVendorProductVariantsInfo&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>',
+                url: 'index.php?path=catalog/product/getVendorProductVariantsInfo_all&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>',
                 dataType: 'json',     
                 success: function(json) {
                     console.log(json);
