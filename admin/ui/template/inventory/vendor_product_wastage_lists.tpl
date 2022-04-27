@@ -562,7 +562,7 @@ function isNumberKey(txt,evt)
 $('input[name=\'new_vendor_product_name\']').autocomplete({
             'source': function(request, response) {
                 $.ajax({
-                    url: 'index.php?path=catalog/product/product_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=catalog/product/product_autocomplete_all&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function(json) {
                         response($.map(json, function(item) {
@@ -583,7 +583,7 @@ $('input[name=\'new_vendor_product_name\']').autocomplete({
                 $('#new_vendor_product_name').attr('data-vendor-product-name', selected_product_store_name);
                 $('input[name=\'new_vendor_product_name\']').val(item['label']);
                 $.ajax({
-                url: 'index.php?path=catalog/product/getVendorProductVariantsInfo&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>',
+                url: 'index.php?path=catalog/product/getVendorProductVariantsInfo_all&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>',
                 dataType: 'json',     
                 success: function(json) {
                     console.log(json);
