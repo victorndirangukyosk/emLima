@@ -1744,6 +1744,33 @@ class ControllerCatalogProduct extends Controller {
         echo json_encode($send);
     }
 
+    public function product_autocomplete_all() {
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        $this->load->model('sale/order');
+        $this->load->model('catalog/vendor_product');
+
+        $send = [];
+
+        $json = $this->model_sale_order->getProductsForInventory_all($filter_name);
+        $log = new Log('error.log');
+
+        foreach ($json as $j) {
+            if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
+                $j['price'] = $j['special_price'];
+            }
+
+            $j['name'] = htmlspecialchars_decode($j['name']);
+
+            $send[] = $j;
+        }
+        echo json_encode($send);
+    }
 
     public function getVendorProductVariantsInfo() {
 
