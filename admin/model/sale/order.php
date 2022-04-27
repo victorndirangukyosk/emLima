@@ -476,6 +476,24 @@ class ModelSaleOrder extends Model {
         return $ret;
     }
 
+
+    public function getProductForPopup_all($product_store_id, $is_admin = false, $store_id) {
+        if (!isset($store_id)) {
+            $store_id = $this->session->data['config_store_id'];
+        }
+        $this->db->select('product_to_store.*,product_description.*,product.*,product_description.name as pd_name', false);
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->group_by('product_to_store.product_store_id');
+        $this->db->where('product_to_store.store_id', $store_id);
+        // $this->db->where('product_to_store.status', 1);
+        $this->db->where('product_description.language_id', $this->config->get('config_language_id'));
+        $this->db->where('product_to_store.product_store_id', $product_store_id);
+        $ret = $this->db->get('product_to_store')->row;
+
+        return $ret;
+    }
+
     public function getProductVariationsNew($product_name, $store_id, $order_id, $formated = false) {
         $returnData = [];
 
@@ -745,6 +763,61 @@ class ModelSaleOrder extends Model {
 
         foreach ($result->rows as $r) {
             if ($r['status']) {
+                $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
+
+                $r['key'] = $key;
+
+                $percent_off = null;
+                if (isset($r['special_price']) && isset($r['price']) && 0 != $r['price'] && 0 != $r['special_price']) {
+                    $percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
+                }
+
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $r['price'] = $this->currency->formatWithoutCurrency($r['price']);
+                }
+
+                if ((float) $r['special_price']) {
+                    $r['special_price'] = $this->currency->formatWithoutCurrency((float) $r['special_price']);
+                } else {
+                    $r['special_price'] = false;
+                }
+
+                $r['model'] = $r['model'];
+
+                $res = [
+                    'variation_id' => $r['product_store_id'],
+                    'unit' => $r['unit'],
+                    'weight' => floatval($r['weight']),
+                    'price' => $r['price'],
+                    'special' => $r['special_price'],
+                    'percent_off' => number_format($percent_off, 0),
+                    'key' => $key,
+                    'model' => $r['model']
+                ];
+
+                if (true == $formated) {
+                    array_push($returnData, $res);
+                } else {
+                    array_push($returnData, $r);
+                }
+            }
+        }
+
+        return $returnData;
+    }
+
+
+    public function getVendorProductVariations_all($product_name, $store_id, $formated = false) {
+        $returnData = [];
+
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' ";//and ps.status=1
+        $log = new Log('error.log');
+        $log->write($all_variations);
+        $result = $this->db->query($all_variations);
+
+        foreach ($result->rows as $r) {
+            // if ($r['status']) 
+            {
                 $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
 
                 $r['key'] = $key;
