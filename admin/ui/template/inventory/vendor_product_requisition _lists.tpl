@@ -6,7 +6,6 @@
                 
             
             
-                <!--<button type="button" id="new_update_inventory" data-toggle="tooltip" title="Update Inventory" class="btn btn-primary"><i class="fa fa-plus"></i></button>-->
 
                 <button type="button" style="background:#63d17d;" data-toggle="tooltip" title="Save Requisition" class="btn btn-default" onclick="updateinventory();">Save Requisition</button>
             
@@ -232,70 +231,7 @@
         </div>
     </div>
     
-     <!-- Modal -->
-    <div id="inventoryupdateModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div style="color: white;background-color: #008db9;" class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"><strong>Inventory Update</strong></h4>
-            </div>
-            <div class="modal-body">
-                <form id="inventory_update" name="inventory_update">
-                    <div class="form-group required">
-                        <label for="recipient-name" class="col-form-label">Product Name</label>
-                        <input type="text" placeholder="Serach Product" class="form-control" data-vendor-product-id="" data-vendor-product-name="" id="new_vendor_product_name" name="new_vendor_product_name" style="max-width: 568px !important;">
-                    </div>
-                    <div class="form-group required">
-                        <label for="recipient-name" class="col-form-label">Product UOM</label>
-                        <select class="form-select" id="new_vendor_product_uom" name="new_vendor_product_uom" style="max-width: 568px !important;">
-                        </select>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group required">
-                                <label for="buying-price" class="col-form-label">Buying Price</label>
-                                <input type="number" class="form-control" id="new_buying_price" name="new_buying_price" min="1" style="max-width: 568px !important;">
-                            </div>   
-                        </div>
-                        <div class="col-sm-6">
-                            <!--<div class="form-group required">
-                                <label for="source" class="col-form-label">Source</label>
-                                <input placeholder="Search Supplier/Farmer" type="text" class="form-control" id="new_buying_source" data-new-buying-source-id="" name="new_buying_source" style="max-width: 568px !important;">
-                            </div>-->   
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group required">
-                                <label for="procured-quantity" class="col-form-label">Total Received Quantity</label>
-                                <input type="number" class="form-control" id="new_procured_quantity" name="new_procured_quantity" min="0.01" style="max-width: 568px !important;">
-                            </div>   
-                        </div>
-                       <!-- <div class="col-sm-6">
-                            <div class="form-group required">
-                                <label for="source" class="col-form-label">Rejected Quantity</label>
-                                <input type="number" class="form-control" id="new_rejected_quantity" name="new_rejected_quantity" min="0" value="0" style="max-width: 568px !important;">
-                            </div>   
-                        </div>-->
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <div class="alert alert-danger" style="display:none;">
-                </div>
-                <div class="alert alert-success" style="display:none;">
-                </div>
-                
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="update_inventory_form" name="update_inventory_form">Update Inventory</button>
-            </div>
-        </div>
-
-    </div>
-</div>  
+      
     
     
     <script type="text/javascript"><!--
@@ -455,95 +391,12 @@ function add() {
             location = url;
         });
     //--></script> 
-    <script type="text/javascript"><!--
-  $('input[name=\'filter_name\']').autocomplete({
-            'source': function(request, response) {
-                $.ajax({
-                    url: 'index.php?path=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
-                    dataType: 'json',
-                    success: function(json) {
-                        response($.map(json, function(item) {
-                            return {
-                                label: item['name'],
-                                value: item['product_id']
-                            }
-                        }));
-                    }
-                });
-            },
-            'select': function(item) {
-                $('input[name=\'filter_name\']').val(item['label']);
-            }
-        });
-
-
-        $('input[name=\'header_name\']').autocomplete({
-            'source': function(request, response) {
-                $.ajax({
-                    url: 'index.php?path=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
-                    dataType: 'json',
-                    success: function(json) {
-                        response($.map(json, function(item) {
-                            return {
-                                label: item['name'],
-                                value: item['product_id']
-                            }
-                        }));
-                    }
-                });
-            },
-            'select': function(item) {
-                $('input[name=\'header_name\']').val(item['label']);
-            }
-        });
-
-        $('input[name=\'filter_model\']').autocomplete({
-            'source': function(request, response) {
-                $.ajax({
-                    url: 'index.php?path=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_model=' + encodeURIComponent(request),
-                    dataType: 'json',
-                    success: function(json) {
-                        response($.map(json, function(item) {
-                            return {
-                                label: item['model'],
-                                value: item['product_id']
-                            }
-                        }));
-                    }
-                });
-            },
-            'select': function(item) {
-                $('input[name=\'filter_model\']').val(item['label']);
-            }
-        });
-  //--></script></div>
+    </div>
 
  
 <script type="text/javascript"><!--
   
-
-
-        $('input[name=\'filter_vendor_name\']').autocomplete({
-    'source': function(request, response) {
-        $.ajax({
-            url: 'index.php?path=setting/store/vendor_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
-            dataType: 'json',
-            success: function(json) {
-                response($.map(json, function(item) {
-                    return {
-                        label: item['name'],
-                        value: item['user_id']
-                    }
-                }));
-            }
-        });
-    },
-    'select': function(item) {
-
-        
-        $('input[name=\'filter_vendor_name\']').val(item['label']);
-    }
-});
+ 
  
  
 function isNumberKey(txt,evt)
@@ -619,183 +472,49 @@ function isNumberKey(txt,evt)
               
          if($('#form-product-requisition').serialize().length<10) {
              alert('please enter data')
-    return false;
-  }
+        return false;
+        }
 
 
-         if(!confirm('Are you sure ?')) {
-    return false;
-  }
+            if(!confirm('Are you sure ?')) {
+        return false;
+        }
 
 
-   $.ajax({
-     
-                        url: 'index.php?path=inventory/vendor_product_requisition/updateMultiInventory&token=<?= $token ?>',
-    type: 'post',
-    dataType: 'json',
-    data: $('#form-product-requisition').serialize(),
-    beforeSend: function() {
-          
-    },
-    complete: function() {
-   
-    },
-    success: function(json) {
-      console.log(json);
-      if (json['status']) {
-        alert('Requisition saved successfully'); 
+        $.ajax({
+            
+                                url: 'index.php?path=inventory/vendor_product_requisition/updateMultiInventory&token=<?= $token ?>',
+            type: 'post',
+            dataType: 'json',
+            data: $('#form-product-requisition').serialize(),
+            beforeSend: function() {
+                
+            },
+            complete: function() {
+        
+            },
+            success: function(json) {
+            console.log(json);
+            if (json['status']) {
+                alert('Requisition saved successfully'); 
 
-        location = location;
-      }     
-    },      
-    error: function(xhr, ajaxOptions, thrownError) {
-      //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-        alert('Requisition Failed'); 
+                location = location;
+            }     
+            },      
+            error: function(xhr, ajaxOptions, thrownError) {
+            //alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                alert('Requisition Failed'); 
 
-      //location = location;
-    }
-  });
+            //location = location;
+            }
+        });
 
        
     }
 
-
-$('input[name=\'new_vendor_product_name\']').autocomplete({
-            'source': function(request, response) {
-                $.ajax({ 
-                    url: 'index.php?path=catalog/product/product_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
-                    dataType: 'json',
-                    success: function(json) {
-                        response($.map(json, function(item) {
-                            return {
-                                label: item['name'],
-                                value: item['product_store_id']
-                            }
-                        }));
-                    }
-                });
-            },
-            'select': function(item) {
-                console.log(item['value']);
-                var selected_product_store_id = item['value'];
-                var selected_product_store_name = item['label'];
-
-                $('#new_vendor_product_name').attr('data-vendor-product-id', selected_product_store_id);
-                $('#new_vendor_product_name').attr('data-vendor-product-name', selected_product_store_name);
-                $('input[name=\'new_vendor_product_name\']').val(item['label']);
-                $.ajax({
-                url: 'index.php?path=catalog/product/getVendorProductVariantsInfo&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>',
-                dataType: 'json',     
-                success: function(json) {
-                    console.log(json);
-                    if(json != null) {
-                    var option = '';
-                    for (var i=0;i<json.length;i++){
-                           option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-price="'+ json[i].price +'" data-special="'+ json[i].special_price +'" value="'+ json[i].unit + '">' + json[i].unit + '</option>';
-                    }
-                    console.log(option);
-                    var $select = $('#new_vendor_product_uom');
-                    $select.html('');
-                    if(json != null && json.length > 0) {
-                    $select.append(option);
-                    }
-                    var $price_input = $('#new_vendor_product_price');
-                    var special_price = json[0].price == null || json[0].price == 0 ? json[0].special_price : json[0].price;
-                    $price_input.val(special_price.replace(/,/g, ""));
-                    $('.selectpicker').selectpicker('refresh');
-                }
-            }
-            });
-            }
-});                    
-
-                        
-    $('button[id^=\'new_update_inventory\']').on('click', function (e) {
-    $("form[id^='inventory_update']")[0].reset();
-    $('#inventory_update')[0].reset();               
-    $('#inventoryupdateModal').modal('toggle');
-    $('#new_vendor_product_name').attr('data-vendor-product-id', "");
-    $('#new_vendor_product_name').attr('data-vendor-product-name', "");
-    $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id', "");
-    $('.alert.alert-success').html('');
-    $('.alert.alert-danger').html('');
-    $('.alert.alert-success').hide();
-    $('.alert.alert-danger').hide();
-    });
-
-    $('button[id^=\'update_inventory_form\']').on('click', function (e) {
-    var vendor_product_uom = $('#new_vendor_product_uom').val();
-    //alert($( "#new_vendor_product_uom option:selected" ).attr('data-product_id'));
-
-    var buying_price = $('#new_buying_price').val();
-    //var buying_source = $('#new_buying_source').val();
-    var procured_quantity = $('#new_procured_quantity').val();
-    //var rejected_quantity = $('#new_rejected_quantity').val();
-    //var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
-    var vendor_product_id = $('#new_vendor_product_uom  option:selected').attr('data-product_id');
-    //var buying_source_id = $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id');
-    $('.alert.alert-success').html('');
-    $('.alert.alert-danger').html(''); 
-    $('.alert.alert-success').hide();
-    $('.alert.alert-danger').hide();    
-    $.ajax({
-            url: 'index.php?path=inventory/vendor_product_dispatch/updateInventorysingle&token=<?= $token ?>',
-            dataType: 'json',
-            data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price,  'received_quantity' : total_procured_qty,  'vendor_product_id' : vendor_product_id  },
-            async: true,
-            beforeSend: function() {
-            $('#update_inventory_form').prop('disabled', true);
-            $('.alert.alert-success').html('<i class="fa fa-check-circle text-success">Please Wait Your Request Processing!</i>');
-            },
-            complete: function() {
-            $('#update_inventory_form').prop('disabled', false);
-            },
-            success: function(json) {
-            if (json) {
-            if(json['status'] == '200') {
-            $('.alert.alert-success').html('');
-            $('.alert.alert-success').html('<i class="fa fa-check-circle text-success">'+json['message']+'</i>');
-            $('.alert.alert-success').show();
-                        location.reload();
-
-            console.log(json);
-            }
-            if(json['status'] == '400') {
-            $('.alert.alert-danger').html('');
-            $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger">'+json['message']+'</i>');
-            $('.alert.alert-danger').show();    
-            }
-            }
-            else {
-            $('.alert.alert-danger').html('<i class="fa fa-times-circle text-danger">Please try again later!</i>');
-            $('.alert.alert-danger').show();     
-            }
-            $('#update_inventory_form').prop('disabled', false);
-            }
-            });
-    });
-
-$('input[name=\'new_buying_source\']').autocomplete({
-            'source': function(request, response) {
-                $.ajax({
-                    url: 'index.php?path=sale/supplier/autocompletesupplierfarmer&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
-                    dataType: 'json',
-                    success: function(json) {
-                        response($.map(json, function(item) {
-                            return {
-                                label: item['name'],
-                                value: item['supplier_id']
-                            }
-                        }));
-                    }
-                });
-            },
-            'select': function(item) {
-                $('input[name=\'new_buying_source\']').val(item['label']);
-                $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id', item['value']);
-            }
-});
-
+ 
+     
+     
  
 
 
@@ -806,10 +525,6 @@ $('input[name=\'new_buying_source\']').autocomplete({
       $('input[name=\'products['+noProduct+'][name]\']').autocomplete({
         'source': function(request, response) {                
 
-            console.log("sd source");
-            console.log(request);
-            console.log(response);
-
             $.ajax({
                 url: 'index.php?path=inventory/vendor_product_requisition/product_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
                 dataType: 'json',     
@@ -819,7 +534,7 @@ $('input[name=\'new_buying_source\']').autocomplete({
                         
                         return {
                             label: item['name']+' - '+item['unit'],
-                            value: item['name'],
+                            value: item['product_store_id'],
                             unit: item['unit'],
                             model: item['model'],
                             product_store_id: item['product_store_id'],
@@ -829,16 +544,13 @@ $('input[name=\'new_buying_source\']').autocomplete({
                    
                     }));
  
-                    console.log(json);
-                    console.log(name);
-                    console.log('sdsd');
+                    
                 }
             });
 
-            //$('.product_name').val(request.term);
+            
         },
          'select': function(item) {
-               
              $('input[name=\'products['+noProduct+'][unit]').val(item.unit);          
             $('input[name=\'products['+noProduct+'][name]').val(item.label);
             $('input[name=\'products['+noProduct+'][product_id]').val(item.product_id);
