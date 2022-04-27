@@ -1788,6 +1788,23 @@ class ControllerCatalogProduct extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function getVendorProductVariantsInfo_all() {
+
+        $log = new Log('error.log');
+        $log->write($this->request->get['product_store_id']);
+        $this->load->model('sale/order');
+        $this->load->model('catalog/vendor_product');
+        $product_details = $this->model_catalog_vendor_product->getProduct($this->request->get['product_store_id']);
+        $product_info = $this->model_sale_order->getProductForPopup_all($this->request->get['product_store_id'], false, $product_details['store_id']);
+        $variations = $this->model_sale_order->getVendorProductVariations_all($product_info['name'], $product_details['store_id']);
+        $log->write($variations);
+        $json = $variations;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     
     public function autocompleteStoreProduct() {
         $json = [];
