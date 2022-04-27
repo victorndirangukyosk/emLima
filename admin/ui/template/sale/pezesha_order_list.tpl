@@ -213,7 +213,7 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?></a>
                                         <?php } ?></td>
-                                    <td class="text-left">Mpesa Reference</td>
+                                    <td class="text-left">Reference ID</td>
                                     <td class="text-left">
                                         <?php if ($sort == 'o.created_at') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>">Payment Received</a>
