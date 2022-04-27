@@ -1325,12 +1325,14 @@ class ControllerInventoryVendorProductRequisition  extends Controller {
             //$send = $json;
 
             foreach ($json as $j) {
-                
+                if( $j['unit']!=null &&  $j['unit'] !='')
+                {
 
                 $j['name'] = htmlspecialchars_decode($j['name']);
 
                 $send[] = $j;
             }
+        }
 
             // echo "<pre>";print_r($json);die;
 
