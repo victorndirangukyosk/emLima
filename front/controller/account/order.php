@@ -1234,8 +1234,9 @@ class ControllerAccountOrder extends Controller {
             // Totals
             $data['totals'] = [];
 
-            $totals = $this->model_account_order->getOrderTotals($this->request->get['order_id']);
-
+            // $totals = $this->model_account_order->getOrderTotals($this->request->get['order_id']);
+            $totals = $this->model_account_order->getOrderTotals_History($this->request->get['order_id']);
+ 
             $data['newTotal'] = $this->currency->format(0);
 
             //echo "<pre>";print_r($totals);die;
