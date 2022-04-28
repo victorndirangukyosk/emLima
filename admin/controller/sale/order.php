@@ -4991,6 +4991,21 @@ class ControllerSaleOrder extends Controller {
                 else{
                     $transaction_id="";
                 }
+
+                $shipping_address_value=$order_info['shipping_address'];
+                if(isset($order_info['shipping_flat_number']) && $order_info['shipping_flat_number'] !="")
+                {
+
+                     
+                    //  echo "<pre>";print_r($order_info['shipping_landmark']);
+                    //   echo "<pre>";print_r($order_info['shipping_flat_number']);die;
+
+                    if (strpos($order_info['shipping_landmark'], $order_info['shipping_flat_number'])!== false)
+                    {
+                        $shipping_address_value=$order_info['shipping_landmark'];
+                    }
+                     
+                }
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
@@ -5007,7 +5022,8 @@ class ControllerSaleOrder extends Controller {
                     'email' => $order_info['email'],
                     'cpf_number' => $this->getUser($order_info['customer_id']),
                     'telephone' => $order_info['telephone'],
-                    'shipping_address' => $order_info['shipping_address'],
+                    // 'shipping_address' => $order_info['shipping_address'],
+                    'shipping_address' => $shipping_address_value,
                     'shipping_city' => $order_info['shipping_city'],
                     'shipping_flat_number' => $order_info['shipping_flat_number'],
                     'shipping_contact_no' => ($order_info['shipping_contact_no']) ? $order_info['shipping_contact_no'] : $order_info['telephone'],
