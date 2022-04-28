@@ -859,6 +859,14 @@ class ModelAccountOrder extends Model {
 
 
     public function getOrderTotals_History($order_id) {
+
+        $query_hasrealorder=$this->db->query('SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'");
+        $count_realorder=count($query_hasrealorder->rows);
+
+            // echo "<pre>";print_r($query_hasrealorder->rows);die;
+
+        if($count_realorder>0)
+        {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_total_history WHERE order_id = '" . (int) $order_id . "' ORDER BY sort_order");
 
             // echo "<pre>";print_r(count($query->rows));die;
@@ -872,6 +880,13 @@ class ModelAccountOrder extends Model {
         else{
         return $query->rows;
         }
+    }
+    else
+    {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_total WHERE order_id = '" . (int) $order_id . "' ORDER BY sort_order");
+
+        return $query->rows;
+    }
     }
 
     public function getOrderHistories($order_id) {
