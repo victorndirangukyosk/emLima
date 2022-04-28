@@ -6357,7 +6357,16 @@ class ControllerSaleOrder extends Controller {
                         'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
                     ];
                 }
-
+                $shipping_address_value=$order_info['shipping_address'];
+                if(isset($order_info['shipping_flat_number']) && $order_info['shipping_flat_number'] !="")
+                {
+                    if (str_contains($order_info['shipping_landmark'], $order_info['shipping_flat_number']))
+                    {
+                        $shipping_address_value=$order_info['shipping_landmark'];
+                    }
+                     
+                }
+      
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
@@ -6372,7 +6381,8 @@ class ControllerSaleOrder extends Controller {
                     'email' => $order_info['email'],
                     'cpf_number' => $this->getUser($order_info['customer_id']),
                     'telephone' => $order_info['telephone'],
-                    'shipping_address' => $order_info['shipping_address'],
+                    // 'shipping_address' => $order_info['shipping_address'],
+                     'shipping_address' => $shipping_address_value,
                     'shipping_city' => $order_info['shipping_city'],
                     'shipping_contact_no' => $order_info['shipping_contact_no'],
                     'shipping_name' => $order_info['shipping_name'],
