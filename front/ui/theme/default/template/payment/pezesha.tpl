@@ -43,21 +43,20 @@ $('#button-pezesha-confirm').on('click', function() {
                 $('#loading').hide();
         },      
         success: function(json) {
-           console.log(json); 
            if(json.status) {
+           console.log(json); 
            $(".overlayed").show();
            $('#button-pezesha-confirm').button('loading');    
            location = '<?php echo $continue; ?>';
            }
            
-           if(!json.status) {
-               
+           if(!json.status) {                
+           $('#error_msg').html(json.message);
+           $('#error_msg').show(); 
+           
            $(".overlayed").hide();
            $('#button-pezesha-confirm').button('reset');   
            $('#loading').hide();
-                           
-           $('#error_msg').html(json.message);
-           $('#error_msg').show();    
            console.log(json);     
            }
 
