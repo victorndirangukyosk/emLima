@@ -38,7 +38,7 @@ $('#button-pezesha-confirm').on('click', function() {
                 $('#button-pezesha-confirm').button('loading');
         },
         complete: function() {
-                alert('2');
+                console.log($("#button-pezesha-confirm").attr("data-success"));
                 $(".overlayed").show();
                 $('#button-pezesha-confirm').button('loading');
                 $('#loading').hide();
@@ -47,13 +47,14 @@ $('#button-pezesha-confirm').on('click', function() {
            if(json.status) {
            console.log(json); 
            $(".overlayed").show();
-           $('#button-pezesha-confirm').button('loading');    
+           $('#button-pezesha-confirm').button('loading');  
+           $("#button-pezesha-confirm").attr("data-success", true);
            location = '<?php echo $continue; ?>';
            }
            
            if(!json.status) {
-           alert('1');
-           console.log($("div#pay-confirm-order > button").attr('class'));    
+           $('#button-pezesha-confirm').button('reset');
+           $("#button-pezesha-confirm").attr("data-success", false);
            $('#error_msg').html(json.message);
            $('#error_msg').show(); 
            }
