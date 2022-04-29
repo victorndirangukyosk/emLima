@@ -51,6 +51,11 @@ $('#button-pezesha-confirm').on('click', function() {
            }
            
            if(!json.status) {
+               
+           $(".overlayed").hide();
+           $('#button-pezesha-confirm').button('reset');   
+           $('#loading').hide();
+                           
            $('#error_msg').html(json.message);
            $('#error_msg').show();    
            console.log(json);     
