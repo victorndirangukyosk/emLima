@@ -39,9 +39,13 @@ $('#button-pezesha-confirm').on('click', function() {
         },
         complete: function() {
                 console.log($("#button-pezesha-confirm").attr("data-success"));
+                if($("#button-pezesha-confirm").attr("data-success")) {
                 $(".overlayed").show();
                 $('#button-pezesha-confirm').button('loading');
                 $('#loading').hide();
+                } else {
+                $('#button-pezesha-confirm').button('reset');
+                }
         },      
         success: function(json) {
            if(json.status) {
