@@ -50,11 +50,10 @@ $('#button-pezesha-confirm').on('click', function() {
            location = '<?php echo $continue; ?>';
            }
            
-           if(!json.status) {                
+           if(!json.status) {
+           $('#button-pezesha-confirm').button('reset');
            $('#error_msg').html(json.message);
            $('#error_msg').show(); 
-           console.log($(this).attr('id'));           
-           console.log(json);     
            }
 
         }       
