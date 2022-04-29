@@ -38,6 +38,7 @@ $('#button-pezesha-confirm').on('click', function() {
                 $('#button-pezesha-confirm').button('loading');
         },
         complete: function() {
+                alert('2');
                 $(".overlayed").show();
                 $('#button-pezesha-confirm').button('loading');
                 $('#loading').hide();
@@ -51,7 +52,8 @@ $('#button-pezesha-confirm').on('click', function() {
            }
            
            if(!json.status) {
-           $("div#pay-confirm-order > button").attr('class');    
+           alert('1');
+           console.log($("div#pay-confirm-order > button").attr('class'));    
            $('#error_msg').html(json.message);
            $('#error_msg').show(); 
            }
