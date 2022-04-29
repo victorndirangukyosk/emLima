@@ -51,7 +51,7 @@ $('#button-pezesha-confirm').on('click', function() {
            }
            
            if(!json.status) {
-           console.log($("div#pay-confirm-order > button").length);    
+           console.log($("div#pay-confirm-order > button").val());    
            $('#button-pezesha-confirm').button('reset');
            $('#error_msg').html(json.message);
            $('#error_msg').show(); 
