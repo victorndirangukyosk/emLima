@@ -55,8 +55,11 @@ $('#button-pezesha-confirm').on('click', function() {
            $('#error_msg').show(); 
            
            $(".overlayed").hide();
-           $('#button-pezesha-confirm').button('reset');   
+           $('#button-pezesha-confirm').button('reset');  
            $('#loading').hide();
+           
+           $('#button-pezesha-confirm').removeClass("btn btn-default disabled").addClass("btn btn-default");  
+           $('#button-pezesha-confirm').removeAttr('disabled');
            console.log(json);     
            }
 
