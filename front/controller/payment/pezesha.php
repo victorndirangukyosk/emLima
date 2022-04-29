@@ -285,7 +285,7 @@ class ControllerPaymentPezesha extends Controller {
                 $json['data'] = $result;
             } else {
                 $json['status'] = false;
-                $json['message'] = 'Please Select Other Payment Option!';
+                $json['message'] = 'Please Select Other Payment Option!'.$result['message'];
                 $json['data'] = $result;
             }
         }

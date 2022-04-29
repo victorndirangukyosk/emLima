@@ -38,8 +38,8 @@ $('#button-pezesha-confirm').on('click', function() {
                 $('#button-pezesha-confirm').button('loading');
         },
         complete: function() {
-                $(".overlayed").hide();
-                $('#button-pezesha-confirm').button('reset');
+                $(".overlayed").show();
+                $('#button-pezesha-confirm').button('loading');
                 $('#loading').hide();
         },      
         success: function(json) {
