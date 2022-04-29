@@ -6105,4 +6105,27 @@ class ModelSaleOrder extends Model {
         return $invoice_products->rows;
     }
 
+
+    public function insertOrderTotal_History($order_id, $totals) {
+         
+        $query_count = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_total_history WHERE order_id = '" . (int) $order_id . "'");
+
+        // echo "<pre>";print_r(count($query->rows));die;
+
+            if(count($query_count->rows)<=0)
+            {
+                foreach ($totals as $total) {
+                        $sql = 'INSERT into ' . DB_PREFIX . "order_total_history SET value = '" . $total['value'] . "', actual_value = '" . $total['actual_value'] . "', order_id = '" . $order_id . "', title = '" . $total['title'] . "', sort_order = '" . $total['sort'] . "', code = '" . $total['code'] . "'";
+
+                        $query = $this->db->query($sql);
+                }
+                    
+            }
+    }
+
+    public function getOrderTotals_History($order_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_total_history WHERE order_id = '" . (int) $order_id . "' ORDER BY sort_order");
+
+        return $query->rows;
+    }
 }
