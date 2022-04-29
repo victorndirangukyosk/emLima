@@ -2832,8 +2832,8 @@ class ModelReportSale extends Model {
 
     public function getstockoutOrdersAndProducts($data = []) {
         //echo "<pre>";print_r($data);die;
-        $sql1 = "SELECT op.product_id, op.name,op.unit,sum(op.quantity) as quantity ,sum(op.total) as total,sum(op.tax) as tax,o.store_name FROM `" . DB_PREFIX . 'order` o ';
-        $sql2 = "SELECT op.product_id, op.name,op.unit,sum(op.quantity) as quantity ,sum(op.total) as total,sum(op.tax) as tax,o.store_name FROM `" . DB_PREFIX . 'order` o ';
+        $sql1 = "SELECT op.product_id, op.name,op.unit,sum(op.quantity) as quantity ,sum(op.total) as total,sum(op.tax*op.quantity) as tax,o.store_name FROM `" . DB_PREFIX . 'order` o ';
+        $sql2 = "SELECT op.product_id, op.name,op.unit,sum(op.quantity) as quantity ,sum(op.total) as total,sum(op.tax*op.quantity) as tax,o.store_name FROM `" . DB_PREFIX . 'order` o ';
 
         // $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
         $sql1 .= '  JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';

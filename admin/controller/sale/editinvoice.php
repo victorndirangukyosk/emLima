@@ -369,9 +369,14 @@ class ControllerSaleEditinvoice extends Controller {
 
                 //echo "<pre>";print_r($order_id);die;
                 $totals = $this->model_sale_order->getOrderTotals($order_id);
-
+                //insert the old totals , in to history table.
+                //only the orders editted for the first time, so the ordered products totals will be in history and editted totals goes on updating in order_total
+                // if (!$this->model_sale_order->hasRealOrderProducts($order_id)) {
+                $this->model_sale_order->insertOrderTotal_History($order_id, $totals);
+                // }
                 //echo "<pre>";print_r($totals);die;
                 foreach ($totals as $total) {
+
                     if ('sub_total' == $total['code']) {
                         $old_sub_total = $total['value'];
                     }
