@@ -946,11 +946,11 @@ class ModelCatalogVendorProduct extends Model {
         }
 
         if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
-            $implode[] = "DATE_FORMAT(date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
+            $implode[] = "DATE_FORMAT(p.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
         }
 
         if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
-            $implode[] = "DATE_FORMAT(date_added, '%Y-%m-%d') BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
+            $implode[] = "DATE_FORMAT(p.date_added, '%Y-%m-%d') BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
         }
 
         if (!empty($data['filter_product_history_id'])) {
@@ -990,7 +990,7 @@ class ModelCatalogVendorProduct extends Model {
         }
 
         $query = $this->db->query($sql);
-        //echo "<pre>";print_r($sql);die;
+        // echo "<pre>";print_r($sql);die;
 
         return $query->rows;
     }
