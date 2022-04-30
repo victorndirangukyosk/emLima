@@ -38,22 +38,38 @@ $('#button-pezesha-confirm').on('click', function() {
                 $('#button-pezesha-confirm').button('loading');
         },
         complete: function() {
-                $(".overlayed").hide();
-                $('#button-pezesha-confirm').button('reset');
+                console.log($("#button-pezesha-confirm").attr("data-success"));
+                console.log(typeof $("#button-pezesha-confirm").attr("data-success"));
+                
+                $(".overlayed").show();
+                $('#button-pezesha-confirm').button('loading');
                 $('#loading').hide();
+                
+                if($("#button-pezesha-confirm").attr("data-success") === 'true') {
+                $(".overlayed").show();
+                $('#button-pezesha-confirm').button('loading');
+                $('#loading').hide();
+                } 
+                
+                if($("#button-pezesha-confirm").attr("data-success") === 'false') {
+                console.log($("#button-pezesha-confirm").attr("data-success"));
+                $('#button-pezesha-confirm').button('reset');
+                }
         },      
         success: function(json) {
-           console.log(json); 
            if(json.status) {
+           console.log(json); 
            $(".overlayed").show();
-           $('#button-pezesha-confirm').button('loading');    
+           $('#button-pezesha-confirm').button('loading');  
+           $("#button-pezesha-confirm").attr("data-success", true);
            location = '<?php echo $continue; ?>';
            }
            
            if(!json.status) {
+           $('#button-pezesha-confirm').button('reset');
+           $("#button-pezesha-confirm").attr("data-success", false);
            $('#error_msg').html(json.message);
-           $('#error_msg').show();    
-           console.log(json);     
+           $('#error_msg').show(); 
            }
 
         }       

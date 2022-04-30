@@ -857,6 +857,38 @@ class ModelAccountOrder extends Model {
         return $query->rows;
     }
 
+
+    public function getOrderTotals_History($order_id) {
+
+        $query_hasrealorder=$this->db->query('SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'");
+        $count_realorder=count($query_hasrealorder->rows);
+
+            // echo "<pre>";print_r($query_hasrealorder->rows);die;
+
+        if($count_realorder>0)
+        {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_total_history WHERE order_id = '" . (int) $order_id . "' ORDER BY sort_order");
+
+            // echo "<pre>";print_r(count($query->rows));die;
+
+        if(count($query->rows)<=0)
+        {
+            $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_total WHERE order_id = '" . (int) $order_id . "' ORDER BY sort_order");
+
+            return $query->rows;
+        }
+        else{
+        return $query->rows;
+        }
+    }
+    else
+    {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_total WHERE order_id = '" . (int) $order_id . "' ORDER BY sort_order");
+
+        return $query->rows;
+    }
+    }
+
     public function getOrderHistories($order_id) {
         $query = $this->db->query('SELECT date_added, os.name AS status, oh.comment, oh.notify FROM ' . DB_PREFIX . 'order_history oh LEFT JOIN ' . DB_PREFIX . "order_status os ON oh.order_status_id = os.order_status_id WHERE oh.order_id = '" . (int) $order_id . "' AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' ORDER BY oh.date_added");
 
@@ -1883,7 +1915,7 @@ class ModelAccountOrder extends Model {
         $description = 'Wallet amount deducted#' . $order_id;
         $this->db->query('DELETE FROM ' . DB_PREFIX . "customer_credit WHERE customer_id = '" . (int) $customer_id . "' and  order_id = '" . (int) $order_id . "'");
         $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $description . "', amount = '" . (float) ($total * -1) . "', date_added = NOW()");
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', transaction_id = 'Paid from wallet amount'");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET customer_id = '" . (int) $customer_id . "', amount = '" . (float) $total . "', order_id = '" . (int) $order_id . "', transaction_id = 'Paid from wallet amount', created_at = NOW()");
 
         $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0 ,total='" . (float) $total . "'  WHERE order_id='" . (int) $order_id . "'");
 

@@ -368,7 +368,8 @@ $('#coupon-category').delegate('.fa-minus-circle', 'click', function() {
  
   <script type="text/javascript"><!--
 $('.date').datetimepicker({
-	pickTime: false
+	pickTime: false,
+             widgetParent: 'body'
 });
 
 

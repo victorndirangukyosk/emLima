@@ -239,17 +239,10 @@ class ControllerSalePezeshaReceivables extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('sale/pezesha_receivables', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
-        $data['dispatchplanning'] = $this->url->link('vehicles/vehicles_list', 'token=' . $this->session->data['token'], 'SSL');
-        $data['invoicepdf'] = $this->url->link('sale/order/invoicepdf', 'token=' . $this->session->data['token'], 'SSL');
-        // $data['shipping'] = $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'], 'SSL');
-        $data['shipping'] = $this->url->link('sale/order/shippingNote', 'token=' . $this->session->data['token'], 'SSL');
-        $data['add'] = $this->url->link('sale/order/add', 'token=' . $this->session->data['token'], 'SSL');
-        $data['delivery_sheet'] = $this->url->link('sale/order/consolidatedOrderSheet', 'token=' . $this->session->data['token'], 'SSL');
-        $data['orders'] = [];
+       $data['orders'] = [];
 
         $filter_data = [
             'filter_city' => $filter_city,
@@ -283,7 +276,7 @@ class ControllerSalePezeshaReceivables extends Controller {
 
         $results = $this->model_sale_order->getPezeshaOrders($filter_data);
 
-        //        echo "<pre>";print_r($results);die;
+            //    echo "<pre>";print_r($results);die;
         $disable = [2, 6, 7, 5, 8, 4, 15, 1, 14, 16, 13, 9, 10, 3, 11, 12];
         foreach ($results as $result) {
             $sub_total = 0;
@@ -353,6 +346,8 @@ class ControllerSalePezeshaReceivables extends Controller {
                 'delivery_charges' => $result['delivery_charges'],
                 'missing_products_count' => count($missing_products),
                 'mpesa_reference' => $result['mpesa_reference'],
+                'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
+
             ];
         }
 
@@ -504,13 +499,14 @@ class ControllerSalePezeshaReceivables extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
-        $data['sort_city'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=c.name' . $url, 'SSL');
-        $data['sort_customer'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-        $data['sort_total'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url, 'SSL');
+        $data['sort_order'] = $this->url->link('sale/pezesha_receivables', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
+        $data['sort_city'] = $this->url->link('sale/pezesha_receivables', 'token=' . $this->session->data['token'] . '&sort=c.name' . $url, 'SSL');
+        $data['sort_customer'] = $this->url->link('sale/pezesha_receivables', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('sale/pezesha_receivables', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
+        $data['sort_total'] = $this->url->link('sale/pezesha_receivables', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url, 'SSL');
+        // $data['sort_date_added'] = $this->url->link('sale/pezesha_receivables', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/pezesha_receivables', 'token=' . $this->session->data['token'] . '&sort=pz.created_at' . $url, 'SSL');
+        $data['sort_date_modified'] = $this->url->link('sale/pezesha_receivables', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url, 'SSL');
 
         $url = '';
 
@@ -599,7 +595,7 @@ class ControllerSalePezeshaReceivables extends Controller {
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/pezesha_receivables', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 

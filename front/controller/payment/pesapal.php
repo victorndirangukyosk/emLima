@@ -594,7 +594,7 @@ class ControllerPaymentPesapal extends Controller {
             $log->write('PESAPAL CALL BACK');
             $customer_id = $customer_info['customer_id'];
             $this->model_payment_pesapal->insertOrderTransactionIdPesapal($order_id, $transaction_tracking_id, $merchant_reference, $customer_id);
-            $this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
+            //$this->model_payment_pesapal->OrderTransaction($order_id, $transaction_tracking_id);
             $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference, $order_id);
             //}
         }
@@ -605,7 +605,7 @@ class ControllerPaymentPesapal extends Controller {
         }
 
         if ('COMPLETED' != $status || null == $status) {
-            $this->load->controller('payment/cod/confirmnonkb');
+            //$this->load->controller('payment/cod/confirmnonkb');
             $this->response->redirect($this->url->link('checkout/success/orderfailed'));
         }
     }
@@ -721,11 +721,24 @@ class ControllerPaymentPesapal extends Controller {
 
                         $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
                         $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                        
+                        $order_info = $this->model_checkout_order->getOrder($order_id);
+                        $log->write('order_info');
+                        $log->write($order_info);
+                        $log->write('order_info');
+                        
+                        $this->model_payment_pesapal->OrderTransaction($order_id, $pesapalTrackingId, $order_info['customer_id'], abs($order_info['amount_partialy_paid'] - $order_info['total']));
                     }
                     /* WALLET */
                 } elseif (!isset($this->session->data['payment_wallet_method']['code']) || $this->session->data['payment_wallet_method']['code'] == 0 || $this->session->data['payment_wallet_method']['code'] != 'wallet' || $customer_wallet_total <= 0) {
                     $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
                     $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
+                    
+                    $order_info = $this->model_checkout_order->getOrder($order_id);
+                    $log->write('order_info');
+                    $log->write($order_info);
+                    $log->write('order_info');
+                    $this->model_payment_pesapal->OrderTransaction($order_id, $pesapalTrackingId, $order_info['customer_id'], abs($order_info['amount_partialy_paid'] - $order_info['total']));
                 }
             } else {
                 $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_pending_order_status_id'), $customer_info['customer_id'], 'customer');

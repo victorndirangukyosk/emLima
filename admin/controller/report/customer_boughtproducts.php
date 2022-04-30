@@ -100,7 +100,8 @@ class ControllerReportCustomerBoughtProducts extends Controller {
                 // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
                 // 'limit' => $this->config->get('config_limit_admin'),
         ];
-        if ('' != $filter_customer || '' != $filter_company) {
+        // if ('' != $filter_customer || '' != $filter_company) {
+            if ('' != $filter_date_start || '' != $filter_date_end) {
             // $customer_total = $this->model_report_customer->getTotalboughtproducts($filter_data);
 
             $results = $this->model_report_customer->getboughtproductswithRealOrders($filter_data);

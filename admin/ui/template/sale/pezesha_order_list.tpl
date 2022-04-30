@@ -55,24 +55,7 @@
                                 </div>
                             <?php endif ?> 
                             
-                             <div class="form-group">
                              
-                                <label class="control-label" for="input-order-type">Order Type</label>
-                                <select name="filter_order_type" id="input-order-type" class="form-control">
-                                    <option value="*" selected></option> 
-                                    <?php if ($filter_order_type=='1') { ?>
-                                    <option value="1" selected="selected">Manual</option>
-                                    <?php } else { ?>
-                                    <option value="1">Manual</option>
-                                    <?php } ?>
-                                     <?php if ($filter_order_type=='0') { ?>
-                                    <option value="0" selected="selected">Online</option>
-                                    <?php } else { ?>
-                                    <option value="0">Online</option>
-                                    <?php } ?>
-                                     
-                                </select>
-                            </div>
                          
                           <div class="form-group">
                                 <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
@@ -87,7 +70,7 @@
                             
                         </div>
                         <div class="col-sm-4">
-                            <div class="form-group">
+                            <div class="form-group"  style="display:none">
                                 <label class="control-label" for="input-order-status"><?php echo $entry_order_status; ?></label>
                                 <select name="filter_order_status" id="input-order-status" class="form-control">
                                     <option value="*"></option>
@@ -106,11 +89,31 @@
                                 </select>
                             </div>
                             <?php if (!$this->user->isVendor()): ?>
-                                <div class="form-group">
+                                <div class="form-group" style="display:none">
                                     <label class="control-label" for="input-name"><?= $column_payment ?></label>
                                     <input type="text" name="filter_payment" value="<?php echo $filter_payment; ?>" placeholder="<?php echo $column_payment; ?>" id="input-name" class="form-control" />
                                 </div>
                             <?php endif ?> 
+
+
+                           <div class="form-group">
+                             
+                                <label class="control-label" for="input-order-type">Order Type</label>
+                                <select name="filter_order_type" id="input-order-type" class="form-control">
+                                    <option value="*" selected></option> 
+                                    <?php if ($filter_order_type=='1') { ?>
+                                    <option value="1" selected="selected">Manual</option>
+                                    <?php } else { ?>
+                                    <option value="1">Manual</option>
+                                    <?php } ?>
+                                     <?php if ($filter_order_type=='0') { ?>
+                                    <option value="0" selected="selected">Online</option>
+                                    <?php } else { ?>
+                                    <option value="0">Online</option>
+                                    <?php } ?>
+                                     
+                                </select>
+                            </div>
 
    
                                <div class="form-group">
@@ -159,7 +162,7 @@
                                 </div>
                             </div>
                             
-                            <div class="form-group">
+                            <div class="form-group"  style="display:none">
                                 <label class="control-label" for="input-delivery-date">Delivery Time Slot</label>
                                     <select name="filter_delivery_time_slot" id="input-delivery-time-slot" class="form-control">
                                     <option value="">Select <?php echo $column_delivery_time_slot; ?></option>
@@ -210,14 +213,19 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?></a>
                                         <?php } ?></td>
-                                    <td class="text-left">Mpesa Reference</td>
+                                    <td class="text-left">Reference ID</td>
                                     <td class="text-left">
-                                        <?php if ($sort == 'o.date_added') { ?>
-                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
+                                        <?php if ($sort == 'o.created_at') { ?>
+                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>">Payment Received</a>
                                         <?php } else { ?>
-                                        <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
+                                        <a href="<?php echo $sort_date_added; ?>">Payment Received</a>
                                         <?php } ?>
                                     </td>
+
+                                    <td class="text-left">Order Date</td>
+                                    <td class="text-left">Delivery Date</td>
+                                        
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -242,7 +250,9 @@
                                     
                                     <td class="text-left"><?php echo $order['total']; ?></td>
                                     <td class="text-left"><?php echo $order['mpesa_reference']; ?></td>
+                                    <td class="text-left"><?php echo $order['created_at']; ?></td>
                                     <td class="text-left"><?php echo $order['date_added']; ?></td>
+                                    <td class="text-left"><?php echo $order['delivery_date']; ?></td>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
@@ -1699,7 +1709,9 @@ var $select = $('#new_order_processor_id');
     <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
     <script type="text/javascript"><!--
   $('.date').datetimepicker({
-            pickTime: false
+            pickTime: false,
+     widgetParent: 'body'
+
         });
 
     setInterval(function() {

@@ -358,7 +358,7 @@ class ModelReportSale extends Model {
         if (!empty($data['filter_order_status_id'])) {
             $sql .= " WHERE o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
         } else {
-            $sql .= " WHERE o.order_status_id > '0'";
+            $sql .= " WHERE o.order_status_id not in (0,6,8,9,16)";
         }
 
         if (!empty($data['filter_city'])) {
@@ -2832,8 +2832,8 @@ class ModelReportSale extends Model {
 
     public function getstockoutOrdersAndProducts($data = []) {
         //echo "<pre>";print_r($data);die;
-        $sql1 = "SELECT op.product_id, op.name,op.unit,sum(op.quantity) as quantity ,o.store_name FROM `" . DB_PREFIX . 'order` o ';
-        $sql2 = "SELECT op.product_id, op.name,op.unit,sum(op.quantity) as quantity ,o.store_name FROM `" . DB_PREFIX . 'order` o ';
+        $sql1 = "SELECT op.product_id, op.name,op.unit,sum(op.quantity) as quantity ,sum(op.total) as total,sum(op.tax*op.quantity) as tax,o.store_name FROM `" . DB_PREFIX . 'order` o ';
+        $sql2 = "SELECT op.product_id, op.name,op.unit,sum(op.quantity) as quantity ,sum(op.total) as total,sum(op.tax*op.quantity) as tax,o.store_name FROM `" . DB_PREFIX . 'order` o ';
 
         // $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
         $sql1 .= '  JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
@@ -2859,8 +2859,8 @@ class ModelReportSale extends Model {
             $sql2 .= " AND op.name LIKE '" .  $data['filter_name'] . "%'";
         }  
 
-        $sql1 .= " AND o.order_status_id NOT IN (0,6,8,16)";
-        $sql2 .= " AND o.order_status_id NOT IN (0,6,8,16)";
+        $sql1 .= " AND o.order_status_id NOT IN (0,6,8,9,16)";
+        $sql2 .= " AND o.order_status_id NOT IN (0,6,8,9,16)";
         if (!empty($data['filter_date_start'])) {
             $sql1 .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
             $sql2 .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -2904,7 +2904,7 @@ class ModelReportSale extends Model {
         //     $sql .= ' ASC';
         // }
 
-        $sql = "SELECT t.product_id, name,unit,sum(quantity) as quantity,t.store_name from (" .$sql1." union all ".$sql2." )as t GROUP BY product_id ,name,unit ,store_name ORDER BY name ASC"; 
+        $sql = "SELECT t.product_id, name,unit,sum(quantity) as quantity,sum(total) as total,sum(tax) as tax,t.store_name from (" .$sql1." union all ".$sql2." )as t GROUP BY product_id ,name,unit ,store_name ORDER BY name ASC"; 
         // echo "<pre>";print_r($sql);die;
         $query = $this->db->query($sql);
 

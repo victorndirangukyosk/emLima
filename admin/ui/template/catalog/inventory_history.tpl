@@ -31,7 +31,7 @@
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_show_filter; ?>" class="btn btn-primary btn-sm" id="showFilter"><i class="fa fa-eye"></i></button>
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_hide_filter; ?>" class="btn btn-primary btn-sm" id="hideFilter"><i class="fa fa-eye-slash"></i></button>
 
-                </div>    
+                </div>     
             </div>
             <div class="panel-body">
                 <div class="well" style="display:none;">
@@ -69,7 +69,7 @@
                         </div>
                         
                         <div class="col-sm-3">
-                            <div class="form-group">
+                            <div class="form-group" hidden>
                                 <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
                                 <input type="text" name="filter_store_id" value="<?php echo $filter_store_id; ?>" placeholder="Store Name" id="input-store-name" class="form-control" />
                             </div>
@@ -89,13 +89,16 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                                    <!--<td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>-->
                                     <td class="text-left"><?php if ($sort == 'name') { ?>
                                         <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                                         <?php } ?></td>
                                     <td class="text-left"><?php echo $column_product_store_id; ?></td>
+                                    <td class="text-left">Unit</td>
+
+
                                     <td class="text-left">Buying Price</td>
                                     <td class="text-left">Source</td>
                                     <td class="text-left"><?php echo $column_procured_qty; ?></td>
@@ -103,26 +106,70 @@
                                     <td class="text-left"><?php echo $column_prev_quantity; ?></td>
                                     <td class="text-left"><?php echo $column_updated_quantity; ?></td>
                                     <td class="text-left"><?php echo $column_updated_by; ?></td>
-                                    <td class="text-left"><?php echo $column_added_user_role; ?></td>
+                                    <!--<td class="text-left"><?php echo $column_added_user_role; ?></td>-->
                                     <td class="text-left"><?php if ($sort == 'date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
                                         <?php } ?></td>
                                     <td class="text-left">Action</td>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if ($history) { ?>
                                 <?php foreach ($history as $histor) { ?>
                                 <tr>
-                                    <td class="text-center"><?php if (in_array($histor['product_history_id'], $selected)) { ?>
+                                    <!--<td class="text-center"><?php if (in_array($histor['product_history_id'], $selected)) { ?>
                                         <input type="checkbox" name="selected[]" value="<?php echo $histor['product_history_id']; ?>" checked="checked" />
                                         <?php } else { ?>
                                         <input type="checkbox" name="selected[]" value="<?php echo $histor['product_history_id']; ?>" />
-                                        <?php } ?></td>
+                                        <?php } ?></td>-->
                                     <td class="text-left"><?php echo $histor['product_name']; ?></td>
                                     <td class="text-right"><?php echo $histor['product_store_id']; ?></td>
+                                    <td class="text-right" style="max-width: 50px !important; text-align: right;"><?php echo $histor['unit']; ?></td>
+                                    
+                                      <?php if($this->user->hasPermission('access', 'inventory/inventory_history_updation')) { ?>
+
+                                   
+                                    <td class="text-left">
+                                         <input style="max-width: 75px !important; text-align: right;" name="buying_price" type="text" onkeypress="return validateFloatKeyPress(this, event);" class="buying_price" data-general_product_id="<?php echo $histor['product_id']; ?>" data-name="<?php echo $histor['name']; ?>" data-current-buying-price="<?php echo $histor['buying_price']; ?>" id="buying_price_<?php echo $histor['product_history_id'];?>" value="<?php echo $histor['buying_price']; ?>">
+                                    </td>
+				    <td class="text-left">
+                                        <input style="max-width: 75px !important;" name="source" type="text" class="source" id="source_<?php echo $histor['product_history_id'];?>" data-current-source="<?php echo $histor['source']; ?>" value="<?php echo $histor['source']; ?>">
+                                    </td>
+
+                                     <td class="text-left">
+                                        <input style="max-width: 75px !important; text-align: right; " name="total_procured_qty" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="procured_qty" data-general_product_id="<?php echo $histor['product_id']; ?>" data-product_store_id="<?php echo $histor['product_store_id']; ?>" data-name="<?php echo $histor['name']; ?>" data-current-qty="<?php echo $histor['quantity']; ?>"  id="total_procured_qty_<?php echo $histor['product_history_id'];?>" value="<?php echo $histor['procured_qty']; ?>">
+                                     
+                                    
+                                    </td>
+                                    <td class="text-left">
+                                        <input style="max-width: 75px !important; text-align: right; " name="rejected_qty" type="text" class="rejected_qty" onkeypress="return validateFloatKeyPress(this, event);" id="rejected_qty_<?php echo $histor['product_history_id'];?>" data-product_store_id="<?php echo $histor['product_store_id']; ?>" data-current-qty="<?php echo $histor['quantity']; ?>" value="<?php echo $histor['rejected_qty']; ?>">
+                                   
+                                    </td>
+
+                                    <td class="text-left">
+                                        <?php //echo $product['quantity'] ?>
+                                    <input style="max-width: 75px !important; text-align: right;" name="prev_qty_in_warehouse" type="text" onkeypress="return validateFloatKeyPress(this, event);"  class="prev_qty_in_warehouse" data-general_product_id="<?php echo $histor['product_id']; ?>" data-product_store_id="<?php echo $histor['product_store_id']; ?>"  data-name="<?php echo $histor['name']; ?>" data-current-qty="<?php echo $histor['quantity']; ?>"  id="prev_qty_in_warehouse_<?php echo $histor['product_history_id'];?>" value="<?php echo $histor['prev_qty']; ?>">
+                                    
+                                   
+                                    </td>
+                                   
+				                 <td class="text-left">
+                                        <input style="max-width: 75px !important; text-align: right; " name="current_qty"  type="number"  id="current_qty_<?php echo $histor['product_history_id'];?>" value="<?php echo $histor['current_qty']; ?>">
+                                   
+                                    </td>
+                                     <td class="text-left"><?php echo $histor['added_user']; ?></td>
+                                   <!-- <td class="text-left"><?php echo $histor['added_user_role']; ?></td>-->
+                                   <!-- <td class="text-left"><?php echo $histor['date_added']; ?></td>-->
+                                   <td>
+                                    <input style="max-width: 85px !important; text-align: right;" name="date_added_edit" type="date"  class="date_added_edit"  id="date_added_<?php echo $histor['product_history_id'];?>" value="<?php echo $histor['date_added_date']; ?>">
+                                    </td>
+                                    <td class="text-left"><button id="download_inventory_voucher" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Download Voucher" data-inventory-voucher="<?php echo $histor['voucher']; ?>"><i class="fa fa-download text-success"></i></button></td>
+                                    <td class="text-left"><button id="update_inventory" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Update Inventory" data-inventory-update="<?php echo $histor['product_history_id']; ?>"><i class="fa fa-save text-success"></i></button></td>
+
+                            <?php }else{ ?>
                                     <td class="text-right"><?php echo $histor['buying_price']; ?></td>
                                     <td class="text-left"><?php echo $histor['source']; ?></td>
                                     <td class="text-right"><?php echo $histor['procured_qty']; ?></td>
@@ -130,9 +177,10 @@
                                     <td class="text-right"><?php echo $histor['prev_qty']; ?></td>
                                     <td class="text-right"><?php echo $histor['current_qty']; ?></td>
                                     <td class="text-left"><?php echo $histor['added_user']; ?></td>
-                                    <td class="text-left"><?php echo $histor['added_user_role']; ?></td>
+                                   <!-- <td class="text-left"><?php echo $histor['added_user_role']; ?></td>-->
                                     <td class="text-left"><?php echo $histor['date_added']; ?></td>
                                     <td class="text-left"><button id="download_inventory_voucher" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Download Voucher" data-inventory-voucher="<?php echo $histor['voucher']; ?>"><i class="fa fa-download text-success"></i></button></td>
+                                 <?php } ?>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
@@ -263,6 +311,53 @@
             location = url;
         }
 
+
+
+  function validateFloatKeyPress(el, evt) {
+
+      // $optionvalue=$('.product-variation option:selected').text().trim();
+       //alert($optionvalue);
+       //if($optionvalue=="Per Kg")
+       //{
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            var number = el.value.split('.');
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            //just one dot
+            if(number.length>1 && charCode == 46){
+                return false;
+            }
+            //get the carat position
+            var caratPos = getSelectionStart(el);
+            var dotPos = el.value.indexOf(".");
+            if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+                return false;
+            }
+            return true;
+        //}
+
+       //else{
+      //var charCode = (evt.which) ? evt.which : event.keyCode;
+       // if (charCode > 31 &&
+       //   (charCode < 48 || charCode > 57))
+       //   return false;
+         // else
+      
+      //return true;
+      // }
+}
+
+ function getSelectionStart(o) {
+	if (o.createTextRange) {
+		var r = document.selection.createRange().duplicate()
+		r.moveEnd('character', o.value.length)
+		if (r.text == '') return o.value.length
+		return o.value.lastIndexOf(r.text)
+	} else return o.selectionStart
+}
+
+
         //-->
 $(document).on('click', '#download_inventory_voucher', function(e){ 
 e.preventDefault();
@@ -270,6 +365,45 @@ var inventory_voucher = $(this).attr("data-inventory-voucher");
 console.log(inventory_voucher);
 window.open(inventory_voucher, '_blank');
 });
+
+
+$(document).on('click', '#update_inventory', function(e){ 
+e.preventDefault();
+var update_inventory = $(this).attr("data-inventory-update");
+var buy_price=encodeURIComponent($('input[id=\'buying_price_'+update_inventory+'\']').val());
+var src=encodeURIComponent($('input[id=\'source_'+update_inventory+'\']').val());
+var p_qty=encodeURIComponent($('input[id=\'total_procured_qty_'+update_inventory+'\']').val());
+var r_qty=encodeURIComponent($('input[id=\'rejected_qty_'+update_inventory+'\']').val());
+var prev_qty=encodeURIComponent($('input[id=\'prev_qty_in_warehouse_'+update_inventory+'\']').val());
+var updated_qty=encodeURIComponent($('input[id=\'current_qty_'+update_inventory+'\']').val());
+var updated_date=encodeURIComponent($('input[id=\'date_added_'+update_inventory+'\']').val());
+ 
+
+   $.ajax({
+                    url: 'index.php?path=catalog/vendor_product/updateInventoryHistory&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data:{ product_history_id : update_inventory, procured_qty : p_qty, rejected_qty : r_qty,prev_qty : prev_qty,current_qty : updated_qty,buying_price : buy_price, source    : src,date_added_date:updated_date },
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                          alert('Saved Successfully');
+                            setTimeout(function(){ window.location.reload(false); }, 1500);
+                        }
+                        else {
+                           alert('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+
+                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                alert('Please try again');
+                                    return false;
+                                }
+                });
+});
+
 </script>
 </div>
 <?php echo $footer; ?> 

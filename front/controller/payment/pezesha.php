@@ -285,7 +285,7 @@ class ControllerPaymentPezesha extends Controller {
                 $json['data'] = $result;
             } else {
                 $json['status'] = false;
-                $json['message'] = 'Please Select Other Payment Option!';
+                $json['message'] = 'Please Select Other Payment Option!'.$result['message'];
                 $json['data'] = $result;
             }
         }
@@ -411,7 +411,13 @@ class ControllerPaymentPezesha extends Controller {
                 $json['status'] = true;
                 $json['message'] = 'Pezesha Loan Applied Successfully!';
                 $json['data'] = $result;
-            } else {
+            } 
+            else if ($loan_type=="Order Id already in use"){
+                $json['status'] = false;
+                $json['message'] = 'Order Id already in use!. Order saved successfully - '.$order_ids;
+                $json['data'] = $result;
+            }
+            else {
                 $json['status'] = false;
                 $json['message'] = 'Please Select Other Payment Option!';
                 $json['data'] = $result;

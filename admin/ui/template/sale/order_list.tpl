@@ -163,8 +163,11 @@
 
                             <?php if (!$this->user->isVendor()): ?>
                                 <div class="form-group">
-                                    <label class="control-label" for="input-name"><?= $column_payment ?></label>
+                                    <label class="control-label" for="input-payment"><?= $column_payment ?></label>
                                     <input type="text" name="filter_payment" value="<?php echo $filter_payment; ?>" placeholder="<?php echo $column_payment; ?>" id="input-name" class="form-control" />
+                               
+                                
+                               
                                 </div>
                             <?php endif ?> 
 
@@ -187,6 +190,27 @@
                                     </span>
                                 </div>
                             </div>
+
+
+                             <div class="form-group">
+                             
+                                <label class="control-label" for="input-order-type">Order Placed From</label>
+                                <select name="filter_order_placed_from" id="input-order-placed-from" class="form-control">
+                                    <option value="*" selected></option> 
+                                    <?php if ($filter_order_placed_from=='Web') { ?>
+                                    <option value="Web" selected="selected">Web</option>
+                                    <?php } else { ?>
+                                    <option value="Web">Web</option>
+                                    <?php } ?>
+                                     <?php if ($filter_order_placed_from=='Mobile') { ?>
+                                    <option value="Mobile" selected="selected">Mobile</option>
+                                    <?php } else { ?>
+                                    <option value="Mobile">Mobile</option>
+                                    <?php } ?>
+                                     
+                                </select>
+                            </div>
+
 
                         </div>
 
@@ -330,9 +354,9 @@
                                         <?php } ?></td>
                                     <td class="text-left">
                                         <?php if ($sort == 'o.date_added') { ?>
-                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
+                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>">Order Date</a>
                                         <?php } else { ?>
-                                        <a href="<?php echo $sort_date_added; ?>"><?php echo $column_date_added; ?></a>
+                                        <a href="<?php echo $sort_date_added; ?>">Order Date</a>
                                         <?php } ?>
                                     </td>
                                     <!-- <td class="text-left"><?php if ($sort == 'o.date_modified') { ?>
@@ -341,7 +365,15 @@
                                         <a href="<?php echo $sort_date_modified; ?>"><?php echo $column_date_modified; ?></a>
                                         <?php } ?></td> -->
 
-                                    <td class="text-left">Delivery Date</td>
+
+                                     <td class="text-left">
+                                        <?php if ($sort == 'o.delivery_date') { ?>
+                                        <a href="<?php echo $sort_delivery_date; ?>" class="<?php echo strtolower($order); ?>">Delivery Date</a>
+                                        <?php } else { ?>
+                                        <a href="<?php echo $sort_delivery_date; ?>">Delivery Date</a>
+                                        <?php } ?>
+                                    </td>
+
 
                                     <td class="text-left">Delivery Timeslot</td>
 
@@ -700,6 +732,13 @@
             if (filter_order_type != '*') {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
             }
+
+
+              var filter_order_placed_from = $('select[name=\'filter_order_placed_from\']').val();
+
+            if (filter_order_placed_from != '*') {
+                url += '&filter_order_placed_from=' + encodeURIComponent(filter_order_placed_from);
+            }
             
             var filter_paid = $('select[name=\'filter_paid\']').val();
 
@@ -806,6 +845,27 @@
                 $('input[name=\'filter_company\']').val(item['label']);
                 $('input[name=\'filter_customer\']').val('');
                 $companyName=item['label'];
+            }
+        });
+
+
+           $('input[name=\'filter_payment\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletepayment&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['name']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'filter_payment\']').val(item['label']);
             }
         });
         
@@ -2117,7 +2177,9 @@ var $select = $('#new_order_processor_id');
     <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
     <script type="text/javascript"><!--
   $('.date').datetimepicker({
-            pickTime: false
+            pickTime: false,
+     widgetParent: 'body'
+
         });
 
     setInterval(function() {
@@ -2378,6 +2440,15 @@ function downloadOrdersonsolidated() {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
             }
             
+
+              var filter_order_placed_from = $('select[name=\'filter_order_placed_from\']').val();
+
+            if (filter_order_placed_from != '*' && filter_order_placed_from != '') {
+                url += '&filter_order_placed_from=' + encodeURIComponent(filter_order_placed_from);
+            }
+            
+
+            
             var filter_paid = $('select[name=\'filter_paid\']').val();
 
             if (filter_paid != '*' && filter_paid != '') {
@@ -2521,6 +2592,13 @@ function downloadOrders() {
             if (filter_order_type != '*' && filter_order_type != '') {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
             }
+            
+              var filter_order_placed_from = $('select[name=\'filter_order_placed_from\']').val();
+
+            if (filter_order_placed_from != '*' && filter_order_placed_from != '') {
+                url += '&filter_order_placed_from=' + encodeURIComponent(filter_order_placed_from);
+            }
+            
             
             var filter_paid = $('select[name=\'filter_paid\']').val();
 
@@ -2666,6 +2744,13 @@ function downloadOrderStickers() {
             if (filter_order_type != '*' && filter_order_type != '') {
                 url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
             }
+            
+              var filter_order_placed_from = $('select[name=\'filter_order_placed_from\']').val();
+
+            if (filter_order_placed_from != '*' && filter_order_placed_from != '') {
+                url += '&filter_order_placed_from=' + encodeURIComponent(filter_order_placed_from);
+            }
+            
             
             var filter_paid = $('select[name=\'filter_paid\']').val();
 

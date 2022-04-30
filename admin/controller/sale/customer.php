@@ -3685,6 +3685,93 @@ class ControllerSaleCustomer extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function autocompletepayment() {
+        $json = [];
+
+        if (isset($this->request->get['filter_name'])) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
+
+            $this->load->model('sale/customer');
+
+            $filter_data = [
+                'filter_name' => $filter_name,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            // $results = $this->model_sale_customer->getPayments($filter_data);
+
+            $files = glob(DIR_APPLICATION.'controller/payment/*.php');
+
+            if ($files) {
+                foreach ($files as $file) {
+                    $extension = basename($file, '.php');
+    
+                    $this->load->language('payment/'.$extension);
+    
+                    $text_link = $this->language->get('text_'.$extension);
+    
+                    if ($text_link != 'text_'.$extension) {
+                        $link = $this->language->get('text_'.$extension);
+                    } else {
+                        $link = '';
+                    } 
+    
+                    $data['extensions'][] = [
+                        'extension' => $extension,
+                        'name' => $this->language->get('heading_title'),
+                        'link' => $link,
+                        'status' => $this->config->get($extension.'_status') ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+                        'sort_order' => $this->config->get($extension.'_sort_order'),
+                        'install' => $this->url->link('extension/payment/install', 'token='.$this->session->data['token'].'&extension='.$extension, 'SSL'),
+                        'uninstall' => $this->url->link('extension/payment/uninstall', 'token='.$this->session->data['token'].'&extension='.$extension, 'SSL'),
+                        'installed' => in_array($extension, $extensions),
+                        'edit' => $this->url->link('payment/'.$extension.'', 'token='.$this->session->data['token'], 'SSL'),
+                    ];
+                }
+            }
+    
+            $names = [];
+            foreach ($data['extensions'] as $key => $row) {
+                $names[$key] = $row['name'];
+            }
+            array_multisort($names, SORT_ASC, $data['extensions']);
+
+
+        //  echo "<pre>";print_r($data['extensions']);die;
+
+            foreach ($data['extensions'] as $result) {
+
+               
+                if($result['status'] !='Disabled')
+                {
+                $json[] = [
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                    'code' => $result['extension'], 
+                    // 'status' => $result['status'], 
+                ];
+            }
+            }
+        }
+
+        // $sort_order = [];
+
+        // foreach ($json as $key => $value) {
+        //     $sort_order[$key] = $value['name'];
+        // }
+
+        // array_multisort($sort_order, SORT_ASC, $json);
+        //  echo "<pre>";print_r($json);die;
+        
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
     public function autocompleteparentcustomer() {
         $json = [];
 

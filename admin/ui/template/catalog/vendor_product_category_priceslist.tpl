@@ -14,6 +14,9 @@
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="changeStatus(0)"><i class="fa fa-times-circle text-danger"></i></button>
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>-->
             <button type="button" onclick="addnewproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add New"><i class="fa fa-plus"></i></button>
+                <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
+                <button type="button" onclick="excel_item();" data-toggle="tooltip" title="" class="btn btn-warning " data-original-title="Download Excel per Item"><i class="fa fa-download"></i></button>
+
             <?php } ?>
 	    <!--<span style="margin-left: 10px;" onclick="ChangeCategoryPrices()" form="form-product" data-toggle="tooltip" title="" class="btn btn-success"><i class="fa fa-check"></i></span>-->
             </div>
@@ -858,6 +861,177 @@ $.ajax({
             }
 });
 });
+
+
+
+function excel() {
+
+    url = 'index.php?path=catalog/vendor_product/export_excel_price_category&token=<?php echo $token; ?> ';
+    url=url.trim();
+ 
+   var filter_name = $('input[name=\'filter_name\']').val();
+
+            if (filter_name) {
+                url += '&filter_name=' + encodeURIComponent(filter_name);
+            }
+
+            var filter_vendor_name = $('input[name=\'filter_vendor_name\']').val();
+
+            if (filter_vendor_name) {
+                url += '&filter_vendor_name=' + encodeURIComponent(filter_vendor_name);
+            }
+
+            var filter_category = $('select[name=\'filter_category\']').val();
+
+            if (filter_category != '*') {
+                url += '&filter_category=' + encodeURIComponent(filter_category);
+            }
+			
+	    var filter_category_price = $('select[name=\'filter_category_price\']').val();
+
+            if (filter_category_price != '*') {
+                url += '&filter_category_price=' + encodeURIComponent(filter_category_price);
+            }
+            else
+            {
+                alert("Please select the price category");
+                return;
+            }
+
+            var filter_price = $('input[name=\'filter_price\']').val();
+
+            if (filter_price) {
+                url += '&filter_price=' + encodeURIComponent(filter_price);
+            }
+
+            var filter_product_id_to = $('input[name=\'filter_product_id_to\']').val();
+
+            if (filter_product_id_to) {
+                url += '&filter_product_id_to=' + encodeURIComponent(filter_product_id_to);
+            }
+
+            var filter_product_id_from = $('input[name=\'filter_product_id_from\']').val();
+
+            if (filter_product_id_from) {
+                url += '&filter_product_id_from=' + encodeURIComponent(filter_product_id_from);
+            }
+            
+            var filter_model = $('input[name=\'filter_model\']').val();
+
+            if (filter_model) {
+                url += '&filter_model=' + encodeURIComponent(filter_model);
+            }
+            
+
+            var filter_store_id = $('input[name=\'filter_store_id\']').val();
+
+            if (filter_store_id) {
+                url += '&filter_store_id=' + encodeURIComponent(filter_store_id);
+            }
+
+            var filter_status = $('select[name=\'filter_status\']').val();
+
+            if (filter_status != '*') {
+                url += '&filter_status=' + encodeURIComponent(filter_status);
+            }
+            
+            var filter_price_category_status = $('select[name=\'filter_price_category_status\']').val();
+
+            if (filter_price_category_status != '*') {
+                url += '&filter_price_category_status=' + encodeURIComponent(filter_price_category_status);
+            }
+  
+          // alert(url);
+    
+    location = url;
+}
+
+
+
+function excel_item() {
+
+    url = 'index.php?path=catalog/vendor_product/export_excel_price_category_item&token=<?php echo $token; ?> ';
+    url=url.trim();
+ 
+   var filter_name = $('input[name=\'filter_name\']').val();
+
+            if (filter_name) {
+                url += '&filter_name=' + encodeURIComponent(filter_name);
+            }
+             else
+            {
+                alert("Please select the product name");
+                return;
+            }
+
+            var filter_vendor_name = $('input[name=\'filter_vendor_name\']').val();
+
+            if (filter_vendor_name) {
+                url += '&filter_vendor_name=' + encodeURIComponent(filter_vendor_name);
+            }
+
+            var filter_category = $('select[name=\'filter_category\']').val();
+
+            if (filter_category != '*') {
+                url += '&filter_category=' + encodeURIComponent(filter_category);
+            }
+			
+	    var filter_category_price = $('select[name=\'filter_category_price\']').val();
+
+            if (filter_category_price != '*') {
+                url += '&filter_category_price=' + encodeURIComponent(filter_category_price);
+            }
+           
+
+            var filter_price = $('input[name=\'filter_price\']').val();
+
+            if (filter_price) {
+                url += '&filter_price=' + encodeURIComponent(filter_price);
+            }
+
+            var filter_product_id_to = $('input[name=\'filter_product_id_to\']').val();
+
+            if (filter_product_id_to) {
+                url += '&filter_product_id_to=' + encodeURIComponent(filter_product_id_to);
+            }
+
+            var filter_product_id_from = $('input[name=\'filter_product_id_from\']').val();
+
+            if (filter_product_id_from) {
+                url += '&filter_product_id_from=' + encodeURIComponent(filter_product_id_from);
+            }
+            
+            var filter_model = $('input[name=\'filter_model\']').val();
+
+            if (filter_model) {
+                url += '&filter_model=' + encodeURIComponent(filter_model);
+            }
+            
+
+            var filter_store_id = $('input[name=\'filter_store_id\']').val();
+
+            if (filter_store_id) {
+                url += '&filter_store_id=' + encodeURIComponent(filter_store_id);
+            }
+
+            var filter_status = $('select[name=\'filter_status\']').val();
+
+            if (filter_status != '*') {
+                url += '&filter_status=' + encodeURIComponent(filter_status);
+            }
+            
+            var filter_price_category_status = $('select[name=\'filter_price_category_status\']').val();
+
+            if (filter_price_category_status != '*') {
+                url += '&filter_price_category_status=' + encodeURIComponent(filter_price_category_status);
+            }
+  
+          // alert(url);
+    
+    location = url;
+}
+
+
 //--></script>
 
 <?php echo $footer; ?>

@@ -481,8 +481,10 @@ class Emailtemplate {
             'bulk_notification_mobile_message' => isset($data['bulk_notification_mobile_message']) ? $data['bulk_notification_mobile_message'] : '',
             'delivery_timeslot' => isset($data['delivery_timeslot']) ? $data['delivery_timeslot'] : '',
             'companyname' => isset($data['companyname']) ? $data['companyname'] : '',
+            'pezesha_documents'=>isset($data['pezesha_documents']) ? $data['pezesha_documents'] : '',
             'pezesha_customer_id' => isset($data['pezesha_customer_id']) ? $data['pezesha_customer_id'] : '',
             'pezesha_customer_uuid' => isset($data['pezesha_customer_uuid']) ? $data['pezesha_customer_uuid'] : '',
+
         ];
 
         return $result;

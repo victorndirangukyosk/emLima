@@ -460,7 +460,7 @@ class ControllerPaymentMpesa extends Controller {
                                     $log->write('transaction_details on complete');
                                     $log->write($transaction_details);
                                     $log->write('transaction_details on complete');
-                                    $this->model_payment_mpesa->insertOrderTransactionIdHybrid($value, $stkPushSimulation->CheckoutRequestID);
+                                    $this->model_payment_mpesa->insertOrderTransactionIdHybrid($value, $stkPushSimulation->CheckoutRequestID, $order_info['customer_id'], abs($order_info['amount_partialy_paid'] - $order_info['total']));
                                     $this->model_sale_order->UpdatePaymentMethod($value, 'mPesa Online', 'mpesa');
                                     //success pending to processing
                                     $order_status_id = $this->config->get('mpesa_order_status_id');
@@ -526,7 +526,14 @@ class ControllerPaymentMpesa extends Controller {
                             $log->write($transaction_details);
                             $log->write('transaction_details on complete 2');
                             if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                                $this->model_payment_mpesa->insertOrderTransactionId($value, $stkPushSimulation->CheckoutRequestID);
+                                
+                                $order_info = $this->model_checkout_order->getOrder($value);
+
+                                $log->write('order_info');
+                                $log->write($order_info);
+                                $log->write('order_info');
+                                
+                                $this->model_payment_mpesa->insertOrderTransactionId($value, $stkPushSimulation->CheckoutRequestID, $order_info['customer_id'], abs($order_info['amount_partialy_paid'] - $order_info['total']));
                             }
                             //success pending to processing
                             $order_status_id = $this->config->get('mpesa_order_status_id');
@@ -718,7 +725,7 @@ class ControllerPaymentMpesa extends Controller {
                         //SKIPPNG HERE UPDATING CheckoutRequestID..BUT WE NEED TO UPDATE RECEIPT NUMBER
                         $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetailsByOrderId($order_id);
                         if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                            $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID);
+                            $this->model_payment_mpesa->insertOrderTransactionId($order_id, $stkPushSimulation->CheckoutRequestID, $order_info['customer_id'], abs($order_info['amount_partialy_paid'] - $order_info['total']));
                         }
                         $this->model_payment_mpesa->addOrderHistoryTransaction($order_id, $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');
                         $json['status'] = true;
@@ -834,7 +841,7 @@ class ControllerPaymentMpesa extends Controller {
                         // $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
                         $transaction_details = $this->model_payment_mpesa->getCustomerTransactionDetailsByMerchantRequestId($mpesaDetails['request_id']);
                         if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                            $this->model_payment_mpesa->insertCustomerTransactionId($mpesaDetails['customer_id'], $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID);
+                            $this->model_payment_mpesa->insertCustomerTransactionId($mpesaDetails['customer_id'], $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID, $amount_topup);
                         }
                         // $this->model_payment_mpesa->insertCustomerTransactionId($mpesaDetails['customer_id'], $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID);
                         // $this->model_payment_mpesa->addOrderHistoryTransaction($order_id, $this->config->get('mpesa_order_status_id'), $customer_info['customer_id'], 'customer', $order_info['order_status_id'], 'mPesa Online', 'mpesa');

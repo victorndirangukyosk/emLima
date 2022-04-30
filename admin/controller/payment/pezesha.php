@@ -27,6 +27,7 @@ class ControllerPaymentPezesha extends Controller {
 
         $data['entry_merchant_key'] = $this->language->get('entry_merchant_key');
         $data['entry_email'] = $this->language->get('entry_email');
+        $data['entry_email_cc'] = $this->language->get('entry_email_cc');
         $data['entry_total'] = $this->language->get('entry_total');
         $data['entry_order_status'] = $this->language->get('entry_order_status');
         $data['entry_status'] = $this->language->get('entry_status');
@@ -61,6 +62,14 @@ class ControllerPaymentPezesha extends Controller {
         } else {
             $data['error_email'] = '';
         }
+
+
+        if (isset($this->error['email_cc'])) {
+            $data['error_email_cc'] = $this->error['email_cc'];
+        } else {
+            $data['error_email_cc'] = '';
+        }
+
 
         if (isset($this->error['client_secret'])) {
             $data['error_client_secret'] = $this->error['client_secret'];
@@ -129,6 +138,13 @@ class ControllerPaymentPezesha extends Controller {
             $data['pezesha_email'] = $this->request->post['pezesha_email'];
         } else {
             $data['pezesha_email'] = $this->config->get('pezesha_email');
+        }
+
+
+        if (isset($this->request->post['pezesha_email_cc'])) {
+            $data['pezesha_email_cc'] = $this->request->post['pezesha_email_cc'];
+        } else {
+            $data['pezesha_email_cc'] = $this->config->get('pezesha_email_cc');
         }
 
         if (isset($this->request->post['pezesha_client_id'])) {
@@ -230,6 +246,10 @@ class ControllerPaymentPezesha extends Controller {
         }
         if (!$this->request->post['pezesha_email']) {
             $this->error['email'] = $this->language->get('error_email');
+        }
+
+        if (!$this->request->post['pezesha_email_cc']) {
+            $this->error['email_cc'] = $this->language->get('error_email_cc');
         }
         if (!$this->request->post['pezesha_client_secret']) {
             $this->error['client_secret'] = $this->language->get('error_client_secret');

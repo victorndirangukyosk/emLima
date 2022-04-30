@@ -17,9 +17,29 @@ class ModelSaleTransactions extends Model
         //     $sql .= " AND c.lastname LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         // }
 
-        if (!empty($data['filter_date_added'])) {
-            $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        // if (!empty($data['filter_date_added'])) {
+        //     $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        // }
+
+
+
+        if (!empty($data['filter_date_added'])  && !empty($data['filter_date_added_to'])) {
+           
+            $sql .= " AND DATE(o.date_added) >= DATE('".$this->db->escape($data['filter_date_added'])."')  AND DATE(o.date_added) <= DATE('".$this->db->escape($data['filter_date_added_to'])."')";
         }
+        else if(!empty($data['filter_date_added']) && empty($data['filter_date_added_to']))
+        {
+            $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+
+        }
+        else if(!empty($data['filter_date_added_to']) && empty($data['filter_date_added']))
+        {          
+            $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added_to'])."')";
+
+        }
+
+
+
 
         if (!empty($data['filter_date_modified'])) {
             $sql .= " AND DATE(o.date_modified) = DATE('".$this->db->escape($data['filter_date_modified'])."')";
@@ -112,9 +132,31 @@ class ModelSaleTransactions extends Model
         // if (!empty($data['filter_customer'])) {
         //     $sql .= " AND c.lastname LIKE '%".$this->db->escape($data['filter_customer'])."%'";
         // }
-        if (!empty($data['filter_date_added'])) {
-            $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        // if (!empty($data['filter_date_added'])) {
+        //     $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+        // }
+
+
+
+
+
+
+        if (!empty($data['filter_date_added'])  && !empty($data['filter_date_added_to'])) {
+           
+            $sql .= " AND DATE(o.date_added) >= DATE('".$this->db->escape($data['filter_date_added'])."')  AND DATE(o.date_added) <= DATE('".$this->db->escape($data['filter_date_added_to'])."')";
         }
+        else if(!empty($data['filter_date_added']) && empty($data['filter_date_added_to']))
+        {
+            $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added'])."')";
+
+        }
+        else if(!empty($data['filter_date_added_to']) && empty($data['filter_date_added']))
+        {          
+            $sql .= " AND DATE(o.date_added) = DATE('".$this->db->escape($data['filter_date_added_to'])."')";
+
+        }
+
+
         if (!empty($data['filter_total'])) {
             $sql .= " AND o.total = '".(float) $data['filter_total']."'";
         }

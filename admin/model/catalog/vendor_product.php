@@ -885,7 +885,13 @@ class ModelCatalogVendorProduct extends Model {
 
         if (!empty($data['filter_name'])) {
             $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
+        }        
+
+        if (!empty($data['filter_product_history_id'])) {
+            $implode[] = "product_history_id = '" . $this->db->escape($data['filter_product_history_id']) . "'";
         }
+
+
 
         if ($implode) {
             $sql .= ' WHERE ' . implode(' AND ', $implode);
@@ -927,9 +933,13 @@ class ModelCatalogVendorProduct extends Model {
     }
 
     public function getProductInventoryHistory($data = []) {
-        $sql = "SELECT * FROM " . DB_PREFIX . 'product_inventory_history';
+        $sql = "SELECT ph.*,p.unit FROM " . DB_PREFIX . 'product_inventory_history ph join hf7_product p on ph.product_id =p.product_id ';
 
         $implode = [];
+         
+        if (!empty($data['filter_name'])) {
+            $implode[] = "product_name = '" . $this->db->escape($data['filter_name']) . "'";
+        }
 
         if (!empty($data['filter_store_id'])) {
             $implode[] = "product_store_id = '" . $this->db->escape($data['filter_store_id']) . "'";
@@ -1128,5 +1138,15 @@ class ModelCatalogVendorProduct extends Model {
 
         $this->db->query($query);
     }
+
+
+    public function updateInventoryHistory($product_history_id, $procured_qty,$rejected_qty,$prev_qty,$current_qty,$buying_price,$source,$date_added,$altered_by) {
+        
+        $query = 'UPDATE ' . DB_PREFIX . "product_inventory_history SET procured_qty = '" . $procured_qty . "',rejected_qty = '" . $rejected_qty . "',prev_qty = '" . $prev_qty . "',current_qty = '" . $current_qty . "',buying_price = '" . $buying_price . "',source = '" . rawurldecode($source) . "',date_added = '" . $date_added . "',altered_by_admin = 1  ,altered_by = '" . $altered_by . "' WHERE product_history_id = '" . (int) $product_history_id . "' ";
+            // echo "<pre>";print_r($query);die;
+
+        $this->db->query($query);
+    }
+
 
 }

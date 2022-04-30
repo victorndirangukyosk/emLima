@@ -364,11 +364,11 @@ class ControllerApiCustomerWishlist extends Controller
 
         //if( $this->customer->isLogged()) {
         if (isset($this->request->get['wishlist_id'])) {
-            $store_id = isset($this->request->get['store_id']) ? $this->request->get['store_id'] : false;
+            // $store_id = isset($this->request->get['store_id']) ? $this->request->get['store_id'] : false;
             $wishlist_id = $this->request->get['wishlist_id'];
 
             $data['store_selected'] = true;
-            $store_id = ACTIVE_STORE_ID;
+            // $store_id = ACTIVE_STORE_ID;
 
             $this->load->model('account/wishlist');
 
@@ -401,7 +401,6 @@ class ControllerApiCustomerWishlist extends Controller
 
                 $products = $this->model_account_wishlist->getWishlistProduct($this->request->get['wishlist_id']);
 
-                //echo "<pre>";print_r($products);die;
 
                 foreach ($products as $product) {
                     //below one we need to send product_store_id
@@ -410,7 +409,7 @@ class ControllerApiCustomerWishlist extends Controller
                     $price = 0;
                     $special_price = 0;
                     $percent_off = 0;
-
+                    $store_id=$product['store_id'];
                     // product_store_id 11
                     if ($store_id) {
                         $productStoreData = $this->model_assets_product->getProductStoreId($product['product_id'], $store_id);
@@ -557,6 +556,7 @@ class ControllerApiCustomerWishlist extends Controller
     }
  
 
+    //below API not using in mobile APP, confirmed by SAmuel ,so Active StoreID not using
     public function getAvailableOrderProducts()
     {
 

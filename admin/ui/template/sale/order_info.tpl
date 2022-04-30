@@ -774,7 +774,7 @@
 
 							
 								<tr>
-									<td colspan="4"></td>
+									<td colspan="5"></td>
 									<td class="text-right"><b><?php echo $total['title']; ?>:</b></td>
 									<td class="text-right"><?php echo $total['text']; ?></td>
 									
@@ -871,6 +871,43 @@
 							
 						</tr>
 					</tbody>
+
+					<tbody>
+
+					<?php 
+						foreach ($totals_history as $total) { ?>
+
+						<?php if(!$this->user->isVendor()) { ?>
+
+							
+								<tr>
+									<td colspan="7"></td>
+									<td class="text-right"><b><?php echo $total['title']; ?>:</b></td>
+									<td class="text-right"><?php echo $total['text']; ?></td>
+									
+									
+								</tr>
+							
+
+						<?php } else { ?>
+
+							
+								<tr>
+									<td colspan="7"></td>
+									<td class="text-right"><b><?php echo $total['title']; ?>:</b></td>
+									<td class="text-right"><?php echo $total['text']; ?></td>
+									
+									
+								</tr>
+							
+
+						<?php } ?>
+
+						
+						
+						<?php } ?>
+					</tbody>
+
 					</table>
 				</tbody>
 		  </div>

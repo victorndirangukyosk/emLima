@@ -210,6 +210,13 @@ class ControllerSettingSetting extends Controller {
             $data['error_active_store_minimum_order_amount'] = '';
         }
 
+
+        if (isset($this->error['active_store_delivery_charge'])) {
+            $data['error_active_store_delivery_charge'] = $this->error['active_store_delivery_charge'];
+        } else {
+            $data['error_active_store_delivery_charge'] = '';
+        }
+
         if (isset($this->error['owner'])) {
             $data['error_owner'] = $this->error['owner'];
         } else {
@@ -646,6 +653,14 @@ class ControllerSettingSetting extends Controller {
         } else {
             $data['config_active_store_minimum_order_amount'] = $this->config->get('config_active_store_minimum_order_amount');
         }
+
+
+        if (isset($this->request->post['config_active_store_delivery_charge'])) {
+            $data['config_active_store_delivery_charge'] = $this->request->post['config_active_store_delivery_charge'];
+        } else {
+            $data['config_active_store_delivery_charge'] = $this->config->get('config_active_store_delivery_charge');
+        }
+
 
         if (isset($this->request->post['config_owner'])) {
             $data['config_owner'] = $this->request->post['config_owner'];
@@ -2330,6 +2345,10 @@ class ControllerSettingSetting extends Controller {
 
         if (!$this->request->post['config_active_store_minimum_order_amount']) {
             $this->error['active_store_minimum_order_amount'] = $this->language->get('error_active_store_minimum_order_amount');
+        }
+
+        if (!$this->request->post['config_active_store_delivery_charge']) {
+            $this->error['active_store_delivery_charge'] = $this->language->get('error_active_store_delivery_charge');
         }
 
         if ((utf8_strlen($this->request->post['config_owner']) < 3) || (utf8_strlen($this->request->post['config_owner']) > 64)) {

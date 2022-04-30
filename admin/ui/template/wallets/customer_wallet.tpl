@@ -254,7 +254,9 @@ $('input[name=\'filter_email\']').autocomplete({
 //--></script> 
   <script type="text/javascript"><!--
 $('.date').datetimepicker({
-	pickTime: false
+	pickTime: false,
+     widgetParent: 'body'
+
 });
 //--></script></div>
 <?php echo $footer; ?> 
