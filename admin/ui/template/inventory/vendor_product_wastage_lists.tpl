@@ -44,19 +44,15 @@
                             <div class="form-group">
                                 <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
                                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
-                            </div>
-                            
-                            
-
-                            
-
-                            <div class="form-group">
-                                <label class="control-label" for="input-model"><?php echo $entry_product_id_from; ?></label>
-                                <input type="text" name="filter_product_id_from" value="<?php echo $filter_product_id_from; ?>" placeholder="<?php echo $entry_product_id_from; ?>" id="input-model" class="form-control" />
-                            </div>
+                            </div>    
 
                            
 
+                        </div>
+                        
+                        <div class="col-sm-4">
+                            
+                           
 
                              <div class="form-group">
 
@@ -72,26 +68,19 @@
                                
                             </div>
 
+                              
+
+                            
                         </div>
-                        <?php if (!$is_vendor): ?>
-                            
-                        
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
-                                <input type="text" name="filter_store_id" value="<?php echo $filter_store_id; ?>" placeholder="Store Name" id="input-store-name" class="form-control" />
-                            </div>
+                      
+
+                      
+
+
+                        <div class="<?php echo $is_vendor ? 'col-sm-4' : 'col-sm-4' ?>">
+                             
                            
-
-                            <div class="form-group">
-
-                              <label class="control-label" for="input-model"><?php echo $entry_product_id_to; ?></label>
-                                <input type="text" name="filter_product_id_to" value="<?php echo $filter_product_id_to; ?>" placeholder="<?php echo $entry_product_id_to; ?>" id="input-model" class="form-control" />
-                            
-
-                              </div>
-
-                               <div class="form-group">
+ <div class="form-group">
 
                              <label class="control-label" for="input-date-added-to">Date Added To</label>
                                 <div class="input-group date">
@@ -105,47 +94,12 @@
                                
                             </div>
 
-                            
-                        </div>
-                        <?php endif ?>
-
-                      
-
-
-                        <div class="<?php echo $is_vendor ? 'col-sm-4' : 'col-sm-4' ?>">
-                            <div class="form-group">
-                                <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
-                                <select name="filter_status" id="input-status" class="form-control">
-                                    <option value="*"></option>
-                                    <?php if ($filter_status) { ?>
-                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                                    <?php } else { ?>
-                                    <option value="1"><?php echo $text_enabled; ?></option>
-                                    <?php } ?>
-                                    <?php if (!$filter_status && !is_null($filter_status)) { ?>
-                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                                    <?php } else { ?>
-                                    <option value="0"><?php echo $text_disabled; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                           <div class="form-group">
-                             <div class="form-group">
-                                <label class="control-label" for="input-model"><?= $entry_vendor_name ?></label>
-                                <input type="text" name="filter_vendor_name" value="<?php echo $filter_vendor_name; ?>" placeholder="Vendor Name" id="input-model" class="form-control" />
-                            </div>
-                            </div>
-
-
- <div class="form-group" style="margin-top:30px;">
+         <div class="form-group" style="margin-top:30px;">
                   <label hidden><input type="checkbox" name="filter_group_by_date[]" value="<?php echo $filter_group_by_date; ?>" <?php if($filter_group_by_date == 1) { ?> checked="" <?php } ?>> Group By Date </label>
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
              
               </div>
-                            <div class="form-group">
-
-
-                               </div>
+                            
 
 
                         </div>
@@ -377,14 +331,14 @@ $('input[name=\'filter_store_id\']').autocomplete({
                 url += '&filter_name=' + encodeURIComponent(filter_name);
             }
 
-             var filter_group_by_date = 0;
+            // var filter_group_by_date = 0;
             
-            if ($('input[name=\'filter_group_by_date[]\']').is(':checked')) {
-                filter_group_by_date = 1;
-                url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);
-            } else {
-            url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);    
-            }
+           // if ($('input[name=\'filter_group_by_date[]\']').is(':checked')) {
+            //    filter_group_by_date = 1;
+            //    url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);
+           // } else {
+           // url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);    
+           // }
 
             var filter_vendor_name = $('input[name=\'filter_vendor_name\']').val();
 
@@ -427,11 +381,7 @@ $('input[name=\'filter_store_id\']').autocomplete({
                 url += '&filter_store_id=' + encodeURIComponent(filter_store_id);
             }
 
-            var filter_status = $('select[name=\'filter_status\']').val();
-
-            if (filter_status != '*') {
-                url += '&filter_status=' + encodeURIComponent(filter_status);
-            }
+            
 
             location = url;
         });
