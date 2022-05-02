@@ -12063,8 +12063,13 @@ class ModelReportExcel extends Model {
             $to = date('d-m-Y', strtotime($filter_data['filter_date_added_to']));
             $objPHPExcel->getActiveSheet()->mergeCells('A3:C3');
             $html = 'FROM ' . $from . ' TO ' . $to;
-
+                if(isset($filter_data['filter_date_added']) && isset($filter_data['filter_date_added_to'])){
             $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
+                }
+            else{
+                $objPHPExcel->getActiveSheet()->setCellValue('A3','');
+
+            }
             $objPHPExcel->getActiveSheet()->getStyle('A1:C3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
             /* $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
@@ -12110,6 +12115,135 @@ class ModelReportExcel extends Model {
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
             header('Content-Disposition: attachment;filename="product_wastage_report.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
+
+    public function download_product_wastage_excel_list($filter_data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        $this->load->language('inventory/wastage');
+        $this->load->model('inventory/inventory_wastage');
+
+
+        $rows = $this->model_inventory_inventory_wastage->getProducts($filter_data);
+
+        // echo "<pre>";print_r($filter_data);die;
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Product Wastage Report')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:F2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Products Wastage Report');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:F2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+            $from = date('d-m-Y', strtotime($filter_data['filter_date_added']));
+            $to = date('d-m-Y', strtotime($filter_data['filter_date_added_to']));
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:F3');
+            $html = 'FROM ' . $from . ' TO ' . $to;
+
+            if(isset($filter_data['filter_date_added']) && isset($filter_data['filter_date_added_to'])){
+                $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
+                    }
+                else{
+                    $objPHPExcel->getActiveSheet()->setCellValue('A3','');
+    
+                }
+            $objPHPExcel->getActiveSheet()->getStyle('A1:F3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            /* $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20); */
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Unit');
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Wastage Quantity');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Date Added');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Added By');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Cumulative Wastage');
+
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+
+            // Fetching the table data
+            $row = 5;
+            foreach ($rows as $result) {
+                /* if($result['pt']) {
+                  $amount = $result['pt'];
+                  }else{
+                  $amount = 0;
+                  } */
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['unit']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['wastage_qty']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['date_added']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['added_by_user']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['cumulative_wastage']);
+
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+            /* $objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+              // Sending headers to force the user to download the file
+              header('Content-Type: application/vnd.ms-excel'); */
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+            header('Content-Disposition: attachment;filename="product_wastage_list.xlsx"');
             header('Cache-Control: max-age=0');
             $objWriter->save('php://output');
             exit;
