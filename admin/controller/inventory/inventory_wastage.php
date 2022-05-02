@@ -574,4 +574,44 @@ class ControllerInventoryInventoryWastage extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function excel()
+    {
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
+ 
+   
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+
+
+        if (isset($this->request->get['filter_date_added_to'])) {
+            $filter_date_added_to = $this->request->get['filter_date_added_to'];
+        } else {
+            $filter_date_added_to = null;
+        }
+
+        
+
+       
+
+        $filter_data = [
+            'filter_name' => $filter_name,           
+            'filter_date_added' => $filter_date_added,
+            'filter_date_added_to' => $filter_date_added_to,
+            'sort' => $sort,
+            'order' => $order,
+            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            // 'limit' => $this->config->get('config_limit_admin'),
+        ];
+
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_product_wastage_excel_list($filter_data);
+    }
 }
