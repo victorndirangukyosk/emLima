@@ -603,6 +603,19 @@
                 </ul>
             </li>
             <?php } ?>
+
+             <?php if( $preturn_report_inventory_wastage != false  ) { ?>
+            <li><a class="parent">Inventory</a>
+                <ul>                    
+                    <?php if($preturn_report_inventory_wastage) { ?>
+                    <li><a href="<?php echo $report_inventory_wastage; ?>">Wastage Data</a></li>
+                    <?php } ?>
+
+                     
+
+                </ul>
+            </li>
+            <?php } ?>
             <?php if( $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false ) { ?>
             <li><a class="parent"><?php echo $text_customer; ?></a>
                 <ul>
