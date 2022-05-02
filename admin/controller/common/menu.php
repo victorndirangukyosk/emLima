@@ -175,6 +175,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_customer_statement'] = $this->url->link('report/customer_order/statement', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_financial_statement'] = $this->url->link('report/customer_financial_statement', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_boughtproducts'] = $this->url->link('report/customer_boughtproducts', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_products_consumption'] = $this->url->link('report/products_consumption', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_count'] = $this->url->link('report/customer_order_count', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_monthly_average'] = $this->url->link('report/customer_order_monthly_average', 'token=' . $this->session->data['token'], 'SSL');
@@ -429,6 +430,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_file_manager'] = $this->user->hasPermission('access', 'tool/file_manager');
 
         $data['preturn_report_vendor_order'] = $this->user->hasPermission('access', 'report/vendor_order');
+        $data['preturn_report_products_consumption'] = $this->user->hasPermission('access', 'report/products_consumption');
 
         $data['preturn_report_vendor_orders'] = $this->user->hasPermission('access', 'report/vendor_orders');
         $data['preturn_report_vendor_orders_category'] = $this->user->hasPermission('access', 'report/vendor_orders_category');
