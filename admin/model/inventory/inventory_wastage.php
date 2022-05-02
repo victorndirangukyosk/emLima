@@ -24,46 +24,12 @@ class ModelInventoryInventoryWastage extends Model {
 
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
-        if (!empty($data['filter_store_id'])) {
-            $sql .= " AND st.name LIKE '" . $this->db->escape($data['filter_store_id']) . "%'";
-        }
-
-        if ($this->user->isVendor()) {
-            $sql .= ' AND v.user_id="' . $this->user->getId() . '"';
-        }
-
-        if (!empty($data['filter_vendor_name'])) {
-            $sql .= ' AND v.user_id="' . $this->db->escape($data['filter_vendor_name']) . '"';
-            /* $sql .= " AND v.firstname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
-              $sql .= " OR v.lastname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'"; */
-        }
-
         
 
         if (!empty($data['filter_name'])) {
             $sql .= " AND pd.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
-
-        
-
-        if (!empty($data['filter_product_id_from']) && !empty($data['filter_product_id_to'])) {
-            $sql .= " AND ps.product_store_id >= '" . (int) $data['filter_product_id_from'] . "'";
-        }
-        else if (!empty($data['filter_product_id_from']) && empty($data['filter_product_id_to'])) {
-            $sql .= " AND ps.product_store_id = '" . (int) $data['filter_product_id_from'] . "'";
-        }
  
-        if (!empty($data['filter_product_id_to'])) {
-            $sql .= " AND ps.product_store_id <= '" . (int) $data['filter_product_id_to'] . "'";
-        }
- 
-        // if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
-        //     $lGroup = false;
-        //     $sql .= " AND p2c.category_id = '" . $this->db->escape($data['filter_category']) . "'";
-        // } else {
-        //     $lGroup = true;
-        // }
-
         if (!empty($data['filter_date_added'])  && !empty($data['filter_date_added_to'])) {
             $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(pw.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
         }
@@ -78,28 +44,20 @@ class ModelInventoryInventoryWastage extends Model {
           
         }
 
-
-     
+   
 
 
         if (($data['filter_group_by_date'] == 0 || $data['filter_group_by_date'] == NULL || !array_key_exists('filter_group_by_date', $data)) && !isset($data['filter_group_by_date'])) {//!array_key_exists('filter_parent_customer_id', $data)
             //group by pending based on requirement
         }
 
-        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
-        }
+       
 
         $sort_data = [
-            'pd.name',
-            'p.price',
+            'pd.name',           
             'p.product_id',
             'ps.product_store_id',
-            // 'p2c.category_id',
-            'ps.quantity',
-            'p.model',
-            'ps.status',
-            'st.name',
+           
         ];
 
         // $sql .= ' GROUP BY ps.product_store_id';
@@ -143,50 +101,11 @@ class ModelInventoryInventoryWastage extends Model {
 
     public function getTotalProducts($data = []) {
         $sql = 'SELECT pw.product_wastage_id from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
-
         // $sql = 'SELECT Distinct product_store_id from ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (ps.product_id = p2c.product_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id)';
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
-        
-        if (!empty($data['filter_store_id'])) {
-            $sql .= " AND st.name LIKE '" . $this->db->escape($data['filter_store_id']) . "%'";
-        }
-
-        if ($this->user->isVendor()) {
-            $sql .= ' AND v.user_id="' . $this->user->getId() . '"';
-        }
-
-        if (!empty($data['filter_vendor_name'])) {
-            $sql .= ' AND v.user_id="' . $this->db->escape($data['filter_vendor_name']) . '"';
-            /* $sql .= " AND v.firstname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
-              $sql .= " OR v.lastname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'"; */
-        }
-
-        
-
         if (!empty($data['filter_name'])) {
             $sql .= " AND pd.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
-
-        
-
-        if (!empty($data['filter_product_id_from']) && !empty($data['filter_product_id_to'])) {
-            $sql .= " AND ps.product_store_id >= '" . (int) $data['filter_product_id_from'] . "'";
-        }
-        else if (!empty($data['filter_product_id_from']) && empty($data['filter_product_id_to'])) {
-            $sql .= " AND ps.product_store_id = '" . (int) $data['filter_product_id_from'] . "'";
-        }
- 
-        if (!empty($data['filter_product_id_to'])) {
-            $sql .= " AND ps.product_store_id <= '" . (int) $data['filter_product_id_to'] . "'";
-        }
- 
-        // if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
-        //     $lGroup = false;
-        //     $sql .= " AND p2c.category_id = '" . $this->db->escape($data['filter_category']) . "'";
-        // } else {
-        //     $lGroup = true;
-        // }
-
         if (!empty($data['filter_date_added'])  && !empty($data['filter_date_added_to'])) {
             $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(pw.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
         }
@@ -200,18 +119,10 @@ class ModelInventoryInventoryWastage extends Model {
             $sql .= "AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
           
         }
-
-
-     
-
-
         if (($data['filter_group_by_date'] == 0 || $data['filter_group_by_date'] == NULL || !array_key_exists('filter_group_by_date', $data)) && !isset($data['filter_group_by_date'])) {//!array_key_exists('filter_parent_customer_id', $data)
             //group by pending based on requirement
         }
-
-        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
-        }
+        
 
         // $sql .= ' GROUP BY ps.product_store_id';
 
@@ -447,5 +358,125 @@ class ModelInventoryInventoryWastage extends Model {
     }
   
    
+    public function getProductsByGroup($data = []) {
+        $sql = 'SELECT ps.product_store_id,p.product_id ,Sum(pw.wastage_qty) as wastage_qty, pd.name,p.unit from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
+
+        $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
+
+        
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND pd.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+ 
+        if (!empty($data['filter_date_added'])  && !empty($data['filter_date_added_to'])) {
+            $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(pw.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
+        }
+        else if(!empty($data['filter_date_added']) && empty($data['filter_date_added_to']))
+        {
+            $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
+
+        }
+        else if(!empty($data['filter_date_added_to']) && empty($data['filter_date_added']))
+        {          
+            $sql .= "AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
+          
+        }
+
+   
+        if ($data['filter_group_by_date'] == 1 ) {//!array_key_exists('filter_parent_customer_id', $data)
+            $sql .= " GROUP BY pw.product_store_id , DATE_FORMAT(pw.date_added, '%Y-%m-%d')";
+        
+        }
+        else{
+            $sql .= " GROUP BY pw.product_store_id";
+
+        }
+
+       
+
+        $sort_data = [
+            'pd.name',           
+            'p.product_id',
+            'ps.product_store_id',
+           
+        ];
+
+        // $sql .= ' GROUP BY ps.product_store_id';
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            // $sql .= ' ORDER BY ' . $data['sort'];
+            $sql .= ' ORDER BY pw.date_added  DESC';
+
+        } else {
+            // $sql .= ' ORDER BY pd.name';
+            $sql .= ' ORDER BY  pw.date_added DESC ';
+        }
+
+        // if (isset($data['order']) && ('ASC' == $data['order'])) {
+        //     $sql .= ' ASC';
+        // } else {
+        //     $sql .= ' DESC';
+        // }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        // echo $sql;die;
+
+        // echo "<pre>";print_r($sql);die;
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+   
+
+    public function getTotalProductsByGroup($data = []) {
+        $sql = 'SELECT  distinct pw.product_store_id from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
+        // $sql = 'SELECT Distinct product_store_id from ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (ps.product_id = p2c.product_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id)';
+        $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND pd.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+        if (!empty($data['filter_date_added'])  && !empty($data['filter_date_added_to'])) {
+            $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(pw.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
+        }
+        else if(!empty($data['filter_date_added']) && empty($data['filter_date_added_to']))
+        {
+            $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
+
+        }
+        else if(!empty($data['filter_date_added_to']) && empty($data['filter_date_added']))
+        {          
+            $sql .= "AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
+          
+        }
+        if ($data['filter_group_by_date'] == 1 ) {//!array_key_exists('filter_parent_customer_id', $data)
+            $sql .= " GROUP BY pw.product_store_id , DATE_FORMAT(pw.date_added, '%Y-%m-%d')";
+        
+        }
+        else{
+            $sql .= " GROUP BY pw.product_store_id";
+
+        }
+        
+
+        // $sql .= ' GROUP BY ps.product_store_id';
+
+        $query = $this->db->query($sql);
+
+        return count($query->rows);
+    }
+    
 
 }
