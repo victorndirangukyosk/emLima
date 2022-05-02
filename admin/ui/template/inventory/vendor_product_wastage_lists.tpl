@@ -3,6 +3,7 @@
     <div class="page-header">
         <div class="container-fluid">
             <div class="pull-right">               
+                    <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success btn-sm" data-original-title="Download Excel"><i class="fa fa-download"></i></button>
             
                 <button type="button" id="add_wastage" data-toggle="tooltip" title="Add Wastage" class="btn btn-primary"><i class="fa fa-plus"></i></button>
                 <!--<?php if($this->user->getGroupName() == 'Administrator') { ?>-->
@@ -110,7 +111,7 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                                    <!--<td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
                                     <td class="text-center"><?php echo $column_image; ?></td>
                                     
 
@@ -125,7 +126,7 @@
                                         <a href="<?php echo $sort_vproduct_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_vproduct_id; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_vproduct_id; ?>"><?php echo $column_vproduct_id; ?></a>
-                                        <?php } ?></td>
+                                        <?php } ?></td>-->
 
 
 
@@ -156,7 +157,7 @@
                                 <?php if ($products) { ?>
                                 <?php foreach ($products as $product) { ?>
                                 <tr>
-                                    <td class="text-center"><?php if (in_array($product['product_store_id'], $selected)) { ?>
+                                    <!--<td class="text-center"><?php if (in_array($product['product_store_id'], $selected)) { ?>
                                         <input type="checkbox" name="selected[]" value="<?php echo $product['product_store_id']; ?>" checked="checked" />
                                         <?php } else { ?>
                                         <input type="checkbox" name="selected[]" value="<?php echo $product['product_store_id']; ?>" />
@@ -167,7 +168,7 @@
                                         <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span>
                                         <?php } ?></td>
                                     <td class="text-right"><?php echo $product['product_id']; ?></td>
-                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>
+                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>-->
                                     <td class="text-left"><?php echo $product['name']; ?></td>
 
 
@@ -331,20 +332,8 @@ $('input[name=\'filter_store_id\']').autocomplete({
                 url += '&filter_name=' + encodeURIComponent(filter_name);
             }
 
-            // var filter_group_by_date = 0;
             
-           // if ($('input[name=\'filter_group_by_date[]\']').is(':checked')) {
-            //    filter_group_by_date = 1;
-            //    url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);
-           // } else {
-           // url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);    
-           // }
-
-            var filter_vendor_name = $('input[name=\'filter_vendor_name\']').val();
-
-            if (filter_vendor_name) {
-                url += '&filter_vendor_name=' + encodeURIComponent(filter_vendor_name);
-            }
+ 
             var filter_date_added = $('input[name=\'filter_date_added\']').val();
 
             if (filter_date_added) {
@@ -358,31 +347,8 @@ $('input[name=\'filter_store_id\']').autocomplete({
                 url += '&filter_date_added_to=' + encodeURIComponent(filter_date_added_to);
             }
             
-
-           
-
-            var filter_product_id_to = $('input[name=\'filter_product_id_to\']').val();
-
-            if (filter_product_id_to) {
-                url += '&filter_product_id_to=' + encodeURIComponent(filter_product_id_to);
-            }
-
-            var filter_product_id_from = $('input[name=\'filter_product_id_from\']').val();
-
-            if (filter_product_id_from) {
-                url += '&filter_product_id_from=' + encodeURIComponent(filter_product_id_from);
-            }
-            
-            
-
-            var filter_store_id = $('input[name=\'filter_store_id\']').val();
-
-            if (filter_store_id) {
-                url += '&filter_store_id=' + encodeURIComponent(filter_store_id);
-            }
-
-            
-
+ 
+             
             location = url;
         });
   //--></script> 
@@ -618,6 +584,38 @@ $.ajax({
 });
  
 
+
+
+            
+function excel() {
+      
+            var url = 'index.php?path=inventory/inventory_wastage/excel&token=<?php echo $token; ?>';
+        var filter_name = $('input[name=\'filter_name\']').val();
+
+            if (filter_name) {
+                url += '&filter_name=' + encodeURIComponent(filter_name);
+            }
+
+            
+ 
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added) {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+
+
+              var filter_date_added_to = $('input[name=\'filter_date_added_to\']').val();
+
+            if (filter_date_added_to) {
+                url += '&filter_date_added_to=' + encodeURIComponent(filter_date_added_to);
+            }
+             
+
+	location = url;
+}
+
+ 
  
 </script>
 <style>
