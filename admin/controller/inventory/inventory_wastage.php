@@ -84,7 +84,7 @@ class ControllerInventoryInventoryWastage extends Controller {
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
-            $sort = 'pd.name';
+            // $sort = 'pd.name';
         }
 
         if (isset($this->request->get['order'])) {
@@ -195,7 +195,7 @@ class ControllerInventoryInventoryWastage extends Controller {
         $product_total = $this->model_inventory_inventory_wastage->getTotalProducts($filter_data);
 
         $results = $this->model_inventory_inventory_wastage->getProducts($filter_data);
-        // echo '<pre>';print_r($results);die;
+        // echo '<pre>';print_r($sort);die;
 
         $this->load->model('catalog/category');
         $data['categories'] = $this->model_catalog_category->getCategories(0);
@@ -351,7 +351,8 @@ class ControllerInventoryInventoryWastage extends Controller {
         }
 
 
-            $data['sort_name'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=pw.date_added' . $url, 'SSL');
             $data['sort_store'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=st.name' . $url, 'SSL');
             $data['sort_product_id'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL');
             $data['sort_vproduct_id'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL');
