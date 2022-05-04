@@ -39,12 +39,13 @@ class ControllerReportInventoryWastage extends Controller {
             $filter_date_added_to = null;
         }
 
-        if (isset($this->request->get['filter_group_by_date'])) {
-            $filter_group_by_date = $this->request->get['filter_group_by_date'];
-        } else {
-            $filter_group_by_date = null;
-        }
+        // if (isset($this->request->get['filter_group_by_date'])) {
+        //     $filter_group_by_date = $this->request->get['filter_group_by_date'];
+        // } else {
+        //     $filter_group_by_date = null;
+        // }
 
+        $filter_group_by_date =1;
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -81,9 +82,9 @@ class ControllerReportInventoryWastage extends Controller {
         // echo '<pre>';print_r($this->request->get['filter_group_by_date']);die;
       
 
-        if (isset($this->request->get['filter_group_by_date'])) {
-            $url .= '&filter_group_by_date=' . urlencode(html_entity_decode($this->request->get['filter_group_by_date'], ENT_QUOTES, 'UTF-8'));
-        }
+        // if (isset($this->request->get['filter_group_by_date'])) {
+        //     $url .= '&filter_group_by_date=' . urlencode(html_entity_decode($this->request->get['filter_group_by_date'], ENT_QUOTES, 'UTF-8'));
+        // }
  
         if (isset($this->request->get['sort'])) {
             $url .= '&sort=' . $this->request->get['sort'];
@@ -146,6 +147,7 @@ class ControllerReportInventoryWastage extends Controller {
                     'wastage_qty' => $result['wastage_qty'],
                     'name' => $result['name'],//product_name
                     'unit' => $result['unit'],
+                    'date_added' => $result['date_added'],
                     // 'added_by_user' => $result['added_by_user'],
                     // 'cumulative_wastage' => $result['cumulative_wastage'],
                     // 'date_added' => $result['date_added'],
@@ -223,9 +225,9 @@ class ControllerReportInventoryWastage extends Controller {
  
 
 
-        if (isset($this->request->get['filter_group_by_date'])) {
-            $url .= '&filter_group_by_date=' . urlencode(html_entity_decode($this->request->get['filter_group_by_date'], ENT_QUOTES, 'UTF-8'));
-        }
+        // if (isset($this->request->get['filter_group_by_date'])) {
+        //     $url .= '&filter_group_by_date=' . urlencode(html_entity_decode($this->request->get['filter_group_by_date'], ENT_QUOTES, 'UTF-8'));
+        // }
 
         if ('ASC' == $order) {
             $url .= '&order=DESC';
@@ -259,9 +261,9 @@ class ControllerReportInventoryWastage extends Controller {
             $url .= '&filter_date_added_to=' . $this->request->get['filter_date_added_to'];
         }
 
-        if (isset($this->request->get['filter_group_by_date'])) {
-            $url .= '&filter_group_by_date=' . urlencode(html_entity_decode($this->request->get['filter_group_by_date'], ENT_QUOTES, 'UTF-8'));
-        }
+        // if (isset($this->request->get['filter_group_by_date'])) {
+        //     $url .= '&filter_group_by_date=' . urlencode(html_entity_decode($this->request->get['filter_group_by_date'], ENT_QUOTES, 'UTF-8'));
+        // }
 
 
         if (isset($this->request->get['sort'])) {
@@ -288,7 +290,7 @@ class ControllerReportInventoryWastage extends Controller {
         $data['filter_name'] = $filter_name;        
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_date_added_to'] = $filter_date_added_to;
-        $data['filter_group_by_date'] = $filter_group_by_date;
+        // $data['filter_group_by_date'] = $filter_group_by_date;
 
 
         $data['sort'] = $sort;
@@ -343,13 +345,13 @@ class ControllerReportInventoryWastage extends Controller {
             $filter_date_added_to = null;
         }
 
-        if (isset($this->request->get['filter_group_by_date'])) {
-            $filter_group_by_date = $this->request->get['filter_group_by_date'];
-        } else {
-            $filter_group_by_date = null;
-        }
+        // if (isset($this->request->get['filter_group_by_date'])) {
+        //     $filter_group_by_date = $this->request->get['filter_group_by_date'];
+        // } else {
+        //     $filter_group_by_date = null;
+        // }
 
-       
+        $filter_group_by_date =1;
 
         $filter_data = [
             'filter_name' => $filter_name,           
