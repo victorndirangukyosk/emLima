@@ -1149,4 +1149,33 @@ class ModelCatalogVendorProduct extends Model {
     }
 
 
+    public function getVendorProductVariations_all($product_name) {
+        $returnData = [];
+
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' ";//and ps.status=1
+        $log = new Log('error.log');
+        $log->write($all_variations);
+        $result = $this->db->query($all_variations);
+
+        foreach ($result->rows as $r) {
+            // if ($r['status']) 
+            {
+                                  
+                $res = [
+                    'variation_id' => $r['product_store_id'],
+                    'unit' => $r['unit'],                    
+                ];
+
+                if (true == $formated) {
+                    array_push($returnData, $res);
+                } else {
+                    array_push($returnData, $r);
+                }
+            }
+        }
+
+        
+        return $returnData;
+    }
+
 }
