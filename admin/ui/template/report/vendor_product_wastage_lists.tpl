@@ -94,8 +94,8 @@
                                
                             </div>
 
-         <div class="form-group" style="margin-top:30px;">
-                  <label ><input type="checkbox" name="filter_group_by_date[]" value="<?php echo $filter_group_by_date; ?>" <?php if($filter_group_by_date == 1) { ?> checked="" <?php } ?>> Group By Day </label>
+         <div class="form-group" >
+                  <label style="margin-top:30px;display:none"><input type="checkbox" name="filter_group_by_date[]" value="<?php echo $filter_group_by_date; ?>" <?php if($filter_group_by_date == 1) { ?> checked="" <?php } ?>> Group By Day </label>
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
              
               </div>
@@ -138,6 +138,7 @@
 
 
                                     <td>Unit</td>
+                                    <td>Date</td>
 
                                      
                                      <td class="text-right">Wastage Quantity</td>
@@ -159,6 +160,7 @@
 
 
                                     <td class="text-left"><?php echo $product['unit']; ?></td>
+                                    <td class="text-left"><?php echo $product['date_added']; ?></td>
                                      
                                     <td class="text-right"><?php echo $product['wastage_qty']; ?>
                                     </td>                        
@@ -206,15 +208,16 @@
                 url += '&filter_name=' + encodeURIComponent(filter_name);
             }
 
-             var filter_group_by_date = 0;
+           //  var filter_group_by_date = 0;
             
-           if ($('input[name=\'filter_group_by_date[]\']').is(':checked')) {
-                filter_group_by_date = 1;
-               url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);
-            } else {
-            url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);    
-           }
+          // if ($('input[name=\'filter_group_by_date[]\']').is(':checked')) {
+           //     filter_group_by_date = 1;
+           //    url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);
+           // } else {
+           // url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);    
+           //}
 
+             
             
             var filter_date_added = $('input[name=\'filter_date_added\']').val();
 
@@ -286,14 +289,14 @@ function excel() {
                 url += '&filter_name=' + encodeURIComponent(filter_name);
             }
 
-             var filter_group_by_date = 0;
+            // var filter_group_by_date = 0;
             
-           if ($('input[name=\'filter_group_by_date[]\']').is(':checked')) {
-                filter_group_by_date = 1;
-               url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);
-            } else {
-            url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);    
-           }
+           //if ($('input[name=\'filter_group_by_date[]\']').is(':checked')) {
+             //   filter_group_by_date = 1;
+             //  url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);
+            //} else {
+            //url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);    
+           //}
 
             
             var filter_date_added = $('input[name=\'filter_date_added\']').val();
