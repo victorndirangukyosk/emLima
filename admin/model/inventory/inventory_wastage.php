@@ -481,4 +481,67 @@ class ModelInventoryInventoryWastage extends Model {
     }
     
 
+
+
+    public function updateProductWastage_Edit($product_wastage_id,$vendor_product_name,$vendor_product_uom, $wastage_qty,$cumulative_wastage,$date_added_date) {
+        
+        $this->trigger->fire('pre.admin.product.wastage', $vendor_product_name);
+
+        $log = new Log('error.log');
+        $log->write($data['wastage_qty']);         
+
+        if ($wastage_qty==null || $wastage_qty=='') {
+            $data['wastage_qty'] = 0;
+        }
+
+        // $qty = $data['current_qty'] + ($data['procured_qty'] - $data['rejected_qty']);
+
+        $sel_query = 'SELECT ps.product_store_id,ps.product_id,ps.quantity FROM ' . DB_PREFIX . 'product_to_store ps join ' . DB_PREFIX . "product p on ps.product_id=p.product_id  WHERE name ='" .  $vendor_product_name . "' and unit='" .  $vendor_product_uom . "'";
+        // echo "<pre>";print_r($sel_query);die;
+
+        $sel_query = $this->db->query($sel_query);
+        $sel = $sel_query->row;
+        
+        $log = new Log('error.log');
+        $log->write($sel['quantity']);
+        $previous_quantity = $sel['quantity'];         
+        $product_general_id = $sel['product_id'];         
+        $product_store_id = $sel['product_store_id'];         
+        $current_quantity = $sel['quantity']-$wastage_qty;   
+               
+
+        $log->write($current_quantity);
+        $log->write('wastage quantity updated');
+
+        $query_cumm = 'SELECT *  FROM ' . DB_PREFIX . "product_wastage WHERE product_wastage_id ='" . (int) $product_wastage_id . "' ";
+        // echo "<pre>";print_r($query_cumm);die;
+        $query_cumm = $this->db->query($query_cumm);    
+        $query_cumm_data = $query_cumm->row;
+
+
+        $prev_quantity = $query_cumm_data['wastage_qty']; 
+        $product_store_id_prev = $query_cumm_data['product_store_id']; 
+
+       
+        $this->db->query('Update' . DB_PREFIX . "product_wastage SET product_id = '" . $product_general_id . "', product_store_id = '" . $product_store_id . "',  wastage_qty = '" . $wastage_qty . "',  modified_by = '" . $this->user->getId() . "', date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',cumulative_wastage='".$cumulative_wastage."',date_added = '" . $date_added_date . "' where product_wastage_id='".$product_wastage_id."'");
+        
+        //delete previous updated quantity
+        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $prev_quantity . "' WHERE product_store_id = '" . (int) $product_store_id_prev . "'";
+        //echo $query;
+        $this->db->query($query);   
+        
+
+        //update current quantity
+        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $current_quantity . "' WHERE product_store_id = '" . (int) $product_store_id . "'";
+        //echo $query;
+        $this->db->query($query);  
+
+               
+        $log->write('product_to_store data modified with wastage quantity');         
+        
+
+        $this->trigger->fire('post.admin.product.wastage', $product_store_id);
+
+        return $this->db->getLastId();
+    }
 }
