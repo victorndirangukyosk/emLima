@@ -618,6 +618,15 @@
                      
 
                 </ul>
+
+                <ul>                    
+                    <?php if($preturn_report_inventory_wastage_consolidated) { ?>
+                    <li><a href="<?php echo $report_inventory_wastage_consolidated; ?>">Wastage Data Consolidated</a></li>
+                    <?php } ?>
+
+                     
+
+                </ul>
             </li>
             <?php } ?>
             <?php if( $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false ) { ?>

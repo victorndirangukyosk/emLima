@@ -144,7 +144,15 @@
 
                                      
                                      <td class="text-right">Wastage</td>
-                                     <td class="text-left">Date Added</td>
+                 
+
+                                      <td class="text-left"><?php if ($sort == 'pw.date_added') { ?>
+                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>">Date Added</a>
+                                        <?php } else { ?>
+                                        <a href="<?php echo $sort_date_added; ?>">Date Added</a>
+                                        <?php } ?>
+                                    </td>
+
                                      <td class="text-left">Added By</td>
                                      <td class="text-right">Cumulative Wastage</td>
 
@@ -171,6 +179,40 @@
                                     <td class="text-right"><?php echo $product['product_store_id']; ?></td>-->
                                     <td class="text-left"><?php echo $product['name']; ?></td>
 
+                                      <?php if($this->user->hasPermission('access', 'inventory/wastage_updation')) { ?>
+
+                                    <td class="text-left">
+                                       <select name=id="product_unit_<?php echo $product['product_wastage_id'];?>"  id="product_unit_<?php echo $product['product_wastage_id'];?>" class="form-control changeUnit" data-product_id="<?php echo $product['product_id']?>" data-product_store_id="<?php echo $product['product_store_id']?>">
+                          <?php foreach($product['variations'] as $variant) { ?>
+                          <?php if($variant['variation_id'] == $product['product_store_id']) { ?>
+                          <option data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> selected><?php echo $variant['unit']; ?></option>
+                          <?php } else { ?>
+                          <option data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> ><?php echo $variant['unit']; ?></option>
+                          <?php } } ?>
+                      </select>
+                      </td>
+                                    
+
+                                     <td class="text-right">
+                                        <input style="max-width: 75px !important; text-align: right; " name="wastage_qty"  type="number"  id="wastage_qty<?php echo $product['product_wastage_id'];?>" value="<?php echo $product['wastage_qty']; ?>">
+                                   
+                                    </td>
+                                     
+                                    <td>
+                                    <input style="max-width: 105px !important; text-align: right;" name="date_added_edit" type="date"  class="date_added_edit"  id="date_added_<?php echo $product['product_wastage_id'];?>" value="<?php echo $product['date_added_date']; ?>">
+                                    </td>
+
+                                     <td class="text-left"><?php echo $product['added_by_user']; ?>
+                                    </td>
+                                <td class="text-right">
+                                        <input style="max-width: 75px !important; text-align: right; " name="cumulative_wastage"  type="number"  id="cumulative_wastage<?php echo $product['product_wastage_id'];?>" value="<?php echo $product['cumulative_wastage']; ?>">
+                                   
+                                    </td>
+                                   
+                                    <td class="text-left"><button id="update_wastage" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Update Wastage" data-wastage-update="<?php echo $product['product_wastage_id']; ?>" data-wastage-update-name="<?php echo $product['name']; ?>"><i class="fa fa-save text-success"></i></button></td>
+				    
+				                <?php }else{ ?>
+
 
                                     <td class="text-left"><?php echo $product['unit']; ?></td>
                                      
@@ -183,15 +225,14 @@
 
                                      <td class="text-right"><?php echo $product['cumulative_wastage']; ?>
                                     </td>
-				    
-				 
+                                      <?php } ?>
                                     
                                 </tr>
 									 
                                 <?php } ?>
                                 <?php } else { ?>
                                 <tr>
-                                    <td class="text-center" colspan="13"><?php echo $text_no_results; ?></td>
+                                    <td class="text-center" colspan="5"><?php echo $text_no_results; ?></td>
                                 </tr>
                                 <?php } ?>
                             </tbody>
@@ -321,6 +362,52 @@ $('input[name=\'filter_store_id\']').autocomplete({
 });
 
  
+
+ 
+$(document).on('click', '#update_wastage', function(e){ 
+e.preventDefault();
+var update_wastage = $(this).attr("data-wastage-update");
+var update_wastage_name = $(this).attr("data-wastage-update-name");
+var cumulative_wastage=encodeURIComponent($('input[id=\'cumulative_wastage'+update_wastage+'\']').val());
+var wastage_qty=encodeURIComponent($('input[id=\'wastage_qty'+update_wastage+'\']').val());
+var updated_date=encodeURIComponent($('input[id=\'date_added_'+update_wastage+'\']').val());
+var unit_edit=decodeURIComponent($('select[id=\'product_unit_'+update_wastage+'\']').val());
+var updated_date=encodeURIComponent($('input[id=\'date_added_'+update_wastage+'\']').val());
+ 
+ console.log(update_wastage);
+ console.log(cumulative_wastage);
+ console.log(wastage_qty);
+ console.log(updated_date);
+ console.log(unit_edit);
+ console.log(update_wastage_name);
+
+ 
+
+   $.ajax({
+                    url: 'index.php?path=inventory/inventory_wastage/updateInventoryWastage_edit&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data:{ product_wastage_id : update_wastage, vendor_product_name : update_wastage_name, vendor_product_uom : unit_edit,wastage_quantity : update_wastage,cumulative_wastage : cumulative_wastage,date_added_date:updated_date },
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                          alert('Updated Successfully');
+                            setTimeout(function(){ window.location.reload(false); }, 1500);
+                        }
+                        else {
+                           alert('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+
+                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                alert('Please try again');
+                                    return false;
+                                }
+                });
+});
+
 
   $('#button-filter').on('click', function() {
 

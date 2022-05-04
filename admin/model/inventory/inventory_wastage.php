@@ -55,6 +55,7 @@ class ModelInventoryInventoryWastage extends Model {
 
         $sort_data = [
             'pd.name',           
+            'pw.date_added',           
             'p.product_id',
             'ps.product_store_id',
            
@@ -62,19 +63,20 @@ class ModelInventoryInventoryWastage extends Model {
 
         // $sql .= ' GROUP BY ps.product_store_id';
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            // $sql .= ' ORDER BY ' . $data['sort'];
-            $sql .= ' ORDER BY pw.date_added  DESC';
+            $sql .= ' ORDER BY ' . $data['sort'];
+            // $sql .= ' ORDER BY pw.date_added  DESC';
+            if (isset($data['order']) && ('ASC' == $data['order'])) {
+                $sql .= ' ASC';
+            } else {
+                $sql .= ' DESC';
+            }
 
         } else {
             // $sql .= ' ORDER BY pd.name';
             $sql .= 'ORDER BY  pw.date_added DESC ';
         }
 
-        // if (isset($data['order']) && ('ASC' == $data['order'])) {
-        //     $sql .= ' ASC';
-        // } else {
-        //     $sql .= ' DESC';
-        // }
+      
 
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
@@ -352,14 +354,14 @@ class ModelInventoryInventoryWastage extends Model {
         }
 
         $query = $this->db->query($sql);
-        //echo "<pre>";print_r($sql);die;
+        // echo "<pre>";print_r($sql);die;
 
         return $query->rows;
     }
   
    
     public function getProductsByGroup($data = []) {
-        $sql = 'SELECT ps.product_store_id,p.product_id ,Sum(pw.wastage_qty) as wastage_qty, pd.name,p.unit from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
+        $sql = 'SELECT ps.product_store_id,p.product_id ,Sum(pw.wastage_qty) as wastage_qty, pd.name,p.unit,date(pw.date_added) as date_added  from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
 
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
@@ -442,7 +444,7 @@ class ModelInventoryInventoryWastage extends Model {
    
 
     public function getTotalProductsByGroup($data = []) {
-        $sql = 'SELECT  distinct pw.product_store_id from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
+        $sql = 'SELECT   pw.product_store_id from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
         // $sql = 'SELECT Distinct product_store_id from ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (ps.product_id = p2c.product_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id)';
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
         if (!empty($data['filter_name'])) {
@@ -479,4 +481,67 @@ class ModelInventoryInventoryWastage extends Model {
     }
     
 
+
+
+    public function updateProductWastage_Edit($product_wastage_id,$vendor_product_name,$vendor_product_uom, $wastage_qty,$cumulative_wastage,$date_added_date) {
+        
+        $this->trigger->fire('pre.admin.product.wastage', $vendor_product_name);
+
+        $log = new Log('error.log');
+        $log->write($data['wastage_qty']);         
+
+        if ($wastage_qty==null || $wastage_qty=='') {
+            $data['wastage_qty'] = 0;
+        }
+
+        // $qty = $data['current_qty'] + ($data['procured_qty'] - $data['rejected_qty']);
+
+        $sel_query = 'SELECT ps.product_store_id,ps.product_id,ps.quantity FROM ' . DB_PREFIX . 'product_to_store ps join ' . DB_PREFIX . "product p on ps.product_id=p.product_id  WHERE name ='" .  $vendor_product_name . "' and unit='" .  $vendor_product_uom . "'";
+        // echo "<pre>";print_r($sel_query);die;
+
+        $sel_query = $this->db->query($sel_query);
+        $sel = $sel_query->row;
+        
+        $log = new Log('error.log');
+        $log->write($sel['quantity']);
+        $previous_quantity = $sel['quantity'];         
+        $product_general_id = $sel['product_id'];         
+        $product_store_id = $sel['product_store_id'];         
+        $current_quantity = $sel['quantity']-$wastage_qty;   
+               
+
+        $log->write($current_quantity);
+        $log->write('wastage quantity updated');
+
+        $query_cumm = 'SELECT *  FROM ' . DB_PREFIX . "product_wastage WHERE product_wastage_id ='" . (int) $product_wastage_id . "' ";
+        // echo "<pre>";print_r($query_cumm);die;
+        $query_cumm = $this->db->query($query_cumm);    
+        $query_cumm_data = $query_cumm->row;
+
+
+        $prev_quantity = $query_cumm_data['wastage_qty']; 
+        $product_store_id_prev = $query_cumm_data['product_store_id']; 
+
+       
+        $this->db->query('Update' . DB_PREFIX . "product_wastage SET product_id = '" . $product_general_id . "', product_store_id = '" . $product_store_id . "',  wastage_qty = '" . $wastage_qty . "',  modified_by = '" . $this->user->getId() . "', date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',cumulative_wastage='".$cumulative_wastage."',date_added = '" . $date_added_date . "' where product_wastage_id='".$product_wastage_id."'");
+        
+        //delete previous updated quantity
+        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $prev_quantity . "' WHERE product_store_id = '" . (int) $product_store_id_prev . "'";
+        //echo $query;
+        $this->db->query($query);   
+        
+
+        //update current quantity
+        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $current_quantity . "' WHERE product_store_id = '" . (int) $product_store_id . "'";
+        //echo $query;
+        $this->db->query($query);  
+
+               
+        $log->write('product_to_store data modified with wastage quantity');         
+        
+
+        $this->trigger->fire('post.admin.product.wastage', $product_store_id);
+
+        return $this->db->getLastId();
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-class ControllerReportInventoryWastage extends Controller {
+class ControllerReportInventoryWastageConsolidated extends Controller {
 
     private $error = [];
 
@@ -45,7 +45,7 @@ class ControllerReportInventoryWastage extends Controller {
         //     $filter_group_by_date = null;
         // }
 
-        $filter_group_by_date =1;
+        $filter_group_by_date=0;
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -108,7 +108,7 @@ class ControllerReportInventoryWastage extends Controller {
         //echo $prices;exit;
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title') ,
-            'href' => $this->url->link('report/inventory_wastage', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
 
@@ -147,7 +147,7 @@ class ControllerReportInventoryWastage extends Controller {
                     'wastage_qty' => $result['wastage_qty'],
                     'name' => $result['name'],//product_name
                     'unit' => $result['unit'],
-                    'date_added' => $result['date_added'],
+                    // 'date_added' => $result['date_added'],
                     // 'added_by_user' => $result['added_by_user'],
                     // 'cumulative_wastage' => $result['cumulative_wastage'],
                     // 'date_added' => $result['date_added'],
@@ -240,9 +240,9 @@ class ControllerReportInventoryWastage extends Controller {
         }
 
 
-            $data['sort_name'] = $this->url->link('report/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-            $data['sort_product_id'] = $this->url->link('report/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL');
-            $data['sort_vproduct_id'] = $this->url->link('report/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL');
+            $data['sort_name'] = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+            $data['sort_product_id'] = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL');
+            $data['sort_vproduct_id'] = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL');
 
 
         $url = '';
@@ -280,7 +280,7 @@ class ControllerReportInventoryWastage extends Controller {
         $pagination->limit = $this->config->get('config_limit_admin');
 
 
-            $pagination->url = $this->url->link('report/inventory_wastage', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+            $pagination->url = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
 
         $data['pagination'] = $pagination->render();
@@ -306,7 +306,7 @@ class ControllerReportInventoryWastage extends Controller {
         /* PREVIOUS CODE */
 
         //echo '<pre>';print_r($cachePrice_data);exit;
-            $this->response->setOutput($this->load->view('report/vendor_product_wastage_lists.tpl', $data));
+            $this->response->setOutput($this->load->view('report/vendor_product_wastage_consolidated.tpl', $data));
 
     }
 
@@ -351,7 +351,7 @@ class ControllerReportInventoryWastage extends Controller {
         //     $filter_group_by_date = null;
         // }
 
-        $filter_group_by_date =1;
+        $filter_group_by_date =0;
 
         $filter_data = [
             'filter_name' => $filter_name,           
@@ -366,6 +366,6 @@ class ControllerReportInventoryWastage extends Controller {
 
 
         $this->load->model('report/excel');
-        $this->model_report_excel->download_product_wastage_excel($filter_data);
+        $this->model_report_excel->download_product_wastage_excel_consolidated($filter_data);
     }
 }

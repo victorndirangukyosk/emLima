@@ -9,7 +9,7 @@
                           
             <!--<?php } ?>-->
             </div>
-            <h1><?php echo $heading_title; ?></h1>
+            <h1>Consolidated Wastage</h1>
             <ul class="breadcrumb">
                 <?php foreach ($breadcrumbs as $breadcrumb) { ?>
                 <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
@@ -94,8 +94,8 @@
                                
                             </div>
 
-         <div class="form-group" >
-                  <label style="margin-top:30px;display:none"><input type="checkbox" name="filter_group_by_date[]" value="<?php echo $filter_group_by_date; ?>" <?php if($filter_group_by_date == 1) { ?> checked="" <?php } ?>> Group By Day </label>
+         <div class="form-group" style="margin-top:30px;">
+                  <label style="display:none"><input type="checkbox" name="filter_group_by_date[]" value="<?php echo $filter_group_by_date; ?>" <?php if($filter_group_by_date == 1) { ?> checked="" <?php } ?>> Group By Day </label>
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
              
               </div>
@@ -137,9 +137,9 @@
                                    
 
 
+                                     
                                     <td><?php echo $column_name; ?></td>
                                     <td>Unit</td>
-                                    <td>Date</td>
 
                                      
                                      <td class="text-right">Wastage Quantity</td>
@@ -159,9 +159,8 @@
                                     <td class="text-right"><?php echo $product['product_store_id']; ?></td>-->
                                     <td class="text-left"><?php echo $product['name']; ?></td>
 
-
                                     <td class="text-left"><?php echo $product['unit']; ?></td>
-                                    <td class="text-left"><?php echo $product['date_added']; ?></td>
+
                                      
                                     <td class="text-right"><?php echo $product['wastage_qty']; ?>
                                     </td>                        
@@ -201,7 +200,7 @@
 
   $('#button-filter').on('click', function() {
 
-            var url = 'index.php?path=report/inventory_wastage&token=<?php echo $token; ?>';
+            var url = 'index.php?path=report/inventory_wastage_consolidated&token=<?php echo $token; ?>';
 
             var filter_name = $('input[name=\'filter_name\']').val();
 
@@ -209,16 +208,18 @@
                 url += '&filter_name=' + encodeURIComponent(filter_name);
             }
 
-           //  var filter_group_by_date = 0;
+             //var filter_group_by_date = 0;
             
-          // if ($('input[name=\'filter_group_by_date[]\']').is(':checked')) {
-           //     filter_group_by_date = 1;
-           //    url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);
-           // } else {
+           //if ($('input[name=\'filter_group_by_date[]\']').is(':checked')) {
+            //    filter_group_by_date = 1;
+            //   url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);
+            //} else {
            // url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);    
            //}
 
-             
+            url += '&filter_group_by_date=' + 0;    
+
+
             
             var filter_date_added = $('input[name=\'filter_date_added\']').val();
 
@@ -283,22 +284,23 @@
             
 function excel() {
       
-            var url = 'index.php?path=report/inventory_wastage/excel&token=<?php echo $token; ?>';
+            var url = 'index.php?path=report/inventory_wastage_consolidated/excel&token=<?php echo $token; ?>';
        var filter_name = $('input[name=\'filter_name\']').val();
 
             if (filter_name) {
                 url += '&filter_name=' + encodeURIComponent(filter_name);
             }
 
-            // var filter_group_by_date = 0;
+             //var filter_group_by_date = 0;
             
            //if ($('input[name=\'filter_group_by_date[]\']').is(':checked')) {
-             //   filter_group_by_date = 1;
-             //  url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);
+            //    filter_group_by_date = 1;
+            //   url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);
             //} else {
-            //url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);    
+           // url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);    
            //}
 
+            url += '&filter_group_by_date=0';    
             
             var filter_date_added = $('input[name=\'filter_date_added\']').val();
 
