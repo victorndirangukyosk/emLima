@@ -491,6 +491,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_report_inventory_wastage'] = $this->user->hasPermission('access', 'report/inventory_wastage');
         $data['preturn_report_inventory_wastage_consolidated'] = $this->user->hasPermission('access', 'report/inventory_wastage_consolidated');
         $data['preturn_inventory_history_updation'] = $this->user->hasPermission('access', 'inventory/inventory_history_updation');
+        $data['preturn_wastage_updation'] = $this->user->hasPermission('access', 'inventory/wastage_updation');
         $data['preturn_vendor_product_requisition'] = $this->user->hasPermission('access', 'inventory/vendor_product_requisition');
         $data['preturn_vendor_product_requisition_history'] = $this->user->hasPermission('access', 'inventory/vendor_product_requisition_history');
         $data['preturn_vendor_commission'] = $this->user->hasPermission('access', 'report/commission');
