@@ -387,7 +387,7 @@ var updated_date=encodeURIComponent($('input[id=\'date_added_'+update_wastage+'\
                     url: 'index.php?path=inventory/inventory_wastage/updateInventoryWastage_edit&token=<?php echo $token; ?>',
                     type: 'post',
                     dataType: 'json',
-                    data:{ product_wastage_id : update_wastage, vendor_product_name : update_wastage_name, vendor_product_uom : unit_edit,wastage_quantity : update_wastage,cumulative_wastage : cumulative_wastage,date_added_date:updated_date },
+                    data:{ product_wastage_id : update_wastage, vendor_product_name : update_wastage_name, vendor_product_uom : unit_edit,wastage_quantity : wastage_qty,cumulative_wastage : cumulative_wastage,date_added_date:updated_date },
                     async: true,
                     success: function(json) {
                         console.log(json); 
