@@ -55,6 +55,7 @@ class ModelInventoryInventoryWastage extends Model {
 
         $sort_data = [
             'pd.name',           
+            'pw.date_added',           
             'p.product_id',
             'ps.product_store_id',
            
@@ -62,19 +63,20 @@ class ModelInventoryInventoryWastage extends Model {
 
         // $sql .= ' GROUP BY ps.product_store_id';
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            // $sql .= ' ORDER BY ' . $data['sort'];
-            $sql .= ' ORDER BY pw.date_added  DESC';
+            $sql .= ' ORDER BY ' . $data['sort'];
+            // $sql .= ' ORDER BY pw.date_added  DESC';
+            if (isset($data['order']) && ('ASC' == $data['order'])) {
+                $sql .= ' ASC';
+            } else {
+                $sql .= ' DESC';
+            }
 
         } else {
             // $sql .= ' ORDER BY pd.name';
             $sql .= 'ORDER BY  pw.date_added DESC ';
         }
 
-        // if (isset($data['order']) && ('ASC' == $data['order'])) {
-        //     $sql .= ' ASC';
-        // } else {
-        //     $sql .= ' DESC';
-        // }
+      
 
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
