@@ -144,7 +144,15 @@
 
                                      
                                      <td class="text-right">Wastage</td>
-                                     <td class="text-left">Date Added</td>
+                 
+
+                                      <td class="text-left"><?php if ($sort == 'pw.date_added') { ?>
+                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>">Date Added</a>
+                                        <?php } else { ?>
+                                        <a href="<?php echo $sort_date_added; ?>">Date Added</a>
+                                        <?php } ?>
+                                    </td>
+
                                      <td class="text-left">Added By</td>
                                      <td class="text-right">Cumulative Wastage</td>
 
