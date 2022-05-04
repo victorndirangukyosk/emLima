@@ -352,14 +352,14 @@ class ModelInventoryInventoryWastage extends Model {
         }
 
         $query = $this->db->query($sql);
-        //echo "<pre>";print_r($sql);die;
+        // echo "<pre>";print_r($sql);die;
 
         return $query->rows;
     }
   
    
     public function getProductsByGroup($data = []) {
-        $sql = 'SELECT ps.product_store_id,p.product_id ,Sum(pw.wastage_qty) as wastage_qty, pd.name,p.unit from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
+        $sql = 'SELECT ps.product_store_id,p.product_id ,Sum(pw.wastage_qty) as wastage_qty, pd.name,p.unit,date(pw.date_added) as date_added  from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
 
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
@@ -442,7 +442,7 @@ class ModelInventoryInventoryWastage extends Model {
    
 
     public function getTotalProductsByGroup($data = []) {
-        $sql = 'SELECT  distinct pw.product_store_id from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
+        $sql = 'SELECT   pw.product_store_id from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
         // $sql = 'SELECT Distinct product_store_id from ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (ps.product_id = p2c.product_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id)';
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
         if (!empty($data['filter_name'])) {
