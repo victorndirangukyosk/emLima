@@ -123,7 +123,7 @@
                                         <a href="<?php echo $sort_vproduct_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_vproduct_id; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_vproduct_id; ?>"><?php echo $column_vproduct_id; ?></a>
-                                        <?php } ?></td>-->
+                                        <?php } ?></td>
 
 
 
@@ -132,12 +132,13 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
                                         <?php } ?>
-                                    </td>
+                                    </td>-->
 
                                    
 
 
                                      
+                                    <td><?php echo $column_name; ?></td>
                                     <td>Unit</td>
 
                                      
