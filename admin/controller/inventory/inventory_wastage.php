@@ -621,4 +621,49 @@ class ControllerInventoryInventoryWastage extends Controller {
         $this->load->model('report/excel');
         $this->model_report_excel->download_product_wastage_excel_list($filter_data);
     }
+
+
+    public function updateInventoryWastage_edit() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $supplier_details = NULL;
+
+        $log = new Log('error.log');
+        $log->write($this->request->post);
+        $log->write($this->request->get);
+
+
+        // if ($this->request->get['vendor_product_id'] != NULL && $this->request->get['vendor_product_uom'] != NULL && $this->request->get['buying_price'] != NULL && $this->request->get['procured_quantity'] != NULL && $this->request->get['rejected_quantity'] != NULL) {
+        if ($this->request->post['vendor_product_name'] != NULL && $this->request->post['vendor_product_uom'] != NULL  && $this->request->post['wastage_quantity'] != NULL) {
+            $this->load->language('inventory/inventory_wastage');
+            $this->load->model('inventory/inventory_wastage');
+
+
+            $vendor_product_uom = $this->request->post['vendor_product_uom'];
+            $wastage_quantity = $this->request->post['wastage_quantity'];
+            $vendor_product_name = $this->request->post['vendor_product_name'];
+            $cumulative_wastage = $this->request->post['cumulative_wastage'];
+            $date_added_date = $this->request->post['date_added_date'];
+            $product_wastage_id = $this->request->post['product_wastage_id'];
+            // $vendor_product_id = ;
+
+            $result = $this->model_inventory_inventory_wastage->updateProductWastage_edit($product_wastage_id,$vendor_product_name, $vendor_product_uom,$wastage_quantity,$cumulative_wastage,$date_added_date);
+            $log->write('RESULT');
+            $log->write($result);
+            $log->write('RESULT');
+            $json['status'] = '200';
+            $json['message'] = 'Products wastage updated!';
+            $this->session->data['success'] = 'Products wastage updated!';
+        } else {
+            $json['status'] = '400';
+            $json['message'] = 'All fields are mandatory!';
+            $this->session->data['warning'] = 'All fields are mandatory!';
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }
