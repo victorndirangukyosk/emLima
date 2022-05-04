@@ -199,6 +199,7 @@ class ControllerInventoryInventoryWastage extends Controller {
 
         $this->load->model('catalog/category');
         $data['categories'] = $this->model_catalog_category->getCategories(0);
+        $this->load->model('catalog/vendor_product');
 
         foreach ($results as $result) {
 
@@ -210,11 +211,15 @@ class ControllerInventoryInventoryWastage extends Controller {
                     $image = $this->model_tool_image->resize('no_image.png', 40, 40);
                     $bigimage = $this->model_tool_image->getImage('no_image.png');
                 }
+                $variations = $this->model_catalog_vendor_product->getVendorProductVariations_all($result['name']);
 
                 $data['products'][] = [
 
                     'product_store_id' => $result['product_store_id'],
                     'product_id' => $result['product_id'],
+                    'product_wastage_id' => $result['product_wastage_id'],
+                    
+                    'variations' => $variations,
                     'wastage_qty' => $result['wastage_qty'],
                     'image' => $image,
                     'bigimage' => $bigimage,
@@ -223,6 +228,7 @@ class ControllerInventoryInventoryWastage extends Controller {
                     'added_by_user' => $result['added_by_user'],
                     'cumulative_wastage' => $result['cumulative_wastage'],
                     'date_added' => $result['date_added'],
+                    'date_added_date' =>date('Y-m-d', strtotime($result['date_added'])),
 
                 ];
             }
