@@ -771,7 +771,8 @@
 							
 
 						<?php } else { ?>
-
+									
+									<?php if($total['code']!="shipping" && $total['code']!="delivery_vat") { ?>
 							
 								<tr>
 									<td colspan="5"></td>
@@ -780,6 +781,7 @@
 									
 									
 								</tr>
+									<?php }  ?>
 							
 
 						<?php } ?>
@@ -891,6 +893,7 @@
 
 						<?php } else { ?>
 
+									<?php if($total['code']!="shipping" && $total['code']!="delivery_vat") { ?>
 							
 								<tr>
 									<td colspan="7"></td>
@@ -899,7 +902,7 @@
 									
 									
 								</tr>
-							
+							<?php }  ?>
 
 						<?php } ?>
 

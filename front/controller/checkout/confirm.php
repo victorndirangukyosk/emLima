@@ -823,6 +823,11 @@ class ControllerCheckoutConfirm extends Controller {
             $log->write('Log 3');
             $stores = $this->cart->getStores();
 
+            $active_Store_exsists=in_array( "75", $stores );
+                // echo "<pre>";print_r($active_Store_exsists);die;
+            
+            $shipping_added=0;
+
             //print_r($stores);
             foreach ($stores as $store_id) {
                 $order_data[$store_id] = [];
@@ -852,8 +857,23 @@ class ControllerCheckoutConfirm extends Controller {
 
                         $log->write('in multiStoreIndex' . $result['code']);
                         $log->write('in loop' . $total);
+                        if($result['code']=='shipping' )
+                        {
+                            if($active_Store_exsists==1)
+                            {
+                            $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
+                            }
+                            else if($result['code']=='shipping' && $active_Store_exsists==0 && $shipping_added==0)
+                            {
+                                $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, -1);
+                               
 
+                            }
+                            $shipping_added=1;//shipping charge added to one of the stores
+                        }
+                        else{
                         $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
+                        }
                     }
                 }
 
@@ -1596,4 +1616,48 @@ class ControllerCheckoutConfirm extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function CheckMinimumOrderTotal() {
+
+        if(($this->config->get('shipping_status')))
+        {
+
+            if (isset($this->session->data['delivery_charge_terms']) && $this->session->data['delivery_charge_terms'] == TRUE) {
+                $json['min_order_total_reached'] = "TRUE";
+            } else {
+        $log = new Log('error.log');
+        $json['min_order_total_reached'] = "FALSE";
+        $log->write('min order value ');
+        
+        $sub_total=$this->cart->getSubTotal();
+        $json['min_order_total_reached'] = $this->config->get('config_active_store_minimum_order_amount') <= $sub_total ? "TRUE" : "FALSE";
+        $json['amount_required'] = "KES ". ($this->config->get('config_active_store_minimum_order_amount') - $sub_total);
+        // echo "<pre>";print_r($json['amount_required']);die;
+        $json['delivery_charge']="KES ".$this->config->get('config_active_store_delivery_charge');
+        $log->write($json['min_order_total_reached']);
+        $log->write($sub_total);
+        $log->write('min order value ');
+            }
+        }
+        else{
+            $json['min_order_total_reached'] = "TRUE";
+        }
+
+        
+
+           
+        
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+
+    public function AcceptDeliveryCharge() {
+
+        $log = new Log('error.log');
+        $json['delivery_charge_terms'] = $this->request->post['accept_terms'];
+        $this->session->data['delivery_charge_terms'] = $this->request->post['accept_terms'];
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }

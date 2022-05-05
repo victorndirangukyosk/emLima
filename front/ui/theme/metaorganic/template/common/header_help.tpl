@@ -111,7 +111,8 @@
                                     </div>
                                     </div>
                                     <div class="butn setui" style="position:relative; z-index:-1000;">
-                                        <a href=<?= $checkout_summary ?>>
+                                       <a  onclick="checkMinimumOrderTotal();">
+
                                         <div class="btn btn-default mini-cart-button" role="button" data-toggle="modal"
                                                 data-target="#store-cart-sides" id="mini-cart-button" 
                                                 style="margin-right:10px; margin-top:0px; display:flex; flex-flow: column nowrap;">
@@ -216,6 +217,44 @@
   <!--Cart HTML End-->
 
 
+
+  
+   <!-- Modal -->
+    <div class="addressModal">
+        <div class="modal fade" id="exampleModal_deliverycharge" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <div class="row">
+                            <div class="col-md-12">
+                              <h2>Accept Delivery Charge</h2>
+                            </div>
+                            <div class="modal-body">
+
+                             
+
+                            <p style="font-weight: bold; font-size: 12px;"><span id="min_required_free_delivery" style="font-weight: bold; font-size: 12px;"></span>  -  away from minimum order value.  Delivery charge - <span id="min_required_free_delivery_charge" style="font-weight: bold; font-size: 12px;"></span>  will be added<span style="color:#ea7128;"></span></p>
+                            </div>
+                            <div class="addnews-address-form">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button style="width:40%" id="agree_delivery_charge" name="agree_delivery_charge" type="button" class="btn btn-primary">I AGREE</button>
+                                        <button style="width:40%" id="cancel_delivery_charge" name="cancel_delivery_charge" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+
+
+
         <script>
         $(document).ready(function(){
   $(".newset").mouseleave(function(){
@@ -267,6 +306,73 @@ $("#mini-cart-button").click(function () {
   });
 
 
+
+
+
+ $('#agree_delivery_charge').on('click', function(){
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/AcceptDeliveryCharge',
+            type: 'post',
+            data: 'accept_terms=true',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                console.log(json);
+                if (json['delivery_charge_terms']) {
+                   $('#exampleModal_deliverycharge').modal('hide');
+                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkoutitems'; ?>";
+                }else{
+                  $('#exampleModal_deliverycharge').modal('show');
+                }
+            }
+        });
+        });
+
+
+
+
+function checkMinimumOrderTotal() {
+
+    $.ajax({
+        url: 'index.php?path=checkout/confirm/CheckMinimumOrderTotal',
+         type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+        success: function(json) {
+            if (json['min_order_total_reached']=="FALSE") {
+                      //$("#proceed_to_checkout").addClass("disabled"); 
+                 $('#exampleModal_deliverycharge').modal('show');
+                  $('#min_required_free_delivery').text(json['amount_required']);
+                  $('#min_required_free_delivery_charge').text(json['delivery_charge']);
+
+                             return false;
+                }else{
+            //$("#proceed_to_checkout").removeClass("disabled"); 
+
+                 $('#exampleModal_deliverycharge').modal('hide');  
+                 $('#min_required_free_delivery').text('');   
+                  $('#min_required_free_delivery_charge').text('');
+
+                  window.location.href = "<?= $continue.'/index.php?path=checkout/checkoutitems'; ?>";
+
+
+                   
+                }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        }
+    });
+}
+
+
+
+
         </script>
     </div>
   <?= $login_modal ?>
@@ -294,7 +400,12 @@ width: 550px;
        margin-right: -180px;
  }
 
-
+ #agree_delivery_charge {
+    width: 49%;
+    float: left;
+    margin-top: 10px;
+    margin-right: 5px;
+    }
 
 </style>
 

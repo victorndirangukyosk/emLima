@@ -515,6 +515,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
                 unset($this->session->data['accept_vendor_terms']);
+                unset($this->session->data['delivery_charge_terms']);
             }
 
             foreach ($order_ids as $key => $value) {
@@ -3517,6 +3518,10 @@ class ControllerApiCustomerOrder extends Controller {
         $log = new Log('error.log');
         if(($this->config->get('shipping_status')))
         {
+            if (isset($this->session->data['delivery_charge_terms']) && $this->session->data['delivery_charge_terms'] == TRUE) {
+                $json['min_order_total_reached'] = "TRUE";
+            } else {
+
         $log = new Log('error.log');
         $json['min_order_total_reached'] = "FALSE";
         $log->write('min order value ');
@@ -3529,6 +3534,7 @@ class ControllerApiCustomerOrder extends Controller {
         $log->write($json['min_order_total_reached']);
         $log->write($sub_total);
         $log->write('min order value ');
+            }
         }
         else{
             $json['min_order_total_reached'] = "TRUE";
@@ -3550,7 +3556,7 @@ class ControllerApiCustomerOrder extends Controller {
         $json['message'] = [];
         $log = new Log('error.log');
         $json['delivery_charge_terms'] = $this->request->post['accept_terms'];
-        // $this->session->data['delivery_charge_terms'] = $this->request->post['accept_terms'];
+        $this->session->data['delivery_charge_terms'] = $this->request->post['accept_terms'];
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -4145,6 +4151,8 @@ class ControllerApiCustomerOrder extends Controller {
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
                 unset($this->session->data['accept_vendor_terms']);
+            unset($this->session->data['delivery_charge_terms']);
+
                 $this->cart->clear();
             } elseif ('pezesha' == $args['payment_method_code']) {
                 $pezesha_result = $this->load->controller('customer/pezesha/applyloanone', $args);
@@ -4154,6 +4162,8 @@ class ControllerApiCustomerOrder extends Controller {
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
                 unset($this->session->data['accept_vendor_terms']);
+            unset($this->session->data['delivery_charge_terms']);
+
                 $this->cart->clear();
             } elseif ('interswitch' == $args['payment_method_code']) {
                 $log = new Log('error.log');
@@ -4183,12 +4193,16 @@ class ControllerApiCustomerOrder extends Controller {
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
                 unset($this->session->data['accept_vendor_terms']);
+            unset($this->session->data['delivery_charge_terms']);
+
                 $this->cart->clear();
             } else {
                 $data['payment'] = $this->load->controller('payment/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
                 unset($this->session->data['accept_vendor_terms']);
+            unset($this->session->data['delivery_charge_terms']);
+
                 $this->cart->clear();
             }
 

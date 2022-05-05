@@ -1402,11 +1402,17 @@ class ControllerSaleOrder extends Controller {
             $vendor_details = $this->model_vendor_vendor->getVendorDetails($store_details['vendor_id']);
 
             //echo "<pre>";print_r($totals);die;
+            $vendor_total_cal=0;
             foreach ($totals as $total) {
                 if ('sub_total' == $total['code']) {
                     $sub_total = $total['value'];
-                    break;
+                   
                 }
+                if('shipping' != $total['code'] && 'delivery_vat' != $total['code']&& 'total' != $total['code'])
+                {
+                    $vendor_total_cal=$vendor_total_cal+$total['value'];
+                }
+                
             }
 
             if ($this->user->isVendor()) {
@@ -1418,7 +1424,8 @@ class ControllerSaleOrder extends Controller {
             } else {
                 // $result['company_name'] = "(NA)";
             }
-            $vendor_total = $this->currency->format(($result['total'] - ($result['total'] * $result['commission']) / 100), $this->config->get('config_currency'));
+            // $vendor_total = $this->currency->format(($result['total'] - ($result['total'] * $result['commission']) / 100), $this->config->get('config_currency'));
+            $vendor_total = $this->currency->format(($vendor_total_cal - ($vendor_total_cal * $result['commission']) / 100), $this->config->get('config_currency'));
             $this->load->model('localisation/order_status');
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
@@ -3606,29 +3613,65 @@ class ControllerSaleOrder extends Controller {
             //echo "<pre>";print_r($totals);die;
 
             $data['total'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']);
+            $vendor=0;
+            if($this->user->isVendor())
+            {
+                $vendor=1;
+            }
+            $vendor_total_cal=0;
 
             foreach ($totals as $total) {
+
+                if('shipping' != $total['code'] && 'delivery_vat' != $total['code']&& 'total' != $total['code'])
+                {
+                    $vendor_total_cal=$vendor_total_cal+$total['value'];
+                }
+                if ('total' == $total['code']) {
+
+                    if( $vendor==0)
+                    {
+                    $data['total'] = $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']);
+                    }
+                    else
+                    {
+                        $data['total'] = $this->currency->format($vendor_total_cal, $order_info['currency_code'], $order_info['currency_value']);
+                        $total['value']=$vendor_total_cal;
+                    }
+
+                }
+
                 $data['totals'][] = [
                     'title' => $total['title'],
                     'code' => $total['code'],
                     'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
                 ];
 
-                if ('total' == $total['code']) {
-                    $data['total'] = $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']);
-                }
             }
-
+            
+            $vendor_total_cal=0;
             foreach ($totals_history as $total) {
+               
+
+                if('shipping' != $total['code'] && 'delivery_vat' != $total['code']&& 'total' != $total['code'])
+                {
+                    $vendor_total_cal=$vendor_total_cal+$total['value'];
+                }
+                if ('total' == $total['code']) {
+                    if( $vendor==0)
+                    {
+                    $data['total'] = $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']);
+                    }
+                    else
+                    {
+                        $data['total'] = $this->currency->format($vendor_total_cal, $order_info['currency_code'], $order_info['currency_value']);
+                        $total['value']=$vendor_total_cal;
+                    }
+                }
                 $data['totals_history'][] = [
                     'title' => $total['title'],
                     'code' => $total['code'],
                     'text' => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
                 ];
-
-                if ('total' == $total['code']) {
-                    $data['total'] = $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']);
-                }
             }
 
             $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
