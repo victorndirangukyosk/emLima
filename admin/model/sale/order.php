@@ -609,7 +609,7 @@ class ModelSaleOrder extends Model {
             $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
         }
 
-        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' and ps.product_store_id='$product_id'";//ps.status=1
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '".$product_name."'" ;//ps.status=1
 
         $result = $this->db->query($all_variations);
 
@@ -644,7 +644,7 @@ class ModelSaleOrder extends Model {
 
                     if (is_array($category_price_data) && count($category_price_data) > 0) {
                         $category_price = $this->currency->formatWithoutCurrency((float) $category_price_data['price']);
-                        $category_price_status = $category_price_data['status'];
+                        $category_price_status =1;// $category_price_data['status'];
                     } else {
                         $category_price = 0;
                         $category_price_status = 1;
@@ -656,7 +656,7 @@ class ModelSaleOrder extends Model {
 
                     if (is_array($category_price_data) && count($category_price_data) > 0) {
                         $category_price = $this->currency->formatWithoutCurrency((float) $category_price_data['price']);
-                        $category_price_status = $category_price_data['status'];
+                        $category_price_status =1;// $category_price_data['status'];
                     } else {
                         $category_price = 0;
                         $category_price_status = 1;
@@ -693,6 +693,7 @@ class ModelSaleOrder extends Model {
                 }
             }
         }
+        // echo "<pre>";print_r($returnData);die;
 
         return $returnData;
     }
