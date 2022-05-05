@@ -91,6 +91,8 @@ class ControllerSaleOrder extends Controller {
             //$send = $json;
 
             foreach ($json as $j) {
+                if($j['unit']!=null && $j['unit']!="")
+                {
                 if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
                     $j['price'] = $j['special_price'];
                 }
@@ -98,6 +100,7 @@ class ControllerSaleOrder extends Controller {
                 $j['name'] = htmlspecialchars_decode($j['name']);
 
                 $send[] = $j;
+            }
             }
 
             //echo "<pre>";print_r($json);die;
@@ -504,6 +507,23 @@ class ControllerSaleOrder extends Controller {
         $variations = $this->model_sale_order->getProductVariationsNew($product_info['name'], $order_info['store_id'], $this->request->get['order_id']);
         //$log->write($variations);
         $json = $variations;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getProductVariantsInfo_All() {
+
+        $this->load->model('sale/order');
+        $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
+        $log = new Log('error.log');
+        $log->write($this->request->get['order_id']);
+        $log->write($this->request->get['product_store_id']);
+        $product_info = $this->model_sale_order->getProductForPopup_all($this->request->get['product_store_id'], false, $order_info['store_id']);
+        $variations = $this->model_sale_order->getProductVariationsDisabled($product_info['name'], $order_info['store_id'], $this->request->get['order_id']);
+        //$log->write($variations);
+        $json = $variations;
+        // echo "<pre>";print_r($variations);die;
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
