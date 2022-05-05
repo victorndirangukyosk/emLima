@@ -178,16 +178,16 @@ class ControllerSaleEditinvoice extends Controller {
                         ];
                     }
 
-                    $variations = $this->model_sale_order->getProductVariationsNew($product['name'], 75, $order_id);
-                    if (array_search($product['product_id'], array_column($variations, 'product_store_id')) !== FALSE) {
-                        //echo 'FOUND!';
-                        $variationsold =$variations;
-                      } else {
-                        //echo 'NOT FOUND!';
+                    // $variations = $this->model_sale_order->getProductVariationsNew($product['name'], 75, $order_id);
+                    // if (array_search($product['product_id'], array_column($variations, 'product_store_id')) !== FALSE) {
+                    //     //echo 'FOUND!';
+                    //     $variationsold =$variations;
+                    //   } else {
+                    //     //echo 'NOT FOUND!';
                     $variation_disabled = $this->model_sale_order->getProductVariationsDisabled($product['name'], 75, $order_id,$product['product_id'],$product['price']);
-                    $variationsold =array_merge($variations,$variation_disabled);
+                    // $variationsold =array_merge($variations,$variation_disabled);
 
-                      }
+                    //   }
 
                     // echo "<pre>";print_r($variationsold);
                     $missed_quantity = $this->model_sale_order->getMissingProductQuantityByProductIdOrderId($order_id, $product['product_id'], 0);
@@ -206,7 +206,7 @@ class ControllerSaleEditinvoice extends Controller {
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
                         /* OLD TOTAL WITH TAX */ //'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
                         'total' => ($product['price'] * ($product['quantity'] - $required_quantity)),
-                        'variations' =>$variationsold,// $variations,
+                        'variations' =>$variation_disabled,// $variations,
                         'missed_quantity' => isset($missed_quantity) && count($missed_quantity) > 0 ? $missed_quantity['quantity_required'] : 0,
                     ];
                     $sub_total += ($product['price'] * ($product['quantity'] - $required_quantity));
