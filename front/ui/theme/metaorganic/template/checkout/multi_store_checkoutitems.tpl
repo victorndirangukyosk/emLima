@@ -306,7 +306,7 @@
 <ul class="checkoutnew">           
 <li>
      <!-- Continue shopping --> 
-                                <?php if($min_order_amount_reached == TRUE) { ?>
+                                <?php if($min_order_amount_reached == TRUE || $this->config->get('shipping_status')) { ?>
                                 <div class="checkout-promocode-form"  >
                                  <div class="form-group">
                                         <span class="input-group-btn kb_proceed_to_checkout" id="proceed_to_checkout"  onclick="setOrderNotes(); getpezeshalimit();">
@@ -567,6 +567,42 @@
     </style>
 
     <?= $footer ?>
+
+     <!-- Modal -->
+    <div class="addressModal">
+        <div class="modal fade" id="exampleModal_deliverycharge_1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <div class="row">
+                            <div class="col-md-12">
+                              <h2>Accept Delivery Charge</h2>
+                            </div>
+                            <div class="modal-body">
+
+                             
+
+                            <p style="font-weight: bold; font-size: 12px;"><span id="min_required_free_delivery_1" style="font-weight: bold; font-size: 12px;"></span>  -  away from minimum order value.  Delivery charge - <span id="min_required_free_delivery_charge_1" style="font-weight: bold; font-size: 12px;"></span>  will be added<span style="color:#ea7128;"></span></p>
+                            </div>
+                            <div class="addnews-address-form">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button style="width:40%" id="agree_delivery_charge_1" name="agree_delivery_charge_1" type="button" class="btn btn-primary">I AGREE</button>
+                                        <button style="width:40%" id="cancel_delivery_charge" name="cancel_delivery_charge" type="button" class="btn btn-grey  cancelbut" data-dismiss="modal">DECLINE</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+
+
     <!-- Modal -->
     <div class="addressModal">
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
@@ -661,7 +697,7 @@
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     <style>
-    #agree_vendor_terms, #pay_pending_amount {
+    #agree_vendor_terms, #pay_pending_amount,#agree_delivery_charge_1 {
     width: 49%;
     float: left;
     margin-top: 10px;
@@ -879,7 +915,35 @@ var dropoff_notes = $('textarea[name="dropoff_notes"]').val();
 document.cookie = "dropoff_notes="+dropoff_notes;
 var po_number = $('input[name="po_number"]').val();
 document.cookie = "po_number="+po_number;
-//$('#exampleModal').modal('toggle');
+$.ajax({
+            url: 'index.php?path=checkout/confirm/CheckMinimumOrderTotal',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                if (json['min_order_total_reached']=="FALSE") {
+                      $("#proceed_to_checkout").addClass("disabled"); 
+                 $('#exampleModal_deliverycharge_1').modal('show');
+                  $('#min_required_free_delivery_1').text(json['amount_required']);
+                  $('#min_required_free_delivery_charge_1').text(json['delivery_charge']);
+
+                             return false;
+                }else{
+            $("#proceed_to_checkout").removeClass("disabled"); 
+
+                 $('#exampleModal_deliverycharge_1').modal('hide');  
+                  $('#min_required_free_delivery_1').text('');
+                  $('#min_required_free_delivery_charge_1').text('');
+
+
+
+                   
+                }
+
+                 
 
 $.ajax({
         url: 'index.php?path=checkout/checkoutitems/getunpaidorders',
@@ -925,8 +989,35 @@ $.ajax({
         error: function(xhr, ajaxOptions, thrownError) {
         }
 });
+            }
+            });
+                           
+ 
 
 });
+
+
+ $('#agree_delivery_charge_1').on('click', function(){
+        $.ajax({
+            url: 'index.php?path=checkout/confirm/AcceptDeliveryCharge',
+            type: 'post',
+            data: 'accept_terms=true',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                console.log(json);
+                if (json['delivery_charge_terms']) {
+                   $('#exampleModal_deliverycharge_1').modal('hide');
+                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";
+                }else{
+                  $('#exampleModal_deliverycharge_1').modal('show');
+                }
+            }
+        });
+        });
 
 $(document).delegate('#updatecart, #updatecar', 'click', function() {
         return false;
@@ -1033,6 +1124,7 @@ $(document).delegate('#updatecart, #updatecar', 'click', function() {
             }
             
             loadTotals($('input#shipping_city_id').val());
+            checkMinimumOrderTotal();
             loadUnpaidorders();
             
             setTimeout(function(){ 
@@ -1704,6 +1796,10 @@ function loadTotals($city_id) {
         },
         success: function(html) {
             $('#checkout-total-wrapper').html(html);
+            if($("a[id^='button-reward']").text() == "CONTINUE SHOPPING")
+            {
+             alert("Order total is less than minimum order value");
+            }
         },
         error: function(xhr, ajaxOptions, thrownError) {
             alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
@@ -1731,6 +1827,41 @@ function loadUnpaidorders() {
             $("#proceed_to_checkout").removeClass("disabled"); 
             $('#exampleModal3').modal('hide');
             }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        }
+    });
+}
+
+
+function checkMinimumOrderTotal() {
+
+    $.ajax({
+        url: 'index.php?path=checkout/confirm/CheckMinimumOrderTotal',
+         type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+        success: function(json) {
+            if (json['min_order_total_reached']=="FALSE") {
+                      $("#proceed_to_checkout").addClass("disabled"); 
+                 $('#exampleModal_deliverycharge_1').modal('show');
+                  $('#min_required_free_delivery_1').text(json['amount_required']);
+                  $('#min_required_free_delivery_charge_1').text(json['delivery_charge']);
+
+                             return false;
+                }else{
+            $("#proceed_to_checkout").removeClass("disabled"); 
+
+                 $('#exampleModal_deliverycharge_1').modal('hide');  
+                 $('#min_required_free_delivery_1').text('');   
+                  $('#min_required_free_delivery_charge_1').text('');
+
+
+                   
+                }
         },
         error: function(xhr, ajaxOptions, thrownError) {
         }

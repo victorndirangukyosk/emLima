@@ -466,7 +466,7 @@ class ControllerPezeshaPezesha extends Controller {
             $loan_id = $result['data']['loan_id'];
             $this->model_pezesha_pezesha->UpdateCustomerLoans($customer_id, $order_id, $loan_id, $loan_type, $amount);
             $this->model_pezesha_pezesha->addOrderHistory($order_id, 5, 'Pezesha', 'pezesha', $this->user->getId(), $this->user->getGroupName(), 0, 'Loan Approved From Pezesha ' . $loan_type);
-            $this->model_pezesha_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $customer_id);
+            //$this->model_pezesha_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $customer_id);
         } else {
             $this->model_pezesha_pezesha->addOrderHistoryFailed($order_id, 8, 'Pezesha', 'pezesha', $this->user->getId(), $this->user->getGroupName(), 0, 'Loan Rejected From Pezesha ' . $loan_type);
         }
