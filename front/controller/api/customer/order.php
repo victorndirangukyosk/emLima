@@ -3518,6 +3518,10 @@ class ControllerApiCustomerOrder extends Controller {
         $log = new Log('error.log');
         if(($this->config->get('shipping_status')))
         {
+            if (isset($this->session->data['delivery_charge_terms']) && $this->session->data['delivery_charge_terms'] == TRUE) {
+                $json['min_order_total_reached'] = "TRUE";
+            } else {
+
         $log = new Log('error.log');
         $json['min_order_total_reached'] = "FALSE";
         $log->write('min order value ');
@@ -3530,6 +3534,7 @@ class ControllerApiCustomerOrder extends Controller {
         $log->write($json['min_order_total_reached']);
         $log->write($sub_total);
         $log->write('min order value ');
+            }
         }
         else{
             $json['min_order_total_reached'] = "TRUE";
@@ -3551,7 +3556,7 @@ class ControllerApiCustomerOrder extends Controller {
         $json['message'] = [];
         $log = new Log('error.log');
         $json['delivery_charge_terms'] = $this->request->post['accept_terms'];
-        // $this->session->data['delivery_charge_terms'] = $this->request->post['accept_terms'];
+        $this->session->data['delivery_charge_terms'] = $this->request->post['accept_terms'];
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
