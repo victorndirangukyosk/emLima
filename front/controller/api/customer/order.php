@@ -3508,6 +3508,53 @@ class ControllerApiCustomerOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function CheckMinimumOrderTotal() {
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $log = new Log('error.log');
+        if(($this->config->get('shipping_status')))
+        {
+        $log = new Log('error.log');
+        $json['min_order_total_reached'] = "FALSE";
+        $log->write('min order value ');
+        
+        $sub_total=$this->cart->getSubTotal();
+        $json['min_order_total_reached'] = $this->config->get('config_active_store_minimum_order_amount') <= $sub_total ? "TRUE" : "FALSE";
+        $json['amount_required'] = "KES ". ($this->config->get('config_active_store_minimum_order_amount') - $sub_total);
+        // echo "<pre>";print_r($json['amount_required']);die;
+        $json['delivery_charge']="KES ".$this->config->get('config_active_store_delivery_charge');
+        $log->write($json['min_order_total_reached']);
+        $log->write($sub_total);
+        $log->write('min order value ');
+        }
+        else{
+            $json['min_order_total_reached'] = "TRUE";
+        }
+
+        
+
+           
+        
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+
+    public function addAcceptDeliveryCharge() {
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $log = new Log('error.log');
+        $json['delivery_charge_terms'] = $this->request->post['accept_terms'];
+        // $this->session->data['delivery_charge_terms'] = $this->request->post['accept_terms'];
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function addAcceptOtherVendorOrderTerm() {
 
         $json = [];
