@@ -3509,7 +3509,7 @@ class ControllerApiCustomerOrder extends Controller {
     }
 
 
-    public function CheckMinimumOrderTotal() {
+    public function getCheckMinimumOrderTotal() {
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
