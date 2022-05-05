@@ -45,6 +45,7 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['vouchers']);
             unset($this->session->data['adminlogin']);
             unset($this->session->data['accept_vendor_terms']);
+            unset($this->session->data['delivery_charge_terms']);
             unset($this->session->data['pezesha_amount_limit']);
             unset($this->session->data['pezesha_customer_amount_limit']);
             setcookie('po_number', null, -1, '/');
