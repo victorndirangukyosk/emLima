@@ -118,8 +118,8 @@ class ControllerSaleCustomer extends Controller {
             $filter_account_manager_name = null;
         }
 
-        if (isset($this->request->get['filter_customer_experince'])) {
-            $filter_customer_experince = $this->request->get['filter_customer_experince'];
+        if (isset($this->request->get['filter_customer_experience'])) {
+            $filter_customer_experince = $this->request->get['filter_customer_experience'];
         } else {
             $filter_customer_experince = null;
         }
@@ -130,8 +130,8 @@ class ControllerSaleCustomer extends Controller {
             $filter_account_manager_id = null;
         }
 
-        if (isset($this->request->get['filter_customer_experince_id'])) {
-            $filter_customer_experince_id = $this->request->get['filter_customer_experince_id'];
+        if (isset($this->request->get['filter_customer_experience_id'])) {
+            $filter_customer_experince_id = $this->request->get['filter_customer_experience_id'];
         } else {
             $filter_customer_experince_id = null;
         }
@@ -193,7 +193,7 @@ class ControllerSaleCustomer extends Controller {
             'filter_account_manager_name' => $filter_account_manager_name,
             'filter_customer_experince' => $filter_customer_experince,
             'filter_account_manager_id' => $filter_account_manager_id,
-            'filter_customer_experience_id' => $filter_customer_experience_id,
+            'filter_customer_experience_id' => $filter_customer_experince_id,
             'filter_sub_customer_show' => $filter_sub_customer_show,
             'filter_monthyear_added' => $this->request->get['filter_monthyear_added'],
             'sort' => $sort,

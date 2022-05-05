@@ -84,7 +84,7 @@ class ControllerInventoryInventoryWastage extends Controller {
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
-            $sort = 'pd.name';
+            // $sort = 'pd.name';
         }
 
         if (isset($this->request->get['order'])) {
@@ -195,10 +195,11 @@ class ControllerInventoryInventoryWastage extends Controller {
         $product_total = $this->model_inventory_inventory_wastage->getTotalProducts($filter_data);
 
         $results = $this->model_inventory_inventory_wastage->getProducts($filter_data);
-        // echo '<pre>';print_r($results);die;
+        // echo '<pre>';print_r($sort);die;
 
         $this->load->model('catalog/category');
         $data['categories'] = $this->model_catalog_category->getCategories(0);
+        $this->load->model('catalog/vendor_product');
 
         foreach ($results as $result) {
 
@@ -210,11 +211,15 @@ class ControllerInventoryInventoryWastage extends Controller {
                     $image = $this->model_tool_image->resize('no_image.png', 40, 40);
                     $bigimage = $this->model_tool_image->getImage('no_image.png');
                 }
+                $variations = $this->model_catalog_vendor_product->getVendorProductVariations_all($result['name']);
 
                 $data['products'][] = [
 
                     'product_store_id' => $result['product_store_id'],
                     'product_id' => $result['product_id'],
+                    'product_wastage_id' => $result['product_wastage_id'],
+                    
+                    'variations' => $variations,
                     'wastage_qty' => $result['wastage_qty'],
                     'image' => $image,
                     'bigimage' => $bigimage,
@@ -223,6 +228,7 @@ class ControllerInventoryInventoryWastage extends Controller {
                     'added_by_user' => $result['added_by_user'],
                     'cumulative_wastage' => $result['cumulative_wastage'],
                     'date_added' => $result['date_added'],
+                    'date_added_date' =>date('Y-m-d', strtotime($result['date_added'])),
 
                 ];
             }
@@ -351,7 +357,8 @@ class ControllerInventoryInventoryWastage extends Controller {
         }
 
 
-            $data['sort_name'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=pw.date_added' . $url, 'SSL');
             $data['sort_store'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=st.name' . $url, 'SSL');
             $data['sort_product_id'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL');
             $data['sort_vproduct_id'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL');
@@ -574,4 +581,89 @@ class ControllerInventoryInventoryWastage extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function excel()
+    {
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
+ 
+   
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
+        }
+
+
+        if (isset($this->request->get['filter_date_added_to'])) {
+            $filter_date_added_to = $this->request->get['filter_date_added_to'];
+        } else {
+            $filter_date_added_to = null;
+        }
+
+        
+
+       
+
+        $filter_data = [
+            'filter_name' => $filter_name,           
+            'filter_date_added' => $filter_date_added,
+            'filter_date_added_to' => $filter_date_added_to,
+            'sort' => $sort,
+            'order' => $order,
+            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            // 'limit' => $this->config->get('config_limit_admin'),
+        ];
+
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_product_wastage_excel_list($filter_data);
+    }
+
+
+    public function updateInventoryWastage_edit() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $supplier_details = NULL;
+
+        $log = new Log('error.log');
+        $log->write($this->request->post);
+        $log->write($this->request->get);
+
+
+        // if ($this->request->get['vendor_product_id'] != NULL && $this->request->get['vendor_product_uom'] != NULL && $this->request->get['buying_price'] != NULL && $this->request->get['procured_quantity'] != NULL && $this->request->get['rejected_quantity'] != NULL) {
+        if ($this->request->post['vendor_product_name'] != NULL && $this->request->post['vendor_product_uom'] != NULL  && $this->request->post['wastage_quantity'] != NULL) {
+            $this->load->language('inventory/inventory_wastage');
+            $this->load->model('inventory/inventory_wastage');
+
+
+            $vendor_product_uom = $this->request->post['vendor_product_uom'];
+            $wastage_quantity = $this->request->post['wastage_quantity'];
+            $vendor_product_name = $this->request->post['vendor_product_name'];
+            $cumulative_wastage = $this->request->post['cumulative_wastage'];
+            $date_added_date = $this->request->post['date_added_date'];
+            $product_wastage_id = $this->request->post['product_wastage_id'];
+            // $vendor_product_id = ;
+
+            $result = $this->model_inventory_inventory_wastage->updateProductWastage_edit($product_wastage_id,$vendor_product_name, $vendor_product_uom,$wastage_quantity,$cumulative_wastage,$date_added_date);
+            $log->write('RESULT');
+            $log->write($result);
+            $log->write('RESULT');
+            $json['status'] = '200';
+            $json['message'] = 'Products wastage updated!';
+            $this->session->data['success'] = 'Products wastage updated!';
+        } else {
+            $json['status'] = '400';
+            $json['message'] = 'All fields are mandatory!';
+            $this->session->data['warning'] = 'All fields are mandatory!';
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 }

@@ -3,6 +3,7 @@
     <div class="page-header">
         <div class="container-fluid">
             <div class="pull-right">               
+                    <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success btn-sm" data-original-title="Download Excel"><i class="fa fa-download"></i></button>
             
                 <button type="button" id="add_wastage" data-toggle="tooltip" title="Add Wastage" class="btn btn-primary"><i class="fa fa-plus"></i></button>
                 <!--<?php if($this->user->getGroupName() == 'Administrator') { ?>-->
@@ -44,19 +45,15 @@
                             <div class="form-group">
                                 <label class="control-label" for="input-name"><?php echo $entry_name; ?></label>
                                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name" class="form-control" />
-                            </div>
-                            
-                            
-
-                            
-
-                            <div class="form-group">
-                                <label class="control-label" for="input-model"><?php echo $entry_product_id_from; ?></label>
-                                <input type="text" name="filter_product_id_from" value="<?php echo $filter_product_id_from; ?>" placeholder="<?php echo $entry_product_id_from; ?>" id="input-model" class="form-control" />
-                            </div>
+                            </div>    
 
                            
 
+                        </div>
+                        
+                        <div class="col-sm-4">
+                            
+                           
 
                              <div class="form-group">
 
@@ -72,26 +69,19 @@
                                
                             </div>
 
+                              
+
+                            
                         </div>
-                        <?php if (!$is_vendor): ?>
-                            
-                        
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
-                                <input type="text" name="filter_store_id" value="<?php echo $filter_store_id; ?>" placeholder="Store Name" id="input-store-name" class="form-control" />
-                            </div>
+                      
+
+                      
+
+
+                        <div class="<?php echo $is_vendor ? 'col-sm-4' : 'col-sm-4' ?>">
+                             
                            
-
-                            <div class="form-group">
-
-                              <label class="control-label" for="input-model"><?php echo $entry_product_id_to; ?></label>
-                                <input type="text" name="filter_product_id_to" value="<?php echo $filter_product_id_to; ?>" placeholder="<?php echo $entry_product_id_to; ?>" id="input-model" class="form-control" />
-                            
-
-                              </div>
-
-                               <div class="form-group">
+ <div class="form-group">
 
                              <label class="control-label" for="input-date-added-to">Date Added To</label>
                                 <div class="input-group date">
@@ -105,47 +95,12 @@
                                
                             </div>
 
-                            
-                        </div>
-                        <?php endif ?>
-
-                      
-
-
-                        <div class="<?php echo $is_vendor ? 'col-sm-4' : 'col-sm-4' ?>">
-                            <div class="form-group">
-                                <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
-                                <select name="filter_status" id="input-status" class="form-control">
-                                    <option value="*"></option>
-                                    <?php if ($filter_status) { ?>
-                                    <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                                    <?php } else { ?>
-                                    <option value="1"><?php echo $text_enabled; ?></option>
-                                    <?php } ?>
-                                    <?php if (!$filter_status && !is_null($filter_status)) { ?>
-                                    <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                                    <?php } else { ?>
-                                    <option value="0"><?php echo $text_disabled; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                           <div class="form-group">
-                             <div class="form-group">
-                                <label class="control-label" for="input-model"><?= $entry_vendor_name ?></label>
-                                <input type="text" name="filter_vendor_name" value="<?php echo $filter_vendor_name; ?>" placeholder="Vendor Name" id="input-model" class="form-control" />
-                            </div>
-                            </div>
-
-
- <div class="form-group" style="margin-top:30px;">
+         <div class="form-group" style="margin-top:30px;">
                   <label hidden><input type="checkbox" name="filter_group_by_date[]" value="<?php echo $filter_group_by_date; ?>" <?php if($filter_group_by_date == 1) { ?> checked="" <?php } ?>> Group By Date </label>
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
              
               </div>
-                            <div class="form-group">
-
-
-                               </div>
+                            
 
 
                         </div>
@@ -156,7 +111,7 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                                    <!--<td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
                                     <td class="text-center"><?php echo $column_image; ?></td>
                                     
 
@@ -171,7 +126,7 @@
                                         <a href="<?php echo $sort_vproduct_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_vproduct_id; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_vproduct_id; ?>"><?php echo $column_vproduct_id; ?></a>
-                                        <?php } ?></td>
+                                        <?php } ?></td>-->
 
 
 
@@ -189,7 +144,15 @@
 
                                      
                                      <td class="text-right">Wastage</td>
-                                     <td class="text-left">Date Added</td>
+                 
+
+                                      <td class="text-left"><?php if ($sort == 'pw.date_added') { ?>
+                                        <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>">Date Added</a>
+                                        <?php } else { ?>
+                                        <a href="<?php echo $sort_date_added; ?>">Date Added</a>
+                                        <?php } ?>
+                                    </td>
+
                                      <td class="text-left">Added By</td>
                                      <td class="text-right">Cumulative Wastage</td>
 
@@ -202,7 +165,7 @@
                                 <?php if ($products) { ?>
                                 <?php foreach ($products as $product) { ?>
                                 <tr>
-                                    <td class="text-center"><?php if (in_array($product['product_store_id'], $selected)) { ?>
+                                    <!--<td class="text-center"><?php if (in_array($product['product_store_id'], $selected)) { ?>
                                         <input type="checkbox" name="selected[]" value="<?php echo $product['product_store_id']; ?>" checked="checked" />
                                         <?php } else { ?>
                                         <input type="checkbox" name="selected[]" value="<?php echo $product['product_store_id']; ?>" />
@@ -213,8 +176,42 @@
                                         <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span>
                                         <?php } ?></td>
                                     <td class="text-right"><?php echo $product['product_id']; ?></td>
-                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>
+                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>-->
                                     <td class="text-left"><?php echo $product['name']; ?></td>
+
+                                      <?php if($this->user->hasPermission('access', 'inventory/wastage_updation')) { ?>
+
+                                    <td class="text-left">
+                                       <select name=id="product_unit_<?php echo $product['product_wastage_id'];?>"  id="product_unit_<?php echo $product['product_wastage_id'];?>" class="form-control changeUnit" data-product_id="<?php echo $product['product_id']?>" data-product_store_id="<?php echo $product['product_store_id']?>">
+                          <?php foreach($product['variations'] as $variant) { ?>
+                          <?php if($variant['variation_id'] == $product['product_store_id']) { ?>
+                          <option data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> selected><?php echo $variant['unit']; ?></option>
+                          <?php } else { ?>
+                          <option data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> ><?php echo $variant['unit']; ?></option>
+                          <?php } } ?>
+                      </select>
+                      </td>
+                                    
+
+                                     <td class="text-right">
+                                        <input style="max-width: 75px !important; text-align: right; " name="wastage_qty"  type="number"  id="wastage_qty<?php echo $product['product_wastage_id'];?>" value="<?php echo $product['wastage_qty']; ?>">
+                                   
+                                    </td>
+                                     
+                                    <td>
+                                    <input style="max-width: 105px !important; text-align: right;" name="date_added_edit" type="date"  class="date_added_edit"  id="date_added_<?php echo $product['product_wastage_id'];?>" value="<?php echo $product['date_added_date']; ?>">
+                                    </td>
+
+                                     <td class="text-left"><?php echo $product['added_by_user']; ?>
+                                    </td>
+                                <td class="text-right">
+                                        <input style="max-width: 75px !important; text-align: right; " name="cumulative_wastage"  type="number"  id="cumulative_wastage<?php echo $product['product_wastage_id'];?>" value="<?php echo $product['cumulative_wastage']; ?>">
+                                   
+                                    </td>
+                                   
+                                    <td class="text-left"><button id="update_wastage" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Update Wastage" data-wastage-update="<?php echo $product['product_wastage_id']; ?>" data-wastage-update-name="<?php echo $product['name']; ?>"><i class="fa fa-save text-success"></i></button></td>
+				    
+				                <?php }else{ ?>
 
 
                                     <td class="text-left"><?php echo $product['unit']; ?></td>
@@ -228,15 +225,14 @@
 
                                      <td class="text-right"><?php echo $product['cumulative_wastage']; ?>
                                     </td>
-				    
-				 
+                                      <?php } ?>
                                     
                                 </tr>
 									 
                                 <?php } ?>
                                 <?php } else { ?>
                                 <tr>
-                                    <td class="text-center" colspan="13"><?php echo $text_no_results; ?></td>
+                                    <td class="text-center" colspan="5"><?php echo $text_no_results; ?></td>
                                 </tr>
                                 <?php } ?>
                             </tbody>
@@ -367,6 +363,52 @@ $('input[name=\'filter_store_id\']').autocomplete({
 
  
 
+ 
+$(document).on('click', '#update_wastage', function(e){ 
+e.preventDefault();
+var update_wastage = $(this).attr("data-wastage-update");
+var update_wastage_name = $(this).attr("data-wastage-update-name");
+var cumulative_wastage=encodeURIComponent($('input[id=\'cumulative_wastage'+update_wastage+'\']').val());
+var wastage_qty=encodeURIComponent($('input[id=\'wastage_qty'+update_wastage+'\']').val());
+var updated_date=encodeURIComponent($('input[id=\'date_added_'+update_wastage+'\']').val());
+var unit_edit=decodeURIComponent($('select[id=\'product_unit_'+update_wastage+'\']').val());
+var updated_date=encodeURIComponent($('input[id=\'date_added_'+update_wastage+'\']').val());
+ 
+ console.log(update_wastage);
+ console.log(cumulative_wastage);
+ console.log(wastage_qty);
+ console.log(updated_date);
+ console.log(unit_edit);
+ console.log(update_wastage_name);
+
+ 
+
+   $.ajax({
+                    url: 'index.php?path=inventory/inventory_wastage/updateInventoryWastage_edit&token=<?php echo $token; ?>',
+                    type: 'post',
+                    dataType: 'json',
+                    data:{ product_wastage_id : update_wastage, vendor_product_name : update_wastage_name, vendor_product_uom : unit_edit,wastage_quantity : wastage_qty,cumulative_wastage : cumulative_wastage,date_added_date:updated_date },
+                    async: true,
+                    success: function(json) {
+                        console.log(json); 
+                        if (json['status']) {
+                          alert('Updated Successfully');
+                            setTimeout(function(){ window.location.reload(false); }, 1500);
+                        }
+                        else {
+                           alert('Please try again');
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {    
+
+                                 // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                                alert('Please try again');
+                                    return false;
+                                }
+                });
+});
+
+
   $('#button-filter').on('click', function() {
 
             var url = 'index.php?path=inventory/inventory_wastage&token=<?php echo $token; ?>';
@@ -377,20 +419,8 @@ $('input[name=\'filter_store_id\']').autocomplete({
                 url += '&filter_name=' + encodeURIComponent(filter_name);
             }
 
-             var filter_group_by_date = 0;
             
-            if ($('input[name=\'filter_group_by_date[]\']').is(':checked')) {
-                filter_group_by_date = 1;
-                url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);
-            } else {
-            url += '&filter_group_by_date=' + encodeURIComponent(filter_group_by_date);    
-            }
-
-            var filter_vendor_name = $('input[name=\'filter_vendor_name\']').val();
-
-            if (filter_vendor_name) {
-                url += '&filter_vendor_name=' + encodeURIComponent(filter_vendor_name);
-            }
+ 
             var filter_date_added = $('input[name=\'filter_date_added\']').val();
 
             if (filter_date_added) {
@@ -404,35 +434,8 @@ $('input[name=\'filter_store_id\']').autocomplete({
                 url += '&filter_date_added_to=' + encodeURIComponent(filter_date_added_to);
             }
             
-
-           
-
-            var filter_product_id_to = $('input[name=\'filter_product_id_to\']').val();
-
-            if (filter_product_id_to) {
-                url += '&filter_product_id_to=' + encodeURIComponent(filter_product_id_to);
-            }
-
-            var filter_product_id_from = $('input[name=\'filter_product_id_from\']').val();
-
-            if (filter_product_id_from) {
-                url += '&filter_product_id_from=' + encodeURIComponent(filter_product_id_from);
-            }
-            
-            
-
-            var filter_store_id = $('input[name=\'filter_store_id\']').val();
-
-            if (filter_store_id) {
-                url += '&filter_store_id=' + encodeURIComponent(filter_store_id);
-            }
-
-            var filter_status = $('select[name=\'filter_status\']').val();
-
-            if (filter_status != '*') {
-                url += '&filter_status=' + encodeURIComponent(filter_status);
-            }
-
+ 
+             
             location = url;
         });
   //--></script> 
@@ -668,6 +671,38 @@ $.ajax({
 });
  
 
+
+
+            
+function excel() {
+      
+            var url = 'index.php?path=inventory/inventory_wastage/excel&token=<?php echo $token; ?>';
+        var filter_name = $('input[name=\'filter_name\']').val();
+
+            if (filter_name) {
+                url += '&filter_name=' + encodeURIComponent(filter_name);
+            }
+
+            
+ 
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added) {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+
+
+              var filter_date_added_to = $('input[name=\'filter_date_added_to\']').val();
+
+            if (filter_date_added_to) {
+                url += '&filter_date_added_to=' + encodeURIComponent(filter_date_added_to);
+            }
+             
+
+	location = url;
+}
+
+ 
  
 </script>
 <style>

@@ -877,7 +877,7 @@ function addInBetween() {
           console.log(ui.item.price);
 
           $.ajax({
-                url: 'index.php?path=sale/order/getProductVariantsInfo&order_id=<?php echo $order_id; ?>&product_store_id='+ui.item.product_id+'&token=<?php echo $token; ?>',
+                url: 'index.php?path=sale/order/getProductVariantsInfo_All&order_id=<?php echo $order_id; ?>&product_store_id='+ui.item.product_id+'&token=<?php echo $token; ?>',
                 dataType: 'json',     
                 success: function(json) {
                     console.log(json);

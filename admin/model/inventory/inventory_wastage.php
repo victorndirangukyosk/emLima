@@ -24,46 +24,12 @@ class ModelInventoryInventoryWastage extends Model {
 
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
-        if (!empty($data['filter_store_id'])) {
-            $sql .= " AND st.name LIKE '" . $this->db->escape($data['filter_store_id']) . "%'";
-        }
-
-        if ($this->user->isVendor()) {
-            $sql .= ' AND v.user_id="' . $this->user->getId() . '"';
-        }
-
-        if (!empty($data['filter_vendor_name'])) {
-            $sql .= ' AND v.user_id="' . $this->db->escape($data['filter_vendor_name']) . '"';
-            /* $sql .= " AND v.firstname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
-              $sql .= " OR v.lastname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'"; */
-        }
-
         
 
         if (!empty($data['filter_name'])) {
             $sql .= " AND pd.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
-
-        
-
-        if (!empty($data['filter_product_id_from']) && !empty($data['filter_product_id_to'])) {
-            $sql .= " AND ps.product_store_id >= '" . (int) $data['filter_product_id_from'] . "'";
-        }
-        else if (!empty($data['filter_product_id_from']) && empty($data['filter_product_id_to'])) {
-            $sql .= " AND ps.product_store_id = '" . (int) $data['filter_product_id_from'] . "'";
-        }
  
-        if (!empty($data['filter_product_id_to'])) {
-            $sql .= " AND ps.product_store_id <= '" . (int) $data['filter_product_id_to'] . "'";
-        }
- 
-        // if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
-        //     $lGroup = false;
-        //     $sql .= " AND p2c.category_id = '" . $this->db->escape($data['filter_category']) . "'";
-        // } else {
-        //     $lGroup = true;
-        // }
-
         if (!empty($data['filter_date_added'])  && !empty($data['filter_date_added_to'])) {
             $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(pw.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
         }
@@ -78,45 +44,39 @@ class ModelInventoryInventoryWastage extends Model {
           
         }
 
-
-     
+   
 
 
         if (($data['filter_group_by_date'] == 0 || $data['filter_group_by_date'] == NULL || !array_key_exists('filter_group_by_date', $data)) && !isset($data['filter_group_by_date'])) {//!array_key_exists('filter_parent_customer_id', $data)
             //group by pending based on requirement
         }
 
-        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
-        }
+       
 
         $sort_data = [
-            'pd.name',
-            'p.price',
+            'pd.name',           
+            'pw.date_added',           
             'p.product_id',
             'ps.product_store_id',
-            // 'p2c.category_id',
-            'ps.quantity',
-            'p.model',
-            'ps.status',
-            'st.name',
+           
         ];
 
         // $sql .= ' GROUP BY ps.product_store_id';
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            // $sql .= ' ORDER BY ' . $data['sort'];
-            $sql .= ' ORDER BY pw.date_added  DESC';
+            $sql .= ' ORDER BY ' . $data['sort'];
+            // $sql .= ' ORDER BY pw.date_added  DESC';
+            if (isset($data['order']) && ('ASC' == $data['order'])) {
+                $sql .= ' ASC';
+            } else {
+                $sql .= ' DESC';
+            }
 
         } else {
             // $sql .= ' ORDER BY pd.name';
             $sql .= 'ORDER BY  pw.date_added DESC ';
         }
 
-        // if (isset($data['order']) && ('ASC' == $data['order'])) {
-        //     $sql .= ' ASC';
-        // } else {
-        //     $sql .= ' DESC';
-        // }
+      
 
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {
@@ -143,50 +103,11 @@ class ModelInventoryInventoryWastage extends Model {
 
     public function getTotalProducts($data = []) {
         $sql = 'SELECT pw.product_wastage_id from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
-
         // $sql = 'SELECT Distinct product_store_id from ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (ps.product_id = p2c.product_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id)';
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
-        
-        if (!empty($data['filter_store_id'])) {
-            $sql .= " AND st.name LIKE '" . $this->db->escape($data['filter_store_id']) . "%'";
-        }
-
-        if ($this->user->isVendor()) {
-            $sql .= ' AND v.user_id="' . $this->user->getId() . '"';
-        }
-
-        if (!empty($data['filter_vendor_name'])) {
-            $sql .= ' AND v.user_id="' . $this->db->escape($data['filter_vendor_name']) . '"';
-            /* $sql .= " AND v.firstname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'";
-              $sql .= " OR v.lastname LIKE '" . $this->db->escape($data['filter_vendor_name']) . "%'"; */
-        }
-
-        
-
         if (!empty($data['filter_name'])) {
             $sql .= " AND pd.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
-
-        
-
-        if (!empty($data['filter_product_id_from']) && !empty($data['filter_product_id_to'])) {
-            $sql .= " AND ps.product_store_id >= '" . (int) $data['filter_product_id_from'] . "'";
-        }
-        else if (!empty($data['filter_product_id_from']) && empty($data['filter_product_id_to'])) {
-            $sql .= " AND ps.product_store_id = '" . (int) $data['filter_product_id_from'] . "'";
-        }
- 
-        if (!empty($data['filter_product_id_to'])) {
-            $sql .= " AND ps.product_store_id <= '" . (int) $data['filter_product_id_to'] . "'";
-        }
- 
-        // if (isset($data['filter_category']) && !is_null($data['filter_category'])) {
-        //     $lGroup = false;
-        //     $sql .= " AND p2c.category_id = '" . $this->db->escape($data['filter_category']) . "'";
-        // } else {
-        //     $lGroup = true;
-        // }
-
         if (!empty($data['filter_date_added'])  && !empty($data['filter_date_added_to'])) {
             $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(pw.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
         }
@@ -200,18 +121,10 @@ class ModelInventoryInventoryWastage extends Model {
             $sql .= "AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
           
         }
-
-
-     
-
-
         if (($data['filter_group_by_date'] == 0 || $data['filter_group_by_date'] == NULL || !array_key_exists('filter_group_by_date', $data)) && !isset($data['filter_group_by_date'])) {//!array_key_exists('filter_parent_customer_id', $data)
             //group by pending based on requirement
         }
-
-        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
-        }
+        
 
         // $sql .= ' GROUP BY ps.product_store_id';
 
@@ -441,11 +354,227 @@ class ModelInventoryInventoryWastage extends Model {
         }
 
         $query = $this->db->query($sql);
-        //echo "<pre>";print_r($sql);die;
+        // echo "<pre>";print_r($sql);die;
 
         return $query->rows;
     }
   
    
+    public function getProductsByGroup($data = []) {
+        $sql = 'SELECT ps.product_store_id,p.product_id ,Sum(pw.wastage_qty) as wastage_qty, pd.name,p.unit,date(pw.date_added) as date_added  from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
 
+        $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
+
+        
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND pd.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+ 
+        if (!empty($data['filter_date_added'])  && !empty($data['filter_date_added_to'])) {
+            $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(pw.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
+        }
+        else if(!empty($data['filter_date_added']) && empty($data['filter_date_added_to']))
+        {
+            $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
+
+        }
+        else if(!empty($data['filter_date_added_to']) && empty($data['filter_date_added']))
+        {          
+            $sql .= "AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
+          
+        }
+
+   
+        if ($data['filter_group_by_date'] == 1 ) {//!array_key_exists('filter_parent_customer_id', $data)
+            $sql .= " GROUP BY pw.product_store_id , DATE_FORMAT(pw.date_added, '%Y-%m-%d')";
+        
+        }
+        else{
+            $sql .= " GROUP BY pw.product_store_id";
+
+        }
+
+       
+
+        $sort_data = [
+            'pd.name',           
+            'p.product_id',
+            'ps.product_store_id',
+           
+        ];
+
+        // $sql .= ' GROUP BY ps.product_store_id';
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            // $sql .= ' ORDER BY ' . $data['sort'];
+            $sql .= ' ORDER BY pw.date_added  DESC';
+
+        } else {
+            // $sql .= ' ORDER BY pd.name';
+            $sql .= ' ORDER BY  pw.date_added DESC ';
+        }
+
+        // if (isset($data['order']) && ('ASC' == $data['order'])) {
+        //     $sql .= ' ASC';
+        // } else {
+        //     $sql .= ' DESC';
+        // }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        // echo $sql;die;
+
+        // echo "<pre>";print_r($sql);die;
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+   
+
+    public function getTotalProductsByGroup($data = []) {
+        $sql = 'SELECT   pw.product_store_id from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
+        // $sql = 'SELECT Distinct product_store_id from ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (ps.product_id = p2c.product_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id)';
+        $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND pd.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+        if (!empty($data['filter_date_added'])  && !empty($data['filter_date_added_to'])) {
+            $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(pw.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
+        }
+        else if(!empty($data['filter_date_added']) && empty($data['filter_date_added_to']))
+        {
+            $sql .= " AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
+
+        }
+        else if(!empty($data['filter_date_added_to']) && empty($data['filter_date_added']))
+        {          
+            $sql .= "AND DATE_FORMAT(pw.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
+          
+        }
+        if ($data['filter_group_by_date'] == 1 ) {//!array_key_exists('filter_parent_customer_id', $data)
+            $sql .= " GROUP BY pw.product_store_id , DATE_FORMAT(pw.date_added, '%Y-%m-%d')";
+        
+        }
+        else{
+            $sql .= " GROUP BY pw.product_store_id";
+
+        }
+        
+
+        // $sql .= ' GROUP BY ps.product_store_id';
+
+        $query = $this->db->query($sql);
+
+        return count($query->rows);
+    }
+    
+
+
+
+    public function updateProductWastage_Edit($product_wastage_id,$vendor_product_name,$vendor_product_uom, $wastage_qty,$cumulative_wastage,$date_added_date) {
+        
+        $this->trigger->fire('pre.admin.product.wastage', $vendor_product_name);
+
+        $log = new Log('error.log');
+        $log->write("Wastage quantity Edit");         
+
+        if ($wastage_qty==null || $wastage_qty=='') {
+            $wastage_qty = 0;
+        }
+        // $log->write($wastage_qty);
+
+        $sel_query = 'SELECT ps.product_store_id,ps.product_id,ps.quantity FROM ' . DB_PREFIX . 'product_to_store ps join ' . DB_PREFIX . "product p on ps.product_id=p.product_id  WHERE name ='" .  $vendor_product_name . "' and unit='" .  $vendor_product_uom . "'";
+        // echo "<pre>";print_r($sel_query);die;
+        $sel_query = $this->db->query($sel_query);
+        $sel = $sel_query->row;
+        
+        $product_general_id = $sel['product_id'];         
+        $product_store_id = $sel['product_store_id'];               
+        $product_quantity = $sel['quantity'];               
+
+
+        $wastage_prev = 'SELECT *  FROM ' . DB_PREFIX . "product_wastage WHERE product_wastage_id ='" . (int) $product_wastage_id . "' ";
+        // echo "<pre>";print_r($wastage_prev);die;
+        $wastage_prev = $this->db->query($wastage_prev);    
+        $wastage_prev_data = $wastage_prev->row;
+
+        $prev_product_quantity = 'SELECT ps.quantity FROM ' . DB_PREFIX . 'product_to_store ps join ' . DB_PREFIX . "product p on ps.product_id=p.product_id  WHERE ps.product_store_id ='" .  $wastage_prev_data['product_store_id'] . "'";
+        // echo "<pre>";print_r($sel_query);die;
+        $prev_product_quantity = $this->db->query($prev_product_quantity);
+        $prev_product_quantity_data = $prev_product_quantity->row;
+
+
+        // $log->write('wastage data prev');
+
+        $prev_product_current_quantity = ($prev_product_quantity_data['quantity']??0)+$wastage_prev_data['wastage_qty']; 
+        $product_store_id_prev = $wastage_prev_data['product_store_id']; 
+        
+
+        $log->write('product to store id prev');
+
+       if($product_store_id_prev==$product_store_id)
+       {
+        $current_product_current_quantity = ($prev_product_current_quantity-$wastage_qty);               
+       }
+       else{
+        $current_product_current_quantity = ($product_quantity-$wastage_qty);               
+           
+       }
+
+        $log->write($product_store_id_prev);
+        $log->write($prev_product_quantity_data['quantity']);
+        $log->write($wastage_qty);
+        $log->write($prev_product_current_quantity);
+
+
+        
+        $log->write('current_quantity_final');
+
+        $log->write($product_store_id);
+        $log->write($product_quantity);
+        $log->write($wastage_qty);
+        $log->write($current_product_current_quantity);
+       
+        $this->db->query('Update ' . DB_PREFIX . "product_wastage SET product_id = '" . $product_general_id . "', product_store_id = '" . $product_store_id . "',  wastage_qty = '" . $wastage_qty . "',  modified_by = '" . $this->user->getId() . "', date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',cumulative_wastage='".$cumulative_wastage."',date_added = '" . $date_added_date . "' where product_wastage_id='".$product_wastage_id."'");
+        $log->write('wastage data updated');
+        
+        //delete previous updated quantity
+        $query_update1 = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $prev_product_current_quantity . "' WHERE product_store_id = '" . (int) $product_store_id_prev . "'";
+        //echo $query;
+        $this->db->query($query_update1);   
+        $log->write($current_quantity);
+        $log->write('current quantity');
+        $log->write($product_store_id_prev);
+        
+
+        //update current quantity
+        $query_update2 = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $current_product_current_quantity . "' WHERE product_store_id = '" . (int) $product_store_id . "'";
+        //echo $query;
+
+        $log->write($current_quantity_final);
+        $log->write('current quantity final');
+        $log->write($product_store_id);
+        
+        $this->db->query($query_update2);  
+
+               
+        $log->write('product_to_store data modified with wastage quantity');         
+        
+
+        $this->trigger->fire('post.admin.product.wastage', $product_store_id);
+
+        return $this->db->getLastId();
+    }
 }
