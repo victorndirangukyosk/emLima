@@ -91,6 +91,8 @@ class ControllerSaleOrder extends Controller {
             //$send = $json;
 
             foreach ($json as $j) {
+                if($j['unit']!=null && $j['unit']!="")
+                {
                 if (isset($j['special_price']) && !is_null($j['special_price']) && $j['special_price'] && (float) $j['special_price']) {
                     $j['price'] = $j['special_price'];
                 }
@@ -98,6 +100,7 @@ class ControllerSaleOrder extends Controller {
                 $j['name'] = htmlspecialchars_decode($j['name']);
 
                 $send[] = $j;
+            }
             }
 
             //echo "<pre>";print_r($json);die;
