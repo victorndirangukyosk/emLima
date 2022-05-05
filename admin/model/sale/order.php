@@ -334,7 +334,7 @@ class ModelSaleOrder extends Model {
             'product.date_added',
         ];
 
-        $this->db->group_by('product_description.name');
+        // $this->db->group_by('product_description.name');
         // $this->db->where('product_to_store.status', 1);
         //REMOVED QUANTITY VALIDATION
         //$this->db->where('product_to_store.quantity >=', 1);
