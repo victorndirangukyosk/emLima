@@ -7,85 +7,110 @@ class ModelTotalShipping extends Model
         $log = new Log('error.log');
         $log->write('Shipping 1');
 
-        if ($this->cart->hasShipping() && isset($this->session->data['shipping_method'])) {
-            //print_r("in if");
-            $log->write('Shipping 2');
-            if ($store_id) {
-                $log->write('Shipping 3');
-                if ($this->session->data['shipping_method']) {
-                    $log->write('Shipping 3.1');
-                    foreach ($this->session->data['shipping_method'] as $data) {
-                        if (isset($data['store_id'])) {
-                            if ($data['store_id'] == $store_id) {
-                                $total_data[] = [
-                                    'code' => 'shipping',
-                                    'title' => $data['shipping_method']['title'],
-                                    //'title' => $data['shipping_method']['title_with_store'],
-                                    'value' => $data['shipping_method']['cost'],
-                                    'sort_order' => $this->config->get('shipping_sort_order'),
-                                ];
-                            }
-                        }
-                    }
-                }
+        // if ($this->cart->hasShipping() && isset($this->session->data['shipping_method'])) {
+        //     //print_r("in if");
+        //     $log->write('Shipping 2');
+        //     if ($store_id) {
+        //         $log->write('Shipping 3');
+        //         if ($this->session->data['shipping_method']) {
+        //             $log->write('Shipping 3.1');
+        //             foreach ($this->session->data['shipping_method'] as $data) {
+        //                 if (isset($data['store_id'])) {
+        //                     if ($data['store_id'] == $store_id) {
+        //                         $total_data[] = [
+        //                             'code' => 'shipping',
+        //                             'title' => $data['shipping_method']['title'],
+        //                             //'title' => $data['shipping_method']['title_with_store'],
+        //                             'value' => $data['shipping_method']['cost'],
+        //                             'sort_order' => $this->config->get('shipping_sort_order'),
+        //                         ];
+        //                     }
+        //                 }
+        //             }
+        //         }
 
-                $totalcost = 0;
-                if (isset($this->session->data['shipping_method'])) {
-                    foreach ($this->session->data['shipping_method'] as $key => $value) {
-                        //print_r($value);die;
-                        if (isset($value['store_id'])) {
-                            if ($store_id == $value['store_id']) {
-                                $tax_rates = $this->tax->getRates($value['shipping_method']['cost'], $value['shipping_method']['tax_class_id']);
-                                foreach ($tax_rates as $tax_rate) {
-                                    if (!isset($taxes[$tax_rate['tax_rate_id']])) {
-                                        $taxes[$tax_rate['tax_rate_id']] = $tax_rate['amount'];
-                                    } else {
-                                        $taxes[$tax_rate['tax_rate_id']] += $tax_rate['amount'];
-                                    }
-                                }
-                                $totalcost += $value['shipping_method']['cost'];
-                            }
-                        }
-                    }
-                }
+        //         $totalcost = 0;
+        //         if (isset($this->session->data['shipping_method'])) {
+        //             foreach ($this->session->data['shipping_method'] as $key => $value) {
+        //                 //print_r($value);die;
+        //                 if (isset($value['store_id'])) {
+        //                     if ($store_id == $value['store_id']) {
+        //                         $tax_rates = $this->tax->getRates($value['shipping_method']['cost'], $value['shipping_method']['tax_class_id']);
+        //                         foreach ($tax_rates as $tax_rate) {
+        //                             if (!isset($taxes[$tax_rate['tax_rate_id']])) {
+        //                                 $taxes[$tax_rate['tax_rate_id']] = $tax_rate['amount'];
+        //                             } else {
+        //                                 $taxes[$tax_rate['tax_rate_id']] += $tax_rate['amount'];
+        //                             }
+        //                         }
+        //                         $totalcost += $value['shipping_method']['cost'];
+        //                     }
+        //                 }
+        //             }
+        //         }
 
-                $total += $totalcost;
-            } else {
-                $log->write('Shipping 4');
-                if ($this->session->data['shipping_method']) {
-                    foreach ($this->session->data['shipping_method'] as $key => $value) {
-                        $total_data[] = [
+        //         $total += $totalcost;
+        //     } else {
+        //         $log->write('Shipping 4');
+        //         if ($this->session->data['shipping_method']) {
+        //             foreach ($this->session->data['shipping_method'] as $key => $value) {
+        //                 $total_data[] = [
+        //                     'code' => 'shipping',
+        //                     'title' => $value['shipping_method']['title'],
+        //                     //'title' => $value['shipping_method']['title_with_store'],
+        //                     'value' => $value['shipping_method']['cost'],
+        //                     'sort_order' => $this->config->get('shipping_sort_order'),
+        //                 ];
+        //             }
+        //         }
+
+        //         //echo "<pre>";print_r("Rve");die;
+
+        //         $totalcost = 0;
+        //         if ($this->session->data['shipping_method']) {
+        //             foreach ($this->session->data['shipping_method'] as $key => $value) {
+        //                 $tax_rates = $this->tax->getRates($value['shipping_method']['cost'], $value['shipping_method']['tax_class_id']);
+        //                 foreach ($tax_rates as $tax_rate) {
+        //                     if (!isset($taxes[$tax_rate['tax_rate_id']])) {
+        //                         $taxes[$tax_rate['tax_rate_id']] = $tax_rate['amount'];
+        //                     } else {
+        //                         $taxes[$tax_rate['tax_rate_id']] += $tax_rate['amount'];
+        //                     }
+        //                 }
+        //                 $totalcost += $value['shipping_method']['cost'];
+        //             }
+        //         }
+
+        //         $total += $totalcost;
+        //     }
+        // } else {
+        //     $log->write('Shipping 6');
+        //     //print_r("else");
+        // }
+
+
+        if ($this->cart->getSubTotal() <=$this->config->get('config_active_store_minimum_order_amount') && ($store_id==75||$store_id==-1||$store_id=='')) {
+            $shipping_charge=$this->config->get('config_active_store_delivery_charge')??0;
+            $shipping_charge_VAT=($shipping_charge *0.16);
+
+                    $total_data[] = [
                             'code' => 'shipping',
-                            'title' => $value['shipping_method']['title'],
-                            //'title' => $value['shipping_method']['title_with_store'],
-                            'value' => $value['shipping_method']['cost'],
+                            'title' => 'Standard Delivery',
+                            'value' => $shipping_charge,
                             'sort_order' => $this->config->get('shipping_sort_order'),
                         ];
-                    }
-                }
 
-                //echo "<pre>";print_r("Rve");die;
+                        $total_data[] = [
+                            'code' => 'delivery_vat',
+                            'title' => 'VAT on Standard Delivery',
+                            'value' => $shipping_charge_VAT,
+                            'sort_order' => $this->config->get('shipping_sort_order')+1,
+                        ];
 
-                $totalcost = 0;
-                if ($this->session->data['shipping_method']) {
-                    foreach ($this->session->data['shipping_method'] as $key => $value) {
-                        $tax_rates = $this->tax->getRates($value['shipping_method']['cost'], $value['shipping_method']['tax_class_id']);
-                        foreach ($tax_rates as $tax_rate) {
-                            if (!isset($taxes[$tax_rate['tax_rate_id']])) {
-                                $taxes[$tax_rate['tax_rate_id']] = $tax_rate['amount'];
-                            } else {
-                                $taxes[$tax_rate['tax_rate_id']] += $tax_rate['amount'];
-                            }
-                        }
-                        $totalcost += $value['shipping_method']['cost'];
-                    }
-                }
+        // echo "<pre>";print_r($total_data);die;
+                       
+        $total += $shipping_charge+$shipping_charge_VAT ;
 
-                $total += $totalcost;
-            }
-        } else {
-            $log->write('Shipping 6');
-            //print_r("else");
         }
     }
 
