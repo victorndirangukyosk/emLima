@@ -512,6 +512,23 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function getProductVariantsInfo_All() {
+
+        $this->load->model('sale/order');
+        $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
+        $log = new Log('error.log');
+        $log->write($this->request->get['order_id']);
+        $log->write($this->request->get['product_store_id']);
+        $product_info = $this->model_sale_order->getProductForPopup_all($this->request->get['product_store_id'], false, $order_info['store_id']);
+        $variations = $this->model_sale_order->getProductVariationsDisabled($product_info['name'], $order_info['store_id'], $this->request->get['order_id']);
+        //$log->write($variations);
+        $json = $variations;
+        // echo "<pre>";print_r($variations);die;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function getVendorProductVariantsInfo() {
 
         $log = new Log('error.log');
