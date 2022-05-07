@@ -354,7 +354,7 @@
                                   </tr>
                                   <tr>
                                         <td>Apply For Pezesha Loan</td>
-                                        <td><button data-order-id="<?=$order_id ?>" id="apply_for_pezesha_loan" class="btn btn-primary" type="button"><i class="fa fa-university" aria-hidden="true"></i> Apply Loan </button></td>
+                                        <td><button data-order-id="<?=$order_id ?>" id="apply_for_pezesha_loan" class="btn btn-primary" type="button" <?php if(isset($pezesha_order_info) && $pezesha_order_info['loan_id'] > 0) { ?> disabled <?php } ?> ><i class="fa fa-university" aria-hidden="true"></i> Apply Loan </button></td>
                                   </tr>
                                   <?php } ?>
 				</table>
