@@ -2239,11 +2239,15 @@ class ControllerSaleOrder extends Controller {
         if (count($order_transaction_data) > 0) {
             $data['order_transaction_id'] = trim($order_transaction_data['transaction_id']);
         }
-
+        
         $order_info = $this->model_sale_order->getOrder($order_id);
 
         if ($order_info) {
-
+            
+            $this->load->model('pezesha/pezesha');
+            $pezesha_order_info = $this->model_pezesha_pezesha->getCustomerPezeshaLoan($order_id, $order_info['customer_id']);
+            $data['pezesha_order_info'] = $pezesha_order_info;
+            
             $kw_shipping_charges = 0;
             $kw_shipping_charges_vat = 0;
             $vendor_order_status = $this->model_sale_order->getVendorOrderStatus($order_info['vendor_order_status_id']);
