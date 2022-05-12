@@ -16,6 +16,10 @@ class ControllerCheckoutTotals extends Controller {
         $total = 0;
         $taxes = $this->cart->getTaxes();
 
+        if (isset($this->request->get['add_delivery_charges']) && $this->request->get['add_delivery_charges'] != NULL) {
+            $this->session->data['add_delivery_charges'] = $this->request->get['add_delivery_charges'];
+        }
+
         // Display prices
         if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
             $sort_order = [];
@@ -36,15 +40,6 @@ class ControllerCheckoutTotals extends Controller {
                 }
             }
             // echo "<pre>";print_r($results);die;
-
-            $log = new Log('error.log');
-            $log->write('totals');
-            $log->write($this->request->get['add_delivery_charges']);
-            if (isset($this->request->get['add_delivery_charges']) && $this->request->get['add_delivery_charges'] != NULL) {
-                $this->load->model('total/shipping');
-                $this->model_total_shipping->getCustomTotal($total_data, $total, $taxes, NULL, $this->request->get['add_delivery_charges']);
-            }
-            $log->write('totals');
 
             $sort_order = [];
 
