@@ -1784,6 +1784,39 @@ __kdt.push({"post_on_load": false});
 
 <script type="text/javascript">
 
+$("#delivery_charges").change(function() {
+    if(this.checked) {
+       loadTotalsWithShippingCharges($('input[name="shipping_city_id"]').val());
+    }
+});
+// Load totals with shipping charges
+function loadTotalsWithShippingCharges($city_id) {
+
+    console.log('sri divya');
+
+    $('#checkout-total-wrapper').html('<center><div class="login-loader" style=""></div></center>');
+
+    $.ajax({
+        url: 'index.php?path=checkout/totals&city_id=' + $city_id,
+        type: 'post',
+        dataType: 'html',
+        cache: false,
+        async: true,
+        beforeSend: function() {
+            
+        },
+        success: function(html) {
+            $('#checkout-total-wrapper').html(html);
+            if($("a[id^='button-reward']").text() == "CONTINUE SHOPPING")
+            {
+             alert("Order total is less than minimum order value");
+            }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+}
 // Load totals
 function loadTotals($city_id) {
 
