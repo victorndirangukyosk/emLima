@@ -1785,19 +1785,17 @@ __kdt.push({"post_on_load": false});
 <script type="text/javascript">
 
 $("#delivery_charges").change(function() {
-    if(this.checked) {
-       loadTotalsWithShippingCharges($('input[name="shipping_city_id"]').val());
-    }
+       loadTotalsWithShippingCharges($('input[name="shipping_city_id"]').val(), this.checked);
 });
 // Load totals with shipping charges
-function loadTotalsWithShippingCharges($city_id) {
+function loadTotalsWithShippingCharges($city_id, $add_delivery_charges) {
 
     console.log('sri divya');
 
     $('#checkout-total-wrapper').html('<center><div class="login-loader" style=""></div></center>');
 
     $.ajax({
-        url: 'index.php?path=checkout/totals&city_id=' + $city_id,
+        url: 'index.php?path=checkout/totals&city_id=' + $city_id +'&add_delivery_charges=' + $add_delivery_charges,
         type: 'post',
         dataType: 'html',
         cache: false,
