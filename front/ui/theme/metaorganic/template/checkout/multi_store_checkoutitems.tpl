@@ -248,6 +248,12 @@
                 <label for="po_number">PO Number</label>
                 <input type="text" id="po_number" name="po_number" class="form-control" value="<?php echo $_COOKIE['po_number']; ?>" placeholder="PO Number">
                 </li>
+                <?php if (isset($this->session->data['adminlogin']) && $this->session->data['adminlogin']) { ?>
+                {*<li>
+                <label for="delivery_charges">Add Delivery Charges</label>
+                <input type="checkbox" id="delivery_charges" name="delivery_charges">
+                </li>*}
+                <?php } ?>
             </ul>
            
         </form>
@@ -1778,6 +1784,37 @@ __kdt.push({"post_on_load": false});
 
 <script type="text/javascript">
 
+$("#delivery_charges").change(function() {
+       loadTotalsWithShippingCharges($('input[name="shipping_city_id"]').val(), this.checked);
+});
+// Load totals with shipping charges
+function loadTotalsWithShippingCharges($city_id, $add_delivery_charges) {
+
+    console.log('sri divya');
+
+    $('#checkout-total-wrapper').html('<center><div class="login-loader" style=""></div></center>');
+
+    $.ajax({
+        url: 'index.php?path=checkout/totals&city_id=' + $city_id +'&add_delivery_charges=' + $add_delivery_charges,
+        type: 'post',
+        dataType: 'html',
+        cache: false,
+        async: true,
+        beforeSend: function() {
+            
+        },
+        success: function(html) {
+            $('#checkout-total-wrapper').html(html);
+            if($("a[id^='button-reward']").text() == "CONTINUE SHOPPING")
+            {
+             alert("Order total is less than minimum order value");
+            }
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+}
 // Load totals
 function loadTotals($city_id) {
 
@@ -3025,6 +3062,11 @@ h2::after {
 .star-rating i {
 	font-size: 14px;
 	color: #ffc000;
+}
+#delivery_charges {
+vertical-align: middle;
+margin: 0px;
+margin-left: 10px;
 }
 </style>
 

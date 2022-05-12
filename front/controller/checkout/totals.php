@@ -1,7 +1,7 @@
 <?php
 
-class ControllerCheckoutTotals extends Controller
-{
+class ControllerCheckoutTotals extends Controller {
+
     public function index() {
         $this->load->language('checkout/cart');
 
@@ -20,14 +20,13 @@ class ControllerCheckoutTotals extends Controller
         if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
             $sort_order = [];
 
-            $results = $this->model_extension_extension->getExtensions('total');           
+            $results = $this->model_extension_extension->getExtensions('total');
 
             foreach ($results as $key => $value) {
                 $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
             }
 
             array_multisort($sort_order, SORT_ASC, $results);
-
 
             foreach ($results as $result) {
                 if ($this->config->get($result['code'] . '_status')) {
@@ -38,6 +37,13 @@ class ControllerCheckoutTotals extends Controller
             }
             // echo "<pre>";print_r($results);die;
 
+            $log = new Log('error.log');
+            $log->write('totals');
+            $log->write($this->request->get['add_delivery_charges']);
+            if (isset($this->request->get['add_delivery_charges']) && $this->request->get['add_delivery_charges'] != NULL) {
+                $this->model_total_shipping->getCustomTotal($total_data, $total, $taxes, NULL, $this->request->get['add_delivery_charges']);
+            }
+            $log->write('totals');
 
             $sort_order = [];
 
@@ -101,8 +107,7 @@ class ControllerCheckoutTotals extends Controller
         }
     }
 
-    public function getTotal($order_id)
-    {
+    public function getTotal($order_id) {
         $this->load->language('checkout/cart');
 
         // Totals
@@ -113,8 +118,6 @@ class ControllerCheckoutTotals extends Controller
         $taxes = $this->cart->getTaxes();
 
         $total_data = $this->model_account_order->getOrderTotals($order_id);
-       
-
 
         // $total_data
 
@@ -162,14 +165,14 @@ class ControllerCheckoutTotals extends Controller
         $data['text_coupon_credited'] = $this->language->get('text_coupon_credited');
 
         //echo "<pre>";print_r($data);die;
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/checkout/order_totals.tpl')) {
-            return $this->load->view($this->config->get('config_template').'/template/checkout/order_totals.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/order_totals.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/checkout/order_totals.tpl', $data);
         } else {
             return $this->load->view('default/template/checkout/order_totals.tpl', $data);
         }
     }
-    public function getTotalOnly($order_id)
-    {
+
+    public function getTotalOnly($order_id) {
         $this->load->language('checkout/cart');
 
         // Totals
@@ -227,8 +230,8 @@ class ControllerCheckoutTotals extends Controller
         //echo "<pre>";print_r($data);die;
         return $data;
     }
-    public function totalData()
-    {
+
+    public function totalData() {
         $this->load->language('checkout/cart');
 
         if (isset($this->request->get['city_id'])) {
@@ -249,20 +252,20 @@ class ControllerCheckoutTotals extends Controller
             $results = $this->model_extension_extension->getExtensions('total');
 
             foreach ($results as $key => $value) {
-                $sort_order[$key] = $this->config->get($value['code'].'_sort_order');
+                $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
             }
 
             array_multisort($sort_order, SORT_ASC, $results);
 
             foreach ($results as $result) {
-                if ($this->config->get($result['code'].'_status')) {
-                    $this->load->model('total/'.$result['code']);
+                if ($this->config->get($result['code'] . '_status')) {
+                    $this->load->model('total/' . $result['code']);
 
                     if ('reward' == $result['code']) {
                         break;
                     }
 
-                    $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
+                    $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
                 }
             }
 
@@ -289,4 +292,5 @@ class ControllerCheckoutTotals extends Controller
 
         return $data;
     }
+
 }

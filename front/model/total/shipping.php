@@ -113,6 +113,33 @@ class ModelTotalShipping extends Model
 
         }
     }
+    
+    public function getCustomTotal(&$total_data, &$total, &$taxes, $store_id = '', $add_delivery_charges) {
+        $log = new Log('error.log');
+        $log->write('Shipping 2');
+
+        $shipping_charge = $this->config->get('config_active_store_delivery_charge') > 0 ? $this->config->get('config_active_store_delivery_charge') : 250;
+        $shipping_charge = $add_delivery_charges == 'true' ? $shipping_charge : 0;
+        $shipping_charge_VAT = ($shipping_charge * 0.16);
+
+        $total_data[] = [
+            'code' => 'shipping',
+            'title' => 'Standard Delivery',
+            'value' => $shipping_charge,
+            'sort_order' => $this->config->get('shipping_sort_order'),
+        ];
+
+        $total_data[] = [
+            'code' => 'delivery_vat',
+            'title' => 'VAT on Standard Delivery',
+            'value' => $shipping_charge_VAT,
+            'sort_order' => $this->config->get('shipping_sort_order') + 1,
+        ];
+
+        // echo "<pre>";print_r($total_data);die;
+
+        $total += $shipping_charge + $shipping_charge_VAT;
+    }
 
     public function getApiTotal(&$total_data, &$total, &$taxes, $store_id = '', $args)
     {
