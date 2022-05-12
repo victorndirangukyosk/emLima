@@ -3030,6 +3030,13 @@ h2::after {
 	font-size: 14px;
 	color: #ffc000;
 }
+#delivery_charges {
+
+vertical-align: middle;
+
+margin: 0px;
+
+}
 </style>
 
 
