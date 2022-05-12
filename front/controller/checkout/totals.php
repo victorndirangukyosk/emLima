@@ -41,6 +41,7 @@ class ControllerCheckoutTotals extends Controller {
             $log->write('totals');
             $log->write($this->request->get['add_delivery_charges']);
             if (isset($this->request->get['add_delivery_charges']) && $this->request->get['add_delivery_charges'] != NULL) {
+                $this->load->model('total/shipping');
                 $this->model_total_shipping->getCustomTotal($total_data, $total, $taxes, NULL, $this->request->get['add_delivery_charges']);
             }
             $log->write('totals');
