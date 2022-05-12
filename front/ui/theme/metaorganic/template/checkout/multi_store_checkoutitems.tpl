@@ -3031,11 +3031,9 @@ h2::after {
 	color: #ffc000;
 }
 #delivery_charges {
-
 vertical-align: middle;
-
 margin: 0px;
-
+margin-left: 10px;
 }
 </style>
 
