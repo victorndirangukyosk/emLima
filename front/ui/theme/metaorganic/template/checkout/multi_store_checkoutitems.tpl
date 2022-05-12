@@ -248,6 +248,10 @@
                 <label for="po_number">PO Number</label>
                 <input type="text" id="po_number" name="po_number" class="form-control" value="<?php echo $_COOKIE['po_number']; ?>" placeholder="PO Number">
                 </li>
+                <li>
+                <label for="delivery_charges">Add Delivery Charges</label>
+                <input type="checkbox" id="delivery_charges" name="delivery_charges">
+                </li>
             </ul>
            
         </form>
