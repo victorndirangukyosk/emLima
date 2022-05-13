@@ -251,7 +251,7 @@
                 <?php if (isset($this->session->data['adminlogin']) && $this->session->data['adminlogin']) { ?>
                 <li>
                 <label for="delivery_charges">Add Delivery Charges</label>
-                <input type="checkbox" id="delivery_charges" name="delivery_charges" <?php if(isset($this->session->data['add_delivery_charges']) && $this->session->data['add_delivery_charges'] == 'true') { ?> checked <?php } ?> >
+                <input type="checkbox" id="delivery_charges" name="delivery_charges" <?php if((isset($this->session->data['add_delivery_charges']) && $this->session->data['add_delivery_charges'] == 'true') || (isset($this->session->data['delivery_charge_terms']) && $this->session->data['delivery_charge_terms'])) { ?> checked <?php } ?> >
                 </li>
                 <?php } ?>
             </ul>
