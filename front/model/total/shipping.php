@@ -1,9 +1,8 @@
 <?php
 
-class ModelTotalShipping extends Model
-{
-    public function getTotal(&$total_data, &$total, &$taxes, $store_id = '')
-    {
+class ModelTotalShipping extends Model {
+
+    public function getTotal(&$total_data, &$total, &$taxes, $store_id = '') {
         $log = new Log('error.log');
         $log->write('Shipping 1');
 
@@ -28,7 +27,6 @@ class ModelTotalShipping extends Model
         //                 }
         //             }
         //         }
-
         //         $totalcost = 0;
         //         if (isset($this->session->data['shipping_method'])) {
         //             foreach ($this->session->data['shipping_method'] as $key => $value) {
@@ -48,7 +46,6 @@ class ModelTotalShipping extends Model
         //                 }
         //             }
         //         }
-
         //         $total += $totalcost;
         //     } else {
         //         $log->write('Shipping 4');
@@ -63,9 +60,7 @@ class ModelTotalShipping extends Model
         //                 ];
         //             }
         //         }
-
         //         //echo "<pre>";print_r("Rve");die;
-
         //         $totalcost = 0;
         //         if ($this->session->data['shipping_method']) {
         //             foreach ($this->session->data['shipping_method'] as $key => $value) {
@@ -80,7 +75,6 @@ class ModelTotalShipping extends Model
         //                 $totalcost += $value['shipping_method']['cost'];
         //             }
         //         }
-
         //         $total += $totalcost;
         //     }
         // } else {
@@ -90,7 +84,12 @@ class ModelTotalShipping extends Model
 
 
         if ($this->cart->getSubTotal() <= $this->config->get('config_active_store_minimum_order_amount') && ($store_id == 75 || $store_id == -1 || $store_id == '')) {
-            $shipping_charge = $this->config->get('config_active_store_delivery_charge') ?? 0;
+            //$shipping_charge = $this->config->get('config_active_store_delivery_charge') ?? 0;
+
+            $shipping_charge = $this->config->get('config_active_store_delivery_charge') > 0 ? $this->config->get('config_active_store_delivery_charge') : 0;
+            if (isset($this->session->data['adminlogin']) && $this->session->data['adminlogin'] && isset($this->session->data['add_delivery_charges'])) {
+                $shipping_charge = isset($this->session->data['add_delivery_charges']) && $this->session->data['add_delivery_charges'] == 'true' ? $shipping_charge : 0;
+            }
             $shipping_charge_VAT = ($shipping_charge * 0.16);
 
             $total_data[] = [
@@ -114,7 +113,7 @@ class ModelTotalShipping extends Model
             $log = new Log('error.log');
             $log->write('Shipping 2');
 
-            $shipping_charge = $this->config->get('config_active_store_delivery_charge') > 0 ? $this->config->get('config_active_store_delivery_charge') : 250;
+            $shipping_charge = $this->config->get('config_active_store_delivery_charge') > 0 ? $this->config->get('config_active_store_delivery_charge') : 0;
             $shipping_charge = $this->session->data['add_delivery_charges'] == 'true' ? $shipping_charge : 0;
             $shipping_charge_VAT = ($shipping_charge * 0.16);
 
@@ -138,8 +137,7 @@ class ModelTotalShipping extends Model
         }
     }
 
-    public function getApiTotal(&$total_data, &$total, &$taxes, $store_id = '', $args)
-    {
+    public function getApiTotal(&$total_data, &$total, &$taxes, $store_id = '', $args) {
         $log = new Log('error.log');
         $log->write('shiping getApiTotal');
 
@@ -184,9 +182,9 @@ class ModelTotalShipping extends Model
             //print_r("in if");
             $log->write('Shipping 2');
             if ($store_id) {
-                $this->load->model('shipping/'.$shipping_method_name);
+                $this->load->model('shipping/' . $shipping_method_name);
 
-                $quote = $this->{'model_shipping_'.$shipping_method_name}->getApiQuote($cost, $store_info['name'], $sub_total, $all_total);
+                $quote = $this->{'model_shipping_' . $shipping_method_name}->getApiQuote($cost, $store_info['name'], $sub_total, $all_total);
 
                 //echo "<pre>";print_r($quote);die;
 
@@ -220,4 +218,5 @@ class ModelTotalShipping extends Model
             $log->write('Shipping 6');
         }
     }
+
 }
