@@ -11,6 +11,7 @@ class ModelPezeshaPezeshaloanreceivables extends Model {
 
         $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'Pezesha', payment_code = 'pezesha', paid = 'Y', date_modified = NOW() WHERE order_id = '" . (int) $data['order'] . "'");
 
+        $data['merchant_id'] = str_replace('KB', '', $data['merchant_id']);
         $this->db->query('INSERT INTO ' . DB_PREFIX . "pezesha_loan_recceivables SET order_id = '" . (int) $data['order'] . "', loan_type = '" . $this->db->escape($data['type']) . "', merchant_id = '" . $data['merchant_id'] . "', pezesha_id = '" . $data['pezesha_id'] . "', loan_id = '" . $data['loan_id'] . "', amount = '" . $data['amount'] . "', account = '" . $data['account'] . "', mpesa_reference = '" . $this->db->escape($data['mpesa_reference']) . "', transaction_date = '" . $this->db->escape($data['transaction_date']) . "'");
         return $this->db->getLastId();
     }
