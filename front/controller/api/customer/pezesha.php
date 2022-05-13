@@ -38,7 +38,7 @@ class ControllerApiCustomerPezesha extends Controller {
             $log->write($auth_response);
             $log->write($customer_device_info);
             $log->write('auth_response');
-            $body = array('identifier' => $customer_pezesha_info['customer_id'], 'channel' => $this->config->get('pezesha_channel'));
+            $body = array('identifier' => $customer_pezesha_info['prefix'] . '' . $customer_pezesha_info['customer_id'], 'channel' => $this->config->get('pezesha_channel'));
             //$body = http_build_query($body);
             $body = json_encode($body);
             $log->write($body);
@@ -138,7 +138,7 @@ class ControllerApiCustomerPezesha extends Controller {
                 $log->write('auth_response');
                 //$payment_details = array('type' => 'BUY_GOODS/PAYBILL', 'number' => $order_id, 'callback_url' => $this->url->link('deliversystem/deliversystem/pezeshacallback', '', 'SSL'));
                 $payment_details = NULL;
-                $body = array('pezesha_id' => /*$customer_pezesha_info['pezesha_customer_id']*/$this->customer->getCustomerPezeshaId(), 'amount' => $amount, 'duration' => $this->config->get('pezesha_loan_duration'), 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => $this->config->get('pezesha_processing_fee'), 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
+                $body = array('pezesha_id' => /* $customer_pezesha_info['pezesha_customer_id'] */$this->customer->getCustomerPezeshaId(), 'amount' => $amount, 'duration' => $this->config->get('pezesha_loan_duration'), 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => $this->config->get('pezesha_processing_fee'), 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
                 //$body = http_build_query($body);
                 $body = json_encode($body);
                 $log->write($body);
@@ -188,7 +188,7 @@ class ControllerApiCustomerPezesha extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
     public function applyloanone($args = []) {
         $json['status'] = false;
         if ($this->validatenew($args)) {
@@ -217,7 +217,7 @@ class ControllerApiCustomerPezesha extends Controller {
                 $log->write('auth_response');
                 //$payment_details = array('type' => 'BUY_GOODS/PAYBILL', 'number' => $order_id, 'callback_url' => $this->url->link('deliversystem/deliversystem/pezeshacallback', '', 'SSL'));
                 $payment_details = NULL;
-                $body = array('pezesha_id' => /*$customer_pezesha_info['pezesha_customer_id']*/$this->customer->getCustomerPezeshaId(), 'amount' => $amount, 'duration' => $this->config->get('pezesha_loan_duration'), 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => $this->config->get('pezesha_processing_fee'), 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
+                $body = array('pezesha_id' => /* $customer_pezesha_info['pezesha_customer_id'] */$this->customer->getCustomerPezeshaId(), 'amount' => $amount, 'duration' => $this->config->get('pezesha_loan_duration'), 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => $this->config->get('pezesha_processing_fee'), 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
                 //$body = http_build_query($body);
                 $body = json_encode($body);
                 $log->write($body);
@@ -283,7 +283,7 @@ class ControllerApiCustomerPezesha extends Controller {
         $log->write($auth_response);
         $log->write($customer_device_info);
         $log->write('auth_response');
-        $body = array('identifier' => /*$customer_pezesha_info['customer_id']*/$this->customer->getCustomerPezeshaIdentifier(), 'channel' => $this->config->get('pezesha_channel'));
+        $body = array('identifier' => /* $customer_pezesha_info['customer_id'] */$this->customer->getCustomerPezeshaIdentifier(), 'channel' => $this->config->get('pezesha_channel'));
         //$body = http_build_query($body);
         $body = json_encode($body);
         $log->write($body);
@@ -356,7 +356,6 @@ class ControllerApiCustomerPezesha extends Controller {
         return !$this->error;
     }
 
-
     public function addloanStatus() {
 
         $log = new Log('error.log');
@@ -401,12 +400,10 @@ class ControllerApiCustomerPezesha extends Controller {
         // if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/pezesha_loan_info.tpl')) {
         //     $html = $this->load->view($this->config->get('config_template') . '/template/account/pezesha_loan_info.tpl', $json['data']);
         // }
-
         // echo json_encode(['html' => $html]);
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($result));
-
     }
 
 }

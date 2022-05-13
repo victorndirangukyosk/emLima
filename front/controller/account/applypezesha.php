@@ -281,11 +281,11 @@ class ControllerAccountApplypezesha extends Controller {
         $log = new Log('error.log');
         $this->load->model('account/customer');
         $this->load->model('sale/order');
-        $log->write('sdassssssssssssssssssssss');
 
+        $customer_pezesha_info = $this->model_account_customer->getPezeshaCustomer($this->customer->getId());
         $customer_device_info = $this->model_account_customer->getCustomer($this->customer->getId());
         $customer_documents = $this->model_account_customer->getCustomerDocuments($this->customer->getId());
-        
+
         $all_customers = $this->customer->getId();
         $sub_customer = $this->model_account_customer->getSubusersByParent($this->customer->getId());
         if (isset($sub_customer) && count($sub_customer) > 0) {
@@ -294,11 +294,11 @@ class ControllerAccountApplypezesha extends Controller {
             $all_customers = $all_customers . ',' . $this->customer->getId();
         }
 
-        
+
         $data['filter_customer_id_array'] = $all_customers;
-        $data['filter_date_added'] = date("Y-m-d",strtotime("-3 Months"));
+        $data['filter_date_added'] = date("Y-m-d", strtotime("-3 Months"));
         $data['filter_date_added_end'] = date("Y-m-d");
-        /*$data['filter_paid'] = 'Y';*/
+        /* $data['filter_paid'] = 'Y'; */
 
         $customer_order_info = $this->model_sale_order->getOrders($data);
         $log->write('CUSTOMER_TRANSACTION_INFO');
@@ -308,8 +308,8 @@ class ControllerAccountApplypezesha extends Controller {
 
         foreach ($customer_order_info as $order_info) {
             $order_transaction_info = $this->model_sale_order->getOrderTransactionId($order_info['order_id']);
-            $transactions['transaction_id'] = /*$order_transaction_info['transaction_id'].*/$order_info['order_id'];
-            $transactions['merchant_id'] = $this->customer->getId();
+            $transactions['transaction_id'] = /* $order_transaction_info['transaction_id']. */$order_info['order_id'];
+            $transactions['merchant_id'] = $customer_pezesha_info['prefix'] . '' . $this->customer->getId();
             $transactions['face_amount'] = round($order_info['total']);
             $transactions['transaction_time'] = $order_info['date_added'];
             $transactions['other_details'] = array('key' => 'Organization_id', 'value' => $customer_device_info['customer_id'], 'key' => 'payee_type', 'value' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'] . ' ' . $customer_device_info['company_name']);
@@ -377,7 +377,7 @@ class ControllerAccountApplypezesha extends Controller {
             $log->write($customer_device_info);
             $log->write('auth_response');
             $meta_data = array('key' => 'customer_group', 'value' => $customer_group_info['description']);
-            $body = array('channel' => $this->config->get('pezesha_channel'), 'terms' => TRUE, 'full_names' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'], 'phone' => '254' . '' . $customer_device_info['telephone'], 'other_phone_nos' => array('254' . '' . $customer_device_info['telephone'], '254' . '' . $customer_device_info['telephone']), 'national_id' => $customer_device_info['national_id'], 'dob' => date('Y-m-d', strtotime($customer_device_info['dob'])), 'email' => $customer_device_info['email'], 'merchant_id' => $customer_device_info['customer_id'], 'merchant_reg_date' => date('Y-m-d', strtotime($customer_device_info['date_added'])), 'location' => $customer_device_info['company_name'] . '' . $customer_device_info['company_address'], 'geo_location' => array('long' => $customer_device_info['longitude'], 'lat' => $customer_device_info['latitude']), 'meta_data' => $meta_data);
+            $body = array('channel' => $this->config->get('pezesha_channel'), 'terms' => TRUE, 'full_names' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'], 'phone' => '254' . '' . $customer_device_info['telephone'], 'other_phone_nos' => array('254' . '' . $customer_device_info['telephone'], '254' . '' . $customer_device_info['telephone']), 'national_id' => $customer_device_info['national_id'], 'dob' => date('Y-m-d', strtotime($customer_device_info['dob'])), 'email' => $customer_device_info['email'], 'merchant_id' => 'KB' . $customer_device_info['customer_id'], 'merchant_reg_date' => date('Y-m-d', strtotime($customer_device_info['date_added'])), 'location' => $customer_device_info['company_name'] . '' . $customer_device_info['company_address'], 'geo_location' => array('long' => $customer_device_info['longitude'], 'lat' => $customer_device_info['latitude']), 'meta_data' => $meta_data);
             //$body = http_build_query($body);
             $body = json_encode($body);
             $log->write($body);
@@ -516,7 +516,7 @@ class ControllerAccountApplypezesha extends Controller {
         $html .= '</tbody></table>';
         return $html;
     }
-    
+
     public function sendpezeshaemail() {
         $log = new Log('error.log');
         $this->load->model('account/customer');
@@ -529,7 +529,6 @@ class ControllerAccountApplypezesha extends Controller {
             $customer_pezehsa['companyname'] = $customer_info['company_name'];
             $customer_pezehsa['pezesha_customer_id'] = $customer_pezesha_info['pezesha_customer_id'];
             $customer_pezehsa['pezesha_customer_uuid'] = $customer_pezesha_info['customer_uuid'];
-            
 
             $log->write('EMAIL SENDING');
             $log->write($customer_pezehsa);
@@ -547,8 +546,8 @@ class ControllerAccountApplypezesha extends Controller {
                 $mail->setHTML($message);
                 $mail->send();
             } catch (Exception $e) {
-            $log = new Log('error.log');  
-            $log->write('CUSTOMER PEZESHA REGISTRATION MAIL EXCEPTION');
+                $log = new Log('error.log');
+                $log->write('CUSTOMER PEZESHA REGISTRATION MAIL EXCEPTION');
             }
         }
     }
