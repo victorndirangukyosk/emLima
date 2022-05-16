@@ -90,7 +90,7 @@ class ModelTotalShipping extends Model {
             if (isset($this->session->data['adminlogin']) && $this->session->data['adminlogin'] && isset($this->session->data['add_delivery_charges'])) {
                 $shipping_charge = isset($this->session->data['add_delivery_charges']) && $this->session->data['add_delivery_charges'] == 'true' ? $shipping_charge : 0;
             }
-            $shipping_charge_VAT = ($shipping_charge * 0.16);
+            $shipping_charge_VAT = 0;
 
             $total_data[] = [
                 'code' => 'shipping',
@@ -98,6 +98,8 @@ class ModelTotalShipping extends Model {
                 'value' => $shipping_charge,
                 'sort_order' => $this->config->get('shipping_sort_order'),
             ];
+            if ($this->config->get('config_active_store_delivery_charge_vat')>0 ) {
+                $shipping_charge_VAT = ($shipping_charge * ($this->config->get('config_active_store_delivery_charge_vat')/100));
 
             $total_data[] = [
                 'code' => 'delivery_vat',
@@ -105,6 +107,7 @@ class ModelTotalShipping extends Model {
                 'value' => $shipping_charge_VAT,
                 'sort_order' => $this->config->get('shipping_sort_order') + 1,
             ];
+        }
 
             // echo "<pre>";print_r($total_data);die;
 
