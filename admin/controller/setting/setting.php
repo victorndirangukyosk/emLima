@@ -217,6 +217,12 @@ class ControllerSettingSetting extends Controller {
             $data['error_active_store_delivery_charge'] = '';
         }
 
+        if (isset($this->error['active_store_delivery_charge_vat'])) {
+            $data['error_active_store_delivery_charge_vat'] = $this->error['active_store_delivery_charge_vat'];
+        } else {
+            $data['error_active_store_delivery_charge_vat'] = '';
+        }
+
         if (isset($this->error['owner'])) {
             $data['error_owner'] = $this->error['owner'];
         } else {
@@ -659,6 +665,13 @@ class ControllerSettingSetting extends Controller {
             $data['config_active_store_delivery_charge'] = $this->request->post['config_active_store_delivery_charge'];
         } else {
             $data['config_active_store_delivery_charge'] = $this->config->get('config_active_store_delivery_charge');
+        }
+
+
+        if (isset($this->request->post['config_active_store_delivery_charge_vat'])) {
+            $data['config_active_store_delivery_charge_vat'] = $this->request->post['config_active_store_delivery_charge_vat'];
+        } else {
+            $data['config_active_store_delivery_charge_vat'] = $this->config->get('config_active_store_delivery_charge_vat');
         }
 
 
@@ -2349,6 +2362,10 @@ class ControllerSettingSetting extends Controller {
 
         if (!$this->request->post['config_active_store_delivery_charge']) {
             $this->error['active_store_delivery_charge'] = $this->language->get('error_active_store_delivery_charge');
+        }
+
+        if (!$this->request->post['config_active_store_delivery_charge_vat']) {
+            $this->error['active_store_delivery_charge_vat'] = $this->language->get('error_active_store_delivery_charge_vat');
         }
 
         if ((utf8_strlen($this->request->post['config_owner']) < 3) || (utf8_strlen($this->request->post['config_owner']) > 64)) {
