@@ -582,6 +582,11 @@
                     <li><a href="<?php echo $report_vendor_commission; ?>"><?php echo 'Commission'; ?></a></li>
                     <?php } ?>
 
+
+            <?php if($preturn_report_order_product_missing_products) { ?>  
+            <li><a href="<?php echo $report_order_product_missing_products; ?>">Missing Order Products</a></li>
+            <?php } ?>
+
                 </ul>
             </li>
             <?php } ?>
