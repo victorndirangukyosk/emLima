@@ -774,6 +774,23 @@
                             </div>
 
 
+
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-active-store-delivery-charge-vat">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="VAT on Delivery Charge">
+                                         VAT on Delivery Charge
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" name="config_active_store_delivery_charge_vat" value="<?php echo $config_active_store_delivery_charge_vat; ?>" placeholder="Enter VAT % on Delivery Charge" id="input-active-store-delivery-charge-vat" class="form-control" />
+                                    <?php if ($error_active_store_delivery_charge_vat) { ?>
+                                    <div class="text-danger"><?php echo $error_active_store_delivery_charge_vat; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
+
+
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-owner"><?php echo $entry_owner; ?></label>
                                 <div class="col-sm-10">

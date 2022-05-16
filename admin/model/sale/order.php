@@ -4617,7 +4617,9 @@ class ModelSaleOrder extends Model {
 
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
 
-
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND mp.name LIKE '%" . $data['filter_name'] . "%'";
+        }
         if (isset($data['filter_order_type'])) {
 
             $sql .= ' AND isadmin_login= ' . $data['filter_order_type'] . '';
@@ -5010,6 +5012,14 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_total'])) {
             $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
         }
+
+
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND p.name LIKE '%" . $data['filter_name'] . "%'";
+        }
+
+
         //  echo "<pre>";print_r($sql);die;
         $query = $this->db->query($sql);
 
@@ -5223,6 +5233,10 @@ class ModelSaleOrder extends Model {
 
         if (!empty($data['filter_payment'])) {
             $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
+        }
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND mp.name LIKE '%" . $data['filter_name'] . "%'";
         }
 
         if (!empty($data['filter_delivery_method'])) {
