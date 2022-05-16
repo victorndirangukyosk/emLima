@@ -405,6 +405,7 @@ class ControllerAccountApplypezesha extends Controller {
                 $data['pezesha_customer_id'] = $result['data']['customer_id'];
                 $data['customer_uuid'] = $result['data']['customer_uuid'];
                 $data['credit_period'] = $this->request->post['credit_period'];
+                $data['customer_id'] = str_replace("KB","",$result['data']['merchant_id']);
                 $customer_device_info = $this->model_account_customer->addPezeshaCustomer($data);
                 $this->sendpezeshaemail();
             }
