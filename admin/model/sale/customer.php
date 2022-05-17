@@ -183,6 +183,19 @@ class ModelSaleCustomer extends Model {
             $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
         }
 
+
+
+        if (isset($data['filter_pezesha']) && !is_null($data['filter_pezesha'])) {
+           if($data['filter_pezesha']=='1')
+           {
+            $implode[] = "c.customer_id in  (select customer_id from hf7_pezesha_customers )";
+           }
+           else{
+            $implode[] = "c.customer_id not in  (select customer_id from hf7_pezesha_customers )";
+
+           }
+        }
+
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
             $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
         }
@@ -1021,6 +1034,18 @@ class ModelSaleCustomer extends Model {
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $implode[] = "status = '" . (int) $data['filter_status'] . "'";
         }
+
+        
+        if (isset($data['filter_pezesha']) && !is_null($data['filter_pezesha'])) {
+            if($data['filter_pezesha']=='1')
+            {
+             $implode[] = "customer_id in  (select customer_id from hf7_pezesha_customers )";
+            }
+            else{
+             $implode[] = " customer_id not in  (select customer_id from hf7_pezesha_customers )";
+ 
+            }
+         }
 
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
             $implode[] = "approved = '" . (int) $data['filter_approved'] . "'";
