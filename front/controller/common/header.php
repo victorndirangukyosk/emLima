@@ -787,9 +787,20 @@ class ControllerCommonHeader extends Controller {
         $data['categories'] = [];
 
         //$categories = $this->model_assets_category->getCategoryByStore(0);
-        $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+        // $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
         //echo "<pre>";print_r($categories);die;
-        foreach ($categories as $category) {
+        $new_categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+
+         $customer_categories = $this->model_assets_category->getCustomerCategoryById(ACTIVE_STORE_ID, 0);
+        
+         foreach ($customer_categories as $customer_category) {
+            $new_categories[] = $customer_category;
+        }
+        $new_categories = array_map("unserialize", array_unique(array_map("serialize", $new_categories)));
+
+        // $data['categories_new'] = $new_categories;
+
+        foreach ($new_categories as $category) {
             // Level 2
             $children_data = [];
 
@@ -2076,7 +2087,7 @@ class ControllerCommonHeader extends Controller {
             } else {
                 $class = '';
             }
-
+ 
             $data['class'] = str_replace('/', '-', $this->request->get['path']) . $class;
         } else {
             $data['class'] = 'common-home';
