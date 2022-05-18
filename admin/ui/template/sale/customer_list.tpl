@@ -210,19 +210,38 @@
              
               
 
+             
+              <div class="form-group">
+                <label class="control-label" for="input-pezesha">Pezesha Customers</label>
+                <select name="filter_pezesha" id="input-pezesha" class="form-control">
+                  <option value="*"></option>
+                  <?php if ($filter_pezesha) { ?>
+                  <option value="1" selected="selected">Pezesha</option>
+                  <?php } else { ?>
+                  <option value="1">Pezesha</option>
+                  <?php } ?>
+                  <?php if (!$filter_pezesha && !is_null($filter_pezesha)) { ?>
+                  <option value="0" selected="selected">Non-Pezesha</option>
+                  <?php } else { ?>
+                  <option value="0">Non-Pezesha</option>
+                  <?php } ?>
+                </select>
+              </div>
               
                  
                  
-              <div class="form-group" style="margin-top:43px;">
+             
+              </div>
+
+              <div class="col-sm-3">
+
+               <div class="form-group" style="margin-top:36px;">
 
                <div class="form-group">
                   <label><input type="checkbox" name="filter_sub_customer_show[]" value="<?php echo $filter_sub_customer_show; ?>" <?php if($filter_sub_customer_show == 1) { ?> checked="" <?php } ?>> Show Sub Customer </label>
               </div>
 
               </div>
-              </div>
-
-              <div class="col-sm-3">
 
               <div class="form-group" style="margin-top:20px;">
                <button type="button" id="button-filter" class="btn btn-primary"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>  
@@ -401,6 +420,13 @@ $('#button-filter').on('click', function() {
   
   if (filter_status != '*') {
     url += '&filter_status=' + encodeURIComponent(filter_status); 
+  }
+
+
+  var filter_pezesha = $('select[name=\'filter_pezesha\']').val();
+  
+  if (filter_pezesha != '*') {
+    url += '&filter_pezesha=' + encodeURIComponent(filter_pezesha); 
   }
   
   var filter_payment_terms = $('select[name=\'filter_payment_terms\']').val();
@@ -664,6 +690,13 @@ function excel() {
   
   if (filter_status != '*') {
     url += '&filter_status=' + encodeURIComponent(filter_status); 
+  } 
+
+
+   var filter_pezesha = $('select[name=\'filter_pezesha\']').val();
+  
+  if (filter_pezesha != '*') {
+    url += '&filter_pezesha=' + encodeURIComponent(filter_pezesha); 
   } 
   
   var filter_payment_terms = $('select[name=\'filter_payment_terms\']').val();
