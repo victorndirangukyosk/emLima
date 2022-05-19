@@ -9753,6 +9753,8 @@ class ModelReportExcel extends Model {
                 'amount_partialy_paid' => $result['amount_partialy_paid'] ? $this->currency->format($result['amount_partialy_paid']) : '',
                 'pending_amount' => $this->currency->format($result['total'] - $result['amount_partialy_paid']),
                 'pending_amount_value' => ($result['total'] - $result['amount_partialy_paid']),
+                'paid_to' => $result['paid_to'],
+
             ];
         }
         // echo'<pre>';print_r($data['orders']);exit;
@@ -9791,24 +9793,24 @@ class ModelReportExcel extends Model {
 
             $objPHPExcel->getActiveSheet()->getStyle('B')->getAlignment()->setWrapText(true);
 
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
-            $objPHPExcel->getActiveSheet()->mergeCells('A2:E2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:G1');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:G2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Payments Received');
             // $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A1:G2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
             //subtitle
 
 
-            $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:G3');
             // if ($from != null) {
             //     $from = date('d-m-Y', strtotime($data['filter_date_added']));
             //     $html = 'Date Added ' . $from;
             // }
             // $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:E3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:G3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $objPHPExcel->getActiveSheet()->getStyle('C')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             $objPHPExcel->getActiveSheet()->getStyle('D')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
@@ -9824,12 +9826,14 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Paid');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Pending Amount');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Transaction ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Paid To');
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 5;
@@ -9844,6 +9848,7 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['paid']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['pending_amount']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['transaction_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['paid_to']);
                 // $Amount = $Amount + $result['pending_amount_value'];
                 ++$row;
             }
