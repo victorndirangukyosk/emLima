@@ -810,6 +810,43 @@ class ModelSaleCustomer extends Model {
         return $query->rows;
     }
 
+    public function getCompanies_pezesha($data = []) {
+        $sql = 'SELECT distinct customer_id,company_name AS name FROM ' . DB_PREFIX . 'customer WHERE status = 1 and customer_id in (select customer_id from hf7_pezesha_customers)';
+
+        $implode = [];
+        if (!empty($data['filter_name'])) {
+            $implode[] = " company_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+        if (!empty($data['filter_account_manager_id'])) {
+            $implode[] = " account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
+        }
+        if ($implode) {
+            $sql .= ' AND ' . implode(' AND ', $implode);
+        }
+        $sql .= ' ORDER BY company_name';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
 
     public function getPayments($data = []) {
         $sql = 'SELECT distinct code AS name FROM ' . DB_PREFIX . 'extension WHERE  type="payment"';
