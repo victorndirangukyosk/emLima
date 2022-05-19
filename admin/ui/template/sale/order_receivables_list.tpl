@@ -1006,3 +1006,11 @@ function showConfirmPopup($order_id,$order_value) {
 
 </script>
 
+
+<style>
+
+.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn)
+{
+ width: 100%;
+}
+</style>
