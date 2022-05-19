@@ -6336,9 +6336,19 @@ class ModelReportExcel extends Model {
                 }
             }
 
+            $transcation_id =  $this->model_sale_order->getOrderTransactionIdandDate($result['order_id']);
+                if (!empty($transcation_id)) {
+                    $transaction_id_value=$transcation_id['transaction_id'];
+                    $transaction_id_date=$transcation_id['created_at'];
+                }
+                else{
+                    $transaction_id_value='';
+                    $transaction_id_date='';
+                }
+
             if ($result['paid'] == 'N') {
                 //check transaction Id Exists are not// if exists, it is paid order,
-                $transcation_id = $this->model_sale_order->getOrderTransactionId($result['order_id']);
+                // $transcation_id = $this->model_sale_order->getOrderTransactionId($result['order_id']);
                 if (!empty($transcation_id)) {
                     $result['paid'] = 'Paid';
                     $result['amountpaid'] = $sub_total;
@@ -6361,6 +6371,8 @@ class ModelReportExcel extends Model {
             }
 
             $data['customers'][] = [
+                'customer_id' => $result['customer_id'],
+                'payment_method' => $result['payment_method'],
                 'company' => $result['company'],
                 'customer' => $result['customer'],
                 'email' => $result['email'],
@@ -6381,6 +6393,10 @@ class ModelReportExcel extends Model {
                 'amountpaid' => number_format($result['amountpaid'], 2),
                 'pendingamount' => number_format($result['pendingamount'], 2),
                 'pendingamountvalue' => ($result['pendingamount']),
+                'paid_to'=> $result['paid_to'],
+                'transaction_id'=> $transaction_id_value,
+                'transaction_id_date'=>$transaction_id_date? date($this->language->get('date_format_short'), strtotime($transaction_id_date)):'',
+                
             ];
         }
 
@@ -6461,22 +6477,28 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyle('H')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             $objPHPExcel->getActiveSheet()->getStyle('I')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            foreach (range('A', 'L') as $columnID) {
+            foreach (range('A', 'P') as $columnID) {
                 $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
                         ->setAutoSize(true);
             }
 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Customer Name');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Company Name');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Order Id');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Order Date');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Delivery Date');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Customer ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Customer Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Company Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Order Id');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Order Date');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Delivery Date');
 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'P.O. Number');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Order Value');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Amount Paid');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'Pending Amount');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 4, 'Payment Status');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'P.O. Number');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Order Value');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'Amount Paid');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 4, 'Pending Amount');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, 4, 'Date of payment');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(11, 4, 'Payment Method');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(12, 4, 'Paid To');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, 4, 'Payment Status');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(14, 4, 'Payment Transactio ID');
+
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -6488,6 +6510,11 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(9, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(10, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(11, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(12, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(13, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(14, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 7;
@@ -6502,16 +6529,22 @@ class ModelReportExcel extends Model {
                 $log->write('RESULT download_customer_statement_excel');
                 $log->write($result);
                 $log->write('RESULT download_customer_statement_excel');
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['company']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['order_id']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['date_added']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['delivery_date']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['po_number']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['subtotal']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['amountpaid']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['pendingamount']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['paid']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['customer']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['order_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['date_added']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['delivery_date']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['po_number']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['subtotal']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['amountpaid']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['pendingamount']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, $row, $result['transaction_id_date']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(11, $row, $result['payment_method']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(12, $row, $result['paid_to']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, $row, $result['paid']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(14, $row, $result['transaction_id']);
+
 
                 $Amount = $Amount + $result['subtotalvalue'];
                 $PendingAmountTotal = $PendingAmountTotal + $result['pendingamountvalue'];
