@@ -810,6 +810,120 @@ class ModelSaleCustomer extends Model {
         return $query->rows;
     }
 
+
+    public function getCompanies_pezesha_all($data = []) {
+        $sql = 'SELECT distinct company_name AS name FROM ' . DB_PREFIX . 'customer WHERE status = 1';
+
+        $implode = [];
+        if (!empty($data['filter_name'])) {
+            $implode[] = " company_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+        }
+        $implode[] = "(parent in (select customer_id from hf7_pezesha_customers) || customer_id in (select customer_id from hf7_pezesha_customers))";
+        
+        if ($implode) {
+            $sql .= ' AND ' . implode(' AND ', $implode);
+        }
+        $sql .= ' ORDER BY company_name';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+
+    public function getCustomers_pezesha($data = []) {
+        $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.name AS customer_group FROM " . DB_PREFIX . 'customer c LEFT JOIN ' . DB_PREFIX . "customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
+
+        $implode = [];
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+        $implode[] = "(c.parent in (select customer_id from hf7_pezesha_customers) || c.customer_id in (select customer_id from hf7_pezesha_customers))";
+
+        if (!empty($data['filter_name'])) {
+            if ($this->user->isVendor()) {
+                $implode[] = "c.firstname LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            } else {
+                $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            }
+        }
+
+        
+
+        if (!empty($data['filter_company'])) {
+            if ('' != $data['filter_company']) {
+                $implode[] = "c.company_name = '" . $this->db->escape($data['filter_company']) . "'";
+            }
+        }
+ 
+ 
+    
+
+        if ($implode) {
+            $sql .= ' AND ' . implode(' AND ', $implode);
+        }
+
+        $sort_data = [
+            'name',
+            'c.email',
+            'customer_group',
+            'c.status',
+            'c.approved',
+            'c.ip',
+            'c.date_added',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY name';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        //echo "<pre>";print_r($sql);die;
+
+        return $query->rows;
+    }
+
+    
     public function getCompanies_pezesha($data = []) {
         $sql = 'SELECT distinct customer_id,company_name AS name FROM ' . DB_PREFIX . 'customer WHERE status = 1 and customer_id in (select customer_id from hf7_pezesha_customers)';
 
