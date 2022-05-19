@@ -3763,6 +3763,46 @@ class ControllerSaleCustomer extends Controller {
     }
 
 
+    public function autocompletecompany_pezesha() {
+        $json = [];
+
+        if (isset($this->request->get['filter_name'])) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
+
+            $this->load->model('sale/customer');
+
+            $filter_data = [
+                'filter_name' => $filter_name,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_sale_customer->getCompanies_pezesha($filter_data);
+            foreach ($results as $result) {
+                $json[] = [
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                    'customer_id' => $result['customer_id'],
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+
     public function autocompletepayment() {
         $json = [];
 
