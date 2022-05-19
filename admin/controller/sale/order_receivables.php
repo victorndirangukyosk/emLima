@@ -283,8 +283,9 @@ class ControllerSaleOrderReceivables extends Controller
 
                 'amount_partialy_paid_value' => $result_success['amount_partialy_paid'],
                 'amount_partialy_paid' => $result_success['amount_partialy_paid']?$this->currency->format($result_success['amount_partialy_paid']):'',
-                'pending_amount' => ($result_success['amount_partialy_paid']>0?($result_success['total']-$result_success['amount_partialy_paid']):0),
+                'pending_amount' => ($result_success['amount_partialy_paid']>0?round(($result_success['total']-$result_success['amount_partialy_paid']),2):0),
                 // 'pending_amount' => $this->currency->format ($result_success['total']-$result_success['amount_partialy_paid']),
+                'paid_to' => $result_success['paid_to'],
 
 
 
@@ -616,9 +617,10 @@ class ControllerSaleOrderReceivables extends Controller
                 // }
                 // #endregion
 
+               
 
-             $this->model_sale_order_receivables->confirmPaymentReceived($this->request->post['paid_order_id'], $this->request->post['transaction_id']);
-            
+             $this->model_sale_order_receivables->confirmPaymentReceived($this->request->post['paid_order_id'], $this->request->post['transaction_id'],0, $this->request->post['paid_to']);
+             
             $data['success'] = 'Updated Successfully';
             // Add to activity log
             $log = new Log('error.log');
@@ -668,7 +670,11 @@ class ControllerSaleOrderReceivables extends Controller
         }  
         if (isset($this->request->post['transaction_id'])) {
             $transaction_id = $this->request->post['transaction_id'];
-        }  
+        } 
+        
+        if (isset($this->request->post['paid_to'])) {
+            $paid_to = $this->request->post['paid_to'];
+        } 
 
         // echo'<pre>';print_r($orders);exit;
 
@@ -700,7 +706,7 @@ class ControllerSaleOrderReceivables extends Controller
                         if($order !='on')
                         {
                         $order_any_selected=$order;//any order in the selection can be tken, to get customer
-                    $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id);
+                    $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id,0,$paid_to);
                     // Add to activity log
                     $log = new Log('error.log');
                     $this->load->model('user/user_activity');
@@ -757,13 +763,13 @@ class ControllerSaleOrderReceivables extends Controller
                         $log->write($order_amount_sufficient);
                         //    exit;
                         if($order_amount_sufficient>=0){
-                    $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id);
+                    $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id,0,$paid_to);
                         }
                         else
                     {
 
                         $amount_partialy_paid=$amount_partialy_paid+$grand_amount_availble;
-                    $this->model_sale_order_receivables->confirmPartialPaymentReceived($order, $transaction_id,'',$amount_partialy_paid);
+                    $this->model_sale_order_receivables->confirmPartialPaymentReceived($order, $transaction_id,'',$amount_partialy_paid,$paid_to);
                     }
                     $grand_amount_availble=$grand_amount_availble-$ordertotal_needtopay;
 
