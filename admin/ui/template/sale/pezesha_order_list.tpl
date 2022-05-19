@@ -49,7 +49,10 @@
                             </div>
 
                             
-                            
+                             <div class="form-group" >
+                                    <label class="control-label" for="input-company">Company</label>
+                                    <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company" id="input-customer" class="form-control" />
+                                </div>
                              
                          
                           <div class="form-group">
@@ -62,6 +65,8 @@
                                 </div>
                             </div>
 
+           
+
                             
                         </div>
                         <div class="col-sm-4">
@@ -73,6 +78,13 @@
                                 <input type="text" name="filter_company_parent" value="<?php if($filter_company_parent != NULL && $filter_company_parent_id != NULL) { echo $filter_company_parent; } ?>" placeholder="Parent Company" id="input-company-parent" class="form-control" data-parent-company-id="<?php if($filter_company_parent != NULL && $filter_company_parent_id != NULL) { echo $filter_company_parent_id; } ?>" />
                           
                             </div>
+
+ <?php if (!$this->user->isVendor()): ?>
+                                <div class="form-group" >
+                                    <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
+                                    <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
+                                </div>
+                            <?php endif ?> 
 
                             
                             <div class="form-group">    
@@ -104,12 +116,7 @@
                                 </div>
                             </div>
                             
-                            <?php if (!$this->user->isVendor()): ?>
-                                <div class="form-group" hidden>
-                                    <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
-                                    <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
-                                </div>
-                            <?php endif ?> 
+                           
                             
                             <div class="form-group">
                             <button type="button" id="button-filter" class="btn btn-primary pull-left" style="margin-top:20px;"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
@@ -288,11 +295,19 @@
              
  
 
+            var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company != '*' && filter_company != '') {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+            
             var filter_customer = $('input[name=\'filter_customer\']').val();
 
-            if (filter_customer) {
+            if (filter_customer != '*' && filter_customer != '') {
                 url += '&filter_customer=' + encodeURIComponent(filter_customer);
             }
+
+            
 
             var filter_store_name = $('input[name=\'filter_store_name\']').val();
 
@@ -365,7 +380,7 @@
         $('input[name=\'filter_customer\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company_parent=' +$companyName,
+                    url: 'index.php?path=sale/customer/autocompletebyCompany_pezesha&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company_parent=' +$companyName,
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -379,6 +394,33 @@
             },
             'select': function (item) {
                 $('input[name=\'filter_customer\']').val(item['label']);
+            }
+        });
+
+
+
+           $('input[name=\'filter_company\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletecompany_pezesha_all&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['name']
+                            }
+                        }));
+
+                        
+                    }
+                });
+                $companyName="";
+            },
+            'select': function (item) {
+                $('input[name=\'filter_company\']').val(item['label']);
+                $('input[name=\'filter_customer\']').val('');
+                $companyName=item['label'];
             }
         });
 
@@ -399,7 +441,7 @@
                         
                     }
                 });
-                $companyName="";
+                 
             },
             'select': function (item) {
 
@@ -408,7 +450,7 @@
                 $('input[name=\'filter_company_parent\']').attr("data-parent-company-id", item['value']);
 
                 $('input[name=\'filter_customer\']').val('');
-                $companyName=item['label'];
+                
             }
         });
         
@@ -515,7 +557,11 @@ function downloadOrders() {
                 url += '&filter_company_parent_id=' + encodeURIComponent(filter_company_parent_id);
             }
 
+            var filter_company = $('input[name=\'filter_company\']').val();
 
+            if (filter_company != '*' && filter_company != '') {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
             
             var filter_customer = $('input[name=\'filter_customer\']').val();
 
