@@ -117,8 +117,8 @@ class ControllerReportProductReceivedSold extends Controller {
             'filter_date_added_to' => $filter_date_added_to,
             'sort' => $sort,
             'order' => $order,
-            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            // 'limit' => $this->config->get('config_limit_admin'),
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin'),
         ];
 
         $this->load->model('tool/image');
@@ -292,6 +292,13 @@ class ControllerReportProductReceivedSold extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
         
+
+         //as the dynamic pagination will not work for this calculation , applied pagination on array
+         $start = ($page - 1) * $this->config->get('config_limit_admin');
+         $limit = $this->config->get('config_limit_admin');
+ 
+         $data['products'] = array_slice($data['products'], $start, $limit);
+
         /* PREVIOUS CODE */
 
         //echo '<pre>';print_r($cachePrice_data);exit;
