@@ -1539,7 +1539,7 @@ class ModelSaleOrder extends Model {
     }
 
     public function getPezeshaOrders($data = []) {
-        $sql = "SELECT pz.mpesa_reference,pz.created_at, c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, o.vendor_order_status_id,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no,o.paid,o.amount_partialy_paid,o.delivery_charges FROM `" . DB_PREFIX . 'order` o ';
+        $sql = "SELECT pz.mpesa_reference,pz.created_at, c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, o.vendor_order_status_id,    cust.company_name AS company_name,cust.customer_id,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no,o.paid,o.amount_partialy_paid,o.delivery_charges,o.paid_to FROM `" . DB_PREFIX . 'order` o ';
         //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
 
         $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
@@ -1547,50 +1547,33 @@ class ModelSaleOrder extends Model {
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
         $sql .= ' JOIN ' . DB_PREFIX . 'pezesha_loan_recceivables pz on (pz.order_id = o.order_id) ';
 
-        if (isset($data['filter_order_status'])) {
-            $implode = [];
+        // if (isset($data['filter_order_status'])) {
+        //     $implode = [];
 
-            $order_statuses = explode(',', $data['filter_order_status']);
+        //     $order_statuses = explode(',', $data['filter_order_status']);
 
-            foreach ($order_statuses as $order_status_id) {
-                $implode[] = "o.order_status_id = '" . (int) $order_status_id . "'";
-            }
+        //     foreach ($order_statuses as $order_status_id) {
+        //         $implode[] = "o.order_status_id = '" . (int) $order_status_id . "'";
+        //     }
 
-            if ($implode) {
-                $sql .= ' WHERE (' . implode(' OR ', $implode) . ')';
-            } else {
+        //     if ($implode) {
+        //         $sql .= ' WHERE (' . implode(' OR ', $implode) . ')';
+        //     } else {
                 
-            }
-        } else {
+        //     }
+        // } else {
             $sql .= " WHERE o.order_status_id > '0'";
-        }
+        // }
 
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
 
 
-        if (isset($data['filter_order_type'])) {
+        if (isset($data['filter_order_type']) && $data['filter_order_type']!='undefined') {
 
             $sql .= ' AND isadmin_login= ' . $data['filter_order_type'] . '';
         }
 
-        //below if condition added for fast orders used in fast order sreen 
-        if (!empty($data['filter_order_day'])) {
-            $current_date = date('Y-m-d');
-            if ('today' == $data['filter_order_day']) {
-                $delivery_date = date('Y-m-d');
-            } else {
-                $delivery_date = date('Y-m-d', strtotime('+1 day'));
-            }
-
-            //$sql .= " AND DATE(o.delivery_date) = " . $delivery_date;
-            $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($delivery_date) . "')";
-
-            // fast orders means, ordered placed on current dadte
-            $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($current_date) . "')";
-
-            //echo "<pre>";print_r($delivery_date);die;
-        }
-
+        
         if (isset($data['filter_orders'])) {
             $sql .= ' AND  o.order_id in (' . $data['filter_orders'] . ')';
         }
@@ -1616,7 +1599,12 @@ class ModelSaleOrder extends Model {
         }
 
 
-        if (!empty($data['filter_company'])) {
+        if (!empty($data['filter_company_parent_id'])) {
+            $sql .= " AND cust.parent  ='" . $data['filter_company_parent_id'] . "'";
+        }
+
+
+        if (!empty($data['filter_company']) && $data['filter_company']!='undefined') {
             $sql .= " AND cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
@@ -1639,7 +1627,7 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.store_name = '" . $data['filter_store_name'] . "'";
         }
 
-        if (!empty($data['filter_payment'])) {
+        if (!empty($data['filter_payment']) && $data['filter_payment']!='undefined') {
             $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
         }
 
@@ -2790,6 +2778,17 @@ class ModelSaleOrder extends Model {
         return $query->row;
     }
 
+
+    public function getOrderTransactionIdandDate($order_id) {
+        $sql = 'SELECT transaction_id,created_at FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
+
+        $query = $this->db->query($sql);
+
+        return $query->row;
+    }
+
+    
+
     public function getOrderTransactionIdExists($order_id) {
         $sql = 'SELECT transaction_id FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
 
@@ -3163,21 +3162,21 @@ class ModelSaleOrder extends Model {
         $sql .= 'LEFT JOIN ' . DB_PREFIX . 'customer cust on(cust.customer_id = o.customer_id)';
         $sql .= ' JOIN ' . DB_PREFIX . 'pezesha_loan_recceivables pz on (pz.order_id = o.order_id) ';
 
-        if (!empty($data['filter_order_status'])) {
-            $implode = [];
+        // if (!empty($data['filter_order_status'])) {
+        //     $implode = [];
 
-            $order_statuses = explode(',', $data['filter_order_status']);
+        //     $order_statuses = explode(',', $data['filter_order_status']);
 
-            foreach ($order_statuses as $order_status_id) {
-                $implode[] = "o.order_status_id = '" . (int) $order_status_id . "'";
-            }
+        //     foreach ($order_statuses as $order_status_id) {
+        //         $implode[] = "o.order_status_id = '" . (int) $order_status_id . "'";
+        //     }
 
-            if ($implode) {
-                $sql .= ' WHERE (' . implode(' OR ', $implode) . ')';
-            }
-        } else {
+        //     if ($implode) {
+        //         $sql .= ' WHERE (' . implode(' OR ', $implode) . ')';
+        //     }
+        // } else {
             $sql .= " WHERE o.order_status_id > '0'";
-        }
+        // }
 
         if (isset($data['filter_order_type'])) {
             $sql .= ' AND isadmin_login="' . $data['filter_order_type'] . '"';
@@ -3198,6 +3197,10 @@ class ModelSaleOrder extends Model {
             //echo "<pre>";print_r($delivery_date);die;
         }
 
+
+        if (!empty($data['filter_company_parent_id'])) {
+            $sql .= " AND cust.parent  ='" . $data['filter_company_parent_id'] . "'";
+        }
         if ($this->user->isVendor()) {
             $sql .= ' AND vendor_id="' . $this->user->getId() . '"';
         }
@@ -4617,7 +4620,9 @@ class ModelSaleOrder extends Model {
 
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
 
-
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND mp.name LIKE '%" . $data['filter_name'] . "%'";
+        }
         if (isset($data['filter_order_type'])) {
 
             $sql .= ' AND isadmin_login= ' . $data['filter_order_type'] . '';
@@ -5010,6 +5015,14 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_total'])) {
             $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
         }
+
+
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND p.name LIKE '%" . $data['filter_name'] . "%'";
+        }
+
+
         //  echo "<pre>";print_r($sql);die;
         $query = $this->db->query($sql);
 
@@ -5223,6 +5236,10 @@ class ModelSaleOrder extends Model {
 
         if (!empty($data['filter_payment'])) {
             $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
+        }
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND mp.name LIKE '%" . $data['filter_name'] . "%'";
         }
 
         if (!empty($data['filter_delivery_method'])) {
@@ -6129,4 +6146,68 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
+
+
+
+    public function getMissingProductsSummary($data = []) {
+        $sql = "SELECT mp.product_store_id,mp.name,mp.unit,sum(mp.quantity_required) as quanity,sum(mp.total) as total FROM `" . DB_PREFIX . 'missing_products` mp  join hf7_order o on mp.order_id =o.order_id';
+        $sql .= " where o.order_status_id not in (6,8,9,16)  ";
+
+         
+
+        //   echo "<pre>";print_r($data['filter_order_type']);die; 
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND mp.name LIKE '%" . $data['filter_name'] . "%'";
+        }
+         
+
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_to'])) {
+            $sql .= " AND DATE(mp.created_at) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        
+
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_to'])) {
+            $sql .= " AND DATE(mp.created_at) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_to']) . "')";
+        }
+
+        
+
+        $sort_data = [
+            'mp.product_store_id',             
+            'mp.name',
+        ];
+        $sql .= " Group by mp.product_store_id,mp.name, mp.unit  ";
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY mp.name';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        // echo "<pre>";print_r($sql);die;
+        $log = new Log('error.log');
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
 }

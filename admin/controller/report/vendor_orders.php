@@ -279,6 +279,19 @@ class ControllerReportVendorOrders extends Controller {
             $filter_customer = null;
         }
 
+        if (isset($this->request->get['filter_company_parent'])) {
+            $filter_company_parent = $this->request->get['filter_company_parent'];
+        } else {
+            $filter_company_parent = null;
+        }
+
+
+        if (isset($this->request->get['filter_company_parent_id'])) {
+            $filter_company_parent_id = $this->request->get['filter_company_parent_id'];
+        } else {
+            $filter_company_parent_id = null;
+        }
+
         if (isset($this->request->get['filter_vendor'])) {
             $filter_vendor = $this->request->get['filter_vendor'];
         } else {
@@ -382,6 +395,8 @@ class ControllerReportVendorOrders extends Controller {
             'filter_order_to_id' => $filter_order_to_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
+            'filter_company_parent' => $filter_company_parent,
+            'filter_company_parent_id' => $filter_company_parent_id,
             'filter_vendor' => $this->getUserByName($filter_vendor),
             'filter_store_name' => $filter_store_name,
             'filter_delivery_method' => $filter_delivery_method,

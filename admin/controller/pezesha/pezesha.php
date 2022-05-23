@@ -56,7 +56,7 @@ class ControllerPezeshaPezesha extends Controller {
         $log->write($customer_device_info);
         $log->write('auth_response');
         $meta_data = array('key' => 'customer_group', 'value' => $customer_group_info['description']);
-        $body = array('channel' => $this->config->get('pezesha_channel'), 'terms' => TRUE, 'full_names' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'], 'phone' => '254' . '' . $customer_device_info['telephone'], 'other_phone_nos' => array('254' . '' . $customer_device_info['telephone'], '254' . '' . $customer_device_info['telephone']), 'national_id' => $customer_device_info['national_id'], 'dob' => date('Y-m-d', strtotime($customer_device_info['dob'])), 'email' => $customer_device_info['email'], 'merchant_id' => $customer_device_info['customer_id'], 'merchant_reg_date' => date('Y-m-d', strtotime($customer_device_info['date_added'])), 'location' => $customer_device_info['company_name'] . '' . $customer_device_info['company_address'], 'geo_location' => array('long' => $customer_device_info['longitude'], 'lat' => $customer_device_info['latitude']), 'meta_data' => $meta_data);
+        $body = array('channel' => $this->config->get('pezesha_channel'), 'terms' => TRUE, 'full_names' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'], 'phone' => '254' . '' . $customer_device_info['telephone'], 'other_phone_nos' => array('254' . '' . $customer_device_info['telephone'], '254' . '' . $customer_device_info['telephone']), 'national_id' => $customer_device_info['national_id'], 'dob' => date('Y-m-d', strtotime($customer_device_info['dob'])), 'email' => $customer_device_info['email'], 'merchant_id' => 'KB' . $customer_device_info['customer_id'], 'merchant_reg_date' => date('Y-m-d', strtotime($customer_device_info['date_added'])), 'location' => $customer_device_info['company_name'] . '' . $customer_device_info['company_address'], 'geo_location' => array('long' => $customer_device_info['longitude'], 'lat' => $customer_device_info['latitude']), 'meta_data' => $meta_data);
         //$body = http_build_query($body);
         $body = json_encode($body);
         $log->write($body);
@@ -190,7 +190,7 @@ class ControllerPezeshaPezesha extends Controller {
         $this->load->model('sale/order');
         $this->load->model('pezesha/pezesha');
         $customer_device_info = $this->model_sale_customer->getCustomer($customer_id);
-        
+
         $all_customers = $customer_id;
         $parent_customer['filter_parent_customer_id'] = $customer_id;
         $parent_customer['filter_parent_customer'] = $customer_id;
@@ -200,13 +200,13 @@ class ControllerPezeshaPezesha extends Controller {
             $all_customers = implode(',', $sub_customer_ids);
             $all_customers = $all_customers . ',' . $customer_id;
         }
-        
+
         $customer_pezesha_info = $this->model_pezesha_pezesha->getCustomer($customer_id);
 
         $data['filter_customer_id_array'] = $all_customers;
-        $data['filter_date_added'] = date("Y-m-d",strtotime("-3 Months"));
+        $data['filter_date_added'] = date("Y-m-d", strtotime("-3 Months"));
         $data['filter_date_added_end'] = date("Y-m-d");
-        /*$data['filter_paid'] = 'Y';*/
+        /* $data['filter_paid'] = 'Y'; */
 
         $customer_order_info = $this->model_sale_order->getOrders($data);
         $log->write('CUSTOMER_TRANSACTION_INFO');
@@ -216,8 +216,8 @@ class ControllerPezeshaPezesha extends Controller {
 
         foreach ($customer_order_info as $order_info) {
             $order_transaction_info = $this->model_sale_order->getOrderTransactionId($order_info['order_id']);
-            $transactions['transaction_id'] = /*$order_transaction_info['transaction_id'].*/$order_info['order_id'];
-            $transactions['merchant_id'] = $customer_id;
+            $transactions['transaction_id'] = /* $order_transaction_info['transaction_id']. */$order_info['order_id'];
+            $transactions['merchant_id'] = $customer_pezesha_info['prefix'] . '' .$customer_id;
             $transactions['face_amount'] = round($order_info['total']);
             $transactions['transaction_time'] = $order_info['date_added'];
             $transactions['other_details'] = array('key' => 'Organization_id', 'value' => $customer_device_info['customer_id'], 'key' => 'payee_type', 'value' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'] . ' ' . $customer_device_info['company_name']);
@@ -405,7 +405,7 @@ class ControllerPezeshaPezesha extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-    
+
     public function applyloanfordeliveredordernew($customer_info) {
 
         $log = new Log('error.log');
@@ -487,12 +487,12 @@ class ControllerPezeshaPezesha extends Controller {
         $this->model_user_user_activity->addActivity('pezesha_apply_loan', $activity_data);
 
         $log->write('customer edit');
-        
+
         return $json;
-        /*$this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));*/
+        /* $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($json)); */
     }
-    
+
     public function applyloanone($customer_device_info) {
 
         $log = new Log('error.log');

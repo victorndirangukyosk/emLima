@@ -47,6 +47,21 @@ class ControllerSalePezeshaReceivables extends Controller {
             $filter_company = null;
         }
 
+
+        if (isset($this->request->get['filter_company_parent'])) {
+            $filter_company_parent = $this->request->get['filter_company_parent'];
+        } else {
+            $filter_company_parent = null;
+        }
+
+
+        if (isset($this->request->get['filter_company_parent_id'])) {
+            $filter_company_parent_id = $this->request->get['filter_company_parent_id'];
+        } else {
+            $filter_company_parent_id = null;
+        }
+
+
         if (isset($this->request->get['filter_customer'])) {
             $filter_customer = $this->request->get['filter_customer'];
         } else {
@@ -166,6 +181,17 @@ class ControllerSalePezeshaReceivables extends Controller {
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
+
+
+        if (isset($this->request->get['filter_company_parent'])) {
+            $url .= '&filter_company_parent=' . urlencode(html_entity_decode($this->request->get['filter_company_parent'], ENT_QUOTES, 'UTF-8'));
+        }
+
+
+        if (isset($this->request->get['filter_company_parent_id'])) {
+            $url .= '&filter_company_parent_id=' . urlencode(html_entity_decode($this->request->get['filter_company_parent_id'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
@@ -251,6 +277,8 @@ class ControllerSalePezeshaReceivables extends Controller {
             'filter_order_to_id' => $filter_order_to_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
+            'filter_company_parent' => $filter_company_parent,
+            'filter_company_parent_id' => $filter_company_parent_id,
             'filter_vendor' => $this->getUserByName($filter_vendor),
             'filter_store_name' => $filter_store_name,
             'filter_delivery_method' => $filter_delivery_method,
@@ -280,6 +308,7 @@ class ControllerSalePezeshaReceivables extends Controller {
         $disable = [2, 6, 7, 5, 8, 4, 15, 1, 14, 16, 13, 9, 10, 3, 11, 12];
         foreach ($results as $result) {
             $sub_total = 0;
+            $total = 0;
 
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
             $missing_products = $this->model_sale_order->getMissingProductsByOrderId($result['order_id']);
@@ -290,23 +319,40 @@ class ControllerSalePezeshaReceivables extends Controller {
             foreach ($totals as $total) {
                 if ('sub_total' == $total['code']) {
                     $sub_total = $total['value'];
-                    break;
+                     
+                }
+                else if ('total' == $total['code']) {
+                    $total = $total['value'];
+                     
                 }
             }
-
+            $result['customer'] =$result['firstname']." ".$result['lastname'];
             if ($this->user->isVendor()) {
                 $result['customer'] = strtok($result['firstname'], ' ');
             }
 
-            if ($result['company_name']) {
-                $result['company_name'] = ' (' . $result['company_name'] . ')';
-            } else {
-                // $result['company_name'] = "(NA)";
-            }
+            // if ($result['company_name']) {
+            //     $result['company_name'] = ' (' . $result['company_name'] . ')';
+            // } else {
+            //     // $result['company_name'] = "(NA)";
+            // }
+
+
+            if ($result['paid']=='Y') {
+                    $amount_paid =  $this->currency->format($total, $this->config->get('config_currency')) ;
+                } else  if ($result['paid']=='P'){
+                    $amount_paid =  $this->currency->format($result['amount_partialy_paid'], $this->config->get('config_currency')) ;
+                }
+                else
+                {
+                    $amount_paid =0;
+                }
+
             $vendor_total = $this->currency->format(($result['total'] - ($result['total'] * $result['commission']) / 100), $this->config->get('config_currency'));
             $this->load->model('localisation/order_status');
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
+                'customer_id' => $result['customer_id'],
                 'delivery_id' => $result['delivery_id'],
                 'order_prefix' => $vendor_details['orderprefix'] != '' ? $vendor_details['orderprefix'] . '-' : '',
                 'vendor_name' => $vendor_details['lastname'],
@@ -324,7 +370,7 @@ class ControllerSalePezeshaReceivables extends Controller {
                 'order_status_color' => $result['color'],
                 'city' => $result['city'],
                 'vendor_total' => $vendor_total,
-                'total' => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
+                'total' => $this->currency->format($total, $result['currency_code'], $result['currency_value']),
                 'sub_total' => $this->currency->format($sub_total, $result['currency_code'], $result['currency_value']),
                 'sub_total_custom' => $sub_total, $result['currency_code'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
@@ -347,6 +393,8 @@ class ControllerSalePezeshaReceivables extends Controller {
                 'missing_products_count' => count($missing_products),
                 'mpesa_reference' => $result['mpesa_reference'],
                 'created_at' => date($this->language->get('date_format_short'), strtotime($result['created_at'])),
+                'amount_paid' => $amount_paid,
+
 
             ];
         }
@@ -436,6 +484,14 @@ class ControllerSalePezeshaReceivables extends Controller {
         }
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_company_parent'])) {
+            $url .= '&filter_company_parent=' . urlencode(html_entity_decode($this->request->get['filter_company_parent'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_company_parent_id'])) {
+            $url .= '&filter_company_parent_id=' . urlencode(html_entity_decode($this->request->get['filter_company_parent_id'], ENT_QUOTES, 'UTF-8'));
         }
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
@@ -531,6 +587,14 @@ class ControllerSalePezeshaReceivables extends Controller {
             $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_company_parent'])) {
+            $url .= '&filter_company_parent=' . urlencode(html_entity_decode($this->request->get['filter_company_parent'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_company_parent_id'])) {
+            $url .= '&filter_company_parent_id=' . urlencode(html_entity_decode($this->request->get['filter_company_parent_id'], ENT_QUOTES, 'UTF-8'));
+        }
+
         if (isset($this->request->get['filter_customer'])) {
             $url .= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
@@ -606,6 +670,8 @@ class ControllerSalePezeshaReceivables extends Controller {
         $data['filter_order_from_id'] = $filter_order_from_id;
         $data['filter_order_to_id'] = $filter_order_to_id;
         $data['filter_company'] = $filter_company;
+        $data['filter_company_parent'] = $filter_company_parent;
+        $data['filter_company_parent_id'] = $filter_company_parent_id;
         $data['filter_customer'] = $filter_customer;
         $data['filter_vendor'] = $filter_vendor;
         $data['filter_store_name'] = $filter_store_name;

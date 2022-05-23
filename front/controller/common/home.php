@@ -2281,8 +2281,17 @@ class ControllerCommonHome extends Controller {
             'filter_category_id' => isset($this->request->get['filter_category']) && $this->request->get['filter_category'] > 0 ? $this->request->get['filter_category'] : NULL,
             'filter_sort' => isset($this->request->get['filter_sort']) || $this->request->get['filter_sort'] != NULL ? $this->request->get['filter_sort'] : NULL
         ];
-        $data['categories_list'] = $results;
-
+        // $data['categories_list'] = $results;
+        // ----start
+         $this->load->model('assets/category');
+         $new_categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+         $customer_categories = $this->model_assets_category->getCustomerCategoryById(ACTIVE_STORE_ID, 0);
+         foreach ($customer_categories as $customer_category) {
+             $new_categories[] = $customer_category;
+         }
+         $new_categories = array_map("unserialize", array_unique(array_map("serialize", $new_categories)));
+        $data['categories_list']= $new_categories;
+         //----end
         $products = $this->getProductsForCategoryPages($filter_data);
         $data['products'] = $products;
 

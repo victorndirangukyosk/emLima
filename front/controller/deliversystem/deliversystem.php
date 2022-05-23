@@ -2067,7 +2067,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                     $data['products'][] = [
                         'order_id' => $order_id,
-                        'product_id' => $product['product_id'],
+                        'product_id' => $product['product_store_id'],
                         'general_product_id' => $product_info['product_id'],
                         'variation_id' => 0,
                         'vendor_id' => $product_info['merchant_id'],

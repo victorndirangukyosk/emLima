@@ -582,6 +582,17 @@
                     <li><a href="<?php echo $report_vendor_commission; ?>"><?php echo 'Commission'; ?></a></li>
                     <?php } ?>
 
+
+            <?php if($preturn_report_order_product_missing_products) { ?>  
+            <li><a href="<?php echo $report_order_product_missing_products; ?>">Missing Order Products</a></li>
+            <?php } ?>
+
+
+             <?php if($preturn_report_missing_products_revenue) { ?>  
+            <li><a href="<?php echo $report_missing_products_revenue; ?>">Missing Products Revenue Lost</a></li>
+            <?php } ?>
+
+
                 </ul>
             </li>
             <?php } ?>
@@ -625,8 +636,18 @@
                     <?php } ?>
 
                      
+           
+
 
                 </ul>
+
+                  <ul>  
+
+                    <?php if($preturn_report_product_received_sold) { ?>  
+            <li><a href="<?php echo $report_product_received_sold; ?>">Product Received and Sold</a></li>
+            <?php } ?>
+
+            </ul>
             </li>
             <?php } ?>
             <?php if( $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false ) { ?>

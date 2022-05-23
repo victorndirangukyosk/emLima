@@ -62,7 +62,7 @@ class Customer {
                 if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
                     $this->pezesha_customer_id = $pezesha_customer_query->row['pezesha_customer_id'];
                     $this->pezesha_customer_uuid = $pezesha_customer_query->row['customer_uuid'];
-                    $this->pezesha_identifier = $pezesha_customer_query->row['customer_id'];
+                    $this->pezesha_identifier = $pezesha_customer_query->row['prefix'] . '' . $pezesha_customer_query->row['customer_id'];
                     $this->credit_period = $pezesha_customer_query->row['credit_period'];
                 } else {
                     $this->pezesha_customer_id = NULL;
@@ -141,7 +141,7 @@ class Customer {
             if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
                 $this->pezesha_customer_id = $pezesha_customer_query->row['pezesha_customer_id'];
                 $this->pezesha_customer_uuid = $pezesha_customer_query->row['customer_uuid'];
-                $this->pezesha_identifier = $pezesha_customer_query->row['customer_id'];
+                $this->pezesha_identifier = $pezesha_customer_query->row['prefix'] . '' . $pezesha_customer_query->row['customer_id'];
                 $this->credit_period = $pezesha_customer_query->row['credit_period'];
             } else {
                 $this->pezesha_customer_id = NULL;
@@ -240,7 +240,7 @@ class Customer {
             if ($customer_query->num_rows > 0 && $pezesha_customer_query->num_rows > 0 && $pezesha_customer_query->row['customer_id'] > 0) {
                 $this->pezesha_customer_id = $pezesha_customer_query->row['pezesha_customer_id'];
                 $this->pezesha_customer_uuid = $pezesha_customer_query->row['customer_uuid'];
-                $this->pezesha_identifier = $pezesha_customer_query->row['customer_id'];
+                $this->pezesha_identifier = $pezesha_customer_query->row['prefix'] . '' . $pezesha_customer_query->row['customer_id'];
                 $this->credit_period = $pezesha_customer_query->row['credit_period'];
             } else {
                 $this->pezesha_customer_id = NULL;

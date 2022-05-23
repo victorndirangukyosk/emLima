@@ -120,6 +120,9 @@ class ControllerCommonMenu extends Controller {
         $data['order_delivaries'] = $this->url->link('sale/amitruckdelivaries', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_product_missing'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_product_missing_products'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_missing_products_revenue'] = $this->url->link('report/missing_products_revenue', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_product_received_sold'] = $this->url->link('report/product_received_sold', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_order_product_missing_products'] = $this->url->link('report/order_product_missing_products', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_product_accept_reject_products'] = $this->url->link('sale/order_product_accept_reject_products', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token=' . $this->session->data['token'], 'SSL');
         $data['vendor_order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
@@ -327,6 +330,9 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_order_delivaries'] = $this->user->hasPermission('access', 'sale/amitruckdelivaries');
         $data['preturn_order_product_missing'] = $this->user->hasPermission('access', 'sale/order_product_missing');
         $data['preturn_order_product_missing_products'] = $this->user->hasPermission('access', 'sale/order_product_missing_products');
+        $data['preturn_report_order_product_missing_products'] = $this->user->hasPermission('access', 'report/order_product_missing_products');
+        $data['preturn_report_missing_products_revenue'] = $this->user->hasPermission('access', 'report/missing_products_revenue');
+        $data['preturn_report_product_received_sold'] = $this->user->hasPermission('access', 'report/product_received_sold');
         $data['preturn_order_product_accept_reject_products'] = $this->user->hasPermission('access', 'sale/order_product_accept_reject_products');
         $data['preturn_order_recurring'] = $this->user->hasPermission('access', 'sale/recurring');
         $data['preturn_return'] = $this->user->hasPermission('access', 'sale/return');
@@ -545,6 +551,9 @@ class ControllerCommonMenu extends Controller {
         $data['order_delivaries'] = $this->url->link('sale/amitruckdelivaries', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_product_missing'] = $this->url->link('sale/order_product_missing', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_product_missing_products'] = $this->url->link('sale/order_product_missing_products', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_order_product_missing_products'] = $this->url->link('report/order_product_missing_products', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_missing_products_revenue'] = $this->url->link('report/missing_products_revenue', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_product_received_sold'] = $this->url->link('report/product_received_sold', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_product_accept_reject_products'] = $this->url->link('sale/order_product_accept_reject_products', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token=' . $this->session->data['token'], 'SSL');
 

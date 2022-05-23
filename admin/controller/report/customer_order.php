@@ -279,10 +279,18 @@ class ControllerReportCustomerOrder extends Controller
                         break;
                     }
                 }
+                $transcation_id =  $this->model_sale_order->getOrderTransactionIdandDate($result['order_id']);
+                if (!empty($transcation_id)) {
+                    $transaction_id_value=$transcation_id['transaction_id'];
+                    $transaction_id_date=$transcation_id['created_at'];
+                }
+                else{
+                    $transaction_id_value='';
+                    $transaction_id_date='';
+                }
                 if($result['paid']=='N')
                 {
                     //check transaction Id Exists are not// if exists, it is paid order,
-                   $transcation_id =  $this->model_sale_order->getOrderTransactionId($result['order_id']);
                     if (!empty($transcation_id)) {
                         $result['paid']='Paid';
                         $result['amountpaid']=$sub_total;
@@ -310,6 +318,8 @@ class ControllerReportCustomerOrder extends Controller
                     $result['pendingamount']=$sub_total-$result['amountpaid'];
                 }
                 $data['customers'][] = [
+                'customer_id' => $result['customer_id'],
+                'payment_method' => $result['payment_method'],
                 'company' => $result['company'],
                 'customer' => $result['customer'],
                 'email' => $result['email'],
@@ -327,10 +337,16 @@ class ControllerReportCustomerOrder extends Controller
                 'paid'=> $result['paid'],
                 'amountpaid'=> number_format($result['amountpaid'],2),
                 'pendingamount'=> number_format($result['pendingamount'],2),
+                'paid_to'=> $result['paid_to'],
+                'transaction_id'=> $transaction_id_value,
+                'transaction_id_date'=>$transaction_id_date? date($this->language->get('date_format_short'), strtotime($transaction_id_date)):'',
+                
+
+                
             ];
             }
         }
-        //   echo "<pre>";print_r($data['customers']);die;
+        //   echo "<pre>";print_r($data['   customers']);die;
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_list'] = $this->language->get('text_list');
