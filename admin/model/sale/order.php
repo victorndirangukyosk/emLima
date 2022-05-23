@@ -6146,4 +6146,68 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
+
+
+
+    public function getMissingProductsSummary($data = []) {
+        $sql = "SELECT mp.product_store_id,mp.name,mp.unit,sum(mp.quantity_required) as quanity,sum(mp.total) as total FROM `" . DB_PREFIX . 'missing_products` mp  join hf7_order o on mp.order_id =o.order_id';
+        $sql .= " where o.order_status_id not in (6,8,9,16)  ";
+
+         
+
+        //   echo "<pre>";print_r($data['filter_order_type']);die; 
+
+        if (!empty($data['filter_name'])) {
+            $sql .= " AND mp.name LIKE '%" . $data['filter_name'] . "%'";
+        }
+         
+
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_to'])) {
+            $sql .= " AND DATE(mp.created_at) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        
+
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_to'])) {
+            $sql .= " AND DATE(mp.created_at) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_to']) . "')";
+        }
+
+        
+
+        $sort_data = [
+            'mp.product_store_id',             
+            'mp.name',
+        ];
+        $sql .= " Group by mp.product_store_id,mp.name, mp.unit  ";
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY mp.name';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        // echo "<pre>";print_r($sql);die;
+        $log = new Log('error.log');
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
 }
