@@ -636,8 +636,18 @@
                     <?php } ?>
 
                      
+           
+
 
                 </ul>
+
+                  <ul>  
+
+                    <?php if($preturn_report_product_received_sold) { ?>  
+            <li><a href="<?php echo $report_product_received_sold; ?>">Product Received and Sold</a></li>
+            <?php } ?>
+
+            </ul>
             </li>
             <?php } ?>
             <?php if( $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false ) { ?>
