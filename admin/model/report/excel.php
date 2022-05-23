@@ -12888,4 +12888,162 @@ class ModelReportExcel extends Model {
     }
 
 
+
+    public function download_product_received_sold_excel($filter_data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        $this->load->language('inventory/wastage');
+        $this->load->model('inventory/product_received_sold');
+
+
+
+        
+        $results = $this->model_inventory_product_received_sold->getProductsReceivedSold($filter_data);
+        // echo '<pre>';print_r($results);die;
+
+        
+        foreach ($results as $result) {
+
+ 
+
+                $data['products'][] = [
+
+                    'product_store_id' => $result['product_id'],
+                    // 'product_id' => $result['product_id'],
+                    'name' => $result['name'],//product_name
+                    'unit' => $result['unit'],
+                    'procured_qty' => $result['procured_qty'],
+                    'rejected_qty' => $result['rejected_qty'],
+                    'sold_qty' => $result['quantity'],
+                    // 'date_added' => $result['date_added'],
+                    // 'added_by_user' => $result['added_by_user'],
+                    // 'cumulative_wastage' => $result['cumulative_wastage'],
+                    // 'date_added' => $result['date_added'],
+
+                ];
+            }
+
+
+      
+
+        $rows =  $data['products'];
+
+        // echo "<pre>";print_r($filter_data);die;
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Product Received and Sold')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:F2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Products Received and Sold');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:F2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+            $from = date('d-m-Y', strtotime($filter_data['filter_date_added']));
+            $to = date('d-m-Y', strtotime($filter_data['filter_date_added_to']));
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:F3');
+            $html = 'FROM ' . $from . ' TO ' . $to;
+                if(isset($filter_data['filter_date_added']) && isset($filter_data['filter_date_added_to'])){
+            $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
+                }
+            else{
+                $objPHPExcel->getActiveSheet()->setCellValue('A3','');
+
+            }
+            $objPHPExcel->getActiveSheet()->getStyle('A1:F3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            /* $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20); */
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Product Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Unit');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Received Quantity');
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Rejected Quantity');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Sold Quantity');
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+
+            // Fetching the table data
+            $row = 5;
+            foreach ($rows as $result) {
+                /* if($result['pt']) {
+                  $amount = $result['pt'];
+                  }else{
+                  $amount = 0;
+                  } */
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['product_store_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['unit']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['procured_qty']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['rejected_qty']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['sold_qty']);
+
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+            /* $objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+              // Sending headers to force the user to download the file
+              header('Content-Type: application/vnd.ms-excel'); */
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+            header('Content-Disposition: attachment;filename="product_received_sold_report.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
+
 }
