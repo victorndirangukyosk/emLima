@@ -587,6 +587,12 @@
             <li><a href="<?php echo $report_order_product_missing_products; ?>">Missing Order Products</a></li>
             <?php } ?>
 
+
+             <?php if($preturn_report_missing_products_revenue) { ?>  
+            <li><a href="<?php echo $report_missing_products_revenue; ?>">Missing Products Revenue Lost</a></li>
+            <?php } ?>
+
+
                 </ul>
             </li>
             <?php } ?>
