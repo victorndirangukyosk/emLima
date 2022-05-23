@@ -123,10 +123,11 @@ class ModelSaleOrderReceivables extends Model
     }
 
 
-    public function confirmPaymentReceived($paid_order_id, $transaction_id, $amount_received = 0) {
+    public function confirmPaymentReceived($paid_order_id, $transaction_id, $amount_received = 0,$paid_to = '') {
   
-            $this->db->query('update `' . DB_PREFIX . 'order` SET paid="Y" , amount_partialy_paid = 0 WHERE order_id="' . $paid_order_id . '"');
-            // echo 'update `' . DB_PREFIX . 'order` SET paid="Y" , amount_partialy_paid = amount_partialy_paid+"'.$amount_received.'" WHERE order_id="' . $paid_order_id . '"';die;
+
+            $this->db->query('update `' . DB_PREFIX . 'order` SET paid="Y" , amount_partialy_paid = 0,paid_to="'.$paid_to.'" WHERE order_id="' . $paid_order_id . '"');
+            // echo 'update `' . DB_PREFIX . 'order` SET paid="Y" , amount_partialy_paid = 0,paid_to="'.$paid_to.'" WHERE order_id="' . $paid_order_id . '"';die;
             
             $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $paid_order_id . "'";
 
@@ -139,12 +140,12 @@ class ModelSaleOrderReceivables extends Model
     }
 
 
-    public function confirmPartialPaymentReceived($paid_order_id, $transaction_id='', $amount_received = '',$amount_partialy_paid=0) {
+    public function confirmPartialPaymentReceived($paid_order_id, $transaction_id='', $amount_received = '',$amount_partialy_paid=0,$paid_to='') {
   
         // $this->db->query('update `' . DB_PREFIX . 'order` SET amount_partialy_paid='" .  $amount_partialy_paid . "'  WHERE order_id="' . $paid_order_id . '"');
         
 
-        $sql = 'UPDATE ' . DB_PREFIX . "order SET amount_partialy_paid = '" . $amount_partialy_paid . "', paid = 'P' WHERE order_id = '" . (int) $paid_order_id . "'";
+        $sql = 'UPDATE ' . DB_PREFIX . "order SET amount_partialy_paid = '" . $amount_partialy_paid . "', paid = 'P',paid_to='".$paid_to."' WHERE order_id = '" . (int) $paid_order_id . "'";
 
         $query = $this->db->query($sql);
         $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $paid_order_id . "'";
@@ -179,7 +180,7 @@ class ModelSaleOrderReceivables extends Model
 
     public function getSuccessfulOrderReceivables($data = [])
     {
-        $sql = "SELECT o.order_id, c.customer_id,c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer,c.company_name as company, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
+        $sql = "SELECT o.order_id, c.customer_id,c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer,c.company_name as company, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid,o.paid_to FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
 
         $sql .= " Where (o.paid = 'Y' || o.paid = 'P')   ";//and  ot.transaction_id  is null
 
@@ -300,7 +301,7 @@ class ModelSaleOrderReceivables extends Model
 
     public function reversePaymentReceived($paid_order_id, $amount_received = '') {
     
-        $this->db->query('update `' . DB_PREFIX . 'order` SET paid="N", amount_partialy_paid = 0 WHERE order_id="' . $paid_order_id . '"');
+        $this->db->query('update `' . DB_PREFIX . 'order` SET paid="N", amount_partialy_paid = 0,paid_to="" WHERE order_id="' . $paid_order_id . '"');
     
         
         $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $paid_order_id . "'";

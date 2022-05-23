@@ -88,6 +88,13 @@ class ControllerSaleCustomer extends Controller {
             $filter_status = null;
         }
 
+
+        if (isset($this->request->get['filter_pezesha'])) {
+            $filter_pezesha = $this->request->get['filter_pezesha'];
+        } else {
+            $filter_pezesha = null;
+        }
+
         if (isset($this->request->get['filter_approved'])) {
             $filter_approved = $this->request->get['filter_approved'];
         } else {
@@ -182,6 +189,7 @@ class ControllerSaleCustomer extends Controller {
             'filter_telephone' => $filter_telephone,
             'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
+            'filter_pezesha' => $filter_pezesha,
             'filter_payment_terms' => $filter_payment_terms,
             'filter_customer_price_category' => $filter_customer_price_category,
             'filter_approved' => $filter_approved,
@@ -264,6 +272,10 @@ class ControllerSaleCustomer extends Controller {
 
             if (isset($this->request->get['filter_status'])) {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
+            }
+
+            if (isset($this->request->get['filter_pezesha'])) {
+                $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
             }
 
             if (isset($this->request->get['filter_payment_terms'])) {
@@ -414,6 +426,10 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
+            if (isset($this->request->get['filter_pezesha'])) {
+                $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
+            }
+
             if (isset($this->request->get['filter_payment_terms'])) {
                 $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
             }
@@ -544,6 +560,10 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
+            if (isset($this->request->get['filter_pezesha'])) {
+                $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
+            }
+
             if (isset($this->request->get['filter_payment_terms'])) {
                 $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
             }
@@ -672,6 +692,10 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
             }
 
+            if (isset($this->request->get['filter_pezesha'])) {
+                $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
+            }
+
             if (isset($this->request->get['filter_payment_terms'])) {
                 $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
             }
@@ -774,6 +798,10 @@ class ControllerSaleCustomer extends Controller {
 
             if (isset($this->request->get['filter_status'])) {
                 $url .= '&filter_status=' . $this->request->get['filter_status'];
+            }
+
+            if (isset($this->request->get['filter_pezesha'])) {
+                $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
             }
 
             if (isset($this->request->get['filter_payment_terms'])) {
@@ -883,6 +911,14 @@ class ControllerSaleCustomer extends Controller {
             $filter_status = $this->request->get['filter_status'];
         } else {
             $filter_status = null;
+        }
+
+
+
+        if (isset($this->request->get['filter_pezesha'])) {
+            $filter_pezesha = $this->request->get['filter_pezesha'];
+        } else {
+            $filter_pezesha = null;
         }
 
         if (isset($this->request->get['filter_payment_terms'])) {
@@ -1014,6 +1050,10 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_pezesha'])) {
+            $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
+        }
+
         if (isset($this->request->get['filter_payment_terms'])) {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
@@ -1106,6 +1146,7 @@ class ControllerSaleCustomer extends Controller {
             'filter_telephone' => $filter_telephone,
             'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
+            'filter_pezesha' => $filter_pezesha,
             'filter_payment_terms' => $filter_payment_terms,
             'filter_customer_price_category' => $filter_customer_price_category,
             'filter_approved' => $filter_approved,
@@ -1270,6 +1311,10 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_pezesha'])) {
+            $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
+        }
+
         if (isset($this->request->get['filter_payment_terms'])) {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
@@ -1365,6 +1410,11 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        
+        if (isset($this->request->get['filter_pezesha'])) {
+            $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
+        }
+
         if (isset($this->request->get['filter_payment_terms'])) {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
@@ -1441,6 +1491,7 @@ class ControllerSaleCustomer extends Controller {
         $data['filter_telephone'] = $filter_telephone;
         $data['filter_customer_group_id'] = $filter_customer_group_id;
         $data['filter_status'] = $filter_status;
+        $data['filter_pezesha'] = $filter_pezesha;
         $data['filter_payment_terms'] = $filter_payment_terms;
         $data['filter_customer_price_category'] = $filter_customer_price_category;
         $data['filter_approved'] = $filter_approved;
@@ -1513,6 +1564,12 @@ class ControllerSaleCustomer extends Controller {
             $filter_status = $this->request->get['filter_status'];
         } else {
             $filter_status = null;
+        }
+
+        if (isset($this->request->get['filter_pezesha'])) {
+            $filter_pezesha = $this->request->get['filter_pezesha'];
+        } else {
+            $filter_pezesha = null;
         }
 
         if (isset($this->request->get['filter_payment_terms'])) {
@@ -1643,6 +1700,11 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+
+        if (isset($this->request->get['filter_pezesha'])) {
+            $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
+        }
+
         if (isset($this->request->get['filter_payment_terms'])) {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
@@ -1731,6 +1793,7 @@ class ControllerSaleCustomer extends Controller {
             'filter_telephone' => $filter_telephone,
             'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
+            'filter_pezesha' => $filter_pezesha,
             'filter_payment_terms' => $filter_payment_terms,
             'filter_customer_price_category' => $filter_customer_price_category,
             'filter_approved' => $filter_approved,
@@ -1883,6 +1946,10 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+        if (isset($this->request->get['filter_pezesha'])) {
+            $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
+        }
+
         if (isset($this->request->get['filter_payment_terms'])) {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
@@ -1978,6 +2045,11 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
         }
 
+
+        if (isset($this->request->get['filter_pezesha'])) {
+            $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
+        }
+
         if (isset($this->request->get['filter_payment_terms'])) {
             $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
         }
@@ -2054,6 +2126,7 @@ class ControllerSaleCustomer extends Controller {
         $data['filter_telephone'] = $filter_telephone;
         $data['filter_customer_group_id'] = $filter_customer_group_id;
         $data['filter_status'] = $filter_status;
+        $data['filter_pezesha'] = $filter_pezesha;
         $data['filter_payment_terms'] = $filter_payment_terms;
         $data['filter_customer_price_category'] = $filter_customer_price_category;
         $data['filter_approved'] = $filter_approved;
@@ -2289,6 +2362,10 @@ class ControllerSaleCustomer extends Controller {
 
         if (isset($this->request->get['filter_status'])) {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
+        }
+
+        if (isset($this->request->get['filter_pezesha'])) {
+            $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
         }
 
         if (isset($this->request->get['filter_payment_terms'])) {
@@ -3520,6 +3597,67 @@ class ControllerSaleCustomer extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function autocompletebyCompany_pezesha() {
+        $json = [];
+
+        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
+
+            if (isset($this->request->get['filter_company'])) {
+                $filter_company = $this->request->get['filter_company'];
+            } else {
+                $filter_company = '';
+            }
+
+            $this->load->model('sale/customer');
+
+            $filter_data = [
+                'filter_name' => $filter_name,
+                'filter_company' => $filter_company,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_sale_customer->getCustomers_pezesha($filter_data);
+
+            foreach ($results as $result) {
+                if ($this->user->isVendor()) {
+                    $result['name'] = $result['firstname'];
+                }
+
+                $json[] = [
+                    'customer_id' => $result['customer_id'],
+                    'customer_group_id' => $result['customer_group_id'],
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                    'customer_group' => $result['customer_group'],
+                    'firstname' => $result['firstname'],
+                    'lastname' => $result['lastname'],
+                    'email' => $result['email'],
+                    'telephone' => $result['telephone'],
+                    'fax' => $result['fax'],
+                    'custom_field' => unserialize($result['custom_field']),
+                    'address' => $this->model_sale_customer->getAddresses($result['customer_id']),
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function customfield() {
         $json = [];
 
@@ -3685,6 +3823,84 @@ class ControllerSaleCustomer extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function autocompletecompany_pezesha() {
+        $json = [];
+
+        if (isset($this->request->get['filter_name'])) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
+
+            $this->load->model('sale/customer');
+
+            $filter_data = [
+                'filter_name' => $filter_name,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_sale_customer->getCompanies_pezesha($filter_data);
+            foreach ($results as $result) {
+                $json[] = [
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                    'customer_id' => $result['customer_id'],
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    
+    public function autocompletecompany_pezesha_all() {
+        $json = [];
+
+        if (isset($this->request->get['filter_name'])) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }
+
+            $this->load->model('sale/customer');
+
+            $filter_data = [
+                'filter_name' => $filter_name,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $results = $this->model_sale_customer->getCompanies_pezesha_all($filter_data);
+            foreach ($results as $result) {
+                $json[] = [
+                    'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
 
     public function autocompletepayment() {
         $json = [];
@@ -3942,6 +4158,10 @@ class ControllerSaleCustomer extends Controller {
 
         if (isset($this->request->get['filter_status'])) {
             $url .= '&filter_status=' . $this->request->get['filter_status'];
+        }
+
+        if (isset($this->request->get['filter_pezesha'])) {
+            $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
         }
 
         if (isset($this->request->get['filter_payment_terms'])) {
@@ -4355,6 +4575,13 @@ class ControllerSaleCustomer extends Controller {
             $filter_status = null;
         }
 
+
+        if (isset($this->request->get['filter_pezesha'])) {
+            $filter_pezesha = $this->request->get['filter_pezesha'];
+        } else {
+            $filter_pezesha = null;
+        }
+
         if (isset($this->request->get['filter_payment_terms'])) {
             $filter_payment_terms = $this->request->get['filter_payment_terms'];
         } else {
@@ -4470,6 +4697,7 @@ class ControllerSaleCustomer extends Controller {
             'filter_telephone' => $filter_telephone,
             'filter_customer_group_id' => $filter_customer_group_id,
             'filter_status' => $filter_status,
+            'filter_pezesha' => $filter_pezesha,
             'filter_payment_terms' => $filter_payment_terms,
             'filter_customer_price_category' => $filter_customer_price_category,
             'filter_approved' => $filter_approved,
@@ -4586,6 +4814,7 @@ class ControllerSaleCustomer extends Controller {
         $data['filter_telephone'] = $filter_telephone;
         $data['filter_customer_group_id'] = $filter_customer_group_id;
         $data['filter_status'] = $filter_status;
+        $data['filter_pezesha'] = $filter_pezesha;
         $data['filter_payment_terms'] = $filter_payment_terms;
         $data['filter_customer_price_category'] = $filter_customer_price_category;
         $data['filter_approved'] = $filter_approved;
