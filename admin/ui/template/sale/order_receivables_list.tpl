@@ -311,6 +311,10 @@
                                         <td class="text-left"> 
                                        Transaction ID
                                         </td>
+
+                                        <td class="text-left"> 
+                                       Paid To
+                                        </td>
                                    <!-- <td class="text-left">
                                         <?php if ($sort == 'o.date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_date_added; ?></a>
@@ -351,6 +355,7 @@
                                     <td class="text-right"><?php echo $order['pending_amount']; ?></td>
                                     <td class="text-left"><?php echo $order['transaction_id']; ?></td>
                                       <!--<td class="text-left"><?php echo $order['date_added']; ?></td> -->
+                                    <td class="text-left"><?php echo $order['paid_to']; ?></td>
                                     <td>
  
                                     <button class="btn btn-default" type="button" onclick="reverse_payment(<?= $order['order_id'].",'".$order['transaction_id'] ."','".$order['amount_partialy_paid'] ."'"?>);" >Reverse Payment</button>  
@@ -714,7 +719,7 @@ function showConfirmPopup($order_id,$order_value) {
         <div class="modal fade" id="paidModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content"  >
-                    <div class="modal-body"  style="height:385px;">
+                    <div class="modal-body"  style="height:485px;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <div class="store-find-block">
                             <div class="mydivsss">
@@ -748,6 +753,10 @@ function showConfirmPopup($order_id,$order_value) {
                                                                 <br/> </div> 
 
                                                 </div> 
+
+
+                                                 
+
                                                   
  
                                                  <div class="form-group">
@@ -758,6 +767,20 @@ function showConfirmPopup($order_id,$order_value) {
                                                     <br/> </div> 
                                                     
                                                 </div>
+
+                                                <div class="form-group">
+
+                                                    <label > Paid To </label>
+                                                        <div class="col-md-12">
+                                                        <select required name="paid_to" id="paid_to" style="max-width:100% ;" class="form-control">
+                                                        
+                                                        <option value="Bank Account Number" selected="selected">Bank Account Number</option>
+                                                        <option value="Mpesa">Mpesa</option>
+                                                        <option value="Pay bill No">Pay bill No</option>
+                                                        
+                                                    </select>      <br/>  <br/> </div> 
+
+                                                </div> 
                                                 
 
 
@@ -808,6 +831,7 @@ function showConfirmPopup($order_id,$order_value) {
         $('#paid-button').addClass('disabled');
         $('#paidModal-success-message').html('');
         var transactionid = $('input[name="transaction_id"]').val();
+        var paidto = $('select[name="paid_to"]').val();
         var amountreceived = 0;
         amountreceived =($('input[name="paid_amount"]').val());
         var orde_id =   $('input[name="paid_order_id"]').val() ;
@@ -878,7 +902,7 @@ function showConfirmPopup($order_id,$order_value) {
             url: 'index.php?path=sale/order_receivables/confirmBulkPaymentReceived&token=<?php echo $token; ?>',
             type: 'post',
             dataType: 'json',
-            data: 'selected=' + selected_order_id + '&transaction_id='+ transactionid+ '&grand_total='+ grand_total+ '&amount_received='+ amountreceived,
+            data: 'selected=' + selected_order_id + '&transaction_id='+ transactionid+ '&grand_total='+ grand_total+ '&amount_received='+ amountreceived+ '&paid_to='+ paidto,
             async: true,
             success: function(json) {
                 console.log(json); 
@@ -982,3 +1006,11 @@ function showConfirmPopup($order_id,$order_value) {
 
 </script>
 
+
+<style>
+
+.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn)
+{
+ width: 100%;
+}
+</style>
