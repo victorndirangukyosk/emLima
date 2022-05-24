@@ -2492,7 +2492,10 @@ function downloadOrdersonsolidated() {
             }
             
             var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
-            return n.value;
+            if(n.value!='on')
+            {
+                return n.value;
+                }
             }).join(',');
             console.log(selected_order_id);
             
@@ -2500,7 +2503,7 @@ function downloadOrdersonsolidated() {
                 url += '&selected_order_id=' + encodeURIComponent(selected_order_id);
             }
             
-
+             
               if((filter_order_from_id==''||filter_order_to_id=='') && filter_delivery_date=='' && filter_order_id=='' && selected_order_id=='')
             {
                 if((filter_date_added=='' || filter_date_added_end=='') && filter_delivery_date=='')
