@@ -13045,5 +13045,137 @@ class ModelReportExcel extends Model {
         }
     }
 
+    public function download_receivables_summary_excel($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+        // echo "<pre>";print_r($data);
+
+        $this->load->language('report/vendor_order');
+        $this->load->model('sale/order');
+        $results = $this->model_sale_order->getReceivablesSummary($data);
+       
+
+        if (is_array($results) && count($results) > 0) {
+            $log = new Log('error.log');
+            $log->write('Yes It Is Array');
+            foreach ($results as $result) {              
+                
+                $data['orders'][] = [
+                'company' => $result['company_name'],               
+                'customer' => $result['customer'],
+                'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
+                'order_total' => ($result['order_total']-$result['partialy_paid']),
+                // 'updated_total' => number_format($result['updated_total'],2),
+                // 'paid'=> $result['paid'],
+                // 'amountpaid'=> number_format($result['amountpaid'],2),
+                // 'pendingamount'=> number_format($result['pendingamount'],2),
+            ];
+            }
+        }
+        $rows=$data['orders'];
+        // echo "<pre>";print_r($rows);exit;
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Summary Sheet')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:D2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Receivables Summary');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:D2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:D2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('F')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 3, 'S.NO');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 3, 'Company');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 3, 'Customer');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 3, 'Sum of Total'); 
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 3)->applyFromArray($title); 
+            // Fetching the table data
+            $row = 4;
+
+            $i = 1;
+            foreach ($rows as $result) {
+
+                $datediff = strtotime($sendingDate) - strtotime($result['delivery_date']);
+
+                if ($result['company_name'] == '' || $result['company_name'] == NULL || $result['company_name'] == 'Individual ' || $result['company_name'] == 'Individual' || $result['company_name'] == 'N/A' || $result['company_name'] == 'n/a') {
+                    $result['company_name'] = $result['customer'];
+                }
+                // // echo "<pre>";print_r(strtotime($result['delivery_date']));
+                // // echo "<pre>";print_r(strtotime($sendingDate));
+                // // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
+                // $result['ageing'] = round($datediff / (60 * 60 * 24));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['company']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['customer']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['order_total']);
+
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $this->currency->format($result['order_total']));
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['ageing']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['status']);
+                $i++;
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="receivables_summary_sheet.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+ 
+            #endregion
+            exit;
+        } catch (Exception $e) {
+           
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
 
 }
