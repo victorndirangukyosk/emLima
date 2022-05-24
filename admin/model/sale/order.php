@@ -6210,4 +6210,88 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
+    public function getReceivablesSummary($data = []) {
+        $sql = "SELECT cust.customer_id, cust.company_name AS company_name,CONCAT(cust.firstname, ' ', cust.lastname) AS customer,  sum(o.total)as total, sum(o.amount_partialy_paid) as partialy_paid,sum(ot.value) as order_total FROM `" . DB_PREFIX . 'order` o ';
+        //    ('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id)';
+
+        $sql .= " WHERE o.order_status_id in(4,5) AND o.paid IN ('N', 'P') And ot.code = 'total' AND ot.title = 'Total' and cust.customer_id>0";
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $sql .= " and cust.status = '" . (int) $data['filter_status'] . "'";
+        }
+
+        if (isset($data['filter_payment_terms']) && !is_null($data['filter_payment_terms'])) {
+            $sql .= " and cust.payment_terms = '" . $data['filter_payment_terms'] . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        $sql .= ' Group  BY cust.company_name,cust.firstname';
+        $sql .= ' ORDER BY cust.company_name,cust.firstname';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        //   echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+
+    public function getTotalReceivablesSummary($data = []) {
+        $sql = "SELECT  count(distinct concat(cust.firstname,' ',cust.lastname)) as count FROM `" . DB_PREFIX . 'order` o ';
+        //    ('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id)';
+
+        $sql .= " WHERE o.order_status_id in(4,5) AND o.paid IN ('N', 'P') And ot.code = 'total' AND ot.title = 'Total'";
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $sql .= " and cust.status = '" . (int) $data['filter_status'] . "'";
+        }
+
+        if (isset($data['filter_payment_terms']) && !is_null($data['filter_payment_terms'])) {
+            $sql .= " and cust.payment_terms = '" . $data['filter_payment_terms'] . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+ 
+
+        //   echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+        //   echo "<pre>";print_r($query);die;
+
+        return $query->row['count'];
+    }
 }
