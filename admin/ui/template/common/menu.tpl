@@ -591,7 +591,9 @@
              <?php if($preturn_report_missing_products_revenue) { ?>  
             <li><a href="<?php echo $report_missing_products_revenue; ?>">Missing Products Revenue Lost</a></li>
             <?php } ?>
-
+ <?php if($preturn_report_receivables_summary) { ?>  
+            <li><a href="<?php echo $report_receivables_summary; ?>">Receivables Summary</a></li>
+            <?php } ?>
 
                 </ul>
             </li>
