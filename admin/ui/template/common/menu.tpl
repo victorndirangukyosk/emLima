@@ -540,7 +540,7 @@
                 </ul>
             </li>               
             <?php } ?>
-            <?php if( $preturn_sale_order != false || $preturn_sale_tax != false || $preturn_sale_transaction != false || $preturn_sale_payment != false  || $preturn_sale_shipping != false || $preturn_sale_return != false || $preturn_sale_coupon != false || $preturn_sale_advanced != false ) { ?>
+            <?php if( $preturn_sale_order != false || $preturn_sale_productmissing!=false || $preturn_sale_tax != false || $preturn_sale_transaction != false || $preturn_sale_payment != false  || $preturn_sale_shipping != false || $preturn_sale_return != false || $preturn_sale_coupon != false || $preturn_sale_advanced != false ) { ?>
             <li><a class="parent"><?php echo $text_sale; ?></a>
                 <ul>
                     <?php if($preturn_sale_order) { ?>
