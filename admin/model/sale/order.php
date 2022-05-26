@@ -6210,4 +6210,204 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
+    public function getReceivablesSummary($data = []) {
+        $sql = "SELECT cust.customer_id, cust.company_name AS company_name,CONCAT(cust.firstname, ' ', cust.lastname) AS customer,  sum(o.total)as total, sum(o.amount_partialy_paid) as partialy_paid,sum(ot.value) as order_total FROM `" . DB_PREFIX . 'order` o ';
+        //    ('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id)';
+
+        $sql .= " WHERE o.order_status_id in(4,5) AND o.paid IN ('N', 'P') And ot.code = 'total' AND ot.title = 'Total' and cust.customer_id>0";
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $sql .= " and cust.status = '" . (int) $data['filter_status'] . "'";
+        }
+
+        if (isset($data['filter_payment_terms']) && !is_null($data['filter_payment_terms'])) {
+            $sql .= " and cust.payment_terms = '" . $data['filter_payment_terms'] . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        $sql .= ' Group  BY cust.company_name,cust.firstname';
+        $sql .= ' ORDER BY cust.company_name,cust.firstname';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        //   echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+
+    public function getTotalReceivablesSummary($data = []) {
+        $sql = "SELECT  count(distinct concat(cust.firstname,' ',cust.lastname)) as count FROM `" . DB_PREFIX . 'order` o ';
+        //    ('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id)';
+
+        $sql .= " WHERE o.order_status_id in(4,5) AND o.paid IN ('N', 'P') And ot.code = 'total' AND ot.title = 'Total'";
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $sql .= " and cust.status = '" . (int) $data['filter_status'] . "'";
+        }
+
+        if (isset($data['filter_payment_terms']) && !is_null($data['filter_payment_terms'])) {
+            $sql .= " and cust.payment_terms = '" . $data['filter_payment_terms'] . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+ 
+
+        //   echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+        //   echo "<pre>";print_r($query);die;
+
+        return $query->row['count'];
+    }
+
+
+    public function getOrdersWithFilters($data = []) {
+        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,(SELECT cust.SAP_customer_no FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS SAP_customer_no,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method,o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id , o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
+        //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
+        // $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
+
+        $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
+
+        // if (isset($data['filter_order_status'])) {
+        $sql .= " WHERE o.order_status_id not in (6,8,9,16)  And o.order_status_id > '0'";
+
+        //} else {
+        // $sql .= " WHERE o.order_status_id > '0'";
+        // }
+
+
+        if (isset($data['filter_orders'])) {
+
+
+            $sql .= ' and  o.order_id in (' . $data['filter_orders'] . ')';
+        }
+        
+        if ($this->user->isVendor()) {
+            $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
+        }
+
+        if (!empty($data['filter_city']) && $data['filter_city'] != 'undefined') {
+            $sql .= " AND c.name LIKE '" . $data['filter_city'] . "%'";
+        }
+
+        if (!empty($data['filter_order_id']) && $data['filter_order_id'] != 'undefined') {
+            $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
+        }
+
+        if (!empty($data['filter_customer']) && $data['filter_customer'] != 'undefined') {
+            $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_vendor']) && $data['filter_vendor'] != 'undefined') {
+            $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';
+        }
+        // echo "<pre>";print_r($sql);die;
+        if (!empty($data['filter_store_name']) && $data['filter_store_name'] != 'undefined') {
+            $sql .= " AND o.store_name = '" . $data['filter_store_name'] . "'";
+        }
+
+        if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
+            $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
+        }
+
+        if (!empty($data['filter_delivery_method']) && $data['filter_delivery_method'] != 'undefined') {
+            $sql .= " AND o.shipping_method LIKE '%" . $data['filter_delivery_method'] . "%'";
+        }
+
+        if (!empty($data['filter_delivery_date']) && $data['filter_delivery_date'] != 'undefined') {
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
+        }
+
+        if (!empty($data['filter_date_added']) && $data['filter_date_added'] != 'undefined') {
+            $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+        //added below filter to get orders added after the given date time
+        if (!empty($data['filter_date_added_greater']) && $data['filter_date_added_greater'] != 'undefined') {
+            $sql .= " AND DATE(o.date_added) >= DATE('" . $this->db->escape($data['filter_date_added_greater']) . "')";
+        }
+
+        if (!empty($data['filter_date_modified']) && $data['filter_date_modified'] != 'undefined') {
+            $sql .= " AND DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
+        }
+
+        if (!empty($data['filter_total']) && $data['filter_total'] != 'undefined') {
+            $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
+        }
+
+        $sort_data = [
+            'o.order_id',
+            'customer',
+            'status',
+            'o.date_added',
+            'o.date_modified',
+            'o.total',
+            'c.name',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY o.order_id';
+        }
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+        //  echo "<pre>";print_r($sql);die;
+
+        return $query->rows;
+    }
+
 }

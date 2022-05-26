@@ -10395,4 +10395,214 @@ class ControllerSaleOrder extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+
+    public function consolidatedCalculationSheetWithFilters() {
+        if (isset($this->request->get['filter_delivery_date'])) {
+            $deliveryDate = $this->request->get['filter_delivery_date'];
+        } else {//consolidated orders data should not be more , so get delivery date
+            // $deliveryDate = date("Y-m-d");
+        }
+
+
+        if (isset($this->request->get['filter_order_status'])) {
+            $order_status = $this->request->get['filter_order_status'];
+        } else {
+            $order_status = null;
+        }
+
+        if (isset($this->request->get['filter_company'])) {
+            $company = $this->request->get['filter_company'];
+        } else {
+            $company = null;
+        }
+
+        if (isset($this->request->get['filter_customer'])) {
+            $customer = $this->request->get['filter_customer'];
+        } else {
+            $customer = null;
+        }
+
+        if (isset($this->request->get['filter_total'])) {
+            $total = $this->request->get['filter_total'];
+        } else {
+            $total = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_method'])) {
+            $delivery_method = $this->request->get['filter_delivery_method'];
+        } else {
+            $delivery_method = null;
+        }
+
+        if (isset($this->request->get['filter_payment'])) {
+            $payment = $this->request->get['filter_payment'];
+        } else {
+            $payment = null;
+        }
+
+        if (isset($this->request->get['filter_order_type'])) {
+            $order_type = $this->request->get['filter_order_type'];
+        } else {
+            $order_type = null;
+        }
+
+        if (isset($this->request->get['filter_order_from_id'])) {
+            $order_from_id = $this->request->get['filter_order_from_id'];
+        } else {
+            $order_from_id = null;
+        }
+
+        if (isset($this->request->get['filter_order_to_id'])) {
+            $order_to_id = $this->request->get['filter_order_to_id'];
+        } else {
+            $order_to_id = null;
+        }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $date_added = $this->request->get['filter_date_added'];
+        } else {
+            $date_added = null;
+        }
+
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $date_added_end = null;
+        }
+
+        if (isset($this->request->get['filter_order_id'])) {
+            $order_id = $this->request->get['filter_order_id'];
+        } else {
+            $order_id = null;
+        }
+
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $delivery_time_slot = $this->request->get['filter_delivery_time_slot'];
+        } else {
+            $delivery_time_slot = null;
+        }
+
+        if (isset($this->request->get['selected_order_id'])) {
+            $orders = $this->request->get['selected_order_id'];
+        } else {
+            $orders = null;
+        }
+        $filter_data = [
+            'filter_delivery_date' => $deliveryDate,
+            'filter_order_status' => $order_status,
+            'filter_company' => $company,
+            'filter_customer' => $customer,
+            'filter_total' => $total,
+            'filter_delivery_method' => $delivery_method,
+            'filter_payment' => $payment,
+            'filter_order_type' => $order_type,
+            'filter_order_type' => $order_type,
+            'filter_order_from_id' => $order_from_id,
+            'filter_order_to_id' => $order_to_id,
+            'filter_date_added' => $date_added,
+            'filter_date_added_end' => $date_added_end,
+            'filter_order_id' => $order_id,
+            'filter_orders' => $orders,
+            'filter_delivery_time' => $delivery_time_slot,
+        ];
+
+
+        $this->load->model('sale/order');
+        $results = $this->model_sale_order->getOrdersWithFilters($filter_data);
+
+        $data = [];
+
+        // echo "<pre>";print_r($results);die;
+
+        $totalOrdersAmount = 0;
+        foreach ($results as $order) {
+
+            $sub_total = 0;
+            $total = 0;
+            $delivery_charge = 0;
+            $delivery_charge_vat = 0;
+            $tax = 0;
+
+            $totals = $this->model_sale_order->getOrderTotals($order['order_id']);
+
+            //echo "<pre>";print_r($totals);die;
+            foreach ($totals as $total) {
+                if ('sub_total' == $total['code']) {
+                    $sub_total = $total['value'];
+                    //break;
+                }
+                if ('shipping' == $total['code']) {
+                    $delivery_charge = $total['value'];
+                }
+                if ('total' == $total['code']) {
+                    $total_full = $total['value'];
+                }
+                if ('delivery_vat' == $total['code']) {
+                    $delivery_charge_vat = $total['value'];
+                }
+                if ('tax' == $total['code']) {
+                    $tax = $total['value'];
+                }
+            }
+            // echo "<pre>";print_r($total);die;
+
+            $data['consolidation'][] = [
+                'delivery_date' => date("d-m-Y", strtotime($order['delivery_date'])),
+                'customer' => $order['customer'], //. ' Order#' . $order['order_id'],
+                'company_name' => $order['company_name'],
+                //'amount' => $order['total'],
+                'amount' => $total_full,
+                'delivery_charge' => $delivery_charge,
+                'delivery_charge_vat' => $delivery_charge_vat,
+                'SAP_customer_no' => $order['SAP_customer_no'],
+                'invoice_no' => 'KB' . $order['order_id'],
+                'SAP_document_no' => '',
+                'order_status' => $order['status'],
+                'color' => $delivery_charge_vat > 0 || $tax > 0 ? 1 : 0,
+            ];
+            // $totalOrdersAmount += $order['total'];
+        }
+        // echo "<pre>";print_r($data['consolidation']);die;
+        // $data['consolidation']['total'] = $totalOrdersAmount; 
+
+        foreach ($results as $index => $order) {
+            $sum = 0;
+            $tran_fee = 0;
+            $data['orders'][$index] = $order;
+            $orderProducts = $this->getOrderProductsWithVariancesNew($data['orders'][$index]['order_id']);
+
+            // $transaction_fee = $this->model_sale_order->getOrderTransactionFee($data['orders'][$index]['order_id']);
+            // if (is_array($transaction_fee) && count($transaction_fee) > 0 && $transaction_fee['order_id'] == $data['orders'][$index]['order_id']) {
+            //     $tran_fee = $transaction_fee['value'];
+            //     /* $log = new Log('error.log');
+            //       $log->write('transaction_fee');
+            //       $log->write($tran_fee);
+            //       $log->write($transaction_fee);
+            //       $log->write('transaction_fee'); */
+            // }
+
+
+            $data['orders'][$index]['products'] = $orderProducts;
+            /*
+              // foreach ($orderProducts as $item) {
+              //     $sum += $item['total_updatedvalue'];
+              // }
+              // $data['consolidation'][$index]['amount'] = $sum + $tran_fee;
+              // $totalOrdersAmount += $sum + $tran_fee;
+             */ //these lines commented to add delivery charge and no transaction fee
+            $totalOrdersAmount += $data['consolidation'][$index]['amount'];
+
+            $data['orders'][$index]['delivery_charge'] = $data['consolidation'][$index]['delivery_charge'];
+            $data['orders'][$index]['delivery_charge_vat'] = $data['consolidation'][$index]['delivery_charge_vat'];
+        }
+        $data['consolidation']['total'] = $totalOrdersAmount;
+
+        //   echo "<pre>";print_r($data);die;
+
+        $this->load->model('report/excel');
+        // $this->model_report_excel->download_consolidated_calculation_sheet_excel($data);
+        $this->model_report_excel->download_consolidated_products_calculation_sheet_excel($data);
+    }
+    
 }

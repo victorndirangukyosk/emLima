@@ -4,16 +4,22 @@
     <div class="page-header">
         <div class="container-fluid">
             <div class="pull-right">
+                 <?php if($this->user->hasPermission('modify', 'sale/order')){ ?>
+
                 <button type="" id="button-status-update" form="form-order" data-toggle="tooltip" title="<?php echo $button_status_update; ?>" class="btn btn-default"><i class="fa fa-refresh"></i></button>
                 <button type="" id="button-status-update-transit" form="form-order" data-toggle="tooltip" title="<?php echo $button_status_update_transit; ?>" class="btn btn-default"><i class="fa fa-cubes"></i></button>
                 <?php if (!$this->user->isVendor()): ?>
                         <button type="" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
                 <?php endif ?>  
+
                 <button type="" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
                 <button type="" id="button-invoice-pdf" form="form-order" formaction="<?php echo $invoicepdf; ?>" data-toggle="tooltip" title="Download Invoice" class="btn btn-default"><i class="fa fa-print"></i></button>
                 <button type="button" onclick="downloadOrderStickers();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders List"><i class="fa fa-download"></i></button>
                 <button type="button" onclick="downloadOrders();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders Excel"><i class="fa fa-download"></i></button>
                 <button type="button" onclick="downloadOrdersonsolidated();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Consolidated Excel"><i class="fa fa-download"></i></button>
+                <button type="button" onclick="downloadOrdersCalculationSheet();" data-toggle="tooltip" title="" class="btn btn-warning" data-original-title="Products with Prices Excel"><i class="fa fa-download"></i></button>
+               
+                 <?php } ?>  
                <?php if (!$this->user->isVendor()): ?>
                         <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
                 <?php endif ?>  
@@ -483,9 +489,10 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                                                 </a>-->  
                                                <?php } else { ?> 
+                                        <?php if($this->user->hasPermission('modify', 'sale/order')){ ?>
                                                
                                                <a href="#" id="updated_new_print_invoice"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>"  data-order-delivery-date="<?= $order['delivery_date'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
-                                           <?php } ?> 
+                                           <?php } ?>  <?php } ?>
                                             <?php } ?>
                                         
 
@@ -530,20 +537,25 @@
                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
                                        </a> 
                                        <?php } ?>
-                                       <?php if ($order['missing_products_count'] == 0 && $order['order_status_id'] == 1  && (!$this->user->isVendor()))    { ?>
-                                       <a href="#" data-toggle="tooltip" data-target="store_modal" title="Missed Products List" data-orderid="<?= $order['order_id'] ?>" id="order_products_list">
-                                       <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                                       </a> 
-                                       <?php } ?>
+                                      
                                         
                                         <?php if ($order['delivery_id'] == NULL && ($order['order_status_id'] == 1 ) && ($this->user->hasPermission('access', 'amitruck/amitruckquotes')) )   { ?>
                                        <a href="#" target="_blank" data-toggle="tooltip" title="Amitruck" data-orderid="<?= $order['order_id'] ?>" data-ordertotal="<?= $order['sub_total_custom'] ?>" id="assign_to_amitruck">
                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
                                         </a>
                                         <?php } ?>
+                                        <?php if($this->user->hasPermission('modify', 'sale/order')){ ?>
+
+                                         <?php if ($order['missing_products_count'] == 0 && $order['order_status_id'] == 1  && (!$this->user->isVendor()))    { ?>
+                                       <a href="#" data-toggle="tooltip" data-target="store_modal" title="Missed Products List" data-orderid="<?= $order['order_id'] ?>" id="order_products_list">
+                                       <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                                       </a> 
+                                       <?php } ?>
+                                       
                                         <a href="#" target="_blank" data-toggle="tooltip" title="Products List" data-orderid="<?= $order['order_id'] ?>" data-order-product-list="<?php echo $order['products_list']; ?>" id="download_product_list">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg>
                                         </a>
+                                           <?php } ?>
                                        </div>
                                     </td>
                                         
@@ -2492,7 +2504,10 @@ function downloadOrdersonsolidated() {
             }
             
             var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
-            return n.value;
+            if(n.value!='on')
+            {
+                return n.value;
+                }
             }).join(',');
             console.log(selected_order_id);
             
@@ -2500,7 +2515,7 @@ function downloadOrdersonsolidated() {
                 url += '&selected_order_id=' + encodeURIComponent(selected_order_id);
             }
             
-
+             
               if((filter_order_from_id==''||filter_order_to_id=='') && filter_delivery_date=='' && filter_order_id=='' && selected_order_id=='')
             {
                 if((filter_date_added=='' || filter_date_added_end=='') && filter_delivery_date=='')
@@ -2537,6 +2552,162 @@ function downloadOrdersonsolidated() {
             location = url;
             
 }
+
+function downloadOrdersCalculationSheet() {
+
+ 
+    url = 'index.php?path=sale/order/consolidatedCalculationSheetWithFilters&token=<?php echo $token; ?>';
+    var filter_order_status = $('select[name=\'filter_order_status\']').val();
+
+            console.log(filter_order_status);
+
+            if (filter_order_status != '*' && filter_order_status != '') {
+                url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
+            }
+
+            var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
+
+            if (filter_delivery_date != '*' && filter_delivery_date != '') {
+                url += '&filter_delivery_date=' + encodeURIComponent(filter_delivery_date);
+            }
+            
+            var filter_company = $('input[name=\'filter_company\']').val();
+
+            if (filter_company != '*' && filter_company != '') {
+                url += '&filter_company=' + encodeURIComponent(filter_company);
+            }
+            
+            var filter_customer = $('input[name=\'filter_customer\']').val();
+
+            if (filter_customer != '*' && filter_customer != '') {
+                url += '&filter_customer=' + encodeURIComponent(filter_customer);
+            }
+            
+            var filter_total = $('input[name=\'filter_total\']').val();
+
+            if (filter_total != '*' && filter_total != '') {
+                url += '&filter_total=' + encodeURIComponent(filter_total);
+            }
+            
+            var filter_delivery_method = $('input[name=\'filter_delivery_method\']').val();
+
+            if (filter_delivery_method != '*' && filter_delivery_method != '') {
+                url += '&filter_delivery_method=' + encodeURIComponent(filter_delivery_method);
+            }
+            
+            var filter_payment = $('input[name=\'filter_payment\']').val();
+
+            if (filter_payment != '*' && filter_payment != '') {
+                url += '&filter_payment=' + encodeURIComponent(filter_payment);
+            }
+            
+            var filter_order_type = $('select[name=\'filter_order_type\']').val();
+
+            if (filter_order_type != '*' && filter_order_type != '') {
+                url += '&filter_order_type=' + encodeURIComponent(filter_order_type);
+            }
+            
+
+              var filter_order_placed_from = $('select[name=\'filter_order_placed_from\']').val();
+
+            if (filter_order_placed_from != '*' && filter_order_placed_from != '') {
+                url += '&filter_order_placed_from=' + encodeURIComponent(filter_order_placed_from);
+            }
+            
+
+            
+            var filter_paid = $('select[name=\'filter_paid\']').val();
+
+            if (filter_paid != '*' && filter_paid != '') {
+                url += '&filter_paid=' + encodeURIComponent(filter_paid);
+            }
+            
+            var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
+
+            if (filter_order_from_id != '*' && filter_order_from_id != '') {
+                url += '&filter_order_from_id=' + encodeURIComponent(filter_order_from_id);
+            }
+            
+            var filter_order_to_id = $('input[name=\'filter_order_to_id\']').val();
+
+            if (filter_order_to_id != '*' && filter_order_to_id != '') {
+                url += '&filter_order_to_id=' + encodeURIComponent(filter_order_to_id);
+            }
+            
+            var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added != '*' && filter_date_added != '') {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+            
+            var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
+
+            if (filter_date_added_end != '*' && filter_date_added_end != '') {
+                url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
+            }
+            
+            var filter_order_id = $('input[name=\'filter_order_id\']').val();
+
+            if (filter_order_id != '*' && filter_order_id != '') {
+                url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
+            }
+            
+            var filter_delivery_time_slot = $('select[name=\'filter_delivery_time_slot\']').val();
+
+            if (filter_delivery_time_slot != '') {
+                url += '&filter_delivery_time_slot=' + encodeURIComponent(filter_delivery_time_slot);
+            }
+            
+            var selected_order_id = $.map($('input[name="selected[]"]:checked'), function(n, i){
+            if(n.value!='on')
+            {
+                return n.value;
+                }
+            }).join(',');
+            console.log(selected_order_id);
+            
+            if (selected_order_id != '') {
+                url += '&selected_order_id=' + encodeURIComponent(selected_order_id);
+            }
+            
+             
+              if((filter_order_from_id==''||filter_order_to_id=='') && filter_delivery_date=='' && filter_order_id=='' && selected_order_id=='')
+            {
+                if((filter_date_added=='' || filter_date_added_end=='') && filter_delivery_date=='')
+                {
+                    alert("Please select  date filters or other ");
+                    return;
+                }
+           
+                // alert(filter_date_added_end);
+
+                    if(filter_date_added_end!='' && filter_date_added!='')
+                    {
+                        
+                        const date1 = new Date(filter_date_added);
+                        const date2 = new Date(filter_date_added_end);
+                        const diffTime = Math.abs(date2 - date1);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                        console.log(diffTime + " milliseconds");
+                        console.log(diffDays + " days");
+                        if(diffDays<0)
+                        {
+                        alert("Please select proper start & end date filters");
+                                        return;
+                        }
+                        if(diffDays>60)
+                        {
+                            alert("Duration between start & end date filters should be less than 60 days");
+                                        return;
+                        }
+                    }
+            }
+
+
+            location = url;
+            
+}
+
 function downloadOrders() {
 
 
