@@ -4,17 +4,22 @@
     <div class="page-header">
         <div class="container-fluid">
             <div class="pull-right">
+                 <?php if($this->user->hasPermission('modify', 'sale/order')){ ?>
+
                 <button type="" id="button-status-update" form="form-order" data-toggle="tooltip" title="<?php echo $button_status_update; ?>" class="btn btn-default"><i class="fa fa-refresh"></i></button>
                 <button type="" id="button-status-update-transit" form="form-order" data-toggle="tooltip" title="<?php echo $button_status_update_transit; ?>" class="btn btn-default"><i class="fa fa-cubes"></i></button>
                 <?php if (!$this->user->isVendor()): ?>
                         <button type="" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
                 <?php endif ?>  
+
                 <button type="" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
                 <button type="" id="button-invoice-pdf" form="form-order" formaction="<?php echo $invoicepdf; ?>" data-toggle="tooltip" title="Download Invoice" class="btn btn-default"><i class="fa fa-print"></i></button>
                 <button type="button" onclick="downloadOrderStickers();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders List"><i class="fa fa-download"></i></button>
                 <button type="button" onclick="downloadOrders();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders Excel"><i class="fa fa-download"></i></button>
                 <button type="button" onclick="downloadOrdersonsolidated();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Consolidated Excel"><i class="fa fa-download"></i></button>
                 <button type="button" onclick="downloadOrdersCalculationSheet();" data-toggle="tooltip" title="" class="btn btn-warning" data-original-title="Products with Prices Excel"><i class="fa fa-download"></i></button>
+               
+                 <?php } ?>  
                <?php if (!$this->user->isVendor()): ?>
                         <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
                 <?php endif ?>  
@@ -484,9 +489,10 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                                                 </a>-->  
                                                <?php } else { ?> 
+                                        <?php if($this->user->hasPermission('modify', 'sale/order')){ ?>
                                                
                                                <a href="#" id="updated_new_print_invoice"  data-order-vendor="<?php echo $order['vendor_name']; ?>" data-order-invoice="<?php echo $order['invoice']; ?>" data-order-id="<?= $order['order_id'] ?>"  data-order-delivery-date="<?= $order['delivery_date'] ?>" data-toggle="tooltip" title="Print Invoice"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></a>
-                                           <?php } ?> 
+                                           <?php } ?>  <?php } ?>
                                             <?php } ?>
                                         
 
@@ -542,9 +548,12 @@
                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
                                         </a>
                                         <?php } ?>
+                                        <?php if($this->user->hasPermission('modify', 'sale/order')){ ?>
+
                                         <a href="#" target="_blank" data-toggle="tooltip" title="Products List" data-orderid="<?= $order['order_id'] ?>" data-order-product-list="<?php echo $order['products_list']; ?>" id="download_product_list">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg>
                                         </a>
+                                           <?php } ?>
                                        </div>
                                     </td>
                                         
