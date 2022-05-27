@@ -457,6 +457,7 @@ class ControllerCommonHome extends Controller {
                     // $bccemail = "sridivya.talluri@technobraingroup.com";
                     //  echo "<pre>";print_r($file_data);die;
                     $filepath = DIR_UPLOAD . "careers/" . $file_upload_status['file_name'];
+                    try{
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($email);
                     $mail->setBCC($bccemail);
@@ -466,6 +467,12 @@ class ControllerCommonHome extends Controller {
                     $mail->setHTML($message);
                     $mail->addAttachment($filepath);
                     $mail->send();
+                    }
+                    catch(exception $ex)
+                    {
+                        $log = new Log('error.log');
+                        $log->write('Mail Sending failed.MAilgun error');
+                    }
 
                     try
                     {
@@ -497,7 +504,8 @@ class ControllerCommonHome extends Controller {
                     }
                     catch(exception $ex)
                     {
-                       
+                        $log = new Log('error.log');
+                        $log->write('Mail Sending failed.MAilgun error');
                     }
                 }
             } else {
