@@ -434,7 +434,10 @@ class ControllerCommonHome extends Controller {
                 $id = $this->model_information_careers->createCareers($first_name, str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), $email, $phone, str_replace("'", "", $this->request->post['careers-job-id']), str_replace("'", "", $this->request->post['careers-cover-letter']), $file_upload_status['file_name'], str_replace("'", "", $this->request->post['careers-job-position']));
                 $status = true;
                 $success_message = 'Thank you we will contact you shortly';
-
+                $jobposition = str_replace("'", "", $this->request->post['careers-job-position']);
+                $log->write($jobposition);
+                $log->write('jobposition');
+                
                 if ($id > 0) {
 
                     //send mail notification to 'stalluri@technobraingroup.com'
@@ -457,6 +460,7 @@ class ControllerCommonHome extends Controller {
                     // $bccemail = "sridivya.talluri@technobraingroup.com";
                     //  echo "<pre>";print_r($file_data);die;
                     $filepath = DIR_UPLOAD . "careers/" . $file_upload_status['file_name'];
+                    try{
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($email);
                     $mail->setBCC($bccemail);
@@ -466,17 +470,23 @@ class ControllerCommonHome extends Controller {
                     $mail->setHTML($message);
                     $mail->addAttachment($filepath);
                     $mail->send();
+                    }
+                    catch(exception $ex)
+                    {
+                        $log = new Log('error.log');
+                        $log->write('Mail Sending failed.MAilgun error');
+                    }
 
                     try
                     {
                         $subject_person='CV Received';
                         $message_person='';
-                        $message_person =  "<br>Dear " . $first_name . "<br><br>";
+                        $message_person =  "<br>Dear " . $first_name . ",<br><br>";
 
                         if ($jobposition != "")
                         $message_person = $message_person ."Thank you for your application for the role of  " . $jobposition . ".<br><br>";
                     else
-                        $message_person = $message_person ."Thank you for your application for the role.  <br><br>";
+                        $message_person = $message_person ."Thank you for your application .  <br><br>";
                         
                         $message_person = $message_person . "Your application is being reviewed by our HR team. We will consider your employment and qualification credentials against the criteria required for the role. <br><br>";
                         $message_person = $message_person . "We regret that due to the high volume of CV’s we receive, we may not be able to respond to all applications individually. We will contact you within the next 7 days if your skills and experience are suitable to the job description, or if there is a similar opportunity presently available. <br><br><br>";
@@ -497,7 +507,8 @@ class ControllerCommonHome extends Controller {
                     }
                     catch(exception $ex)
                     {
-                       
+                        $log = new Log('error.log');
+                        $log->write('Mail Sending failed.MAilgun error');
                     }
                 }
             } else {
