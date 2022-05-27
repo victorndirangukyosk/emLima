@@ -434,7 +434,10 @@ class ControllerCommonHome extends Controller {
                 $id = $this->model_information_careers->createCareers($first_name, str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), $email, $phone, str_replace("'", "", $this->request->post['careers-job-id']), str_replace("'", "", $this->request->post['careers-cover-letter']), $file_upload_status['file_name'], str_replace("'", "", $this->request->post['careers-job-position']));
                 $status = true;
                 $success_message = 'Thank you we will contact you shortly';
-
+                $jobposition = str_replace("'", "", $this->request->post['careers-job-position']);
+                $log->write($jobposition);
+                $log->write('jobposition');
+                
                 if ($id > 0) {
 
                     //send mail notification to 'stalluri@technobraingroup.com'
