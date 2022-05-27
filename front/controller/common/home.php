@@ -478,12 +478,12 @@ class ControllerCommonHome extends Controller {
                     {
                         $subject_person='CV Received';
                         $message_person='';
-                        $message_person =  "<br>Dear " . $first_name . "<br><br>";
+                        $message_person =  "<br>Dear " . $first_name . ",<br><br>";
 
                         if ($jobposition != "")
                         $message_person = $message_person ."Thank you for your application for the role of  " . $jobposition . ".<br><br>";
                     else
-                        $message_person = $message_person ."Thank you for your application for the role.  <br><br>";
+                        $message_person = $message_person ."Thank you for your application .  <br><br>";
                         
                         $message_person = $message_person . "Your application is being reviewed by our HR team. We will consider your employment and qualification credentials against the criteria required for the role. <br><br>";
                         $message_person = $message_person . "We regret that due to the high volume of CV’s we receive, we may not be able to respond to all applications individually. We will contact you within the next 7 days if your skills and experience are suitable to the job description, or if there is a similar opportunity presently available. <br><br><br>";
