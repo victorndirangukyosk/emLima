@@ -102,7 +102,7 @@
         </ul>
     </li>
     <?php } ?>
-    <?php if($preturn_vendor_product) { ?>  
+    <?php if($preturn_category_prices) { ?>  
     <li id="simple-blog">
         <a class="parent"><i class="fa fa-tags fa-fw"></i> <span>Category Prices</span></a>
         <ul>

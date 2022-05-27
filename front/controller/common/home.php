@@ -391,6 +391,33 @@ class ControllerCommonHome extends Controller {
         //   echo "<pre>";print_r($data);die;
     }
 
+
+    public function job_opening_details_saved($id = 0, $message = "", $errormessage = "") {
+        $data['site_key'] = $this->config->get('config_google_captcha_public');
+        if (isset($this->request->get['id'])) {
+            $filter['id'] = $this->request->get['id'];
+        } else {
+            $filter['id'] = $id;
+        }
+        // echo  ($id);die;
+        // $this->load->model('information/careers');
+
+        // $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter);
+        // $data['jobpositions'][0]['site_key'] = $this->config->get('config_google_captcha_public');
+        // $data['jobpositions'][0]['action'] = $this->url->link('common/home/savecareers', '', 'SSL');
+        // $data['jobpositions'][0]['message'] = $message;
+        // $data['jobpositions'][0]['errormessage'] = $errormessage;
+        // if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+        //     //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+        //     $data['jobpositions'][0]['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        // } else {
+        //     $data['jobpositions'][0]['logo'] = 'assets/img/logo.svg';
+        // }
+        //   echo "<pre>";print_r($data['jobpositions'][0]);die;
+        // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
+        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening_saved.tpl', $data['jobpositions'][0]));
+    }
+
     public function job_opening_details($id = 0, $message = "", $errormessage = "") {
         $data['site_key'] = $this->config->get('config_google_captcha_public');
         if (isset($this->request->get['id'])) {
@@ -429,11 +456,15 @@ class ControllerCommonHome extends Controller {
                 $this->load->model('setting/setting');
                 $first_name = str_replace("'", "", $this->request->post['careers-first-name']);
                 $email = str_replace("'", "", $this->request->post['careers-email']);
+                $person_email= $email;
                 $phone = str_replace("'", "", $this->request->post['careers-phone-number']);
                 $id = $this->model_information_careers->createCareers($first_name, str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), $email, $phone, str_replace("'", "", $this->request->post['careers-job-id']), str_replace("'", "", $this->request->post['careers-cover-letter']), $file_upload_status['file_name'], str_replace("'", "", $this->request->post['careers-job-position']));
                 $status = true;
                 $success_message = 'Thank you we will contact you shortly';
-
+                $jobposition = str_replace("'", "", $this->request->post['careers-job-position']);
+                $log->write($jobposition);
+                $log->write('jobposition');
+                
                 if ($id > 0) {
 
                     //send mail notification to 'stalluri@technobraingroup.com'
@@ -456,6 +487,7 @@ class ControllerCommonHome extends Controller {
                     // $bccemail = "sridivya.talluri@technobraingroup.com";
                     //  echo "<pre>";print_r($file_data);die;
                     $filepath = DIR_UPLOAD . "careers/" . $file_upload_status['file_name'];
+                    try{
                     $mail = new Mail($this->config->get('config_mail'));
                     $mail->setTo($email);
                     $mail->setBCC($bccemail);
@@ -465,10 +497,50 @@ class ControllerCommonHome extends Controller {
                     $mail->setHTML($message);
                     $mail->addAttachment($filepath);
                     $mail->send();
+                    }
+                    catch(exception $ex)
+                    {
+                        $log = new Log('error.log');
+                        $log->write('Mail Sending failed.MAilgun error');
+                    }
+
+                    try
+                    {
+                        $subject_person='CV Received';
+                        $message_person='';
+                        $message_person =  "<br>Dear " . $first_name . ",<br><br>";
+
+                        if ($jobposition != "")
+                        $message_person = $message_person ."Thank you for your application for the role of  " . $jobposition . ".<br><br>";
+                    else
+                        $message_person = $message_person ."Thank you for your application .  <br><br>";
+                        
+                        $message_person = $message_person . "Your application is being reviewed by our HR team. We will consider your employment and qualification credentials against the criteria required for the role. <br><br>";
+                        $message_person = $message_person . "We regret that due to the high volume of CV’s we receive, we may not be able to respond to all applications individually. We will contact you within the next 7 days if your skills and experience are suitable to the job description, or if there is a similar opportunity presently available. <br><br><br>";
+
+                        $message_person = $message_person . "All the best!! <br><br>";
+                        $message_person = $message_person . "Regards,<br>";
+                        $message_person = $message_person . "KwikBasket";
+
+                        $mail = new Mail($this->config->get('config_mail'));
+                        $mail->setTo($person_email);
+                        $mail->setBCC($bccemail);
+                        $mail->setFrom($this->config->get('config_from_email'));
+                        $mail->setSender($this->config->get('config_name'));
+                        $mail->setSubject($subject_person);
+                        $mail->setHTML($message_person);
+                        $mail->send();
+
+                    }
+                    catch(exception $ex)
+                    {
+                        $log = new Log('error.log');
+                        $log->write('Mail Sending failed.MAilgun error');
+                    }
                 }
             } else {
                 $status = true;
-                $error_message = 'Please upload correct file and data';
+                $error_message = 'Please upload correct file and data with less than 2 MB';
             }
 
 
@@ -476,10 +548,17 @@ class ControllerCommonHome extends Controller {
         }
         // $this->response->setOutput(json_encode($json));
         if ($this->request->post['careers-job-id'] == 0)
+        {
             $this->careers(0, $success_message, $error_message);
+        }
         else
-            $this->job_opening_details($this->request->post['careers-job-id'], $success_message, $error_message);
+
+        {
+            // $this->job_opening_details($this->request->post['careers-job-id'], $success_message, $error_message);
+            $this->job_opening_details_saved($this->request->post['careers-job-id'], $success_message, $error_message);
         // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
+        }
+
     }
 
     public function FeatureFileUpload($file_data) {
