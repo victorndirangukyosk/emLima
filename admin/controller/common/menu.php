@@ -250,6 +250,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_vendor'] = $this->url->link('report/vendor', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['vendor_product'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'], 'SSL');
+        // $data['category_price'] = $this->url->link('category/price', 'token=' . $this->session->data['token'], 'SSL');
         $data['inventory_wastage'] = $this->url->link('inventory/inventory_wastage', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_inventory_wastage'] = $this->url->link('report/inventory_wastage', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_inventory_wastage_consolidated'] = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'], 'SSL');
@@ -495,6 +496,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_marketing'] = $this->user->hasPermission('access', 'report/marketing');
 
         $data['preturn_vendor_product'] = $this->user->hasPermission('access', 'catalog/vendor_product');
+        $data['preturn_category_prices'] = $this->user->hasPermission('access', 'category/prices');
         $data['preturn_inventory_wastage'] = $this->user->hasPermission('access', 'inventory/inventory_wastage');
         $data['preturn_report_inventory_wastage'] = $this->user->hasPermission('access', 'report/inventory_wastage');
         $data['preturn_report_inventory_wastage_consolidated'] = $this->user->hasPermission('access', 'report/inventory_wastage_consolidated');
