@@ -429,6 +429,7 @@ class ControllerCommonHome extends Controller {
                 $this->load->model('setting/setting');
                 $first_name = str_replace("'", "", $this->request->post['careers-first-name']);
                 $email = str_replace("'", "", $this->request->post['careers-email']);
+                $person_email= $email;
                 $phone = str_replace("'", "", $this->request->post['careers-phone-number']);
                 $id = $this->model_information_careers->createCareers($first_name, str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), $email, $phone, str_replace("'", "", $this->request->post['careers-job-id']), str_replace("'", "", $this->request->post['careers-cover-letter']), $file_upload_status['file_name'], str_replace("'", "", $this->request->post['careers-job-position']));
                 $status = true;
@@ -465,10 +466,43 @@ class ControllerCommonHome extends Controller {
                     $mail->setHTML($message);
                     $mail->addAttachment($filepath);
                     $mail->send();
+
+                    try
+                    {
+                        $subject_person='CV Received';
+                        $message_person='';
+                        $message_person =  "Dear " . $first_name . "<br>";
+
+                        if ($jobposition != "")
+                        $message_person = $message_person ."Thank you for your application for the role of  " . $jobposition . ".<br>";
+                    else
+                        $message_person = $message_person ."Thank you for your application for the role.  <br>";
+                        
+                        $message_person = $message_person . "Your application is being reviewed by our HR team. We will consider your employment and qualification credentials against the criteria required for the role. </br>";
+                        $message_person = $message_person . "We regret that due to the high volume of CV’s we receive, we may not be able to respond to all applications individually. We will contact you within the next 7 days if your skills and experience are suitable to the job description, or if there is a similar opportunity presently available. <br><br>";
+
+                        $message_person = $message_person . "All the best!! <br>";
+                        $message_person = $message_person . "Regards,<br>";
+                        $message_person = $message_person . "KwikBasket";
+
+                        $mail = new Mail($this->config->get('config_mail'));
+                        $mail->setTo($person_email);
+                        $mail->setBCC($bccemail);
+                        $mail->setFrom($this->config->get('config_from_email'));
+                        $mail->setSender($this->config->get('config_name'));
+                        $mail->setSubject($subject_person);
+                        $mail->setHTML($message_person);
+                        $mail->send();
+
+                    }
+                    catch(exception $ex)
+                    {
+                       
+                    }
                 }
             } else {
                 $status = true;
-                $error_message = 'Please upload correct file and data';
+                $error_message = 'Please upload correct file and data with less than 2 MB';
             }
 
 
