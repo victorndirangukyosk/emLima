@@ -400,9 +400,9 @@ class ControllerCommonHome extends Controller {
             $filter['id'] = $id;
         }
         // echo  ($id);die;
-        // $this->load->model('information/careers');
+        $this->load->model('information/careers');
 
-        // $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter);
+        $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter);
         // $data['jobpositions'][0]['site_key'] = $this->config->get('config_google_captcha_public');
         // $data['jobpositions'][0]['action'] = $this->url->link('common/home/savecareers', '', 'SSL');
         // $data['jobpositions'][0]['message'] = $message;
