@@ -400,19 +400,19 @@ class ControllerCommonHome extends Controller {
             $filter['id'] = $id;
         }
         // echo  ($id);die;
-        // $this->load->model('information/careers');
+        $this->load->model('information/careers');
 
-        // $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter);
+        $data['jobpositions'] = $this->model_information_careers->getJobPositions($filter);
         // $data['jobpositions'][0]['site_key'] = $this->config->get('config_google_captcha_public');
         // $data['jobpositions'][0]['action'] = $this->url->link('common/home/savecareers', '', 'SSL');
         // $data['jobpositions'][0]['message'] = $message;
         // $data['jobpositions'][0]['errormessage'] = $errormessage;
-        // if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
-        //     //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
-        //     $data['jobpositions'][0]['logo'] = $server . 'image/' . $this->config->get('config_logo');
-        // } else {
-        //     $data['jobpositions'][0]['logo'] = 'assets/img/logo.svg';
-        // }
+        if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
+            //$data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'),200,110);
+            $data['jobpositions'][0]['logo'] = $server . 'image/' . $this->config->get('config_logo');
+        } else {
+            $data['jobpositions'][0]['logo'] = 'assets/img/logo.svg';
+        }
         //   echo "<pre>";print_r($data['jobpositions'][0]);die;
         // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening_saved.tpl', $data['jobpositions'][0]));
