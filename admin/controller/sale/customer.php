@@ -3498,6 +3498,7 @@ class ControllerSaleCustomer extends Controller {
             $filter_data = [
                 'filter_name' => $filter_name,
                 'filter_email' => $filter_email,
+                'filter_sub_customer_show' => 1,
                 'start' => 0,
                 'limit' => 5,
             ];
@@ -3558,6 +3559,7 @@ class ControllerSaleCustomer extends Controller {
             $filter_data = [
                 'filter_name' => $filter_name,
                 'filter_company' => $filter_company,
+                'filter_sub_customer_show' => 1,
                 'start' => 0,
                 'limit' => 5,
             ];
@@ -3799,6 +3801,7 @@ class ControllerSaleCustomer extends Controller {
 
             $filter_data = [
                 'filter_name' => $filter_name,
+                'filter_sub_customer_show' => 1,
                 'start' => 0,
                 'limit' => 5,
             ];
