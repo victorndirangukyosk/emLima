@@ -259,6 +259,8 @@ class ControllerAccountOrder extends Controller {
                 //'edit_own_order' => $this->url->link('checkout/edit_order/index_new', 'order_id=' . $result['order_id'], 'SSL'),
                 'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours <= 2 && $result['paid'] == 'N' && $result['payment_code'] == 'cod') ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
                 'paid' => $result['paid'],
+                'paid_status' => $result['paid'] =='P' ? 'Partially Paid' : ($result['paid'] =='Y' ? 'Paid' : 'Pending'),
+
                 'products_missed' => $result['delivery_date'] == date('Y-m-d') && ($result['order_status_id'] == 4 || $result['order_status_id'] == 5) ? 1 : 0,
                 'products_rejected' => $result['delivery_date'] == date('Y-m-d') && ($result['order_status_id'] == 4 || $result['order_status_id'] == 5) ? 1 : 0,
                 'missing_order_product_link' => $missing_order_product_link != NULL && $missing_order_product_link['link'] != NULL ? $missing_order_product_link['link'] : NULL,
