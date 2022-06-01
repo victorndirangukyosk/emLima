@@ -6487,11 +6487,13 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $order['name']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $order['unit_updated']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $order['quantity_updated']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, str_replace('KES', ' ', $order['total_updated']));
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, str_replace('KES', ' ', $order['total_updated']));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, round($order['total_updatedvalue'],2));
                 $Amount = $Amount + $order['total_updatedvalue'];
                 ++$row;
             }
-            $Amount = str_replace('KES', ' ', $this->currency->format($Amount));
+            // $Amount = str_replace('KES', ' ', $this->currency->format($Amount));
+            $Amount = round($Amount,2);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, $row)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, 'Amount');
@@ -6665,13 +6667,13 @@ class ModelReportExcel extends Model {
                 'editedproducts' => (int) $products_qty,
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
                 //'subtotal'     => $this->currency->format($sub_total),
-                'subtotalvalue' => $sub_total,
+                'subtotalvalue' => round($sub_total,2),
                 'po_number' => $result['po_number'],
                 'subtotal' => str_replace('KES', ' ', $this->currency->format($sub_total)),
                 'SAP_customer_no' => $result['SAP_customer_no'],
                 'paid' => $result['paid'],
-                'amountpaid' => number_format($result['amountpaid'], 2),
-                'pendingamount' => number_format($result['pendingamount'], 2),
+                'amountpaid' => round($result['amountpaid'], 2),
+                'pendingamount' => round($result['pendingamount'], 2),
                 'pendingamountvalue' => ($result['pendingamount']),
                 'paid_to'=> $result['paid_to'],
                 'transaction_id'=> $transaction_id_value,
@@ -6816,7 +6818,7 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['date_added']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['delivery_date']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['po_number']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['subtotal']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['subtotalvalue']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['amountpaid']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['pendingamount']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, $row, $result['transaction_id_date']);
@@ -7891,6 +7893,7 @@ class ModelReportExcel extends Model {
                 'orders' => $result['orders'],
                 'products' => $result['products'],
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
+                'total_value' => round($result['total'],2),
                 'edit' => $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
             ];
         }
@@ -7977,7 +7980,8 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['company']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['orders']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['products']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['total']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['total']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['total_value']);
                 // $Amount = $Amount + $result['subtotalvalue'];
                 ++$row;
             }
@@ -9034,6 +9038,7 @@ class ModelReportExcel extends Model {
                 'orders' => $result['orders'],
                 'products' => $result['products'],
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
+                'total_value' => round($result['total'],2),
                     // 'edit' => $this->url->link('sale/customer/edit', 'token='.$this->session->data['token'].'&customer_id='.$result['customer_id'].$url, 'SSL'),
             ];
         }
@@ -9077,25 +9082,25 @@ class ModelReportExcel extends Model {
             //     $sheet_subtitle = '';
             // }
 
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:D1');
-            $objPHPExcel->getActiveSheet()->mergeCells('A2:D2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:E2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Customer Orders');
             // $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:D2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
             //subtitle
             $from = date('d-m-Y', strtotime($data['filter_date_start']));
             $to = date('d-m-Y', strtotime($data['filter_date_end']));
-            $objPHPExcel->getActiveSheet()->mergeCells('A3:D3');
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:E3');
             if ($from != '01-01-1990') {
                 $html = 'Customers Registered Between ' . $from . ' And ' . $to;
             } else
                 $html = 'Customers Registered Till Date : ' . $to;
 
             $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:D3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $objPHPExcel->getActiveSheet()->getStyle('D')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             foreach (range('A', 'L') as $columnID) {
@@ -9123,7 +9128,7 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['customer']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['orders']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['products']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['total']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['total_value']);
                 // $Amount = $Amount + $result['subtotalvalue'];
                 ++$row;
             }
@@ -9441,7 +9446,8 @@ class ModelReportExcel extends Model {
                 'customer' => $result['customer'],
                 'company' => $result['company'],
                 'order_id' => $result['order_id'],
-                'order_date' => $result['date_added'],
+                // 'order_date' => $result['date_added'],
+                'order_date' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                     // 'email' => $result['email'],
                     // 'customer_group' => $result['customer_group'],
                     // 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
@@ -10565,7 +10571,9 @@ class ModelReportExcel extends Model {
                 // 'transaction_id' => $result['transaction_id'],
                 'order_id' => $result['order_id'],
                 'customer_credit_id' => $result['customer_credit_id'],
-                'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
+                // 'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                'date_added_time' => date($this->language->get('time_format'), strtotime($result['date_added'])),
             ];
         }
 
@@ -10609,17 +10617,17 @@ class ModelReportExcel extends Model {
             //     $sheet_subtitle = '';
             // }
 
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:F1');
-            $objPHPExcel->getActiveSheet()->mergeCells('A2:F2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:G1');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:G2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Customers Wallet ');
             // $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:F2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A1:G2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
             //subtitle
             // $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:F2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:G2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
             // $objPHPExcel->getActiveSheet()->getStyle('D')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
@@ -10634,12 +10642,14 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 3, 'Description');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 3, 'Order ID');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 3, 'Date Added');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 3, 'Time Added');
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 3)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 3)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 3)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 3)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 3)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 3)->applyFromArray($title);
 
             // Fetching the table data
             $row = 4;
@@ -10657,6 +10667,7 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['description']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['date_added']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['date_added_time']);
                 // $Amount = $Amount + $result['subtotalvalue'];
                 ++$row;
             }
