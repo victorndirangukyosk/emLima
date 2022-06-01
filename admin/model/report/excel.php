@@ -8045,7 +8045,8 @@ class ModelReportExcel extends Model {
                 'email' => $result['email'],
                 'comment' => $comt,
                 'ip' => $result['ip'],
-                'date_added' => date($this->language->get('datetime_format'), strtotime($result['date_added'])),
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                'date_added_time' => date($this->language->get('time_format'), strtotime($result['date_added'])),
                 'order_id' => $result['order_id'],
             ];
         }
@@ -8079,11 +8080,11 @@ class ModelReportExcel extends Model {
 
             $sheet_subtitle = '';
 
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:G1');
             // $objPHPExcel->getActiveSheet()->mergeCells('A2:E2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Customer Activities');
             // $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
@@ -8093,7 +8094,7 @@ class ModelReportExcel extends Model {
             // $objPHPExcel->getActiveSheet()->mergeCells('A3:I3');
             // $html = 'FROM ' . $from . ' TO ' . $to;
             // $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             // $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             foreach (range('A', 'L') as $columnID) {
@@ -8106,7 +8107,8 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Comment');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'IP');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Date');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Order ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Time');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Order ID');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -8114,6 +8116,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 5;
@@ -8126,7 +8129,8 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['comment']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['ip']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['date_added']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['order_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['date_added_time']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['order_id']);
 
                 ++$row;
             }
