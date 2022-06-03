@@ -635,7 +635,7 @@ class ControllerApiCustomerCheckout extends Controller {
                     if ($payment_method['code'] == 'wallet') {
                         $data['payment_wallet_methods'] = $payment_method;
                     }
-                    if ($payment_method['code'] != 'pezesha') {
+                    if ($payment_method['code'] != 'pezesha' && $payment_method['code'] != 'mpesa' && $payment_method['code'] != 'pesapal') {
                         unset($data['payment_methods'][$payment_method['code']]);
                     }
                 }
