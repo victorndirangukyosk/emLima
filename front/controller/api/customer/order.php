@@ -4155,7 +4155,7 @@ class ControllerApiCustomerOrder extends Controller {
 
                 $this->cart->clear();
             } elseif ('pezesha' == $args['payment_method_code']) {
-                $pezesha_result = $this->load->controller('customer/pezesha/applyloanone', $args);
+                $pezesha_result = $this->load->controller('api/customer/pezesha/applyloanone', $args);
                 $log->write('pezesha_result');
                 $log->write($pezesha_result);
                 $log->write('pezesha_result');
