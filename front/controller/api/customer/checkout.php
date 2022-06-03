@@ -486,7 +486,7 @@ class ControllerApiCustomerCheckout extends Controller {
             unset($this->session->data['pezesha_amount_limit']);
             unset($this->session->data['pezesha_customer_amount_limit']);
             //get the pezesha amount limit 
-            $this->load->controller('customer/getPezeshaLoanOffers');
+            // $this->load->controller('customer/getPezeshaLoanOffers');
             $b = $this->getPezeshaLoanOffers();
 
             // echo "<pre>";print_r($this->session->data['pezesha_amount_limit']);die;
@@ -544,7 +544,7 @@ class ControllerApiCustomerCheckout extends Controller {
 
             foreach ($results as $result) {
                 $log = new Log('error.log');
-                $log->write('code');
+                $log->write('code payment 123');
                 $log->write($result['code']);
                 $log->write('code');
                 if ($this->config->get($result['code'] . '_status')) {
@@ -595,19 +595,22 @@ class ControllerApiCustomerCheckout extends Controller {
 
             $log->write('getPaymentTerms');
             $log->write($this->customer->getPaymentTerms());
-            unset($this->session->data['pezesha_amount_limit']);
-            unset($this->session->data['pezesha_customer_amount_limit']);
-            //get the pezesha amount limit 
-            // $a= $this->load->controller('api/customer/getPezeshaLoanOffers');
-            $a = $this->getPezeshaLoanOffers();
+            // unset($this->session->data['pezesha_amount_limit']);
+            // unset($this->session->data['pezesha_customer_amount_limit']);
+            // //get the pezesha amount limit 
+            // // $a= $this->load->controller('api/customer/getPezeshaLoanOffers');
+            // $a = $this->getPezeshaLoanOffers();
 
             // echo "<pre>";print_r($this->session->data['pezesha_customer_amount_limit']);die;
             // echo "<pre>";print_r($data);die;
+            $log->write('pezesha data Start ');
+
             $log->write($this->customer->getPaymentTerms());
             $log->write($this->customer->getCustomerPezeshaId());
             $log->write($this->session->data['pezesha_customer_amount_limit']);
             $log->write($this->session->data['pezesha_amount_limit']);
             $log->write('pezesha data');
+            $log->write('pezesha data  getting or not');
 
             if (($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) || ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0)) {
                 foreach ($data['payment_methods'] as $payment_method) {
