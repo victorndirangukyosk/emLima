@@ -251,7 +251,9 @@ class ControllerApiCustomerPezesha extends Controller {
                         $order_id = $value;
                         $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, $result['data']['loan_id'], $loan_type);
                         $this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $this->customer->getId());
-                        $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pezesha_order_status_id'), 'Paid With Pezesha', true, $this->customer->getId(), 'customer', '', 'Y');
+                        // $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pezesha_order_status_id'), 'Paid With Pezesha', true, $this->customer->getId(), 'customer', '', 'Y');
+                        $ret = $this->model_checkout_order->addOrderHistory($order_id, 14/* $this->config->get('pezesha_order_status_id') */, 'Applied For Pezesha Loan', true, $this->customer->getId(), 'customer', '', 'N');
+                   
                     }
                     $json['status'] = true;
                     $json['message'] = 'Pezesha Loan Applied Successfully!';

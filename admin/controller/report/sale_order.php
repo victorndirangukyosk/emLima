@@ -305,6 +305,7 @@ class ControllerReportSaleOrder extends Controller {
                 //'products' => $result['products'],
                 'products' => $result['realproducts'] != NULL && $result['realproducts'] > 0 ? $result['realproducts'] : $result['products'],
                 'tax' => $this->currency->format($result['tax'], $this->config->get('config_currency')),
+                'tax_value' => $result['tax']??0,
                 //'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
                 'total' => $this->currency->format($result['totals'], $this->config->get('config_currency')),
                 'totalvalue' => $result['totals'],

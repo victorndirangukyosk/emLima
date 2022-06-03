@@ -342,14 +342,14 @@ class ControllerReportCustomerOrderCount extends Controller
                     $OrdersValue=$OrdersValue+$totalpermonth['Total'];
                     //$data['customers'][$i][$monthname]=$this->currency->format($totalpermonth['Total'], $this->config->get('config_currency'));
                     // $data['customers'][$i][$monthname]=number_format($totalpermonth['Total'],2);
-                    $data['customers'][$i][$monthname]=number_format($totalpermonth['TotalOrders'],2);
+                    $data['customers'][$i][$monthname]=round($totalpermonth['TotalOrders'],2);
                }
                $data['customers'][$i]['Total Order Count']= $totalOrders;
 
-                $data['customers'][$i]['Total Order Value']=number_format($OrdersValue);
+                $data['customers'][$i]['Total Order Value']=round($OrdersValue,2);
                 if($OrdersValue>0 && $totalOrders>0)
                 {
-                $data['customers'][$i]['Avg. Order Value']= number_format(($OrdersValue/$totalOrders),2);
+                $data['customers'][$i]['Avg. Order Value']= round(($OrdersValue/$totalOrders),2);
                 }
                 else
                 {
