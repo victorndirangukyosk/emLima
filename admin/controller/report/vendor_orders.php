@@ -769,13 +769,13 @@ class ControllerReportVendorOrders extends Controller {
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
 
             //echo "<pre>";print_r($totals);die;
-            foreach ($totals as $total) {
-                if ('sub_total' == $total['code']) {
-                    $sub_total = $total['value'];
+            foreach ($totals as $tot) {
+                if ('sub_total' == $tot['code']) {
+                    $sub_total = $tot['value'];
                     //break;
                 }
-                if ('total' == $total['code']) {
-                    $total = $total['value'];
+                if ('total' == $tot['code']) {
+                    $total = $tot['value'];
                     break;
                 }
             }

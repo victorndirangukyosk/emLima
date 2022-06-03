@@ -6147,6 +6147,7 @@ class ControllerSaleOrder extends Controller {
                 'quantity_updated' => $originalProduct['quantity'],
                 'unit_updated' => $uomOrderedWithoutApproximations,
                 'price' => $this->currency->format($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
+                'price_value' => ($originalProduct['price'] + ($this->config->get('config_tax') ? $originalProduct['tax'] : 0)),
                 'total' => $this->currency->format($originalProduct['total'] + ($this->config->get('config_tax') ? ($originalProduct['tax'] * $originalProduct['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
                 'total_updated' => $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']),
                 'total_updated_currency' => trim(explode(' ', $this->currency->format($totalUpdated, $order_info['currency_code'], $order_info['currency_value']))[0]),
