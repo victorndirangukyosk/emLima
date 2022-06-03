@@ -28,7 +28,7 @@ class ModelPaymentPezesha extends Model {
                 'code' => 'pezesha',
                 'title' => $this->language->get('text_title'),
                 'terms' => $this->language->get('text_terms'),
-                'terms1' => 'Available Pezesha Amount - ' . $this->session->data['pezesha_amount_limit'],
+                'terms1' => 'Available Pezesha Amount - ' . $this->session->data['pezesha_amount_limit']??0,
                 'sort_order' => $this->config->get('pezesha_sort_order'),
             ];
         }
