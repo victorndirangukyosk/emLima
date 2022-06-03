@@ -358,6 +358,60 @@ class ControllerApiCustomerPezesha extends Controller {
         return !$this->error;
     }
 
+    public function getunpaidorderscount() {
+        $json = [];
+        $log = new Log('error.log');
+        $log->write($this->customer->getPaymentTerms());
+        $log->write($this->customer->getId());
+
+        $data['pending_order_id'] = NULL;
+
+        if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
+            $this->load->model('account/order');
+            $this->load->model('sale/order');
+            $page = 1;
+            $results_orders = $this->model_account_order->getOrdersNew(($page - 1) * 10, 10, $NoLimit = true);
+            $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
+            if (count($results_orders) > 0) {
+                foreach ($results_orders as $order) {
+                    if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
+                        $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                        if (empty($order['transcation_id']) || $order['paid'] == 'P') {
+                            $data['pending_order_id'][] = $order['order_id'];
+                        }
+                    }
+                }
+            }
+        }
+
+        $data['unpaid_orders_count'] = count($data['pending_order_id']);
+        $data['message'] = count($data['pending_order_id']) > 0 ? 'Your Order(s) Payment Is Pending!' : '';
+        return $data;
+    }
+    public function getCheckOtherVendorOrderExist() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $log = new Log('error.log');
+        $json['modal_open'] = FALSE;
+        if (isset($this->session->data['accept_vendor_terms']) && $this->session->data['accept_vendor_terms'] == TRUE) {
+            $json['modal_open'] = FALSE;
+        } else {
+            foreach ($this->cart->getProducts() as $store_products) {
+                /* FOR KWIKBASKET ORDERS */
+                $log->write('CheckOtherVendorOrderExists');
+                $log->write($store_products['store_id']);
+                $log->write('CheckOtherVendorOrderExists');
+                if ($store_products['store_id'] > 75 && $this->customer->getPaymentTerms() != 'Payment On Delivery') {
+                    $json['modal_open'] = TRUE;
+                }
+            }
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
     public function addloanStatus() {
 
         $log = new Log('error.log');
