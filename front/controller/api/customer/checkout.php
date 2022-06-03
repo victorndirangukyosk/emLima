@@ -487,6 +487,7 @@ class ControllerApiCustomerCheckout extends Controller {
             unset($this->session->data['pezesha_customer_amount_limit']);
             //get the pezesha amount limit 
             $this->load->controller('customer/getPezeshaLoanOffers');
+            $b = $this->getPezeshaLoanOffers();
 
             // echo "<pre>";print_r($this->session->data['pezesha_amount_limit']);die;
 
