@@ -1,13 +1,13 @@
 <?php
 
-class ControllerReportReceivablesSummary extends Controller
+class ControllerReportReceivablesAgeing extends Controller
 {
    
     public function index()
     {
         $this->load->language('report/customer_financial_statement');
 
-        $this->document->setTitle('Receivables Summary');
+        $this->document->setTitle('Receivables Ageing');
 
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -74,7 +74,7 @@ class ControllerReportReceivablesSummary extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/receivables_Summary', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('report/receivables_ageing', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $this->load->model('sale/order');
@@ -86,33 +86,111 @@ class ControllerReportReceivablesSummary extends Controller
             'filter_date_end' => $filter_date_end,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
-            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            'limit' => $this->config->get('config_limit_admin'),
+            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            // 'limit' => $this->config->get('config_limit_admin'),
         ];
          
-            $results = $this->model_sale_order->getReceivablesSummary($filter_data);
-            $customer_total=$this->model_sale_order->getTotalReceivablesSummary($filter_data);;
+            $results = $this->model_sale_order->getReceivablesAgeing($filter_data);
+            $results_customers = $this->model_sale_order->getReceivablesAgeing_customers($filter_data);
+            // $customer_total=$this->model_sale_order->getTotalReceivablesSummary($filter_data);;
        
         $this->load->model('sale/order');
-        if (is_array($results) && count($results) > 0) {
+        $customer_total=count($results_customers);
+
+        if (is_array($results) && $customer_total > 0) {
             $log = new Log('error.log');
             $log->write('Yes It Is Array');
-            foreach ($results as $result) {              
+
+            foreach ($results_customers as $res_cust) {     
                 
-                $data['orders'][] = [
-                'company' => $result['company_name'],               
-                'customer' => $result['customer'],
-                'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
-                'order_total' => round(($result['order_total']-$result['partialy_paid']),2),
-                // 'updated_total' => number_format($result['updated_total'],2),
-                // 'paid'=> $result['paid'],
-                // 'amountpaid'=> number_format($result['amountpaid'],2),
-                // 'pendingamount'=> number_format($result['pendingamount'],2),
-            ];
+               
+                $payment_term_diff=0;
+                $total=0;
+                $not_due=0;
+                $sum_30=0;
+                $sum_60=0;
+                $sum_90=0;
+                $sum_180=0;
+                $sum_360=0;
+                $sum_360_greater=0;
+
+
+                if($res_cust['payment_terms']=='Payment On Delivery')
+                {
+                    $payment_term_diff=0;
+                }
+                else if($res_cust['payment_terms']=='7 Days Credit')
+                {
+                    $payment_term_diff=7;
+
+                }
+                else if($res_cust['payment_terms']=='15 Days Credit')
+                {
+                    $payment_term_diff=15;
+
+                }
+                else if($res_cust['payment_terms']=='30 Days Credit')
+                {
+                    $payment_term_diff=30;
+
+                }
+
+            foreach ($results as $result) {              
+                if($res_cust['customer']==$result['customer'])
+                {
+                    $total= $total+($result['order_total']-$result['partialy_paid']);
+                    if($result['datediff']<=$payment_term_diff && $payment_term_diff!=0)
+                    {
+                        $not_due=$not_due+($result['order_total']-$result['partialy_paid']);
+                    }
+                    else if($result['datediff']>=0 && $result['datediff']<=30)
+                    {
+                        $sum_30=$sum_30+($result['order_total']-$result['partialy_paid']);
+                    }
+                    else if($result['datediff']>=31 && $result['datediff']<=60)
+                    {
+                        $sum_60=$sum_60+($result['order_total']-$result['partialy_paid']);
+                    }
+                    else if($result['datediff']>=61 && $result['datediff']<=90)
+                    {
+                        $sum_90=$sum_90+($result['order_total']-$result['partialy_paid']);
+                    }
+                    else if($result['datediff']>=91 && $result['datediff']<=180)
+                    {
+                        $sum_180=$sum_180+($result['order_total']-$result['partialy_paid']);
+                    }
+                    else if($result['datediff']>=181 && $result['datediff']<=360)
+                    {
+                        $sum_360=$sum_360+($result['order_total']-$result['partialy_paid']);
+                    }
+                    else if($result['datediff']>=361 )
+                    {
+                        $sum_360_greater=$sum_360_greater+($result['order_total']-$result['partialy_paid']);
+                    }
+
+                }
+              
             }
+
+            $data['orders'][] = [
+                'company' => $res_cust['company_name'],               
+                'customer' => $res_cust['customer'],
+                'payment_terms' => $res_cust['payment_terms'],
+                'total' => $total,
+                // 'order_total' => round(($result['order_total']-$result['partialy_paid']),2),
+                'not_due' => $not_due,
+                'sum_30' => $sum_30,
+                'sum_60' => $sum_60,
+                'sum_90' => $sum_90,
+                'sum_180' =>$sum_180,
+                'sum_360' => $sum_360,
+                'sum_360_greater' => $sum_360_greater,
+               
+            ];
         }
-        //   echo "<pre>";print_r($data['customers']);die;
-        $data['heading_title'] = $this->language->get('heading_title');
+        }
+        //   echo "<pre>";print_r($data['orders']);die;
+        $data['heading_title'] = 'Receivables Ageing';
 
         $data['text_list'] = $this->language->get('text_list');
         $data['text_no_results'] = $this->language->get('text_no_results');
@@ -172,7 +250,7 @@ class ControllerReportReceivablesSummary extends Controller
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/receivables_summary', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/receivables_ageing', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -187,14 +265,14 @@ class ControllerReportReceivablesSummary extends Controller
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('report/receivables_summary.tpl', $data));
+        $this->response->setOutput($this->load->view('report/receivables_ageing.tpl', $data));
     }
 
-    public function receivablessummaryexcel()
+    public function receivablesageingexcel()
     {
         $this->load->language('report/customer_statement');
 
-        $this->document->setTitle($this->language->get('heading_title'));
+        $this->document->setTitle('Receivables Ageing');
 
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -230,8 +308,8 @@ class ControllerReportReceivablesSummary extends Controller
         ];
 
         $this->load->model('report/excel');
-        // $this->model_report_excel->download_customer_financial_statement_excel($filter_data);
-        $this->model_report_excel->download_receivables_summary_excel($filter_data);
+        // $this->model_report_excel->download_receivables_summary_excel($filter_data);
+        $this->model_report_excel->download_receivables_ageing_excel($filter_data);
     }
 
 

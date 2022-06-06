@@ -139,7 +139,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_customer_id'])) {
             $sql .= " AND o.customer_id = '" . $data['filter_customer_id'] . "'";
         }
-        
+
         if (isset($data['filter_customer_id_array']) && !is_null($data['filter_customer_id_array'])) {
             $sql .= "AND o.customer_id IN (" . $data['filter_customer_id_array'] . ")";
         }
@@ -159,7 +159,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_total'])) {
             $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
         }
-        
+
         if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
         }
@@ -1077,6 +1077,15 @@ class ModelSaleOrder extends Model {
 
         $this->db->query('INSERT INTO ' . DB_PREFIX . "product_inventory_history SET product_id = '" . $data['product_id'] . "', product_store_id = '" . $store_product_id . "', product_name = '" . $data['product_name'] . "', procured_qty = '" . $data['procured_qty'] . "', prev_qty = '" . $previous_quantity . "', current_qty = '" . $qty . "', rejected_qty = '" . $data['rejected_qty'] . "', buying_price= '" . $data['current_buying_price'] . "', prev_buying_price= '" . $previous_buying_price . "',  source = '" . $data['source'] . "', prev_source = '" . $previous_source . "', added_by = '" . $data['user_id'] . "', added_user_role = '" . $data['user_role'] . "', added_user = '" . $data['user_name'] . "', delivery_date = '" . $data['delivery_date'] . "', target_buying_price = '" . $data['target_buying_price'] . "',  date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "'");
         return $this->db->getLastId();
+    }
+
+    public function getStoreInfo($store_id) {
+        $this->db->select('store.store_id,store.name,store.min_order_amount,store.city_id,store.commision,store.fixed_commision,user.commision as vendor_commision ,user.fixed_commision as vendor_fixed_commision', false);
+        $this->db->join('user', 'user.user_id = store.vendor_id', 'left');
+        $this->db->where('store.store_id', $store_id);
+        $this->db->where('store.status', 1);
+        $store_info = $this->db->get('store')->row;
+        return $store_info;
     }
 
 }

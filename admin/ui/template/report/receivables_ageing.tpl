@@ -2,7 +2,7 @@
 <div id="content">
   <div class="page-header">
     <div class="container-fluid">
-      <h1>Receivables Summary</h1>
+      <h1>Receivables Ageing</h1>
       <ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
         <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
@@ -86,11 +86,12 @@
                               
  </div>
  
-             <br>
             <br>
             <br>
             <br>
             <br>
+            <br>
+            
               <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
            
           </div>
@@ -103,8 +104,13 @@
                 <td class="text-left">Company</td>
                 <td class="text-left">Customer</td>   
                 <td class="text-right">Sum of Total</td>
-                <!--<td class="text-right">Sum not Due</td> 
-                <td class="text-right">Sum Due</td> -->
+                 <td class="text-right">Sum not Due</td> 
+                <td class="text-right">Sum of 0-30</td>  
+                <td class="text-right">Sum of 31-60</td>  
+                <td class="text-right">Sum of 61-90</td>  
+                <td class="text-right">Sum of 91-180</td>  
+                <td class="text-right">Sum of 181-360</td>  
+                <td class="text-right">Sum of >360</td>  
               </tr>
             </thead>
             <tbody>
@@ -113,10 +119,15 @@
               <tr>
                 <td class="text-left"><?php echo $order['company']; ?></td>
                 <td class="text-left"><?php echo $order['customer']; ?></td> 
-                <td class="text-right"><?php echo $order['order_total']; ?></td>
-                <!--<td class="text-right"><?php echo $order['updated_total']; ?></td>
-              
-                <td class="text-right"><?php echo $order['updated_total']; ?></td>-->
+                <td class="text-right"><?php echo $order['total']; ?></td>
+                <td class="text-right"><?php echo $order['not_due']; ?></td>
+                <td class="text-right"><?php echo $order['sum_30']; ?></td>
+                <td class="text-right"><?php echo $order['sum_60']; ?></td>
+                <td class="text-right"><?php echo $order['sum_90']; ?></td>
+                <td class="text-right"><?php echo $order['sum_180']; ?></td>
+                <td class="text-right"><?php echo $order['sum_360']; ?></td>
+                <td class="text-right"><?php echo $order['sum_360_greater']; ?></td>
+                
 
               </tr>
               <?php } ?>
@@ -128,16 +139,16 @@
             </tbody>
           </table>
         </div>
-        <div class="row">
+        <!--<div class="row">
           <div class="col-sm-6 text-left"><?php echo $pagination; ?></div>
           <div class="col-sm-6 text-right"><?php echo $results; ?></div>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-	url = 'index.php?path=report/receivables_summary&token=<?php echo $token; ?>';
+	url = 'index.php?path=report/receivables_ageing&token=<?php echo $token; ?>';
 
   
             var filter_customer = $('input[name=\'filter_customer\']').val();
@@ -231,7 +242,7 @@ $('#button-filter').on('click', function() {
 
  
 function excel() {
-       url = 'index.php?path=report/receivables_summary/receivablessummaryexcel&token=<?php echo $token; ?>';
+       url = 'index.php?path=report/receivables_ageing/receivablesageingexcel&token=<?php echo $token; ?>';
       
         
      var filter_customer = $('input[name=\'filter_customer\']').val();

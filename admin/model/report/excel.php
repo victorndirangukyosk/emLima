@@ -13459,10 +13459,242 @@ class ModelReportExcel extends Model {
             header('Content-Disposition: attachment;filename="receivables_summary_sheet.xlsx"');
             header('Cache-Control: max-age=0');
             $objWriter->save('php://output');
- 
-            #endregion
             exit;
-        } catch (Exception $e) {
+        } 
+        catch (Exception $e) {
+           
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
+
+
+    public function download_receivables_ageing_excel($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+        // echo "<pre>";print_r($data);
+
+        $this->load->language('report/vendor_order');
+        $this->load->model('sale/order');
+        $results = $this->model_sale_order->getReceivablesAgeing($filter_data);
+            $results_customers = $this->model_sale_order->getReceivablesAgeing_customers($filter_data);
+       
+            $this->load->model('sale/order');
+            $customer_total=count($results_customers);
+    
+            if (is_array($results) && $customer_total > 0) {
+                $log = new Log('error.log');
+                $log->write('Yes It Is Array');
+    
+                foreach ($results_customers as $res_cust) {     
+                    
+                   
+                    $payment_term_diff=0;
+                    $total=0;
+                    $not_due=0;
+                    $sum_30=0;
+                    $sum_60=0;
+                    $sum_90=0;
+                    $sum_180=0;
+                    $sum_360=0;
+                    $sum_360_greater=0;
+    
+    
+                    if($res_cust['payment_terms']=='Payment On Delivery')
+                    {
+                        $payment_term_diff=0;
+                    }
+                    else if($res_cust['payment_terms']=='7 Days Credit')
+                    {
+                        $payment_term_diff=7;
+    
+                    }
+                    else if($res_cust['payment_terms']=='15 Days Credit')
+                    {
+                        $payment_term_diff=15;
+    
+                    }
+                    else if($res_cust['payment_terms']=='30 Days Credit')
+                    {
+                        $payment_term_diff=30;
+    
+                    }
+    
+                foreach ($results as $result) {              
+                    if($res_cust['customer']==$result['customer'])
+                    {
+                        $total= $total+($result['order_total']-$result['partialy_paid']);
+                        if($result['datediff']<=$payment_term_diff && $payment_term_diff!=0)
+                        {
+                            $not_due=$not_due+($result['order_total']-$result['partialy_paid']);
+                        }
+                        else if($result['datediff']>=0 && $result['datediff']<=30)
+                        {
+                            $sum_30=$sum_30+($result['order_total']-$result['partialy_paid']);
+                        }
+                        else if($result['datediff']>=31 && $result['datediff']<=60)
+                        {
+                            $sum_60=$sum_60+($result['order_total']-$result['partialy_paid']);
+                        }
+                        else if($result['datediff']>=61 && $result['datediff']<=90)
+                        {
+                            $sum_90=$sum_90+($result['order_total']-$result['partialy_paid']);
+                        }
+                        else if($result['datediff']>=91 && $result['datediff']<=180)
+                        {
+                            $sum_180=$sum_180+($result['order_total']-$result['partialy_paid']);
+                        }
+                        else if($result['datediff']>=181 && $result['datediff']<=360)
+                        {
+                            $sum_360=$sum_360+($result['order_total']-$result['partialy_paid']);
+                        }
+                        else if($result['datediff']>=361 )
+                        {
+                            $sum_360_greater=$sum_360_greater+($result['order_total']-$result['partialy_paid']);
+                        }
+    
+                    }
+                  
+                }
+    
+                $data['orders'][] = [
+                    'company' => $res_cust['company_name'],               
+                    'customer' => $res_cust['customer'],
+                    'payment_terms' => $res_cust['payment_terms'],
+                    'total' => $total,
+                    // 'order_total' => round(($result['order_total']-$result['partialy_paid']),2),
+                    'not_due' => $not_due,
+                    'sum_30' => $sum_30,
+                    'sum_60' => $sum_60,
+                    'sum_90' => $sum_90,
+                    'sum_180' =>$sum_180,
+                    'sum_360' => $sum_360,
+                    'sum_360_greater' => $sum_360_greater,
+                   
+                ];
+            }
+            }
+        $rows=$data['orders'];
+        // echo "<pre>";print_r($rows);exit;
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Summary Sheet')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:D2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Receivables Summary');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:D2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:D2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('F')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 3, 'S.NO');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 3, 'Company');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 3, 'Customer');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 3, 'Sum of Total'); 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 3, 'Sum not Due'); 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 3, 'Sum of 0-30'); 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 3, 'Sum of 31-60'); 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 3, 'Sum of 61-90'); 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 3, 'Sum of 91-180'); 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 3, 'Sum of 181-360'); 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, 3, 'Sum of >360'); 
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 3)->applyFromArray($title); 
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 3)->applyFromArray($title); 
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 3)->applyFromArray($title); 
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 3)->applyFromArray($title); 
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 3)->applyFromArray($title); 
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 3)->applyFromArray($title); 
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(9, 3)->applyFromArray($title); 
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(10, 3)->applyFromArray($title); 
+            // Fetching the table data
+            $row = 4;
+
+            $i = 1;
+            foreach ($rows as $result) {
+
+                $datediff = strtotime($sendingDate) - strtotime($result['delivery_date']);
+
+                if ($result['company_name'] == '' || $result['company_name'] == NULL || $result['company_name'] == 'Individual ' || $result['company_name'] == 'Individual' || $result['company_name'] == 'N/A' || $result['company_name'] == 'n/a') {
+                    $result['company_name'] = $result['customer'];
+                }
+                // // echo "<pre>";print_r(strtotime($result['delivery_date']));
+                // // echo "<pre>";print_r(strtotime($sendingDate));
+                // // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
+                // $result['ageing'] = round($datediff / (60 * 60 * 24));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['company']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['customer']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['total']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['not_due']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['sum_30']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['sum_60']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['sum_90']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['sum_180']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['sum_360']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, $row, $result['sum_360_greater']);
+
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $this->currency->format($result['order_total']));
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['ageing']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['status']);
+                $i++;
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="receivables_ageing_sheet.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit;
+        } 
+        catch (Exception $e) {
            
             $errstr = $e->getMessage();
             $errline = $e->getLine();
