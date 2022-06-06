@@ -595,9 +595,15 @@
             <li><a href="<?php echo $report_receivables_summary; ?>">Receivables Summary</a></li>
             <?php } ?>
 
+ <?php if($preturn_report_receivables_ageing) { ?>  
+            <li><a href="<?php echo $report_receivables_ageing; ?>">Receivables Ageing</a></li>
+            <?php } ?>
+
                 </ul>
             </li>
             <?php } ?>
+
+           
 
             <?php if( $preturn_product_viewed != false || $preturn_product_purchased != false ) { ?>
             <li><a class="parent"><?php echo $text_product; ?></a>
