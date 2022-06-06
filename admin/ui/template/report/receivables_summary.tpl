@@ -86,7 +86,11 @@
                               
  </div>
  
-            
+             <br>
+            <br>
+            <br>
+            <br>
+            <br>
               <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
            
           </div>
