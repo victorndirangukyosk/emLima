@@ -7,7 +7,7 @@ class ControllerReportReceivablesSummary extends Controller
     {
         $this->load->language('report/customer_financial_statement');
 
-        $this->document->setTitle($this->language->get('heading_title'));
+        $this->document->setTitle('Receivables Summary');
 
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
