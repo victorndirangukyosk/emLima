@@ -7,7 +7,7 @@ class ControllerReportReceivablesAgeing extends Controller
     {
         $this->load->language('report/customer_financial_statement');
 
-        $this->document->setTitle($this->language->get('heading_title'));
+        $this->document->setTitle('Receivables Ageing');
 
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -190,7 +190,7 @@ class ControllerReportReceivablesAgeing extends Controller
         }
         }
         //   echo "<pre>";print_r($data['orders']);die;
-        $data['heading_title'] = $this->language->get('heading_title');
+        $data['heading_title'] = 'Receivables Ageing';
 
         $data['text_list'] = $this->language->get('text_list');
         $data['text_no_results'] = $this->language->get('text_no_results');
@@ -272,7 +272,7 @@ class ControllerReportReceivablesAgeing extends Controller
     {
         $this->load->language('report/customer_statement');
 
-        $this->document->setTitle($this->language->get('heading_title'));
+        $this->document->setTitle('Receivables Ageing');
 
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
