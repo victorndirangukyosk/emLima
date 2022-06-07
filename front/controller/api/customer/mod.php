@@ -17,11 +17,11 @@ class ControllerApiCustomerMod extends Controller {
             $log->write('mod loop' . $order_id . 'front\controller\api\customer\mod.php');
             $log->write('mod loop' . $order_id . ' ' . $this->cart->getSubTotal() . ' ' . $this->cart->getTotal());
 
-            if ($customer_info != null)
+            if ($customer_info != null) {
                 $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), $comment, true, $customer_info['customer_id'], 'customer');
-            else
-                $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true, 0, 'customer');
-
+            } else {
+                $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), $comment, true, 0, 'customer');
+            }
             $this->load->model('account/activity');
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
@@ -48,11 +48,11 @@ class ControllerApiCustomerMod extends Controller {
             $log->write('mod loop' . $order_id . 'front\controller\api\customer\mod.php');
             $log->write('mod loop' . $order_id . ' ' . $this->cart->getSubTotal() . ' ' . $this->cart->getTotal());
 
-            if ($customer_info != null)
+            if ($customer_info != null) {
                 $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), $comment, true, $customer_info['customer_id'], 'customer');
-            else
-                $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true, 0, 'customer');
-
+            } else {
+                $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), $comment, true, 0, 'customer');
+            }
             $this->load->model('account/activity');
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
