@@ -377,7 +377,7 @@ class ModelInventoryInventoryWastage extends Model {
   
    
     public function getProductsByGroup($data = []) {
-        $sql = 'SELECT ps.product_store_id,p.product_id ,Sum(pw.wastage_qty) as wastage_qty, pd.name,p.unit,date(pw.date_added) as date_added  from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
+        $sql = 'SELECT ps.product_store_id,p.product_id ,Sum(pw.wastage_qty) as wastage_qty, pd.name,p.unit,date(pw.date_added) as date_added,avg(pw.avg_buying_price) as avg_buying_price  from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
 
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
