@@ -97,11 +97,22 @@ class ControllerReportReceivablesSummary extends Controller
         if (is_array($results) && count($results) > 0) {
             $log = new Log('error.log');
             $log->write('Yes It Is Array');
-            foreach ($results as $result) {              
+            foreach ($results as $result) {   
+                 
+                $payment_terms=$result['payment_terms'];
+                $isPezesha_customer=false;
+                $isPezesha_customer = $this->model_sale_order->isPezeshaCustomer($result['customer_id']);
+
+                if($isPezesha_customer==true)
+                {
+                    $payment_terms='Pezesha';
+                }
+
                 
                 $data['orders'][] = [
                 'company' => $result['company_name'],               
                 'customer' => $result['customer'],
+                'payment_terms' => $payment_terms,
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
                 'order_total' => round(($result['order_total']-$result['partialy_paid']),2),
                 // 'updated_total' => number_format($result['updated_total'],2),
