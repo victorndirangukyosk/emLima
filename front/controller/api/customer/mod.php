@@ -18,6 +18,8 @@ class ControllerApiCustomerMod extends Controller {
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $log->write('Order Confirm In Mobile MOD');
         $log->write($is_he_parents);
+        $log->write($this->customer->getOrderApprovalAccess());
+        $log->write($this->customer->getOrderApprovalAccessRole());
         $log->write('Order Confirm In Mobile MOD');
 
         $parent_customer_info = NULL;
@@ -45,6 +47,7 @@ class ControllerApiCustomerMod extends Controller {
             $log->write('mod loop' . $order_id);
             $log->write('mod loop' . $order_id . 'front\controller\api\customer\mod.php');
             $log->write('mod loop' . $order_id . ' ' . $this->cart->getSubTotal() . ' ' . $this->cart->getTotal());
+            $log->write('mod loop order status id' . $order_status_id);
 
             if ($customer_info != null) {
                 $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), $comment, true, $customer_info['customer_id'], 'customer');
@@ -78,6 +81,8 @@ class ControllerApiCustomerMod extends Controller {
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $log->write('Order Confirm In Mobile MOD');
         $log->write($is_he_parents);
+        $log->write($this->customer->getOrderApprovalAccess());
+        $log->write($this->customer->getOrderApprovalAccessRole());
         $log->write('Order Confirm In Mobile MOD');
 
         $parent_customer_info = NULL;
@@ -105,6 +110,7 @@ class ControllerApiCustomerMod extends Controller {
             $log->write('mod loop' . $order_id);
             $log->write('mod loop' . $order_id . 'front\controller\api\customer\mod.php');
             $log->write('mod loop' . $order_id . ' ' . $this->cart->getSubTotal() . ' ' . $this->cart->getTotal());
+            $log->write('mod loop order status id' . $order_status_id);
 
             $this->load->model('account/credit');
             $customer_wallet_total = $this->model_account_credit->getTotalAmount();
