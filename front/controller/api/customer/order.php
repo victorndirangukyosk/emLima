@@ -3652,7 +3652,7 @@ class ControllerApiCustomerOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addOrderNew($args = []) {
+    public function addOrdersNew($args = []) {
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
@@ -4671,7 +4671,7 @@ class ControllerApiCustomerOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addOrdersNew($args = []) {
+    public function addOrderNew($args = []) {
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
