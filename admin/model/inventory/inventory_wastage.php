@@ -20,7 +20,7 @@ class ModelInventoryInventoryWastage extends Model {
     }
 
     public function getProducts($data = []) {
-        $sql = 'SELECT pw.product_wastage_id,ps.product_store_id,p.product_id ,pw.wastage_qty,pw.date_added,pw.added_by,pw.cumulative_wastage,CONCAT(u1.firstname," " ,u1.lastname) as added_by_user,pd.name,p.unit,p.image from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
+        $sql = 'SELECT pw.product_wastage_id,ps.product_store_id,p.product_id ,pw.wastage_qty,pw.date_added,pw.added_by,pw.cumulative_wastage,CONCAT(u1.firstname," " ,u1.lastname) as added_by_user,pd.name,p.unit,p.image,pw.avg_buying_price from ' . DB_PREFIX . 'product_wastage pw LEFT JOIN '.DB_PREFIX.'product_to_store ps on (pw.product_store_id = ps.product_store_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) LEFT JOIN ' . DB_PREFIX . 'user u1 ON (pw.added_by = u1.user_id)';
 
         $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
@@ -203,7 +203,7 @@ class ModelInventoryInventoryWastage extends Model {
 
     
 
-    public function updateProductWastage($vendor_product_name,$vendor_product_uom, $wastage_qty) {
+    public function updateProductWastage($vendor_product_name,$vendor_product_uom, $wastage_qty,$product_average_buying_price) {
         
         $this->trigger->fire('pre.admin.product.wastage', $vendor_product_name);
 
@@ -213,6 +213,11 @@ class ModelInventoryInventoryWastage extends Model {
         if ($wastage_qty==null || $wastage_qty=='') {
             $data['wastage_qty'] = 0;
         }
+
+        if ($product_average_buying_price=='NA' || $product_average_buying_price=='N/A') {
+            $product_average_buying_price = NULL;
+        }
+        // echo "<pre>";print_r($product_average_buying_price);die;
 
         // $qty = $data['current_qty'] + ($data['procured_qty'] - $data['rejected_qty']);
 
@@ -239,7 +244,7 @@ class ModelInventoryInventoryWastage extends Model {
 
         $cummulative_current=$cummulative+$wastage_qty;
 
-        // echo "<pre>";print_r($cummulative_current);die;
+        // echo "<pre>";print_r('INSERT INTO ' . DB_PREFIX . "product_wastage SET product_id = '" . $product_general_id . "', product_store_id = '" . $product_store_id . "',  wastage_qty = '" . $wastage_qty . "',  added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',cumulative_wastage='".$cummulative_current."',avg_buying_price='".$product_average_buying_price."'");die;
 
 
 
@@ -251,7 +256,18 @@ class ModelInventoryInventoryWastage extends Model {
         $log->write($data['wastage_qty']);         
         $log->write('product_to_store data modified with wastage quantity');         
         
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_wastage SET product_id = '" . $product_general_id . "', product_store_id = '" . $product_store_id . "',  wastage_qty = '" . $wastage_qty . "',  added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',cumulative_wastage='".$cummulative_current."'");
+        if($product_average_buying_price==NULL || $product_average_buying_price=='')
+        {
+
+
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "product_wastage SET product_id = '" . $product_general_id . "', product_store_id = '" . $product_store_id . "',  wastage_qty = '" . $wastage_qty . "',  added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',cumulative_wastage='".$cummulative_current."'");
+        }
+        else{
+
+
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "product_wastage SET product_id = '" . $product_general_id . "', product_store_id = '" . $product_store_id . "',  wastage_qty = '" . $wastage_qty . "',  added_by = '" . $this->user->getId() . "', added_user_role = '" . $this->user->getGroupName() . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "',cumulative_wastage='".$cummulative_current."',avg_buying_price='".$product_average_buying_price."'");
+
+        }
         
         $this->trigger->fire('post.admin.product.wastage', $product_store_id);
 
@@ -576,5 +592,23 @@ class ModelInventoryInventoryWastage extends Model {
         $this->trigger->fire('post.admin.product.wastage', $product_store_id);
 
         return $this->db->getLastId();
+    }
+
+
+
+    public function getAverageBuyingPrice($filter_name,$filter_product_uom,$date) {
+        // echo '<pre>';print_r('SELECT avg(i.buying_price) as price from ' . DB_PREFIX . "product_inventory_price_history i join hf7_product p on i.product_id=p.product_id  WHERE p.name = '" . $filter_name . "' and p.unit='".filter_product_uom."' and i.date_added <='".$date."' and i.date_added>=DATE_ADD('".$date."' , INTERVAL -500 DAY)");die;
+        // echo '<pre>';print_r('SELECT s.buying_price as price from ' . DB_PREFIX . "product_to_store s join hf7_product p on i.product_id=p.product_id  WHERE p.name = '" . $filter_name . "' and p.unit='".$filter_product_uom."'");die;
+        $query = $this->db->query('SELECT avg(i.buying_price) as price from ' . DB_PREFIX . "product_inventory_price_history i join hf7_product p on i.product_id=p.product_id  WHERE p.name = '" . $filter_name . "' and p.unit='".$filter_product_uom."' and i.date_added <='".$date."' and i.date_added>=DATE_ADD('".$date."' , INTERVAL -10 DAY)");
+        // echo $query;die;
+
+        $avg_price = $query->row['price'];
+        if($avg_price==null || $avg_price=='' || $avg_price==0)
+        {
+            $query1 = $this->db->query('SELECT s.buying_price as price from ' . DB_PREFIX . "product_to_store s join hf7_product p on s.product_id=p.product_id  WHERE p.name = '" . $filter_name . "' and p.unit='".$filter_product_uom."'");
+            $avg_price = $query1->row['price']??'NA';
+        }
+
+        return $avg_price;
     }
 }
