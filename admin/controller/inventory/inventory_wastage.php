@@ -228,6 +228,7 @@ class ControllerInventoryInventoryWastage extends Controller {
                     'added_by_user' => $result['added_by_user'],
                     'cumulative_wastage' => $result['cumulative_wastage'],
                     'date_added' => $result['date_added'],
+                    'avg_buying_price' => $result['avg_buying_price']??'NA',
                     'date_added_date' =>date('Y-m-d', strtotime($result['date_added'])),
 
                 ];
@@ -562,9 +563,11 @@ class ControllerInventoryInventoryWastage extends Controller {
             $vendor_product_uom = $this->request->get['vendor_product_uom'];
             $wastage_quantity = $this->request->get['wastage_quantity'];
             $vendor_product_name = $this->request->get['vendor_product_name'];
+            $product_average_buying_price = $this->request->get['product_average_buying_price']??NULL;
+
             // $vendor_product_id = ;
 
-            $result = $this->model_inventory_inventory_wastage->updateProductWastage($vendor_product_name, $vendor_product_uom,$wastage_quantity);
+            $result = $this->model_inventory_inventory_wastage->updateProductWastage($vendor_product_name, $vendor_product_uom,$wastage_quantity,$product_average_buying_price);
             $log->write('RESULT');
             $log->write($result);
             $log->write('RESULT');
@@ -661,6 +664,46 @@ class ControllerInventoryInventoryWastage extends Controller {
             $json['status'] = '400';
             $json['message'] = 'All fields are mandatory!';
             $this->session->data['warning'] = 'All fields are mandatory!';
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+
+    public function getAverageBuyingPrice() {
+        $json = [];
+
+
+
+        if (isset($this->request->get['vendor_product_name']) ) {
+          
+            if (isset($this->request->get['vendor_product_name'])) {
+                $filter_name = $this->request->get['vendor_product_name'];
+            } else {
+                $filter_name = '';
+            }
+
+
+            if (isset($this->request->get['vendor_product_uom'])) {
+                $filter_product_uom = $this->request->get['vendor_product_uom'];
+            } 
+            
+
+            if (isset($this->request->get['filter_date'])) {
+                $filter_date = $this->request->get['filter_date'];
+            } else {
+                $filter_date =  date('Y-m-d');
+            }
+
+              
+
+           
+            $this->load->model('inventory/inventory_wastage');
+
+            $results = $this->model_inventory_inventory_wastage->getAverageBuyingPrice($filter_name,$filter_product_uom,$filter_date);
+
+            $json['price']=$results;
         }
 
         $this->response->addHeader('Content-Type: application/json');

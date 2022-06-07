@@ -5136,7 +5136,13 @@ class ControllerApiCustomerOrder extends Controller {
 
                 $this->cart->clear();
             } elseif (('cod' == $args['payment_method_code']) || ('cod' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
-                $data['payment'] = $this->load->controller('payment/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
+                if (('cod' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
+                    $data['payment'] = $this->load->controller('api/customer/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
+                }
+
+                if (('cod' == $args['payment_method_code']) && isset($args['payment_wallet_method_code']) && 'wallet' == $args['payment_wallet_method_code']) {
+                    $data['payment'] = $this->load->controller('api/customer/' . $args['payment_method_code'] . '/apiConfirmHybridPayments', $order_ids);
+                }
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
                 unset($this->session->data['accept_vendor_terms']);

@@ -148,6 +148,8 @@ class ControllerReportInventoryWastage extends Controller {
                     'name' => $result['name'],//product_name
                     'unit' => $result['unit'],
                     'date_added' => $result['date_added'],
+                    'avg_buying_price' => ($result['avg_buying_price']==null?'NA':round($result['avg_buying_price'],2)),
+
                     // 'added_by_user' => $result['added_by_user'],
                     // 'cumulative_wastage' => $result['cumulative_wastage'],
                     // 'date_added' => $result['date_added'],

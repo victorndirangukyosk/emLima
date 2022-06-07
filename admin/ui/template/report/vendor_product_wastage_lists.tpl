@@ -143,6 +143,7 @@
 
                                      
                                      <td class="text-right">Wastage Quantity</td>
+                                     <td class="text-right">Avg. Buying Price</td>
                                      
 
                                     
@@ -165,7 +166,8 @@
                                      
                                     <td class="text-right"><?php echo $product['wastage_qty']; ?>
                                     </td>                        
-				    
+				     <td class="text-right"><?php echo $product['avg_buying_price']; ?>
+                                    </td> 
 				 
                                     
                                 </tr>
