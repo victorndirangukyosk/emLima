@@ -155,6 +155,7 @@
 
                                      <td class="text-left">Added By</td>
                                      <td class="text-right">Cumulative Wastage</td>
+                                     <td class="text-right">Avg. Buying Price</td>
 
                                     
                                      
@@ -208,7 +209,8 @@
                                         <input style="max-width: 75px !important; text-align: right; " name="cumulative_wastage"  type="number"  id="cumulative_wastage<?php echo $product['product_wastage_id'];?>" value="<?php echo $product['cumulative_wastage']; ?>">
                                    
                                     </td>
-                                   
+                                    <td class="text-right"><?php echo $product['avg_buying_price']; ?>
+                                    </td>
                                     <td class="text-left"><button id="update_wastage" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Update Wastage" data-wastage-update="<?php echo $product['product_wastage_id']; ?>" data-wastage-update-name="<?php echo $product['name']; ?>"><i class="fa fa-save text-success"></i></button></td>
 				    
 				                <?php }else{ ?>
@@ -224,6 +226,9 @@
                                     </td>
 
                                      <td class="text-right"><?php echo $product['cumulative_wastage']; ?>
+                                    </td>
+
+                                    <td class="text-right"><?php echo $product['avg_buying_price']; ?>
                                     </td>
                                       <?php } ?>
                                     
@@ -319,6 +324,21 @@
                                   </div>   
                         </div>
                     </div>
+
+
+                      <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group required">
+                                <label for="average-price" class="col-form-label">Average Buying Price</label>
+                                <input type="text" disabled class="form-control" id="averaga_price" name="averaga_price" min="0.01" style="max-width: 568px !important;width:568px;">
+                            </div>   
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group required">
+                                  </div>   
+                        </div>
+                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -363,6 +383,27 @@ $('input[name=\'filter_store_id\']').autocomplete({
 
  
 
+
+$('#new_vendor_product_uom').change(function(){
+  //alert("The text has been changed.");
+    var product_uom = $('#new_vendor_product_uom').val();     
+    var vendor_product_name = $('#new_vendor_product_name').attr('data-vendor-product-name');
+    $.ajax({
+                        url: 'index.php?path=inventory/inventory_wastage/getAverageBuyingPrice&vendor_product_name='+vendor_product_name+'&vendor_product_uom='+product_uom+'&token=<?php echo $token; ?>',
+                        dataType: 'json',     
+                        success: function(json) {
+                            console.log(json);
+                            if(json != null) { 
+                            $('#averaga_price').val(json['price']);
+                            }                           
+                             
+                        }
+                    
+                    });
+ 
+   
+
+});
  
 $(document).on('click', '#update_wastage', function(e){ 
 e.preventDefault();
@@ -603,6 +644,23 @@ $('input[name=\'new_vendor_product_name\']').autocomplete({
                     }
                     
                     $('.selectpicker').selectpicker('refresh');
+                        alert("The text has been changed.");
+
+                     var product_uom = $('#new_vendor_product_uom').val();     
+                    var vendor_product_name = $('#new_vendor_product_name').attr('data-vendor-product-name');
+                    $.ajax({
+                        url: 'index.php?path=inventory/inventory_wastage/getAverageBuyingPrice&vendor_product_name='+vendor_product_name+'&vendor_product_uom='+product_uom+'&token=<?php echo $token; ?>',
+                        dataType: 'json',     
+                        success: function(json) {
+                            console.log(json);
+                            if(json != null) { 
+                            $('#averaga_price').val(json['price']);
+                            }                           
+                             
+                        }
+                    
+                    });
+ 
                 }
             }
             });
@@ -628,6 +686,7 @@ var wastage_quantity = $('#wastage_quantity').val();
 //var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
 //above ID is not correct to consider, as changing uom dropdown will not update product ID 
 var vendor_product_name = $('#new_vendor_product_name').attr('data-vendor-product-name');
+var product_average_buying_price = $('#averaga_price').val();
 
 $('.alert.alert-success').html('');
 $('.alert.alert-danger').html(''); 
@@ -636,7 +695,7 @@ $('.alert.alert-danger').hide();
 $.ajax({
         url: 'index.php?path=inventory/inventory_wastage/updateInventoryWastage&token=<?= $token ?>',
         dataType: 'json',
-        data: { 'vendor_product_uom' : vendor_product_uom,  'wastage_quantity' : wastage_quantity, 'vendor_product_name' : vendor_product_name  },
+        data: { 'vendor_product_uom' : vendor_product_uom,  'wastage_quantity' : wastage_quantity, 'vendor_product_name' : vendor_product_name, 'product_average_buying_price' : product_average_buying_price  },
         async: true,
         beforeSend: function() {
         $('#update_inventory_wastage_form').prop('disabled', true);
