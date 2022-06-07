@@ -15,6 +15,7 @@ class ControllerApiCustomerMod extends Controller {
         foreach ($orders as $order_id) {
             $log->write('mod loop' . $order_id);
             $log->write('mod loop' . $order_id . 'front\controller\api\customer\mod.php');
+            $log->write('mod loop' . $order_id . ' ' . $this->cart->getSubTotal() . ' ' . $this->cart->getTotal());
 
             if ($customer_info != null)
                 $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), $comment, true, $customer_info['customer_id'], 'customer');
