@@ -3652,7 +3652,7 @@ class ControllerApiCustomerOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addOrderNew($args = []) {
+    public function addOrdersNew($args = []) {
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
@@ -4671,7 +4671,7 @@ class ControllerApiCustomerOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addOrdersNew($args = []) {
+    public function addOrderNew($args = []) {
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
@@ -5144,7 +5144,13 @@ class ControllerApiCustomerOrder extends Controller {
 
                 $this->cart->clear();
             } elseif (('mod' == $args['payment_method_code']) || ('mod' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
-                $data['payment'] = $this->load->controller('api/customer/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
+                if (('mod' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
+                    $data['payment'] = $this->load->controller('api/customer/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
+                }
+
+                if (('mod' == $args['payment_method_code']) && isset($args['payment_wallet_method_code']) && 'wallet' == $args['payment_wallet_method_code']) {
+                    $data['payment'] = $this->load->controller('api/customer/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
+                }
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
                 unset($this->session->data['accept_vendor_terms']);
