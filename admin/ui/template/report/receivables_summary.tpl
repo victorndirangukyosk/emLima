@@ -103,6 +103,7 @@
                 <td class="text-left">Company</td>
                 <td class="text-left">Customer</td>   
                 <td class="text-right">Sum of Total</td>
+                <td class="text-left">Payment Terms</td>
                 <!--<td class="text-right">Sum not Due</td> 
                 <td class="text-right">Sum Due</td> -->
               </tr>
@@ -114,6 +115,7 @@
                 <td class="text-left"><?php echo $order['company']; ?></td>
                 <td class="text-left"><?php echo $order['customer']; ?></td> 
                 <td class="text-right"><?php echo $order['order_total']; ?></td>
+                <td class="text-right"><?php echo $order['payment_terms']; ?></td>
                 <!--<td class="text-right"><?php echo $order['updated_total']; ?></td>
               
                 <td class="text-right"><?php echo $order['updated_total']; ?></td>-->
