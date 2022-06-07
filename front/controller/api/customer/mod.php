@@ -12,6 +12,35 @@ class ControllerApiCustomerMod extends Controller {
 
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         $comment = "";
+
+        /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
+        $this->load->model('account/customer');
+        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+        $log->write('Order Confirm In Mobile MOD');
+        $log->write($is_he_parents);
+        $log->write('Order Confirm In Mobile MOD');
+
+        $parent_customer_info = NULL;
+        if ($is_he_parents != NULL && $is_he_parents > 0) {
+            $parent_customer_info = $this->model_account_customer->getCustomer($is_he_parents);
+        }
+
+        $sub_customer_order_approval_required = 1;
+        if (isset($parent_customer_info) && $parent_customer_info != NULL && is_array($parent_customer_info)) {
+            $sub_customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $sub_customer_order_approval_required = $sub_customer_info['sub_customer_order_approval'];
+        }
+
+        $order_appoval_access = FALSE;
+        if ($this->customer->getOrderApprovalAccess() > 0 && $this->customer->getOrderApprovalAccessRole() != NULL) {
+            $order_appoval_access = TRUE;
+        }
+
+        $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
+        $order_status_id = $order_status_id > 0 ? $order_status_id : $this->config->get('mod_order_status_id');
+        /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
+
         foreach ($orders as $order_id) {
             $log->write('mod loop' . $order_id);
             $log->write('mod loop' . $order_id . 'front\controller\api\customer\mod.php');
@@ -43,6 +72,35 @@ class ControllerApiCustomerMod extends Controller {
 
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         $comment = "";
+
+        /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
+        $this->load->model('account/customer');
+        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
+        $log->write('Order Confirm In Mobile MOD');
+        $log->write($is_he_parents);
+        $log->write('Order Confirm In Mobile MOD');
+
+        $parent_customer_info = NULL;
+        if ($is_he_parents != NULL && $is_he_parents > 0) {
+            $parent_customer_info = $this->model_account_customer->getCustomer($is_he_parents);
+        }
+
+        $sub_customer_order_approval_required = 1;
+        if (isset($parent_customer_info) && $parent_customer_info != NULL && is_array($parent_customer_info)) {
+            $sub_customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $sub_customer_order_approval_required = $sub_customer_info['sub_customer_order_approval'];
+        }
+
+        $order_appoval_access = FALSE;
+        if ($this->customer->getOrderApprovalAccess() > 0 && $this->customer->getOrderApprovalAccessRole() != NULL) {
+            $order_appoval_access = TRUE;
+        }
+
+        $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
+        $order_status_id = $order_status_id > 0 ? $order_status_id : $this->config->get('mod_order_status_id');
+        /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
+
         foreach ($orders as $order_id) {
             $log->write('mod loop' . $order_id);
             $log->write('mod loop' . $order_id . 'front\controller\api\customer\mod.php');
