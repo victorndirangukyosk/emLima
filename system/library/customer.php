@@ -23,6 +23,8 @@ class Customer {
     private $pezesha_identifier;
     private $credit_period;
     private $jwt_token;
+    private $order_approval_access;
+    private $order_approval_access_role;
 
     public function __construct($registry) {
         $this->config = $registry->get('config');
@@ -87,6 +89,8 @@ class Customer {
                 $this->mobile_notification = $customer_query->row['mobile_notification'];
                 $this->email_notification = $customer_query->row['email_notification'];
                 $this->payment_terms = $customer_query->row['payment_terms'];
+                $this->order_approval_access = $customer_query->row['order_approval_access'];
+                $this->order_approval_access_role = $customer_query->row['order_approval_access_role'];
 
                 $this->db->query('UPDATE ' . DB_PREFIX . "customer SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int) $this->customer_id . "'");
 
@@ -190,6 +194,8 @@ class Customer {
             $this->mobile_notification = $customer_query->row['mobile_notification'];
             $this->email_notification = $customer_query->row['email_notification'];
             $this->payment_terms = $customer_query->row['payment_terms'];
+            $this->order_approval_access = $customer_query->row['order_approval_access'];
+            $this->order_approval_access_role = $customer_query->row['order_approval_access_role'];
 
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int) $this->customer_id . "'");
 
@@ -288,6 +294,8 @@ class Customer {
             $this->mobile_notification = $customer_query->row['mobile_notification'];
             $this->email_notification = $customer_query->row['email_notification'];
             $this->payment_terms = $customer_query->row['payment_terms'];
+            $this->order_approval_access = $customer_query->row['order_approval_access'];
+            $this->order_approval_access_role = $customer_query->row['order_approval_access_role'];
 
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int) $this->customer_id . "'");
 
@@ -315,6 +323,8 @@ class Customer {
         $this->mobile_notification = '';
         $this->email_notification = '';
         $this->payment_terms = '';
+        $this->order_approval_access = '';
+        $this->order_approval_access_role = '';
         $this->customer_category = '';
         $this->customer_parent = '';
         $this->pezesha_customer_id = '';
@@ -395,6 +405,14 @@ class Customer {
         return $this->payment_terms;
     }
 
+    public function getOrderApprovalAccess() {
+        return $this->order_approval_access;
+    }
+
+    public function getOrderApprovalAccessRole() {
+        return $this->order_approval_access_role;
+    }
+
     public function getCustomerCategory() {
         return $this->customer_category;
     }
@@ -438,6 +456,8 @@ class Customer {
         $this->mobile_notification = $data['mobile_notification'];
         $this->email_notification = $data['email_notification'];
         $this->payment_terms = $data['payment_terms'];
+        $this->order_approval_access = $data['order_approval_access'];
+        $this->order_approval_access_role = $data['order_approval_access_role'];
         $this->customer_category = $data['customer_category'];
         $this->customer_parent = $data['customer_parent'];
         $this->pezesha_customer_id = $data['pezesha_customer_id'];
