@@ -12838,16 +12838,16 @@ class ModelReportExcel extends Model {
             ];
 
             //Company name, address
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:F2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:G2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Products Wastage Report');
-            $objPHPExcel->getActiveSheet()->getStyle('A1:F2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A1:G2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
             //subtitle
             $from = date('d-m-Y', strtotime($filter_data['filter_date_added']));
             $to = date('d-m-Y', strtotime($filter_data['filter_date_added_to']));
-            $objPHPExcel->getActiveSheet()->mergeCells('A3:F3');
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:G3');
             $html = 'FROM ' . $from . ' TO ' . $to;
 
             if(isset($filter_data['filter_date_added']) && isset($filter_data['filter_date_added_to'])){
@@ -12857,7 +12857,8 @@ class ModelReportExcel extends Model {
                     $objPHPExcel->getActiveSheet()->setCellValue('A3','');
 
                 }
-            $objPHPExcel->getActiveSheet()->getStyle('A1:F3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:G3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('G')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             /* $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
               $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20); */
@@ -12874,6 +12875,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Date Added');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Added By');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Cumulative Wastage');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Avg. Buying Price');
 
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
@@ -12882,6 +12884,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 5;
@@ -12898,6 +12901,7 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['date_added']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['added_by_user']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['cumulative_wastage']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['avg_buying_price']??'NA');
 
                 ++$row;
             }
