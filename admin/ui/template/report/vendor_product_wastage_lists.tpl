@@ -116,7 +116,7 @@
                                         <a href="<?php echo $sort_product_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_product_id; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_product_id; ?>"><?php echo $column_product_id; ?></a>
-                                        <?php } ?></td>
+                                        <?php } ?></td> 
 
 
                                     <td class="text-left"><?php if ($sort == 'ps.product_store_id') { ?>
@@ -127,7 +127,7 @@
 
 
 
-                                    <td class="text-left"><?php if ($sort == 'pd.name') { ?>
+                                   <td class="text-left"><?php if ($sort == 'pd.name') { ?>
                                         <a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_name; ?>"><?php echo $column_name; ?></a>
@@ -137,6 +137,7 @@
                                    
 
 
+                                    <td><?php echo $column_vproduct_id; ?></td>
                                     <td><?php echo $column_name; ?></td>
                                     <td>Unit</td>
                                     <td>Date</td>
@@ -156,8 +157,8 @@
                                 <?php foreach ($products as $product) { ?>
                                 <tr>
                                     
-                                   <!-- <td class="text-right"><?php echo $product['product_id']; ?></td>
-                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>-->
+                                   <!-- <td class="text-right"><?php echo $product['product_id']; ?></td>-->
+                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>
                                     <td class="text-left"><?php echo $product['name']; ?></td>
 
 
