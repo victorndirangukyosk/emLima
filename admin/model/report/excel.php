@@ -10470,10 +10470,10 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['customer'] . PHP_EOL . $result['company']);
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['total']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, round($result['total_value'],2));
                 // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['amount_partialy_paid']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['paid']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['pending_amount']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, round($result['pending_amount_value'],2));
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['transaction_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['paid_to']);
                 // $Amount = $Amount + $result['pending_amount_value'];
