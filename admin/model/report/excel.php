@@ -1958,9 +1958,9 @@ class ModelReportExcel extends Model {
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $product['unit']);
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $product['quantity_updated']);
                     $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $product['unit_updated']);
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $product['price']);
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $product['price_value']);
                     // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $product['total_updated']);
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $product['total']);
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $product['total_value']);
 
                     // $totalOrderAmount += $product['total_updatedvalue'];
                     $totalOrderAmount += $product['total_value'];
@@ -1972,10 +1972,16 @@ class ModelReportExcel extends Model {
                 } else {
                     $totalOrderAmountFull = $totalOrderAmount;
                 }
-                $totalOrderAmount = $this->currency->format($totalOrderAmount);
-                $totalOrderAmountFull = $this->currency->format($totalOrderAmountFull);
-                $delivery_charge = $this->currency->format($delivery_charge);
-                $delivery_charge_vat = $this->currency->format($delivery_charge_vat);
+                // $totalOrderAmount = $this->currency->format($totalOrderAmount);
+                // $totalOrderAmountFull = $this->currency->format($totalOrderAmountFull);
+                // $delivery_charge = $this->currency->format($delivery_charge);
+                // $delivery_charge_vat = $this->currency->format($delivery_charge_vat);
+
+
+                $totalOrderAmount = ($totalOrderAmount);
+                $totalOrderAmountFull = ($totalOrderAmountFull);
+                $delivery_charge = ($delivery_charge);
+                $delivery_charge_vat = ($delivery_charge_vat);
 
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, 'Sub-Total ');
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $totalOrderAmount);
@@ -2220,7 +2226,8 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['shipping_address']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $this->currency->format($result['total']));
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $this->currency->format($result['total']));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, ($result['total']));
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['delivery_date']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['delivery_timeslot']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['status']);
