@@ -39,7 +39,7 @@ class ControllerApiCustomerMod extends Controller {
         }
 
         $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
-        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('mod_order_status_id') : 15;
         $order_status_id = $order_status_id > 0 ? $order_status_id : $this->config->get('mod_order_status_id');
         /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
 
@@ -102,7 +102,7 @@ class ControllerApiCustomerMod extends Controller {
         }
 
         $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
-        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('mod_order_status_id') : 15;
         $order_status_id = $order_status_id > 0 ? $order_status_id : $this->config->get('mod_order_status_id');
         /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
 
