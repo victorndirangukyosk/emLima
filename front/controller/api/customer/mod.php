@@ -39,7 +39,7 @@ class ControllerApiCustomerMod extends Controller {
         }
 
         $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
-        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('mod_order_status_id') : 15;
         $order_status_id = $order_status_id > 0 ? $order_status_id : $this->config->get('mod_order_status_id');
         /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
 
@@ -102,7 +102,7 @@ class ControllerApiCustomerMod extends Controller {
         }
 
         $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
-        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('mod_order_status_id') : 15;
         $order_status_id = $order_status_id > 0 ? $order_status_id : $this->config->get('mod_order_status_id');
         /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
 
@@ -136,7 +136,7 @@ class ControllerApiCustomerMod extends Controller {
                     $this->model_sale_order->UpdatePaymentMethod($order_id, 'Wallet Payment', 'wallet');
                     $ret = $this->model_checkout_order->addOrderHistory($order_id, 1, 'Paid Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
                 } elseif ($customer_info != NULL && $customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
-                    $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $value, $customer_wallet_total, $value, 'P', $customer_wallet_total);
+                    $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $order_id, $customer_wallet_total, $value, 'P', $customer_wallet_total);
                     $this->model_sale_order->UpdatePaymentMethod($order_id, 'Wallet Payment', 'wallet');
                     $ret = $this->model_checkout_order->addOrderHistory($order_id, 1, 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
                 }

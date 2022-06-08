@@ -725,6 +725,12 @@
                     <?php } ?>
 
 
+                    <?php if($preturn_report_customer_receivables) { ?>  
+            <li><a href="<?php echo $report_customer_receivables; ?>">Customer Receivables</a></li>
+            <?php } ?>
+
+
+
                 </ul>
             </li>
             <?php }?>
