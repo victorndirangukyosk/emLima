@@ -5799,19 +5799,19 @@ class ModelReportExcel extends Model {
             ];
 
             //Company name, address
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:J2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:O2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Inventory History ');
-            $objPHPExcel->getActiveSheet()->getStyle('A1:J2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A1:O2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
-            $objPHPExcel->getActiveSheet()->getStyle('A4:J4')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A4:O4')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
             //subtitle
 
-            $objPHPExcel->getActiveSheet()->getStyle('A1:J3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:O3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
             /* $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
               $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);
@@ -5821,7 +5821,7 @@ class ModelReportExcel extends Model {
 
              */
 
-            foreach (range('A', 'L') as $columnID) {
+            foreach (range('A', 'S') as $columnID) {
                 $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
                         ->setAutoSize(true);
             }
@@ -5842,6 +5842,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(11, 4, 'Updated By');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(12, 4, 'User Role');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, 4, 'Date Added');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(14, 4, 'Date Time');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -5859,6 +5860,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(11, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(12, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(13, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(14, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 5;
@@ -5879,7 +5881,8 @@ class ModelReportExcel extends Model {
 
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(11, $row, $result['added_user']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(12, $row, $result['added_user_role']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, $row, $result['date_added']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, $row, date($this->language->get('date_format_short'), strtotime($result['date_added'])));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(14, $row, date($this->language->get('time_format'), strtotime($result['date_added'])));
                 ++$row;
             }
 
