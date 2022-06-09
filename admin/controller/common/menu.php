@@ -124,7 +124,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_product_received_sold'] = $this->url->link('report/product_received_sold', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_receivables_summary'] = $this->url->link('report/receivables_summary', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_receivables_ageing'] = $this->url->link('report/receivables_ageing', 'token=' . $this->session->data['token'], 'SSL');
-        $data['report_customer_receivables'] = $this->url->link('report/customer_receivables', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_payment_receivables'] = $this->url->link('report/payment_receivables', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_order_product_missing_products'] = $this->url->link('report/order_product_missing_products', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_product_accept_reject_products'] = $this->url->link('sale/order_product_accept_reject_products', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token=' . $this->session->data['token'], 'SSL');
@@ -339,7 +339,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_report_product_received_sold'] = $this->user->hasPermission('access', 'report/product_received_sold');
         $data['preturn_report_receivables_summary'] = $this->user->hasPermission('access', 'report/receivables_summary');
         $data['preturn_report_receivables_ageing'] = $this->user->hasPermission('access', 'report/receivables_ageing');
-        $data['preturn_report_customer_receivables'] = $this->user->hasPermission('access', 'report/customer_receivables');
+        $data['preturn_report_payment_receivables'] = $this->user->hasPermission('access', 'report/payment_receivables');
         $data['preturn_order_product_accept_reject_products'] = $this->user->hasPermission('access', 'sale/order_product_accept_reject_products');
         $data['preturn_order_recurring'] = $this->user->hasPermission('access', 'sale/recurring');
         $data['preturn_return'] = $this->user->hasPermission('access', 'sale/return');
@@ -505,6 +505,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_report_inventory_wastage'] = $this->user->hasPermission('access', 'report/inventory_wastage');
         $data['preturn_report_inventory_wastage_consolidated'] = $this->user->hasPermission('access', 'report/inventory_wastage_consolidated');
         $data['preturn_inventory_history_updation'] = $this->user->hasPermission('access', 'inventory/inventory_history_updation');
+        $data['preturn_inventory_buying_price_updation'] = $this->user->hasPermission('access', 'inventory/inventory_buying_price_updation');
         $data['preturn_wastage_updation'] = $this->user->hasPermission('access', 'inventory/wastage_updation');
         $data['preturn_vendor_product_requisition'] = $this->user->hasPermission('access', 'inventory/vendor_product_requisition');
         $data['preturn_vendor_product_requisition_history'] = $this->user->hasPermission('access', 'inventory/vendor_product_requisition_history');
@@ -564,7 +565,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_product_received_sold'] = $this->url->link('report/product_received_sold', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_receivables_summary'] = $this->url->link('report/receivables_summary', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_receivables_ageing'] = $this->url->link('report/receivables_ageing', 'token=' . $this->session->data['token'], 'SSL');
-        $data['report_customer_receivables'] = $this->url->link('report/customer_receivables', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_payment_receivables'] = $this->url->link('report/payment_receivables', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_product_accept_reject_products'] = $this->url->link('sale/order_product_accept_reject_products', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_dashboard'] = $this->url->link('sale/orderdashboard', 'token=' . $this->session->data['token'], 'SSL');
 

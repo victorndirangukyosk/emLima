@@ -129,12 +129,21 @@
                                     <td class="text-right"><?php echo $histor['product_store_id']; ?></td>
                                     <td class="text-right" style="max-width: 50px !important; text-align: right;"><?php echo $histor['unit']; ?></td>
                                     
-                                      <?php if($this->user->hasPermission('access', 'inventory/inventory_history_updation')) { ?>
+                                      <?php if($this->user->hasPermission('access', 'inventory/inventory_buying_price_updation')) { ?>
 
                                    
                                     <td class="text-left">
                                          <input style="max-width: 75px !important; text-align: right;" name="buying_price" type="text" onkeypress="return validateFloatKeyPress(this, event);" class="buying_price" data-general_product_id="<?php echo $histor['product_id']; ?>" data-name="<?php echo $histor['name']; ?>" data-current-buying-price="<?php echo $histor['buying_price']; ?>" id="buying_price_<?php echo $histor['product_history_id'];?>" value="<?php echo $histor['buying_price']; ?>">
                                     </td>
+
+                                     <?php }else{ ?>
+
+                                    <td class="text-right"><?php echo $histor['buying_price']; ?></td>
+
+
+                                      <?php } ?>
+                                      <?php if($this->user->hasPermission('access', 'inventory/inventory_history_updation')) { ?>
+
 				    <td class="text-left">
                                         <input style="max-width: 75px !important;" name="source" type="text" class="source" id="source_<?php echo $histor['product_history_id'];?>" data-current-source="<?php echo $histor['source']; ?>" value="<?php echo $histor['source']; ?>">
                                     </td>
@@ -167,10 +176,8 @@
                                     <input style="max-width: 85px !important; text-align: right;" name="date_added_edit" type="date"  class="date_added_edit"  id="date_added_<?php echo $histor['product_history_id'];?>" value="<?php echo $histor['date_added_date']; ?>">
                                     </td>
                                     <td class="text-left"><button id="download_inventory_voucher" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Download Voucher" data-inventory-voucher="<?php echo $histor['voucher']; ?>"><i class="fa fa-download text-success"></i></button></td>
-                                    <td class="text-left"><button id="update_inventory" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Update Inventory" data-inventory-update="<?php echo $histor['product_history_id']; ?>"><i class="fa fa-save text-success"></i></button></td>
 
                             <?php }else{ ?>
-                                    <td class="text-right"><?php echo $histor['buying_price']; ?></td>
                                     <td class="text-left"><?php echo $histor['source']; ?></td>
                                     <td class="text-right"><?php echo $histor['procured_qty']; ?></td>
                                     <td class="text-right"><?php echo $histor['rejected_qty']; ?></td>
@@ -181,6 +188,12 @@
                                     <td class="text-left"><?php echo $histor['date_added']; ?></td>
                                     <td class="text-left"><button id="download_inventory_voucher" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Download Voucher" data-inventory-voucher="<?php echo $histor['voucher']; ?>"><i class="fa fa-download text-success"></i></button></td>
                                  <?php } ?>
+                                      <?php if($this->user->hasPermission('access', 'inventory/inventory_buying_price_updation') || $this->user->hasPermission('access', 'inventory/inventory_history_updation')) { ?>
+
+
+                                    <td class="text-left"><button id="update_inventory" type="button" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Update Inventory" data-inventory-update="<?php echo $histor['product_history_id']; ?>"><i class="fa fa-save text-success"></i></button></td>
+                                <?php } ?>
+
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>

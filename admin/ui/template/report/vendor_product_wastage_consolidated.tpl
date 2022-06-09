@@ -138,6 +138,7 @@
 
 
                                      
+                                    <td><?php echo $column_vproduct_id; ?></td>
                                     <td><?php echo $column_name; ?></td>
                                     <td>Unit</td>
 
@@ -156,8 +157,8 @@
                                 <?php foreach ($products as $product) { ?>
                                 <tr>
                                     
-                                   <!-- <td class="text-right"><?php echo $product['product_id']; ?></td>
-                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>-->
+                                   <!-- <td class="text-right"><?php echo $product['product_id']; ?></td>-->
+                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>
                                     <td class="text-left"><?php echo $product['name']; ?></td>
 
                                     <td class="text-left"><?php echo $product['unit']; ?></td>

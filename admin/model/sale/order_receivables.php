@@ -4,7 +4,7 @@ class ModelSaleOrderReceivables extends Model
 {
     public function getOrderReceivables($data = [])
     {
-        $sql = "SELECT o.order_id, c.customer_id,c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer,c.company_name as company, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
+        $sql = "SELECT o.order_id, c.customer_id,c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer,c.company_name as company, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid,c.payment_terms FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
 
         $sql .= " Where (o.paid = 'P' or o.paid = 'N')  ";//and  ot.transaction_id  is null ";
 
@@ -31,6 +31,12 @@ class ModelSaleOrderReceivables extends Model
         if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
         }
+
+
+        if (!empty($data['filter_payment_terms'])) {
+            $sql .= " AND c.payment_terms LIKE '%".$data['filter_payment_terms']."%'";
+        }
+
 
         // if (!empty($data['filter_date_modified'])) {
         //     $sql .= " AND DATE(o.date_modified) = DATE('".$this->db->escape($data['filter_date_modified'])."')";
@@ -108,6 +114,10 @@ class ModelSaleOrderReceivables extends Model
 
         if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
             $sql .= " AND DATE(o.date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
+        }
+
+        if (!empty($data['filter_payment_terms'])) {
+            $sql .= " AND c.payment_terms LIKE '%".$data['filter_payment_terms']."%'";
         }
 
         // if (!empty($data['filter_total'])) {
