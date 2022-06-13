@@ -5135,6 +5135,11 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write('pezesha_result');
                 $log->write($pezesha_result);
                 $log->write('pezesha_result');
+                if (isset($pezesha_result) && array_key_exists('data', $pezesha_result) && $pezesha_result['data']['status']) {
+                    $log->write('pezesha_result_2');
+                    $log->write($pezesha_result);
+                    $log->write('pezesha_result_2');
+                }
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
                 unset($this->session->data['accept_vendor_terms']);
