@@ -5135,17 +5135,29 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write('pezesha_result');
                 $log->write($pezesha_result);
                 $log->write('pezesha_result');
-                if (isset($pezesha_result) && array_key_exists('data', $pezesha_result) && $pezesha_result['data']['status']) {
+                if (isset($pezesha_result) && array_key_exists('data', $pezesha_result) && $pezesha_result['data']['status'] == 200 && $pezesha_result['data']['response_code'] == 0 && !$pezesha_result['data']['error']) {
+
+                    unset($this->session->data['accept_vendor_terms']);
+                    unset($this->session->data['delivery_charge_terms']);
+                    $this->cart->clear();
+
                     $log->write('pezesha_result_2');
                     $log->write($pezesha_result);
                     $log->write('pezesha_result_2');
-                }
-                $json['status'] = 200;
-                $json['msg'] = 'Order placed Successfully';
-                unset($this->session->data['accept_vendor_terms']);
-                unset($this->session->data['delivery_charge_terms']);
 
-                $this->cart->clear();
+                    $json['status'] = 200;
+                    $json['msg'] = 'Order placed Successfully';
+                } else if (isset($pezesha_result) && array_key_exists('data', $pezesha_result) && $pezesha_result['data']['status'] != 200 && $pezesha_result['data']['response_code'] != 0 && $pezesha_result['data']['error']) {
+                    $log->write('pezesha_result_2');
+                    $log->write($pezesha_result);
+                    $log->write('pezesha_result_2');
+
+                    $json['status'] = $pezesha_result['data']['status'];
+                    $json['msg'] = $pezesha_result['data']['message'] . ' ' . $pezesha_result['message'];
+                } else {
+                    $json['status'] = 500;
+                    $json['msg'] = 'Something went wrong, Please try agian later!';
+                }
             } elseif (('cod' == $args['payment_method_code']) || ('cod' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
                 if (('cod' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
                     $data['payment'] = $this->load->controller('api/customer/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
