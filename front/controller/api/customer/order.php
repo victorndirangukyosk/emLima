@@ -5126,11 +5126,11 @@ class ControllerApiCustomerOrder extends Controller {
                 $this->cart->clear();
             } elseif (('pezesha' == $args['payment_method_code']) || ('pezesha' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
                 if (('pezesha' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
-                    $pezesha_result = $this->load->controller('customer/pezesha/applyloanone', $args);
+                    $pezesha_result = $this->load->controller('api/customer/pezesha/applyloanone', $order_ids);
                 }
 
                 if (('pezesha' == $args['payment_method_code']) && isset($args['payment_wallet_method_code']) && 'wallet' == $args['payment_wallet_method_code']) {
-                    $pezesha_result = $this->load->controller('customer/pezesha/applyloanonehybrid', $args);
+                    $pezesha_result = $this->load->controller('api/customer/pezesha/applyloanonehybrid', $order_ids);
                 }
                 $log->write('pezesha_result');
                 $log->write($pezesha_result);
