@@ -321,18 +321,27 @@ class ControllerApiCustomerPezesha extends Controller {
 
     public function applyloanonehybrid($orders) {
         $json['status'] = false;
-        if ($this->cart->getTotal() > $this->getPezeshaCreditLimit()) {
+        if ($this->getPezeshaCreditLimit() < 0) {
             $json['status'] = false;
             $json['message'] = 'Plese Check Your Pezesha Amount Limit!(' . $this->getPezeshaCreditLimit() . ')';
         }
-        if ($this->cart->getTotal() <= $this->getPezeshaCreditLimit()) {
+        if ($this->getPezeshaCreditLimit() > 0) {
             $log = new Log('error.log');
             $this->load->model('account/customer');
             $this->load->model('checkout/order');
             $this->load->model('payment/pezesha');
+            $this->load->model('account/credit');
+            $this->load->model('payment/wallet');
+            $this->load->model('sale/order');
+
+            $amount = $this->cart->getTotal();
+            $customer_wallet_total = $this->model_account_credit->getTotalAmount();
+            if ($customer_wallet_total > 0) {
+                $amount = $amount - $customer_wallet_total;
+                $amount = abs($amount);
+            }
 
             $customer_id = $this->customer->getId();
-            $amount = $this->cart->getTotal();
             $order_id = '#' . implode("#", $orders);
 
             $customer_device_info = $this->model_account_customer->getCustomer($customer_id);
@@ -376,10 +385,40 @@ class ControllerApiCustomerPezesha extends Controller {
             //return $json;
             if ($result['status'] == 200 && $result['response_code'] == 0 && !$result['error']) {
                 foreach ($orders as $order_id) {
-                    $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, $result['data']['loan_id'], $loan_type);
-                    $this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $this->customer->getId());
-                    // $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pezesha_order_status_id'), 'Paid With Pezesha', true, $this->customer->getId(), 'customer', '', 'Y');
-                    $ret = $this->model_checkout_order->addOrderHistory($order_id, 14/* $this->config->get('pezesha_order_status_id') */, 'Applied For Pezesha Loan', true, $this->customer->getId(), 'customer', '', 'N');
+                    $customer_wallet_total = $this->model_account_credit->getTotalAmount();
+
+                    if ($customer_wallet_total > 0) {
+                        $totals = $this->model_sale_order->getOrderTotals($order_id);
+                        $log->write($totals);
+                        $total = 0;
+                        foreach ($totals as $total) {
+                            if ('total' == $total['code']) {
+                                $total = $total['value'];
+                                break;
+                            }
+                        }
+                        if ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total <= $customer_wallet_total) {
+                            $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $order_id, $total, $order_id, 'Y', 0);
+                            $this->model_sale_order->UpdatePaymentMethod($order_id, 'Wallet Payment', 'wallet');
+                            $ret = $this->model_checkout_order->addOrderHistory($order_id, 1, 'Paid Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
+                        } elseif ($customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
+                            $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $order_id, $customer_wallet_total, $order_id, 'P', $customer_wallet_total);
+                            $this->model_sale_order->UpdatePaymentMethod($order_id, 'Wallet Payment', 'wallet');
+                            $ret = $this->model_checkout_order->addOrderHistory($order_id, 14, 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
+
+                            $order_info = $this->model_checkout_order->getOrder($order_id);
+
+                            $log->write('order_info');
+                            $log->write($order_info);
+                            $log->write('order_info');
+                            if ($order_info['paid'] == 'P') {
+                                $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, 0/* $result['data']['loan_id'] */, $loan_type);
+                                //$this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $this->customer->getId());
+                                $ret = $this->model_checkout_order->addOrderHistory($order_id, 14/* $this->config->get('pezesha_order_status_id') */, 'Applied For Pezesha Loan', true, $this->customer->getId(), 'customer', '', 'P');
+                            }
+                        }
+                        /* WALLET */
+                    }
                 }
                 $json['status'] = true;
                 $json['message'] = 'Pezesha Loan Applied Successfully!';
