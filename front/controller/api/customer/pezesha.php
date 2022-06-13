@@ -306,7 +306,7 @@ class ControllerApiCustomerPezesha extends Controller {
             if ($result['status'] == 200 && $result['response_code'] == 0 && !$result['error']) {
                 foreach ($orders as $order_id) {
                     $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, $result['data']['loan_id'], $loan_type);
-                    $this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $this->customer->getId());
+                    //$this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $this->customer->getId());
                     // $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('pezesha_order_status_id'), 'Paid With Pezesha', true, $this->customer->getId(), 'customer', '', 'Y');
                     $ret = $this->model_checkout_order->addOrderHistory($order_id, 14/* $this->config->get('pezesha_order_status_id') */, 'Applied For Pezesha Loan', true, $this->customer->getId(), 'customer', '', 'N');
                 }
@@ -326,11 +326,26 @@ class ControllerApiCustomerPezesha extends Controller {
 
     public function applyloanonehybrid($orders) {
         $json['status'] = false;
-        if ($this->getPezeshaCreditLimit() < 0) {
+
+        $this->load->model('account/credit');
+        $customer_wallet_total = $this->model_account_credit->getTotalAmount();
+
+        if ($this->getPezeshaCreditLimit() <= 0) {
             $json['status'] = false;
             $json['message'] = 'Plese Check Your Pezesha Amount Limit!(' . $this->getPezeshaCreditLimit() . ')';
+            $json['data']['status'] = 400;
+            $json['data']['response_code'] = 1;
+            $json['data']['error'] = TRUE;
+            $json['data']['message'] = '';
+        } elseif ($customer_wallet_total <= 0) {
+            $json['status'] = false;
+            $json['message'] = 'Plese Check Your Wallet Amount!(' . $customer_wallet_total . 'KES)';
+            $json['data']['status'] = 400;
+            $json['data']['response_code'] = 1;
+            $json['data']['error'] = TRUE;
+            $json['data']['message'] = '';
         }
-        if ($this->getPezeshaCreditLimit() > 0) {
+        if ($this->getPezeshaCreditLimit() > 0 && $customer_wallet_total > 0) {
             $log = new Log('error.log');
             $this->load->model('account/customer');
             $this->load->model('checkout/order');
@@ -359,7 +374,8 @@ class ControllerApiCustomerPezesha extends Controller {
             $log->write('auth_response');
             //$payment_details = array('type' => 'BUY_GOODS/PAYBILL', 'number' => $order_id, 'callback_url' => $this->url->link('deliversystem/deliversystem/pezeshacallback', '', 'SSL'));
             $payment_details = NULL;
-            $body = array('pezesha_id' => /* $customer_pezesha_info['pezesha_customer_id'] */$this->customer->getCustomerPezeshaId(), 'amount' => $amount, 'duration' => $this->config->get('pezesha_loan_duration'), 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => $this->config->get('pezesha_processing_fee'), 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
+            $order_ids = array_values($orders);
+            $body = array('order_id' => $order_ids, 'pezesha_id' => /* $customer_pezesha_info['pezesha_customer_id'] */$this->customer->getCustomerPezeshaId(), 'amount' => $amount, 'duration' => $this->config->get('pezesha_loan_duration'), 'interest' => ($this->config->get('pezesha_interest') / 100 * $amount), 'rate' => $this->config->get('pezesha_interest'), 'fee' => $this->config->get('pezesha_processing_fee'), 'channel' => $this->config->get('pezesha_channel'), 'payment_details' => $payment_details);
             //$body = http_build_query($body);
             $body = json_encode($body);
             $log->write($body);
@@ -421,6 +437,9 @@ class ControllerApiCustomerPezesha extends Controller {
                                 //$this->model_payment_pezesha->insertOrderTransactionId($order_id, 'PEZESHA_' . $result['data']['loan_id'], $this->customer->getId());
                                 $ret = $this->model_checkout_order->addOrderHistory($order_id, 14/* $this->config->get('pezesha_order_status_id') */, 'Applied For Pezesha Loan', true, $this->customer->getId(), 'customer', '', 'P');
                             }
+                        } elseif ($customer_wallet_total == 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
+                            $this->model_account_customer->SaveCustomerLoans($this->customer->getId(), $order_id, 0/* $result['data']['loan_id'] */, $loan_type);
+                            $ret = $this->model_checkout_order->addOrderHistory($order_id, 14/* $this->config->get('pezesha_order_status_id') */, 'Applied For Pezesha Loan', true, $this->customer->getId(), 'customer', '', 'N');
                         }
                         /* WALLET */
                     }
@@ -434,9 +453,9 @@ class ControllerApiCustomerPezesha extends Controller {
                 $json['data'] = $result;
             }
         }
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+        return $json;
+        /* $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($json)); */
     }
 
     public function loanoffers() {
