@@ -599,7 +599,7 @@ class ModelInventoryInventoryWastage extends Model {
     public function getAverageBuyingPrice($filter_name,$filter_product_uom,$date) {
         // echo '<pre>';print_r('SELECT avg(i.buying_price) as price from ' . DB_PREFIX . "product_inventory_price_history i join hf7_product p on i.product_id=p.product_id  WHERE p.name = '" . $filter_name . "' and p.unit='".filter_product_uom."' and i.date_added <='".$date."' and i.date_added>=DATE_ADD('".$date."' , INTERVAL -500 DAY)");die;
         // echo '<pre>';print_r('SELECT s.buying_price as price from ' . DB_PREFIX . "product_to_store s join hf7_product p on i.product_id=p.product_id  WHERE p.name = '" . $filter_name . "' and p.unit='".$filter_product_uom."'");die;
-        $query = $this->db->query('SELECT avg(i.buying_price) as price from ' . DB_PREFIX . "product_inventory_price_history i join hf7_product p on i.product_id=p.product_id  WHERE p.name = '" . $filter_name . "' and p.unit='".$filter_product_uom."' and i.date_added <='".$date."' and i.date_added>=DATE_ADD('".$date."' , INTERVAL -10 DAY)");
+        $query = $this->db->query('SELECT avg(i.buying_price) as price from ' . DB_PREFIX . "product_inventory_price_history i join hf7_product p on i.product_id=p.product_id  WHERE p.name = '" . $filter_name . "' and i.buying_price > 0  and p.unit='".$filter_product_uom."' and i.date_added <='".$date."' and i.date_added>=DATE_ADD('".$date."' , INTERVAL -10 DAY)");
         // echo $query;die;
 
         $avg_price = $query->row['price'];
