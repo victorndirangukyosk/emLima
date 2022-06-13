@@ -248,6 +248,10 @@ class ControllerApiCustomerPezesha extends Controller {
         if ($this->cart->getTotal() > $this->getPezeshaCreditLimit()) {
             $json['status'] = false;
             $json['message'] = 'Plese Check Your Pezesha Amount Limit!(' . $this->getPezeshaCreditLimit() . ')';
+            $json['data']['status'] = 400;
+            $json['data']['response_code'] = 1;
+            $json['data']['error'] = TRUE;
+            $json['data']['message'] = '';
         }
         if ($this->cart->getTotal() <= $this->getPezeshaCreditLimit()) {
             $log = new Log('error.log');
