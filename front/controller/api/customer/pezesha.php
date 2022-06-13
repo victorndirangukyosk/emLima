@@ -315,7 +315,7 @@ class ControllerApiCustomerPezesha extends Controller {
                 $json['data'] = $result;
             }
         }
-
+        return $json;
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
