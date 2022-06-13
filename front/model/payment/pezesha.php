@@ -28,7 +28,7 @@ class ModelPaymentPezesha extends Model {
                 'code' => 'pezesha',
                 'title' => $this->language->get('text_title'),
                 'terms' => $this->language->get('text_terms'),
-                'terms1' => 'Available Pezesha Amount - ' . $this->session->data['pezesha_amount_limit']??0,
+                'terms1' => 'Available Pezesha Amount - ' . $this->session->data['pezesha_amount_limit'] ?? 0,
                 'sort_order' => $this->config->get('pezesha_sort_order'),
             ];
         }
@@ -42,9 +42,8 @@ class ModelPaymentPezesha extends Model {
         $log->write('order_id_transaction_id');
         $log->write($order_id . ' ' . $transaction_id);
         $log->write('order_id_transaction_id');
-        $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
-
-        $query = $this->db->query($sql);
+        //$sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
+        //$query = $this->db->query($sql);
 
         $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $order_id . "', transaction_id = '" . $transaction_id . "', customer_id = '" . $customer_id . "', created_at = NOW()";
 
