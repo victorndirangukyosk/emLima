@@ -607,7 +607,7 @@ class ControllerApiCustomerCheckout extends Controller {
 
             $log->write($this->customer->getPaymentTerms());
             $log->write($this->customer->getCustomerPezeshaId());
-            $log->write($this->getPezeshaCustomerCreditLimit());
+            $log->write($this->getPezeshaCustomerCreditLimit() . 'PEZESHA LIMIT');
             /* $log->write($this->session->data['pezesha_customer_amount_limit']);
               $log->write($this->session->data['pezesha_amount_limit']); */
             $log->write('pezesha data');
