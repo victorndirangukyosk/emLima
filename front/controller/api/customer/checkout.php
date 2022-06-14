@@ -752,8 +752,10 @@ class ControllerApiCustomerCheckout extends Controller {
             $result = json_decode($result, true);
             $log->write($result);
             $json = $result;
-            if ($result['status'] == 200 && $result['response_code'] == 0 && $result['error'] == false) {
+            if ($result['status'] == 200 && $result['response_code'] == 0 && !$result['error'] && array_key_exists('data', $result) && array_key_exists('amount', $result['data'])) {
                 return $result['data']['amount'];
+            } else {
+                return 0;
             }
         } else {
             return 0;
