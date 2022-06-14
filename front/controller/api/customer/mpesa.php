@@ -340,56 +340,56 @@ class ControllerApiCustomerMpesa extends Controller {
                 $log->write($key . ' ' . $order_reference_number);
                 $log->write('COMPLETE key' . ' ' . 'order_reference_number');
 
-                if ($key == 75) {
-                    $order_reference_number = $order_reference_number;
-                    $number = $data['mpesa_phonenumber'];
-                    $log = new Log('error.log');
-                    $log->write($data);
+                //if ($key == 75) {
+                $order_reference_number = $order_reference_number;
+                $number = $data['mpesa_phonenumber'];
+                $log = new Log('error.log');
+                $log->write($data);
 
-                    $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($order_reference_number);
-                    $log->write('mpesaDetails');
-                    $log->write($mpesaDetails);
-                    $log->write('mpesaDetails');
-                    $live = true;
+                $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($order_reference_number);
+                $log->write('mpesaDetails');
+                $log->write($mpesaDetails);
+                $log->write('mpesaDetails');
+                $live = true;
 
-                    $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+                $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
 
-                    if ($mpesaDetails) {
+                if ($mpesaDetails) {
 
-                        $BusinessShortCode = $this->config->get('mpesa_business_short_code');
-                        $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+                    $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+                    $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
 
-                        $checkoutRequestID = $mpesaDetails['checkout_request_id']; //'ws_CO_28032018142406660';
-                        $timestamp = '20' . date('ymdhis');
-                        $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+                    $checkoutRequestID = $mpesaDetails['checkout_request_id']; //'ws_CO_28032018142406660';
+                    $timestamp = '20' . date('ymdhis');
+                    $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
 
-                        $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
+                    $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
 
-                        // Void the order first
-                        $log->write('COMPLETE STKPushSimulation');
-                        $log->write($stkPushSimulation);
+                    // Void the order first
+                    $log->write('COMPLETE STKPushSimulation');
+                    $log->write($stkPushSimulation);
 
-                        $stkPushSimulation = json_decode($stkPushSimulation);
-                        $log->write('COMPLETE STKPushSimulation JSON ARRAY');
-                        $log->write($stkPushSimulation);
-                        if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
-                            $json['error'] = $stkPushSimulation->ResultDesc;
-                            $json['mpesa_response'] = $stkPushSimulation;
+                    $stkPushSimulation = json_decode($stkPushSimulation);
+                    $log->write('COMPLETE STKPushSimulation JSON ARRAY');
+                    $log->write($stkPushSimulation);
+                    if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
+                        $json['error'] = $stkPushSimulation->ResultDesc;
+                        $json['mpesa_response'] = $stkPushSimulation;
+                    }
+
+                    if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
+                        $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($mpesaDetails['order_reference_number']);
+
+                        if (is_array($transaction_details) && count($transaction_details) <= 0) {
+                            $this->model_payment_mpesa->insertMpesaOrderTransaction($mpesaDetails['order_id'], $mpesaDetails['order_reference_number'], $stkPushSimulation->CheckoutRequestID);
                         }
 
-                        if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
-                            $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($mpesaDetails['order_reference_number']);
-
-                            if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                                $this->model_payment_mpesa->insertMpesaOrderTransaction($mpesaDetails['order_id'], $mpesaDetails['order_reference_number'], $stkPushSimulation->CheckoutRequestID);
-                            }
-
-                            $json['status'] = true;
-                            $json['message'] = 'Payment Successfull.';
-                            $json['mpesa_response'] = $stkPushSimulation;
-                        }
+                        $json['status'] = true;
+                        $json['message'] = 'Payment Successfull.';
+                        $json['mpesa_response'] = $stkPushSimulation;
                     }
                 }
+                //}
             }
         } else {
             $json['status'] = 10014;
@@ -400,6 +400,7 @@ class ControllerApiCustomerMpesa extends Controller {
 
             http_response_code(400);
         }
+        $log = new Log('error.log');
         $log->write('MpesaCheckoutComplete json');
         $log->write($json);
         $log->write('MpesaCheckoutComplete json');
