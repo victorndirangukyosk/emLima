@@ -468,6 +468,7 @@ class ControllerApiCustomerWallet extends Controller {
         $log->write($this->customer->getId());
 
         $this->load->model('checkout/order');
+        $this->load->model('payment/wallet');
 
         /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
         $this->load->model('account/customer');
@@ -502,8 +503,7 @@ class ControllerApiCustomerWallet extends Controller {
         $order_id = NULL;
         foreach ($orders as $order_id) {
             $log->write('wallet loop:2' . $order_id);
-
-            $this->model_checkout_order->UpdateParentApproval($order_id);
+            $this->model_checkout_order->UpdateParentApprovalAPI($order_id);
         }
         $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
         $comment = "";
@@ -523,7 +523,7 @@ class ControllerApiCustomerWallet extends Controller {
             }
 
             if ($customer_info != null) {
-                $this->model_checkout_order->addTransactionCredit($this->customer->getId(), 'Paid Through Wallet By Customer For #' . $order_id, $total, $order_id);
+                $this->model_payment_wallet->addTransactionCredit($this->customer->getId(), 'Paid Through Wallet By Customer For #' . $order_id, $total, $order_id);
                 $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true, $customer_info['customer_id'], 'customer');
             } else {
                 $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true, 0, 'customer');
