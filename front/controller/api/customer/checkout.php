@@ -651,7 +651,9 @@ class ControllerApiCustomerCheckout extends Controller {
 
             http_response_code(400);
         }
-
+        $log->write('PAYMENT METHODS RESPONSE');
+        $log->write($json);
+        $log->write('PAYMENT METHODS RESPONSE');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
