@@ -157,7 +157,7 @@ class ControllerApiCustomerCod extends Controller {
                     $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
                 } elseif ($customer_info != NULL && $customer_wallet_total == 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
                     $this->model_sale_order->UpdatePaymentMethod($order_id, 'Corporate Account/ Cheque Payment', 'cod');
-                    $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), '', FALSE, $this->customer->getId(), 'customer');
+                    $ret = $this->model_checkout_order->addOrderHistory($order_id, 14, '', FALSE, $this->customer->getId(), 'customer');
                 }
 
 
