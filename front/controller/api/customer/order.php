@@ -5084,7 +5084,6 @@ class ControllerApiCustomerOrder extends Controller {
             if (('mpesa' == $args['payment_method_code']) || ('mpesa' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
                 //save for refrence id correct order id
                 $log = new Log('error.log');
-                $cod_order_ids = NULL;
                 foreach ($order_ids as $order_id) {
                     $order_details = $this->model_account_order->getOrderDetailsById($order_id);
                     $kwikbasket_order_reference_number = $order_data[$order_details['store_id']]['order_reference_number'];
@@ -5117,7 +5116,6 @@ class ControllerApiCustomerOrder extends Controller {
                         }
                     }
                 }
-                $this->load->controller('payment/cod/apiConfirm', $cod_order_ids);
                 $json['status'] = 200;
                 $json['msg'] = 'Order placed Successfully';
                 unset($this->session->data['accept_vendor_terms']);
