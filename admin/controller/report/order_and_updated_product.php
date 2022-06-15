@@ -3,7 +3,7 @@
 class ControllerReportOrderAndUpdatedProduct extends Controller {
 
     public function index() {
-        $this->load->language('report/customer_order');
+        $this->load->language('report/order_and_updated_product');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
@@ -154,7 +154,7 @@ class ControllerReportOrderAndUpdatedProduct extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $this->response->setOutput($this->load->view('report/customer_order.tpl', $data));
+        $this->response->setOutput($this->load->view('report/order_and_updated_product.tpl', $data));
     }
 
     public function statement() {
