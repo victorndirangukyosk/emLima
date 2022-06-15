@@ -13,10 +13,11 @@ $_['column_email'] = 'E-Mail';
 $_['column_customer_group'] = 'Customer Group';
 $_['column_status'] = 'Status';
 $_['column_order_id'] = 'Order ID';
-$_['column_orders'] = 'No. Orders';
-$_['column_products'] = 'No. Products';
-$_['column_total'] = 'Total';
-$_['column_action'] = 'Action';
+$_['column_vendor_product_id'] = 'Vendor Product ID';
+$_['column_product_name'] = 'Product Name';
+$_['column_uom'] = 'UOM';
+$_['column_customer_ordred_quantity'] = 'Customer Ordered Quantity';
+$_['column_updated_quantity'] = 'Updated Quantity';
 
 // Entry
 $_['entry_date_start'] = 'Date Start';

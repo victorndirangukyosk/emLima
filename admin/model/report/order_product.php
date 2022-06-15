@@ -2,7 +2,7 @@
 
 class ModelReportOrderProduct extends Model {
 
-    public function getOrderAndUpdatedProducts($data = []) {
+    public function getOrders($data = []) {
         $sql = 'SELECT * FROM `' . DB_PREFIX . "order` o WHERE o.customer_id > '0'";
 
         if (!empty($data['filter_order_status_id'])) {
@@ -52,6 +52,18 @@ class ModelReportOrderProduct extends Model {
         $query = $this->db->query($sql);
 
         return $query->row['total'];
+    }
+
+    public function getOrderedProducts($order_id) {
+        $sql = 'SELECT order_id,product_id,name,unit,quantity as customer_ordered_quantity FROM `' . DB_PREFIX . "order_product` o WHERE o.order_id = '" . $order_id . "'";
+        $query = $this->db->query($sql);
+        return $query->rows;
+    }
+
+    public function getOrderUpdatedProducts($order_id) {
+        $sql = 'SELECT order_id,product_id,name,unit,quantity as updated_quantity FROM `' . DB_PREFIX . "real_order_product` o WHERE o.order_id = '" . $order_id . "'";
+        $query = $this->db->query($sql);
+        return $query->rows;
     }
 
 }

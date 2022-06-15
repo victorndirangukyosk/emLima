@@ -3,11 +3,6 @@
   <div class="page-header">
     <div class="container-fluid">
       <h1><?php echo $heading_title; ?></h1>
-      <ul class="breadcrumb">
-        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-        <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
-        <?php } ?>
-      </ul>
     </div>
   </div>
   <div class="container-fluid">
@@ -64,28 +59,27 @@
             <thead>
               <tr>
                 <td class="text-left"><?php echo $column_order_id; ?></td>
-                <!--<td class="text-left"><?php echo $column_email; ?></td>
-                <td class="text-left"><?php echo $column_customer_group; ?></td>
-                <td class="text-left"><?php echo $column_status; ?></td>-->
-                <td class="text-right"><?php echo $column_orders; ?></td>
-                <td class="text-right"><?php echo $column_products; ?></td>
-                <td class="text-right"><?php echo $column_total; ?></td>
-                <td class="text-right"><?php echo $column_action; ?></td>
+                <td class="text-right"><?php echo $column_vendor_product_id; ?></td>
+                <td class="text-right"><?php echo $column_product_name; ?></td>
+                <td class="text-right"><?php echo $column_uom; ?></td>
+                <td class="text-right"><?php echo $column_customer_ordred_quantity; ?></td>
+                <td class="text-right"><?php echo $column_updated_quantity; ?></td>
               </tr>
             </thead>
             <tbody>
-              <?php if ($customers) { ?>
-              <?php foreach ($customers as $customer) { ?>
+              <?php if ($order_and_updated_products) { ?>
+              <?php foreach ($order_and_updated_products as $order_and_updated_product) { ?>
+              <?php foreach ($order_and_updated_product as $order_and_updated_produc) { ?>
+              <?php //print_r($order_and_updated_produc); ?>
               <tr>
-                <td class="text-left"><?php echo $customer['company']; ?></td>
-               <!-- <td class="text-left"><?php echo $customer['email']; ?></td>
-                <td class="text-left"><?php echo $customer['customer_group']; ?></td>
-                <td class="text-left"><?php echo $customer['status']; ?></td>-->
-                <td class="text-right"><?php echo $customer['orders']; ?></td>
-                <td class="text-right"><?php echo $customer['products']; ?></td>
-                <td class="text-right"><?php echo $customer['total']; ?></td>
-                <td class="text-right"><a href="<?php echo $customer['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a></td>
+                <td class="text-left"><?php echo $order_and_updated_produc['order_id']; ?></td>
+                <td class="text-right"><?php echo $order_and_updated_produc['product_id']; ?></td>
+                <td class="text-right"><?php echo $order_and_updated_produc['name']; ?></td>
+                <td class="text-right"><?php echo $order_and_updated_produc['unit']; ?></td>
+                <td class="text-right"><?php echo $order_and_updated_produc['customer_ordered_quantity']; ?></td>
+                <td class="text-right"><?php echo $order_and_updated_produc['updated_quantity']; ?></td>
               </tr>
+              <?php } ?>
               <?php } ?>
               <?php } else { ?>
               <tr>
