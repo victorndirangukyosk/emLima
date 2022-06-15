@@ -103,6 +103,7 @@ class ControllerReportOrderAndUpdatedProduct extends Controller {
         $data['column_customer_group'] = $this->language->get('column_customer_group');
         $data['column_status'] = $this->language->get('column_status');
         $data['column_orders'] = $this->language->get('column_orders');
+        $data['column_order_id'] = $this->language->get('column_order_id');
         $data['column_products'] = $this->language->get('column_products');
         $data['column_total'] = $this->language->get('column_total');
         $data['column_action'] = $this->language->get('column_action');

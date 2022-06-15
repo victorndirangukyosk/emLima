@@ -63,7 +63,7 @@
           <table class="table table-bordered table-hover">
             <thead>
               <tr>
-                <td class="text-left">Company</td>
+                <td class="text-left"><?php echo $column_order_id; ?></td>
                 <!--<td class="text-left"><?php echo $column_email; ?></td>
                 <td class="text-left"><?php echo $column_customer_group; ?></td>
                 <td class="text-left"><?php echo $column_status; ?></td>-->
