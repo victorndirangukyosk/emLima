@@ -82,6 +82,7 @@ $_['text_report_farmer_activity'] = 'Farmer Activity';
 $_['text_report_user_activity'] = 'User Activity';
 $_['text_report_customer_online'] = 'Customers Online';
 $_['text_report_customer_order'] = 'Orders';
+$_['text_report_order_and_updated_product'] = 'Ordered Vs Updated Products';
 $_['text_report_customer_reward'] = 'Reward Points';
 $_['text_report_customer_credit'] = 'Credit';
 $_['text_report_affiliate'] = 'Affiliates';

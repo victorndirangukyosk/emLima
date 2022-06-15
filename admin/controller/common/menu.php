@@ -150,7 +150,7 @@ class ControllerCommonMenu extends Controller {
 
         $data['report_sale_advanced'] = $this->url->link('report/sale_advanced', 'token=' . $this->session->data['token'] . '&filter_order_status_id=5', 'SSL');
 
-        $data['report_sale_productmissing'] = $this->url->link('report/sale_productmissing', 'token=' . $this->session->data['token'] , 'SSL');
+        $data['report_sale_productmissing'] = $this->url->link('report/sale_productmissing', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_sale_tax'] = $this->url->link('report/sale_tax', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_sale_shipping'] = $this->url->link('report/sale_shipping', 'token=' . $this->session->data['token'], 'SSL');
@@ -170,6 +170,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_user_activity'] = $this->url->link('report/user_activity', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_online'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order'] = $this->url->link('report/customer_order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_order_and_updated_product'] = $this->url->link('report/order_and_updated_product', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_orderplaced'] = $this->url->link('report/customer_orderplaced', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_onboarded'] = $this->url->link('report/customer_onboarded', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_wallet'] = $this->url->link('report/customer_wallet', 'token=' . $this->session->data['token'], 'SSL');
@@ -485,6 +486,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_account_manager_customer_online'] = $this->user->hasPermission('access', 'report/account_manager_customer_online');
         $data['preturn_user_activity'] = $this->user->hasPermission('access', 'report/user_activity');
         $data['preturn_customer_order'] = $this->user->hasPermission('access', 'report/customer_order');
+        $data['preturn_order_and_updated_product'] = $this->user->hasPermission('access', 'report/order_and_updated_product');
         $data['preturn_customer_orderplaced'] = $this->user->hasPermission('access', 'report/customer_orderplaced');
         $data['preturn_customer_onboarded'] = $this->user->hasPermission('access', 'report/customer_onboarded');
         $data['preturn_customer_wallet'] = $this->user->hasPermission('access', 'report/customer_wallet');
@@ -597,6 +599,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_user_activity'] = $this->url->link('report/user_activity', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_online'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order'] = $this->url->link('report/customer_order', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_order_and_updated_product'] = $this->url->link('report/order_and_updated_product', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_orderplaced'] = $this->url->link('report/customer_orderplaced', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_onboarded'] = $this->url->link('report/customer_onboarded', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_wallet'] = $this->url->link('report/customer_wallet', 'token=' . $this->session->data['token'], 'SSL');
