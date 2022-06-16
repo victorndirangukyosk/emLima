@@ -169,9 +169,43 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-delivery-time"><?php echo $entry_delivery_time; ?></label>
                 <div class="col-sm-10">
-                <input type="text" name="delivery_time" value="<?php echo $delivery_time; ?>" placeholder="<?php echo $entry_delivery_time; ?>" id="input-delivery-time" class="form-control" /> 
+                <input type="number" name="delivery_time" value="<?php echo $delivery_time; ?>" placeholder="<?php echo $entry_delivery_time; ?>" id="input-delivery-time" class="form-control" /> 
                 </div>
               </div>
+              
+              <div class="form-group">
+                       <label class="col-sm-2 control-label">Delivery Days</label> 
+                       <div class="col-sm-10">
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="category_delivery[]" value="monday" <?php if(isset($monday) && $monday == 1) { ?> checked="checked" <?php } ?> >Monday</label>
+                           </div>
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="category_delivery[]" value="tuesday" <?php if(isset($tuesday) && $tuesday == 1) { ?> checked="checked" <?php } ?> >Tuesday</label>
+                           </div>
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="category_delivery[]" value="wednesday" <?php if(isset($wednesday) && $wednesday == 1) { ?> checked="checked" <?php } ?> >Wednesday</label>
+                           </div>
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="category_delivery[]" value="thursday" <?php if(isset($thursday) && $thursday == 1) { ?> checked="checked" <?php } ?> >Thursday</label>
+                           </div>
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="category_delivery[]" value="friday" <?php if(isset($friday) && $friday == 1) { ?> checked="checked" <?php } ?> >Friday</label>
+                           </div>
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="category_delivery[]" value="saturday" <?php if(isset($saturday) && $saturday == 1) { ?> checked="checked" <?php } ?> >Saturday</label>
+                           </div>
+                           <div class="checkbox">
+                               <label>
+                                   <input type="checkbox" name="category_delivery[]" value="sunday" <?php if(isset($sunday) && $sunday == 1) { ?> checked="checked" <?php } ?> >Sunday</label>
+                           </div>
+                       </div>
+                </div>
             </div>
             <div class="tab-pane fade" id="tab-seo">
                 <ul class="nav nav-tabs" id="seo-language">
