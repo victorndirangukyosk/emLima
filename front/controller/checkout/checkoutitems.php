@@ -551,27 +551,7 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $data['products'] = $products;
 
         $data['mostboughtproducts'] = $this->make_slides($this->getMostBoughtProducts($productsID));
-//    echo "<pre>";print_r($data['mostboughtproducts']);die;
-        // if($this->config->get('config_multi_store')) {
-        // if ( file_exists( DIR_TEMPLATE . $this->config->get( 'config_template' ) . '/template/checkout/multi_store_checkoutitems.tpl' ) ) {
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/checkout/multi_store_checkoutitems.tpl', $data));
-        // } else {
-        //     $this->response->setOutput( $this->load->view( 'default/template/checkout/multi_store_checkout.tpl', $data ) );
-        // }
-        // } else {
-        //     if ( file_exists( DIR_TEMPLATE . $this->config->get( 'config_template' ) . '/template/checkout/checkout.tpl' ) ) {
-        //         $this->response->setOutput( $this->load->view( $this->config->get( 'config_template' ) . '/template/checkout/checkout.tpl', $data ) );
-        //     } else {
-        //         $this->response->setOutput( $this->load->view( 'default/template/checkout/checkout.tpl', $data ) );
-        //     }
-        // }
-
-        /*
-          if ( file_exists( DIR_TEMPLATE . $this->config->get( 'config_template' ) . '/template/checkout/checkout.tpl' ) ) {
-          $this->response->setOutput( $this->load->view( $this->config->get( 'config_template' ) . '/template/checkout/checkout.tpl', $data ) );
-          } else {
-          $this->response->setOutput( $this->load->view( 'default/template/checkout/checkout.tpl', $data ) );
-          } */
     }
 
     public function getMostBoughtProducts($productsID) {
@@ -1133,6 +1113,10 @@ class ControllerCheckoutCheckoutItems extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
         //return $data;
+    }
+
+    public function getOnDemandCategoryProducts() {
+        $products = $this->cart->getProducts();
     }
 
 }
