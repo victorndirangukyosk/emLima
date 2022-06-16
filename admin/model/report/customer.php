@@ -1866,4 +1866,100 @@ class ModelReportCustomer extends Model {
 
         return $query->row['total'];
     }
+
+
+
+    public function getTotalCustomers($data = []) {
+
+        $sql = 'SELECT count(DISTINCT c.customer_id) AS total FROM ' . DB_PREFIX . 'customer c   ' ;
+
+        $implode = [];
+
+        
+        $implode[] = "c.customer_id > 0";
+
+        if (!empty($data['filter_customer'])) {
+            $implode[] = " CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = " CONCAT(c.company_name) LIKE '" . $this->db->escape($data['filter_company']) . "'";
+        }
+       
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
+        }
+
+
+        if (!empty($data['filter_payment_terms'])) {
+            $implode[] = " c.payment_terms LIKE '" . $this->db->escape($data['filter_payment_terms']) . "'";
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        // $sql .= ' ORDER BY c.firstname DESC';
+
+        //  echo  ($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
+
+
+    public function getCustomers($data = []) {
+
+        $sql = 'SELECT c.customer_id, concat(c.firstname," ",c.lastname) as name,c.status,c.payment_terms  FROM ' . DB_PREFIX . 'customer c ';
+
+        $implode = [];
+
+        
+        $implode[] = "c.customer_id > 0";
+
+        if (!empty($data['filter_customer'])) {
+            $implode[] = " CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $implode[] = " CONCAT(c.company_name) LIKE '" . $this->db->escape($data['filter_company']) . "'";
+        }
+       
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $implode[] = "c.status = '" . (int) $data['filter_status'] . "'";
+        }
+
+
+        if (!empty($data['filter_payment_terms'])) {
+            $implode[] = " c.payment_terms LIKE '" . $this->db->escape($data['filter_payment_terms']) . "'";
+        }
+
+        if ($implode) {
+            $sql .= ' WHERE ' . implode(' AND ', $implode);
+        }
+
+        $sql .= ' ORDER BY c.firstname DESC';
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        // echo  print_r($data['filter_status']);die;
+
+        // echo  ($data);die;
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
 }
