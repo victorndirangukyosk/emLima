@@ -204,4 +204,66 @@ class ModelReportProduct extends Model
         return $query->rows;
     }
 
+
+    public function getInventoryPurchased($data = [])
+    {
+        $sql = 'SELECT ih.product_history_id,ih.product_name,p.unit, (ih.procured_qty) AS quantity,ih.source,date(ih.date_added) as date,(ih.buying_price) as price, ((ih.buying_price) * ih.procured_qty) AS total FROM '.DB_PREFIX.'product_inventory_history ih LEFT JOIN `'.DB_PREFIX.'product` p ON (ih.product_id = p.product_id)  where 1=1';
+
+ 
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(ih.date_added) >= '".$this->db->escape($data['filter_date_start'])."'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(ih.date_added) <= '".$this->db->escape($data['filter_date_end'])."'";
+        }
+
+        
+
+        // $sql .= ' GROUP BY op.general_product_id ';
+        $sql .= '  ORDER BY ih.date_added DESC';
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function getTotalInventoryPurchased($data)
+    {
+        $sql = 'SELECT count(ih.product_history_id) AS total FROM '.DB_PREFIX.'product_inventory_history ih LEFT JOIN `'.DB_PREFIX.'product` p ON (ih.product_id = p.product_id)  where 1=1';
+
+ 
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(ih.date_added) >= '".$this->db->escape($data['filter_date_start'])."'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(ih.date_added) <= '".$this->db->escape($data['filter_date_end'])."'";
+        }
+
+        
+
+        // $sql .= ' GROUP BY op.general_product_id ';
+        // $sql .= '  ORDER BY ih.date_added DESC';
+
+        
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
+
+
 }
