@@ -676,6 +676,9 @@
                     <?php if($preturn_customer_order) { ?>
                     <li><a href="<?php echo $report_customer_order; ?>"><?php echo $text_report_customer_order; ?></a></li>
                     <?php } ?>
+                    <?php if($preturn_order_and_updated_product) { ?>
+                    <li><a href="<?php echo $report_order_and_updated_product; ?>"><?php echo $text_report_order_and_updated_product; ?></a></li>
+                    <?php } ?>
                     <?php if($preturn_customer_reward) { ?>
                     <li><a href="<?php echo $report_customer_reward; ?>"><?php echo $text_report_customer_reward; ?></a></li>
                     <?php } ?>
