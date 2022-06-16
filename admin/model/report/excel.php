@@ -13940,4 +13940,113 @@ class ModelReportExcel extends Model {
         }
     }
 
+    public function download_customer_master_excel($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        $this->load->language('report/income');
+        $this->load->model('report/customer');
+        $rows = $this->model_report_customer->getCustomers($data);
+
+        // echo "<pre>";print_r($rows);die;
+       
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Customers Master')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:C2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Customers Master');
+            $objPHPExcel->getActiveSheet()->getStyle('A4:C4')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:C3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            /* $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(30);
+              $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(30); */
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Customer Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Status');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Payment Terms');
+
+             
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyle('B')->getAlignment()->setWrapText(true);
+
+            // Fetching the table data
+            $row = 5;
+            foreach ($rows as $result) {
+
+                $result['status']= ($result['status']==0 ?'Disabled':'Enabled');
+
+                
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['name']);
+                 
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['status']);
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['payment_terms']);
+
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+            /* $objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+              // Sending headers to force the user to download the file
+              header('Content-Type: application/vnd.ms-excel'); */
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+            header('Content-Disposition: attachment;filename="customers_Master.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
 }
