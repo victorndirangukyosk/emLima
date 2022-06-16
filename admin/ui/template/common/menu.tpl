@@ -658,10 +658,14 @@
             </ul>
             </li>
             <?php } ?>
-            <?php if( $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false ) { ?>
+            <?php if( $preturn_report_customer !=false || $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false ) { ?>
             <li><a class="parent"><?php echo $text_customer; ?></a>
                 <ul>
 
+
+                    <?php if($preturn_report_customer) { ?>
+                    <li><a href="<?php echo $report_customer; ?>">Customer Master</a></li>
+                    <?php } ?>
 
                     <?php if($preturn_customer_order) { ?>
                     <li><a href="<?php echo $report_customer_financial_statement; ?>"><?php echo $text_report_customer_financial_statement; ?></a></li>
