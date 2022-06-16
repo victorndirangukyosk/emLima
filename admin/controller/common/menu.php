@@ -163,6 +163,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_sale_coupon'] = $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_product_viewed'] = $this->url->link('report/product_viewed', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_product_purchased'] = $this->url->link('report/product_purchased', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_inventory_purchased'] = $this->url->link('report/inventory_purchased', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_activity'] = $this->url->link('report/customer_activity', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer'] = $this->url->link('report/customer', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_farmer_activity'] = $this->url->link('report/farmer_activity', 'token=' . $this->session->data['token'], 'SSL');
@@ -480,6 +481,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_sale_coupon'] = $this->user->hasPermission('access', 'report/sale_coupon');
         $data['preturn_product_viewed'] = $this->user->hasPermission('access', 'report/product_viewed');
         $data['preturn_product_purchased'] = $this->user->hasPermission('access', 'report/product_purchased');
+        $data['preturn_inventory_purchased'] = $this->user->hasPermission('access', 'report/inventory_purchased');
         $data['preturn_customer_online'] = $this->user->hasPermission('access', 'report/customer_online');
         $data['preturn_customer_activity'] = $this->user->hasPermission('access', 'report/customer_activity');
         $data['preturn_report_customer'] = $this->user->hasPermission('access', 'report/customer');
@@ -594,6 +596,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_sale_coupon'] = $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_product_viewed'] = $this->url->link('report/product_viewed', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_product_purchased'] = $this->url->link('report/product_purchased', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_inventory_purchased'] = $this->url->link('report/inventory_purchased', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_activity'] = $this->url->link('report/customer_activity', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer'] = $this->url->link('report/customer', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_farmer_activity'] = $this->url->link('report/farmer_activity', 'token=' . $this->session->data['token'], 'SSL');
@@ -693,6 +696,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_sale_coupon'] = $this->user->hasPermission('access', 'report/sale_coupon');
         $data['preturn_product_viewed'] = $this->user->hasPermission('access', 'report/product_viewed');
         $data['preturn_product_purchased'] = $this->user->hasPermission('access', 'report/product_purchased');
+        $data['preturn_inventory_purchased'] = $this->user->hasPermission('access', 'report/inventory_purchased');
         $data['preturn_customer_online'] = $this->user->hasPermission('access', 'report/customer_online');
         $data['preturn_customer_activity'] = $this->user->hasPermission('access', 'report/customer_activity');
         $data['preturn_report_customer'] = $this->user->hasPermission('access', 'report/customer');
