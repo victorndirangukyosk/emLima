@@ -64,7 +64,7 @@
     <li id="simple-blog">
         <a class="parent"><i class="fa fa-cubes fa-fw"></i> <span>Inventory</span></a>
         <ul>
-          <?php if($preturn_vendor_product != false){ ?>
+          <?php if(  $preturn_inventory_wastage != false || $preturn_vendor_product_requisition  != false || preturn_vendor_product_requisition_history !=false){ ?>
             <li><a class="parent">Inventory</a>
             <ul>
             <li><a href="<?php echo $inventory_management; ?>">Inventory</a></li>
@@ -87,6 +87,8 @@
             <li><a href="<?php echo $vendor_product_requisition_history ; ?>">Requisition History</a></li>
             
           <?php } ?>
+
+         
 
             
             </ul>
@@ -627,7 +629,7 @@
             </li>
             <?php } ?>
 
-             <?php if( $preturn_report_inventory_wastage != false  ) { ?>
+             <?php if( $preturn_report_inventory_wastage != false  || $preturn_report_inventory_wastage_consolidated!=false || $preturn_report_product_received_sold !=false || $preturn_inventory_purchased!=false ) { ?>
             <li><a class="parent">Inventory</a>
                 <ul>                    
                     <?php if($preturn_report_inventory_wastage) { ?>
@@ -656,6 +658,14 @@
             <?php } ?>
 
             </ul>
+
+
+  <ul>  
+              <?php if($preturn_inventory_purchased) { ?>
+                    <li><a href="<?php echo $report_inventory_purchased; ?>">Purchases</a></li>
+                    <?php } ?> </ul>
+
+
             </li>
             <?php } ?>
             <?php if( $preturn_report_customer !=false || $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false ) { ?>
