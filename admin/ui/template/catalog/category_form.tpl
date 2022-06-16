@@ -169,7 +169,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-delivery-time"><?php echo $entry_delivery_time; ?></label>
                 <div class="col-sm-10">
-                <input type="text" name="delivery_time" value="<?php echo $delivery_time; ?>" placeholder="<?php echo $entry_delivery_time; ?>" id="input-delivery-time" class="form-control" /> 
+                <input type="number" name="delivery_time" value="<?php echo $delivery_time; ?>" placeholder="<?php echo $entry_delivery_time; ?>" id="input-delivery-time" class="form-control" /> 
                 </div>
               </div>
             </div>
