@@ -459,7 +459,7 @@ class Customer {
         $this->order_approval_access = $data['order_approval_access'];
         $this->order_approval_access_role = $data['order_approval_access_role'];
         $this->customer_category = $data['customer_category'];
-        $this->customer_parent = $data['customer_parent'];
+        $this->customer_parent = $data['parent'];
         $this->pezesha_customer_id = $data['pezesha_customer_id'];
         $this->pezesha_customer_uuid = $data['pezesha_customer_uuid'];
         $this->pezesha_identifier = $data['pezesha_identifier'];

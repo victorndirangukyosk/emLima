@@ -394,7 +394,7 @@ class ControllerApiCustomerCheckout extends Controller {
             // echo "<pre>";print_r($this->customer);die;
             $total = $this->request->get['total'];
             // if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
-            if (($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) || ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0)) {
+            if (($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) || ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $pezesha_customer_credit_limit == 0)) {
 
                 foreach ($results as $result) {
                     if ($result['code'] == 'wallet' || $result['code'] == 'mod' || $result['code'] == 'mpesa' || $result['code'] == 'pesapal' || $result['code'] == 'interswitch') {
@@ -413,7 +413,7 @@ class ControllerApiCustomerCheckout extends Controller {
                     }
                 }
                 // } else if ($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') {
-            } if ((($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) || (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0))) {
+            } if ((($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) || (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $pezesha_customer_credit_limit == 0))) {
 
                 foreach ($results as $result) {
                     if ($result['code'] == 'cod' || $result['code'] == 'wallet') {
@@ -432,7 +432,7 @@ class ControllerApiCustomerCheckout extends Controller {
                     }
                 }
                 // } else {
-            } if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status') && $this->session->data['pezesha_customer_amount_limit'] > 0) {
+            } if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status') && $pezesha_customer_credit_limit > 0) {
 
                 foreach ($results as $result) {
                     if ($result['code'] == 'pezesha' || $result['code'] == 'wallet') {
@@ -488,6 +488,7 @@ class ControllerApiCustomerCheckout extends Controller {
             //get the pezesha amount limit 
             // $this->load->controller('customer/getPezeshaLoanOffers');
             $b = $this->getPezeshaLoanOffers();
+            $pezesha_customer_credit_limit = $this->getPezeshaCustomerCreditLimit();
 
             // echo "<pre>";print_r($this->session->data['pezesha_amount_limit']);die;
 
@@ -600,19 +601,19 @@ class ControllerApiCustomerCheckout extends Controller {
             // //get the pezesha amount limit 
             // // $a= $this->load->controller('api/customer/getPezeshaLoanOffers');
             // $a = $this->getPezeshaLoanOffers();
-
             // echo "<pre>";print_r($this->session->data['pezesha_customer_amount_limit']);die;
             // echo "<pre>";print_r($data);die;
             $log->write('pezesha data Start ');
 
             $log->write($this->customer->getPaymentTerms());
             $log->write($this->customer->getCustomerPezeshaId());
-            $log->write($this->session->data['pezesha_customer_amount_limit']);
-            $log->write($this->session->data['pezesha_amount_limit']);
+            $log->write($this->getPezeshaCustomerCreditLimit() . 'PEZESHA LIMIT');
+            /* $log->write($this->session->data['pezesha_customer_amount_limit']);
+              $log->write($this->session->data['pezesha_amount_limit']); */
             $log->write('pezesha data');
             $log->write('pezesha data  getting or not');
 
-            if (($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) || ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0)) {
+            if (($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) || ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $pezesha_customer_credit_limit == 0)) {
                 foreach ($data['payment_methods'] as $payment_method) {
                     if ($payment_method['code'] == 'wallet') {
                         $data['payment_wallet_methods'] = $payment_method;
@@ -621,7 +622,7 @@ class ControllerApiCustomerCheckout extends Controller {
                         unset($data['payment_methods'][$payment_method['code']]);
                     }
                 }
-            } if ((($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) || (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0))) {
+            } if ((($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) || (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $pezesha_customer_credit_limit == 0))) {
                 foreach ($data['payment_methods'] as $payment_method) {
                     if ($payment_method['code'] == 'wallet') {
                         $data['payment_wallet_methods'] = $payment_method;
@@ -630,12 +631,12 @@ class ControllerApiCustomerCheckout extends Controller {
                         unset($data['payment_methods'][$payment_method['code']]);
                     }
                 }
-            } if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status') && $this->session->data['pezesha_customer_amount_limit'] > 0) {
+            } if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status') && $pezesha_customer_credit_limit > 0) {
                 foreach ($data['payment_methods'] as $payment_method) {
                     if ($payment_method['code'] == 'wallet') {
                         $data['payment_wallet_methods'] = $payment_method;
                     }
-                    if ($payment_method['code'] != 'pezesha' && $payment_method['code'] != 'mpesa' ) {//&& $payment_method['code'] != 'pesapal'
+                    if ($payment_method['code'] != 'pezesha' && $payment_method['code'] != 'mpesa') {//&& $payment_method['code'] != 'pesapal'
                         unset($data['payment_methods'][$payment_method['code']]);
                     }
                 }
@@ -650,7 +651,9 @@ class ControllerApiCustomerCheckout extends Controller {
 
             http_response_code(400);
         }
-
+        $log->write('PAYMENT METHODS RESPONSE');
+        $log->write($json);
+        $log->write('PAYMENT METHODS RESPONSE');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -708,6 +711,57 @@ class ControllerApiCustomerCheckout extends Controller {
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($result));
+    }
+
+    public function getPezeshaCustomerCreditLimit() {
+
+        $log = new Log('error.log');
+        if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status')) {
+
+            $this->load->model('account/customer');
+
+            $customer_id = $this->customer->getId();
+
+            $customer_device_info = $this->model_account_customer->getCustomer($customer_id);
+            $customer_pezesha_info = $this->model_account_customer->getPezeshaCustomer($customer_id);
+
+            $auth_response = $this->auth();
+            $log->write('auth_response');
+            $log->write($auth_response);
+            $log->write($customer_device_info);
+            $log->write('auth_response');
+            $body = array('identifier' => $customer_pezesha_info['prefix'] . '' . $customer_pezesha_info['customer_id'], 'channel' => $this->config->get('pezesha_channel'));
+            //$body = http_build_query($body);
+            $body = json_encode($body);
+            $log->write($body);
+            $curl = curl_init();
+            if ($this->config->get('pezesha_environment') == 'live') {
+                curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/options');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+            } else {
+                curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/options');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
+            }
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            $result = curl_exec($curl);
+
+            $log->write($result);
+            curl_close($curl);
+            $result = json_decode($result, true);
+            $log->write($result);
+            $json = $result;
+            if ($result['status'] == 200 && $result['response_code'] == 0 && !$result['error'] && array_key_exists('data', $result) && array_key_exists('amount', $result['data'])) {
+                return $result['data']['amount'];
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
     }
 
     public function auth() {
