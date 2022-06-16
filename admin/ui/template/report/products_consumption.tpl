@@ -73,6 +73,9 @@
                <td class="text-left">Order Date</td>
                <td class="text-left">Order Id</td>
                 <td class="text-left">Customer Name</td>                
+                <td class="text-left">Customer Status</td> 
+                <td class="text-left">Payment Terms</td> 
+
                 <td class="text-left">Product Name</td> 
                 <td class="text-left">Unit</td> 
                 <td class="text-right">Quantity</td> 
@@ -87,6 +90,9 @@
                 <td class="text-left"><?php echo $prod['order_date']; ?></td>
                 <td class="text-left"><?php echo $prod['order_id']; ?></td>
                 <td class="text-left"><?php echo $prod['customer']; ?></td>
+                <td class="text-left"><?php echo $prod['customer_status']; ?></td>
+                <td class="text-left"><?php echo $prod['payment_terms']; ?></td>
+
                <td class="text-left"><?php echo $prod['name']; ?></td>
                 <td class="text-left"><?php echo $prod['unit']; ?></td>
                 <td class="text-right"><?php echo $prod['quantity']; ?></td>

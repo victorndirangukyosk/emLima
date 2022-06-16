@@ -138,8 +138,8 @@ class ModelReportProduct extends Model
 
     public function getproductsconsumption($data = []) {
         //Order Rejected(16),Order Approval Pending(15),Cancelled(6),Failed(8),Pending(9),Possible Fraud(10)
-        $sql0 = "SELECT o.order_id,date(o.date_added) as date_added,c.company_name  as company,CONCAT(c.firstname, ' ', c.lastname) as customer,op.name,op.unit,op.product_id,  op.quantity ,os.name as status  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id)  LEFT JOIN `" . DB_PREFIX . "order_status` os ON (os.order_status_id = o.order_status_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`)  ";
-        $sql1 = "SELECT o.order_id,date(o.date_added) as date_added,c.company_name  as company,CONCAT(c.firstname, ' ', c.lastname) as customer,op.name,op.unit,op.product_id,  op.quantity  ,os.name as status FROM `" . DB_PREFIX . 'real_order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) LEFT JOIN `" . DB_PREFIX . "order_status` os ON (os.order_status_id = o.order_status_id)  WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10) ";
+        $sql0 = "SELECT o.order_id,date(o.date_added) as date_added,c.company_name  as company,c.payment_terms,CONCAT(c.firstname, ' ', c.lastname) as customer,c.status as customer_status,op.name,op.unit,op.product_id,  op.quantity ,os.name as status  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id)  LEFT JOIN `" . DB_PREFIX . "order_status` os ON (os.order_status_id = o.order_status_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`)  ";
+        $sql1 = "SELECT o.order_id,date(o.date_added) as date_added,c.company_name  as company,c.payment_terms,CONCAT(c.firstname, ' ', c.lastname) as customer,c.status as customer_status,op.name,op.unit,op.product_id,  op.quantity  ,os.name as status FROM `" . DB_PREFIX . 'real_order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) LEFT JOIN `" . DB_PREFIX . "order_status` os ON (os.order_status_id = o.order_status_id)  WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10) ";
 
         // if (!empty($data['filter_order_status_id'])) {
         //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
@@ -185,7 +185,7 @@ class ModelReportProduct extends Model
         // $sql0 .= ' GROUP BY op.product_id ';
         // $sql1 .= ' GROUP BY op.product_id '; //general_product_id
 
-        $sql = "SELECT order_id,date_added,company,customer,name,unit,product_id, quantity ,status from (" . $sql0 . "union all " . $sql1 . ") as t";
+        $sql = "SELECT order_id,date_added,company,payment_terms,customer,customer_status,name,unit,product_id, quantity ,status from (" . $sql0 . "union all " . $sql1 . ") as t";
         // $sql .= ' GROUP BY product_id   ORDER BY quantity DESC';
 
         // if (isset($data['start']) || isset($data['limit'])) {
@@ -203,5 +203,67 @@ class ModelReportProduct extends Model
 
         return $query->rows;
     }
+
+
+    public function getInventoryPurchased($data = [])
+    {
+        $sql = 'SELECT ih.product_history_id,ih.product_name,p.unit, (ih.procured_qty) AS quantity,ih.source,date(ih.date_added) as date,(ih.buying_price) as price, ((ih.buying_price) * ih.procured_qty) AS total FROM '.DB_PREFIX.'product_inventory_history ih LEFT JOIN `'.DB_PREFIX.'product` p ON (ih.product_id = p.product_id)  where 1=1';
+
+ 
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(ih.date_added) >= '".$this->db->escape($data['filter_date_start'])."'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(ih.date_added) <= '".$this->db->escape($data['filter_date_end'])."'";
+        }
+
+        
+
+        // $sql .= ' GROUP BY op.general_product_id ';
+        $sql .= '  ORDER BY ih.date_added DESC';
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function getTotalInventoryPurchased($data)
+    {
+        $sql = 'SELECT count(ih.product_history_id) AS total FROM '.DB_PREFIX.'product_inventory_history ih LEFT JOIN `'.DB_PREFIX.'product` p ON (ih.product_id = p.product_id)  where 1=1';
+
+ 
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(ih.date_added) >= '".$this->db->escape($data['filter_date_start'])."'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(ih.date_added) <= '".$this->db->escape($data['filter_date_end'])."'";
+        }
+
+        
+
+        // $sql .= ' GROUP BY op.general_product_id ';
+        // $sql .= '  ORDER BY ih.date_added DESC';
+
+        
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
+
 
 }

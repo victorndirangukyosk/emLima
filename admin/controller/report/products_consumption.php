@@ -96,10 +96,12 @@ class ControllerReportProductsConsumption extends Controller {
                     'order_date' => $result['date_added'],
                     'order_id' => $result['order_id'],
                     'customer' => $result['customer'],
+                    'customer_status' => $result['customer_status']==0?'Disabled':'Enabled',
                     'name' => $result['name'],
                     'unit' => $result['unit'],
                     'quantity' => $result['quantity'],
                     'status' => $result['status'],
+                    'payment_terms' => $result['payment_terms'],
                 ];
             }
         }
