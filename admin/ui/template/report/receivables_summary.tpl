@@ -26,7 +26,7 @@
           <div class="row">
 
 
-            <!--<div class="col-sm-4">
+            <div class="col-sm-4">
              <div class="form-group">
                 <label class="control-label" for="input-date-start"><?php echo $entry_date_start; ?></label>
                 <div class="input-group date">
@@ -43,7 +43,7 @@
                   <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                   </span></div>
               </div>
-            </div>-->
+            </div> 
 
            
            <div class="col-sm-4">

@@ -6234,6 +6234,18 @@ class ModelSaleOrder extends Model {
             $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
+        if (!empty($data['filter_date_start']) && empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) >= DATE('" . $this->db->escape($data['filter_date_start']) . "')";
+        }
+ 
+        if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) BETWEEN DATE('" . $this->db->escape($data['filter_date_start']) . "') AND DATE('" . $this->db->escape($data['filter_date_end']) . "')";
+        }
+
+        if (empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) <= DATE('" . $this->db->escape($data['filter_date_end']) . "')";
+        }
+
         $sql .= ' Group  BY cust.company_name,cust.firstname';
         $sql .= ' ORDER BY cust.company_name,cust.firstname';
 
@@ -6286,7 +6298,17 @@ class ModelSaleOrder extends Model {
             $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
+        if (!empty($data['filter_date_start']) && empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) >= DATE('" . $this->db->escape($data['filter_date_start']) . "')";
+        }
  
+        if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) BETWEEN DATE('" . $this->db->escape($data['filter_date_start']) . "') AND DATE('" . $this->db->escape($data['filter_date_end']) . "')";
+        }
+
+        if (empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) <= DATE('" . $this->db->escape($data['filter_date_end']) . "')";
+        }
 
         //   echo "<pre>";print_r($sql);die;
         $query = $this->db->query($sql);
