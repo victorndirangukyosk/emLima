@@ -36,19 +36,11 @@
                   </span></div>
               </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-4">
               <div class="form-group">
-                <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
-                <select name="filter_order_status_id" id="input-status" class="form-control">
-                  <option value="0"><?php echo $text_all_status; ?></option>
-                  <?php foreach ($order_statuses as $order_status) { ?>
-                  <?php if ($order_status['order_status_id'] == $filter_order_status_id) { ?>
-                  <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                  <?php } else { ?>
-                  <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                  <?php } ?>
-                  <?php } ?>
-                </select>
+                <label class="control-label" for="input-order-id">Order ID</label>
+                  <input type="text" name="filter_order_id" value="<?php echo $filter_order_id; ?>" placeholder="Order ID" id="filter_order_id" class="form-control" />
+                
               </div>
               <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
             </div>
@@ -69,18 +61,16 @@
             <tbody>
               <?php if ($order_and_updated_products) { ?>
               <?php foreach ($order_and_updated_products as $order_and_updated_product) { ?>
-              <?php foreach ($order_and_updated_product as $order_and_updated_produc) { ?>
-              <?php //print_r($order_and_updated_produc); ?>
               <tr>
-                <td class="text-left"><?php echo $order_and_updated_produc['order_id']; ?></td>
-                <td class="text-right"><?php echo $order_and_updated_produc['product_id']; ?></td>
-                <td class="text-right"><?php echo $order_and_updated_produc['name']; ?></td>
-                <td class="text-right"><?php echo $order_and_updated_produc['unit']; ?></td>
-                <td class="text-right"><?php echo $order_and_updated_produc['customer_ordered_quantity']; ?></td>
-                <td class="text-right"><?php echo $order_and_updated_produc['updated_quantity']; ?></td>
+                <td class="text-left"><?php echo $order_and_updated_product['order_id']; ?></td>
+                <td class="text-right"><?php echo $order_and_updated_product['product_id']; ?></td>
+                <td class="text-right"><?php echo $order_and_updated_product['name']; ?></td>
+                <td class="text-right"><?php echo $order_and_updated_product['unit']; ?></td>
+                <td class="text-right"><?php echo $order_and_updated_product['quantity']; ?></td>
+                <td class="text-right"><?php echo $order_and_updated_product['updated_quantity']; ?></td>
               </tr>
               <?php } ?>
-              <?php } ?>
+               
               <?php } else { ?>
               <tr>
                 <td class="text-center" colspan="8"><?php echo $text_no_results; ?></td>
@@ -98,7 +88,7 @@
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-	url = 'index.php?path=report/customer_order&token=<?php echo $token; ?>';
+	url = 'index.php?path=report/order_and_updated_product&token=<?php echo $token; ?>';
 	
 	var filter_date_start = $('input[name=\'filter_date_start\']').val();
 	
@@ -112,11 +102,37 @@ $('#button-filter').on('click', function() {
 		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
 	}
 	
-	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
+	var filter_order_id = $('input[name=\'filter_order_id\']').val();
 	
-	if (filter_order_status_id != 0) {
-		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
+	if (filter_order_id != '' && filter_order_id != undefined) {
+		url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
 	}	
+  if((filter_order_id == ''||filter_order_id == undefined) &&( filter_date_start =='' || filter_date_end==''))
+  {
+    alert('please select either order id or dates');
+    return;
+  }
+  if(filter_date_start !='' && filter_date_end !='')
+  {
+
+                        const date1 = new Date(filter_date_start);
+                        const date2 = new Date(filter_date_end);
+                        const diffTime = Math.abs(date2 - date1);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                        console.log(diffTime + " milliseconds");
+                        console.log(diffDays + " days");
+                        if(diffDays<0)
+                        {
+                        alert("Please select proper start & end date filters");
+                                        return;
+                        }
+                        if(diffDays>60)
+                        {
+                            alert("Duration between start & end date filters should be less than 60 days");
+                                        return;
+                        }
+
+  }
 
 	location = url;
 });
@@ -124,7 +140,7 @@ $('#button-filter').on('click', function() {
 
 
 function excel() {
-      	url = 'index.php?path=report/customer_order/orderexcel&token=<?php echo $token; ?>';
+      	url = 'index.php?path=report/order_and_updated_product/excel&token=<?php echo $token; ?>';
         
      	var filter_date_start = $('input[name=\'filter_date_start\']').val();
 	
@@ -138,12 +154,38 @@ function excel() {
 		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
 	}
 	
-	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
+	var filter_order_id = $('input[name=\'filter_order_id\']').val();
 	
-	if (filter_order_status_id != 0) {
-		url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
+	if (filter_order_id != '') {
+		url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
 	}	
     
+     if((filter_order_id == ''||filter_order_id == undefined) &&( filter_date_start =='' || filter_date_end==''))
+  {
+    alert('please select either order id or dates');
+    return;
+  }
+  if(filter_date_start !='' && filter_date_end !='')
+  {
+
+                        const date1 = new Date(filter_date_start);
+                        const date2 = new Date(filter_date_end);
+                        const diffTime = Math.abs(date2 - date1);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                        console.log(diffTime + " milliseconds");
+                        console.log(diffDays + " days");
+                        if(diffDays<0)
+                        {
+                        alert("Please select proper start & end date filters");
+                                        return;
+                        }
+                        if(diffDays>60)
+                        {
+                            alert("Duration between start & end date filters should be less than 60 days");
+                                        return;
+                        }
+
+  }
     location = url;
 }
 
