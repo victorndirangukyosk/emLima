@@ -27,9 +27,9 @@ class ControllerPaymentCod extends Controller {
         $log->write($this->session->data['payment_method']['code']);
         if ('cod' == $this->session->data['payment_method']['code']) {
 
-            /* $this->load->controller('checkout/confirm/RemoveOnDemandCategoryProductsFromCart');
-              $this->load->controller('checkout/confirm/multiStoreIndex');
-              $this->load->controller('checkout/confirm/CreateOrderWithOnDemandCategoryProducts'); */
+            $this->load->controller('checkout/confirm/RemoveOnDemandCategoryProductsFromCarts');
+            $this->load->controller('checkout/confirm/multiStoreIndex');
+            $this->load->controller('checkout/confirm/CreateOrderWithOnDemandCategoryProducts');
 
             $this->load->model('checkout/order');
 
