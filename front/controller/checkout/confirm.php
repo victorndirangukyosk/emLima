@@ -823,10 +823,10 @@ class ControllerCheckoutConfirm extends Controller {
             $log->write('Log 3');
             $stores = $this->cart->getStores();
 
-            $active_Store_exsists=in_array( "75", $stores );
-                // echo "<pre>";print_r($active_Store_exsists);die;
-            
-            $shipping_added=0;
+            $active_Store_exsists = in_array("75", $stores);
+            // echo "<pre>";print_r($active_Store_exsists);die;
+
+            $shipping_added = 0;
 
             //print_r($stores);
             foreach ($stores as $store_id) {
@@ -857,22 +857,15 @@ class ControllerCheckoutConfirm extends Controller {
 
                         $log->write('in multiStoreIndex' . $result['code']);
                         $log->write('in loop' . $total);
-                        if($result['code']=='shipping' )
-                        {
-                            if($active_Store_exsists==1)
-                            {
-                            $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
-                            }
-                            else if($result['code']=='shipping' && $active_Store_exsists==0 && $shipping_added==0)
-                            {
+                        if ($result['code'] == 'shipping') {
+                            if ($active_Store_exsists == 1) {
+                                $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
+                            } else if ($result['code'] == 'shipping' && $active_Store_exsists == 0 && $shipping_added == 0) {
                                 $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, -1);
-                               
-
                             }
-                            $shipping_added=1;//shipping charge added to one of the stores
-                        }
-                        else{
-                        $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
+                            $shipping_added = 1; //shipping charge added to one of the stores
+                        } else {
+                            $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
                         }
                     }
                 }
@@ -973,26 +966,14 @@ class ControllerCheckoutConfirm extends Controller {
                     $order_data[$store_id]['login_mode'] = '';
                 }
 
-                if (isset($this->session->data['payment_method']['title']) && $store_id == 75) {
+                if (isset($this->session->data['payment_method']['title'])) {
                     $order_data[$store_id]['payment_method'] = $this->session->data['payment_method']['title'];
-                } elseif (isset($this->session->data['payment_method']['title']) && $store_id != 75) {
-                    if ($this->session->data['payment_method']['code'] == 'wallet' || $this->session->data['payment_method']['code'] == 'mod') {
-                        $order_data[$store_id]['payment_method'] = $this->session->data['payment_method']['title'];
-                    } else {
-                        $order_data[$store_id]['payment_method'] = 'Corporate Account/ Cheque Payment';
-                    }
                 } else {
                     $order_data[$store_id]['payment_method'] = '';
                 }
 
-                if (isset($this->session->data['payment_method']['code']) && $store_id == 75) {
+                if (isset($this->session->data['payment_method']['code'])) {
                     $order_data[$store_id]['payment_code'] = $this->session->data['payment_method']['code'];
-                } elseif (isset($this->session->data['payment_method']['code']) && $store_id != 75) {
-                    if ($this->session->data['payment_method']['code'] == 'wallet' || $this->session->data['payment_method']['code'] == 'mod') {
-                        $order_data[$store_id]['payment_code'] = $this->session->data['payment_method']['code'];
-                    } else {
-                        $order_data[$store_id]['payment_code'] = 'cod';
-                    }
                 } else {
                     $order_data[$store_id]['payment_code'] = '';
                 }
@@ -1616,41 +1597,33 @@ class ControllerCheckoutConfirm extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-
     public function CheckMinimumOrderTotal() {
 
-        if(($this->config->get('shipping_status')))
-        {
+        if (($this->config->get('shipping_status'))) {
 
             if (isset($this->session->data['delivery_charge_terms']) && $this->session->data['delivery_charge_terms'] == TRUE) {
                 $json['min_order_total_reached'] = "TRUE";
             } else {
-        $log = new Log('error.log');
-        $json['min_order_total_reached'] = "FALSE";
-        $log->write('min order value ');
-        
-        $sub_total=$this->cart->getSubTotal();
-        $json['min_order_total_reached'] = $this->config->get('config_active_store_minimum_order_amount') <= $sub_total ? "TRUE" : "FALSE";
-        $json['amount_required'] = "KES ". ($this->config->get('config_active_store_minimum_order_amount') - $sub_total);
-        // echo "<pre>";print_r($json['amount_required']);die;
-        $json['delivery_charge']="KES ".$this->config->get('config_active_store_delivery_charge');
-        $log->write($json['min_order_total_reached']);
-        $log->write($sub_total);
-        $log->write('min order value ');
+                $log = new Log('error.log');
+                $json['min_order_total_reached'] = "FALSE";
+                $log->write('min order value ');
+
+                $sub_total = $this->cart->getSubTotal();
+                $json['min_order_total_reached'] = $this->config->get('config_active_store_minimum_order_amount') <= $sub_total ? "TRUE" : "FALSE";
+                $json['amount_required'] = "KES " . ($this->config->get('config_active_store_minimum_order_amount') - $sub_total);
+                // echo "<pre>";print_r($json['amount_required']);die;
+                $json['delivery_charge'] = "KES " . $this->config->get('config_active_store_delivery_charge');
+                $log->write($json['min_order_total_reached']);
+                $log->write($sub_total);
+                $log->write('min order value ');
             }
-        }
-        else{
+        } else {
             $json['min_order_total_reached'] = "TRUE";
         }
 
-        
-
-           
-        
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
-
 
     public function AcceptDeliveryCharge() {
 
@@ -1660,4 +1633,323 @@ class ControllerCheckoutConfirm extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
+    public function getOnDemandCategoryProducts() {
+        $products = $this->cart->getProducts();
+        $log = new Log('error.log');
+        $log->write('ON_DEMAND_CATEGORY_PRODUCTS');
+        $this->session->data['on_demand_category_products'] = NULL;
+        foreach ($products as $key => $value) {
+            $this->load->model('assets/product');
+            $product_categories = $this->model_assets_product->getCategoryByProductId($value['product_id']);
+
+            foreach ($product_categories as $product_category) {
+                $log->write($value['product_store_id']);
+                //$log->write($product_category);
+                //$log->write($value);
+
+                $this->load->model('assets/category');
+                $product_categories = $this->model_assets_category->getCategory($product_category['category_id']);
+                //$log->write($product_categories);
+
+                if ($product_categories['delivery_time'] != NULL && $product_categories['delivery_time'] > 0) {
+                    $category_delivery_time_slot = $this->load->controller('checkout/delivery_time/getdeliverytimebyhours', $product_categories['delivery_time']);
+                    $value['delivery_date'] = $category_delivery_time_slot['selected_time_slot_date'];
+                    $value['delivery_timeslot'] = $category_delivery_time_slot['selected_time_slot_delivery_timeslot'];
+                    $value['category'] = $value['store_id'] . $product_category['category_id'];
+                    $this->session->data['on_demand_category_products'][$key] = $value;
+                }
+
+                /* $price = $this->currency->format($this->tax->calculate($value['special_price'], $value['tax_class_id'], $this->config->get('config_tax')));
+                  $tax_price = $this->currency->format($this->tax->getTax($value['special_price'], $value['tax_class_id']));
+                  $log->write($price . ' ' . 'TAX PRICE');
+                  $log->write($tax_price . ' ' . 'TAX PRICE'); */
+            }
+        }
+        $log->write($products);
+        $log->write($this->session->data['on_demand_category_products']);
+        $log->write('ON_DEMAND_CATEGORY_PRODUCTS');
+    }
+
+    public function RemoveOnDemandCategoryProductsFromCart() {
+
+        $log = new Log('error.log');
+        $previous_count = $this->cart->countProducts();
+        $log->write('REMOVE_ON_DEMAND_CATEGORY_PRODUCTS_FROM_CART');
+
+        if (isset($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
+            foreach ($this->session->data['on_demand_category_products'] as $on_demand_category_product) {
+                $this->cart->remove($on_demand_category_product['key']);
+                $this->cart->removeTempCart($on_demand_category_product['key']);
+            }
+        }
+        $log->write('REMOVE_ON_DEMAND_CATEGORY_PRODUCTS_FROM_CART');
+        $present_count = $this->cart->countProducts();
+        if ($previous_count > $present_count) {
+            $json['products_removed'] = TRUE;
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function CreateOrderWithOnDemandCategoryProducts() {
+
+        $log = new Log('error.log');
+        $this->load->model('checkout/order');
+        $this->load->model('sale/order');
+        $this->load->model('assets/product');
+        $this->load->model('account/customer');
+        $this->load->model('tool/image');
+        $this->load->model('account/activity');
+
+        $data = NULL;
+        $delivery_date = NULL;
+        $delivery_timeslot = NULL;
+
+        if (isset($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
+
+            $store_categories = array_column($this->session->data['on_demand_category_products'], 'category');
+
+            $sub_total = 0;
+            $tax = 0;
+            $i = 0;
+            foreach ($this->session->data['on_demand_category_products'] as $on_demand_category_product) {
+
+                $product_info = $this->model_assets_product->getProduct($on_demand_category_product['product_store_id'], true);
+
+                $price = $this->currency->format($this->tax->calculate($on_demand_category_product['special_price'], $on_demand_category_product['tax_class_id'], $this->config->get('config_tax')));
+                $tax_price = $this->tax->getTax($on_demand_category_product['special_price'], $on_demand_category_product['tax_class_id']);
+
+                $delivery_date = $on_demand_category_product['delivery_date'];
+                $delivery_timeslot = $on_demand_category_product['delivery_timeslot'];
+
+                if ($product_info != NULL) {
+
+                    if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
+                        $image = $this->model_tool_image->resize($product_info['image'], 80, 100);
+                    } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
+                        $image = $this->model_tool_image->resize('placeholder.png', 80, 100);
+                    }
+
+                    $data['products'][] = [
+                        'product_id' => $on_demand_category_product['product_store_id'],
+                        'general_product_id' => $product_info['product_id'],
+                        'variation_id' => 0,
+                        'vendor_id' => $product_info['merchant_id'],
+                        'store_id' => $product_info['store_id'],
+                        'name' => $product_info['name'],
+                        'unit' => $product_info['unit'],
+                        'model' => $product_info['model'],
+                        'image' => $image,
+                        'quantity' => $on_demand_category_product['quantity'],
+                        'price' => $on_demand_category_product['special_price'],
+                        'total' => $on_demand_category_product['special_price'] * $on_demand_category_product['quantity'],
+                        'tax' => $this->tax->getTax($on_demand_category_product['special_price'], $product_info['tax_class_id']),
+                        'reward' => 0,
+                        'product_type' => 'replacable',
+                        'product_note' => $on_demand_category_product['product_note'],
+                    ];
+                    $sub_total += $on_demand_category_product['special_price'] * $on_demand_category_product['quantity'];
+                    $tax += $tax_price * $on_demand_category_product['quantity'];
+                    $i++;
+                }
+            }
+
+            foreach ($this->session->data['order_id'] as $order_id) {
+                $order_info = $this->model_sale_order->getOrder($order_id);
+                $totals = $this->model_sale_order->getOrderTotals($order_id);
+                break;
+            }
+
+
+            $new_total = $sub_total + $tax;
+            $order_info['total'] = $new_total;
+
+            $total_data = [];
+
+            foreach ($totals as $total) {
+                if ($total['code'] == 'sub_total') {
+                    $total_data[] = [
+                        'code' => $total['code'],
+                        'title' => $total['title'],
+                        'value' => $sub_total,
+                        'sort_order' => $total['sort_order'],
+                        'actual_value' => NULL,
+                        'text' => $this->currency->format($sub_total),
+                    ];
+                } elseif ($total['code'] == 'tax') {
+                    $total_data[] = [
+                        'code' => $total['code'],
+                        'title' => $total['title'],
+                        'value' => $tax,
+                        'sort_order' => $total['sort_order'],
+                        'actual_value' => NULL,
+                        'text' => $this->currency->format($tax),
+                    ];
+                } elseif ($total['code'] == 'transaction_fee') {
+                    $total_data[] = [
+                        'code' => $total['code'],
+                        'title' => $total['title'],
+                        'value' => $total['value'],
+                        'sort_order' => $total['sort_order'],
+                        'actual_value' => NULL,
+                        'text' => $this->currency->format($total['value']),
+                    ];
+                } elseif ($total['code'] == 'total') {
+                    $total_data[] = [
+                        'code' => $total['code'],
+                        'title' => $total['title'],
+                        'value' => $new_total,
+                        'sort_order' => $total['sort_order'],
+                        'actual_value' => NULL,
+                        'text' => $this->currency->format($new_total),
+                    ];
+                } else {
+                    $total_data[] = [
+                        'code' => $total['code'],
+                        'title' => $total['title'],
+                        'value' => $total['value'],
+                        'sort_order' => $total['sort_order'],
+                        'actual_value' => NULL,
+                        'text' => $this->currency->format($total['value']),
+                    ];
+                }
+            }
+
+            usort($total_data, function ($a, $b) {
+                return $a['sort_order'] <=> $b['sort_order'];
+            });
+
+            if ($order_info != NULL && is_array($order_info) && count($order_info) > 0 && is_array($data['products']) && count($data['products']) > 0) {
+
+                $transaction_details['customer_id'] = $order_info['customer_id'];
+                $transaction_details['no_of_products'] = $i;
+                $transaction_details['total'] = $order_info['total'];
+
+                $order_info['delivery_date'] = $delivery_date;
+                $order_info['delivery_timeslot'] = $delivery_timeslot;
+
+                $date = new DateTime("now", new DateTimeZone('Africa/Nairobi'));
+                if (($delivery_date == NULL && $delivery_timeslot == NULL) && strtotime($date->format('H:i:s')) < strtotime('12:00:00')) {
+                    $order_info['delivery_date'] = $date->format('Y-m-d');
+                    $order_info['delivery_timeslot'] = '02:00pm - 04:00pm';
+                    $log->write('02:00pm - 04:00pm');
+                }
+
+                if (($delivery_date == NULL && $delivery_timeslot == NULL) && strtotime($date->format('H:i:s')) > strtotime('12:00:00')) {
+                    $order_info['delivery_date'] = date('Y-m-d', strtotime($date->format('Y/m/d') . "+1 days"));
+                    $order_info['delivery_timeslot'] = '06:00am - 08:00am';
+                    $log->write('06:00am - 08:00am');
+                }
+
+                $new_order_id = $this->model_sale_order->CreateOrder($order_info);
+                $new_order_info = $this->model_sale_order->getOrder($new_order_id);
+                $customer_info = $this->model_account_customer->getCustomer($new_order_info['customer_id']);
+                $new_product_id = $this->model_sale_order->InsertProductsByOrderId($data['products'], $new_order_id);
+                $new_total_id = $this->model_sale_order->InsertOrderTotals($total_data, $new_order_id);
+                $new_transaction_id = $this->model_sale_order->InsertOrderTransactionDetails($transaction_details, $new_order_id);
+                $new_order_history_id = $this->model_checkout_order->addOrderHistory($new_order_info['order_id'], $new_order_info['order_status_id'], 'Missing Products Order', false, $customer_info['firstname'] . ' ' . $customer_info['lastname'], 'customer', NULL, '');
+
+                $activity_data = [
+                    'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+                    'order_id' => $new_order_info['order_id'],
+                ];
+
+                $this->model_account_activity->addActivity('order_account', $activity_data);
+                array_push($this->session->data['order_id'], $new_order_info['order_id']);
+
+                if (strlen($new_order_info['shipping_name']) <> 0) {
+                    $address = $new_order_info['shipping_name'] . '<br />' . $new_order_info['shipping_address'] . '<br /><b>Contact No.:</b> ' . $new_order_info['shipping_contact_no'];
+                } else {
+                    $address = '';
+                }
+
+                $payment_address = '';
+                $special = NULL;
+                $order_href = $new_order_info['store_url'] . 'index.php?path=account/order/info&order_id=' . $new_order_info['order_id'];
+                $order_pdf_href = '';
+                $invoice_no = NULL;
+
+                $email_data = array(
+                    'template_id' => 'order_' . (int) $new_order_info['order_status_id'],
+                    'order_info' => $new_order_info,
+                    'address' => $address,
+                    'payment_address' => $payment_address,
+                    'special' => $special,
+                    'order_href' => $order_href,
+                    'order_pdf_href' => $order_pdf_href,
+                    'order_status' => $new_order_info['order_status_id'],
+                    'totals' => $totals,
+                    'tax_amount' => $tax,
+                    'order_id' => $new_order_id,
+                    'invoice_no' => !empty($invoice_no) ? $invoice_no : '',
+                    'order_products_list' => $this->load->controller('emailtemplate/emailtemplate/getOrderProductListTemplate', $new_order_info)
+                );
+
+                $subject = $this->emailtemplate->getSubject('OrderAll', 'order_' . (int) $new_order_info['order_status_id'], $email_data);
+                $message = $this->emailtemplate->getMessage('OrderAll', 'order_' . (int) $new_order_info['order_status_id'], $email_data);
+                $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_' . (int) $new_order_info['order_status_id'], $email_data);
+
+                try {
+                    if ($customer_info['email_notification'] == 1 && $this->emailtemplate->getEmailEnabled('OrderAll', 'order_' . (int) $new_order_info['order_status_id'])) {
+                        $mail = new mail($this->config->get('config_mail'));
+                        $mail->setTo($new_order_info['email']);
+                        $mail->setFrom($this->config->get('config_from_email'));
+                        $mail->setSender($new_order_info['store_name']);
+                        $mail->setSubject($subject);
+                        $mail->setHtml($message);
+                        $mail->send();
+                        $log->write('mail end');
+                    }
+                } catch (Exception $e) {
+                    
+                }
+                $log->write($order_info);
+                $log->write($data);
+                $log->write($total_data);
+            }
+        }
+    }
+
+    public function CheckOnDemandCategoryProductsExists() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $products = $this->cart->getProducts();
+        $log = new Log('error.log');
+        $log->write('ON_DEMAND_CATEGORY_PRODUCTS');
+        $json['modal_open'] = FALSE;
+
+        $this->session->data['on_demand_category_products'] = NULL;
+        foreach ($products as $key => $value) {
+            $this->load->model('assets/product');
+            $product_categories = $this->model_assets_product->getCategoryByProductId($value['product_id']);
+
+            foreach ($product_categories as $product_category) {
+                $log->write($value['product_store_id']);
+
+                $this->load->model('assets/category');
+                $product_categories = $this->model_assets_category->getCategory($product_category['category_id']);
+
+                if ($product_categories['delivery_time'] != NULL && $product_categories['delivery_time'] > 0) {
+                    $category_delivery_time_slot = $this->load->controller('checkout/delivery_time/getdeliverytimebyhours', $product_categories['delivery_time']);
+                    $json['modal_open'] = TRUE;
+                    $value['delivery_date'] = $category_delivery_time_slot['selected_time_slot_date'];
+                    $value['delivery_timeslot'] = $category_delivery_time_slot['selected_time_slot_delivery_timeslot'];
+                    $value['category'] = $value['store_id'] . $product_category['category_id'];
+                    $this->session->data['on_demand_category_products'][$key] = $value;
+                }
+            }
+        }
+        $json['data'] = $this->session->data['on_demand_category_products'];
+        $log->write($products);
+        $log->write($this->session->data['on_demand_category_products']);
+        $log->write('ON_DEMAND_CATEGORY_PRODUCTS');
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
