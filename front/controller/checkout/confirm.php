@@ -1692,6 +1692,20 @@ class ControllerCheckoutConfirm extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function RemoveOnDemandCategoryProductsFromCarts() {
+
+        $log = new Log('error.log');
+        $log->write('REMOVE_ON_DEMAND_CATEGORY_PRODUCTS_FROM_CART');
+
+        if (isset($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
+            foreach ($this->session->data['on_demand_category_products'] as $on_demand_category_product) {
+                $this->cart->remove($on_demand_category_product['key']);
+                $this->cart->removeTempCart($on_demand_category_product['key']);
+            }
+        }
+        $log->write('REMOVE_ON_DEMAND_CATEGORY_PRODUCTS_FROM_CART');
+    }
+
     public function CreateOrderWithOnDemandCategoryProducts() {
 
         $log = new Log('error.log');
