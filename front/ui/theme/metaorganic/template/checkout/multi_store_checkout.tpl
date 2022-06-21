@@ -1158,6 +1158,7 @@ __kdt.push({"post_on_load": false});
           loadUnpaidorders();
           getLocationOnly();
           setAddressId();
+          getOnDemandCategoryProducts();
 
         $('.replacable').on('click', function(){
             console.log("replacable");
@@ -2495,7 +2496,27 @@ window.location.href = "<?= $continue.'/index.php?path=account/transactions'; ?>
 
 $('#pay_clear_cart').on('click', function(){
 window.location.href = "<?= $continue.'/index.php?path=common/home'; ?>";
-});  
+});
+
+
+// Get On Demand Category Products
+function getOnDemandCategoryProducts() {
+
+    $.ajax({
+        url: 'index.php?path=checkout/confirm/getOnDemandCategoryProducts',
+        type: 'get',
+        dataType: 'json',
+        cache: true,
+        async: true,
+        beforeSend: function() {
+        },
+        success: function(json) {
+            
+        },
+        error: function(xhr, ajaxOptions, thrownError) {
+        }
+    });
+}
 </script>
 <script src="https://api-test.equitybankgroup.com/js/eazzycheckout.js"></script>
 </body>

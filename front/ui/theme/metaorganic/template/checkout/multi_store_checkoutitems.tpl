@@ -642,6 +642,45 @@
             </div>
         </div>
     </div>
+    
+    
+    <!-- Modal -->
+    <div class="addressModal">
+        <div class="modal fade" id="exampleModal_ondemand" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="modal-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Product Name</th>
+                                            <th scope="col">Delivery Date</th>
+                                            <th scope="col">Delivery Timeslot</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="on_demand_category_products">
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                            <p style="font-weight: bold; font-size: 12px;"></p>
+                            <div class="addnews-address-form">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <button id="on_demand_category_products_agree" name="on_demand_category_products_agree" type="button" class="btn btn-primary">I AGREE</button>
+                                        <button id="on_demand_category_products_remove" name="on_demand_category_products_remove" type="button" class="btn btn-grey  cancelbut">REMOVE PRODUCT(S) FROM CART</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal -->
 <div class="addressModal">
@@ -703,13 +742,13 @@
     <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?= $this->config->get('config_google_api_key') ?>&libraries=places"></script>
     <script type="text/javascript" src="<?= $base?>admin/ui/javascript/map-picker/js/locationpicker.jquery.js?v=2.3"></script>
     <style>
-    #agree_vendor_terms, #pay_pending_amount,#agree_delivery_charge_1 {
+    #on_demand_category_products_agree, #agree_vendor_terms, #pay_pending_amount,#agree_delivery_charge_1 {
     width: 49%;
     float: left;
     margin-top: 10px;
     margin-right: 5px;
     }
-    #remove_vendor_products, #pay_clear_cart {
+    #on_demand_category_products_remove, #remove_vendor_products, #pay_clear_cart {
     width: 49%;
     float: left;
     margin-top: 10px;
@@ -757,23 +796,82 @@ window.location.href = "<?= $continue.'/index.php?path=common/home'; ?>";
             },
             success: function(json) {
                 console.log(json);
-                if (json['vendor_terms']) {
+                /*if (json['vendor_terms']) {
                    $('#exampleModal').modal('hide');
                    window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";
                 }else{
                   $('#exampleModal').modal('show');
+                }*/
+                
+                $.ajax({
+            url: 'index.php?path=checkout/confirm/CheckOnDemandCategoryProductsExists',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                if (json['modal_open']) {
+                $('#exampleModal').modal('hide'); 
+                $('#exampleModal_ondemand').modal('show');
+                var i = 1;
+                $.each(json.data, function(k, v) {
+                $("#on_demand_category_products").append("<tr><th scope='row'>" + i + "</th><td>" + v.name + "</td><td>" + v.delivery_date + "</td><td>" + v.delivery_timeslot + "</td></tr>");   
+                i++;
+                });
+                $("#on_demand_category_products").append("<tr><td colspan='4'>The above product(s) from the cart are delivered on mentioned delivery dates.</td></tr>");   
+                return false;
+                } else {
+                $('#exampleModal_ondemand').modal('hide'); 
+                $('#on_demand_category_products').html('');
+                window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";     
                 }
+            }
+            });
             }
         });
         });
+        
+        $('#on_demand_category_products_agree').on('click', function(){
+        $('#exampleModal_ondemand').modal('hide');
+        window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";
+        });
+        
         $('#cancel_vendor_terms').on('click', function(){
             $('#exampleModal2_text').text('Remove Other Vendor Products!');
             $('#exampleModal2').modal('show');
             //window.location.href = "<?= $base;?>";
         });
+        
+        $('#on_demand_category_products_remove').on('click', function(){
+          $.ajax({
+            url: 'index.php?path=checkout/confirm/RemoveOnDemandCategoryProductsFromCart',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            $('#on_demand_category_products tr:last').remove();    
+            $("#on_demand_category_products").append("<tr><td></td><td colspan='2'>Removeing above product(s) from the cart.</td><td></td></tr>");   
+            },
+            complete: function() {
+            },
+            success: function(json) {
+            if (json['products_removed']) {
+                   $('#on_demand_category_products tr:last').remove();    
+                   $("#on_demand_category_products").append("<tr><td></td><td colspan='2'>Removed above product(s) from the cart.</td><td></td></tr>");   
+                   setTimeout(function(){ 
+                   $('#exampleModal2').modal('hide');
+                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkoutitems'; ?>";
+                   },3000);
+            }    
+            }
+        });  
+        });
+        
         $('#cancel_products_vendor_terms').on('click', function(){
             window.location.href = "<?= $base;?>";
         });
+        
         $('#remove_vendor_products').on('click', function(){
           $.ajax({
             url: 'index.php?path=checkout/cart/removeothervendorproductsfromcart',
@@ -931,22 +1029,16 @@ $.ajax({
             },
             success: function(json) {
                 if (json['min_order_total_reached']=="FALSE") {
-                      $("#proceed_to_checkout").addClass("disabled"); 
+                 $("#proceed_to_checkout").addClass("disabled"); 
                  $('#exampleModal_deliverycharge_1').modal('show');
-                  $('#min_required_free_delivery_1').text(json['amount_required']);
-                  $('#min_required_free_delivery_charge_1').text(json['delivery_charge']);
-
-                             return false;
+                 $('#min_required_free_delivery_1').text(json['amount_required']);
+                 $('#min_required_free_delivery_charge_1').text(json['delivery_charge']);
+                 return false;
                 }else{
-            $("#proceed_to_checkout").removeClass("disabled"); 
-
+                 $("#proceed_to_checkout").removeClass("disabled"); 
                  $('#exampleModal_deliverycharge_1').modal('hide');  
-                  $('#min_required_free_delivery_1').text('');
-                  $('#min_required_free_delivery_charge_1').text('');
-
-
-
-                   
+                 $('#min_required_free_delivery_1').text('');
+                 $('#min_required_free_delivery_charge_1').text('');
                 }
 
                  
@@ -964,6 +1056,7 @@ $.ajax({
             console.log('unpaid_orders');
             $("#proceed_to_checkout").addClass("disabled");  
             $('#exampleModal3').modal('show');
+            return false;
             } else {
             $("#proceed_to_checkout").removeClass("disabled"); 
             $('#exampleModal3').modal('hide');
@@ -980,16 +1073,41 @@ $.ajax({
                 if (json['modal_open']) {
                 $('#exampleModal').modal('show');
                 $('#products_list').text(json['product_list']);
-
                 return false;
-                }else{
+                } else {
                 $('#exampleModal').modal('hide'); 
                 $('#products_list').text('');
+                //window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";
+                $.ajax({
+            url: 'index.php?path=checkout/confirm/CheckOnDemandCategoryProductsExists',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+            },
+            complete: function() {
+            },
+            success: function(json) {
+                if (json['modal_open']) {
+                $('#exampleModal').modal('hide'); 
+                $('#exampleModal_ondemand').modal('show');
+                var i = 1;
+                $.each(json.data, function(k, v) {
+                $("#on_demand_category_products").append("<tr><th scope='row'>" + i + "</th><td>" + v.name + "</td><td>" + v.delivery_date + "</td><td>" + v.delivery_timeslot + "</td></tr>");   
+                i++;
+                });
+                $("#on_demand_category_products").append("<tr><td colspan='4'>The above product(s) from the cart are delivered on mentioned delivery dates.</td></tr>");   
+                return false;
+                } else {
+                $('#exampleModal_ondemand').modal('hide'); 
+                $('#on_demand_category_products').html('');
                 window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";     
                 }
             }
             });
             
+                }
+            }
+            });
             }
         },
         error: function(xhr, ajaxOptions, thrownError) {
