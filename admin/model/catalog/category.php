@@ -35,7 +35,15 @@ class ModelCatalogCategory extends Model {
     public function addCategory($data) {
         $this->trigger->fire('pre.admin.category.add', $data);
 
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "category SET discount = '" . $data['discount'] . "', parent_id = '" . (int) $data['parent_id'] . "', `top` = '" . (isset($data['top']) ? (int) $data['top'] : 0) . "', `column` = '" . (int) $data['column'] . "', sort_order = '" . (int) $data['sort_order'] . "', status = '" . (int) $data['status'] . "', delivery_time = '" . (int) $data['delivery_time'] . "', date_modified = NOW(), date_added = NOW()");
+        $monday = in_array("monday", $data['category_delivery']) ? 1 : 0;
+        $tuesday = in_array("tuesday", $data['category_delivery']) ? 1 : 0;
+        $wednesday = in_array("wednesday", $data['category_delivery']) ? 1 : 0;
+        $thursday = in_array("thursday", $data['category_delivery']) ? 1 : 0;
+        $friday = in_array("friday", $data['category_delivery']) ? 1 : 0;
+        $saturday = in_array("saturday", $data['category_delivery']) ? 1 : 0;
+        $sunday = in_array("sunday", $data['category_delivery']) ? 1 : 0;
+
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "category SET discount = '" . $data['discount'] . "', parent_id = '" . (int) $data['parent_id'] . "', `top` = '" . (isset($data['top']) ? (int) $data['top'] : 0) . "', `column` = '" . (int) $data['column'] . "', sort_order = '" . (int) $data['sort_order'] . "', status = '" . (int) $data['status'] . "', delivery_time = '" . (int) $data['delivery_time'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "', date_modified = NOW(), date_added = NOW()");
 
         $category_id = $this->db->getLastId();
 
@@ -130,10 +138,18 @@ class ModelCatalogCategory extends Model {
 
     public function editCategory($category_id, $data) {
         $this->trigger->fire('pre.admin.category.edit', $data);
+        
+        $monday = in_array("monday", $data['category_delivery']) ? 1 : 0;
+        $tuesday = in_array("tuesday", $data['category_delivery']) ? 1 : 0;
+        $wednesday = in_array("wednesday", $data['category_delivery']) ? 1 : 0;
+        $thursday = in_array("thursday", $data['category_delivery']) ? 1 : 0;
+        $friday = in_array("friday", $data['category_delivery']) ? 1 : 0;
+        $saturday = in_array("saturday", $data['category_delivery']) ? 1 : 0;
+        $sunday = in_array("sunday", $data['category_delivery']) ? 1 : 0;
 
         $isTop = $this->db->query('SELECT * FROM `' . DB_PREFIX . "category` WHERE category_id = '" . (int) $category_id . "'");
 
-        $this->db->query('UPDATE ' . DB_PREFIX . "category SET discount = '" . $data['discount'] . "', parent_id = '" . (int) $data['parent_id'] . "', `top` = '" . (isset($data['top']) ? (int) $data['top'] : 0) . "', `column` = '" . (int) $data['column'] . "', sort_order = '" . (int) $data['sort_order'] . "', status = '" . (int) $data['status'] . "', delivery_time = '" . (int) $data['delivery_time'] . "', date_modified = NOW() WHERE category_id = '" . (int) $category_id . "'");
+        $this->db->query('UPDATE ' . DB_PREFIX . "category SET discount = '" . $data['discount'] . "', parent_id = '" . (int) $data['parent_id'] . "', `top` = '" . (isset($data['top']) ? (int) $data['top'] : 0) . "', `column` = '" . (int) $data['column'] . "', sort_order = '" . (int) $data['sort_order'] . "', status = '" . (int) $data['status'] . "', delivery_time = '" . (int) $data['delivery_time'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "', date_modified = NOW() WHERE category_id = '" . (int) $category_id . "'");
 
         if (isset($data['image'])) {
             $this->db->query('UPDATE ' . DB_PREFIX . "category SET image = '" . $this->db->escape($data['image']) . "' WHERE category_id = '" . (int) $category_id . "'");

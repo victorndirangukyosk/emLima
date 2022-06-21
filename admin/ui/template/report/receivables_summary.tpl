@@ -26,7 +26,7 @@
           <div class="row">
 
 
-            <!--<div class="col-sm-4">
+            <div class="col-sm-4">
              <div class="form-group">
                 <label class="control-label" for="input-date-start"><?php echo $entry_date_start; ?></label>
                 <div class="input-group date">
@@ -43,7 +43,7 @@
                   <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                   </span></div>
               </div>
-            </div>-->
+            </div> 
 
            
            <div class="col-sm-4">
@@ -86,7 +86,11 @@
                               
  </div>
  
-            
+             <br>
+            <br>
+            <br>
+            <br>
+            <br>
               <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
            
           </div>
@@ -99,6 +103,7 @@
                 <td class="text-left">Company</td>
                 <td class="text-left">Customer</td>   
                 <td class="text-right">Sum of Total</td>
+                <td class="text-left">Payment Terms</td>
                 <!--<td class="text-right">Sum not Due</td> 
                 <td class="text-right">Sum Due</td> -->
               </tr>
@@ -110,6 +115,7 @@
                 <td class="text-left"><?php echo $order['company']; ?></td>
                 <td class="text-left"><?php echo $order['customer']; ?></td> 
                 <td class="text-right"><?php echo $order['order_total']; ?></td>
+                <td class="text-right"><?php echo $order['payment_terms']; ?></td>
                 <!--<td class="text-right"><?php echo $order['updated_total']; ?></td>
               
                 <td class="text-right"><?php echo $order['updated_total']; ?></td>-->

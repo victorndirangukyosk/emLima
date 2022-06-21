@@ -1,11 +1,11 @@
 <?php
 
-class ControllerReportProductsConsumption extends Controller {
+class ControllerReportCompaniesSales extends Controller {
 
     public function index() {
         $this->load->language('report/customer_boughtproducts');
 
-        $this->document->setTitle($this->language->get('heading_title'));
+        $this->document->setTitle('Sales from Companies');
 
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -13,11 +13,11 @@ class ControllerReportProductsConsumption extends Controller {
             $filter_date_start = '';
         }
 
-        // if (isset($this->request->get['filter_date_end'])) {
-        //     $filter_date_end = $this->request->get['filter_date_end'];
-        // } else {
-        //     $filter_date_end = '';
-        // }
+        if (isset($this->request->get['filter_date_end'])) {
+            $filter_date_end = $this->request->get['filter_date_end'];
+        } else {
+            $filter_date_end = '';
+        }
         
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
@@ -37,15 +37,15 @@ class ControllerReportProductsConsumption extends Controller {
             $url .= '&filter_date_start=' . $this->request->get['filter_date_start'];
         }
 
-        // if (isset($this->request->get['filter_date_end'])) {
-        //     $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
-        // }
+        if (isset($this->request->get['filter_date_end'])) {
+            $url .= '&filter_date_end=' . $this->request->get['filter_date_end'];
+        }
        
 
         $variations = array();
         if (isset($this->request->get['filter_name'])) {
             $url .= '&filter_name=' . $this->request->get['filter_name'];
-            $variations = $this->getProductVariantsInfo($this->request->get['filter_name']);
+            // $variations = $this->getProductVariantsInfo($this->request->get['filter_name']);
             //$log = new Log('error.log');
             //$log->write($variations);
         }
@@ -63,24 +63,24 @@ class ControllerReportProductsConsumption extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/products_consumption', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('report/companies_sales', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
-        $this->load->model('report/product');
+        $this->load->model('report/sale');
 
         $data['products'] = [];
 
         $filter_data = [
             'filter_date_start' => $filter_date_start,
-            // 'filter_date_end' => $filter_date_end,           
+            'filter_date_end' => $filter_date_end,           
             'filter_name' => $filter_name,
-            'filter_variations' => $variations
+            // 'filter_variations' => $variations
                 // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
                 // 'limit' => $this->config->get('config_limit_admin'),
         ];
-            if ('' != $filter_date_start || '' != $filter_name) {
+            if (  '' != $filter_name) {
 
-            $results = $this->model_report_product->getproductsconsumption($filter_data);
+            $results = $this->model_report_sale->getSalesByCompanies($filter_data);
             $products_total = count($results);
         } else {
             $products_total = 0;
@@ -96,10 +96,11 @@ class ControllerReportProductsConsumption extends Controller {
                     'order_date' => $result['date_added'],
                     'order_id' => $result['order_id'],
                     'customer' => $result['customer'],
+                    'company' => $result['company'],
                     'customer_status' => $result['customer_status']==0?'Disabled':'Enabled',
-                    'name' => $result['name'],
-                    'unit' => $result['unit'],
-                    'quantity' => $result['quantity'],
+                    // 'name' => $result['name'],
+                    // 'unit' => $result['unit'],
+                    // 'quantity' => $result['quantity'],
                     'status' => $result['status'],
                     'payment_terms' => $result['payment_terms'],
                 ];
@@ -136,7 +137,7 @@ class ControllerReportProductsConsumption extends Controller {
 
         $this->load->model('sale/customer');
 
-        $data['customer_names'] = $this->model_sale_customer->getCustomers(null);
+        // $data['customer_names'] = $this->model_sale_customer->getCustomers(null);
 
         $url = '';
 
@@ -158,7 +159,7 @@ class ControllerReportProductsConsumption extends Controller {
         $pagination->total = $products_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/products_consumption', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/companies_sales', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -180,13 +181,13 @@ class ControllerReportProductsConsumption extends Controller {
 
         $data['products'] = array_slice($data['products'], $start, $limit);
 
-        $this->response->setOutput($this->load->view('report/products_consumption.tpl', $data));
+        $this->response->setOutput($this->load->view('report/companies_sales.tpl', $data));
     }
 
-    public function productsconsumptionexcel() {
+    public function excel() {
         $this->load->language('report/customer_boughtproducts');
 
-        $this->document->setTitle($this->language->get('heading_title'));
+        $this->document->setTitle('Sales By Companies');
 
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -207,7 +208,7 @@ class ControllerReportProductsConsumption extends Controller {
         $variations = array();
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
-            $variations = $this->getProductVariantsInfo($this->request->get['filter_name']);
+            // $variations = $this->getProductVariantsInfo($this->request->get['filter_name']);
             //$log = new Log('error.log');
             //$log->write($variations);
         } else {
@@ -218,44 +219,13 @@ class ControllerReportProductsConsumption extends Controller {
             'filter_date_start' => $filter_date_start,
             // 'filter_date_end' => $filter_date_end,
             'filter_name' => $filter_name,
-            'filter_variations' => $variations
+            // 'filter_variations' => $variations
         ];
 
         $this->load->model('report/excel');  
-        $this->model_report_excel->download_product_consumption_excel($filter_data);
+        $this->model_report_excel->download_companies_sales_excel($filter_data);
     }
 
-    public function product_autocomplete() {
-
-        if (isset($this->request->get['filter_name'])) {
-            $filter_name = $this->request->get['filter_name'];
-        } else {
-            $filter_name = '';
-        }
-
-        $this->load->model('sale/order');
-
-        $send = [];
-
-        $json = $this->model_sale_order->getProductDataByStoreFilterNew($filter_name);
-        $log = new Log('error.log');
-
-        foreach ($json as $j) {
-            $j['name'] = htmlspecialchars_decode($j['name']);
-
-            $send[] = $j;
-        }
-
-        echo json_encode($send);
-    }
-
-    public function getProductVariantsInfo($product_name) {
-
-        $this->load->model('sale/order');
-        $log = new Log('error.log');
-        $variations = $this->model_sale_order->getProductVariationsNewFarmer($product_name, 75);
-        //$log->write($variations);
-        return $variations;
-    }
+     
 
 }

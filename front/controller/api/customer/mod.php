@@ -1,23 +1,26 @@
 <?php
 
-class ControllerApiCustomerCod extends Controller {
+class ControllerApiCustomerMod extends Controller {
 
     public function apiConfirm($orders) {
         $log = new Log('error.log');
-        $log->write('apiConfirm cod confirm');
-        $log->write($this->customer->getId());
+        $log->write('apiConfirm mod confirm');
 
         $this->load->model('checkout/order');
 
-        $log->write($this->config->get('cod_order_status_id'));
+        $log->write($this->config->get('mod_order_status_id'));
+
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $comment = "";
+
         /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
-        $log->write('Order Confirm In Mobile COD');
+        $log->write('Order Confirm In Mobile MOD');
         $log->write($is_he_parents);
         $log->write($this->customer->getOrderApprovalAccess());
         $log->write($this->customer->getOrderApprovalAccessRole());
-        $log->write('Order Confirm In Mobile COD');
+        $log->write('Order Confirm In Mobile MOD');
 
         $parent_customer_info = NULL;
         if ($is_he_parents != NULL && $is_he_parents > 0) {
@@ -36,28 +39,21 @@ class ControllerApiCustomerCod extends Controller {
         }
 
         $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
-        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
-        $order_status_id = $order_status_id > 0 ? $order_status_id : $this->config->get('cod_order_status_id');
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('mod_order_status_id') : 15;
+        $order_status_id = $order_status_id > 0 ? $order_status_id : $this->config->get('mod_order_status_id');
         /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
 
-        $order_id = NULL;
         foreach ($orders as $order_id) {
-            $log->write('cod loop:2' . $order_id);
+            $log->write('mod loop' . $order_id);
+            $log->write('mod loop' . $order_id . 'front\controller\api\customer\mod.php');
+            $log->write('mod loop' . $order_id . ' ' . $this->cart->getSubTotal() . ' ' . $this->cart->getTotal());
+            $log->write('mod loop order status id' . $order_status_id);
 
-            $this->model_checkout_order->UpdateParentApproval($order_id);
-        }
-        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-        $comment = "";
-        foreach ($orders as $order_id) {
-            $log->write('cod loop' . $order_id);
-
-            // $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('cod_order_status_id'));
-            // $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id);
-            if ($customer_info != null)
-                $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true, $customer_info['customer_id'], 'customer');
-            else
-                $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment, true, 0, 'customer');
-
+            if ($customer_info != null) {
+                $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), $comment, true, $customer_info['customer_id'], 'customer');
+            } else {
+                $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), $comment, true, 0, 'customer');
+            }
             $this->load->model('account/activity');
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
@@ -67,34 +63,27 @@ class ControllerApiCustomerCod extends Controller {
 
             $this->model_account_activity->addActivity('order_account', $activity_data);
         }
-
-        /* if ($order_id != NULL) {
-          $this->model_checkout_order->UpdateParentApprovalAPI($order_id, $Approver_assigned['order_approval_access'], $Approver_assigned['order_approval_access_role']);
-          } */
-
-        if ($parent_approval == "Pending") {//&& $sub_customer_order_approval_required == 1
-            $this->load->model('checkout/order');
-            $this->model_checkout_order->SendMailToParentUser($order_id);
-        }
     }
 
     public function apiConfirmHybridPayments($orders) {
         $log = new Log('error.log');
-        $log->write('apiConfirm cod confirm');
-        $log->write($this->customer->getId());
+        $log->write('apiConfirm mod confirm');
 
         $this->load->model('checkout/order');
 
-        $log->write($this->config->get('cod_order_status_id'));
+        $log->write($this->config->get('mod_order_status_id'));
+
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $comment = "";
 
         /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
-        $log->write('Order Confirm In Mobile COD');
+        $log->write('Order Confirm In Mobile MOD');
         $log->write($is_he_parents);
         $log->write($this->customer->getOrderApprovalAccess());
         $log->write($this->customer->getOrderApprovalAccessRole());
-        $log->write('Order Confirm In Mobile COD');
+        $log->write('Order Confirm In Mobile MOD');
 
         $parent_customer_info = NULL;
         if ($is_he_parents != NULL && $is_he_parents > 0) {
@@ -113,29 +102,24 @@ class ControllerApiCustomerCod extends Controller {
         }
 
         $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
-        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
-        $order_status_id = $order_status_id > 0 ? $order_status_id : $this->config->get('cod_order_status_id');
+        $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('mod_order_status_id') : 15;
+        $order_status_id = $order_status_id > 0 ? $order_status_id : $this->config->get('mod_order_status_id');
         /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
 
-        $order_id = NULL;
         foreach ($orders as $order_id) {
-            $log->write('mobile cod loop:2' . $order_id);
+            $log->write('mod loop' . $order_id);
+            $log->write('mod loop' . $order_id . 'front\controller\api\customer\mod.php');
+            $log->write('mod loop' . $order_id . ' ' . $this->cart->getSubTotal() . ' ' . $this->cart->getTotal());
+            $log->write('mod loop order status id' . $order_status_id);
 
-            $this->model_checkout_order->UpdateParentApproval($order_id);
-        }
-        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-        $comment = "";
-        foreach ($orders as $order_id) {
-            $log->write('mobile cod loop' . $order_id);
-
-            $this->load->model('sale/order');
             $this->load->model('account/credit');
-            $this->load->model('payment/wallet');
-
             $customer_wallet_total = $this->model_account_credit->getTotalAmount();
             $order_info = $this->model_checkout_order->getOrder($order_id);
+
             if ($customer_wallet_total > 0 && $order_info['paid'] == 'N') {
 
+                $this->load->model('sale/order');
+                $this->load->model('payment/wallet');
 
                 $totals = $this->model_sale_order->getOrderTotals($order_id);
                 $log->write($totals);
@@ -154,13 +138,11 @@ class ControllerApiCustomerCod extends Controller {
                 } elseif ($customer_info != NULL && $customer_wallet_total > 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
                     $this->model_payment_wallet->addTransactionCreditForHybridPayment($this->customer->getId(), "Wallet amount deducted #" . $order_id, $customer_wallet_total, $order_id, 'P', $customer_wallet_total);
                     $this->model_sale_order->UpdatePaymentMethod($order_id, 'Wallet Payment', 'wallet');
-                    $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
+                    $ret = $this->model_checkout_order->addOrderHistory($order_id, 1, 'Paid Partially Through Wallet By Customer', FALSE, $this->customer->getId(), 'customer');
                 } elseif ($customer_info != NULL && $customer_wallet_total == 0 && $totals != NULL && $total > 0 && $total > $customer_wallet_total) {
-                    $this->model_sale_order->UpdatePaymentMethod($order_id, 'Corporate Account/ Cheque Payment', 'cod');
-                    $ret = $this->model_checkout_order->addOrderHistory($order_id, 14, '', FALSE, $this->customer->getId(), 'customer');
+                    $this->model_sale_order->UpdatePaymentMethod($order_id, 'mPesa On Delivery', 'mod');
+                    $ret = $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('mod_order_status_id'), '', FALSE, $this->customer->getId(), 'customer');
                 }
-
-
                 $this->load->model('account/activity');
                 $activity_data = [
                     'customer_id' => $this->customer->getId(),
@@ -169,11 +151,6 @@ class ControllerApiCustomerCod extends Controller {
                 ];
 
                 $this->model_account_activity->addActivity('order_account', $activity_data);
-            }
-
-            if ($parent_approval == "Pending") {//&& $sub_customer_order_approval_required == 1
-                $this->load->model('checkout/order');
-                $this->model_checkout_order->SendMailToParentUser($order_id);
             }
         }
     }

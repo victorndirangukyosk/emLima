@@ -64,7 +64,7 @@
     <li id="simple-blog">
         <a class="parent"><i class="fa fa-cubes fa-fw"></i> <span>Inventory</span></a>
         <ul>
-          <?php if($preturn_vendor_product != false){ ?>
+          <?php if(  $preturn_inventory_wastage != false || $preturn_vendor_product_requisition  != false || preturn_vendor_product_requisition_history !=false){ ?>
             <li><a class="parent">Inventory</a>
             <ul>
             <li><a href="<?php echo $inventory_management; ?>">Inventory</a></li>
@@ -87,6 +87,8 @@
             <li><a href="<?php echo $vendor_product_requisition_history ; ?>">Requisition History</a></li>
             
           <?php } ?>
+
+         
 
             
             </ul>
@@ -540,9 +542,16 @@
                 </ul>
             </li>               
             <?php } ?>
-            <?php if( $preturn_sale_order != false || $preturn_sale_productmissing !=false || $preturn_sale_tax != false || $preturn_sale_transaction != false || $preturn_sale_payment != false  || $preturn_sale_shipping != false || $preturn_sale_return != false || $preturn_sale_coupon != false || $preturn_sale_advanced != false ) { ?>
+            <?php if( $preturn_sale_order != false || $preturn_sale_productmissing !=false || $preturn_sale_tax != false || $preturn_sale_transaction != false || $preturn_sale_payment != false  || $preturn_sale_shipping != false || $preturn_sale_return != false || $preturn_sale_coupon != false || $preturn_sale_advanced != false  || $preturn_companies_sales !=false) { ?>
             <li><a class="parent"><?php echo $text_sale; ?></a>
                 <ul>
+
+                
+                 <?php if($preturn_companies_sales) { ?>
+                    <li><a href="<?php echo $report_companies_sales; ?>">Sales By Companies</a></li>
+                    <?php }?>
+
+
                     <?php if($preturn_sale_order) { ?>
                     <li><a href="<?php echo $report_sale_order; ?>"><?php echo $text_report_sale_order; ?></a></li>
                     <?php }?>
@@ -595,9 +604,15 @@
             <li><a href="<?php echo $report_receivables_summary; ?>">Receivables Summary</a></li>
             <?php } ?>
 
+ <?php if($preturn_report_receivables_ageing) { ?>  
+            <li><a href="<?php echo $report_receivables_ageing; ?>">Receivables Ageing</a></li>
+            <?php } ?>
+
                 </ul>
             </li>
             <?php } ?>
+
+           
 
             <?php if( $preturn_product_viewed != false || $preturn_product_purchased != false ) { ?>
             <li><a class="parent"><?php echo $text_product; ?></a>
@@ -621,7 +636,7 @@
             </li>
             <?php } ?>
 
-             <?php if( $preturn_report_inventory_wastage != false  ) { ?>
+             <?php if( $preturn_report_inventory_wastage != false  || $preturn_report_inventory_wastage_consolidated!=false || $preturn_report_product_received_sold !=false || $preturn_inventory_purchased!=false ) { ?>
             <li><a class="parent">Inventory</a>
                 <ul>                    
                     <?php if($preturn_report_inventory_wastage) { ?>
@@ -650,12 +665,24 @@
             <?php } ?>
 
             </ul>
+
+
+  <ul>  
+              <?php if($preturn_inventory_purchased) { ?>
+                    <li><a href="<?php echo $report_inventory_purchased; ?>">Purchases</a></li>
+                    <?php } ?> </ul>
+
+
             </li>
             <?php } ?>
-            <?php if( $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false ) { ?>
+            <?php if( $preturn_report_customer !=false || $preturn_customer_online != false || $preturn_customer_activity != false || $preturn_customer_order != false || $preturn_customer_reward != false || $preturn_customer_credit != false ) { ?>
             <li><a class="parent"><?php echo $text_customer; ?></a>
                 <ul>
 
+
+                    <?php if($preturn_report_customer) { ?>
+                    <li><a href="<?php echo $report_customer; ?>">Customer Master</a></li>
+                    <?php } ?>
 
                     <?php if($preturn_customer_order) { ?>
                     <li><a href="<?php echo $report_customer_financial_statement; ?>"><?php echo $text_report_customer_financial_statement; ?></a></li>
@@ -669,6 +696,9 @@
                     <?php } ?>
                     <?php if($preturn_customer_order) { ?>
                     <li><a href="<?php echo $report_customer_order; ?>"><?php echo $text_report_customer_order; ?></a></li>
+                    <?php } ?>
+                    <?php if($preturn_order_and_updated_product) { ?>
+                    <li><a href="<?php echo $report_order_and_updated_product; ?>"><?php echo $text_report_order_and_updated_product; ?></a></li>
                     <?php } ?>
                     <?php if($preturn_customer_reward) { ?>
                     <li><a href="<?php echo $report_customer_reward; ?>"><?php echo $text_report_customer_reward; ?></a></li>
@@ -717,6 +747,12 @@
                      <?php if($preturn_customer_order_monthly_average) { ?>
                     <li><a href="<?php echo $report_customer_order_monthly_average; ?>"><?php echo $text_report_customer_order_monthly_average; ?></a></li>
                     <?php } ?>
+
+
+                    <?php if($preturn_report_payment_receivables) { ?>  
+            <li><a href="<?php echo $report_payment_receivables; ?>">Payment Receivables</a></li>
+            <?php } ?>
+
 
 
                 </ul>

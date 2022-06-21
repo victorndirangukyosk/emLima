@@ -138,12 +138,14 @@
 
 
                                      
+                                    <td><?php echo $column_vproduct_id; ?></td>
                                     <td><?php echo $column_name; ?></td>
                                     <td>Unit</td>
 
                                      
                                      <td class="text-right">Wastage Quantity</td>
                                      
+                                     <td class="text-right">Avg. Buying Price</td>
 
                                     
                                      
@@ -155,8 +157,8 @@
                                 <?php foreach ($products as $product) { ?>
                                 <tr>
                                     
-                                   <!-- <td class="text-right"><?php echo $product['product_id']; ?></td>
-                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>-->
+                                   <!-- <td class="text-right"><?php echo $product['product_id']; ?></td>-->
+                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>
                                     <td class="text-left"><?php echo $product['name']; ?></td>
 
                                     <td class="text-left"><?php echo $product['unit']; ?></td>
@@ -165,7 +167,8 @@
                                     <td class="text-right"><?php echo $product['wastage_qty']; ?>
                                     </td>                        
 				    
-				 
+				   <td class="text-right"><?php echo $product['avg_buying_price']; ?>
+                                    </td> 
                                     
                                 </tr>
 									 

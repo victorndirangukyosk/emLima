@@ -150,7 +150,6 @@ class ModelSaleCustomer extends Model {
 
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
             $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "' or c.customer_id = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
-       
         }
 
         if (!empty($data['filter_email'])) {
@@ -186,14 +185,11 @@ class ModelSaleCustomer extends Model {
 
 
         if (isset($data['filter_pezesha']) && !is_null($data['filter_pezesha'])) {
-           if($data['filter_pezesha']=='1')
-           {
-            $implode[] = "c.customer_id in  (select customer_id from hf7_pezesha_customers )";
-           }
-           else{
-            $implode[] = "c.customer_id not in  (select customer_id from hf7_pezesha_customers )";
-
-           }
+            if ($data['filter_pezesha'] == '1') {
+                $implode[] = "c.customer_id in  (select customer_id from hf7_pezesha_customers )";
+            } else {
+                $implode[] = "c.customer_id not in  (select customer_id from hf7_pezesha_customers )";
+            }
         }
 
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
@@ -222,15 +218,15 @@ class ModelSaleCustomer extends Model {
         if (isset($data['filter_account_manager_name']) && !is_null($data['filter_account_manager_id'])) {
             $implode[] = "c.account_manager_id = '" . (int) $data['filter_account_manager_id'] . "'";
         }
-        
+
         if (isset($data['filter_payment_terms']) && !is_null($data['filter_payment_terms']) && $data['filter_payment_terms'] != NULL) {
             $implode[] = "c.payment_terms = '" . $data['filter_payment_terms'] . "'";
         }
-        
+
         if (isset($data['filter_customer_price_category']) && !is_null($data['filter_customer_price_category']) && $data['filter_customer_price_category'] != NULL) {
             $implode[] = "c.customer_category = '" . $data['filter_customer_price_category'] . "'";
         }
-        
+
         if (!empty($data['filter_customer_experience_id']) && !empty($data['filter_customer_experience_id'])) {
             $implode[] = "customer_experience_id = '" . $this->db->escape($data['filter_customer_experience_id']) . "'";
         }
@@ -311,7 +307,6 @@ class ModelSaleCustomer extends Model {
 
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
             $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "' or c.customer_id = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
-        
         }
 
         if (!empty($data['filter_email'])) {
@@ -671,7 +666,7 @@ class ModelSaleCustomer extends Model {
                 $implode[] = "CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
             }
         }
- 
+
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
             $implode[] = "c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }
@@ -810,7 +805,6 @@ class ModelSaleCustomer extends Model {
         return $query->rows;
     }
 
-
     public function getCompanies_pezesha_all($data = []) {
         $sql = 'SELECT distinct company_name AS name FROM ' . DB_PREFIX . 'customer WHERE status = 1';
 
@@ -819,7 +813,7 @@ class ModelSaleCustomer extends Model {
             $implode[] = " company_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
         $implode[] = "(parent in (select customer_id from hf7_pezesha_customers) || customer_id in (select customer_id from hf7_pezesha_customers))";
-        
+
         if ($implode) {
             $sql .= ' AND ' . implode(' AND ', $implode);
         }
@@ -848,7 +842,6 @@ class ModelSaleCustomer extends Model {
         return $query->rows;
     }
 
-
     public function getCustomers_pezesha($data = []) {
         $sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) AS name, cgd.name AS customer_group FROM " . DB_PREFIX . 'customer c LEFT JOIN ' . DB_PREFIX . "customer_group_description cgd ON (c.customer_group_id = cgd.customer_group_id) WHERE cgd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
@@ -867,16 +860,16 @@ class ModelSaleCustomer extends Model {
             }
         }
 
-        
+
 
         if (!empty($data['filter_company'])) {
             if ('' != $data['filter_company']) {
                 $implode[] = "c.company_name = '" . $this->db->escape($data['filter_company']) . "'";
             }
         }
- 
- 
-    
+
+
+
 
         if ($implode) {
             $sql .= ' AND ' . implode(' AND ', $implode);
@@ -923,7 +916,6 @@ class ModelSaleCustomer extends Model {
         return $query->rows;
     }
 
-    
     public function getCompanies_pezesha($data = []) {
         $sql = 'SELECT distinct customer_id,company_name AS name FROM ' . DB_PREFIX . 'customer WHERE status = 1 and customer_id in (select customer_id from hf7_pezesha_customers)';
 
@@ -969,7 +961,7 @@ class ModelSaleCustomer extends Model {
         if (!empty($data['filter_name'])) {
             $implode[] = " code LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
         }
-        
+
         if ($implode) {
             $sql .= ' AND ' . implode(' AND ', $implode);
         }
@@ -1046,39 +1038,39 @@ class ModelSaleCustomer extends Model {
         if ($customer_info) {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET approved = '1' WHERE customer_id = '" . (int) $customer_id . "'");
             //AFTER CUSTOMER VERIFIED MAIL SENDING
-//            $this->load->model('setting/store');
-//
-//            $store_info = $this->model_setting_store->getStore($customer_info['store_id']);
-//
-//            if ($store_info) {
-//                $store_name = $store_info['name'];
-//                $store_url = $store_info['url'] . 'index.php?path=account/login';
-//            } else {
-//                $store_name = $this->config->get('config_name');
-//                $store_url = HTTP_CATALOG . 'index.php?path=account/login';
-//            }
-//
-//            $customer_info['store_name'] = $store_name;
-//            $customer_info['account_href'] = $store_url;
-//
-//            $subject = $this->emailtemplate->getSubject('Customer', 'customer_4', $customer_info);
-//            $message = $this->emailtemplate->getMessage('Customer', 'customer_4', $customer_info);
-//
-//            $mail = new Mail($this->config->get('config_mail'));
-//            $mail->setTo($customer_info['email']);
-//            $mail->setFrom($this->config->get('config_from_email'));
-//            $mail->setSender($this->config->get('config_name'));
-//            $mail->setSubject($subject);
-//            $mail->setHTML($message);
-//            $mail->send();
-//
-//            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_4', $customer_info);
-//            // send message here
-//            if ( $this->emailtemplate->getSmsEnabled('Customer','customer_4')) {
-//
-//                $ret =  $this->emailtemplate->sendmessage($customer_info['telephone'],$sms_message);
-//
-//            }
+            $this->load->model('setting/store');
+
+            $store_info = $this->model_setting_store->getStore($customer_info['store_id']);
+
+            if ($store_info) {
+                $store_name = $store_info['name'];
+                //$store_url = $store_info['url'] . 'index.php?path=account/login';
+                $store_url = 'https://www.kwikbasket.com/index.php?path=account/login';
+            } else {
+                $store_name = $this->config->get('config_name');
+                //$store_url = HTTP_CATALOG . 'index.php?path=account/login';
+                $store_url = 'https://www.kwikbasket.com/index.php?path=account/login';
+            }
+
+            $customer_info['store_name'] = $store_name;
+            $customer_info['account_href'] = $store_url;
+
+            $subject = $this->emailtemplate->getSubject('Customer', 'customer_4', $customer_info);
+            $message = $this->emailtemplate->getMessage('Customer', 'customer_4', $customer_info);
+
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($customer_info['email']);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->send();
+
+            $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_4', $customer_info);
+            // send message here
+            if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_4')) {
+                $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+            }
         }
     }
 
@@ -1161,15 +1153,15 @@ class ModelSaleCustomer extends Model {
         if (!empty($data['filter_account_manager_id']) && !empty($data['filter_account_manager_name'])) {
             $implode[] = "account_manager_id = '" . $this->db->escape($data['filter_account_manager_id']) . "'";
         }
-        
+
         if (!empty($data['filter_customer_experience_id']) && !empty($data['filter_customer_experience_id'])) {
             $implode[] = "customer_experience_id = '" . $this->db->escape($data['filter_customer_experience_id']) . "'";
         }
-        
+
         if (!empty($data['filter_payment_terms']) && !empty($data['filter_payment_terms']) && $data['filter_payment_terms'] != NULL) {
             $implode[] = "payment_terms = '" . $this->db->escape($data['filter_payment_terms']) . "'";
         }
-        
+
         if (!empty($data['filter_customer_price_category']) && !empty($data['filter_customer_price_category']) && $data['filter_customer_price_category'] != NULL) {
             $implode[] = "customer_category = '" . $this->db->escape($data['filter_customer_price_category']) . "'";
         }
@@ -1186,17 +1178,14 @@ class ModelSaleCustomer extends Model {
             $implode[] = "status = '" . (int) $data['filter_status'] . "'";
         }
 
-        
+
         if (isset($data['filter_pezesha']) && !is_null($data['filter_pezesha'])) {
-            if($data['filter_pezesha']=='1')
-            {
-             $implode[] = "customer_id in  (select customer_id from hf7_pezesha_customers )";
+            if ($data['filter_pezesha'] == '1') {
+                $implode[] = "customer_id in  (select customer_id from hf7_pezesha_customers )";
+            } else {
+                $implode[] = " customer_id not in  (select customer_id from hf7_pezesha_customers )";
             }
-            else{
-             $implode[] = " customer_id not in  (select customer_id from hf7_pezesha_customers )";
- 
-            }
-         }
+        }
 
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
             $implode[] = "approved = '" . (int) $data['filter_approved'] . "'";
@@ -1444,7 +1433,7 @@ class ModelSaleCustomer extends Model {
         if (!empty($data['filter_ip'])) {
             $sql .= "And c.ip = '" . $this->db->escape($data['filter_ip']) . "'";
         }
- 
+
         if (!empty($data['filter_parent_customer_id']) && !empty($data['filter_parent_customer'])) {
             $sql .= "And c.parent = '" . $this->db->escape($data['filter_parent_customer_id']) . "'";
         }

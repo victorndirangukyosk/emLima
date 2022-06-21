@@ -2,7 +2,7 @@
 <div id="content">
   <div class="page-header">
     <div class="container-fluid">
-      <h1>Products Consumption</h1>
+      <h1>Sales By Companies</h1>
       <ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
         <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
@@ -13,7 +13,7 @@
   <div class="container-fluid">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><i class="fa fa-bar-chart"></i> <?php echo $text_list; ?></h3>
+        <h3 class="panel-title"><i class="fa fa-bar-chart"></i>Orders List</h3>
 		  <div class="pull-right">
       
                     <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success btn-sm" data-original-title="Download Excel"><i class="fa fa-download"></i></button>
@@ -30,9 +30,9 @@
            
  
                    <div class="form-group">
-                <label class="control-label" for="input-product">Product</label>
+                <label class="control-label" for="input-company">Company Name</label>
 
-                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="Product" id="input-customer" class="form-control" />
+                 <input type="text" name="filter_name" value="<?php echo $filter_name; ?>" placeholder="Company" id="input-company" class="form-control" />
               
               </div>
 
@@ -44,12 +44,12 @@
  
              <div class="col-sm-4">
               <div class="form-group">
-                <label class="control-label" for="input-date-start">Order Date</label>
+               <!--  <label class="control-label" for="input-date-start">Order Date</label>
                 <div class="input-group date">
                   <input type="text" name="filter_date_start" value="<?php echo $filter_date_start; ?>" placeholder="Order Date" data-date-format="YYYY-MM-DD" id="input-date-start" class="form-control" />
                   <span class="input-group-btn">
                   <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                  </span></div>
+                  </span></div>-->
               </div>
              <!-- <div class="form-group">
                 <label class="control-label" for="input-date-end"><?php echo $entry_date_end; ?></label>
@@ -73,13 +73,10 @@
                <td class="text-left">Order Date</td>
                <td class="text-left">Order Id</td>
                 <td class="text-left">Customer Name</td>                
+                <!--<td class="text-left">Company</td> -->               
                 <td class="text-left">Customer Status</td> 
                 <td class="text-left">Payment Terms</td> 
-
-                <td class="text-left">Product Name</td> 
-                <td class="text-left">Unit</td> 
-                <td class="text-right">Quantity</td> 
-                <td class="text-right">Order Status</td> 
+                <td class="text-left">Order Status</td> 
                 
               </tr>
             </thead>
@@ -90,13 +87,10 @@
                 <td class="text-left"><?php echo $prod['order_date']; ?></td>
                 <td class="text-left"><?php echo $prod['order_id']; ?></td>
                 <td class="text-left"><?php echo $prod['customer']; ?></td>
+                <!--<td class="text-left"><?php echo $prod['company']; ?></td>-->
                 <td class="text-left"><?php echo $prod['customer_status']; ?></td>
-                <td class="text-left"><?php echo $prod['payment_terms']; ?></td>
-
-               <td class="text-left"><?php echo $prod['name']; ?></td>
-                <td class="text-left"><?php echo $prod['unit']; ?></td>
-                <td class="text-right"><?php echo $prod['quantity']; ?></td>
-                <td class="text-right"><?php echo $prod['status']; ?></td>
+                <td class="text-left"><?php echo $prod['payment_terms']; ?></td> 
+                <td class="text-left"><?php echo $prod['status']; ?></td>
                 </tr>
               <?php } ?>
               <?php } else { ?>
@@ -116,13 +110,9 @@
   </div>
   <script type="text/javascript"><!--
 $('#button-filter').on('click', function() {
-	url = 'index.php?path=report/products_consumption&token=<?php echo $token; ?>';
+	url = 'index.php?path=report/companies_sales&token=<?php echo $token; ?>';
 
-  
-            var filter_customer = $('input[name=\'filter_customer\']').val();
-
-           
-            
+   
     var filter_name = $('input[name=\'filter_name\']').val();
 
     if (filter_name) {
@@ -137,9 +127,9 @@ $('#button-filter').on('click', function() {
 	if (filter_date_start) {
 		url += '&filter_date_start=' + encodeURIComponent(filter_date_start);
 	}
-  if(filter_date_start=="" && filter_name=="" )
+  if( filter_name=="" )
   {
-     alert("Please select order date or product");
+     alert("Please select company");
      return;
   }
 
@@ -192,30 +182,11 @@ $('#button-filter').on('click', function() {
             }
         });
    
-    $('input[name=\'filter_name\']').autocomplete({
-
-            'source': function (request, response) {
-                $.ajax({
-                    url: 'index.php?path=report/customer_boughtproducts/product_autocomplete&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request)+'&filter_company=' +$companyName,
-                    dataType: 'json',
-                    success: function (json) {
-                        response($.map(json, function (item) {
-                            return {
-                                label: item['name'],
-                                value: item['product_store_id']
-                            }
-                        }));
-                    }
-                });
-            },
-            'select': function (item) {
-                $('input[name=\'filter_name\']').val(item['label']);
-                $('input[name=\'filter_name\']').attr('product_id',item['value']);
-            }
-    });  
+   
 
 
-   $('input[name=\'filter_company\']').autocomplete({
+   //$('input[name=\'filter_company\']').autocomplete({
+   $('input[name=\'filter_name\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
                     url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
@@ -234,8 +205,9 @@ $('#button-filter').on('click', function() {
                 $companyName="";
             },
             'select': function (item) {
-                $('input[name=\'filter_company\']').val(item['label']);
-                $('input[name=\'filter_customer\']').val('');
+                //$('input[name=\'filter_company\']').val(item['label']);
+                $('input[name=\'filter_name\']').val(item['label']);
+                //$('input[name=\'filter_customer\']').val('');
                 $companyName=item['label'];
             }
         });
@@ -243,7 +215,7 @@ $('#button-filter').on('click', function() {
  
 function excel() {
   
-     var  url = 'index.php?path=report/products_consumption/productsconsumptionexcel&token=<?php echo $token; ?>';
+     var  url = 'index.php?path=report/companies_sales/excel&token=<?php echo $token; ?>';
       
         
      
@@ -263,9 +235,9 @@ function excel() {
 	}
    
 
-   if (""== filter_date_start && ""== filter_name)
+   if (  ""== filter_name)
   {
-     alert("Please select order date or product");
+     alert("Please select company");
      return;
   }
 
