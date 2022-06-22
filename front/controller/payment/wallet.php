@@ -1,7 +1,5 @@
 <?php
 
- 
-
 class ControllerPaymentWallet extends Controller {
 
     public function index() {
@@ -26,6 +24,11 @@ class ControllerPaymentWallet extends Controller {
         $log->write('wallet confirm');
         $log->write($this->session->data['payment_method']['code']);
         if ('wallet' == $this->session->data['payment_method']['code']) {
+
+            $this->load->controller('checkout/confirm/RemoveOnDemandCategoryProductsFromCarts');
+            $this->load->controller('checkout/confirm/multiStoreIndex');
+            $this->load->controller('checkout/confirm/CreateOrderWithOnDemandCategoryProducts');
+
             $this->load->model('checkout/order');
 
             $log->write($this->session->data['order_id']);
@@ -59,23 +62,23 @@ class ControllerPaymentWallet extends Controller {
             $order_id = NULL;
             foreach ($this->session->data['order_id'] as $key => $value) {
                 //if ($key == 75) {
-                    $order_id = $value;
-                    $log->write('wallet loop:2' . $order_id);
+                $order_id = $value;
+                $log->write('wallet loop:2' . $order_id);
 
-                    $this->model_checkout_order->UpdateParentApproval($order_id);
+                $this->model_checkout_order->UpdateParentApproval($order_id);
                 //}
             }
             foreach ($this->session->data['order_id'] as $key => $value) {
-                if ($key == 75) {
-                    $order_id = $value;
-                    $this->load->model('account/customer');
-                    $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
-                    $log->write('wallet loop' . $order_id);
+                //if ($key == 75) {
+                $order_id = $value;
+                $this->load->model('account/customer');
+                $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+                $log->write('wallet loop' . $order_id);
 
-                    $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, '', true, $customer_info['customer_id'], 'customer');
-                }
+                $ret = $this->model_checkout_order->addOrderHistory($order_id, $order_status_id, '', true, $customer_info['customer_id'], 'customer');
+                //}
             }
-            $this->load->controller('payment/wallet/confirmnonkb');
+            //$this->load->controller('payment/wallet/confirmnonkb');
             /* if ($order_id != NULL) {
               $this->model_checkout_order->UpdateParentApproval($order_id);
               } */
