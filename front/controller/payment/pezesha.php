@@ -285,7 +285,7 @@ class ControllerPaymentPezesha extends Controller {
                 $json['data'] = $result;
             } else {
                 $json['status'] = false;
-                $json['message'] = 'Please Select Other Payment Option!'.$result['message'];
+                $json['message'] = 'Please Select Other Payment Option!' . $result['message'];
                 $json['data'] = $result;
             }
         }
@@ -313,6 +313,11 @@ class ControllerPaymentPezesha extends Controller {
         }
         if ('pezesha' == $this->session->data['payment_method']['code'] && $amount <= $this->session->data['pezesha_customer_amount_limit']) {
             $log = new Log('error.log');
+
+            $this->load->controller('checkout/confirm/RemoveOnDemandCategoryProductsFromCarts');
+            $this->load->controller('checkout/confirm/multiStoreIndex');
+            $this->load->controller('checkout/confirm/CreateOrderWithOnDemandCategoryProducts');
+
             $this->load->model('account/customer');
             $this->load->model('checkout/order');
             $this->load->model('payment/pezesha');
@@ -411,13 +416,11 @@ class ControllerPaymentPezesha extends Controller {
                 $json['status'] = true;
                 $json['message'] = 'Pezesha Loan Applied Successfully!';
                 $json['data'] = $result;
-            } 
-            else if ($loan_type=="Order Id already in use"){
+            } else if ($loan_type == "Order Id already in use") {
                 $json['status'] = false;
-                $json['message'] = 'Order Id already in use!. Order saved successfully - '.$order_ids;
+                $json['message'] = 'Order Id already in use!. Order saved successfully - ' . $order_ids;
                 $json['data'] = $result;
-            }
-            else {
+            } else {
                 $json['status'] = false;
                 $json['message'] = 'Please Select Other Payment Option!';
                 $json['data'] = $result;
