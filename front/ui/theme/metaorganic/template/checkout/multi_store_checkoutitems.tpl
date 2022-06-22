@@ -777,11 +777,11 @@
         });
 });*/
 $('#pay_pending_amount').on('click', function(){
-window.location.href = "<?= $continue.'/index.php?path=account/transactions'; ?>";
+window.location.href = "<?= $continue.'index.php?path=account/transactions'; ?>";
 });
 
 $('#pay_clear_cart').on('click', function(){
-window.location.href = "<?= $continue.'/index.php?path=common/home'; ?>";
+window.location.href = "<?= $continue.'index.php?path=common/home'; ?>";
 });   
         
         $('#agree_vendor_terms').on('click', function(){
@@ -798,7 +798,7 @@ window.location.href = "<?= $continue.'/index.php?path=common/home'; ?>";
                 console.log(json);
                 /*if (json['vendor_terms']) {
                    $('#exampleModal').modal('hide');
-                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";
+                   window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";
                 }else{
                   $('#exampleModal').modal('show');
                 }*/
@@ -835,7 +835,7 @@ window.location.href = "<?= $continue.'/index.php?path=common/home'; ?>";
         
         $('#on_demand_category_products_agree').on('click', function(){
         $('#exampleModal_ondemand').modal('hide');
-        window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";
+        window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";
         });
         
         $('#cancel_vendor_terms').on('click', function(){
@@ -861,7 +861,7 @@ window.location.href = "<?= $continue.'/index.php?path=common/home'; ?>";
                    $("#on_demand_category_products").append("<tr><td></td><td colspan='2'>Removed above product(s) from the cart.</td><td></td></tr>");   
                    setTimeout(function(){ 
                    $('#exampleModal2').modal('hide');
-                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkoutitems'; ?>";
+                   window.location.href = "<?= $continue.'index.php?path=checkout/checkoutitems'; ?>";
                    },3000);
             }    
             }
@@ -887,7 +887,7 @@ window.location.href = "<?= $continue.'/index.php?path=common/home'; ?>";
                    $('#exampleModal2_text').text('Your Cart Updated!');
                    setTimeout(function(){ 
                    $('#exampleModal2').modal('hide');
-                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkoutitems'; ?>";
+                   window.location.href = "<?= $continue.'index.php?path=checkout/checkoutitems'; ?>";
                    },3000);
             }    
             }
@@ -1135,7 +1135,7 @@ $.ajax({
                 console.log(json);
                 if (json['delivery_charge_terms']) {
                    $('#exampleModal_deliverycharge_1').modal('hide');
-                   window.location.href = "<?= $continue.'/index.php?path=checkout/checkout'; ?>";
+                   window.location.href = "<?= $continue.'index.php?path=checkout/checkout'; ?>";
                 }else{
                   $('#exampleModal_deliverycharge_1').modal('show');
                 }
