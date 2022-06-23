@@ -5,6 +5,11 @@ require_once DIR_SYSTEM . '/vendor/pesapal/OAuth.php';
 class ControllerPaymentPesapal extends Controller {
 
     public function index() {
+
+        $this->load->controller('checkout/confirm/RemoveOnDemandCategoryProductsFromCarts');
+        $this->load->controller('checkout/confirm/multiStoreIndex');
+        $this->load->controller('checkout/confirm/CreateOrderWithOnDemandCategoryProducts');
+
         $this->load->language('payment/pesapal');
         $this->load->model('setting/setting');
         $this->load->model('payment/pesapal');
@@ -721,19 +726,19 @@ class ControllerPaymentPesapal extends Controller {
 
                         $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
                         $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
-                        
+
                         $order_info = $this->model_checkout_order->getOrder($order_id);
                         $log->write('order_info');
                         $log->write($order_info);
                         $log->write('order_info');
-                        
+
                         $this->model_payment_pesapal->OrderTransaction($order_id, $pesapalTrackingId, $order_info['customer_id'], abs($order_info['amount_partialy_paid'] - $order_info['total']));
                     }
                     /* WALLET */
                 } elseif (!isset($this->session->data['payment_wallet_method']['code']) || $this->session->data['payment_wallet_method']['code'] == 0 || $this->session->data['payment_wallet_method']['code'] != 'wallet' || $customer_wallet_total <= 0) {
                     $this->model_payment_pesapal->addOrderHistory($order_id, $this->config->get('pesapal_order_status_id'), $customer_info['customer_id'], 'customer');
                     $this->model_payment_pesapal->updateorderstatusipn($order_id, $pesapalTrackingId, $pesapal_merchant_reference, $customer_id, $status);
-                    
+
                     $order_info = $this->model_checkout_order->getOrder($order_id);
                     $log->write('order_info');
                     $log->write($order_info);
