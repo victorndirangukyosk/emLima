@@ -189,7 +189,8 @@ class ModelSchedulerDbupdates extends Model {
     }
 
 
-    public function getCutoffTimes() {
+    public function getCutoffTimes() 
+    {
 
         $sql = "SELECT distinct timeslot,cut_off_time FROM " . DB_PREFIX . "store_delivery_timeslot  where status=1 and store_id=75";
          
@@ -216,4 +217,20 @@ class ModelSchedulerDbupdates extends Model {
 
         // return $query->rows;
      }
+
+
+     public function getUnapprovedOrders($timeslot,$new_timeslot,$delivery_date) {
+
+        $sql_select = "select o.order_id,o.customer_id,c.parent,o.firstname,o.lastname,c.company_name,o.ip,c.device_id from " . DB_PREFIX . "order o  join ". DB_PREFIX . "customer c on o.customer_id=c.customer_id where o.timeslot=" .$timeslot." and  o.delivery_date=".$delivery_date." and o.order_status_id=15";
+       
+        $log = new Log('error.log');
+        $log->write("selected orders timeslot");
+        $query_select = $this->db->query($sql_select);
+        //  echo "<pre>";print_r($sql);die;
+        $log->write($query_select->rows);
+
+        // return $query->rows;
+     }
+
+    
 }
