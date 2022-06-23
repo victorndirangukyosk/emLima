@@ -6,10 +6,6 @@ class ControllerPaymentPesapal extends Controller {
 
     public function index() {
 
-        $this->load->controller('checkout/confirm/RemoveOnDemandCategoryProductsFromCarts');
-        $this->load->controller('checkout/confirm/multiStoreIndex');
-        $this->load->controller('checkout/confirm/CreateOrderWithOnDemandCategoryProducts');
-
         $this->load->language('payment/pesapal');
         $this->load->model('setting/setting');
         $this->load->model('payment/pesapal');
@@ -562,6 +558,10 @@ class ControllerPaymentPesapal extends Controller {
 
     public function status() {
         $log = new Log('error.log');
+
+        $this->load->controller('checkout/confirm/RemoveOnDemandCategoryProductsFromCarts');
+        $this->load->controller('checkout/confirm/multiStoreIndex');
+        $this->load->controller('checkout/confirm/CreateOrderWithOnDemandCategoryProducts');
 
         $this->load->language('payment/pesapal');
         $this->load->model('setting/setting');
