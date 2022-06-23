@@ -816,21 +816,21 @@ class ControllerCommonScheduler extends Controller {
     }
     
 
-    public function SendMailToParentUser($order_id) {
+    public function SendMailToParentUser($order_id, $parent, $firstname,$lastname,$customer_id,$company_name,$ip) {
         $log = new Log('error.log');
         $log->write('SEND MAIL to parent user second time');
         $log->write($order_id);
         $this->load->model('account/customer');
-        $is_he_parents = $this->model_account_customer->CheckHeIsParent();
-        $customer_info = $this->model_account_customer->getCustomer($is_he_parents);
-        $order_info_custom = $this->getOrderNew($order_id);
+        $is_he_parents = $parent;
+        $customer_info = $this->model_account_customer->getCustomer($parent);//parent_customer_info
+        // $order_info_custom = $this->getOrderNew($order_id);
         //$log->write($order_info_custom);
-        $order_info = $this->getOrder($order_id);
-        if ($order_info) {
-            $store_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
+        // $order_info = $this->getOrder($order_id);
+        // if ($order_info) {
+            $store_name = $firstname . ' ' . $lastname;
             $store_url = $this->url->link('account/login/customer');
-        }
-        $sub_customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+        // }
+        // $sub_customer_info = $this->model_account_customer->getCustomer($customer_id);
 
         $ciphering = 'AES-128-CTR';
         $iv_length = openssl_cipher_iv_length($ciphering);
@@ -838,16 +838,16 @@ class ControllerCommonScheduler extends Controller {
         $encryption_iv = '1234567891011121';
         $encryption_key = 'KwikBasket';
 
-        $order_id = openssl_encrypt($order_info['order_id'], $ciphering, $encryption_key, $options, $encryption_iv);
-        $customer_id = openssl_encrypt($order_info['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+        $order_id = openssl_encrypt($order_id, $ciphering, $encryption_key, $options, $encryption_iv);
+        $customer_id = openssl_encrypt($customer_id, $ciphering, $encryption_key, $options, $encryption_iv);
         $parent_id = openssl_encrypt($is_he_parents, $ciphering, $encryption_key, $options, $encryption_iv);
 
         $customer_info['store_name'] = $store_name;
-        $customer_info['branchname'] = $sub_customer_info['company_name'];
-        $customer_info['subuserfirstname'] = $sub_customer_info['firstname'];
-        $customer_info['subuserlastname'] = $sub_customer_info['lastname'];
-        $customer_info['subuserorderid'] = $order_info['order_id'];
-        $customer_info['ip_address'] = $order_info['ip'];
+        $customer_info['branchname'] = $company_name;//sub_customer_info['company_name'];
+        $customer_info['subuserfirstname'] = $firstname;//$sub_customer_info['firstname'];
+        $customer_info['subuserlastname'] = $lastname;//$sub_customer_info['lastname'];
+        $customer_info['subuserorderid'] = $order_id;//$order_info['order_id'];
+        $customer_info['ip_address'] = $ip;//$order_info['ip'];
         $customer_info['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
         $customer_info['device_id'] = $customer_info['device_id'];
 
@@ -868,7 +868,7 @@ class ControllerCommonScheduler extends Controller {
                 $mail->send();
             }
         } catch (exception $ex) {
-            $log->write('SendMailToParentUser Error');
+            $log->write('SendMailToParentUser for second time Error');
             $log->write($ex);
         }
 
@@ -881,7 +881,7 @@ class ControllerCommonScheduler extends Controller {
         if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
 
             $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-            $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+            $ret = $this->emailtemplate->sendPushNotification($customer_id, $customer_info['device_id'], $order_id, $store_id, $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
         } else {
             $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
         }
@@ -893,14 +893,14 @@ class ControllerCommonScheduler extends Controller {
             foreach ($order_approval_access_user as $order_approval_access_use) {
                 if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
 
-                    $order_id = openssl_encrypt($order_info['order_id'], $ciphering, $encryption_key, $options, $encryption_iv);
-                    $customer_id = openssl_encrypt($order_info['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+                    $order_id = openssl_encrypt($order_id, $ciphering, $encryption_key, $options, $encryption_iv);
+                    $customer_id = openssl_encrypt($customer_id, $ciphering, $encryption_key, $options, $encryption_iv);
                     $parent_id = openssl_encrypt($order_approval_access_use['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
 
                     $order_approval_access_use['store_name'] = $store_name;
-                    $order_approval_access_use['branchname'] = $sub_customer_info['company_name'];
-                    $order_approval_access_use['subuserfirstname'] = $sub_customer_info['firstname'];
-                    $order_approval_access_use['subuserlastname'] = $sub_customer_info['lastname'];
+                    $order_approval_access_use['branchname'] = $company_name;//$sub_customer_info['company_name'];
+                    $order_approval_access_use['subuserfirstname'] = $firstname;//$sub_customer_info['firstname'];
+                    $order_approval_access_use['subuserlastname'] = $lastname;//$sub_customer_info['lastname'];
                     $order_approval_access_use['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
                     $order_approval_access_use['device_id'] = $order_approval_access_use['device_id'];
 
@@ -934,21 +934,21 @@ class ControllerCommonScheduler extends Controller {
                     if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && $order_approval_access_use['mobile_notification'] && strlen($order_approval_access_use['device_id']) > 0) {
 
                         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                        $ret = $this->emailtemplate->sendPushNotification($customer_id, $order_approval_access_use['device_id'], $order_id, $store_id, $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
                     } else {
                         $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
                     }
                 }
 
                 if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
-                    $order_id = openssl_encrypt($order_info['order_id'], $ciphering, $encryption_key, $options, $encryption_iv);
-                    $customer_id = openssl_encrypt($order_info['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+                    $order_id = openssl_encrypt($order_id, $ciphering, $encryption_key, $options, $encryption_iv);
+                    $customer_id = openssl_encrypt($customer_id, $ciphering, $encryption_key, $options, $encryption_iv);
                     $parent_id = openssl_encrypt($order_approval_access_use['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
 
                     $order_approval_access_use['store_name'] = $store_name;
-                    $order_approval_access_use['branchname'] = $sub_customer_info['company_name'];
-                    $order_approval_access_use['subuserfirstname'] = $sub_customer_info['firstname'];
-                    $order_approval_access_use['subuserlastname'] = $sub_customer_info['lastname'];
+                    $order_approval_access_use['branchname'] = $company_name;//$sub_customer_info['company_name'];
+                    $order_approval_access_use['subuserfirstname'] = $firstname;//$sub_customer_info['firstname'];
+                    $order_approval_access_use['subuserlastname'] = $lastname;//$sub_customer_info['lastname'];
                     $order_approval_access_use['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
                     $order_approval_access_use['device_id'] = $order_approval_access_use['device_id'];
 
@@ -982,7 +982,8 @@ class ControllerCommonScheduler extends Controller {
                     if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && $order_approval_access_use['mobile_notification'] == 1 && strlen($order_approval_access_use['device_id']) > 0) {
 
                         $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
-                        $ret = $this->emailtemplate->sendPushNotification($order_info['customer_id'], $order_approval_access_use['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                        $ret = $this->emailtemplate->sendPushNotification($customer_id, $order_approval_access_use['device_id'], $order_id, $store_id
+                        , $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
                     } else {
                         $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
                     }
