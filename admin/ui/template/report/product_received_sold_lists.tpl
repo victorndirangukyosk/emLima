@@ -116,14 +116,14 @@
                                         <a href="<?php echo $sort_product_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_product_id; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_product_id; ?>"><?php echo $column_product_id; ?></a>
-                                        <?php } ?></td>-->
+                                        <?php } ?></td>
 
 
                                     <td class="text-left"><?php if ($sort == 't.product_id') { ?>
                                         <a href="<?php echo $sort_product_id; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_vproduct_id; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_product_id; ?>"><?php echo $column_vproduct_id; ?></a>
-                                        <?php } ?></td>
+                                        <?php } ?></td>-->
 
 
 
@@ -141,10 +141,13 @@
                                     <td>Unit</td>
                                      
 
-                                     
-                                     <td class="text-right">Received Quantity</td>
-                                     <td class="text-right">Rejected Quantity</td>
                                      <td class="text-right">Sold Quantity</td>
+                                     <td class="text-right">Revenue</td>
+                                     
+                                     <td class="text-right">Procured Quantity</td>
+                                     <td class="text-right">Rejected Quantity</td>
+                                     <!--<td class="text-right">Buying Price</td>-->
+                                     <td class="text-right">Total Price</td>
                                      
 
                                     
@@ -157,17 +160,20 @@
                                 <?php foreach ($products as $product) { ?>
                                 <tr>
                                     
-                                   <!-- <td class="text-right"><?php echo $product['product_id']; ?></td>-->
-                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>
+                                   <!-- <td class="text-right"><?php echo $product['product_id']; ?></td>
+                                    <td class="text-right"><?php echo $product['product_store_id']; ?></td>-->
                                     <td class="text-left"><?php echo $product['name']; ?></td>
 
 
                                     <td class="text-left"><?php echo $product['unit']; ?></td>
                                      <!-- <td class="text-left"><?php echo $product['date_added']; ?></td>-->
+                                    <td class="text-right"><?php echo $product['sold_qty']; ?>
+                                    <td class="text-right"><?php echo $product['revenue']; ?>
                                      
                                     <td class="text-right"><?php echo $product['procured_qty']; ?>
                                     <td class="text-right"><?php echo $product['rejected_qty']; ?>
-                                    <td class="text-right"><?php echo $product['sold_qty']; ?>
+                                   <!--  <td class="text-right"><?php echo $product['priceperItem']; ?>-->
+                                    <td class="text-right"><?php echo $product['Totalprice']; ?>
                                     </td>                        
 				    
 				 
