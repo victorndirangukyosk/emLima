@@ -13435,13 +13435,16 @@ class ModelReportExcel extends Model {
 
                 $data['products'][] = [
 
-                    'product_store_id' => $result['product_id'],
+                    // 'product_store_id' => $result['product_id'],
                     // 'product_id' => $result['product_id'],
                     'name' => $result['name'],//product_name
                     'unit' => $result['unit'],
                     'procured_qty' => $result['procured_qty'],
                     'rejected_qty' => $result['rejected_qty'],
                     'sold_qty' => $result['quantity'],
+                    'revenue'=> round($result['revenue'],2),
+                    'priceperItem' => $result['priceperItem'],
+                    'Totalprice' => $result['Totalprice'],
                     // 'date_added' => $result['date_added'],
                     // 'added_by_user' => $result['added_by_user'],
                     // 'cumulative_wastage' => $result['cumulative_wastage'],
@@ -13510,13 +13513,15 @@ class ModelReportExcel extends Model {
                         ->setAutoSize(true);
             }
 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product ID');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Product Name');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Unit');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Received Quantity');
-
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Rejected Quantity');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Sold Quantity');
+            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Unit');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Sold Quantity');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Revenue');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Procured Quantity');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Rejected Quantity');
+            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Buying Price');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Total Price');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -13524,6 +13529,8 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+            // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 5;
@@ -13534,12 +13541,15 @@ class ModelReportExcel extends Model {
                   $amount = 0;
                   } */
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['product_store_id']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['name']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['unit']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['procured_qty']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['rejected_qty']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['sold_qty']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['product_store_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['unit']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['sold_qty']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['revenue']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['procured_qty']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['rejected_qty']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['priceperItem']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['Totalprice']);
 
                 ++$row;
             }
