@@ -4,11 +4,12 @@ class ModelInventoryProductReceivedSold extends Model {
 
     
     public function getProductsReceivedSold($data = []) {
+        //op.product_id,
+        //i.product_store_id as product_id,
+        $sql1 = 'SELECT op.name,op.unit,op.quantity,op.total as sum1,(op.tax*op.quantity)as sum2,0 as procured_qty,0 as rejected_qty,0 as buying_price,0 as total ,0 as count FROM `hf7_order_product`op join hf7_order o on o.order_id =op.order_id WHERE   o.order_status_id not in(0,6,8,9,16) and o.order_id not in (select order_id from hf7_real_order_product) ';
+        $sql2 = 'SELECT op.name,op.unit,op.quantity,op.total as sum1,(op.tax*op.quantity)as sum2,0 as procured_qty,0 as rejected_qty,0 as buying_price,0 as total,0 as count FROM `hf7_real_order_product`op join hf7_order o on o.order_id =op.order_id WHERE   o.order_status_id not in(0,6,8,9,16)  ';
 
-        $sql1 = 'SELECT op.product_id,op.name,op.unit,op.quantity,0 as procured_qty,0 as rejected_qty FROM `hf7_order_product`op join hf7_order o on o.order_id =op.order_id WHERE   o.order_status_id not in(6,8,9,16) and o.order_id not in (select order_id from hf7_real_order_product) ';
-        $sql2 = 'SELECT op.product_id,op.name,op.unit,op.quantity,0 as procured_qty,0 as rejected_qty FROM `hf7_real_order_product`op join hf7_order o on o.order_id =op.order_id WHERE   o.order_status_id not in(6,8,9,16)  ';
-
-        $sql3 = 'SELECT i.product_store_id as product_id,i.product_name as name,p.unit,0 as quantity,i.procured_qty,i.rejected_qty   FROM `hf7_product_inventory_history` i join hf7_product p on i.product_id =p.product_id WHERE  1=1  ';
+        $sql3 = 'SELECT i.product_name as name,p.unit,0 as quantity,0 as sum1,0 as sum2,i.procured_qty,i.rejected_qty,i.buying_price as buying_price,(i.buying_price*i.procured_qty) as total,1 as count   FROM `hf7_product_inventory_history` i join hf7_product p on i.product_id =p.product_id WHERE  1=1  ';
        
         if (!empty($data['filter_name'])) {
             $sql1 .= " AND op.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
@@ -39,16 +40,16 @@ class ModelInventoryProductReceivedSold extends Model {
             $sql2 .= "AND DATE_FORMAT(i.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
           
         }
- 
+            //buying price not coming correctly, due to wrong data
 
         $sort_data = [
             't.name',           
-            't.product_id',
+            // 't.product_id',
            
         ];
 
-        $sql .= 'select  t.product_id,t.name,t.unit,sum(quantity)as quantity,sum(procured_qty) as procured_qty ,sum(rejected_qty) as rejected_qty from ('.$sql1. ' union all ' .$sql2 .' union all ' .$sql3.') as t';
-        $sql .= '  group by t.product_id, t.name ,t.unit ';
+        $sql .= 'select  t.name,t.unit,sum(quantity)as quantity,sum(t.sum1+t.sum2)as revenue,sum(procured_qty) as procured_qty ,sum(rejected_qty) as rejected_qty,0 as priceperItem ,sum(total) as Totalprice from ('.$sql1. ' union all ' .$sql2 .' union all ' .$sql3.') as t';
+        $sql .= '  group by  t.name ,t.unit ';//t.product_id,t.product_id,
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY ' . $data['sort'];
