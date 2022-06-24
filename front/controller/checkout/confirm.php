@@ -1677,7 +1677,7 @@ class ControllerCheckoutConfirm extends Controller {
         $previous_count = $this->cart->countProducts();
         $log->write('REMOVE_ON_DEMAND_CATEGORY_PRODUCTS_FROM_CART');
 
-        if (isset($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
+        if (isset($this->session->data['on_demand_category_products']) && $this->cart->hasProducts() != count($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
             foreach ($this->session->data['on_demand_category_products'] as $on_demand_category_product) {
                 $this->cart->remove($on_demand_category_product['key']);
                 $this->cart->removeTempCart($on_demand_category_product['key']);
@@ -1685,7 +1685,7 @@ class ControllerCheckoutConfirm extends Controller {
         }
         $log->write('REMOVE_ON_DEMAND_CATEGORY_PRODUCTS_FROM_CART');
         $present_count = $this->cart->countProducts();
-        if ($previous_count > $present_count) {
+        if ($previous_count > $present_count || $this->cart->hasProducts() != count($this->session->data['on_demand_category_products'])) {
             $json['products_removed'] = TRUE;
         }
         $this->response->addHeader('Content-Type: application/json');
@@ -1697,7 +1697,7 @@ class ControllerCheckoutConfirm extends Controller {
         $log = new Log('error.log');
         $log->write('REMOVE_ON_DEMAND_CATEGORY_PRODUCTS_FROM_CART');
 
-        if (isset($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
+        if (isset($this->session->data['on_demand_category_products']) && $this->cart->hasProducts() != count($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
             foreach ($this->session->data['on_demand_category_products'] as $on_demand_category_product) {
                 $this->cart->remove($on_demand_category_product['key']);
                 $this->cart->removeTempCart($on_demand_category_product['key']);
@@ -1720,7 +1720,7 @@ class ControllerCheckoutConfirm extends Controller {
         $delivery_date = NULL;
         $delivery_timeslot = NULL;
 
-        if (isset($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
+        if (isset($this->session->data['on_demand_category_products']) && $this->cart->hasProducts() != count($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
 
             $store_categories = array_column($this->session->data['on_demand_category_products'], 'category');
 

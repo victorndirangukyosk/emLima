@@ -219,6 +219,7 @@ class ControllerCheckoutSuccess extends Controller {
 
                 unset($this->session->data['pezesha_amount_limit']);
                 unset($this->session->data['pezesha_customer_amount_limit']);
+                unset($this->session->data['on_demand_category_products']);
             }
         }
 
