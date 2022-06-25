@@ -1163,6 +1163,19 @@ class ControllerCheckoutConfirm extends Controller {
 
                     $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
                 }
+
+                $log->write('ON_DEMAND_CATEGORY_DELIVERY_TIME_SLOTS');
+                $log->write($this->cart->hasProducts());
+                $log->write(count($this->session->data['on_demand_category_products']));
+                $log->write($this->session->data['on_demand_category_products_delivery_date']);
+                $log->write($this->session->data['on_demand_category_products_delivery_timeslot']);
+
+                if ($this->cart->hasProducts() == count($this->session->data['on_demand_category_products']) && isset($this->session->data['on_demand_category_products_delivery_date']) && isset($this->session->data['on_demand_category_products_delivery_timeslot'])) {
+                    $log->write('ON_DEMAND_CATEGORY_DELIVERY_TIME_SLOTS');
+                    $order_data[$store_id]['delivery_date'] = $this->session->data['on_demand_category_products_delivery_date'];
+                    $order_data[$store_id]['delivery_timeslot'] = $this->session->data['on_demand_category_products_delivery_timeslot'];
+                    $log->write('ON_DEMAND_CATEGORY_DELIVERY_TIME_SLOTS');
+                }
             }
             // echo "<pre>";print_r($order_data);die;
 
@@ -1658,6 +1671,8 @@ class ControllerCheckoutConfirm extends Controller {
                     $value['delivery_timeslot'] = $category_delivery_time_slot['selected_time_slot_delivery_timeslot'];
                     $value['category'] = $value['store_id'] . $product_category['category_id'];
                     $this->session->data['on_demand_category_products'][$key] = $value;
+                    $this->session->data['on_demand_category_products_delivery_date'] = $category_delivery_time_slot['selected_time_slot_date'];
+                    $this->session->data['on_demand_category_products_delivery_timeslot'] = $category_delivery_time_slot['selected_time_slot_delivery_timeslot'];
                 }
 
                 /* $price = $this->currency->format($this->tax->calculate($value['special_price'], $value['tax_class_id'], $this->config->get('config_tax')));
@@ -1677,7 +1692,7 @@ class ControllerCheckoutConfirm extends Controller {
         $previous_count = $this->cart->countProducts();
         $log->write('REMOVE_ON_DEMAND_CATEGORY_PRODUCTS_FROM_CART');
 
-        if (isset($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
+        if (isset($this->session->data['on_demand_category_products']) && $this->cart->hasProducts() != count($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
             foreach ($this->session->data['on_demand_category_products'] as $on_demand_category_product) {
                 $this->cart->remove($on_demand_category_product['key']);
                 $this->cart->removeTempCart($on_demand_category_product['key']);
@@ -1685,7 +1700,7 @@ class ControllerCheckoutConfirm extends Controller {
         }
         $log->write('REMOVE_ON_DEMAND_CATEGORY_PRODUCTS_FROM_CART');
         $present_count = $this->cart->countProducts();
-        if ($previous_count > $present_count) {
+        if ($previous_count > $present_count || $this->cart->hasProducts() != count($this->session->data['on_demand_category_products'])) {
             $json['products_removed'] = TRUE;
         }
         $this->response->addHeader('Content-Type: application/json');
@@ -1697,7 +1712,7 @@ class ControllerCheckoutConfirm extends Controller {
         $log = new Log('error.log');
         $log->write('REMOVE_ON_DEMAND_CATEGORY_PRODUCTS_FROM_CART');
 
-        if (isset($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
+        if (isset($this->session->data['on_demand_category_products']) && $this->cart->hasProducts() != count($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
             foreach ($this->session->data['on_demand_category_products'] as $on_demand_category_product) {
                 $this->cart->remove($on_demand_category_product['key']);
                 $this->cart->removeTempCart($on_demand_category_product['key']);
@@ -1709,6 +1724,7 @@ class ControllerCheckoutConfirm extends Controller {
     public function CreateOrderWithOnDemandCategoryProducts() {
 
         $log = new Log('error.log');
+        $log->write('CreateOrderWithOnDemandCategoryProducts');
         $this->load->model('checkout/order');
         $this->load->model('sale/order');
         $this->load->model('assets/product');
@@ -1720,8 +1736,9 @@ class ControllerCheckoutConfirm extends Controller {
         $delivery_date = NULL;
         $delivery_timeslot = NULL;
 
-        if (isset($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
+        if (isset($this->session->data['on_demand_category_products']) && $this->cart->hasProducts() != count($this->session->data['on_demand_category_products']) && count($this->session->data['on_demand_category_products']) > 0) {
 
+            $log->write('CreateOrderWithOnDemandCategoryProducts_2');
             $store_categories = array_column($this->session->data['on_demand_category_products'], 'category');
 
             $sub_total = 0;
@@ -1954,6 +1971,8 @@ class ControllerCheckoutConfirm extends Controller {
                     $value['delivery_timeslot'] = $category_delivery_time_slot['selected_time_slot_delivery_timeslot'];
                     $value['category'] = $value['store_id'] . $product_category['category_id'];
                     $this->session->data['on_demand_category_products'][$key] = $value;
+                    $this->session->data['on_demand_category_products_delivery_date'] = $category_delivery_time_slot['selected_time_slot_date'];
+                    $this->session->data['on_demand_category_products_delivery_timeslot'] = $category_delivery_time_slot['selected_time_slot_delivery_timeslot'];
                 }
             }
         }
