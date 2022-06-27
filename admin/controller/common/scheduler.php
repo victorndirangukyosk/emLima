@@ -731,5 +731,271 @@ class ControllerCommonScheduler extends Controller {
        
     }
 
+    //Notify unapproved orders to parent user , 30mins before cutoff time
+    //and update order to next timeslot, if cutoff time is reached
+    public function updateUnapprovedOrderTimeslot() {
+
+        //this method should be called every 30 mins ,as , notify time is 30 mins before cutoff
+        //get cutoff time 
+        $this->load->model('scheduler/dbupdates');
+        $times = $this->model_scheduler_dbupdates->getCutoffTimes();
+        // echo "<pre>";print_r(date('h:i A'));die;       
+        $log = new Log('error.log'); 
+        $current_time=date('h:i A');        
+        $current_time_buffer=date("H:i", strtotime('-3 minutes', $current_time));       
+        //notify time is 30mins before cut off time, so adding 30 mins to
+        //cut off time and comparing with cutoff time to send notification
+        $notify_time = date("H:i", strtotime('+30 minutes', $current_time));
+        $notify_time_buffer = date("H:i", strtotime('+3 minutes', $notify_time));
+        $i=0;
+        $times_count=count($times);
+        foreach($times as $time)
+        {
+            
+            $log->write("TimeSlot updation and notification for unapproved orders");
+            $log->write($time['cut_off_time']);
+            $log->write($current_time);
+            $log->write("TimeSlot updation next");
+            if($time['cut_off_time'] ==$current_time)
+                {
+                    $log->write("Unapproved Orders ,update timeslot");
+                    $log->write($time['cut_off_time'].'update timeslot');
+                    if((str_contains($time['cut_off_time'], 'PM')) )
+                    {
+                        $delivery_date=date("Y-m-d", strtotime("1 days"));
+                    }
+                    else{
+                        $delivery_date=date("Y-m-d");
+                    }
+                    if($i>=$times_count-1)
+                    {
+                        $delivery_date = date('Y-m-d', strtotime($delivery_date . ' +1 day'));
+                    $this->model_scheduler_dbupdates->updateUnapprovedOrdersTimeslot($time['timeslot'],$times[0]['timeslot'],$delivery_date);
+                    }
+                    else
+                    {
+                        $this->model_scheduler_dbupdates->updateUnapprovedOrdersTimeslot($time['timeslot'],$times[i+1]['timeslot'],$delivery_date);
+
+                    }
+                }   
+                else if($time['cut_off_time'] ==$notify_time)
+                {
+                    $log->write("Unapproved Orders ,Notification");
+                    $log->write($time['cut_off_time'].'Notify');
+                    if((str_contains($time['cut_off_time'], 'PM')) )
+                    {
+                        $delivery_date=date("Y-m-d", strtotime("1 days"));
+                    }
+                    else{
+                        $delivery_date=date("Y-m-d");
+                    }
+
+                    if($i>=$times_count-1)
+                    {
+                        $delivery_date = date('Y-m-d', strtotime($delivery_date . ' +1 day'));
+                        $results = $this->model_scheduler_dbupdates->getUnapprovedOrders($time['timeslot'],$times[0]['timeslot'],$delivery_date);
+                    }
+                    else
+                    {
+                    $results = $this->model_scheduler_dbupdates->getUnapprovedOrders($time['timeslot'],$times[i+1]['timeslot'],$delivery_date);
+                       
+                    }
+
+                    foreach ($results as $result) {
+                        $log->write("Unapproved Orders");
+                        $log->write($time['cut_off_time'].'send notification mail');
+
+                        $this->SendMailToParentUser($result['order_id']);
+                        }
+
+                }
+                $i++;
+        }      
+         
+        
+    }
     
+
+    public function SendMailToParentUser($order_id, $parent, $firstname,$lastname,$customer_id,$company_name,$ip) {
+        $log = new Log('error.log');
+        $log->write('SEND MAIL to parent user second time');
+        $log->write($order_id);
+        $this->load->model('account/customer');
+        $is_he_parents = $parent;
+        $customer_info = $this->model_account_customer->getCustomer($parent);//parent_customer_info
+        // $order_info_custom = $this->getOrderNew($order_id);
+        //$log->write($order_info_custom);
+        // $order_info = $this->getOrder($order_id);
+        // if ($order_info) {
+            $store_name = $firstname . ' ' . $lastname;
+            $store_url = $this->url->link('account/login/customer');
+        // }
+        // $sub_customer_info = $this->model_account_customer->getCustomer($customer_id);
+
+        $ciphering = 'AES-128-CTR';
+        $iv_length = openssl_cipher_iv_length($ciphering);
+        $options = 0;
+        $encryption_iv = '1234567891011121';
+        $encryption_key = 'KwikBasket';
+
+        $order_id = openssl_encrypt($order_id, $ciphering, $encryption_key, $options, $encryption_iv);
+        $customer_id = openssl_encrypt($customer_id, $ciphering, $encryption_key, $options, $encryption_iv);
+        $parent_id = openssl_encrypt($is_he_parents, $ciphering, $encryption_key, $options, $encryption_iv);
+
+        $customer_info['store_name'] = $store_name;
+        $customer_info['branchname'] = $company_name;//sub_customer_info['company_name'];
+        $customer_info['subuserfirstname'] = $firstname;//$sub_customer_info['firstname'];
+        $customer_info['subuserlastname'] = $lastname;//$sub_customer_info['lastname'];
+        $customer_info['subuserorderid'] = $order_id;//$order_info['order_id'];
+        $customer_info['ip_address'] = $ip;//$order_info['ip'];
+        $customer_info['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+        $customer_info['device_id'] = $customer_info['device_id'];
+
+        $log->write('EMAIL SENDING');
+        $log->write($customer_info);
+        $log->write('EMAIL SENDING');
+        try {
+            if ($customer_info['email_notification'] == 1) {
+                $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $customer_info);
+                $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $customer_info);
+
+                $mail = new Mail($this->config->get('config_mail'));
+                $mail->setTo($customer_info['email']);
+                $mail->setFrom($this->config->get('config_from_email'));
+                $mail->setSender($this->config->get('config_name'));
+                $mail->setSubject($subject);
+                $mail->setHTML($message);
+                $mail->send();
+            }
+        } catch (exception $ex) {
+            $log->write('SendMailToParentUser for second time Error');
+            $log->write($ex);
+        }
+
+
+        $log->write('status enabled of mobi noti');
+        $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $customer_info);
+
+        $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $customer_info);
+
+        if (isset($customer_info) && isset($customer_info['device_id']) && $customer_info['mobile_notification'] == 1 && strlen($customer_info['device_id']) > 0) {
+
+            $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+            $ret = $this->emailtemplate->sendPushNotification($customer_id, $customer_info['device_id'], $order_id, $store_id, $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+        } else {
+            $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+        }
+
+        if ($is_he_parents != NULL && $is_he_parents > 0) {
+            $order_approval_access = $this->db->query('SELECT c.customer_id, c.parent, c.order_approval_access_role, c.order_approval_access, c.email, c.firstname, c.lastname, c.device_id, c.sms_notification, c.mobile_notification, c.email_notification  FROM ' . DB_PREFIX . "customer c WHERE c.parent = '" . (int) $is_he_parents . "' AND c.order_approval_access = 1 AND (c.order_approval_access_role = 'head_chef' OR c.order_approval_access_role = 'procurement_person')");
+            $order_approval_access_user = $order_approval_access->rows;
+
+            foreach ($order_approval_access_user as $order_approval_access_use) {
+                if ($order_approval_access_use['order_approval_access_role'] == 'head_chef' && $order_approval_access_use['order_approval_access'] > 0) {
+
+                    $order_id = openssl_encrypt($order_id, $ciphering, $encryption_key, $options, $encryption_iv);
+                    $customer_id = openssl_encrypt($customer_id, $ciphering, $encryption_key, $options, $encryption_iv);
+                    $parent_id = openssl_encrypt($order_approval_access_use['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+
+                    $order_approval_access_use['store_name'] = $store_name;
+                    $order_approval_access_use['branchname'] = $company_name;//$sub_customer_info['company_name'];
+                    $order_approval_access_use['subuserfirstname'] = $firstname;//$sub_customer_info['firstname'];
+                    $order_approval_access_use['subuserlastname'] = $lastname;//$sub_customer_info['lastname'];
+                    $order_approval_access_use['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+                    $order_approval_access_use['device_id'] = $order_approval_access_use['device_id'];
+
+                    $log->write('EMAIL SENDING');
+                    $log->write($customer_info);
+                    $log->write('EMAIL SENDING');
+
+                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
+                    $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
+                    try {
+                        if ($order_approval_access_use['email_notification'] == 1) {
+                            $mail = new Mail($this->config->get('config_mail'));
+                            $mail->setTo($order_approval_access_use['email']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setSubject($subject);
+                            $mail->setHTML($message);
+                            $mail->send();
+                        }
+                    } catch (exception $ex) {
+                        $log->write('SendMailToParentUser Error');
+                        $log->write($ex);
+                    }
+
+
+                    $log->write('status enabled of mobi noti');
+                    $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
+
+                    $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $order_approval_access_use);
+
+                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && $order_approval_access_use['mobile_notification'] && strlen($order_approval_access_use['device_id']) > 0) {
+
+                        $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                        $ret = $this->emailtemplate->sendPushNotification($customer_id, $order_approval_access_use['device_id'], $order_id, $store_id, $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                    } else {
+                        $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+                    }
+                }
+
+                if ($order_approval_access_use['order_approval_access_role'] == 'procurement_person' && $order_approval_access_use['order_approval_access'] > 0) {
+                    $order_id = openssl_encrypt($order_id, $ciphering, $encryption_key, $options, $encryption_iv);
+                    $customer_id = openssl_encrypt($customer_id, $ciphering, $encryption_key, $options, $encryption_iv);
+                    $parent_id = openssl_encrypt($order_approval_access_use['customer_id'], $ciphering, $encryption_key, $options, $encryption_iv);
+
+                    $order_approval_access_use['store_name'] = $store_name;
+                    $order_approval_access_use['branchname'] = $company_name;//$sub_customer_info['company_name'];
+                    $order_approval_access_use['subuserfirstname'] = $firstname;//$sub_customer_info['firstname'];
+                    $order_approval_access_use['subuserlastname'] = $lastname;//$sub_customer_info['lastname'];
+                    $order_approval_access_use['order_link'] = $this->url->link('account/login/checksubuserorder', 'order_token=' . $order_id . '&user_token=' . $customer_id . '&parent_user_token=' . $parent_id, 'SSL');
+                    $order_approval_access_use['device_id'] = $order_approval_access_use['device_id'];
+
+                    $log->write('EMAIL SENDING');
+                    $log->write($customer_info);
+                    $log->write('EMAIL SENDING');
+
+                    try {
+                        if ($order_approval_access_use['email_notification'] == 1) {
+                            $subject = $this->emailtemplate->getSubject('Customer', 'customer_7', $order_approval_access_use);
+                            $message = $this->emailtemplate->getMessage('Customer', 'customer_7', $order_approval_access_use);
+
+                            $mail = new Mail($this->config->get('config_mail'));
+                            $mail->setTo($order_approval_access_use['email']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setSubject($subject);
+                            $mail->setHTML($message);
+                            $mail->send();
+                        }
+                    } catch (exception $ex) {
+                        $log->write('SendMailToParentUser Error');
+                        $log->write($ex);
+                    }
+
+                    $log->write('status enabled of mobi noti');
+                    $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_7', $order_approval_access_user);
+
+                    $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_7', $order_approval_access_use);
+
+                    if (isset($order_approval_access_use) && isset($order_approval_access_use['device_id']) && $order_approval_access_use['mobile_notification'] == 1 && strlen($order_approval_access_use['device_id']) > 0) {
+
+                        $log->write('customer device id set FRONT.MODEL.CHECKOUT.ORDER');
+                        $ret = $this->emailtemplate->sendPushNotification($customer_id, $order_approval_access_use['device_id'], $order_id, $store_id
+                        , $mobile_notification_title, $mobile_notification_template, 'com.instagolocal.showorder');
+                    } else {
+                        $log->write('customer device id not set FRONT.MODEL.CHECKOUT.ORDER');
+                    }
+                }
+            }
+        }
+
+        $log->write('SMS SENDING');
+        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_7', $customer_info);
+        // send message here
+        if ($customer_info['sms_notification'] == 1 && $this->emailtemplate->getSmsEnabled('Customer', 'customer_7')) {
+            $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
+        }
+    }
 }

@@ -625,7 +625,7 @@ class ModelAssetsProduct extends Model {
             }
         }
 
-        
+
 
         $log = new Log('error.log');
         $log->write($store_id);
@@ -643,7 +643,6 @@ class ModelAssetsProduct extends Model {
 
         $cachePrice_data = $this->cache->get('category_price_data');
 
-        
         if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) {
             //  echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
             $s_price = $cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
@@ -652,7 +651,7 @@ class ModelAssetsProduct extends Model {
             $ret['price'] = $o_price;
         }
         $category_price_data = $this->getCategoryPriceStatusByProductStoreId($ret['product_store_id']);
-        
+
         $ret['price'] = strval($ret['price']);
         $ret['special_price'] = strval($ret['special_price']);
 
@@ -666,7 +665,7 @@ class ModelAssetsProduct extends Model {
             } else {
                 $store_id = ACTIVE_STORE_ID;
             }
-        }      
+        }
 
         $log = new Log('error.log');
         $log->write($store_id);
@@ -678,25 +677,24 @@ class ModelAssetsProduct extends Model {
         $this->db->group_by('product_to_store.product_store_id');
         //$this->db->where('product_to_store.store_id', $store_id);
         $this->db->where('product_to_store.status', 1);
-        $this->db->where('product.status',1);
+        $this->db->where('product.status', 1);
         $this->db->where('product_to_store.product_store_id', $product_store_id);
         $ret = $this->db->get('product_to_store')->row;
 
         $cachePrice_data = $this->cache->get('category_price_data');
 
-        if($ret!=null)
-        {
-        if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) {
-            //  echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
-            $s_price = $cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
-            $o_price = $cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
-            $ret['special_price'] = $s_price;
-            $ret['price'] = $o_price;
-        }
-        $category_price_data = $this->getCategoryPriceStatusByProductStoreId($ret['product_store_id']);
-        
-        $ret['price'] = strval($ret['price']);
-        $ret['special_price'] = strval($ret['special_price']);
+        if ($ret != null) {
+            if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) {
+                //  echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+                $s_price = $cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
+                $o_price = $cachePrice_data[$ret['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
+                $ret['special_price'] = $s_price;
+                $ret['price'] = $o_price;
+            }
+            $category_price_data = $this->getCategoryPriceStatusByProductStoreId($ret['product_store_id']);
+
+            $ret['price'] = strval($ret['price']);
+            $ret['special_price'] = strval($ret['special_price']);
         }
 
         return $ret;
@@ -2659,12 +2657,12 @@ class ModelAssetsProduct extends Model {
                 $this->db->where('product_to_category.category_id', (int) $data['filter_category_id']);
             }
         }
-        if (!empty($data['filter_product_store_id'])) {             
-                $this->db->where('product_to_store.product_store_id', (int) $data['filter_product_store_id']);
-            }
-            if (!empty($data['filter_product_general_id'])) {             
-                $this->db->where('product_to_store.product_id', (int) $data['filter_product_general_id']);
-            }
+        if (!empty($data['filter_product_store_id'])) {
+            $this->db->where('product_to_store.product_store_id', (int) $data['filter_product_store_id']);
+        }
+        if (!empty($data['filter_product_general_id'])) {
+            $this->db->where('product_to_store.product_id', (int) $data['filter_product_general_id']);
+        }
 
         if (!empty($data['filter_name']) || !empty($data['filter_tag'])) {
             if (!empty($data['filter_name'])) {
@@ -3032,6 +3030,16 @@ class ModelAssetsProduct extends Model {
 
         $log->write($sql);
         return $this->db->query($sql)->row;
+    }
+
+    public function getProductCategoryByProductId($product_id) {
+        $query = 'SELECT * FROM ' . DB_PREFIX . "product_to_category ptc WHERE product_id ='" . (int) $product_id . "'";
+        return $this->db->query($query)->rows;
+    }
+
+    public function getCategoryByProductId($product_id) {
+        $product_category_details = $this->getProductCategoryByProductId($product_id);
+        return $product_category_details;
     }
 
 }

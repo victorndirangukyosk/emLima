@@ -47,8 +47,12 @@ class ControllerPaymentMpesa extends Controller {
         $json['processed'] = false;
 
         if ('mpesa' == $this->session->data['payment_method']['code'] || 'mpesa' == $this->request->post['payment_method']) {
-            $this->load->language('payment/mpesa');
 
+            $this->load->controller('checkout/confirm/RemoveOnDemandCategoryProductsFromCarts');
+            $this->load->controller('checkout/confirm/multiStoreIndex');
+            $this->load->controller('checkout/confirm/CreateOrderWithOnDemandCategoryProducts');
+
+            $this->load->language('payment/mpesa');
             $this->load->model('payment/mpesa');
 
             $this->load->model('checkout/order');
@@ -108,7 +112,7 @@ class ControllerPaymentMpesa extends Controller {
                 $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
                 $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
                 if ($this->session->data['payment_wallet_method']['code'] == 'wallet' && $customer_wallet_total > 0) {
-                $CallBackURL = $this->url->link('deliversystem/deliversystem/hybridmpesaOrderStatus', '', 'SSL');    
+                    $CallBackURL = $this->url->link('deliversystem/deliversystem/hybridmpesaOrderStatus', '', 'SSL');
                 }
 //$CallBackURL = 'https://a1c6dda0aaba.ngrok.io/kwikbasket/index.php?path=deliversystem/deliversystem/mpesaOrderStatus';
 
@@ -504,11 +508,11 @@ class ControllerPaymentMpesa extends Controller {
                                         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                                         curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
                                         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                                        curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                                        curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                                         $resp = curl_exec($curl);
                                         $log->write('resp');
-                                        $log->write($url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                                        $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                                         $log->write($resp);
                                         curl_close($curl);
@@ -526,13 +530,13 @@ class ControllerPaymentMpesa extends Controller {
                             $log->write($transaction_details);
                             $log->write('transaction_details on complete 2');
                             if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                                
+
                                 $order_info = $this->model_checkout_order->getOrder($value);
 
                                 $log->write('order_info');
                                 $log->write($order_info);
                                 $log->write('order_info');
-                                
+
                                 $this->model_payment_mpesa->insertOrderTransactionId($value, $stkPushSimulation->CheckoutRequestID, $order_info['customer_id'], abs($order_info['amount_partialy_paid'] - $order_info['total']));
                             }
                             //success pending to processing
@@ -577,11 +581,11 @@ class ControllerPaymentMpesa extends Controller {
                                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                                 curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
                                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                                curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                                curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                                 $resp = curl_exec($curl);
                                 $log->write('resp');
-                                $log->write($url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                                $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                                 $log->write($resp);
                                 curl_close($curl);
@@ -1187,11 +1191,11 @@ class ControllerPaymentMpesa extends Controller {
                             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                             curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
                             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                            curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                            curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                             $resp = curl_exec($curl);
                             $log->write('resp');
-                            $log->write($url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                            $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                             $log->write($resp);
                             curl_close($curl);
@@ -1307,11 +1311,11 @@ class ControllerPaymentMpesa extends Controller {
                                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                                 curl_setopt($curl, CURLOPT_FORBID_REUSE, false);
                                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                                curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                                curl_setopt($curl, CURLOPT_URL, $url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                                 $resp = curl_exec($curl);
                                 $log->write('resp');
-                                $log->write($url . 'index.php?path='. $api . ($url_data ? '&' . http_build_query($url_data) : ''));
+                                $log->write($url . 'index.php?path=' . $api . ($url_data ? '&' . http_build_query($url_data) : ''));
 
                                 $log->write($resp);
                                 curl_close($curl);
@@ -1573,7 +1577,7 @@ class ControllerPaymentMpesa extends Controller {
         $log->write('manifest_id_res');
         $log->write($manifest_id_res);
         $log->write('div id in transaction id table');
-        
+
         if (is_array($manifest_id) && count($manifest_id) > 0) {
             return 1;
         } else {

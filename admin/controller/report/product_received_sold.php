@@ -134,13 +134,16 @@ class ControllerReportProductReceivedSold extends Controller {
 
                 $data['products'][] = [
 
-                    'product_store_id' => $result['product_id'],
+                    // 'product_store_id' => $result['product_id'],
                     // 'product_id' => $result['product_id'],
                     'name' => $result['name'],//product_name
                     'unit' => $result['unit'],
+                    'sold_qty' => $result['quantity'],
+                    'revenue'=> round($result['revenue'],2),
                     'procured_qty' => $result['procured_qty'],
                     'rejected_qty' => $result['rejected_qty'],
-                    'sold_qty' => $result['quantity'],
+                    'priceperItem' => $result['priceperItem'],
+                    'Totalprice' => $result['Totalprice'],
                     // 'date_added' => $result['date_added'],
                     // 'added_by_user' => $result['added_by_user'],
                     // 'cumulative_wastage' => $result['cumulative_wastage'],
@@ -342,7 +345,17 @@ class ControllerReportProductReceivedSold extends Controller {
         }
 
         
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'pd.name';
+        }
 
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
         $filter_data = [
             'filter_name' => $filter_name,           
             'filter_date_added' => $filter_date_added,

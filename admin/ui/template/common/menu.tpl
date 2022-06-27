@@ -592,21 +592,8 @@
                     <?php } ?>
 
 
-            <?php if($preturn_report_order_product_missing_products) { ?>  
-            <li><a href="<?php echo $report_order_product_missing_products; ?>">Missing Order Products</a></li>
-            <?php } ?>
-
-
-             <?php if($preturn_report_missing_products_revenue) { ?>  
-            <li><a href="<?php echo $report_missing_products_revenue; ?>">Missing Products Revenue Lost</a></li>
-            <?php } ?>
- <?php if($preturn_report_receivables_summary) { ?>  
-            <li><a href="<?php echo $report_receivables_summary; ?>">Receivables Summary</a></li>
-            <?php } ?>
-
- <?php if($preturn_report_receivables_ageing) { ?>  
-            <li><a href="<?php echo $report_receivables_ageing; ?>">Receivables Ageing</a></li>
-            <?php } ?>
+           
+ 
 
                 </ul>
             </li>
@@ -780,6 +767,35 @@
                 </ul>
             </li>
             <?php }?>
+
+
+               <?php if( ($preturn_report_finance != false) || ($preturn_report_receivables_summary || $preturn_report_receivables_ageing  || $preturn_report_missing_products_revenue || $preturn_report_order_product_missing_products)) { ?>
+            <li><a class="parent">Finance</a>
+                <ul>
+                   
+                    <?php if($preturn_report_receivables_summary) { ?>  
+            <li><a href="<?php echo $report_receivables_summary; ?>">Receivables Summary</a></li>
+            <?php } ?>
+
+            <?php if($preturn_report_receivables_ageing) { ?>  
+            <li><a href="<?php echo $report_receivables_ageing; ?>">Receivables Ageing</a></li>
+            <?php } ?>
+
+
+             <?php if($preturn_report_order_product_missing_products) { ?>  
+            <li><a href="<?php echo $report_order_product_missing_products; ?>">Missing Order Products</a></li>
+            <?php } ?>
+
+
+             <?php if($preturn_report_missing_products_revenue) { ?>  
+            <li><a href="<?php echo $report_missing_products_revenue; ?>">Missing Products Revenue Lost</a></li>
+            <?php } ?>
+
+            
+                </ul>
+            </li>
+            <?php } ?>
+
 
         </ul>
     </li>

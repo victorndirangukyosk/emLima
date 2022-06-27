@@ -37,6 +37,11 @@ class ControllerPaymentMod extends Controller {
         $log->write('mod confirm');
         $log->write($this->session->data['payment_method']['code']);
         if ('mod' == $this->session->data['payment_method']['code']) {
+
+            $this->load->controller('checkout/confirm/RemoveOnDemandCategoryProductsFromCarts');
+            $this->load->controller('checkout/confirm/multiStoreIndex');
+            $this->load->controller('checkout/confirm/CreateOrderWithOnDemandCategoryProducts');
+
             $this->load->model('checkout/order');
             $this->load->model('account/customer');
             $this->load->model('payment/wallet');
@@ -44,8 +49,8 @@ class ControllerPaymentMod extends Controller {
 
             $log->write($this->session->data['order_id']);
             $log->write($this->config->get('mod_order_status_id'));
-            
-            /*DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER*/
+
+            /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
             $this->load->model('account/customer');
             $is_he_parents = $this->model_account_customer->CheckHeIsParent();
             $log->write('Order Confirm In MOD');
@@ -71,8 +76,8 @@ class ControllerPaymentMod extends Controller {
             $parent_approval = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? 'Approved' : 'Pending';
             $order_status_id = $is_he_parents == NULL || $order_appoval_access == TRUE || $sub_customer_order_approval_required == 0 ? $this->config->get('cod_order_status_id') : 15;
             $order_status_id = $order_status_id > 0 ? $order_status_id : $this->config->get('mod_order_status_id');
-            /*DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER*/
-            
+            /* DECIDING ORDER STATUS IF CUSTOMER SUB CUSTOMER */
+
             foreach ($this->session->data['order_id'] as $key => $value) {
 
                 $customer_wallet_total = $this->model_account_credit->getTotalAmount();

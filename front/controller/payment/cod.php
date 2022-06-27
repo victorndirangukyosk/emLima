@@ -26,6 +26,11 @@ class ControllerPaymentCod extends Controller {
         $log->write('cod confirm');
         $log->write($this->session->data['payment_method']['code']);
         if ('cod' == $this->session->data['payment_method']['code']) {
+
+            $this->load->controller('checkout/confirm/RemoveOnDemandCategoryProductsFromCarts');
+            $this->load->controller('checkout/confirm/multiStoreIndex');
+            $this->load->controller('checkout/confirm/CreateOrderWithOnDemandCategoryProducts');
+
             $this->load->model('checkout/order');
 
             $log->write($this->session->data['order_id']);
@@ -59,10 +64,10 @@ class ControllerPaymentCod extends Controller {
             $order_id = NULL;
             foreach ($this->session->data['order_id'] as $key => $value) {
                 //if ($key == 75) {
-                    $order_id = $value;
-                    $log->write('cod loop:2' . $order_id);
+                $order_id = $value;
+                $log->write('cod loop:2' . $order_id);
 
-                    $this->model_checkout_order->UpdateParentApproval($order_id);
+                $this->model_checkout_order->UpdateParentApproval($order_id);
                 //}
             }
             foreach ($this->session->data['order_id'] as $key => $value) {

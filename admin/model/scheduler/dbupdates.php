@@ -188,4 +188,49 @@ class ModelSchedulerDbupdates extends Model {
         }
     }
 
+
+    public function getCutoffTimes() 
+    {
+
+        $sql = "SELECT distinct timeslot,cut_off_time FROM " . DB_PREFIX . "store_delivery_timeslot  where status=1 and store_id=75";
+         
+        $query = $this->db->query($sql);
+
+        //  echo "<pre>";print_r($sql);die;
+
+        return $query->rows;
+     }
+
+     
+     public function updateUnapprovedOrdersTimeslot($timeslot,$new_timeslot,$delivery_date) {
+
+        $sql_select = "select order_id from " . DB_PREFIX . "order  where timeslot=" .$timeslot." and  delivery_date=".$delivery_date." and order_status_id=15";
+       
+        $sql = "update " . DB_PREFIX . "order set timeslot=".$new_timeslot." where timeslot=" .$timeslot." and  delivery_date=".$delivery_date." and order_status_id=15";
+        $log = new Log('error.log');
+        $log->write("updated orders timeslot");
+        $query_select = $this->db->query($sql_select);
+        $query = $this->db->query($sql);
+        //  echo "<pre>";print_r($sql);die;
+        $log->write($query_select->rows);
+        $log->write($query->rows);
+
+        // return $query->rows;
+     }
+
+
+     public function getUnapprovedOrders($timeslot,$new_timeslot,$delivery_date) {
+
+        $sql_select = "select o.order_id,o.customer_id,c.parent,o.firstname,o.lastname,c.company_name,o.ip,c.device_id from " . DB_PREFIX . "order o  join ". DB_PREFIX . "customer c on o.customer_id=c.customer_id where o.timeslot=" .$timeslot." and  o.delivery_date=".$delivery_date." and o.order_status_id=15";
+       
+        $log = new Log('error.log');
+        $log->write("selected orders timeslot");
+        $query_select = $this->db->query($sql_select);
+        //  echo "<pre>";print_r($sql);die;
+        $log->write($query_select->rows);
+
+        // return $query->rows;
+     }
+
+    
 }
