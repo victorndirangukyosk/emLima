@@ -1177,6 +1177,12 @@ class ControllerSettingSetting extends Controller {
             $data['config_currency_auto'] = $this->config->get('config_currency_auto');
         }
 
+        if (isset($this->request->post['config_wallet_subuser'])) {
+            $data['config_wallet_subuser'] = $this->request->post['config_wallet_subuser'];
+        } else {
+            $data['config_wallet_subuser'] = $this->config->get('config_wallet_subuser');
+        }
+
         $this->load->model('localisation/currency');
 
         $data['currencies'] = $this->model_localisation_currency->getCurrencies();
