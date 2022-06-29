@@ -1086,8 +1086,8 @@ class ModelReportCustomer extends Model {
     public function getboughtproductswithRealOrders($data = []) {
         //general product not available..need to change code
         //Order Rejected(16),Order Approval Pending(15),Cancelled(6),Failed(8),Pending(9),Possible Fraud(10)
-        $sql0 = "SELECT c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`)  ";
-        $sql1 = "SELECT c.company_name  as company,op.name,op.unit,op.product_id, SUM( op.quantity )AS quantity  FROM `" . DB_PREFIX . 'real_order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10) ";
+        $sql0 = "SELECT c.company_name  as company,op.name,op.unit,op.product_id, ( op.quantity )AS quantity  FROM `" . DB_PREFIX . 'order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10)   and o.order_id not in (select order_id from `hf7_real_order_product`)  ";
+        $sql1 = "SELECT c.company_name  as company,op.name,op.unit,op.product_id, ( op.quantity )AS quantity  FROM `" . DB_PREFIX . 'real_order_product` op LEFT JOIN `' . DB_PREFIX . 'order` o ON (op.order_id = o.order_id) LEFT JOIN `' . DB_PREFIX . "customer` c ON (c.customer_id = o.customer_id) WHERE o.customer_id > 0   and o.order_status_id not in (0,16,15,6,8,9,10) ";
 
         // if (!empty($data['filter_order_status_id'])) {
         //     $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
@@ -1124,11 +1124,11 @@ class ModelReportCustomer extends Model {
             $sql1 .= "AND op.product_id IN (" . $variants . ")";
         }
 
-        $sql0 .= ' GROUP BY op.product_id ';
-        $sql1 .= ' GROUP BY op.product_id '; //general_product_id
+        // $sql0 .= ' GROUP BY op.product_id ';
+        // $sql1 .= ' GROUP BY op.product_id '; //general_product_id
 
         $sql = "SELECT company,name,unit,product_id, sum(quantity )AS quantity from (" . $sql0 . "union all " . $sql1 . ") as t";
-        $sql .= ' GROUP BY product_id   ORDER BY quantity DESC';
+        $sql .= ' GROUP BY company,name,unit,product_id   ORDER BY quantity DESC';
 
         // if (isset($data['start']) || isset($data['limit'])) {
         //     if ($data['start'] < 0) {
