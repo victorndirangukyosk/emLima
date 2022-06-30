@@ -38,6 +38,13 @@ class ControllerReportCustomerOrderPattern extends Controller {
             $filter_account_manager_name = '';
         }
 
+
+        if (isset($this->request->get['filter_sub_customer_show'])) {
+            $filter_sub_customer_show = $this->request->get['filter_sub_customer_show'];
+        } else {
+            $filter_sub_customer_show = 0;
+        }
+
         //placing pagination effecting the calculation so, adding pagination to customer list
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
@@ -142,6 +149,7 @@ class ControllerReportCustomerOrderPattern extends Controller {
                 $totalpermonth = 0;
                 $data['customers'][] = [
                     'Company Name' => $result['company'],
+                    'Payment Terms' => $result['payment_terms'],
                 ];
                 $totalOrders = 0;
                 $OrdersValue = 0;
@@ -215,6 +223,11 @@ class ControllerReportCustomerOrderPattern extends Controller {
         if (isset($this->request->get['filter_company'])) {
             $url .= '&filter_company=' . $this->request->get['filter_company'];
         }
+
+        if (isset($this->request->get['filter_account_manager_name'])) {
+            $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
+        }
+
         $pagination = new Pagination();
         $pagination->total = $company_total;
         $pagination->page = $page;
@@ -361,6 +374,7 @@ class ControllerReportCustomerOrderPattern extends Controller {
                 $totalpermonth = 0;
                 $data['customers'][] = [
                     'Company Name' => $result['company'],
+                    'Payment Terms' => $result['payment_terms'],
                 ];
                 $totalOrders = 0;
                 $OrdersValue = 0;
