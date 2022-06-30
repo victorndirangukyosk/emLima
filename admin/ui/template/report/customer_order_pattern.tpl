@@ -92,7 +92,7 @@
             <thead>
               <tr>
                  <?php foreach ($customers[0] as $h_key=>$h_value) { ?>   
-                  <?php if($h_key=="Company Name") {    ?>         
+                  <?php if($h_key=="Company Name" || $h_key=="Payment Terms") {    ?>         
                 <td class="text-left"><?php echo $h_key; ?></td>  
               <?php } else { ?>
                 <td class="text-right"><?php echo $h_key; ?></td>  
@@ -106,7 +106,7 @@
               <?php foreach ($customers as  $b_key=>$b_value) { ?>
             <tr>
               <?php foreach ($b_value as  $bb_key=>$bb_value) { ?>
-              <?php if($bb_key=="Company Name") {    ?> 
+              <?php if($bb_key=="Company Name" || $bb_key=="Payment Terms") {    ?> 
                 <td class="text-left"><?php echo  $bb_value; ?></td>
                  <?php } else { ?>
                 <td class="text-right"><?php echo $bb_value; ?></td>  
@@ -191,9 +191,9 @@ $('#button-filter').on('click', function() {
   else{
         dt1 = new Date(filter_date_start);
     dt2 = new Date(filter_date_end);
-    if(diff_months(dt1, dt2)>12)
+    if(diff_months(dt1, dt2)>3)
     {
-    alert("Please select Start and End months less than 12 or with in the year");
+    alert("Please select Start and End months less than 3 or with in the year");
     return;
     }
  
@@ -345,9 +345,19 @@ function excel() {
   if(filter_date_end=="" || filter_date_start=="")
   {
     alert("Please select Start and End Dates");
-    return;
-  }
 
+      return;
+  }
+  else{
+        dt1 = new Date(filter_date_start);
+    dt2 = new Date(filter_date_end);
+    if(diff_months(dt1, dt2)>3)
+    {
+    alert("Please select Start and End months less than 3 or with in the year");
+    return;
+    }
+ 
+  }
 
 
     location = url;
