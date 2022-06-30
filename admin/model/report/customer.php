@@ -865,7 +865,7 @@ class ModelReportCustomer extends Model {
     public function getValidCompanies($data = []) {
         $log = new Log('error.log');
         $log->write($data);
-        $sql = "SELECT c.company_name  as company ,c.customer_id from hf7_customer c ";
+        $sql = "SELECT c.company_name  as company ,c.customer_id ,c.payment_terms from hf7_customer c ";
         $implode = [];
         
 
