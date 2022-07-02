@@ -304,9 +304,9 @@ class ModelAccountApi extends Model {
           $this->error['lastname'] = $this->language->get( 'error_lastname' );
           } */
 
-        if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
-            $this->error['email'] = $this->language->get('error_email');
-        }
+        /* if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+          $this->error['email'] = $this->language->get('error_email');
+          } */
 
         if ($this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
             $this->error['warning'] = $this->language->get('error_exists');
@@ -383,21 +383,23 @@ class ModelAccountApi extends Model {
                     $data['success_message'] = $this->language->get('text_otp_sent') . ' ' . $this->request->post['phone'];
                 }
 
-                try {
-                    if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
-                        $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
-                        $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
+                if ($this->request->post['email'] != NULL) {
+                    try {
+                        if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
+                            $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
+                            $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
 
-                        $mail = new mail($this->config->get('config_mail'));
-                        $mail->setTo($this->request->post['email']);
-                        $mail->setFrom($this->config->get('config_from_email'));
-                        $mail->setSubject($subject);
-                        $mail->setSender($this->config->get('config_name'));
-                        $mail->setHtml($message);
-                        $mail->send();
+                            $mail = new mail($this->config->get('config_mail'));
+                            $mail->setTo($this->request->post['email']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSubject($subject);
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setHtml($message);
+                            $mail->send();
+                        }
+                    } catch (Exception $e) {
+                        
                     }
-                } catch (Exception $e) {
-                    
                 }
             } else {
                 // enter valid number throw error
