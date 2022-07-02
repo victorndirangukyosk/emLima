@@ -884,6 +884,31 @@
 
                             
 
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Assign wallet to Sub user">Assign Wallet to Sub User</span></label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline">
+                                        <?php if ($config_wallet_subuser) { ?>
+                                        <input type="radio" name="config_wallet_subuser" value="1" checked="checked" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="config_wallet_subuser" value="1" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } ?>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <?php if (!$config_wallet_subuser) { ?>
+                                        <input type="radio" name="config_wallet_subuser" value="0" checked="checked" />
+                                        <?php echo $text_no; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="config_wallet_subuser" value="0" />
+                                        <?php echo $text_no; ?>
+                                        <?php } ?>
+                                    </label>
+                                </div>
+                            </div>
+
+
                             <?php if ($locations) { ?>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-container="#tab-general" title="<?php echo $help_location; ?>"><?php echo $entry_location; ?></span></label>

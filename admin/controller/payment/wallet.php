@@ -96,6 +96,12 @@ class ControllerPaymentWallet extends Controller
             $data['wallet_order_status_id'] = $this->config->get('wallet_order_status_id');
         }
 
+        if (isset($this->request->post['wallet_sub_user_order_status_id'])) {
+            $data['wallet_sub_user_order_status_id'] = $this->request->post['wallet_sub_user_order_status_id'];
+        } else {
+            $data['wallet_sub_user_order_status_id'] = $this->config->get('wallet_sub_user_order_status_id');
+        }
+
         $this->load->model('localisation/order_status');
 
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();

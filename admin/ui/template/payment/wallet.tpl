@@ -87,6 +87,22 @@
               </select>
             </div>
           </div>  
+
+      <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-sub-user-order-status">Sub User Order Status</label>
+            <div class="col-sm-10">
+              <select name="wallet_sub_user_order_status_id" id="input-sub-user-order-status" class="form-control">
+                <?php foreach ($order_statuses as $order_status) { ?>
+                <?php if ($order_status['order_status_id'] == $wallet_sub_user_order_status_id) { ?>
+                <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
+                <?php } else { ?>
+                <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
+                <?php } ?>
+                <?php } ?>
+              </select>
+            </div>
+          </div>
+          
         </form>
       </div>
     </div>
