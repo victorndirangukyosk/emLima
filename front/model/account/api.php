@@ -267,7 +267,11 @@ class ModelAccountApi extends Model {
                 // add activity and all
 
                 if ($this->customer->loginByPhone($customer_id)) {
-                    $this->model_account_customer->addLoginAttempt($this->customer->getEmail());
+                    if($this->customer->getEmail() !="")
+                    {
+                        $this->model_account_customer->addLoginAttempt($this->customer->getEmail());
+
+                    }
 
                     if ('shipping' == $this->config->get('config_tax_customer')) {
                         $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
