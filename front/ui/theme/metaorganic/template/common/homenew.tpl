@@ -181,25 +181,29 @@
                 <?php }else{?>
                 <div>
                   <div class="menuset">
-                    
-
                     <div class="newset" style="margin-top: 20px;"><a class="btn" href="#">
                         <span>
-                          Register
+                          <?= $full_name ?>
                         </span> </a>
 
                       <div class="dropdownset" style="display:none;">
                         <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
-                            href="<?= BASE_URL."/index.php?path=account/login/newCustomer" ?>"><i class="fa fa-user"></i>Register as Customer</a></div>
-                        
-                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="https://farmers.kwikbasket.com/farmer-registration"><i
-                              class="fa fa-user"></i>Register as Farmer</a></div>
-                        
-                         
+                            href="<?= $dashboard ?>"><i class="fa fa-user"></i>Dashboard</a></div>
+                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $po_ocr ?>"><i
+                              class="fa fa-file-text"></i>Purchase Order &nbsp;<span
+                              class="badge badge-pill badge-success">BETA</span></a></div>
+                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $wishlist ?>"><i
+                              class="fa fa-shopping-basket"></i>My Basket</a></div>
+                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $account ?>"><i
+                              class="fa fa-user"></i>My Account</a></div>
+                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $help ?>"><i
+                              class="fa fa-question-circle"></i>Help</a></div>
+                        <div class="dropdownsetnew"><a class="header__upper-deck-item-link" href="<?= $logout ?>"><i
+                              class="fa fa-power-off"></i>
+                            <?= $text_logout ?>
+                          </a></div>
                       </div>
                     </div>
-
-
                     <div class="butn setui" style="position:relative; z-index:-1000;">
                     <a  onclick="checkMinimumOrderTotal();">
                       <div class="btn btn-default mini-cart-button" role="button" data-toggle="modal"
