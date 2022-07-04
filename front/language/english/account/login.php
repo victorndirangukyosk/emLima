@@ -23,6 +23,7 @@ $_['entry_password'] = 'Password';
 
 // Error
 $_['error_login'] = 'Warning: No match for E-Mail Address and/or Password.';
+$_['error_login_mobile'] = 'Warning: No match for Mobile and/or Password.';
 $_['error_attempts'] = 'Warning: Your account has exceeded allowed number of login attempts. Please try again in 10 minutes.';
 $_['error_approved'] = 'Warning: Your account requires approval before you can login.';
 $_['error_not_verified'] = 'Email is not verified. Please Verify Your Email. <a href="#" id="resendVerificationMail"> Resend Verification Email </a> now';
