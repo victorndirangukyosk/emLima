@@ -25,6 +25,7 @@ class ModelAccountApi extends Model {
         return $data;
     }
 
+    //any changes made in this method, should update in customerLoginByPhone
     public function customer_login($username, $password) {
         /* $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api` WHERE username = '" . $this->db->escape($username) . "' AND password = '" . $this->db->escape($password) . "' AND status = '1'");
 
@@ -44,6 +45,9 @@ class ModelAccountApi extends Model {
 
                 $data['customer_email'] = $user_query->row['email'];
                 $data['parent'] = $user_query->row['parent'];
+                //dont add phone number here
+                //$data['customer_phone'] = $user_query->row['telephone'];
+                
             } else {
                 $data['status'] = false;
                 $data['not_verified'] = true;
@@ -69,6 +73,9 @@ class ModelAccountApi extends Model {
                 $data['customer_phone'] = $user_query->row['telephone'];
                 $data['customer_email'] = $user_query->row['email'];
                 $data['parent'] = $user_query->row['parent'];
+                $data['order_approval_access'] = $user_query->row['order_approval_access'];
+                $data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
+
             } else {
                 $data['status'] = false;
                 $data['not_verified'] = true;
