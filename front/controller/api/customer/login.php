@@ -165,7 +165,16 @@ class ControllerApiCustomerLogin extends Controller {
                 // $json['error'] = $this->language->get('error_not_approved');
                 $json['error'] = $this->language->get('error_approved');
             } else {
+
+                if (is_numeric($this->request->post['username'])) {
+                    //login by phone number
+                $json['error'] = $this->language->get('error_login_mobile');
+
+                } else {
+                    
                 $json['error'] = $this->language->get('error_login');
+                }
+
             }
 
             $json['status'] = false;
