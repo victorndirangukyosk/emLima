@@ -23,10 +23,24 @@ class ControllerAccountForgotten extends Controller
 
             $password = substr(sha1(uniqid(mt_rand(), true)), 0, 10);
 
+
+            if(is_numeric($this->request->post['email']))
+            {
+            $this->model_account_customer->resetPasswordWithMobile($this->request->post['email'], $password, 1);
+            //1 implies, new password is generated and user need to update his password
+
+            $this->model_account_customer->resetPasswordMailWithMobile($this->request->post['email'], $password);
+            $this->model_account_customer->resetPasswordSMSWithMobile($this->request->post['email'], $password);
+            }
+            else{
             $this->model_account_customer->resetPassword($this->request->post['email'], $password, 1);
             //1 implies, new password is generated and user need to update his password
 
             $this->model_account_customer->resetPasswordMail($this->request->post['email'], $password);
+                $this->model_account_customer->resetPasswordSMS($this->request->post['email'], $password);
+               
+            }
+
 
             //echo "<pre>";print_r($password);die;
             $this->session->data['success'] = $this->language->get('text_success');
@@ -77,11 +91,33 @@ class ControllerAccountForgotten extends Controller
 
     protected function validate()
     {
-        if (!isset($this->request->post['email'])) {
-            $this->error['warning'] = $this->language->get('error_email');
-        } elseif (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
-            $this->error['warning'] = $this->language->get('error_email');
+        // if (!isset($this->request->post['email'])) {
+        //     $this->error['warning'] = $this->language->get('error_email');
+        // } elseif (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+        //     $this->error['warning'] = $this->language->get('error_email');
+        // }
+
+
+        if(isset ($this->request->post['email']) && !empty($this->request->post['email']))
+        {
+            if(is_numeric($this->request->post['email']))
+            {
+                if (!$this->model_account_customer->getTotalCustomersByPhone($this->request->post['email'])) {
+                    $this->error['warning'] = $this->language->get('error_email_mobile');
+                }
+            }
+            else{
+
+                if (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+                    $this->error['warning'] = $this->language->get('error_email');
+                }   
+            }
         }
+        else
+         {
+            $this->error['warning'] = $this->language->get('error_email_NA');
+
+        } 
 
         return !$this->error;
     }
