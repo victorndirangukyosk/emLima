@@ -77,12 +77,23 @@ class ControllerApiForgetPassword extends Controller
         if ($this->validateCustomer()) {
             $this->load->language('mail/forgotten');
             $password = substr(sha1(uniqid(mt_rand(), true)), 0, 10);
-            $this->model_account_customer->resetPassword($this->request->post['email'], $password, 1);
+
+            if(is_numeric($this->request->post['email']))
+            {
+            $this->model_account_customer->resetPasswordWithMobile($this->request->post['email'], $password, 1);
             //1 implies, new password is generated and user need to update his password
 
-            $this->model_account_customer->resetPasswordMail($this->request->post['email'], $password);
-            $this->model_account_customer->resetPasswordSMS($this->request->post['email'], $password);
-
+            $this->model_account_customer->resetPasswordMailWithMobile($this->request->post['email'], $password);
+            $this->model_account_customer->resetPasswordSMSWithMobile($this->request->post['email'], $password);
+            }
+            else{
+                $this->model_account_customer->resetPassword($this->request->post['email'], $password, 1);
+                //1 implies, new password is generated and user need to update his password
+    
+                $this->model_account_customer->resetPasswordMail($this->request->post['email'], $password);
+                $this->model_account_customer->resetPasswordSMS($this->request->post['email'], $password);
+               
+            }
             
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -91,7 +102,11 @@ class ControllerApiForgetPassword extends Controller
 
              // Add to activity log
              $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
+                if(!isset($customer_info))
+                {
+                    $customer_info = $this->model_account_customer->getCustomerByPhone($this->request->post['email']);
 
+                }
              if ($customer_info) {
                  $this->load->model('account/activity');
  
@@ -120,14 +135,26 @@ class ControllerApiForgetPassword extends Controller
 
         
         if (!isset($this->request->post['email'])) {
-            $this->error['warning'] = $this->language->get('error_email');
-        } elseif (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
-            $this->error['warning'] = $this->language->get('error_email');
+            $this->error['warning'] = $this->language->get('error_email_NA');
+        } else
+        {
+            if(is_numeric($this->request->post['email']))
+            {
+                if (!$this->model_account_customer->getTotalCustomersByPhone($this->request->post['email'])) {
+                    $this->error['warning'] = $this->language->get('error_email_mobile');
+                }
+            }
+            else{
+
+                if (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+                    $this->error['warning'] = $this->language->get('error_email_mobile');
+                }   
+            }
         }
 
         return !$this->error;
     }
-
+ 
 
     public function changepassword()
     {
