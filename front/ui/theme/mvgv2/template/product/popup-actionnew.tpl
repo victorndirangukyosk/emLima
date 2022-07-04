@@ -2,7 +2,9 @@
 
   
   
-  <div class="_2D2lC">
+  <div class="_2D2lC">                                      <?php if($product['variations'][0]['category_price_discount_percentage'] > 0) { ?>
+                                                            <div id="content-discount"><del><?=$product['variations'][0]['category_price_discount_amount_format'];?></del>(<?=$product['variations'][0]['category_price_discount_percentage'];?>% OFF)</div>
+                                                            <?php } ?>
                                                             <div class="price-popup" id="content-container">
                                                                  <?=$product['variations'][0]['special_price'];?></div>
                                                         </div>
@@ -14,6 +16,7 @@
                                                       <select class="product-variation">
                                                       <?php foreach($product['variations'] as $variation) { ?>
                                                       <option value="<?php echo isset($variation['variation_id']) ? $variation['variation_id'] : ''; ?>"
+                                                      data-discount="<?php echo isset($variation['category_price_discount_percentage']) && $variation['category_price_discount_percentage'] > 0 ? '<del>'.$variation['category_price_discount_amount_format'].'</del>('.$variation['category_price_discount_percentage'].'% OFF)' : ''; ?>"
                                                       data-price="<?php echo isset($variation['price']) ? $variation['price'] : ''; ?>"
                                                       data-quantity="<?php echo isset($variation['qty_in_cart']) ? $variation['qty_in_cart'] : ''; ?>"
                                                       data-key="<?php echo isset($variation['key']) ? $variation['key'] : ''; ?>"
@@ -233,12 +236,13 @@ $(function() {
 
 $(document).delegate('.product-variation', 'change', function() {
 
-     
+    console.log($(this).children("option:selected").attr('data-discount'));
     const newProductId = $(this).children("option:selected").val();
     const newPrice = $(this).children("option:selected").attr('data-price');
     const newproID = $(this).children("option:selected").attr('data-productid');
     const newwlID = $(this).children("option:selected").attr('data-isWl');
     const newSpecial = $(this).children("option:selected").attr('data-special');
+    const newDiscount = $(this).children("option:selected").attr('data-discount');
     const dataKey = $(this).children("option:selected").attr('data-key');
     const qty_in_cart1 = $(this).children("option:selected").attr('data-quantity');
 
@@ -248,7 +252,7 @@ $(document).delegate('.product-variation', 'change', function() {
      //$('#content-container').html('KES ' +newSpecial);
      //$('#content-container').html('KES '  +qty_in_cart1);
      $('#content-container').html(newSpecial);
- 
+     $('#content-discount').html(newDiscount);
     let dataHolder = $('#add-cart-btnnew');
     let wishlistHolder = $('#add-wishlist');
      let wishlistbuttonHolder = $('#add-btn-wishlist');

@@ -163,4 +163,9 @@ final class Tax {
         }
     }
 
+    public function getOrginalPrice($discount_price, $discount) {
+        $discount_price += $discount_price * ($discount / 100);
+        return $discount_price;
+    }
+
 }

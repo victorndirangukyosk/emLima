@@ -313,8 +313,8 @@ class Cart {
                     }
 
                     if (CATEGORY_PRICE_ENABLED == true) {
-                        $cat_price = $this->getCategoryPriceProduct($product_query->row['product_store_id'], $product['store_id'], $_SESSION['customer_category']);
-                        $orignal_price = isset($cat_price) ? $this->getCategoryPriceProduct($product_query->row['product_store_id'], $product['store_id'], $_SESSION['customer_category']) : $price;
+                        $cat_price = $this->getCategoryPriceProductNew($product_query->row['product_store_id'], $product['store_id'], $_SESSION['customer_category']);
+                        $orignal_price = isset($cat_price) ? $this->getCategoryPriceProductNew($product_query->row['product_store_id'], $product['store_id'], $_SESSION['customer_category']) : $price;
                         $price = $orignal_price;
                     }
 
@@ -952,6 +952,24 @@ class Cart {
         $product_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE product_store_id = '" . (int) $product_store_id . "' AND store_id = '" . (int) $store_id . "' AND price_category = '" . $category . "' AND status = '1'");
 
         return $product_query->row['price'];
+    }
+
+    public function getCategoryPriceProductNew($product_store_id, $store_id, $category) {
+        //echo $category;exit;
+        $product_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE product_store_id = '" . (int) $product_store_id . "' AND store_id = '" . (int) $store_id . "' AND price_category = '" . $category . "' AND status = '1'");
+
+        $log = new Log('error.log');
+        $log->write('product_query');
+        $log->write($product_query->row);
+        $log->write('product_query');
+
+        $product_query->row['price'];
+
+        $discount_price = NULL;
+        if (is_array($product_query->row) && $product_query->row != NULL && count($product_query->row) > 0) {
+            $discount_price += $product_query->row['price'] * ($product_query->row['discount'] / 100);
+            return $discount_price;
+        }
     }
 
     public function getProductsByStoreId($store_id) {

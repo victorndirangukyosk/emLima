@@ -846,6 +846,12 @@ class ModelAssetsProduct extends Model {
         $result = $this->db->query($all_variations);
 
         foreach ($result->rows as $r) {
+
+            $orginal_price = $r['special_price'];
+            $r['category_price_discount_percentage'] = 0;
+            $r['category_price_discount_amount'] = 0;
+            $r['category_price_discount_amount_format'] = $this->currency->format(0);
+
             $category_price_data = $this->getCategoryPriceStatusByProductStoreId($r['product_store_id']);
             $category_pricing_variant_status = is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1;
             if ($category_pricing_variant_status == 1) {
@@ -883,11 +889,17 @@ class ModelAssetsProduct extends Model {
                       } else {
                       $r['special_price'] = false;
                       } */
+                    $c_price_discount_amount = 0;
 
                     if (!$this->config->get('config_inclusiv_tax')) {
                         //FOR CATEGORY PRICING
                         $category_s_price = 0;
                         $category_o_price = 0;
+
+                        $customer_category_price_discount_percentage = 0;
+                        $customer_category_price_discount_amount = 0;
+                        $customer_category_price_discount_amount_format = $this->currency->format(0);
+
                         if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$r['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $r['store_id']])) {
                             $category_s_price = $cachePrice_data[$r['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $r['store_id']];
                             $category_o_price = $cachePrice_data[$r['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $r['store_id']];
@@ -897,6 +909,24 @@ class ModelAssetsProduct extends Model {
                             }
                         }
                         //FOR CATEGORY PRICING
+                        //FOR CATEGORY DISCOUNT
+                        if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                            $customer_discount_response = $this->load->controller('common/customercategorydiscount', $r);
+
+                            if (isset($customer_discount_response) && $customer_discount_response != NULL && is_array($customer_discount_response)) {
+                                $r['category_price_discount_percentage'] = $customer_discount_response['discount_percentage'];
+                                $r['category_price_discount_amount'] = $customer_discount_response['special_price'];
+                                $r['category_price_discount_amount_format'] = $this->currency->format($customer_discount_response['special_price']);
+
+                                $r['price'] = $customer_discount_response['discount_amount'];
+                                $r['special_price'] = $customer_discount_response['discount_amount'];
+                            }
+
+                            $customer_category_price_discount_percentage = $r['category_price_discount_percentage'];
+                            $customer_category_price_discount_amount = $r['category_price_discount_amount'];
+                            $customer_category_price_discount_amount_format = $this->currency->format($r['category_price_discount_amount']);
+                        }
+                        //FOR CATEGORY DISCOUNT
                         //get price html
                         if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                             $price = $this->currency->format($this->tax->calculate($r['price'], $r['tax_class_id'], $this->config->get('config_tax')));

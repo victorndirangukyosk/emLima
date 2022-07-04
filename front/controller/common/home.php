@@ -391,7 +391,6 @@ class ControllerCommonHome extends Controller {
         //   echo "<pre>";print_r($data);die;
     }
 
-
     public function job_opening_details_saved($id = 0, $message = "", $errormessage = "") {
         $data['site_key'] = $this->config->get('config_google_captcha_public');
         if (isset($this->request->get['id'])) {
@@ -456,7 +455,7 @@ class ControllerCommonHome extends Controller {
                 $this->load->model('setting/setting');
                 $first_name = str_replace("'", "", $this->request->post['careers-first-name']);
                 $email = str_replace("'", "", $this->request->post['careers-email']);
-                $person_email= $email;
+                $person_email = $email;
                 $phone = str_replace("'", "", $this->request->post['careers-phone-number']);
                 $id = $this->model_information_careers->createCareers($first_name, str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), $email, $phone, str_replace("'", "", $this->request->post['careers-job-id']), str_replace("'", "", $this->request->post['careers-cover-letter']), $file_upload_status['file_name'], str_replace("'", "", $this->request->post['careers-job-position']));
                 $status = true;
@@ -464,7 +463,7 @@ class ControllerCommonHome extends Controller {
                 $jobposition = str_replace("'", "", $this->request->post['careers-job-position']);
                 $log->write($jobposition);
                 $log->write('jobposition');
-                
+
                 if ($id > 0) {
 
                     //send mail notification to 'stalluri@technobraingroup.com'
@@ -487,34 +486,31 @@ class ControllerCommonHome extends Controller {
                     // $bccemail = "sridivya.talluri@technobraingroup.com";
                     //  echo "<pre>";print_r($file_data);die;
                     $filepath = DIR_UPLOAD . "careers/" . $file_upload_status['file_name'];
-                    try{
-                    $mail = new Mail($this->config->get('config_mail'));
-                    $mail->setTo($email);
-                    $mail->setBCC($bccemail);
-                    $mail->setFrom($this->config->get('config_from_email'));
-                    $mail->setSender($this->config->get('config_name'));
-                    $mail->setSubject($subject);
-                    $mail->setHTML($message);
-                    $mail->addAttachment($filepath);
-                    $mail->send();
-                    }
-                    catch(exception $ex)
-                    {
+                    try {
+                        $mail = new Mail($this->config->get('config_mail'));
+                        $mail->setTo($email);
+                        $mail->setBCC($bccemail);
+                        $mail->setFrom($this->config->get('config_from_email'));
+                        $mail->setSender($this->config->get('config_name'));
+                        $mail->setSubject($subject);
+                        $mail->setHTML($message);
+                        $mail->addAttachment($filepath);
+                        $mail->send();
+                    } catch (exception $ex) {
                         $log = new Log('error.log');
                         $log->write('Mail Sending failed.MAilgun error');
                     }
 
-                    try
-                    {
-                        $subject_person='CV Received';
-                        $message_person='';
-                        $message_person =  "<br>Dear " . $first_name . ",<br><br>";
+                    try {
+                        $subject_person = 'CV Received';
+                        $message_person = '';
+                        $message_person = "<br>Dear " . $first_name . ",<br><br>";
 
                         if ($jobposition != "")
-                        $message_person = $message_person ."Thank you for your application for the role of  " . $jobposition . ".<br><br>";
-                    else
-                        $message_person = $message_person ."Thank you for your application .  <br><br>";
-                        
+                            $message_person = $message_person . "Thank you for your application for the role of  " . $jobposition . ".<br><br>";
+                        else
+                            $message_person = $message_person . "Thank you for your application .  <br><br>";
+
                         $message_person = $message_person . "Your application is being reviewed by our HR team. We will consider your employment and qualification credentials against the criteria required for the role. <br><br>";
                         $message_person = $message_person . "We regret that due to the high volume of CV’s we receive, we may not be able to respond to all applications individually. We will contact you within the next 7 days if your skills and experience are suitable to the job description, or if there is a similar opportunity presently available. <br><br><br>";
 
@@ -530,10 +526,7 @@ class ControllerCommonHome extends Controller {
                         $mail->setSubject($subject_person);
                         $mail->setHTML($message_person);
                         $mail->send();
-
-                    }
-                    catch(exception $ex)
-                    {
+                    } catch (exception $ex) {
                         $log = new Log('error.log');
                         $log->write('Mail Sending failed.MAilgun error');
                     }
@@ -547,18 +540,13 @@ class ControllerCommonHome extends Controller {
             //$this->response->addHeader('Content-Type: application/json');
         }
         // $this->response->setOutput(json_encode($json));
-        if ($this->request->post['careers-job-id'] == 0)
-        {
+        if ($this->request->post['careers-job-id'] == 0) {
             $this->careers(0, $success_message, $error_message);
-        }
-        else
-
-        {
+        } else {
             // $this->job_opening_details($this->request->post['careers-job-id'], $success_message, $error_message);
             $this->job_opening_details_saved($this->request->post['careers-job-id'], $success_message, $error_message);
-        // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
+            // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
         }
-
     }
 
     public function FeatureFileUpload($file_data) {
@@ -1749,6 +1737,11 @@ class ControllerCommonHome extends Controller {
                     }
                 }
                 //FOR CATEGORY PRICING
+                //FOR CATEGORY PRICING
+                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    $this->load->controller('common/customercategorydiscount', $result);
+                }
+                //FOR CATEGORY PRICING
                 //get price html
                 if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
@@ -2362,15 +2355,15 @@ class ControllerCommonHome extends Controller {
         ];
         // $data['categories_list'] = $results;
         // ----start
-         $this->load->model('assets/category');
-         $new_categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
-         $customer_categories = $this->model_assets_category->getCustomerCategoryById(ACTIVE_STORE_ID, 0);
-         foreach ($customer_categories as $customer_category) {
-             $new_categories[] = $customer_category;
-         }
-         $new_categories = array_map("unserialize", array_unique(array_map("serialize", $new_categories)));
-        $data['categories_list']= $new_categories;
-         //----end
+        $this->load->model('assets/category');
+        $new_categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+        $customer_categories = $this->model_assets_category->getCustomerCategoryById(ACTIVE_STORE_ID, 0);
+        foreach ($customer_categories as $customer_category) {
+            $new_categories[] = $customer_category;
+        }
+        $new_categories = array_map("unserialize", array_unique(array_map("serialize", $new_categories)));
+        $data['categories_list'] = $new_categories;
+        //----end
         $products = $this->getProductsForCategoryPages($filter_data);
         $data['products'] = $products;
 

@@ -214,4 +214,130 @@ class ControllerDropdownsDropdowns extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function autocompleteparentcustomer() {
+        $json = [];
+
+        if (isset($this->request->get['filter_parent_customer']) || isset($this->request->get['filter_company_name'])) {
+
+            if (isset($this->request->get['filter_parent_customer'])) {
+                $filter_parent_customer = $this->request->get['filter_parent_customer'];
+            } else {
+                $filter_parent_customer = '';
+            }
+
+            if (isset($this->request->get['filter_company_name'])) {
+                $filter_parent_company = $this->request->get['filter_company_name'];
+            } else {
+                $filter_parent_company = '';
+            }
+
+            $this->load->model('sale/customer');
+
+            $filter_data = [
+                'filter_parent_customer' => $filter_parent_customer,
+                'filter_parent_company' => $filter_parent_company,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $log = new Log('error.log');
+            $results = $this->model_sale_customer->getParentCompanies($filter_data);
+            foreach ($results as $result) {
+                $json[] = [
+                    'company_name' => strip_tags(html_entity_decode($result['company_name'], ENT_QUOTES, 'UTF-8')),
+                    'customer_id' => $result['customer_id'],
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['company_name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function autocompletevendorproducts() {
+
+        $json = [];
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        if (isset($this->request->get['filter_vendor_name'])) {
+            $filter_vendor_name = $this->request->get['filter_vendor_name'];
+        } else {
+            $filter_vendor_name = '';
+        }
+
+        if (isset($this->request->get['filter_category'])) {
+            $filter_category = $this->request->get['filter_category'];
+        } else {
+            $filter_category = '';
+        }
+
+        if (isset($this->request->get['filter_store_id'])) {
+            $filter_store_id = $this->request->get['filter_store_id'];
+        } else {
+            $filter_store_id = '';
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $filter_status = $this->request->get['filter_status'];
+        } else {
+            $filter_status = 1;
+        }
+
+        if (isset($this->request->get['filter_category_price'])) {
+            $filter_category_price = $this->request->get['filter_category_price'];
+        } else {
+            $filter_category_price = '';
+        }
+
+        $filter_data = [
+            'filter_name' => $filter_name,
+            'filter_vendor_name' => $filter_vendor_name,
+            'filter_category' => $filter_category,
+            'filter_store_id' => $filter_store_id,
+            'filter_status' => $filter_status,
+            'filter_category_price' => $filter_category_price,
+            'start' => 0,
+            'limit' => 5,
+        ];
+
+        $this->load->model('catalog/vendor_product');
+        $results = $this->model_catalog_vendor_product->getProducts($filter_data);
+        $log = new Log('error.log');
+
+        foreach ($results as $result) {
+            $json[] = [
+                'product_name' => strip_tags(html_entity_decode($result['product_name'], ENT_QUOTES, 'UTF-8')),
+                'product_id' => $result['product_id'],
+                'product_store_id' => $result['product_store_id'],
+                'unit' => $result['unit'],
+                'price' => $result['price'],
+                'special_price' => $result['special_price'],
+            ];
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['product_name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

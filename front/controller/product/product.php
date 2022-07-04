@@ -809,6 +809,11 @@ class ControllerProductProduct extends Controller {
         //echo "<pre>";print_r($product_info);die;
 
         if ($product_info) {
+
+            $product_info['category_price_discount_percentage'] = 0;
+            $product_info['category_price_discount_amount'] = 0;
+            $product_info['category_price_discount_amount_format'] = $this->currency->format(0);
+
             if ($product_info['image'] != NULL && file_exists(DIR_IMAGE . $product_info['image'])) {
                 $thumb = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
             } else if ($product_info['image'] == NULL || !file_exists(DIR_IMAGE . $product_info['image'])) {
@@ -842,12 +847,16 @@ class ControllerProductProduct extends Controller {
             $key = base64_encode(serialize(['product_store_id' => (int) $product_info['product_store_id'], 'store_id' => $store_id]));
             $s_price = 0;
             $o_price = 0;
+            $c_price_discount_amount = 0;
 
             if (!$this->config->get('config_inclusiv_tax')) {
                 $log = new Log('error.log');
                 //FOR CATEGORY PRICING
                 $category_s_price = 0;
                 $category_o_price = 0;
+                $customer_category_price_discount_percentage = 0;
+                $customer_category_price_discount_amount = 0;
+                $customer_category_price_discount_amount_format = $this->currency->format(0);
 
                 if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product_info['store_id']])) {
                     $category_s_price = $cachePrice_data[$product_info['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $product_info['store_id']];
@@ -858,6 +867,24 @@ class ControllerProductProduct extends Controller {
                     }
                 }
                 //FOR CATEGORY PRICING
+                //FOR CATEGORY DISCOUNT
+                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    $customer_discount_response = $this->load->controller('common/customercategorydiscount', $product_info);
+
+                    if (isset($customer_discount_response) && $customer_discount_response != NULL && is_array($customer_discount_response)) {
+
+                        $product_info['category_price_discount_percentage'] = $customer_discount_response['discount_percentage'];
+                        $product_info['category_price_discount_amount'] = $customer_discount_response['special_price'];
+                        $product_info['category_price_discount_amount_format'] = $this->currency->format($customer_discount_response['special_price']);
+
+                        $product_info['price'] = $customer_discount_response['discount_amount'];
+                        $product_info['special_price'] = $customer_discount_response['discount_amount'];
+
+                        $category_s_price = $product_info['special_price'];
+                        $category_o_price = $product_info['special_price'];
+                    }
+                }
+                //FOR CATEGORY DISCOUNT
                 //get price html
                 if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
@@ -873,6 +900,10 @@ class ControllerProductProduct extends Controller {
                 } else {
                     $product_info['special_price'] = false;
                 }
+
+                $customer_category_price_discount_percentage = $product_info['category_price_discount_percentage'];
+                $customer_category_price_discount_amount = $product_info['category_price_discount_amount'];
+                $customer_category_price_discount_amount_format = $product_info['category_price_discount_amount_format'];
             } else {
                 $s_price = $product_info['special_price'];
                 $o_price = $product_info['price'];
@@ -896,6 +927,29 @@ class ControllerProductProduct extends Controller {
                     $product_info['special_price'] = $this->currency->format($s_price);
                     $product_info['price'] = $this->currency->format($o_price);
                 }
+
+                //FOR CATEGORY DISCOUNT
+                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    $customer_discount_response = $this->load->controller('common/customercategorydiscount', $product_info);
+
+                    if (isset($customer_discount_response) && $customer_discount_response != NULL && is_array($customer_discount_response)) {
+
+                        $product_info['category_price_discount_percentage'] = $customer_discount_response['discount_percentage'];
+                        $product_info['category_price_discount_amount'] = $customer_discount_response['special_price'];
+                        $product_info['category_price_discount_amount_format'] = $this->currency->format($customer_discount_response['special_price']);
+
+                        $s_price = $customer_discount_response['discount_amount'];
+                        $o_price = $customer_discount_response['discount_amount'];
+
+                        $product_info['price'] = $this->currency->format($customer_discount_response['discount_amount']);
+                        $product_info['special_price'] = $this->currency->format($customer_discount_response['discount_amount']);
+                    }
+                }
+                //FOR CATEGORY DISCOUNT
+
+                $customer_category_price_discount_percentage = $product_info['category_price_discount_percentage'];
+                $customer_category_price_discount_amount = $product_info['category_price_discount_amount'];
+                $customer_category_price_discount_amount_format = $product_info['category_price_discount_amount_format'];
             }
 
             if (isset($product_info['pd_name'])) {

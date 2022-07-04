@@ -567,6 +567,9 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
         //  echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
+
+            $result['category_price_discount_percentage'] = 0;
+            $result['category_price_discount_amount'] = 0;
             // if qty less then 1 dont show product
             if ($result['quantity'] <= 0) {
                 continue;
@@ -584,8 +587,29 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
             $s_price = 0;
             $o_price = 0;
+            $c_price_discount_amount = 0;
 
             if (!$this->config->get('config_inclusiv_tax')) {
+                //FOR CATEGORY PRICING
+                $category_s_price = 0;
+                $category_o_price = 0;
+                $customer_category_price_discount_percentage = 0;
+                $customer_category_price_discount_amount = 0;
+
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']])) {
+                    $category_s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']];
+                    $category_o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id']];
+                    $customer_category_price_discount_percentage = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id'] . '_' . 'DISCOUNT'];
+                    $customer_category_price_discount_amount = $this->tax->getOrginalPrice($category_s_price, $customer_category_price_discount_percentage);
+
+                    if ($category_s_price != NULL && $category_s_price > 0) {
+                        $result['price'] = $category_s_price;
+                        $result['special_price'] = $category_s_price;
+                        $result['category_price_discount_percentage'] = $customer_category_price_discount_percentage;
+                        $result['category_price_discount_amount'] = $customer_category_price_discount_amount;
+                    }
+                }
+                //FOR CATEGORY PRICING
                 //get price html
                 if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
@@ -601,6 +625,10 @@ class ControllerCheckoutCheckoutItems extends Controller {
                 } else {
                     $special_price = false;
                 }
+
+                $category_price_discount_amount = $this->currency->format($this->tax->calculate($this->tax->getOrginalPrice($result['category_price_discount_amount'], $result['category_price_discount_percentage']), $result['tax_class_id'], $this->config->get('config_tax')));
+                $c_price_discount_amount = $this->tax->calculate($this->tax->getOrginalPrice($result['category_price_discount_amount'], $result['category_price_discount_percentage']), $result['tax_class_id'], $this->config->get('config_tax'));
+                $category_price_discount_percentage = $result['category_price_discount_percentage'];
             } else {
                 if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->currency->format($result['price']);
@@ -614,16 +642,25 @@ class ControllerCheckoutCheckoutItems extends Controller {
                     $special_price = $result['special_price'];
                 }
 
+                $category_price_discount_amount = $this->currency->format($this->tax->getOrginalPrice($result['category_price_discount_amount'], $result['category_price_discount_percentage']));
+                $category_price_discount_percentage = $result['category_price_discount_percentage'];
+
                 $s_price = $result['special_price'];
                 $o_price = $result['price'];
+                $c_price_discount_amount = $this->tax->getOrginalPrice($result['category_price_discount_amount'], $result['category_price_discount_percentage']);
 
                 //echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price;//exit;
 
                 if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']])) {
                     $s_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
                     $o_price = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $filter_data['store_id']];
+
+                    $category_price_discount_percentage = $cachePrice_data[$result['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $result['store_id'] . '_' . 'DISCOUNT'];
+                    $c_price_discount_amount = $this->tax->getOrginalPrice($s_price, $category_price_discount_percentage);
+
                     $special_price = $this->currency->format($s_price);
                     $price = $this->currency->format($o_price);
+                    $category_price_discount_amount = $this->currency->format($c_price_discount_amount);
                 }
             }
 
@@ -665,6 +702,8 @@ class ControllerCheckoutCheckoutItems extends Controller {
                     'weight' => floatval($result['weight']),
                     'price' => $price,
                     'special' => $special_price,
+                    'category_price_discount_percentage' => $category_price_discount_percentage,
+                    'category_price_discount_amount' => $category_price_discount_amount,
                 ];
             } else {
                 // Add as new product
@@ -685,6 +724,8 @@ class ControllerCheckoutCheckoutItems extends Controller {
                             'weight' => floatval($result['weight']),
                             'price' => $price,
                             'special' => $special_price,
+                            'category_price_discount_percentage' => $category_price_discount_percentage,
+                            'category_price_discount_amount' => $category_price_discount_amount,
                         ],
                     ],
                     'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
@@ -1053,7 +1094,10 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
                     $output .= '<img class="_1xvs1" src="' . $result[$i]['thumb'] . '" title="' . $result[$i]['name'] . '" alt="' . $result[$i]['name'] . '" style="left: 0%;"> ';
                     $output .= '  </div>           <div class="thumb-content">           <h4>' . $result[$i]['name'] . '</h4>';
-                    $output .= '     <p class="item-price"><span>' . $result[$i]['variations'][0]['special'] . ' / Per' . $result[$i]['variations'][0]['unit'] . '  </span></p>';
+                    if ($result[$i]['variations'][0]['category_price_discount_percentage'] > 0) {
+                        $output .= '<div><del>' . $result[$i]['variations'][0]['category_price_discount_amount'] . '</del>(' . $result[$i]['variations'][0]['category_price_discount_percentage'] . ')% OFF</div>';
+                    }
+                    $output .= '     <p class="item-price"><span>' . $result[$i]['variations'][0]['special'] . ' / Per ' . $result[$i]['variations'][0]['unit'] . '  </span></p>';
 
                     $output .= '     </div>  </div> </div></a></div>';
                 }
@@ -1069,7 +1113,10 @@ class ControllerCheckoutCheckoutItems extends Controller {
 
                         $output .= '<img class="_1xvs1" src="' . $result[$i]['thumb'] . '" title="' . $result[$i]['name'] . '" alt="' . $result[$i]['name'] . '" style="left: 0%;"> ';
                         $output .= '  </div>           <div class="thumb-content">           <h4>' . $result[$i]['name'] . '</h4>';
-                        $output .= '     <p class="item-price"><span>' . $result[$i]['variations'][0]['special'] . ' / Per' . $result[$i]['variations'][0]['unit'] . '  </span></p>';
+                        if ($result[$i]['variations'][0]['category_price_discount_percentage'] > 0) {
+                            $output .= '<div><del>' . $result[$i]['variations'][0]['category_price_discount_amount'] . '</del>(' . $result[$i]['variations'][0]['category_price_discount_percentage'] . ')% OFF</div>';
+                        }
+                        $output .= '     <p class="item-price"><span>' . $result[$i]['variations'][0]['special'] . ' / Per ' . $result[$i]['variations'][0]['unit'] . '  </span></p>';
 
                         $output .= '     </div>  </div> </div></a></div>';
                     }

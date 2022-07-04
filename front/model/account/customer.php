@@ -672,6 +672,19 @@ class ModelAccountCustomer extends Model {
         $this->cache->set('category_price_data', $cache_price_data);
     }
 
+    public function cacheProductDiscount($store_id) {
+        $this->cache->delete('category_discount_data');
+        $cache_price_data = [];
+        $sql = 'SELECT * FROM `' . DB_PREFIX . "customer_discount` where `store_id` > 0";
+        $resultsdata = $this->db->query($sql);
+        if (count($resultsdata->rows) > 0) {
+            foreach ($resultsdata->rows as $result) {
+                $cache_price_data[$result['product_store_id'] . '_' . $result['price_category'] . '_' . $result['store_id']] = $result['discount'];
+            }
+        }
+        $this->cache->set('category_discount_data', $cache_price_data);
+    }
+
     public function CheckHeIsParent() {
         $is_he_parent = $this->db->query('SELECT c.parent FROM ' . DB_PREFIX . "customer c WHERE customer_id = '" . (int) $this->customer->getId() . "'");
 

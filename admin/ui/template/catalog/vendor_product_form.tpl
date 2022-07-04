@@ -160,11 +160,18 @@
 									<?php } ?>
 								</div>
 							</div>
+                                                        
+                                                        <div class="form-group ">
+								<label class="col-sm-2 control-label"><?php echo $entry_discount; ?></label>
+								<div class="col-sm-10">
+                                                                    <input type="number" step="0.01" name="discount" onkeypress="return validateFloatKeyPress(this, event);" onkeyup="getPrice();"  value="<?php echo $discount; ?>" id="discount" class="form-control input-full-width" />
+								</div>
+							</div>
 
 							<div class="form-group ">
 								<label class="col-sm-2 control-label"><?php echo $entry_special_price; ?></label>
 								<div class="col-sm-10">
-									<input type="text" name="special_price" onkeypress="return validateFloatKeyPress(this, event);"  value="<?php echo $special_price; ?>" id="special_price" class="form-control input-full-width" />
+									<input type="text" name="special_price" onkeypress="return validateFloatKeyPress(this, event);" onkeyup="calculate();"  value="<?php echo $special_price; ?>" id="special_price" class="form-control input-full-width" />
 								</div>
 							</div>
 
@@ -422,5 +429,23 @@ $('input[name=\'product\']').autocomplete({
       //return true;
       // }
 }
-
+ function calculate() {
+        var pPos = parseInt($('#price').val()); 
+        var pEarned = parseInt($('#special_price').val());
+        var perc="";
+        if(isNaN(pPos) || isNaN(pEarned)){
+            perc=" ";
+           }else{
+           perc = ((pEarned/pPos) * 100).toFixed(3);
+           }
+        
+        $('#discount').val(perc);
+ }
+ function getPrice() {
+            var numVal1 = Number($('#price').val());
+            var numVal2 = Number($('#discount').val()) / 100;
+            var totalValue = numVal1 - (numVal1 * numVal2);
+            alert(totalValue);
+            $('#special_price').val(totalValue.toFixed(2));
+ }
 </script>

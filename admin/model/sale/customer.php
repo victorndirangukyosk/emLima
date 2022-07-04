@@ -1032,6 +1032,44 @@ class ModelSaleCustomer extends Model {
         return $query->rows;
     }
 
+    public function getParentCompanies($data = []) {
+        $log = new Log('error.log');
+        $sql = 'SELECT customer_id, company_name, CONCAT(firstname, " ", lastname) AS name FROM ' . DB_PREFIX . 'customer WHERE status = 1 AND (parent = 0 OR parent IS NULL)';
+
+        $implode = [];
+        if (!empty($data['filter_parent_customer'])) {
+            $implode[] = "CONCAT(firstname, ' ', lastname) LIKE '%" . $this->db->escape($data['filter_parent_customer']) . "%'";
+        }
+        if (!empty($data['filter_parent_company'])) {
+            $implode[] = "company_name LIKE '%" . $this->db->escape($data['filter_parent_company']) . "%'";
+        }
+        if ($implode) {
+            $sql .= ' AND ' . implode(' AND ', $implode);
+        }
+        $sql .= ' ORDER BY name';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
     public function approve($customer_id) {
         $customer_info = $this->getCustomer($customer_id);
 
@@ -2632,6 +2670,44 @@ class ModelSaleCustomer extends Model {
     public function getCustomerCategories($customer_id) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "category_to_customer WHERE customer_id = '" . (int) $customer_id . "'");
         return $query->rows;
+    }
+
+    public function updateCustomerPriceCategory($price_category, $customer_id) {
+        $query = 'UPDATE ' . DB_PREFIX . "customer SET customer_category = '" . $this->db->escape($price_category) . "' WHERE customer_id ='" . (int) $customer_id . "'";
+        $log = new Log('error.log');
+        $log->write($query);
+        $res = $this->db->query($query);
+        if ($res == 1) {
+            $this->updateSubCustomerPriceCategory($price_category, $customer_id);
+        }
+        return $res;
+    }
+
+    public function updateCustomerPriceDiscount($price_category, $customer_id) {
+        $query = 'UPDATE ' . DB_PREFIX . "customer SET customer_discount_category = '" . $this->db->escape($price_category) . "' WHERE customer_id ='" . (int) $customer_id . "'";
+        $log = new Log('error.log');
+        $log->write($query);
+        $res = $this->db->query($query);
+        if ($res == 1) {
+            $this->updateSubCustomerDiscountCategory($price_category, $customer_id);
+        }
+        return $res;
+    }
+
+    public function updateSubCustomerPriceCategory($price_category, $customer_id) {
+        $query = 'UPDATE ' . DB_PREFIX . "customer SET customer_category = '" . $this->db->escape($price_category) . "' WHERE parent ='" . (int) $customer_id . "'";
+        $log = new Log('error.log');
+        $log->write($query);
+        $res = $this->db->query($query);
+        return $res;
+    }
+
+    public function updateSubCustomerDiscountCategory($price_category, $customer_id) {
+        $query = 'UPDATE ' . DB_PREFIX . "customer SET customer_discount_category = '" . $this->db->escape($price_category) . "' WHERE parent ='" . (int) $customer_id . "'";
+        $log = new Log('error.log');
+        $log->write($query);
+        $res = $this->db->query($query);
+        return $res;
     }
 
 }

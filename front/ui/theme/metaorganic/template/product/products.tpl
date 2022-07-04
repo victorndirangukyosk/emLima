@@ -136,6 +136,13 @@
                                                     <!-- <a class="_2Pk9X" tabindex="0">-->
                                                     <?=$product['name']?>
                                                     <br/>
+                                                    
+                                                    <?php if($product['variations'][0]['category_price_discount_percentage'] > 0) { ?>
+                                                    <div>
+                                                    <del><?= $product['variations'][0]['category_price_discount_amount'];?></del>(<?= $product['variations'][0]['category_price_discount_percentage'];?>% OFF)
+                                                    </div>
+                                                    <?php } ?>
+                                                    
                                                     <div style="color:#6dbd46">
                                                      <?= $product['variations'][0]['special'];?>    <?php  echo '/ ' .'Per'./*. $product['variations'][0]['weight'] .*/ ' ' . $product['variations'][0]['unit']; ?>
                                                      </div>

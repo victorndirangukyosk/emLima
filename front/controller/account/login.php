@@ -672,6 +672,7 @@ class ControllerAccountLogin extends Controller {
 
                         $data['success_message'] = $this->language->get('text_login_success');
                         $this->model_account_customer->cacheProductPrices(75);
+                        $this->model_account_customer->cacheProductDiscount(75);
                         $this->session->data['order_approval_access'] = $user_query->row['order_approval_access'];
                         $this->session->data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
                     }
@@ -772,6 +773,7 @@ class ControllerAccountLogin extends Controller {
                 }
 
                 $this->model_account_customer->cacheProductPrices(75);
+                $this->model_account_customer->cacheProductDiscount(75);
                 $this->trigger->fire('post.customer.login');
 
                 // maintain session to identify as admin login
@@ -789,6 +791,7 @@ class ControllerAccountLogin extends Controller {
 
         if ($this->customer->isLogged()) {
             $this->model_account_customer->cacheProductPrices(75);
+            $this->model_account_customer->cacheProductDiscount(75);
             $this->response->redirect('/');
             //REDIRECTING TO HOME PAGE
             //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
@@ -952,6 +955,7 @@ class ControllerAccountLogin extends Controller {
             $this->cart->clear();
             unset($this->session->data['customer_id']);
             unset($this->session->data['customer_category']);
+            unset($this->session->data['customer_discount_category']);
             unset($this->session->data['wishlist']);
             unset($this->session->data['payment_address']);
             unset($this->session->data['payment_method']);
@@ -978,6 +982,7 @@ class ControllerAccountLogin extends Controller {
             //         $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
             //     }
             //     $this->model_account_customer->cacheProductPrices(75);
+            //     $this->model_account_customer->cacheProductDiscount(75);
             //     $this->trigger->fire('post.customer.login');
             //     // maintain session to identify as admin login
             //     $this->session->data['adminlogin'] = 1;
@@ -1033,16 +1038,26 @@ class ControllerAccountLogin extends Controller {
             }
             $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
             // echo "<pre>";print_r($customer_details);die; 
+
+            if ($api_info['parent'] != NULL && $api_info['parent'] > 0) {
+                $customer_details_d = $this->db->query('SELECT customer_discount_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['parent'] . "' AND status = '1'");
+            } else {
+                $customer_details_d = $this->db->query('SELECT customer_discount_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $api_info['customer_id'] . "' AND status = '1'");
+            }
+            $this->session->data['customer_discount_category'] = isset($customer_details_d->row['customer_discount_category']) ? $customer_details_d->row['customer_discount_category'] : null;
+
             $this->session->data['order_approval_access'] = $customer_info['order_approval_access'];
             $this->session->data['order_approval_access_role'] = $customer_info['order_approval_access_role'];
 
             //echo  "{'status' : 'success','resp':".json_encode($unencodedArray)."}"
             $this->load->model('account/customer');
             $this->model_account_customer->cacheProductPrices(75);
+            $this->model_account_customer->cacheProductDiscount(75);
         }
 
         if ($this->customer->isLogged()) {
             $this->model_account_customer->cacheProductPrices(75);
+            $this->model_account_customer->cacheProductDiscount(75);
             $this->response->redirect('/');
             //REDIRECTING TO HOME PAGE
             //$this->response->redirect($this->url->link('account/account', '', 'SSL'));
@@ -1105,21 +1120,26 @@ class ControllerAccountLogin extends Controller {
 
                         /* SET CUSTOMER CATEGORY */
                         $data['customer_category'] = NULL;
+                        $data['customer_discount_category'] = NULL;
                         if ($customer_query->row['customer_id'] > 0 && $customer_query->row['parent'] > 0) {
                             $parent_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($customer_query->row['parent']) . "' AND status = '1' AND approved='1'");
                             if ($customer_query->num_rows > 0 && $parent_customer_query->row['customer_id'] > 0) {
                                 $data['customer_category'] = $parent_customer_query->row['customer_category'];
+                                $data['customer_discount_category'] = $parent_customer_query->row['customer_discount_category'];
                             } else {
                                 $data['customer_category'] = NULL;
+                                $data['customer_discount_category'] = NULL;
                             }
                         }
 
                         if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
                             $data['customer_category'] = $customer_query->row['customer_category'];
+                            $data['customer_discount_category'] = $customer_query->row['customer_discount_category'];
                         }
                         //$this->customer->setVariables($data['customer_category']);
                         /* SET CUSTOMER CATEGORY */
                         $customer_query->row['customer_category'] = $data['customer_category'];
+                        $customer_query->row['customer_discount_category'] = $data['customer_discount_category'];
 
                         /* SET CUSTOMER PEZESHA */
                         if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
