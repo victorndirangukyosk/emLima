@@ -73,8 +73,30 @@ class ControllerApiForgetPassword extends Controller
         $this->load->language('account/forgotten');
 
         $json['status'] = 502;
+        $json['message'] = "";
+        if (isset($this->request->post['email']) && !empty($this->request->post['email'])) {
 
-        if ($this->validateCustomer()) {
+ 
+            if(is_numeric($this->request->post['email']))
+            {
+                if (!$this->model_account_customer->getTotalCustomersByPhone($this->request->post['email'])) {
+                    $json['message'] = $this->language->get('error_email_mobile');
+                }
+            }
+            else{
+
+                if (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+                    $json['message'] = $this->language->get('error_email');
+                }   
+            }
+       
+        }
+        else {
+            
+            $json['message'] = $this->language->get('error_email_NA');
+        }
+        if($json['message'] =="")
+        {
             $this->load->language('mail/forgotten');
             $password = substr(sha1(uniqid(mt_rand(), true)), 0, 10);
 
@@ -121,22 +143,17 @@ class ControllerApiForgetPassword extends Controller
             unset($this->session->data['api_id']);
             $json['success'] = $this->language->get('text_success');
             $json['status'] = 200;
-        } else {
-            
-            $json['message'] = $this->language->get('error_email');
-        }
-
+        }  
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
     protected function validateCustomer()
     {
-
+            // echo "<pre>";print_r(isset($this->request->post['email']));die;
         
-        if (!isset($this->request->post['email'])) {
-            $this->error['warning'] = $this->language->get('error_email_NA');
-        } else
+        
+        if(isset ($this->request->post['email']) && !empty($this->request->post['email']))
         {
             if(is_numeric($this->request->post['email']))
             {
@@ -151,6 +168,11 @@ class ControllerApiForgetPassword extends Controller
                 }   
             }
         }
+        else
+         {
+            $this->error['warning'] = $this->language->get('error_email_NA');
+
+        } 
 
         return !$this->error;
     }
