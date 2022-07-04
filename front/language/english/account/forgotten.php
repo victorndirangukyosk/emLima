@@ -15,7 +15,9 @@ $_['text_success'] = 'Success: A new password has been sent to your e-mail addre
 $_['entry_email'] = '';
 
 // Error
-$_['error_email'] = 'Warning: The E-Mail Address was not found in our records, please try again!';
+$_['error_email'] = 'Warning: The E-Mail Address  was not found in our records, please try again!';
+$_['error_email_NA'] = 'Warning: Please enter E-Mail Address /Mobile Number !';
+$_['error_email_mobile'] = 'Warning: The E-Mail Address / Mobile Number  was not found in our records, please try again!';
 $_['error_captcha'] = 'Warning: Verification code does not match the image!';
 $_['error_invalid'] = 'Invalid Email';
 $_['error_req'] = 'Email Required';

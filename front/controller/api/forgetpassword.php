@@ -73,16 +73,49 @@ class ControllerApiForgetPassword extends Controller
         $this->load->language('account/forgotten');
 
         $json['status'] = 502;
+        $json['message'] = "";
+        if (isset($this->request->post['email']) && !empty($this->request->post['email'])) {
 
-        if ($this->validateCustomer()) {
+ 
+            if(is_numeric($this->request->post['email']))
+            {
+                if (!$this->model_account_customer->getTotalCustomersByPhone($this->request->post['email'])) {
+                    $json['message'] = $this->language->get('error_email_mobile');
+                }
+            }
+            else{
+
+                if (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+                    $json['message'] = $this->language->get('error_email');
+                }   
+            }
+       
+        }
+        else {
+            
+            $json['message'] = $this->language->get('error_email_NA');
+        }
+        if($json['message'] =="")
+        {
             $this->load->language('mail/forgotten');
             $password = substr(sha1(uniqid(mt_rand(), true)), 0, 10);
-            $this->model_account_customer->resetPassword($this->request->post['email'], $password, 1);
+
+            if(is_numeric($this->request->post['email']))
+            {
+            $this->model_account_customer->resetPasswordWithMobile($this->request->post['email'], $password, 1);
             //1 implies, new password is generated and user need to update his password
 
-            $this->model_account_customer->resetPasswordMail($this->request->post['email'], $password);
-            $this->model_account_customer->resetPasswordSMS($this->request->post['email'], $password);
-
+            $this->model_account_customer->resetPasswordMailWithMobile($this->request->post['email'], $password);
+            $this->model_account_customer->resetPasswordSMSWithMobile($this->request->post['email'], $password);
+            }
+            else{
+                $this->model_account_customer->resetPassword($this->request->post['email'], $password, 1);
+                //1 implies, new password is generated and user need to update his password
+    
+                $this->model_account_customer->resetPasswordMail($this->request->post['email'], $password);
+                $this->model_account_customer->resetPasswordSMS($this->request->post['email'], $password);
+               
+            }
             
             $this->session->data['success'] = $this->language->get('text_success');
 
@@ -91,7 +124,11 @@ class ControllerApiForgetPassword extends Controller
 
              // Add to activity log
              $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
+                if(!isset($customer_info))
+                {
+                    $customer_info = $this->model_account_customer->getCustomerByPhone($this->request->post['email']);
 
+                }
              if ($customer_info) {
                  $this->load->model('account/activity');
  
@@ -106,28 +143,40 @@ class ControllerApiForgetPassword extends Controller
             unset($this->session->data['api_id']);
             $json['success'] = $this->language->get('text_success');
             $json['status'] = 200;
-        } else {
-            
-            $json['message'] = $this->language->get('error_email');
-        }
-
+        }  
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
 
     protected function validateCustomer()
     {
-
+            // echo "<pre>";print_r(isset($this->request->post['email']));die;
         
-        if (!isset($this->request->post['email'])) {
-            $this->error['warning'] = $this->language->get('error_email');
-        } elseif (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
-            $this->error['warning'] = $this->language->get('error_email');
+        
+        if(isset ($this->request->post['email']) && !empty($this->request->post['email']))
+        {
+            if(is_numeric($this->request->post['email']))
+            {
+                if (!$this->model_account_customer->getTotalCustomersByPhone($this->request->post['email'])) {
+                    $this->error['warning'] = $this->language->get('error_email_mobile');
+                }
+            }
+            else{
+
+                if (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+                    $this->error['warning'] = $this->language->get('error_email_mobile');
+                }   
+            }
         }
+        else
+         {
+            $this->error['warning'] = $this->language->get('error_email_NA');
+
+        } 
 
         return !$this->error;
     }
-
+ 
 
     public function changepassword()
     {

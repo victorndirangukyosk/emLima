@@ -296,6 +296,21 @@ class ModelAccountCustomer extends Model {
         }
     }
 
+
+    public function resetPasswordWithMobile($phone, $password) {
+        //echo "<pre>";print_r($password);die;, ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'
+        
+                if ($password && 'default' != $password) {
+        // echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
+        
+                    $this->trigger->fire('pre.customer.edit.password');
+        
+                    $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '" . $password . "',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE telephone = '" . $this->db->escape(($phone)) . "'");
+        
+                    $this->trigger->fire('post.customer.edit.password');
+                }
+            }
+
     public function editPassword($email, $password) {
 //  echo "<pre>";print_r($password);die;
 
@@ -478,7 +493,7 @@ class ModelAccountCustomer extends Model {
             'order_link' => $this->url->link('account/login/customer'),
         ];
 
-//Reset Password id = 3
+        //Reset Password id = 3
         $subject = $this->emailtemplate->getSubject('Customer', 'customer_3', $data);
         $message = $this->emailtemplate->getMessage('Customer', 'customer_3', $data);
 
@@ -497,6 +512,56 @@ class ModelAccountCustomer extends Model {
         $log->write($email);
         $log->write('phone');
         $customer = $this->getCustomerByEmail($email);
+
+        $data = [
+            'firstname' => $customer['firstname'],
+            'lastname' => $customer['lastname'],
+            'email' => $customer['email'],
+            'telephone' => $customer['telephone'],
+            'password' => $password,
+        ];
+
+        //Reset Password id = 3
+        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_3', $data);
+
+        if ($this->emailtemplate->getSmsEnabled('Customer', 'customer_3')) {
+            $ret = $this->emailtemplate->sendmessage($data['telephone'], $sms_message);
+        }
+    }
+
+
+
+    public function resetPasswordMailWithMobile($phone, $password) {
+        $customer = $this->getCustomerByPhone($phone);
+
+        $data = [
+            'firstname' => $customer['firstname'],
+            'lastname' => $customer['lastname'],
+            'email' => $customer['email'],
+            'password' => $password,
+            'ip_address' => $customer['ip'],
+            'order_link' => $this->url->link('account/login/customer'),
+        ];
+
+        //Reset Password id = 3
+        $subject = $this->emailtemplate->getSubject('Customer', 'customer_3', $data);
+        $message = $this->emailtemplate->getMessage('Customer', 'customer_3', $data);
+
+        $mail = new Mail($this->config->get('config_mail'));
+        $mail->setTo($data['email']);
+        $mail->setFrom($this->config->get('config_from_email'));
+        $mail->setSender($this->config->get('config_name'));
+        $mail->setSubject($subject);
+        $mail->setHTML($message);
+        $mail->send();
+    }
+
+    public function resetPasswordSMSWithMobile($phone, $password) {
+        $log = new Log('error.log');
+        $log->write('phone');
+        $log->write($phone);
+        $log->write('phone');
+        $customer = $this->getCustomerByPhone($phone);
 
         $data = [
             'firstname' => $customer['firstname'],
