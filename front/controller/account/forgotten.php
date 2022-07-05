@@ -31,25 +31,31 @@ class ControllerAccountForgotten extends Controller
 
             $this->model_account_customer->resetPasswordMailWithMobile($this->request->post['email'], $password);
             $this->model_account_customer->resetPasswordSMSWithMobile($this->request->post['email'], $password);
-            }
+            $this->session->data['success'] = $this->language->get('text_success_mobile');
+            $customer_info = $this->model_account_customer->getCustomerByPhone($this->request->post['email']);
+            $data['text_message'] = $this->language->get('text_success_mobile');
+            
+        }
             else{
             $this->model_account_customer->resetPassword($this->request->post['email'], $password, 1);
             //1 implies, new password is generated and user need to update his password
 
             $this->model_account_customer->resetPasswordMail($this->request->post['email'], $password);
                 $this->model_account_customer->resetPasswordSMS($this->request->post['email'], $password);
+            $this->session->data['success'] = $this->language->get('text_success');
+            $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
+            $data['text_message'] = $this->language->get('text_success');
                
             }
 
 
             //echo "<pre>";print_r($password);die;
-            $this->session->data['success'] = $this->language->get('text_success');
 
             $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
 
             // Add to activity log
-            $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
 
+            
             if ($customer_info) {
                 $this->load->model('account/activity');
 
@@ -63,7 +69,6 @@ class ControllerAccountForgotten extends Controller
 
             $data['status'] = true;
             $data['redirect'] = $this->url->link('account/account', '', 'SSL');
-            $data['text_message'] = $this->language->get('text_success');
 
             if ($this->request->isAjax()) {
                 $this->response->addHeader('Content-Type: application/json');
