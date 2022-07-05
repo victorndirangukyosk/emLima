@@ -318,10 +318,12 @@ class ModelAccountApi extends Model {
         /* if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
           $this->error['email'] = $this->language->get('error_email');
           } */
-
+            if(isset($this->request->post['email']) && !empty($this->request->post['email']))
+            {
         if ($this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
             $this->error['warning'] = $this->language->get('error_exists');
         }
+    }
 
         /* if (false !== strpos($this->request->post['telephone'], '#') || empty($this->request->post['telephone'])) {
           $this->error['telephone'] = $this->language->get('error_telephone');
