@@ -518,6 +518,7 @@ $_['error_vendor_group_ids'] = 'Vendor Group IDs required!';
 $_['error_account_manager_group_id'] = 'Account Manager Group ID required!';
 $_['error_customer_experience_group_id'] = 'Customer Experience Group ID required!';
 $_['error_shopper_group_ids'] = 'Shopper Group IDs required!';
+$_['error_kibandas_customer_group_id'] = 'Kibandas  Customer Group ID required!';
 $_['error_member_account_fee'] = 'Member account fee not valid!';
 
 $_['text_twilio'] = 'Twilio';

@@ -545,7 +545,9 @@ class ModelAccountCustomer extends Model {
         $data = [
             'firstname' => $customer['firstname'],
             'lastname' => $customer['lastname'],
-            'email' => $customer['email'],
+            'email' => $customer['telephone'],//this is substituted as username in mail template
+            'email_to' => $customer['email'],
+            'telephone' => $customer['telephone'],
             'password' => $password,
             'ip_address' => $customer['ip'],
             'order_link' => $this->url->link('account/login/customer'),
@@ -554,14 +556,16 @@ class ModelAccountCustomer extends Model {
         //Reset Password id = 3
         $subject = $this->emailtemplate->getSubject('Customer', 'customer_3', $data);
         $message = $this->emailtemplate->getMessage('Customer', 'customer_3', $data);
-
+        if(!empty($data['email_to']))
+        {
         $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo($data['email']);
+        $mail->setTo($data['email_to']);
         $mail->setFrom($this->config->get('config_from_email'));
         $mail->setSender($this->config->get('config_name'));
         $mail->setSubject($subject);
         $mail->setHTML($message);
         $mail->send();
+        }
     }
 
     public function resetPasswordSMSWithMobile($phone, $password) {
@@ -574,7 +578,8 @@ class ModelAccountCustomer extends Model {
         $data = [
             'firstname' => $customer['firstname'],
             'lastname' => $customer['lastname'],
-            'email' => $customer['email'],
+            'email' => $customer['telephone'],//this is substituted as username in mail template
+            'email_to' => $customer['email'],
             'telephone' => $customer['telephone'],
             'password' => $password,
         ];
