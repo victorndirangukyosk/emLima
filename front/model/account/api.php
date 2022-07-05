@@ -482,7 +482,10 @@ class ModelAccountApi extends Model {
                     } else {
                         $this->request->post['dob'] = null;
                     }
+                    if(empty($this->request->post['source']))
+                    {
                     $this->request->post['source'] = 'MOBILE';
+                    }
                     //$this->request->post['password'] = mt_rand(1000,9999);
                     // echo "<pre>";print_r($this->request->post);die;
                     // $accountmanagerid = NULL;
@@ -495,7 +498,7 @@ class ModelAccountApi extends Model {
                     $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
 
                     $logged_in = $this->customer->loginByPhone($customer_id);
-
+ 
                     unset($this->session->data['guest']);
 
                     // Add to activity log
@@ -596,6 +599,8 @@ class ModelAccountApi extends Model {
 
                     $data['success_message'] = $this->language->get('text_valid_otp');
                     $data['customer_id'] = $customer_id;
+                $data['status'] = true;
+
                 }
             } else {
                 // enter valid number throw error
