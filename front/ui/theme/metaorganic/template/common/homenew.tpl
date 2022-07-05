@@ -67,6 +67,15 @@
       }
     }
   </style>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RXVNTRRM14"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RXVNTRRM14');
+  </script>
 </head>
 
 <body data-wrapper-optimized="" id="homenew" class="new-homepage-image-format drawer drawer--top">
