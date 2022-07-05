@@ -10,6 +10,7 @@ $_['label_email'] = 'Email';
 $_['text_para'] = 'We will send an email to reset your password';
 $_['text_email'] = 'Enter the e-mail address associated with your account. Click submit to have your password e-mailed to you.';
 $_['text_success'] = 'Success: A new password has been sent to your e-mail address.';
+$_['text_success_mobile'] = 'Success: A new password has been sent to your mobile number.';
 
 // Entry
 $_['entry_email'] = '';
