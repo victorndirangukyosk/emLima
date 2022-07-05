@@ -1573,7 +1573,7 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['filter_customer_group_id'])) {
             $filter_customer_group_id = $this->request->get['filter_customer_group_id'];
         } else {
-            $filter_customer_group_id = null;
+            $filter_customer_group_id = $this->config->get('config_kibandas_customer_group_id');
         }
 
         if (isset($this->request->get['filter_status'])) {
