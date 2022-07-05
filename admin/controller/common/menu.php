@@ -75,6 +75,7 @@ class ControllerCommonMenu extends Controller {
         $data['offer'] = $this->url->link('marketing/offer', 'token=' . $this->session->data['token'], 'SSL');
         $data['currency'] = $this->url->link('localisation/currency', 'token=' . $this->session->data['token'], 'SSL');
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&sort=c.date_added&order=DESC', 'SSL');
+        $data['kibanda'] = $this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&sort=c.date_added&order=DESC', 'SSL');
         // $data['customer_otp'] = $this->url->link('sale/customer/customer_otp', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
         $data['customer_otp'] = $this->url->link('sale/customer_otp', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
         $data['farmer'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.created_at&order=DESC', 'SSL');
@@ -349,6 +350,8 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_order_recurring'] = $this->user->hasPermission('access', 'sale/recurring');
         $data['preturn_return'] = $this->user->hasPermission('access', 'sale/return');
         $data['preturn_customer'] = $this->user->hasPermission('access', 'sale/customer');
+        $data['preturn_kibanda'] = $this->user->hasPermission('access', 'sale/customer/kibanda');
+        $data['preturn_kibandas'] = $this->user->hasPermission('access', 'sale/kibanda');
         // $data['preturn_customer_otp'] = $this->user->hasPermission('access', 'sale/customer/customer_otp');
         $data['preturn_farmer'] = $this->user->hasPermission('access', 'sale/farmer');
         $data['preturn_supplier'] = $this->user->hasPermission('access', 'sale/supplier');
