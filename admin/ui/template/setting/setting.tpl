@@ -909,6 +909,20 @@
                             </div>
 
 
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-kibandas-customer-group-id">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="Kibandas Customer Group ID">
+                                        Kibandas Customer Group ID
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_kibandas_customer_group_id" value="<?php echo $config_kibandas_customer_group_id; ?>" placeholder="Enter Kibandas Customer Group ID" id="input-kibandas-customer-group-id" class="form-control" />
+                                    <?php if ($error_kibandas_customer_group_id) { ?>
+                                    <div class="text-danger"><?php echo $error_kibandas_customer_group_id; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
                             <?php if ($locations) { ?>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-container="#tab-general" title="<?php echo $help_location; ?>"><?php echo $entry_location; ?></span></label>
