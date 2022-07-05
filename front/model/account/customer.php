@@ -181,7 +181,8 @@ class ModelAccountCustomer extends Model {
             if (!$customer_group_info['approval']) {
                 try {
                     //Customer Registration Register
-
+                    if(isset($data['email']) && !empty($data['email']))
+                    {
                     $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
                     $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
                     $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
@@ -193,6 +194,7 @@ class ModelAccountCustomer extends Model {
                     $mail->setSubject($subject);
                     $mail->setHTML($message);
                     $mail->send();
+                    }
                 } catch (Exception $e) {
                     
                 }
