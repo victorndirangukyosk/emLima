@@ -1800,11 +1800,11 @@ class ControllerSaleCustomer extends Controller {
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href' => $this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
 
         $data['add'] = $this->url->link('sale/customer/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('sale/customer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('sale/customer/kibanda/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $data['customers'] = [];
 
@@ -1843,7 +1843,7 @@ class ControllerSaleCustomer extends Controller {
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             if (!$result['approved']) {
-                $approve = $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL');
+                $approve = $this->url->link('sale/customer/kibanda/approve', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL');
             } else {
                 $approve = '';
             }
@@ -1851,7 +1851,7 @@ class ControllerSaleCustomer extends Controller {
             $login_info = $this->model_sale_customer->getTotalLoginAttempts($result['email']);
 
             if ($login_info && $login_info['total'] >= $this->config->get('config_login_attempts')) {
-                $unlock = $this->url->link('sale/customer/unlock', 'token=' . $this->session->data['token'] . '&email=' . $result['email'] . $url, 'SSL');
+                $unlock = $this->url->link('sale/customer/kibanda/unlock', 'token=' . $this->session->data['token'] . '&email=' . $result['email'] . $url, 'SSL');
             } else {
                 $unlock = '';
             }
@@ -1878,8 +1878,8 @@ class ControllerSaleCustomer extends Controller {
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'approve' => $approve,
                 'unlock' => $unlock,
-                'edit' => $this->url->link('sale/customer/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
-                'customer_view' => $this->url->link('sale/customer/view_customer', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
+                'edit' => $this->url->link('sale/customer/kibanda/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
+                'customer_view' => $this->url->link('sale/customer/kibanda/view_customer', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
             ];
         }
 
@@ -2046,12 +2046,12 @@ class ControllerSaleCustomer extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $data['sort_name'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_email'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
-        $data['sort_customer_group'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=customer_group' . $url, 'SSL');
-        $data['sort_status'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
-        $data['sort_ip'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
+        $data['sort_name'] = $this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_email'] = $this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
+        $data['sort_customer_group'] = $this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . '&sort=customer_group' . $url, 'SSL');
+        $data['sort_status'] = $this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
+        $data['sort_ip'] = $this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
+        $data['sort_date_added'] = $this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
 
         $url = '';
 
@@ -2148,7 +2148,7 @@ class ControllerSaleCustomer extends Controller {
         $pagination->total = $customer_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
