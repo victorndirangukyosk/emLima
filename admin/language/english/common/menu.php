@@ -14,6 +14,7 @@ $_['text_coupon'] = 'Coupons';
 $_['text_offer'] = 'Offers';
 $_['text_currency'] = 'Currencies';
 $_['text_customer'] = 'Customers';
+$_['text_kibanda'] = 'Kibandas';
 $_['text_farmer'] = 'Farmers';
 $_['text_supplier'] = 'Suppliers';
 $_['text_farmertransactions'] = 'Farmer Transactions';
