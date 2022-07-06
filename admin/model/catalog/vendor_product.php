@@ -366,6 +366,11 @@ class ModelCatalogVendorProduct extends Model {
             }
         }
 
+        if (!empty($data['filter_category_price_prods'])) {
+            $filter_category_price_prods = implode(',', $data['filter_category_price_prods']);
+            $sql .= ' AND ps.product_store_id IN (' . $filter_category_price_prods . ') ';
+        }
+
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
         }
