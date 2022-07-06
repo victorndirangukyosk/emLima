@@ -1542,7 +1542,7 @@ class ControllerSaleCustomer extends Controller {
 
         $this->response->setOutput($this->load->view('sale/customer_list.tpl', $data));
     }
-    
+
     protected function getkibandaList() {
         $this->load->language('sale/customer');
 
@@ -3492,15 +3492,43 @@ class ControllerSaleCustomer extends Controller {
             $this->error['dob'] = 'Please Check DOB Format!';
         }
 
-        if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
-            $this->error['email'] = $this->language->get('error_email');
+        if ($this->config->get('config_kibandas_customer_group_id') != 14) {
+            if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+                $this->error['email'] = $this->language->get('error_email');
+            }
         }
 
-        if ((utf8_strlen($this->request->post['company_name']) < 1)) {
-            $this->error['company_name'] = $this->language->get('error_company_name');
+        if ($this->config->get('config_kibandas_customer_group_id') == 14 && isset($this->request->post['email']) && strlen($this->request->post['email']) > 0) {
+            if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+                $this->error['email'] = $this->language->get('error_email');
+            }
         }
-        if ((utf8_strlen($this->request->post['company_address']) < 1)) {
-            $this->error['company_address'] = $this->language->get('error_company_address');
+
+        if ($this->config->get('config_kibandas_customer_group_id') != 14) {
+
+            if ((utf8_strlen($this->request->post['company_name']) < 1)) {
+                $this->error['company_name'] = $this->language->get('error_company_name');
+            }
+        }
+
+        if ($this->config->get('config_kibandas_customer_group_id') == 14 && isset($this->request->post['company_name']) && strlen($this->request->post['company_name']) > 0) {
+
+            if ((utf8_strlen($this->request->post['company_name']) < 1)) {
+                $this->error['company_name'] = $this->language->get('error_company_name');
+            }
+        }
+
+        if ($this->config->get('config_kibandas_customer_group_id') != 14) {
+
+            if ((utf8_strlen($this->request->post['company_address']) < 1)) {
+                $this->error['company_address'] = $this->language->get('error_company_address');
+            }
+        }
+
+        if ($this->config->get('config_kibandas_customer_group_id') == 14 && isset($this->request->post['company_address']) && strlen($this->request->post['company_address']) > 0) {
+            if ((utf8_strlen($this->request->post['company_address']) < 1)) {
+                $this->error['company_address'] = $this->language->get('error_company_address');
+            }
         }
 
         $customer_info = $this->model_sale_customer->getCustomerByEmail($this->request->post['email']);
