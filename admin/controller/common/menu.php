@@ -271,6 +271,7 @@ class ControllerCommonMenu extends Controller {
         $data['inventory_management_price'] = $this->url->link('catalog/vendor_product/InventoryPriceHistory', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['category_prices'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'], 'SSL');
+        $data['category_discount'] = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['transaction'] = $this->url->link('sale/transactions', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_receivables'] = $this->url->link('sale/order_receivables', 'token=' . $this->session->data['token'], 'SSL');
@@ -513,6 +514,7 @@ class ControllerCommonMenu extends Controller {
 
         $data['preturn_vendor_product'] = $this->user->hasPermission('access', 'catalog/vendor_product');
         $data['preturn_category_prices'] = $this->user->hasPermission('access', 'category/prices');
+        $data['preturn_category_discounts'] = $this->user->hasPermission('access', 'catalog/categorydiscount');
         $data['preturn_inventory_wastage'] = $this->user->hasPermission('access', 'inventory/inventory_wastage');
         $data['preturn_report_inventory_wastage'] = $this->user->hasPermission('access', 'report/inventory_wastage');
         $data['preturn_report_inventory_wastage_consolidated'] = $this->user->hasPermission('access', 'report/inventory_wastage_consolidated');

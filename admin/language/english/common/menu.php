@@ -36,6 +36,7 @@ $_['text_language_override'] = 'Language Overrides';
 $_['text_error_log'] = 'Error Logs';
 $_['text_extension'] = 'Extensions';
 $_['text_export_import'] = 'Export / Import';
+$_['text_category_discounts'] = 'Category Discounts';
 $_['text_clear_data'] = 'Data';
 $_['text_feed'] = 'Feeds';
 $_['text_filter'] = 'Filters';

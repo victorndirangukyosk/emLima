@@ -59,7 +59,7 @@
                             </div>
 							
                             <div class="form-group">
-                                <label class="control-label" for="input-category">Price Category</label>
+                                <label class="control-label" for="input-category">Discount Category</label>
                                 <select name="filter_category_price" id="input-category-price" class="form-control">
                                     <option value="*"></option>
                                     <?php foreach ($price_categories_list as $price_category) { ?>
@@ -81,7 +81,7 @@
                                 <input type="text" name="filter_product_id_from" value="<?php echo $filter_product_id_from; ?>" placeholder="<?php echo $entry_product_id_from; ?>" id="input-model" class="form-control" />
                             </div>-->
                             <div class="form-group">
-                                <label class="control-label" for="input-model">Price Category Status</label>
+                                <label class="control-label" for="input-model">Discount Category Status</label>
                                 <select name="filter_price_category_status" id="input-status" class="form-control">
                                     <option value="*"></option>
                                     <?php if ($filter_price_category_status) { ?>
@@ -306,15 +306,15 @@
                                  
                                 <td class="text-right">
                                     <?php if(isset($product['category_price_status']) && $product['category_price_status'] != NULL && $product['category_price_status'] == 1) { ?>
-                                    <button type="button" onclick="ChangeCategoryPricesStatus('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 0, '<?php echo $price_cat['price_category']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Disable Product Category Price Status"><i class="fa fa-check-circle text-success"></i></button>
+                                    <!--<button type="button" onclick="ChangeCategoryPricesStatus('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 0, '<?php echo $price_cat['price_category']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Disable Product Category Price Status"><i class="fa fa-check-circle text-success"></i></button>-->
                                     <?php } ?>
                                     <?php if(isset($product['category_price_status']) && $product['category_price_status'] != NULL && $product['category_price_status'] == 0) { ?>
-                                    <button type="button" onclick="ChangeCategoryPricesStatus('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 1, '<?php echo $price_cat['price_category']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Enable Product Category Price Status"><i class="fa fa-times-circle text-danger"></i></button>
+                                    <!--<button type="button" onclick="ChangeCategoryPricesStatus('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 1, '<?php echo $price_cat['price_category']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Enable Product Category Price Status"><i class="fa fa-times-circle text-danger"></i></button>-->
                                     <?php } ?>
-                                    <button type="button" onclick="ChangeCategoryPrices('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-save text-success"></i></button>
-									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
+                                    <!--<button type="button" onclick="ChangeCategoryPrices('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-save text-success"></i></button>-->
+									<!--<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
 									data-toggle="modal" data-target="#<?php echo $product['product_store_id']; ?>historyModal"
-								    title="" class="btn btn-default" data-original-title="History"><i class="fa fa-history text-success"></i></button>
+								    title="" class="btn btn-default" data-original-title="History"><i class="fa fa-history text-success"></i></button>-->
 							    </td>
                                     
                                 </tr>
@@ -644,7 +644,7 @@ function submit_copy() {
 
   $('#button-filter').on('click', function() {
 
-            var url = 'index.php?path=catalog/vendor_product/category_priceslist&token=<?php echo $token; ?>';
+            var url = 'index.php?path=catalog/vendor_product/discount_priceslist&token=<?php echo $token; ?>';
 
             var filter_name = $('input[name=\'filter_name\']').val();
 
@@ -1048,7 +1048,7 @@ $.ajax({
 
 function excel() {
 
-    url = 'index.php?path=catalog/vendor_product/export_excel_price_category&token=<?php echo $token; ?> ';
+    url = 'index.php?path=catalog/vendor_product/export_excel_discount_category&token=<?php echo $token; ?> ';
     url=url.trim();
  
    var filter_name = $('input[name=\'filter_name\']').val();
@@ -1132,7 +1132,7 @@ function excel() {
 
 function excel_item() {
 
-    url = 'index.php?path=catalog/vendor_product/export_excel_price_category_item&token=<?php echo $token; ?> ';
+    url = 'index.php?path=catalog/vendor_product/export_excel_discount_category_item&token=<?php echo $token; ?> ';
     url=url.trim();
  
    var filter_name = $('input[name=\'filter_name\']').val();

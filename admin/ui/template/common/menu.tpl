@@ -109,6 +109,9 @@
         <a class="parent"><i class="fa fa-tags fa-fw"></i> <span>Category Prices</span></a>
         <ul>
             <li><a href="<?php echo $category_prices; ?>"><span>Category Prices</span></a></li>
+            <?php if($preturn_category_discounts) { ?>
+            <li><a href="<?php echo $category_discount; ?>"><span><?php echo $text_category_discounts; ?></span></a></li>
+            <?php } ?>
             <li><a href="<?php echo $export_import; ?>"><span><?php echo $text_export_import; ?></span></a></li>
         </ul>
     </li>
