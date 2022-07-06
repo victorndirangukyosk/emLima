@@ -1843,7 +1843,7 @@ class ControllerSaleCustomer extends Controller {
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             if (!$result['approved']) {
-                $approve = $this->url->link('sale/customer/kibanda/approve', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL');
+                $approve = $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL');
             } else {
                 $approve = '';
             }
@@ -1879,7 +1879,7 @@ class ControllerSaleCustomer extends Controller {
                 'approve' => $approve,
                 'unlock' => $unlock,
                 'edit' => $this->url->link('sale/customer/kibanda/edit', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
-                'customer_view' => $this->url->link('sale/customer/kibanda/view_customer', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
+                'customer_view' => $this->url->link('sale/customer/view_customer', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
             ];
         }
 
