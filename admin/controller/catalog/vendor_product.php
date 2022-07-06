@@ -298,6 +298,681 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->getList();
     }
 
+    protected function getDiscountList($inventory = false, $prices = false, $discount = true) {
+        $category_prices = $this->getDiscountProductPrices();
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
+
+        if (isset($this->request->get['filter_tax_class_id'])) {
+            $filter_tax_class_id = $this->request->get['filter_tax_class_id'];
+        } else {
+            $filter_tax_class_id = null;
+        }
+
+        if (isset($this->request->get['filter_vendor_name'])) {
+            $filter_vendor_name = $this->request->get['filter_vendor_name'];
+        } else {
+            $filter_vendor_name = null;
+        }
+
+        if (isset($this->request->get['filter_price'])) {
+            $filter_price = $this->request->get['filter_price'];
+        } else {
+            $filter_price = null;
+        }
+
+        if (isset($this->request->get['filter_product_id_from'])) {
+            $filter_product_id_from = $this->request->get['filter_product_id_from'];
+        } else {
+            $filter_product_id_from = null;
+        }
+
+        if (isset($this->request->get['filter_model'])) {
+            $filter_model = $this->request->get['filter_model'];
+        } else {
+            $filter_model = null;
+        }
+
+        if (isset($this->request->get['filter_product_id_to'])) {
+            $filter_product_id_to = $this->request->get['filter_product_id_to'];
+        } else {
+            $filter_product_id_to = null;
+        }
+
+        if (isset($this->request->get['filter_category'])) {
+            $filter_category = $this->request->get['filter_category'];
+        } else {
+            $filter_category = null;
+        }
+
+        if (isset($this->request->get['filter_category_price'])) {
+            $filter_category_price = $this->request->get['filter_category_price'];
+        } else {
+            $filter_category_price = null;
+        }
+
+        if (isset($this->request->get['filter_store_id'])) {
+            $filter_store_id = $this->request->get['filter_store_id'];
+        } else {
+            $filter_store_id = null;
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $filter_status = $this->request->get['filter_status'];
+        } else {
+            $filter_status = null;
+        }
+
+        if (isset($this->request->get['filter_price_category_status'])) {
+            $filter_price_category_status = $this->request->get['filter_price_category_status'];
+        } else {
+            $filter_price_category_status = null;
+        }
+
+        if (isset($this->request->get['filter_quantity'])) {
+            $filter_quantity = $this->request->get['filter_quantity'];
+        } else {
+            $filter_quantity = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'pd.name';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $url = '';
+
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_vendor_name'])) {
+            $url .= '&filter_vendor_name=' . urlencode(html_entity_decode($this->request->get['filter_vendor_name'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_price'])) {
+            $url .= '&filter_price=' . $this->request->get['filter_price'];
+        }
+
+        if (isset($this->request->get['filter_product_id_from'])) {
+            $url .= '&filter_product_id_from=' . urlencode(html_entity_decode($this->request->get['filter_product_id_from'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_model'])) {
+            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_product_id_to'])) {
+            $url .= '&filter_product_id_to=' . urlencode(html_entity_decode($this->request->get['filter_product_id_to'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_store_id'])) {
+            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $url .= '&filter_status=' . $this->request->get['filter_status'];
+        }
+        if (isset($this->request->get['filter_price_category_status'])) {
+            $url .= '&filter_price_category_status=' . $this->request->get['filter_price_category_status'];
+        }
+        if (isset($this->request->get['filter_quantity'])) {
+            $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        }
+
+        if (isset($this->request->get['filter_category_price'])) {
+            $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
+        }
+
+        if (isset($this->request->get['filter_tax_class_id'])) {
+            $url .= '&filter_tax_class_id=' . $this->request->get['filter_tax_class_id'];
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+
+        $data['breadcrumbs'] = [];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
+        ];
+
+        //echo $prices;exit;
+        if (!isset($discount) || $discount == false) {
+            $data['breadcrumbs'][] = [
+                'text' => ((false == $inventory) && (false == $prices)) ? $this->language->get('heading_title') : ((true == $prices) ? 'Products Category Prices' : 'Inventory Management'),
+                'href' => $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            ];
+        }
+
+        if (isset($discount) || $discount == true) {
+            $data['breadcrumbs'][] = [
+                'text' => 'Products Category Discounts',
+                'href' => $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            ];
+        }
+
+
+        $data['add'] = $this->url->link('catalog/vendor_product/add', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['copy'] = $this->url->link('catalog/vendor_product/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = $this->url->link('catalog/vendor_product/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+
+        $data['products'] = [];
+        $this->load->model('catalog/vendor_product');
+        $category_price_prods = NULL;
+        if (isset($this->request->get['filter_category_price'])) {
+            $category_price_prods = $this->model_catalog_vendor_product->getCategoryDiscountDetailsByCategoryName(75, $this->request->get['filter_category_price']);
+            $category_price_prods = array_column($category_price_prods, 'product_store_id');
+            /* $log = new Log('error.log');
+              $log->write('category_price_prods');
+              $log->write($category_price_prods);
+              $log->write('category_price_prods'); */
+        }
+
+        $filter_data = [
+            'filter_name' => $filter_name,
+            'filter_vendor_name' => $this->getUserByName($filter_vendor_name),
+            'filter_price' => $filter_price,
+            'filter_product_id_from' => $filter_product_id_from,
+            'filter_model' => $filter_model,
+            'filter_product_id_to' => $filter_product_id_to,
+            'filter_category' => $filter_category,
+            'filter_store_id' => $filter_store_id,
+            'filter_status' => $filter_status,
+            'filter_price_category_status' => $filter_price_category_status,
+            'filter_quantity' => $filter_quantity,
+            'filter_category_price' => $filter_category_price,
+            'filter_tax_class_id' => $filter_tax_class_id,
+            'sort' => $sort,
+            'order' => $order,
+            'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            'limit' => $this->config->get('config_limit_admin'),
+            'filter_category_price_prods' => isset($this->request->get['filter_category_price']) ? $category_price_prods : NULL,
+        ];
+
+        $this->load->model('tool/image');
+
+        $product_total = $this->model_catalog_vendor_product->getTotalProducts($filter_data);
+
+        $results = $this->model_catalog_vendor_product->getProducts($filter_data);
+        //echo '<pre>';print_r($results);
+        if (isset($this->request->get['filter_category_price'])) {
+            $modified_res = [];
+            $modified_res_new = [];
+            if (count($results) > 0) {
+                foreach ($results as $res) {
+                    if (isset($category_prices[$res['product_store_id'] . '_' . $this->request->get['filter_category_price'] . '_75'])) {
+                        $modified_res[] = $res;
+                    }
+                }
+                if (count($modified_res) > 0) {
+                    foreach ($modified_res as $modified) {
+                        //$log = new Log('error.log');
+                        //$log->write($modified);
+                        $category_price_details = $this->model_catalog_vendor_product->getCategoryDiscountDetails($modified['product_store_id'], $modified['product_id'], $modified['product_name'], $modified['store_id'], $this->request->get['filter_category_price']);
+                        //$log->write($category_price_details);
+                        if (is_array($category_price_details) && count($category_price_details) > 0 && array_key_exists('status', $category_price_details)) {
+                            $modified['category_price_status'] = $category_price_details['status'];
+                        } else {
+                            $modified['category_price_status'] = 1;
+                        }
+                        $modified_res_new[] = $modified;
+                    }
+                }
+            }
+
+            $results = $modified_res_new;
+            //$results = $modified_res;
+            //$product_total = count($results);
+        }
+
+        $results_count = $this->model_catalog_vendor_product->getProductsCount($filter_data);
+        if (isset($this->request->get['filter_category_price'])) {
+            $modified_res_count = [];
+            if (count($results_count) > 0) {
+                foreach ($results_count as $results_cou) {
+                    if (isset($category_prices[$results_cou['product_store_id'] . '_' . $this->request->get['filter_category_price'] . '_75'])) {
+                        $modified_res_count[] = $results_cou;
+                    }
+                }
+            }
+
+            $results_count = $modified_res_count;
+            $product_total = count($results_count);
+        }
+
+        $this->load->model('catalog/category');
+        $data['categories'] = $this->model_catalog_category->getCategories(0);
+
+        foreach ($results as $result) {
+            if (isset($this->request->get['filter_price_category_status']) && $result['category_price_status'] == $this->request->get['filter_price_category_status']) {
+                $category = $this->model_catalog_vendor_product->getProductCategories($result['product_id']);
+
+                if (is_file(DIR_IMAGE . $result['image'])) {
+                    $image = $this->model_tool_image->resize($result['image'], 40, 40);
+                    $bigimage = $this->model_tool_image->getImage($result['image']);
+                } else {
+                    $image = $this->model_tool_image->resize('no_image.png', 40, 40);
+                    $bigimage = $this->model_tool_image->getImage('no_image.png');
+                }
+
+                $data['products'][] = [
+                    'buying_price' => $result['buying_price'],
+                    'source' => $result['source'],
+                    'store_name' => $result['store_name'],
+                    //'vendor_name'=>$result['fs'].' '.$result['ls'],
+                    'product_store_id' => $result['product_store_id'],
+                    'product_id' => $result['product_id'],
+                    'price' => $result['price'],
+                    'special_price' => $result['special_price'],
+                    'quantity' => $result['quantity'],
+                    'image' => $image,
+                    'bigimage' => $bigimage,
+                    'name' => $result['product_name'],
+                    'unit' => $result['unit'],
+                    //'weight' => $result['weight'],
+                    'model' => $result['model'],
+                    'category' => $category,
+                    'category_price_status' => array_key_exists('category_price_status', $result) ? $result['category_price_status'] : '',
+                    'status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+                    'edit' => $this->url->link('catalog/vendor_product/edit', 'token=' . $this->session->data['token'] . '&store_product_id=' . $result['product_store_id'] . $url, 'SSL'),
+                ];
+            }
+            if (!isset($this->request->get['filter_price_category_status'])) {
+                $category = $this->model_catalog_vendor_product->getProductCategories($result['product_id']);
+
+                if (is_file(DIR_IMAGE . $result['image'])) {
+                    $image = $this->model_tool_image->resize($result['image'], 40, 40);
+                    $bigimage = $this->model_tool_image->getImage($result['image']);
+                } else {
+                    $image = $this->model_tool_image->resize('no_image.png', 40, 40);
+                    $bigimage = $this->model_tool_image->getImage('no_image.png');
+                }
+
+                $data['products'][] = [
+                    'buying_price' => $result['buying_price'],
+                    'source' => $result['source'],
+                    'store_name' => $result['store_name'],
+                    //'vendor_name'=>$result['fs'].' '.$result['ls'],
+                    'product_store_id' => $result['product_store_id'],
+                    'product_id' => $result['product_id'],
+                    'price' => $result['price'],
+                    'special_price' => $result['special_price'],
+                    'quantity' => $result['quantity'],
+                    'image' => $image,
+                    'bigimage' => $bigimage,
+                    'name' => $result['product_name'],
+                    'unit' => $result['unit'],
+                    //'weight' => $result['weight'],
+                    'model' => $result['model'],
+                    'category' => $category,
+                    'category_price_status' => array_key_exists('category_price_status', $result) ? $result['category_price_status'] : '',
+                    'status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+                    'edit' => $this->url->link('catalog/vendor_product/edit', 'token=' . $this->session->data['token'] . '&store_product_id=' . $result['product_store_id'] . $url, 'SSL'),
+                ];
+            }
+        }
+
+        if ($this->user->isVendor()) {
+            $data['is_vendor'] = 1;
+        } else {
+            $data['is_vendor'] = 0;
+        }
+
+        if (!isset($discount) || $discount == false) {
+            $data['heading_title'] = ((false == $inventory) && (false == $prices)) ? $this->language->get('heading_title') : ((true == $prices) ? 'Products Category Prices' : 'Inventory Management');
+        }
+
+        if (isset($discount) || $discount == true) {
+            $data['heading_title'] = 'Products Category Discounts';
+        }
+        $data['text_list'] = $this->language->get('text_list');
+        $data['text_enabled'] = $this->language->get('text_enabled');
+        $data['text_disabled'] = $this->language->get('text_disabled');
+        $data['text_no_results'] = $this->language->get('text_no_results');
+        $data['text_confirm'] = $this->language->get('text_confirm');
+
+        $data['column_image'] = $this->language->get('column_image');
+        $data['column_store_name'] = $this->language->get('column_store_name');
+
+        $data['column_unit'] = $this->language->get('column_unit');
+
+        $data['column_name'] = $this->language->get('column_name');
+        $data['column_category'] = $this->language->get('column_category');
+        $data['column_model'] = $this->language->get('column_model');
+        $data['column_product_id'] = $this->language->get('column_product_id');
+        $data['column_vproduct_id'] = $this->language->get('column_vproduct_id');
+        $data['column_price'] = $this->language->get('column_price');
+        $data['column_quantity'] = $this->language->get('column_quantity');
+        $data['column_status'] = $this->language->get('column_status');
+        $data['column_action'] = $this->language->get('column_action');
+
+        $data['entry_name'] = $this->language->get('entry_name');
+        $data['entry_store_name'] = $this->language->get('entry_store_name');
+        $data['entry_vendor_name'] = $this->language->get('entry_vendor_name');
+        $data['entry_model'] = $this->language->get('entry_model');
+        $data['entry_price'] = $this->language->get('entry_price');
+        $data['entry_product_id_from'] = $this->language->get('entry_product_id_from');
+        $data['entry_product_id_to'] = $this->language->get('entry_product_id_to');
+
+        $data['entry_quantity'] = $this->language->get('entry_quantity');
+        $data['entry_status'] = $this->language->get('entry_status');
+
+        $data['button_copy'] = $this->language->get('button_copy');
+        $data['button_add'] = $this->language->get('button_add');
+        $data['button_edit'] = $this->language->get('button_edit');
+        $data['button_delete'] = $this->language->get('button_delete');
+        $data['button_filter'] = $this->language->get('button_filter');
+        $data['button_show_filter'] = $this->language->get('button_show_filter');
+        $data['button_hide_filter'] = $this->language->get('button_hide_filter');
+        $data['button_enable'] = $this->language->get('button_enable');
+        $data['button_disable'] = $this->language->get('button_disable');
+
+        $data['token'] = $this->session->data['token'];
+
+        if (isset($this->error['warning'])) {
+            $data['error_warning'] = $this->error['warning'];
+        } else {
+            $data['error_warning'] = '';
+        }
+
+        if (isset($this->session->data['warning'])) {
+            $data['error_warning'] = $this->session->data['warning'];
+            unset($this->session->data['warning']);
+        }
+
+        if (isset($this->session->data['success'])) {
+            $data['success'] = $this->session->data['success'];
+            unset($this->session->data['success']);
+        } else {
+            $data['success'] = '';
+        }
+
+        if (isset($this->request->post['selected'])) {
+            $data['selected'] = (array) $this->request->post['selected'];
+        } else {
+            $data['selected'] = [];
+        }
+
+        $url = '';
+
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_vendor_name'])) {
+            $url .= '&filter_vendor_name=' . urlencode(html_entity_decode($this->request->get['filter_vendor_name'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_price'])) {
+            $url .= '&filter_price=' . $this->request->get['filter_price'];
+        }
+
+        if (isset($this->request->get['filter_product_id_from'])) {
+            $url .= '&filter_product_id_from=' . urlencode(html_entity_decode($this->request->get['filter_product_id_from'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_model'])) {
+            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_product_id_to'])) {
+            $url .= '&filter_product_id_to=' . urlencode(html_entity_decode($this->request->get['filter_product_id_to'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_store_id'])) {
+            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $url .= '&filter_status=' . $this->request->get['filter_status'];
+        }
+
+        if (isset($this->request->get['filter_price_category_status'])) {
+            $url .= '&filter_price_category_status=' . $this->request->get['filter_price_category_status'];
+        }
+
+        if (isset($this->request->get['filter_category_price'])) {
+            $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
+        }
+
+        if (isset($this->request->get['filter_tax_class_id'])) {
+            $url .= '&filter_tax_class_id=' . $this->request->get['filter_tax_class_id'];
+        }
+
+        if ('ASC' == $order) {
+            $url .= '&order=DESC';
+        } else {
+            $url .= '&order=ASC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+
+        if (false == $inventory && false == $prices) {
+            $data['sort_name'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+            $data['sort_model'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL');
+
+            $data['sort_store'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=st.name' . $url, 'SSL');
+
+            $data['sort_product_id'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL');
+
+            $data['sort_vproduct_id'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL');
+
+            $data['sort_category'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=p2c.category' . $url, 'SSL');
+            $data['sort_price'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL');
+            $data['sort_quantity'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=ps.quantity' . $url, 'SSL');
+            $data['sort_status'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
+            $data['sort_order'] = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
+        } elseif (true == $inventory) {
+            $data['sort_name'] = $this->url->link('catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+            $data['sort_model'] = $this->url->link('catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL');
+
+            $data['sort_store'] = $this->url->link('catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=st.name' . $url, 'SSL');
+
+            $data['sort_product_id'] = $this->url->link('catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL');
+
+            $data['sort_vproduct_id'] = $this->url->link('catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL');
+
+            $data['sort_category'] = $this->url->link('catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=p2c.category' . $url, 'SSL');
+            $data['sort_price'] = $this->url->link('catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL');
+            $data['sort_quantity'] = $this->url->link('catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=ps.quantity' . $url, 'SSL');
+            $data['sort_status'] = $this->url->link('catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
+            $data['sort_order'] = $this->url->link('catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
+        } elseif (true == $prices) {
+            $data['sort_name'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+            $data['sort_model'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL');
+
+            $data['sort_store'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=st.name' . $url, 'SSL');
+
+            $data['sort_product_id'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL');
+
+            $data['sort_vproduct_id'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL');
+
+            $data['sort_category'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p2c.category' . $url, 'SSL');
+            $data['sort_price'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL');
+            $data['sort_quantity'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=ps.quantity' . $url, 'SSL');
+            $data['sort_status'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
+            $data['sort_order'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
+        } elseif (true == $discount) {
+            $data['sort_name'] = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+            $data['sort_model'] = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL');
+
+            $data['sort_store'] = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'] . '&sort=st.name' . $url, 'SSL');
+
+            $data['sort_product_id'] = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL');
+
+            $data['sort_vproduct_id'] = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL');
+
+            $data['sort_category'] = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'] . '&sort=p2c.category' . $url, 'SSL');
+            $data['sort_price'] = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL');
+            $data['sort_quantity'] = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'] . '&sort=ps.quantity' . $url, 'SSL');
+            $data['sort_status'] = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
+            $data['sort_order'] = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
+        }
+
+        $url = '';
+
+        if (isset($this->request->get['filter_name'])) {
+            $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_vendor_name'])) {
+            $url .= '&filter_vendor_name=' . urlencode(html_entity_decode($this->request->get['filter_vendor_name'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_price'])) {
+            $url .= '&filter_price=' . $this->request->get['filter_price'];
+        }
+
+        if (isset($this->request->get['filter_product_id_from'])) {
+            $url .= '&filter_product_id_from=' . urlencode(html_entity_decode($this->request->get['filter_product_id_from'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_model'])) {
+            $url .= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_product_id_to'])) {
+            $url .= '&filter_product_id_to=' . urlencode(html_entity_decode($this->request->get['filter_product_id_to'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_store_id'])) {
+            $url .= '&filter_store_id=' . $this->request->get['filter_store_id'];
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $url .= '&filter_status=' . $this->request->get['filter_status'];
+        }
+
+        if (isset($this->request->get['filter_price_category_status'])) {
+            $url .= '&filter_price_category_status=' . $this->request->get['filter_price_category_status'];
+        }
+
+        if (isset($this->request->get['filter_category'])) {
+            $url .= '&filter_category=' . $this->request->get['filter_category'];
+        }
+
+        if (isset($this->request->get['filter_quantity'])) {
+            $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        }
+
+        if (isset($this->request->get['filter_category_price'])) {
+            $url .= '&filter_category_price=' . $this->request->get['filter_category_price'];
+        }
+
+        if (isset($this->request->get['filter_tax_class_id'])) {
+            $url .= '&filter_tax_class_id=' . $this->request->get['filter_tax_class_id'];
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
+        $pagination = new Pagination();
+        $pagination->total = $product_total;
+        $pagination->page = $page;
+        $pagination->limit = $this->config->get('config_limit_admin');
+
+        if (!isset($discount) || $discount == false) {
+            if (false == $inventory && false == $prices) {
+                $pagination->url = $this->url->link('catalog/vendor_product', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+            } elseif (true == $inventory) {
+                $pagination->url = $this->url->link('catalog/vendor_product/inventory', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+            } elseif (true == $prices) {
+                $pagination->url = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+            }
+        }
+
+        if (isset($discount) || $discount == true) {
+            $pagination->url = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        }
+
+        $data['pagination'] = $pagination->render();
+
+        $data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($product_total - $this->config->get('config_limit_admin'))) ? $product_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $product_total, ceil($product_total / $this->config->get('config_limit_admin')));
+
+        $data['filter_name'] = $filter_name;
+        $data['filter_vendor_name'] = $filter_vendor_name;
+        $data['filter_price'] = $filter_price;
+        $data['filter_product_id_from'] = $filter_product_id_from;
+        $data['filter_model'] = $filter_model;
+        $data['filter_product_id_to'] = $filter_product_id_to;
+        $data['filter_category'] = $filter_category;
+        $data['filter_store_id'] = $filter_store_id;
+        $data['filter_status'] = $filter_status;
+        $data['filter_price_category_status'] = $filter_price_category_status;
+        $data['filter_category_price'] = $filter_category_price;
+        $data['filter_tax_class_id'] = $filter_tax_class_id;
+        $this->load->model('localisation/tax_class');
+        $data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
+
+        $data['sort'] = $sort;
+        $data['order'] = $order;
+
+        $data['header'] = $this->load->controller('common/header');
+
+        //echo "<pre>";print_r($data['heading_title'] );die;
+
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
+        $this->load->model('sale/customer_group');
+        /* PREVIOUS CODE */
+        //$data['price_categories'] =  $this->model_sale_customer_group->getPriceCategories();
+        $data['price_categories_list'] = $this->model_sale_customer_group->getDiscountCategories();
+        $data['product_categories'] = $this->model_catalog_category->getCategories(0);
+        $data['price_categories'] = $this->model_sale_customer_group->getDiscountCategoriesfilter($filter_category_price);
+        $data['category_prices'] = $category_prices;
+        //echo '<pre>';print_r($cachePrice_data);exit;
+
+        if (!isset($discount) || $discount == false) {
+
+            if (false == $inventory && false == $prices) {
+                $this->response->setOutput($this->load->view('catalog/vendor_product_lists.tpl', $data));
+            } elseif (true == $inventory) {
+                $data['inventory_history'] = $this->url->link('catalog/vendor_product/InventoryHistory', 'token=' . $this->session->data['token'], 'SSL');
+                $this->response->setOutput($this->load->view('catalog/vendor_product_inventory_lists.tpl', $data));
+            } elseif (true == $prices) {
+                $this->response->setOutput($this->load->view('catalog/vendor_product_category_priceslist.tpl', $data));
+            }
+        }
+
+        if (isset($discount) || $discount == true) {
+            $this->response->setOutput($this->load->view('catalog/vendor_product_discount_priceslist.tpl', $data));
+        }
+    }
+
     protected function getList($inventory = false, $prices = false) {
         $category_prices = $this->getCategoriesProductPrices();
         if (isset($this->request->get['filter_name'])) {
@@ -477,7 +1152,13 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->load->model('catalog/vendor_product');
         $category_price_prods = NULL;
         if (isset($this->request->get['filter_category_price'])) {
+        if (empty($filter_status)) {
+        
             $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryName(75, $this->request->get['filter_category_price']);
+        }
+        else{
+            $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryNameByStatus(75, $this->request->get['filter_category_price'],$filter_status);
+        }
             $category_price_prods = array_column($category_price_prods, 'product_store_id');
             /* $log = new Log('error.log');
               $log->write('category_price_prods');
@@ -511,7 +1192,7 @@ class ControllerCatalogVendorProduct extends Controller {
         $product_total = $this->model_catalog_vendor_product->getTotalProducts($filter_data);
 
         $results = $this->model_catalog_vendor_product->getProducts($filter_data);
-        //echo '<pre>';print_r($results);
+        // echo '<pre>';print_r($results);
         if (isset($this->request->get['filter_category_price'])) {
             $modified_res = [];
             $modified_res_new = [];
@@ -915,6 +1596,7 @@ class ControllerCatalogVendorProduct extends Controller {
         /* PREVIOUS CODE */
         //$data['price_categories'] =  $this->model_sale_customer_group->getPriceCategories();
         $data['price_categories_list'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['product_categories'] = $this->model_catalog_category->getCategories(0);
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategoriesfilter($filter_category_price);
         $data['category_prices'] = $category_prices;
         //echo '<pre>';print_r($cachePrice_data);exit;
@@ -1503,6 +2185,7 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['entry_product_id_to'] = $this->language->get('entry_product_id_to');
 
         $data['entry_special_price'] = $this->language->get('entry_special_price');
+        $data['entry_discount'] = $this->language->get('entry_discount');
         $data['entry_quantity'] = $this->language->get('entry_quantity');
         $data['entry_subtract'] = $this->language->get('entry_subtract');
         $data['entry_minimum'] = $this->language->get('entry_minimum');
@@ -1725,6 +2408,14 @@ class ControllerCatalogVendorProduct extends Controller {
             $data['special_price'] = $product_info['special_price'];
         } else {
             $data['special_price'] = '';
+        }
+
+        if (isset($this->request->post['discount'])) {
+            $data['discount'] = $this->request->post['discount'];
+        } elseif (!empty($product_info) && isset($product_info['discount'])) {
+            $data['discount'] = $product_info['discount'];
+        } else {
+            $data['discount'] = '';
         }
 
         if (isset($this->request->post['quantity'])) {
@@ -2367,6 +3058,16 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->getList(false, true);
     }
 
+    public function discount_priceslist() {
+        $this->load->language('catalog/product');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('catalog/general');
+
+        $this->getDiscountList(false, false, true);
+    }
+
     protected function getCategoriesProductPrices() {
         $cache_price_data = [];
         $sql = 'SELECT * FROM `' . DB_PREFIX . 'product_category_prices`';
@@ -2382,10 +3083,35 @@ class ControllerCatalogVendorProduct extends Controller {
         //$this->cache->set('category_price_data',$cache_price_data);
     }
 
+    protected function getDiscountProductPrices() {
+        $cache_price_data = [];
+        $sql = 'SELECT * FROM `' . DB_PREFIX . 'customer_discount`';
+        //echo $sql;exit;
+        $resultsdata = $this->db->query($sql);
+        if (count($resultsdata->rows) > 0) {
+            foreach ($resultsdata->rows as $result) {
+                $cache_price_data[$result['product_store_id'] . '_' . $result['price_category'] . '_' . $result['store_id']] = $result['price'];
+                $cache_price_data[$result['product_store_id'] . '_' . $result['price_category'] . '_' . $result['store_id']] = $result['discount'];
+            }
+        }
+
+        return $cache_price_data;
+        //$this->cache->set('category_price_data',$cache_price_data);
+    }
 
     protected function getCategoriesProductPricesByProductID($product_store_id) {
 
-        $sql = 'SELECT pc.*,p.unit FROM `' . DB_PREFIX . 'product_category_prices` pc join `' . DB_PREFIX . 'product` p on pc.product_id = p.product_id where pc.product_store_id='.$product_store_id;
+        $sql = 'SELECT pc.*,p.unit FROM `' . DB_PREFIX . 'product_category_prices` pc join `' . DB_PREFIX . 'product` p on pc.product_id = p.product_id where pc.product_store_id=' . $product_store_id;
+        // echo $sql;exit;
+        $resultsdata = $this->db->query($sql);
+
+        return $resultsdata->rows;
+        //$this->cache->set('category_price_data',$cache_price_data);
+    }
+
+    protected function getDiscountProductPricesByProductID($product_store_id) {
+
+        $sql = 'SELECT pc.*,p.unit FROM `' . DB_PREFIX . 'customer_discount` pc join `' . DB_PREFIX . 'product` p on pc.product_id = p.product_id where pc.product_store_id=' . $product_store_id;
         // echo $sql;exit;
         $resultsdata = $this->db->query($sql);
 
@@ -2570,7 +3296,7 @@ class ControllerCatalogVendorProduct extends Controller {
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             'limit' => $this->config->get('config_limit_admin'),
-        ]; 
+        ];
 
         $history_total = $this->model_catalog_vendor_product->getTotalProductInventoryHistory($filter_data);
 
@@ -2728,7 +3454,7 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['filter_name'] = $filter_name;
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_date_added_end'] = $filter_date_added_end;
-        $data['filter_store_id'] = $filter_store_id; 
+        $data['filter_store_id'] = $filter_store_id;
 
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -3146,10 +3872,7 @@ class ControllerCatalogVendorProduct extends Controller {
         }
     }
 
-
     public function export_excel_price_category() {
-
-
 
         $category_prices = $this->getCategoriesProductPrices();
         if (isset($this->request->get['filter_name'])) {
@@ -3306,7 +4029,6 @@ class ControllerCatalogVendorProduct extends Controller {
                         if (is_array($category_price_details) && count($category_price_details) > 0 && array_key_exists('status', $category_price_details)) {
                             $modified['category_price_status'] = $category_price_details['status'];
                             $modified['category_price'] = 1;
-
                         } else {
                             $modified['category_price_status'] = 1;
                         }
@@ -3355,7 +4077,7 @@ class ControllerCatalogVendorProduct extends Controller {
             // }
 
 
-            $category_price=  $category_prices[$result['product_store_id'].'_'.$filter_category_price.'_75'];
+            $category_price = $category_prices[$result['product_store_id'] . '_' . $filter_category_price . '_75'];
 
             $data['products'][] = [
                 'store_name' => $result['store_name'],
@@ -3388,6 +4110,243 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->model_report_excel->download_categorypricelist_excel($data['products'], $filter_data);
     }
 
+    public function export_excel_discount_category() {
+
+        $category_prices = $this->getDiscountProductPrices();
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
+
+        if (isset($this->request->get['filter_tax_class_id'])) {
+            $filter_tax_class_id = $this->request->get['filter_tax_class_id'];
+        } else {
+            $filter_tax_class_id = null;
+        }
+
+        if (isset($this->request->get['filter_vendor_name'])) {
+            $filter_vendor_name = $this->request->get['filter_vendor_name'];
+        } else {
+            $filter_vendor_name = null;
+        }
+
+        if (isset($this->request->get['filter_price'])) {
+            $filter_price = $this->request->get['filter_price'];
+        } else {
+            $filter_price = null;
+        }
+
+        if (isset($this->request->get['filter_product_id_from'])) {
+            $filter_product_id_from = $this->request->get['filter_product_id_from'];
+        } else {
+            $filter_product_id_from = null;
+        }
+
+        if (isset($this->request->get['filter_model'])) {
+            $filter_model = $this->request->get['filter_model'];
+        } else {
+            $filter_model = null;
+        }
+
+        if (isset($this->request->get['filter_product_id_to'])) {
+            $filter_product_id_to = $this->request->get['filter_product_id_to'];
+        } else {
+            $filter_product_id_to = null;
+        }
+
+        if (isset($this->request->get['filter_category'])) {
+            $filter_category = $this->request->get['filter_category'];
+        } else {
+            $filter_category = null;
+        }
+
+        if (isset($this->request->get['filter_category_price'])) {
+            $filter_category_price = $this->request->get['filter_category_price'];
+        } else {
+            $filter_category_price = null;
+        }
+
+        if (isset($this->request->get['filter_store_id'])) {
+            $filter_store_id = $this->request->get['filter_store_id'];
+        } else {
+            $filter_store_id = null;
+        }
+
+        if (isset($this->request->get['filter_status'])) {
+            $filter_status = $this->request->get['filter_status'];
+        } else {
+            $filter_status = null;
+        }
+
+        if (isset($this->request->get['filter_price_category_status'])) {
+            $filter_price_category_status = $this->request->get['filter_price_category_status'];
+        } else {
+            $filter_price_category_status = null;
+        }
+
+        if (isset($this->request->get['filter_quantity'])) {
+            $filter_quantity = $this->request->get['filter_quantity'];
+        } else {
+            $filter_quantity = null;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'pd.name';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
+
+
+        // if ( isset( $this->request->get['page'] ) ) {
+        // 	$page = $this->request->get['page'];
+        // } else {
+        // 	$page = 1;
+        // }
+
+
+        $filter_data = [
+            'filter_name' => $filter_name,
+            'filter_vendor_name' => $this->getUserByName($filter_vendor_name),
+            'filter_price' => $filter_price,
+            'filter_product_id_from' => $filter_product_id_from,
+            'filter_model' => $filter_model,
+            'filter_product_id_to' => $filter_product_id_to,
+            'filter_category' => $filter_category,
+            'filter_store_id' => $filter_store_id,
+            'filter_status' => $filter_status,
+            'filter_price_category_status' => $filter_price_category_status,
+            'filter_quantity' => $filter_quantity,
+            'filter_category_price' => $filter_category_price,
+            'filter_tax_class_id' => $filter_tax_class_id,
+            'sort' => $sort,
+            'order' => $order,
+            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+            // 'limit' => $this->config->get('config_limit_admin'),
+            'filter_category_price_prods' => isset($this->request->get['filter_category_price']) ? $category_price_prods : NULL,
+        ];
+
+        $data['products'] = [];
+        $this->load->model('catalog/vendor_product');
+        $category_price_prods = NULL;
+
+        if (isset($this->request->get['filter_category_price'])) {
+            $category_price_prods = $this->model_catalog_vendor_product->getCategoryDiscountDetailsByCategoryName(75, $this->request->get['filter_category_price']);
+            $category_price_prods = array_column($category_price_prods, 'product_store_id');
+            /* $log = new Log('error.log');
+              $log->write('category_price_prods');
+              $log->write($category_price_prods);
+              $log->write('category_price_prods'); */
+        }
+
+        // $product_total = $this->model_catalog_vendor_product->getTotalProducts($filter_data);
+
+        $results = $this->model_catalog_vendor_product->getProducts($filter_data);
+        //echo '<pre>';print_r($results);
+        if (isset($this->request->get['filter_category_price'])) {
+            $modified_res = [];
+            $modified_res_new = [];
+            if (count($results) > 0) {
+                foreach ($results as $res) {
+                    if (isset($category_prices[$res['product_store_id'] . '_' . $this->request->get['filter_category_price'] . '_75'])) {
+                        $modified_res[] = $res;
+                    }
+                }
+                if (count($modified_res) > 0) {
+                    foreach ($modified_res as $modified) {
+                        //$log = new Log('error.log');
+                        //$log->write($modified);
+                        $category_price_details = $this->model_catalog_vendor_product->getCategoryDiscountDetails($modified['product_store_id'], $modified['product_id'], $modified['product_name'], $modified['store_id'], $this->request->get['filter_category_price']);
+                        //$log->write($category_price_details);
+                        if (is_array($category_price_details) && count($category_price_details) > 0 && array_key_exists('status', $category_price_details)) {
+                            $modified['category_price_status'] = $category_price_details['status'];
+                            $modified['category_price'] = 1;
+                        } else {
+                            $modified['category_price_status'] = 1;
+                        }
+
+
+
+
+                        $modified_res_new[] = $modified;
+                    }
+                }
+            }
+
+            $results = $modified_res_new;
+            //$results = $modified_res;
+            //$product_total = count($results);
+        }
+
+        $results_count = $this->model_catalog_vendor_product->getProductsCount($filter_data);
+        if (isset($this->request->get['filter_category_price'])) {
+            $modified_res_count = [];
+            if (count($results_count) > 0) {
+                foreach ($results_count as $results_cou) {
+                    if (isset($category_prices[$results_cou['product_store_id'] . '_' . $this->request->get['filter_category_price'] . '_75'])) {
+                        $modified_res_count[] = $results_cou;
+                    }
+                }
+            }
+
+            $results_count = $modified_res_count;
+            $product_total = count($results_count);
+        }
+
+        $this->load->model('catalog/category');
+        $data['categories'] = $this->model_catalog_category->getCategories(0);
+        //  echo "<pre>";print_r($category_prices);die;
+
+        foreach ($results as $result) {
+            $category = $this->model_catalog_vendor_product->getProductCategories($result['product_id']);
+
+            // if (is_file(DIR_IMAGE . $result['image'])) {
+            //     $image = $this->model_tool_image->resize($result['image'], 40, 40);
+            //     $bigimage = $this->model_tool_image->getImage($result['image']);
+            // } else {
+            //     $image = $this->model_tool_image->resize('no_image.png', 40, 40);
+            //     $bigimage = $this->model_tool_image->getImage('no_image.png');
+            // }
+
+
+            $category_price = $category_prices[$result['product_store_id'] . '_' . $filter_category_price . '_75'];
+
+            $data['products'][] = [
+                'store_name' => $result['store_name'],
+                //'vendor_name'=>$result['fs'].' '.$result['ls'],
+                'product_store_id' => $result['product_store_id'],
+                'product_id' => $result['product_id'],
+                'price' => $result['price'],
+                'special_price' => $result['special_price'],
+                'quantity' => $result['quantity'],
+                'buying_price' => $result['buying_price'],
+                'source' => $result['source'],
+                // 'image' => $image,
+                // 'bigimage' => $bigimage,
+                'name' => $result['product_name'],
+                'unit' => $result['unit'],
+                //'weight' => $result['weight'],
+                'model' => $result['model'],
+                'category' => $category,
+                'category_price' => $category_price,
+                'category_price_status' => array_key_exists('category_price_status', $result) ? $result['category_price_status'] : '',
+                'status' => ($result['sts']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+            ];
+        }
+
+        //   echo "<pre>";print_r($data['products']);die;
+
+
+        $this->load->model('report/excel');
+
+        $this->model_report_excel->download_categorypricelist_excel($data['products'], $filter_data);
+    }
 
     public function export_excel_price_category_item() {
 
@@ -3409,8 +4368,8 @@ class ControllerCatalogVendorProduct extends Controller {
 
         $results = $this->model_catalog_vendor_product->getProducts($filter_data);
 
-        if(is_Array($results) && count($results)>0){
-        $category_prices = $this->getCategoriesProductPricesByProductID($results[0]['product_store_id']);
+        if (is_Array($results) && count($results) > 0) {
+            $category_prices = $this->getCategoriesProductPricesByProductID($results[0]['product_store_id']);
         }
 
 
@@ -3431,7 +4390,7 @@ class ControllerCatalogVendorProduct extends Controller {
                 'price_category' => $cprice['price_category'],
                 'status' => ($cprice['status']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
             ];
-       }
+        }
 
 
         //   echo "<pre>";print_r($data['products']);die;
@@ -3442,33 +4401,234 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->model_report_excel->download_categorypricelist_item_excel($data['products'], $filter_data);
     }
 
+    public function export_excel_discount_category_item() {
+
+
+        // $category_prices = $this->getCategoriesProductPrices();
+
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }
+
+        $filter_data = [
+            'filter_name' => $filter_name,
+        ];
+
+        $data['products'] = [];
+        $this->load->model('catalog/vendor_product');
+
+        $results = $this->model_catalog_vendor_product->getProducts($filter_data);
+
+        if (is_Array($results) && count($results) > 0) {
+            $category_prices = $this->getDiscountProductPricesByProductID($results[0]['product_store_id']);
+        }
+
+
+        //  echo "<pre>";print_r($category_prices);die;
+
+        foreach ($category_prices as $cprice) {
+
+            $data['products'][] = [
+                // 'store_name' => $result['store_name'],
+                //'vendor_name'=>$result['fs'].' '.$result['ls'],
+                'product_store_id' => $cprice['product_store_id'],
+                'product_id' => $cprice['product_id'],
+                'price' => $cprice['price'],
+                'name' => $cprice['product_name'],
+                'unit' => $cprice['unit'],
+                'price_category' => $cprice['price_category'],
+                'status' => ($cprice['status']) ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+            ];
+        }
+
+
+        //   echo "<pre>";print_r($data['products']);die;
+
+
+        $this->load->model('report/excel');
+
+        $this->model_report_excel->download_categorypricelist_item_excel($data['products'], $filter_data);
+    }
 
     public function updateInventoryHistory() {
-        try{
-        $log = new Log('error.log');
-        $product_history_id = $this->request->post['product_history_id'];
-        $procured_qty = $this->request->post['procured_qty'];
-        $rejected_qty = $this->request->post['rejected_qty'];
-        $prev_qty = $this->request->post['prev_qty'];
-        $current_qty = $this->request->post['current_qty'];
-        $buying_price = $this->request->post['buying_price'];
-        $source = $this->request->post['source'];
-        $date_added = $this->request->post['date_added_date'];
-        $log->write($product_history_id);
-        $log->write('inventory history changed by '.$this->user->getId());
-        
-        $this->load->model('catalog/vendor_product');
-        $this->model_catalog_vendor_product->updateInventoryHistory($product_history_id, $procured_qty,$rejected_qty,$prev_qty,$current_qty,$buying_price,$source,$date_added,$this->user->getId());
-        $json['status']=1;
-        }
-        catch(exception $e)
-        {
-        $json['status']=0;
+        try {
+            $log = new Log('error.log');
+            $product_history_id = $this->request->post['product_history_id'];
+            $procured_qty = $this->request->post['procured_qty'];
+            $rejected_qty = $this->request->post['rejected_qty'];
+            $prev_qty = $this->request->post['prev_qty'];
+            $current_qty = $this->request->post['current_qty'];
+            $buying_price = $this->request->post['buying_price'];
+            $source = $this->request->post['source'];
+            $date_added = $this->request->post['date_added_date'];
+            $log->write($product_history_id);
+            $log->write('inventory history changed by ' . $this->user->getId());
 
-        }
-        finally{
+            $this->load->model('catalog/vendor_product');
+            $this->model_catalog_vendor_product->updateInventoryHistory($product_history_id, $procured_qty, $rejected_qty, $prev_qty, $current_qty, $buying_price, $source, $date_added, $this->user->getId());
+            $json['status'] = 1;
+        } catch (exception $e) {
+            $json['status'] = 0;
+        } finally {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($json));
         }
     }
+
+    public function adddiscount() {
+
+        $log = new Log('error.log');
+        $json = [];
+
+        $log->write($this->request->post);
+        $ffilter_company_name = $this->request->post['filter_company_name'];
+        $hhidden_company_name = $this->request->post['hidden_company_name'];
+        $ffilter_product_category = $this->request->post['filter_product_category'];
+        $ffilter_vendor_product_discount = $this->request->post['filter_vendor_product_discount'];
+        $hhidden_vendor_product_name = $this->request->post['hidden_vendor_product_name'];
+
+        if (isset($this->request->post['filter_name'])) {
+            $filter_name = $this->request->post['filter_name'];
+        } else {
+            $filter_name = '';
+        }
+
+        if (isset($this->request->post['filter_vendor_name'])) {
+            $filter_vendor_name = $this->request->post['filter_vendor_name'];
+        } else {
+            $filter_vendor_name = '';
+        }
+
+        if (isset($this->request->post['filter_product_category'])) {
+            $filter_category = $this->request->post['filter_product_category'];
+        } else {
+            $filter_category = '';
+        }
+
+        if (isset($this->request->post['filter_store_id'])) {
+            $filter_store_id = $this->request->post['filter_store_id'];
+        } else {
+            $filter_store_id = '';
+        }
+
+        if (isset($this->request->post['hidden_vendor_product_name'])) {
+            $filter_product_store_id = $this->request->post['hidden_vendor_product_name'];
+        } else {
+            $filter_product_store_id = '';
+        }
+
+        if (isset($this->request->post['filter_status'])) {
+            $filter_status = $this->request->post['filter_status'];
+        } else {
+            $filter_status = '';
+        }
+
+        if (isset($this->request->post['filter_category_price'])) {
+            $filter_category_price = $this->request->post['filter_category_price'];
+        } else {
+            $filter_category_price = '';
+        }
+
+        $filter_data = [
+            'filter_name' => $filter_name,
+            'filter_vendor_name' => $filter_vendor_name,
+            'filter_category' => $filter_category,
+            'filter_store_id' => $filter_store_id,
+            'filter_product_store_id' => $filter_product_store_id,
+            'filter_status' => $filter_status,
+            'filter_category_price' => $filter_category_price,
+            'filter_status' => 1,
+            'start' => 0,
+                //'limit' => 5,
+        ];
+
+        $this->load->model('catalog/vendor_product');
+        $this->load->model('sale/customer');
+        $customer_details = $this->model_sale_customer->getCustomer($hhidden_company_name);
+        $results = $this->model_catalog_vendor_product->getProducts($filter_data);
+
+        $log = new Log('error.log');
+        /* $log->write($results);
+          $log->write($customer_details); */
+
+        $exist_price_category = [];
+        $non_exist_price_category = [];
+        $updateCustomerPriceCategory = true;
+
+        if (count($results) > 0) {
+
+            if ($customer_details['customer_discount_category'] != NULL) {
+                foreach ($results as $result) {
+
+                    $exist_product_price_category_detials = $this->model_catalog_vendor_product->findProductDiscountCategory($customer_details['customer_category'], $result['product_store_id']);
+
+                    if (isset($exist_product_price_category_detials) && count($exist_product_price_category_detials) > 0) {
+                        //$log->write($result);
+                        //$log->write($exist_product_price_category_detials);
+                        $res = $this->model_catalog_vendor_product->updateProductDiscountPrice($exist_product_price_category_detials['price_category'], $result['product_store_id'], $result['product_id'], $result['special_price'], $ffilter_vendor_product_discount, $exist_product_price_category_detials['product_category_price_id']);
+                        $log->write($res);
+                        if ($res != 1) {
+                            $exist_price_category[] = $result;
+                        }
+                    }
+
+                    if (!isset($exist_product_price_category_detials) || count($exist_product_price_category_detials) <= 0) {
+                        $res = $this->model_catalog_vendor_product->insertProductDiscountPrice($customer_details['customer_category'], $result['product_store_id'], $result['product_id'], $result['special_price'], $ffilter_vendor_product_discount, $result['product_name']);
+                        $log->write($res);
+                        if ($res != 1) {
+                            $exist_price_category[] = $result;
+                        }
+                    }
+                }
+
+                if (count($exist_price_category) <= 0) {
+                    $log->write('updateCustomerPriceCategory');
+                    $updateCustomerPriceCategory = $this->model_sale_customer->updateCustomerPriceDiscount($customer_details['customer_category'], $customer_details['customer_id']);
+                }
+            }
+
+            if ($customer_details['customer_discount_category'] == NULL) {
+
+                $new_price_category_name = strtoupper(preg_replace('/\s+/', '', $customer_details['company_name'])) . '_' . strtoupper(preg_replace('/\s+/', '', $customer_details['firstname'])) . '_' . strtoupper(preg_replace('/\s+/', '', $customer_details['lastname']));
+                foreach ($results as $result) {
+                    $res = $this->model_catalog_vendor_product->insertProductDiscountPrice($new_price_category_name, $result['product_store_id'], $result['product_id'], $result['special_price'], $ffilter_vendor_product_discount, $result['product_name']);
+                    $log->write($res);
+                    if ($res != 1) {
+                        $non_exist_price_category[] = $result;
+                    }
+                }
+
+                if (count($non_exist_price_category) <= 0) {
+                    $log->write('createCustomerPriceCategory');
+                    $updateCustomerPriceCategory = $this->model_sale_customer->updateCustomerPriceDiscount($new_price_category_name, $customer_details['customer_id']);
+                }
+            }
+        }
+
+        $log->write('RESULTS');
+        $log->write($non_exist_price_category);
+        $log->write($exist_price_category);
+        $log->write($updateCustomerPriceCategory);
+        $log->write('RESULTS');
+
+        if (count($non_exist_price_category) <= 0 && count($exist_price_category) <= 0 && $updateCustomerPriceCategory == true) {
+            $this->load->controller('catalog/product/cacheProductPrices', 75);
+            $json['status'] = 200;
+            $json['message'] = 'Customer Price Category Updated!';
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
+
+        if (count($non_exist_price_category) > 0 && count($exist_price_category) > 0 && $updateCustomerPriceCategory == false) {
+            $json['status'] = 400;
+            $json['data'] = $exist_price_category;
+            $json['data'] = $non_exist_price_category;
+            $json['message'] = 'Customer Price Category Created!';
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
+    }
+
 }

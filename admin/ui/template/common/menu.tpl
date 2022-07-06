@@ -109,6 +109,9 @@
         <a class="parent"><i class="fa fa-tags fa-fw"></i> <span>Category Prices</span></a>
         <ul>
             <li><a href="<?php echo $category_prices; ?>"><span>Category Prices</span></a></li>
+            <?php if($preturn_category_discounts) { ?>
+            <li><a href="<?php echo $category_discount; ?>"><span><?php echo $text_category_discounts; ?></span></a></li>
+            <?php } ?>
             <li><a href="<?php echo $export_import; ?>"><span><?php echo $text_export_import; ?></span></a></li>
         </ul>
     </li>
@@ -220,12 +223,15 @@
     <?php } ?>
     
     <?php
-    if( $preturn_customer != false || $preturn_customer_group != false || $preturn_customer_ban_ip != false) {
+    if( $preturn_customer != false || $preturn_kibandas != false || $preturn_customer_group != false || $preturn_customer_ban_ip != false) {
     ?>
     <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_customer; ?></span></a>
         <ul class="collapse">
             <?php if($preturn_customer) { ?>
             <li><a href="<?php echo $customer; ?>"><?php echo $text_customer; ?></a></li>
+            <?php } ?>
+            <?php if($preturn_kibandas) { ?>
+            <li><a href="<?php echo $kibanda; ?>"><?php echo $text_kibanda; ?></a></li>
             <?php } ?>
             <?php if($preturn_customer_group) { ?>
             <li><a href="<?php echo $customer_group; ?>"><?php echo $text_customer_group; ?></a></li>

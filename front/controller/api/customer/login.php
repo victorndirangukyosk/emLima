@@ -35,7 +35,7 @@ class ControllerApiCustomerLogin extends Controller {
         } else {
             $api_info = $this->model_account_api->customer_login($this->request->post['username'], $this->request->post['password']);
         }
-
+ 
         //echo "<pre>";print_r($api_info);die;
         if ($api_info['status']) {
             /* if(!isset($this->session->data['customer_id'])) {
@@ -50,6 +50,22 @@ class ControllerApiCustomerLogin extends Controller {
             /*
              * Create the token as an array
              */
+
+             if(isset($api_info['customer_phone']) && $api_info['customer_phone']!="")
+             {
+            $data = [
+                'iat' => $issuedAt, // Issued at: time when the token was generated
+                'jti' => $tokenId, // Json Token Id: an unique identifier for the token
+                'iss' => $serverName, // Issuer
+                'nbf' => $notBefore, // Not before
+                'exp' => $expire, // Expire
+                'data' => [// Data related to the logged user you can set your required data
+                    'id' => $api_info['customer_id'], // id from the users table
+                    'name' => $api_info['customer_phone'], //  name
+                ],
+            ];
+        }
+        else{
             $data = [
                 'iat' => $issuedAt, // Issued at: time when the token was generated
                 'jti' => $tokenId, // Json Token Id: an unique identifier for the token
@@ -61,6 +77,7 @@ class ControllerApiCustomerLogin extends Controller {
                     'name' => $api_info['customer_email'], //  name
                 ],
             ];
+        }
 
             $secretKey = base64_decode(SECRET_KEY);
             /// Here we will transform this array into JWT:
@@ -148,7 +165,16 @@ class ControllerApiCustomerLogin extends Controller {
                 // $json['error'] = $this->language->get('error_not_approved');
                 $json['error'] = $this->language->get('error_approved');
             } else {
+
+                if (is_numeric($this->request->post['username'])) {
+                    //login by phone number
+                $json['error'] = $this->language->get('error_login_mobile');
+
+                } else {
+                    
                 $json['error'] = $this->language->get('error_login');
+                }
+
             }
 
             $json['status'] = false;

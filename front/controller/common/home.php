@@ -391,7 +391,6 @@ class ControllerCommonHome extends Controller {
         //   echo "<pre>";print_r($data);die;
     }
 
-
     public function job_opening_details_saved($id = 0, $message = "", $errormessage = "") {
         $data['site_key'] = $this->config->get('config_google_captcha_public');
         if (isset($this->request->get['id'])) {
@@ -456,7 +455,7 @@ class ControllerCommonHome extends Controller {
                 $this->load->model('setting/setting');
                 $first_name = str_replace("'", "", $this->request->post['careers-first-name']);
                 $email = str_replace("'", "", $this->request->post['careers-email']);
-                $person_email= $email;
+                $person_email = $email;
                 $phone = str_replace("'", "", $this->request->post['careers-phone-number']);
                 $id = $this->model_information_careers->createCareers($first_name, str_replace("'", "", $this->request->post['lastname']), str_replace("'", "", $this->request->post['role']), str_replace("'", "", $this->request->post['yourself']), $email, $phone, str_replace("'", "", $this->request->post['careers-job-id']), str_replace("'", "", $this->request->post['careers-cover-letter']), $file_upload_status['file_name'], str_replace("'", "", $this->request->post['careers-job-position']));
                 $status = true;
@@ -464,7 +463,7 @@ class ControllerCommonHome extends Controller {
                 $jobposition = str_replace("'", "", $this->request->post['careers-job-position']);
                 $log->write($jobposition);
                 $log->write('jobposition');
-                
+
                 if ($id > 0) {
 
                     //send mail notification to 'stalluri@technobraingroup.com'
@@ -487,34 +486,31 @@ class ControllerCommonHome extends Controller {
                     // $bccemail = "sridivya.talluri@technobraingroup.com";
                     //  echo "<pre>";print_r($file_data);die;
                     $filepath = DIR_UPLOAD . "careers/" . $file_upload_status['file_name'];
-                    try{
-                    $mail = new Mail($this->config->get('config_mail'));
-                    $mail->setTo($email);
-                    $mail->setBCC($bccemail);
-                    $mail->setFrom($this->config->get('config_from_email'));
-                    $mail->setSender($this->config->get('config_name'));
-                    $mail->setSubject($subject);
-                    $mail->setHTML($message);
-                    $mail->addAttachment($filepath);
-                    $mail->send();
-                    }
-                    catch(exception $ex)
-                    {
+                    try {
+                        $mail = new Mail($this->config->get('config_mail'));
+                        $mail->setTo($email);
+                        $mail->setBCC($bccemail);
+                        $mail->setFrom($this->config->get('config_from_email'));
+                        $mail->setSender($this->config->get('config_name'));
+                        $mail->setSubject($subject);
+                        $mail->setHTML($message);
+                        $mail->addAttachment($filepath);
+                        $mail->send();
+                    } catch (exception $ex) {
                         $log = new Log('error.log');
                         $log->write('Mail Sending failed.MAilgun error');
                     }
 
-                    try
-                    {
-                        $subject_person='CV Received';
-                        $message_person='';
-                        $message_person =  "<br>Dear " . $first_name . ",<br><br>";
+                    try {
+                        $subject_person = 'CV Received';
+                        $message_person = '';
+                        $message_person = "<br>Dear " . $first_name . ",<br><br>";
 
                         if ($jobposition != "")
-                        $message_person = $message_person ."Thank you for your application for the role of  " . $jobposition . ".<br><br>";
-                    else
-                        $message_person = $message_person ."Thank you for your application .  <br><br>";
-                        
+                            $message_person = $message_person . "Thank you for your application for the role of  " . $jobposition . ".<br><br>";
+                        else
+                            $message_person = $message_person . "Thank you for your application .  <br><br>";
+
                         $message_person = $message_person . "Your application is being reviewed by our HR team. We will consider your employment and qualification credentials against the criteria required for the role. <br><br>";
                         $message_person = $message_person . "We regret that due to the high volume of CV’s we receive, we may not be able to respond to all applications individually. We will contact you within the next 7 days if your skills and experience are suitable to the job description, or if there is a similar opportunity presently available. <br><br><br>";
 
@@ -530,10 +526,7 @@ class ControllerCommonHome extends Controller {
                         $mail->setSubject($subject_person);
                         $mail->setHTML($message_person);
                         $mail->send();
-
-                    }
-                    catch(exception $ex)
-                    {
+                    } catch (exception $ex) {
                         $log = new Log('error.log');
                         $log->write('Mail Sending failed.MAilgun error');
                     }
@@ -547,18 +540,13 @@ class ControllerCommonHome extends Controller {
             //$this->response->addHeader('Content-Type: application/json');
         }
         // $this->response->setOutput(json_encode($json));
-        if ($this->request->post['careers-job-id'] == 0)
-        {
+        if ($this->request->post['careers-job-id'] == 0) {
             $this->careers(0, $success_message, $error_message);
-        }
-        else
-
-        {
+        } else {
             // $this->job_opening_details($this->request->post['careers-job-id'], $success_message, $error_message);
             $this->job_opening_details_saved($this->request->post['careers-job-id'], $success_message, $error_message);
-        // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
+            // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/landing_page/jobopening.tpl', $data['jobpositions'][0]));
         }
-
     }
 
     public function FeatureFileUpload($file_data) {
@@ -777,50 +765,55 @@ class ControllerCommonHome extends Controller {
             $this->response->redirect($this->url->link('product/store', 'store_id=' . $this->session->data['config_store_id'] . ''));
         }
 
-        $this->load->model('tool/image');
-        $this->load->language('common/home');
-        $this->load->model('account/wishlist');
+        $data['order_count'] = NULL;
+        if (isset($this->session->data['customer_id'])) {
 
-        $wishlist_results = $this->model_account_wishlist->getWishlists();
-        foreach ($wishlist_results as $result) {
-            $wishlist_products = $this->model_account_wishlist->getWishlistProduct($result['wishlist_id']);
-            $totalCount = 0;
-            if (!empty($wishlist_products)) {
-                $totalCount = count($wishlist_products);
-            }
-            $data['wishlists'][] = [
-                'wishlist_id' => $result['wishlist_id'],
-                'name' => $result['name'],
-                'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
-                'product_count' => $totalCount,
-                'products' => $wishlist_products,
-                'href' => $this->url->link('account/wishlist/info', 'wishlist_id=' . $result['wishlist_id'], 'SSL'),
-            ];
-        }
+            $this->load->model('tool/image');
+            $this->load->language('common/home');
+            $this->load->model('account/wishlist');
 
-        $data['blocks'] = [];
-
-        $blocks = $this->model_tool_image->getBlocks();
-
-        // echo "<pre>";print_r($blocks);die;
-        foreach ($blocks as $block) {
-            if (is_file(DIR_IMAGE . $block['image'])) {
-                $image = $this->model_tool_image->resize($block['image'], 290, 163);
-            } else {
-                $image = $this->model_tool_image->resize('no_image.png', 290, 163);
+            $wishlist_results = $this->model_account_wishlist->getWishlists();
+            foreach ($wishlist_results as $result) {
+                $wishlist_products = $this->model_account_wishlist->getWishlistProduct($result['wishlist_id']);
+                $totalCount = 0;
+                if (!empty($wishlist_products)) {
+                    $totalCount = count($wishlist_products);
+                }
+                $data['wishlists'][] = [
+                    'wishlist_id' => $result['wishlist_id'],
+                    'name' => $result['name'],
+                    'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
+                    'product_count' => $totalCount,
+                    'products' => $wishlist_products,
+                    'href' => $this->url->link('account/wishlist/info', 'wishlist_id=' . $result['wishlist_id'], 'SSL'),
+                ];
             }
 
-            $temp['image'] = $image;
-            $temp['description'] = trim($block['description']);
-            $temp['title'] = $block['title'];
-            $temp['sort_order'] = $block['sort_order'];
 
-            array_push($data['blocks'], $temp);
+            $data['blocks'] = [];
+
+            $blocks = $this->model_tool_image->getBlocks();
+
+            // echo "<pre>";print_r($blocks);die;
+            foreach ($blocks as $block) {
+                if (is_file(DIR_IMAGE . $block['image'])) {
+                    $image = $this->model_tool_image->resize($block['image'], 290, 163);
+                } else {
+                    $image = $this->model_tool_image->resize('no_image.png', 290, 163);
+                }
+
+                $temp['image'] = $image;
+                $temp['description'] = trim($block['description']);
+                $temp['title'] = $block['title'];
+                $temp['sort_order'] = $block['sort_order'];
+
+                array_push($data['blocks'], $temp);
+            }
+
+            $this->load->model('sale/order');
+            $numberOfOrders = count($this->model_sale_order->getOrders());
+            $data['order_count'] = $numberOfOrders;
         }
-
-        $this->load->model('sale/order');
-        $numberOfOrders = count($this->model_sale_order->getOrders());
-        $data['order_count'] = $numberOfOrders;
 
         //echo "<pre>";print_r($data['blocks']);die;
         $this->document->setTitle($this->config->get('config_meta_title'));
@@ -1037,24 +1030,27 @@ class ControllerCommonHome extends Controller {
             $data['warning'] = '';
         }
 
-        $data['banners'] = $data['testimonials'] = [];
+        if (isset($this->session->data['customer_id'])) {
 
-        $rows = $this->model_tool_image->getTestimonial();
+            $data['banners'] = $data['testimonials'] = [];
 
-        foreach ($rows as $row) {
-            $row['thumb'] = $this->model_tool_image->resize($row['image'], 80, 80);
-            $data['testimonials'][] = $row;
-        }
+            $rows = $this->model_tool_image->getTestimonial();
 
-        //banners
-        $rows = $this->model_tool_image->getAllOffers();
-
-        foreach ($rows as $row) {
-            if (false === strpos($row['link'], '://')) {
-                $row['link'] = 'http://' . $row['link'];
+            foreach ($rows as $row) {
+                $row['thumb'] = $this->model_tool_image->resize($row['image'], 80, 80);
+                $data['testimonials'][] = $row;
             }
-            $row['image'] = $this->model_tool_image->resize($row['image'], 300, 300);
-            $data['banners'][] = $row;
+
+            //banners
+            $rows = $this->model_tool_image->getAllOffers();
+
+            foreach ($rows as $row) {
+                if (false === strpos($row['link'], '://')) {
+                    $row['link'] = 'http://' . $row['link'];
+                }
+                $row['image'] = $this->model_tool_image->resize($row['image'], 300, 300);
+                $data['banners'][] = $row;
+            }
         }
 
         $data['play_store'] = $this->config->get('config_android_app_link');
@@ -1082,174 +1078,179 @@ class ControllerCommonHome extends Controller {
         $data['login'] = $this->url->link('account/login', '', 'SSL');
         $data['register'] = $this->url->link('account/register', '', 'SSL');
         $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
-        $this->load->model('assets/category');
-        $data['categories'] = [];
-        $this->load->controller('product/store');
-        $new_categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
-        $customer_categories = $this->model_assets_category->getCustomerCategoryById(ACTIVE_STORE_ID, 0);
-        foreach ($customer_categories as $customer_category) {
-            $new_categories[] = $customer_category;
-        }
-        $new_categories = array_map("unserialize", array_unique(array_map("serialize", $new_categories)));
+        if (isset($this->session->data['customer_id'])) {
 
-        $data['categories_new'] = $new_categories;
-        //$categories = $this->model_assets_category->getCategoriesNoRelationStore();
-        $selected_categoory_id = isset($this->request->get['filter_category']) && $this->request->get['filter_category'] > 0 ? $this->request->get['filter_category'] : 0;
-        if ($selected_categoory_id == 0) {
-            $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
-        } else {
-            $categories = $this->model_assets_category->getCategoryById(ACTIVE_STORE_ID, 0, $selected_categoory_id);
-        }
-
-        /* $log = new Log('error.log');
-          $log->write('categories');
-          $log->write($customer_categories);
-          $log->write($categories);
-          $log->write('categories'); */
-
-        foreach ($customer_categories as $customer_category) {
-            $categories[] = $customer_category;
-        }
-        $categories = array_map("unserialize", array_unique(array_map("serialize", $categories)));
-
-        $selectedProducts = [];
-        foreach ($categories as $category) {
-            // Level 2
-            $children_data = [];
-
-            $children = $this->model_assets_category->getCategories($category['category_id']);
-
-            //echo "<pre>";print_r($children);die;
-            foreach ($children as $child) {
-                $children_data[] = [
-                    'name' => $child['name'],
-                    'id' => $child['category_id'],
-                    'href' => $this->url->link('product/category', 'category=' . $category['category_id'] . '_' . $child['category_id']),
-                ];
+            $this->load->model('assets/category');
+            $data['categories'] = [];
+            $this->load->controller('product/store');
+            $new_categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+            $customer_categories = $this->model_assets_category->getCustomerCategoryById(ACTIVE_STORE_ID, 0);
+            foreach ($customer_categories as $customer_category) {
+                $new_categories[] = $customer_category;
             }
+            $new_categories = array_map("unserialize", array_unique(array_map("serialize", $new_categories)));
 
-            $filter_data_product = [
-                'filter_category_id' => $category['category_id'],
-                'filter_sub_category' => true,
-                'start' => 0,
-                'limit' => (1359 == $category['category_id']) ? 12 : 12,
-                'store_id' => ACTIVE_STORE_ID,
-                'selectedProducts' => $selectedProducts,
-                'filter_sort' => isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] != NULL ? $this->request->get['filter_sort'] : NULL
-            ];
-
-            // Level 1
-            $productslisted = $this->getProducts($filter_data_product);
-            $data['categories'][] = [
-                'name' => $category['name'],
-                'id' => $category['category_id'],
-                'thumb' => $this->model_tool_image->resize($category['image'], 300, 300),
-                'children' => $children_data,
-                'column' => $category['column'] ? $category['column'] : 1,
-                'href' => $this->url->link('product/category', 'category=' . $category['category_id']),
-                'products' => $productslisted,
-            ];
-
-            foreach ($productslisted as $producted) {
-                $selectedProducts[] = $producted['product_store_id'];
-            }
-        }
-        //	   echo "<pre>";print_r($data['categories']);die;
-        $data['page'] = isset($_REQUEST['page']) ? $_REQUEST['page'] : '';
-        //$this->load->language('module/store');
-        $this->load->model('setting/store');
-        $filter = [];
-        $filter['filter_status'] = 1;
-        if (isset($_REQUEST['location'])) {
-            $userSearch = explode(',', $_REQUEST['location']);
-            $filter['filter_location'] = $_REQUEST['location'];
-        }
-        if (isset($_REQUEST['category'])) {
-            $filter['filter_category'] = $_REQUEST['category'];
-        }
-        //echo'<pre>';print_r($filter);exit;
-        //$categoriesIds = $this->model_setting_store->getStoreCategoriesbyStoreId(2,$_REQUEST['category']);
-        //echo'<pre>';print_r($categoriesIds);exit;
-        $stores = $this->model_setting_store->getStoresAll($filter);
-
-        /* Code for storeType Dynamic */
-        $this->load->model('assets/category');
-        $store_types = $this->model_assets_category->getStoreTypes();
-        $tempStoreTypeArray = [];
-        foreach ($store_types as $value) {
-            $tempStoreTypeArray[$value['store_type_id']] = $value['name'];
-        }
-        // echo'<pre>';print_r($stores);exit;
-        foreach ($stores as $store) {
-            $tempStore = $store;
-            $tempStore['href'] = $this->model_setting_store->getSeoUrl('store_id=' . $store['store_id']);
-            $tempStore['thumb'] = $this->model_tool_image->resize($store['logo'], 300, 300);
-            $tempStore['categorycount'] = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'], isset($_REQUEST['category']) ? $_REQUEST['category'] : '');
-            if (!empty($store['store_type_ids'])) {
-                $arrayStoretypes = explode(',', $store['store_type_ids']);
-                $tempStoretypename = '';
-                foreach ($arrayStoretypes as $key => $types) {
-                    $tempStoretypename .= (0 == $key) ? $tempStoreTypeArray[$types] : ',' . $tempStoreTypeArray[$types];
-                }
-                $tempStore['storeTypes'] = $tempStoretypename;
-            }
-
-            if (isset($_REQUEST['location']) && isset($_REQUEST['category'])) {
-                //echo 'locat';exit;
-                $res = $this->model_setting_store->getDistance($userSearch[0], $userSearch[1], $store['latitude'], $store['longitude'], $store['serviceable_radius']);
-                if ($res && ($tempStore['categorycount'] > 0)) {
-                    $data['stores'][] = $tempStore;
-                }
-            } elseif (isset($_REQUEST['location'])) {
-                //echo 'loc';exit;
-                $res = $this->model_setting_store->getDistance($userSearch[0], $userSearch[1], $store['latitude'], $store['longitude'], $store['serviceable_radius']);
-                if ($res) {
-                    $data['stores'][] = $tempStore;
-                }
-            } elseif (isset($_REQUEST['category'])) {
-                //echo 'cat';exit;
-                // $categorycount = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'],$_REQUEST['category']);
-                if ($tempStore['categorycount'] > 0) {
-                    $data['stores'][] = $tempStore;
-                }
+            $data['categories_new'] = $new_categories;
+            //$categories = $this->model_assets_category->getCategoriesNoRelationStore();
+            $selected_categoory_id = isset($this->request->get['filter_category']) && $this->request->get['filter_category'] > 0 ? $this->request->get['filter_category'] : 0;
+            if ($selected_categoory_id == 0) {
+                $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
             } else {
-                //echo 'no';exit;
-                $data['stores'][] = $tempStore;
+                $categories = $this->model_assets_category->getCategoryById(ACTIVE_STORE_ID, 0, $selected_categoory_id);
             }
-            /* if($_REQUEST['category']){
-              $categorycount = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'],$_REQUEST['category']);
-              if($categorycount > 0){
-              $data['stores'][] = $tempStore;
-              }
-              }else{
-              $data['stores'][] = $tempStore;
-              } */
-        }
-        //	    echo'<pre>';print_r($data['stores']);exit;
-        // 5 best seller product
-        $complete_status_ids = '(' . implode(',', $this->config->get('config_complete_status')) . ')';
-        $query_best = $this->db->query('SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name FROM ' . DB_PREFIX . 'order_product AS op LEFT JOIN ' . DB_PREFIX . 'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  ' . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.order_status_id IN " . $complete_status_ids . ' GROUP BY pd.name ORDER BY total DESC LIMIT 5');
-        $best_products = $query_best->rows;
 
-        foreach ($best_products as $products) {
-            $product_detail = $this->model_assets_product->getDetailproduct($products['product_id']);
-            $product_detail['thumb'] = $this->model_tool_image->resize(isset($product_detail['image']) ? $product_detail['image'] : '', 100, 100);
-            $data['bestseller'][] = $product_detail;
-        }
+            /* $log = new Log('error.log');
+              $log->write('categories');
+              $log->write($customer_categories);
+              $log->write($categories);
+              $log->write('categories'); */
 
-        /** Products To Percentage off * */
-        $prductsOffer = $this->getProducts([
-            'store_id' => ACTIVE_STORE_ID,
-        ]);
-        $this->array_sort_by_column($prductsOffer, 'percent_off');
-        $data['offer_products'] = array_slice($prductsOffer, 0, 5, true);
+            foreach ($customer_categories as $customer_category) {
+                $categories[] = $customer_category;
+            }
+            $categories = array_map("unserialize", array_unique(array_map("serialize", $categories)));
+
+            $selectedProducts = [];
+            foreach ($categories as $category) {
+                // Level 2
+                $children_data = [];
+
+                $children = $this->model_assets_category->getCategories($category['category_id']);
+
+                //echo "<pre>";print_r($children);die;
+                foreach ($children as $child) {
+                    $children_data[] = [
+                        'name' => $child['name'],
+                        'id' => $child['category_id'],
+                        'href' => $this->url->link('product/category', 'category=' . $category['category_id'] . '_' . $child['category_id']),
+                    ];
+                }
+
+                $filter_data_product = [
+                    'filter_category_id' => $category['category_id'],
+                    'filter_sub_category' => true,
+                    'start' => 0,
+                    'limit' => (1359 == $category['category_id']) ? 12 : 12,
+                    'store_id' => ACTIVE_STORE_ID,
+                    'selectedProducts' => $selectedProducts,
+                    'filter_sort' => isset($this->request->get['filter_sort']) && $this->request->get['filter_sort'] != NULL ? $this->request->get['filter_sort'] : NULL
+                ];
+
+                // Level 1
+                $productslisted = $this->getProducts($filter_data_product);
+                $data['categories'][] = [
+                    'name' => $category['name'],
+                    'id' => $category['category_id'],
+                    'thumb' => $this->model_tool_image->resize($category['image'], 300, 300),
+                    'children' => $children_data,
+                    'column' => $category['column'] ? $category['column'] : 1,
+                    'href' => $this->url->link('product/category', 'category=' . $category['category_id']),
+                    'products' => $productslisted,
+                ];
+
+                foreach ($productslisted as $producted) {
+                    $selectedProducts[] = $producted['product_store_id'];
+                }
+            }
+            //	   echo "<pre>";print_r($data['categories']);die;
+            $data['page'] = isset($_REQUEST['page']) ? $_REQUEST['page'] : '';
+            //$this->load->language('module/store');
+            $this->load->model('setting/store');
+            $filter = [];
+            $filter['filter_status'] = 1;
+            if (isset($_REQUEST['location'])) {
+                $userSearch = explode(',', $_REQUEST['location']);
+                $filter['filter_location'] = $_REQUEST['location'];
+            }
+            if (isset($_REQUEST['category'])) {
+                $filter['filter_category'] = $_REQUEST['category'];
+            }
+            //echo'<pre>';print_r($filter);exit;
+            //$categoriesIds = $this->model_setting_store->getStoreCategoriesbyStoreId(2,$_REQUEST['category']);
+            //echo'<pre>';print_r($categoriesIds);exit;
+            $stores = $this->model_setting_store->getStoresAll($filter);
+
+            /* Code for storeType Dynamic */
+            $this->load->model('assets/category');
+            $store_types = $this->model_assets_category->getStoreTypes();
+            $tempStoreTypeArray = [];
+            foreach ($store_types as $value) {
+                $tempStoreTypeArray[$value['store_type_id']] = $value['name'];
+            }
+            // echo'<pre>';print_r($stores);exit;
+            foreach ($stores as $store) {
+                $tempStore = $store;
+                $tempStore['href'] = $this->model_setting_store->getSeoUrl('store_id=' . $store['store_id']);
+                $tempStore['thumb'] = $this->model_tool_image->resize($store['logo'], 300, 300);
+                $tempStore['categorycount'] = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'], isset($_REQUEST['category']) ? $_REQUEST['category'] : '');
+                if (!empty($store['store_type_ids'])) {
+                    $arrayStoretypes = explode(',', $store['store_type_ids']);
+                    $tempStoretypename = '';
+                    foreach ($arrayStoretypes as $key => $types) {
+                        $tempStoretypename .= (0 == $key) ? $tempStoreTypeArray[$types] : ',' . $tempStoreTypeArray[$types];
+                    }
+                    $tempStore['storeTypes'] = $tempStoretypename;
+                }
+
+                if (isset($_REQUEST['location']) && isset($_REQUEST['category'])) {
+                    //echo 'locat';exit;
+                    $res = $this->model_setting_store->getDistance($userSearch[0], $userSearch[1], $store['latitude'], $store['longitude'], $store['serviceable_radius']);
+                    if ($res && ($tempStore['categorycount'] > 0)) {
+                        $data['stores'][] = $tempStore;
+                    }
+                } elseif (isset($_REQUEST['location'])) {
+                    //echo 'loc';exit;
+                    $res = $this->model_setting_store->getDistance($userSearch[0], $userSearch[1], $store['latitude'], $store['longitude'], $store['serviceable_radius']);
+                    if ($res) {
+                        $data['stores'][] = $tempStore;
+                    }
+                } elseif (isset($_REQUEST['category'])) {
+                    //echo 'cat';exit;
+                    // $categorycount = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'],$_REQUEST['category']);
+                    if ($tempStore['categorycount'] > 0) {
+                        $data['stores'][] = $tempStore;
+                    }
+                } else {
+                    //echo 'no';exit;
+                    $data['stores'][] = $tempStore;
+                }
+                /* if($_REQUEST['category']){
+                  $categorycount = $this->model_setting_store->getStoreCategoriesbyStoreId($store['store_id'],$_REQUEST['category']);
+                  if($categorycount > 0){
+                  $data['stores'][] = $tempStore;
+                  }
+                  }else{
+                  $data['stores'][] = $tempStore;
+                  } */
+            }
+            //	    echo'<pre>';print_r($data['stores']);exit;
+            // 5 best seller product
+            $complete_status_ids = '(' . implode(',', $this->config->get('config_complete_status')) . ')';
+            $query_best = $this->db->query('SELECT SUM( op.quantity )AS total, op.product_id,op.general_product_id, pd.name FROM ' . DB_PREFIX . 'order_product AS op LEFT JOIN ' . DB_PREFIX . 'order AS o ON ( op.order_id = o.order_id ) LEFT JOIN  ' . DB_PREFIX . "product_description AS pd ON (op.general_product_id = pd.product_id)  WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND o.order_status_id IN " . $complete_status_ids . ' GROUP BY pd.name ORDER BY total DESC LIMIT 5');
+            $best_products = $query_best->rows;
+
+            foreach ($best_products as $products) {
+                $product_detail = $this->model_assets_product->getDetailproduct($products['product_id']);
+                $product_detail['thumb'] = $this->model_tool_image->resize(isset($product_detail['image']) ? $product_detail['image'] : '', 100, 100);
+                $data['bestseller'][] = $product_detail;
+            }
+
+            /** Products To Percentage off * */
+            $prductsOffer = $this->getProducts([
+                'store_id' => ACTIVE_STORE_ID,
+            ]);
+            $this->array_sort_by_column($prductsOffer, 'percent_off');
+            $data['offer_products'] = array_slice($prductsOffer, 0, 5, true);
+        }
         //echo '<pre>';print_r($data['offer_products']);exit;
         /* add Contact modal */
         $data['contactus_modal'] = $this->load->controller('information/contact');
         $data['checkout_summary'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
-        $data['mostboughtproducts'] = array_slice($this->getMostBoughtProducts(), 0, 6);
-        $data['mostboughtproducts_url'] = $this->url->link('product/store/featuredproducts', '', 'SSL');
-        $data['cartproducts'] = $this->cart->getProducts();
+        if (isset($this->session->data['customer_id'])) {
+            $data['mostboughtproducts'] = array_slice($this->getMostBoughtProducts(), 0, 6);
+            $data['mostboughtproducts_url'] = $this->url->link('product/store/featuredproducts', '', 'SSL');
+            $data['cartproducts'] = $this->cart->getProducts();
+        }
         $data['wallet_url'] = $this->url->link('account/credit', '', 'SSL');
         $data['pezesha'] = $this->url->link('account/pezesha', '', 'SSL');
         $data['pezesha_loans'] = $this->url->link('account/pezeshaloans', '', 'SSL');
@@ -2362,15 +2363,15 @@ class ControllerCommonHome extends Controller {
         ];
         // $data['categories_list'] = $results;
         // ----start
-         $this->load->model('assets/category');
-         $new_categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
-         $customer_categories = $this->model_assets_category->getCustomerCategoryById(ACTIVE_STORE_ID, 0);
-         foreach ($customer_categories as $customer_category) {
-             $new_categories[] = $customer_category;
-         }
-         $new_categories = array_map("unserialize", array_unique(array_map("serialize", $new_categories)));
-        $data['categories_list']= $new_categories;
-         //----end
+        $this->load->model('assets/category');
+        $new_categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
+        $customer_categories = $this->model_assets_category->getCustomerCategoryById(ACTIVE_STORE_ID, 0);
+        foreach ($customer_categories as $customer_category) {
+            $new_categories[] = $customer_category;
+        }
+        $new_categories = array_map("unserialize", array_unique(array_map("serialize", $new_categories)));
+        $data['categories_list'] = $new_categories;
+        //----end
         $products = $this->getProductsForCategoryPages($filter_data);
         $data['products'] = $products;
 

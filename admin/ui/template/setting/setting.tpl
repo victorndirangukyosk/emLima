@@ -884,6 +884,45 @@
 
                             
 
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Assign wallet to Sub user">Assign Wallet to Sub User</span></label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline">
+                                        <?php if ($config_wallet_subuser) { ?>
+                                        <input type="radio" name="config_wallet_subuser" value="1" checked="checked" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="config_wallet_subuser" value="1" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } ?>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <?php if (!$config_wallet_subuser) { ?>
+                                        <input type="radio" name="config_wallet_subuser" value="0" checked="checked" />
+                                        <?php echo $text_no; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="config_wallet_subuser" value="0" />
+                                        <?php echo $text_no; ?>
+                                        <?php } ?>
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-kibandas-customer-group-id">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="Kibandas Customer Group ID">
+                                        Kibandas Customer Group ID
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_kibandas_customer_group_id" value="<?php echo $config_kibandas_customer_group_id; ?>" placeholder="Enter Kibandas Customer Group ID" id="input-kibandas-customer-group-id" class="form-control" />
+                                    <?php if ($error_kibandas_customer_group_id) { ?>
+                                    <div class="text-danger"><?php echo $error_kibandas_customer_group_id; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
                             <?php if ($locations) { ?>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" data-container="#tab-general" title="<?php echo $help_location; ?>"><?php echo $entry_location; ?></span></label>

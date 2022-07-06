@@ -25,6 +25,7 @@ class ModelAccountApi extends Model {
         return $data;
     }
 
+    //any changes made in this method, should update in customerLoginByPhone
     public function customer_login($username, $password) {
         /* $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "api` WHERE username = '" . $this->db->escape($username) . "' AND password = '" . $this->db->escape($password) . "' AND status = '1'");
 
@@ -44,6 +45,9 @@ class ModelAccountApi extends Model {
 
                 $data['customer_email'] = $user_query->row['email'];
                 $data['parent'] = $user_query->row['parent'];
+                //dont add phone number here
+                //$data['customer_phone'] = $user_query->row['telephone'];
+                
             } else {
                 $data['status'] = false;
                 $data['not_verified'] = true;
@@ -69,6 +73,9 @@ class ModelAccountApi extends Model {
                 $data['customer_phone'] = $user_query->row['telephone'];
                 $data['customer_email'] = $user_query->row['email'];
                 $data['parent'] = $user_query->row['parent'];
+                $data['order_approval_access'] = $user_query->row['order_approval_access'];
+                $data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
+
             } else {
                 $data['status'] = false;
                 $data['not_verified'] = true;
@@ -260,7 +267,11 @@ class ModelAccountApi extends Model {
                 // add activity and all
 
                 if ($this->customer->loginByPhone($customer_id)) {
-                    $this->model_account_customer->addLoginAttempt($this->customer->getEmail());
+                    if($this->customer->getEmail() !="")
+                    {
+                        $this->model_account_customer->addLoginAttempt($this->customer->getEmail());
+
+                    }
 
                     if ('shipping' == $this->config->get('config_tax_customer')) {
                         $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
@@ -304,13 +315,15 @@ class ModelAccountApi extends Model {
           $this->error['lastname'] = $this->language->get( 'error_lastname' );
           } */
 
-        if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
-            $this->error['email'] = $this->language->get('error_email');
-        }
-
+        /* if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
+          $this->error['email'] = $this->language->get('error_email');
+          } */
+            if(isset($this->request->post['email']) && !empty($this->request->post['email']))
+            {
         if ($this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
             $this->error['warning'] = $this->language->get('error_exists');
         }
+    }
 
         /* if (false !== strpos($this->request->post['telephone'], '#') || empty($this->request->post['telephone'])) {
           $this->error['telephone'] = $this->language->get('error_telephone');
@@ -383,21 +396,23 @@ class ModelAccountApi extends Model {
                     $data['success_message'] = $this->language->get('text_otp_sent') . ' ' . $this->request->post['phone'];
                 }
 
-                try {
-                    if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
-                        $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
-                        $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
+                if ($this->request->post['email'] != NULL) {
+                    try {
+                        if ($this->emailtemplate->getEmailEnabled('registerOTP', 'registerotp_2')) {
+                            $subject = $this->emailtemplate->getSubject('registerOTP', 'registerotp_2', $data);
+                            $message = $this->emailtemplate->getMessage('registerOTP', 'registerotp_2', $data);
 
-                        $mail = new mail($this->config->get('config_mail'));
-                        $mail->setTo($this->request->post['email']);
-                        $mail->setFrom($this->config->get('config_from_email'));
-                        $mail->setSubject($subject);
-                        $mail->setSender($this->config->get('config_name'));
-                        $mail->setHtml($message);
-                        $mail->send();
+                            $mail = new mail($this->config->get('config_mail'));
+                            $mail->setTo($this->request->post['email']);
+                            $mail->setFrom($this->config->get('config_from_email'));
+                            $mail->setSubject($subject);
+                            $mail->setSender($this->config->get('config_name'));
+                            $mail->setHtml($message);
+                            $mail->send();
+                        }
+                    } catch (Exception $e) {
+                        
                     }
-                } catch (Exception $e) {
-                    
                 }
             } else {
                 // enter valid number throw error
@@ -467,7 +482,10 @@ class ModelAccountApi extends Model {
                     } else {
                         $this->request->post['dob'] = null;
                     }
+                    if(empty($this->request->post['source']))
+                    {
                     $this->request->post['source'] = 'MOBILE';
+                    }
                     //$this->request->post['password'] = mt_rand(1000,9999);
                     // echo "<pre>";print_r($this->request->post);die;
                     // $accountmanagerid = NULL;
@@ -480,7 +498,7 @@ class ModelAccountApi extends Model {
                     $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
 
                     $logged_in = $this->customer->loginByPhone($customer_id);
-
+ 
                     unset($this->session->data['guest']);
 
                     // Add to activity log
@@ -581,6 +599,8 @@ class ModelAccountApi extends Model {
 
                     $data['success_message'] = $this->language->get('text_valid_otp');
                     $data['customer_id'] = $customer_id;
+                $data['status'] = true;
+
                 }
             } else {
                 // enter valid number throw error

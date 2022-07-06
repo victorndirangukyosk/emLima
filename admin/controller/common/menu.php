@@ -75,6 +75,7 @@ class ControllerCommonMenu extends Controller {
         $data['offer'] = $this->url->link('marketing/offer', 'token=' . $this->session->data['token'], 'SSL');
         $data['currency'] = $this->url->link('localisation/currency', 'token=' . $this->session->data['token'], 'SSL');
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&sort=c.date_added&order=DESC', 'SSL');
+        $data['kibanda'] = $this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&sort=c.date_added&order=DESC', 'SSL');
         // $data['customer_otp'] = $this->url->link('sale/customer/customer_otp', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
         $data['customer_otp'] = $this->url->link('sale/customer_otp', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
         $data['farmer'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.created_at&order=DESC', 'SSL');
@@ -270,6 +271,7 @@ class ControllerCommonMenu extends Controller {
         $data['inventory_management_price'] = $this->url->link('catalog/vendor_product/InventoryPriceHistory', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['category_prices'] = $this->url->link('catalog/vendor_product/category_priceslist', 'token=' . $this->session->data['token'], 'SSL');
+        $data['category_discount'] = $this->url->link('catalog/vendor_product/discount_priceslist', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['transaction'] = $this->url->link('sale/transactions', 'token=' . $this->session->data['token'], 'SSL');
         $data['order_receivables'] = $this->url->link('sale/order_receivables', 'token=' . $this->session->data['token'], 'SSL');
@@ -349,6 +351,8 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_order_recurring'] = $this->user->hasPermission('access', 'sale/recurring');
         $data['preturn_return'] = $this->user->hasPermission('access', 'sale/return');
         $data['preturn_customer'] = $this->user->hasPermission('access', 'sale/customer');
+        $data['preturn_kibanda'] = $this->user->hasPermission('access', 'sale/customer/kibanda');
+        $data['preturn_kibandas'] = $this->user->hasPermission('access', 'sale/kibanda');
         // $data['preturn_customer_otp'] = $this->user->hasPermission('access', 'sale/customer/customer_otp');
         $data['preturn_farmer'] = $this->user->hasPermission('access', 'sale/farmer');
         $data['preturn_supplier'] = $this->user->hasPermission('access', 'sale/supplier');
@@ -510,6 +514,7 @@ class ControllerCommonMenu extends Controller {
 
         $data['preturn_vendor_product'] = $this->user->hasPermission('access', 'catalog/vendor_product');
         $data['preturn_category_prices'] = $this->user->hasPermission('access', 'category/prices');
+        $data['preturn_category_discounts'] = $this->user->hasPermission('access', 'catalog/categorydiscount');
         $data['preturn_inventory_wastage'] = $this->user->hasPermission('access', 'inventory/inventory_wastage');
         $data['preturn_report_inventory_wastage'] = $this->user->hasPermission('access', 'report/inventory_wastage');
         $data['preturn_report_inventory_wastage_consolidated'] = $this->user->hasPermission('access', 'report/inventory_wastage_consolidated');

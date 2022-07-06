@@ -10,12 +10,15 @@ $_['label_email'] = 'Email';
 $_['text_para'] = 'We will send an email to reset your password';
 $_['text_email'] = 'Enter the e-mail address associated with your account. Click submit to have your password e-mailed to you.';
 $_['text_success'] = 'Success: A new password has been sent to your e-mail address.';
+$_['text_success_mobile'] = 'Success: A new password has been sent to your mobile number.';
 
 // Entry
 $_['entry_email'] = '';
 
 // Error
-$_['error_email'] = 'Warning: The E-Mail Address was not found in our records, please try again!';
+$_['error_email'] = 'Warning: The E-Mail Address  was not found in our records, please try again!';
+$_['error_email_NA'] = 'Warning: Please enter E-Mail Address /Mobile Number !';
+$_['error_email_mobile'] = 'Warning: The E-Mail Address / Mobile Number  was not found in our records, please try again!';
 $_['error_captcha'] = 'Warning: Verification code does not match the image!';
 $_['error_invalid'] = 'Invalid Email';
 $_['error_req'] = 'Email Required';

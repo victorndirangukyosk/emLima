@@ -63,4 +63,21 @@ class ModelAccountCredit extends Model
             return 0;
         }
     }
+
+
+    public function getTotalAmountOfParent($parent_id)
+    {
+        $query = $this->db->query('SELECT SUM(amount) AS total FROM `'.DB_PREFIX."customer_credit` WHERE  customer_id = '".(int) $parent_id."'  GROUP BY customer_id");//customer_id = '".(int) $this->customer->getId()."' ||
+        // echo "<pre>";print_r('SELECT SUM(amount) AS total FROM `'.DB_PREFIX."customer_credit` WHERE customer_id = '".(int) $parent_id."' GROUP BY customer_id");die;
+
+        if ($query->num_rows) {
+        //   echo "<pre>";print_r($query->row['total']);die;
+
+            return $query->row['total'];
+        } else {
+            return 0;
+        }
+
+       
+    }
 }

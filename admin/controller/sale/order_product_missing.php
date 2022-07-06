@@ -1523,9 +1523,16 @@ class ControllerSaleOrderProductMissing extends Controller {
             $subject = $this->emailtemplate->getSubject('OrderAll', 'order_21', $data);
             $message = $this->emailtemplate->getMessage('OrderAll', 'order_21', $data);
             $sms_message = $this->emailtemplate->getSmsMessage('OrderAll', 'order_21', $data);
+            $log->write($customer_info['communication_email']);
+            $log->write('MISSING_ORDER_PRODUCT_MAIL_SENDING');
+
 
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($customer_info['email']);
+            if(isset($customer_info['communication_email']) && $customer_info['communication_email']!="")
+            {
+            $mail->setCc($customer_info['communication_email']);
+            }
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);

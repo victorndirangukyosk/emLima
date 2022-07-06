@@ -192,6 +192,14 @@ class ControllerSettingSetting extends Controller {
             $data['error_farmer_group_id'] = '';
         }
 
+
+        if (isset($this->error['kibandas_customer_group_id'])) {
+            $data['error_kibandas_customer_group_id'] = $this->error['kibandas_customer_group_id'];
+        } else {
+            $data['error_kibandas_customer_group_id'] = '';
+        }
+
+
         if (isset($this->error['supplier_group_ids'])) {
             $data['error_supplier_group_id'] = $this->error['supplier_group_id'];
         } else {
@@ -641,6 +649,14 @@ class ControllerSettingSetting extends Controller {
         } else {
             $data['config_farmer_group_id'] = $this->config->get('config_farmer_group_id');
         }
+
+
+        if (isset($this->request->post['config_kibandas_customer_group_id'])) {
+            $data['config_kibandas_customer_group_id'] = $this->request->post['config_kibandas_customer_group_id'];
+        } else {
+            $data['config_kibandas_customer_group_id'] = $this->config->get('config_kibandas_customer_group_id');
+        }
+
 
         if (isset($this->request->post['config_supplier_group_id'])) {
             $data['config_supplier_group_id'] = $this->request->post['config_supplier_group_id'];
@@ -1175,6 +1191,12 @@ class ControllerSettingSetting extends Controller {
             $data['config_currency_auto'] = $this->request->post['config_currency_auto'];
         } else {
             $data['config_currency_auto'] = $this->config->get('config_currency_auto');
+        }
+
+        if (isset($this->request->post['config_wallet_subuser'])) {
+            $data['config_wallet_subuser'] = $this->request->post['config_wallet_subuser'];
+        } else {
+            $data['config_wallet_subuser'] = $this->config->get('config_wallet_subuser');
         }
 
         $this->load->model('localisation/currency');
@@ -2346,6 +2368,11 @@ class ControllerSettingSetting extends Controller {
 
         if (!$this->request->post['config_farmer_group_id']) {
             $this->error['farmer_group_id'] = $this->language->get('error_farmer_group_id');
+        }
+
+
+        if (!$this->request->post['config_kibandas_customer_group_id']) {
+            $this->error['kibandas_customer_group_id'] = $this->language->get('error_kibandas_customer_group_id');
         }
 
         if (!$this->request->post['config_supplier_group_id']) {
