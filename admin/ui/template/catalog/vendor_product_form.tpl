@@ -161,12 +161,12 @@
 								</div>
 							</div>
                                                         
-                                                        <div class="form-group ">
+                                                        <!--<div class="form-group ">
 								<label class="col-sm-2 control-label"><?php echo $entry_discount; ?></label>
 								<div class="col-sm-10">
                                                                     <input type="number" step="0.01" name="discount" onkeypress="return validateFloatKeyPress(this, event);" onkeyup="getPrice();"  value="<?php echo $discount; ?>" id="discount" class="form-control input-full-width" />
 								</div>
-							</div>
+							</div>-->
 
 							<div class="form-group ">
 								<label class="col-sm-2 control-label"><?php echo $entry_special_price; ?></label>
