@@ -222,9 +222,15 @@ class ControllerAccountLogin extends Controller {
           } */
 
         // Check if customer has been approved.
-
+          if(is_numeric($this->request->post['email']))
+          {
+        $customer_info = $this->model_account_customer->getCustomerByPhone($this->request->post['email']);
+          }
+          else
+          {
         $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
 
+          }
         if ($customer_info && !$customer_info['approved']) {
             $this->error['warning'] = $this->language->get('error_not_verified');
         }
@@ -777,11 +783,19 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['vouchers']);
             unset($this->session->data['adminlogin']);
             unset($this->session->data['add_delivery_charges']);
-            setcookie('po_number', null, -1, '/');
-
+            setcookie('po_number', null, -1, '/'); 
+ 
             $customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);
+            if(isset($customer_info['email']) && !empty($customer_info['email']))
+            {
+                $login_key=$customer_info['email'];
+            }
+            else
+            {
+                $login_key=$customer_info['telephone'];
 
-            if ($customer_info && $this->customer->login($customer_info['email'], '', true)) {
+            }
+            if ($customer_info && $this->customer->login($login_key, '', true)) {
                 // Default Addresses
                 $this->load->model('account/address');
 
