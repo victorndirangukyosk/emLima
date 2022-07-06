@@ -781,6 +781,138 @@ class ControllerSaleCustomer extends Controller {
 
         $this->getList();
     }
+    
+    public function kibandaapprove() {
+        $this->load->language('sale/customer');
+
+        $this->document->setTitle($this->language->get('heading_title'));
+
+        $this->load->model('sale/customer');
+
+        $customers = [];
+
+        if (isset($this->request->post['selected'])) {
+            $customers = $this->request->post['selected'];
+        } elseif (isset($this->request->get['customer_id'])) {
+            $customers[] = $this->request->get['customer_id'];
+        }
+
+        if ($customers && $this->validateApprove()) {
+            $this->model_sale_customer->approve($this->request->get['customer_id']);
+
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'customer_id' => $this->request->get['customer_id'],
+            ];
+            $log->write('customer approve');
+
+            $this->model_user_user_activity->addActivity('customer_account_approved', $activity_data);
+
+            $log->write('customer approve');
+
+            $this->session->data['success'] = $this->language->get('text_success');
+
+            $url = '';
+
+            if (isset($this->request->get['filter_company'])) {
+                $url .= '&filter_company=' . urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_name'])) {
+                $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_email'])) {
+                $url .= '&filter_email=' . urlencode(html_entity_decode($this->request->get['filter_email'], ENT_QUOTES, 'UTF-8'));
+            }
+
+            if (isset($this->request->get['filter_customer_group_id'])) {
+                $url .= '&filter_customer_group_id=' . $this->request->get['filter_customer_group_id'];
+            }
+
+            if (isset($this->request->get['filter_status'])) {
+                $url .= '&filter_status=' . $this->request->get['filter_status'];
+            }
+
+            if (isset($this->request->get['filter_pezesha'])) {
+                $url .= '&filter_pezesha=' . $this->request->get['filter_pezesha'];
+            }
+
+            if (isset($this->request->get['filter_payment_terms'])) {
+                $url .= '&filter_payment_terms=' . $this->request->get['filter_payment_terms'];
+            }
+
+            if (isset($this->request->get['filter_customer_price_category'])) {
+                $url .= '&filter_customer_price_category=' . $this->request->get['filter_customer_price_category'];
+            }
+
+            if (isset($this->request->get['filter_approved'])) {
+                $url .= '&filter_approved=' . $this->request->get['filter_approved'];
+            }
+
+            if (isset($this->request->get['filter_ip'])) {
+                $url .= '&filter_ip=' . $this->request->get['filter_ip'];
+            }
+
+            if (isset($this->request->get['filter_parent_customer'])) {
+                $url .= '&filter_parent_customer=' . $this->request->get['filter_parent_customer'];
+            }
+
+            if (isset($this->request->get['filter_parent_customer_id'])) {
+                $url .= '&filter_parent_customer_id=' . $this->request->get['filter_parent_customer_id'];
+            }
+
+            if (isset($this->request->get['filter_account_manager_name'])) {
+                $url .= '&filter_account_manager_name=' . $this->request->get['filter_account_manager_name'];
+            }
+
+            if (isset($this->request->get['filter_customer_experience'])) {
+                $url .= '&filter_customer_experience=' . $this->request->get['filter_customer_experience'];
+            }
+
+            if (isset($this->request->get['filter_account_manager_id'])) {
+                $url .= '&filter_account_manager_id=' . $this->request->get['filter_account_manager_id'];
+            }
+
+            if (isset($this->request->get['filter_customer_experience_id'])) {
+                $url .= '&filter_customer_experience_id=' . $this->request->get['filter_customer_experience_id'];
+            }
+
+            if (isset($this->request->get['filter_sub_customer_show'])) {
+                $url .= '&filter_sub_customer_show=' . $this->request->get['filter_sub_customer_show'];
+            }
+
+            if (isset($this->request->get['filter_date_added'])) {
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            }
+
+            if (isset($this->request->get['filter_date_added_to'])) {
+                $url .= '&filter_date_added_to=' . $this->request->get['filter_date_added_to'];
+            }
+
+            if (isset($this->request->get['sort'])) {
+                $url .= '&sort=' . $this->request->get['sort'];
+            }
+
+            if (isset($this->request->get['order'])) {
+                $url .= '&order=' . $this->request->get['order'];
+            }
+
+            if (isset($this->request->get['page'])) {
+                $url .= '&page=' . $this->request->get['page'];
+            }
+
+            $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+        }
+
+        $this->getkibandaList();
+    }
 
     public function unlock() {
         $this->load->language('sale/customer');
@@ -1843,7 +1975,7 @@ class ControllerSaleCustomer extends Controller {
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             if (!$result['approved']) {
-                $approve = $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL');
+                $approve = $this->url->link('sale/customer/kibandaapprove', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL');
             } else {
                 $approve = '';
             }
