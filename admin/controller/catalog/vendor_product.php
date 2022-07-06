@@ -2406,7 +2406,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
         if (isset($this->request->post['discount'])) {
             $data['discount'] = $this->request->post['discount'];
-        } elseif (!empty($product_info)) {
+        } elseif (!empty($product_info) && isset($product_info['discount'])) {
             $data['discount'] = $product_info['discount'];
         } else {
             $data['discount'] = '';
