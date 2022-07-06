@@ -908,7 +908,7 @@ class ControllerSaleCustomer extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getkibandaList();
