@@ -176,7 +176,8 @@ class mail
         // Check First
         if (!$this->to) {
             trigger_error('Error: E-Mail to required!');
-            exit();
+            // exit();commented becoz, for kibandas , email is not available
+            return  true;
         }
 
         if (!$this->from) {

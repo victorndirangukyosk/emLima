@@ -1152,7 +1152,8 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->load->model('catalog/vendor_product');
         $category_price_prods = NULL;
         if (isset($this->request->get['filter_category_price'])) {
-            $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryName(75, $this->request->get['filter_category_price']);
+            // $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryName(75, $this->request->get['filter_category_price']);
+            $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryNameByStatus(75, $this->request->get['filter_category_price'],$filter_status);
             $category_price_prods = array_column($category_price_prods, 'product_store_id');
             /* $log = new Log('error.log');
               $log->write('category_price_prods');

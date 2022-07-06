@@ -142,6 +142,14 @@ class ModelAccountCustomer extends Model {
         $customer_id = $this->db->getLastId();
         $this->savepassword($customer_id, $data['password']);
 
+        
+
+        if(empty($data['email']) &&  $customer_group_id==$this->config->get('config_kibandas_customer_group_id'))
+        {
+        $temp_email="KB".$customer_id."@yopmail.com";
+        $this->db->query('UPDATE ' . DB_PREFIX . "customer SET email = '" . $temp_email . "' WHERE customer_id = '" . (int) $customer_id . "'");
+        }
+
         if (!empty($data['country_id'])) {
             $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', dob = '" . $data['dob'] . "', company = '" . $this->db->escape($data['company']) . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', city_id = '" . $this->db->escape($data['cityid']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
 
