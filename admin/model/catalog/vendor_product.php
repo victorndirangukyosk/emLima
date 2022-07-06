@@ -440,7 +440,10 @@ class ModelCatalogVendorProduct extends Model {
             $sql .= " AND (ps.price = '" . $this->db->escape($data['filter_price']) . "' or ps.special_price = '" . $this->db->escape($data['filter_price']) . "' )";
         }
 
-
+        if (!empty($data['filter_category_price_prods'])) {
+            $filter_category_price_prods = implode(',', $data['filter_category_price_prods']);
+            $sql .= ' AND ps.product_store_id IN (' . $filter_category_price_prods . ') ';
+        }
 
         if (!empty($data['filter_product_id_from']) && !empty($data['filter_product_id_to'])) {
             $sql .= " AND ps.product_store_id >= '" . (int) $data['filter_product_id_from'] . "'";
