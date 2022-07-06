@@ -1184,6 +1184,14 @@ class ModelCatalogVendorProduct extends Model {
         return $res->rows;
     }
 
+    public function getCategoryPriceDetailsByCategoryNameByStatus($store_id, $price_category,$status) {
+        $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND store_id='" . $store_id . "' AND status ='".$status ."'";
+        $res = $this->db->query($category_price);
+        // echo "<pre>";print_r($category_price);die;
+        
+        return $res->rows;
+    }
+
     public function getCategoryDiscountDetailsByCategoryName($store_id, $price_category) {
         $category_price = 'SELECT * FROM ' . DB_PREFIX . "customer_discount WHERE price_category='" . $price_category . "' AND store_id='" . $store_id . "'";
         $res = $this->db->query($category_price);
