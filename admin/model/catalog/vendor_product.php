@@ -17,11 +17,11 @@ class ModelCatalogVendorProduct extends Model {
         $saturday = in_array("saturday", $data['product_delivery']) ? 1 : 0;
         $sunday = in_array("sunday", $data['product_delivery']) ? 1 : 0;
 
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_to_store SET  product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $this->db->escape($data['merchant_id']) . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',discount = '" . $data['discount'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "'");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_to_store SET  product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $this->db->escape($data['merchant_id']) . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "'");
         $product_store_id = $this->db->getLastId();
 
         foreach ($data['product_variation']['variation'] as $prv => $value) {
-            $this->db->query('INSERT INTO ' . DB_PREFIX . "variation_to_product_store SET  variation_id = '" . $value . "', product_store_id = '" . $product_store_id . "', price = '" . $data['product_variation']['price'][$prv] . "',discount = '" . $data['product_variation']['discount'][$prv] . "',special_price = '" . $data['product_variation']['special_price'][$prv] . "'");
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "variation_to_product_store SET  variation_id = '" . $value . "', product_store_id = '" . $product_store_id . "', price = '" . $data['product_variation']['price'][$prv] . "',special_price = '" . $data['product_variation']['special_price'][$prv] . "'");
         }
 
         $this->cache->delete('product');
@@ -52,7 +52,7 @@ class ModelCatalogVendorProduct extends Model {
             $prev_data_status = $prev_data_query->row['status'];
         }
         // echo "<pre>";print_r($prev_data_status);die;
-        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $data['merchant_id'] . "', price = '" . $data['price'] . "',discount = '" . $data['discount'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
+        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $data['merchant_id'] . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
 
         $this->db->query($query);
 
@@ -61,7 +61,7 @@ class ModelCatalogVendorProduct extends Model {
         // insert variation
         if (isset($this->request->post['product_variation']['variation'])) {
             foreach ($this->request->post['product_variation']['variation'] as $prv => $value) {
-                $this->db->query('INSERT INTO ' . DB_PREFIX . "variation_to_product_store SET  variation_id = '" . $value . "', product_store_id = '" . $store_product_id . "', price = '" . $this->request->post['product_variation']['price'][$prv] . "',discount = '" . $this->request->post['product_variation']['discount'][$prv] . "',special_price = '" . $this->request->post['product_variation']['special_price'][$prv] . "'");
+                $this->db->query('INSERT INTO ' . DB_PREFIX . "variation_to_product_store SET  variation_id = '" . $value . "', product_store_id = '" . $store_product_id . "', price = '" . $this->request->post['product_variation']['price'][$prv] . "',special_price = '" . $this->request->post['product_variation']['special_price'][$prv] . "'");
             }
         }
 
