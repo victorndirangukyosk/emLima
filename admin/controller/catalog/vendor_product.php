@@ -1214,7 +1214,9 @@ class ControllerCatalogVendorProduct extends Controller {
                         if (is_array($category_price_details) && count($category_price_details) > 0 && array_key_exists('status', $category_price_details)) {
                             $modified['category_price_status'] = $category_price_details['status'];
                         } else {
-                            $modified['category_price_status'] = 1;
+                            // $modified['category_price_status'] = 1;
+                            $modified['category_price_status'] = $modified['final_status'];
+
                         }
                         $modified_res_new[] = $modified;
                     }
