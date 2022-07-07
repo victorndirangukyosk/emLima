@@ -23,8 +23,8 @@
                         <th rowspan="1">SNo.</th>
                         <th rowspan="1">&nbsp;</th>
                         <th rowspan="1"><span class="nobr">Product Name</span></th>
-                                                <th class="text-center" ><span class="nobr">Unit Price</span></th>
-                                                <th class="text-right"><span class="nobr">Unit </span></th>
+                        <th class="text-center" ><span class="nobr">Unit Price</span></th>
+                        <th class="text-right"><span class="nobr">Unit </span></th>
                         <th rowspan="1" class="text-center">Qty</th>
                         <th rowspan="1" class="text-center">Tax</th>
                         <th class="text-center">Sub Total</th>
