@@ -1,9 +1,8 @@
 <?php
 
-class ControllerApiPayment extends Controller
-{
-    public function address()
-    {
+class ControllerApiPayment extends Controller {
+
+    public function address() {
         $this->load->language('api/payment');
 
         // Delete old payment address, payment methods and method so not to cause any issues if there is an error
@@ -28,8 +27,7 @@ class ControllerApiPayment extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function methods()
-    {
+    public function methods() {
         $this->load->language('api/payment');
 
         // Delete past shipping methods and method just in case there is an error
@@ -46,6 +44,7 @@ class ControllerApiPayment extends Controller
                 $total_data = [];
                 $total = 0;
                 $taxes = $this->cart->getTaxes();
+                $custom_discounts = $this->cart->getDiscounts();
 
                 $this->load->model('extension/extension');
 
@@ -54,16 +53,20 @@ class ControllerApiPayment extends Controller
                 $results = $this->model_extension_extension->getExtensions('total');
 
                 foreach ($results as $key => $value) {
-                    $sort_order[$key] = $this->config->get($value['code'].'_sort_order');
+                    $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
                 }
 
                 array_multisort($sort_order, SORT_ASC, $results);
 
                 foreach ($results as $result) {
-                    if ($this->config->get($result['code'].'_status')) {
-                        $this->load->model('total/'.$result['code']);
-
-                        $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
+                    if ($this->config->get($result['code'] . '_status')) {
+                        $this->load->model('total/' . $result['code']);
+                        if ($result['code'] != 'discount') {
+                            $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                        }
+                        if ($result['code'] == 'discount') {
+                            $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes, NULL, $custom_discounts);
+                        }
                     }
                 }
 
@@ -77,14 +80,14 @@ class ControllerApiPayment extends Controller
                 $recurring = $this->cart->hasRecurringProducts();
 
                 foreach ($results as $result) {
-                    if ($this->config->get($result['code'].'_status')) {
-                        $this->load->model('payment/'.$result['code']);
+                    if ($this->config->get($result['code'] . '_status')) {
+                        $this->load->model('payment/' . $result['code']);
 
-                        $method = $this->{'model_payment_'.$result['code']}->getMethod($total);
+                        $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
 
                         if ($method) {
                             if ($recurring) {
-                                if (method_exists($this->{'model_payment_'.$result['code']}, 'recurringPayments') && $this->{'model_payment_'.$result['code']}->recurringPayments()) {
+                                if (method_exists($this->{'model_payment_' . $result['code']}, 'recurringPayments') && $this->{'model_payment_' . $result['code']}->recurringPayments()) {
                                     $json['payment_methods'][$result['code']] = $method;
                                 }
                             } else {
@@ -114,8 +117,7 @@ class ControllerApiPayment extends Controller
         $this->response->setOutput(json_encode($json));
     }
 
-    public function method()
-    {
+    public function method() {
         $this->load->language('api/payment');
 
         // Delete old payment method so not to cause any issues if there is an error
@@ -145,4 +147,5 @@ class ControllerApiPayment extends Controller
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
+
 }
