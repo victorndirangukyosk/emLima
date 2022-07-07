@@ -1151,13 +1151,16 @@ class ControllerCatalogVendorProduct extends Controller {
         $data['products'] = [];
         $this->load->model('catalog/vendor_product');
         $category_price_prods = NULL;
+
         if (isset($this->request->get['filter_category_price'])) {
-        if (empty($filter_status)) {
+        if (!isset($filter_status) ||$filter_status=="" ) {
+            
         
-            $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryName(75, $this->request->get['filter_category_price']);
+            $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryName(0, $this->request->get['filter_category_price']);
         }
         else{
-            $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryNameByStatus(75, $this->request->get['filter_category_price'],$filter_status);
+
+            $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryNameByStatus(0, $this->request->get['filter_category_price'],$filter_status);
         }
             $category_price_prods = array_column($category_price_prods, 'product_store_id');
             /* $log = new Log('error.log');
@@ -1224,6 +1227,7 @@ class ControllerCatalogVendorProduct extends Controller {
         }
 
         $results_count = $this->model_catalog_vendor_product->getProductsCount($filter_data);
+        
         if (isset($this->request->get['filter_category_price'])) {
             $modified_res_count = [];
             if (count($results_count) > 0) {
@@ -1238,6 +1242,7 @@ class ControllerCatalogVendorProduct extends Controller {
             $product_total = count($results_count);
         }
 
+        
         $this->load->model('catalog/category');
         $data['categories'] = $this->model_catalog_category->getCategories(0);
 

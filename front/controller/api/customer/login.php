@@ -8,6 +8,7 @@ class ControllerApiCustomerLogin extends Controller {
 
     public function index() {
         $this->load->language('api/login');
+        $this->load->language('account/login');
 
         //echo "<pre>";print_r($this->request->post);die;
         // Delete old login so not to cause any issues if there is an error
