@@ -17,6 +17,7 @@ class Customer {
     private $email_notification;
     private $payment_terms;
     private $customer_category;
+    private $customer_discount_category;
     private $customer_parent;
     private $pezesha_customer_id;
     private $pezesha_customer_uuid;
@@ -43,13 +44,16 @@ class Customer {
                     $parent_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($customer_query->row['parent']) . "' AND status = '1' AND approved='1'");
                     if ($customer_query->num_rows > 0 && $parent_customer_query->row['customer_id'] > 0) {
                         $this->customer_category = $parent_customer_query->row['customer_category'];
+                        $this->customer_discount_category = $parent_customer_query->row['customer_discount_category'];
                     } else {
                         $this->customer_category = NULL;
+                        $this->customer_discount_category = NULL;
                     }
                 }
 
                 if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
                     $this->customer_category = $customer_query->row['customer_category'];
+                    $this->customer_discount_category = $customer_query->row['customer_discount_category'];
                     $this->customer_parent = $customer_query->row['parent'];
                 }
                 /* SET CUSTOMER CATEGORY */
@@ -107,22 +111,16 @@ class Customer {
 
     public function login($email, $password, $override = false) {
         if ($override) {
-            if(is_numeric($email))//if numeric , telephone ,need to consider
-            {
-            $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE (telephone) = '" . $this->db->escape(($email)) . "' AND status = '1'");
-            }
-            else{
+            if (is_numeric($email)) {//if numeric , telephone ,need to consider
+                $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE (telephone) = '" . $this->db->escape(($email)) . "' AND status = '1'");
+            } else {
                 $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "' AND status = '1'");
-
             }
         } else {
-            if(is_numeric($email))
-            {
-            $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE (telephone) = '" . $this->db->escape(($email)) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1' AND approved = '1'");
-            }
-            else{
+            if (is_numeric($email)) {
+                $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE (telephone) = '" . $this->db->escape(($email)) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1' AND approved = '1'");
+            } else {
                 $customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1' AND approved = '1'");
-
             }
         }
 
@@ -138,14 +136,17 @@ class Customer {
                 $parent_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($customer_query->row['parent']) . "' AND status = '1' AND approved='1'");
                 if ($customer_query->num_rows > 0 && $parent_customer_query->row['customer_id'] > 0) {
                     $this->customer_category = $parent_customer_query->row['customer_category'];
+                    $this->customer_discount_category = $parent_customer_query->row['customer_discount_category'];
                 } else {
                     $this->customer_category = NULL;
+                    $this->customer_discount_category = NULL;
                 }
             }
 
             if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
                 $this->customer_parent = $customer_query->row['parent'];
                 $this->customer_category = $customer_query->row['customer_category'];
+                $this->customer_discount_category = $customer_query->row['customer_discount_category'];
             }
             /* SET CUSTOMER CATEGORY */
 
@@ -229,6 +230,7 @@ class Customer {
         if ($customer_query->num_rows) {
             $this->session->data['customer_id'] = $customer_query->row['customer_id'];
             $this->session->data['customer_category'] = isset($customer_query->row['customer_category']) ? $customer_query->row['customer_category'] : null;
+            $this->session->data['customer_discount_category'] = isset($customer_query->row['customer_discount_category']) ? $customer_query->row['customer_discount_category'] : null;
             $this->session->data['parent'] = $customer_query->row['parent'];
             $log = new Log('error.log');
 
@@ -238,14 +240,17 @@ class Customer {
                 $parent_customer_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->db->escape($customer_query->row['parent']) . "' AND status = '1' AND approved='1'");
                 if ($customer_query->num_rows > 0 && $parent_customer_query->row['customer_id'] > 0) {
                     $this->customer_category = $parent_customer_query->row['customer_category'];
+                    $this->customer_discount_category = $parent_customer_query->row['customer_discount_category'];
                 } else {
                     $this->customer_category = NULL;
+                    $this->customer_discount_category = NULL;
                 }
             }
 
             if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
                 $this->customer_parent = $customer_query->row['parent'];
                 $this->customer_category = $customer_query->row['customer_category'];
+                $this->customer_discount_category = $customer_query->row['customer_discount_category'];
             }
             /* SET CUSTOMER CATEGORY */
             $log->write('FROM HERE PARENT CUSTOMER SESSION ASSIGN system_library_customer.php loginByPhone');
@@ -340,6 +345,7 @@ class Customer {
         $this->order_approval_access = '';
         $this->order_approval_access_role = '';
         $this->customer_category = '';
+        $this->customer_discount_category = '';
         $this->customer_parent = '';
         $this->pezesha_customer_id = '';
         $this->pezesha_customer_uuid = '';
@@ -431,6 +437,10 @@ class Customer {
         return $this->customer_category;
     }
 
+    public function getCustomerDiscountCategory() {
+        return $this->customer_discount_category;
+    }
+
     public function getCustomerParent() {
         return $this->customer_parent;
     }
@@ -473,6 +483,7 @@ class Customer {
         $this->order_approval_access = $data['order_approval_access'];
         $this->order_approval_access_role = $data['order_approval_access_role'];
         $this->customer_category = $data['customer_category'];
+        $this->customer_discount_category = $data['customer_discount_category'];
         $this->customer_parent = $data['parent'];
         $this->pezesha_customer_id = $data['pezesha_customer_id'];
         $this->pezesha_customer_uuid = $data['pezesha_customer_uuid'];
