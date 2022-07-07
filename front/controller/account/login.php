@@ -222,15 +222,11 @@ class ControllerAccountLogin extends Controller {
           } */
 
         // Check if customer has been approved.
-          if(is_numeric($this->request->post['email']))
-          {
-        $customer_info = $this->model_account_customer->getCustomerByPhone($this->request->post['email']);
-          }
-          else
-          {
-        $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
-
-          }
+        if (is_numeric($this->request->post['email'])) {
+            $customer_info = $this->model_account_customer->getCustomerByPhone($this->request->post['email']);
+        } else {
+            $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
+        }
         if ($customer_info && !$customer_info['approved']) {
             $this->error['warning'] = $this->language->get('error_not_verified');
         }
@@ -610,14 +606,10 @@ class ControllerAccountLogin extends Controller {
 
         if (isset($this->request->post['password']) && isset($this->request->post['email'])) {
             //$otp_data = $this->model_account_customer->getOTP($this->request->post['customer_id'],$this->request->post['verify_otp'],'login');
-            if(is_numeric($this->request->post['email']))
-            {
-            $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE telephone = '" . $this->db->escape($this->request->post['email']) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($this->request->post['password']) . "'))))) OR password = '" . $this->db->escape(md5($this->request->post['password'])) . "')");
-            }
-            else 
-            {
-            $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($this->request->post['email']) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($this->request->post['password']) . "'))))) OR password = '" . $this->db->escape(md5($this->request->post['password'])) . "')");
-
+            if (is_numeric($this->request->post['email'])) {
+                $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE telephone = '" . $this->db->escape($this->request->post['email']) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($this->request->post['password']) . "'))))) OR password = '" . $this->db->escape(md5($this->request->post['password'])) . "')");
+            } else {
+                $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($this->request->post['email']) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($this->request->post['password']) . "'))))) OR password = '" . $this->db->escape(md5($this->request->post['password'])) . "')");
             }
             //print_r($user_query);
             if ($user_query->num_rows) {
@@ -702,18 +694,13 @@ class ControllerAccountLogin extends Controller {
             } else {
                 $data['status'] = false;
 
-               
-
                 if (is_numeric($this->request->post['email'])) {
                     //login by phone number
                     $data['error_warning'] = $this->language->get('error_login_mobile');
-
                 } else {
-                    
+
                     $data['error_warning'] = $this->language->get('error_login');
                 }
-
-
             }
 
             // add activity and all
@@ -783,17 +770,13 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['vouchers']);
             unset($this->session->data['adminlogin']);
             unset($this->session->data['add_delivery_charges']);
-            setcookie('po_number', null, -1, '/'); 
- 
-            $customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);
-            if(isset($customer_info['email']) && !empty($customer_info['email']))
-            {
-                $login_key=$customer_info['email'];
-            }
-            else
-            {
-                $login_key=$customer_info['telephone'];
+            setcookie('po_number', null, -1, '/');
 
+            $customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);
+            if (isset($customer_info['email']) && !empty($customer_info['email'])) {
+                $login_key = $customer_info['email'];
+            } else {
+                $login_key = $customer_info['telephone'];
             }
             if ($customer_info && $this->customer->login($login_key, '', true)) {
                 // Default Addresses
@@ -984,6 +967,7 @@ class ControllerAccountLogin extends Controller {
             $this->cart->clear();
             unset($this->session->data['customer_id']);
             unset($this->session->data['customer_category']);
+            unset($this->session->data['customer_discount_category']);
             unset($this->session->data['wishlist']);
             unset($this->session->data['payment_address']);
             unset($this->session->data['payment_method']);
@@ -1464,16 +1448,13 @@ class ControllerAccountLogin extends Controller {
         if ((isset($this->request->post['email']) || isset($this->request->post['mobile'])) && isset($this->request->post['password'])) {
             $this->load->model('account/customer');
 
-            if(isset($this->request->post['email']))
-            {
-            $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($this->request->post['email']) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($this->request->post['password']) . "'))))) OR password = '" . $this->db->escape(md5($this->request->post['password'])) . "')");
+            if (isset($this->request->post['email'])) {
+                $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($this->request->post['email']) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($this->request->post['password']) . "'))))) OR password = '" . $this->db->escape(md5($this->request->post['password'])) . "')");
             }
             // else if (isset($this->request->post['mobile']))
             // {
             // $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE telephone = '" . $this->db->escape($this->request->post['mobile']) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($this->request->post['password']) . "'))))) OR password = '" . $this->db->escape(md5($this->request->post['password'])) . "')");
-
             // }
-
             //print_r($user_query);
             if ($user_query->num_rows) {
                 $customer_info = $user_query->row;
