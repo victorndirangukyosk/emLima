@@ -144,7 +144,7 @@ class ModelAccountCustomer extends Model {
 
         
 
-        if(empty($data['email']) &&  $customer_group_id==$this->config->get('config_kibandas_customer_group_id'))
+        if(empty($data['email']) )//&&  $customer_group_id==$this->config->get('config_kibandas_customer_group_id')
         {
         $temp_email="KB".$customer_id."@yopmail.com";
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET email = '" . $temp_email . "' WHERE customer_id = '" . (int) $customer_id . "'");
