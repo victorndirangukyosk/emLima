@@ -220,6 +220,9 @@ class ModelCatalogVendorProduct extends Model {
             $filter_category_price_prods = implode(',', $data['filter_category_price_prods']);
             $sql .= ' AND ps.product_store_id IN (' . $filter_category_price_prods . ') ';
         }
+        else if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
+        }
 
         if (!empty($data['filter_product_id_to'])) {
             $sql .= " AND ps.product_store_id <= '" . (int) $data['filter_product_id_to'] . "'";
@@ -248,9 +251,7 @@ class ModelCatalogVendorProduct extends Model {
             }
         }
 
-        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
-            $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
-        }
+        
 
         $sort_data = [
             'pd.name',
@@ -370,8 +371,7 @@ class ModelCatalogVendorProduct extends Model {
             $filter_category_price_prods = implode(',', $data['filter_category_price_prods']);
             $sql .= ' AND ps.product_store_id IN (' . $filter_category_price_prods . ') ';
         }
-
-        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+        else  if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
         }
 
@@ -1187,15 +1187,31 @@ class ModelCatalogVendorProduct extends Model {
     }
 
     public function getCategoryPriceDetailsByCategoryName($store_id, $price_category) {
+        if($store_id!=0)
+        {
         $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND store_id='" . $store_id . "'";
+        }
+        else
+        {
+        $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' ";
+            
+        }
         $res = $this->db->query($category_price);
         return $res->rows;
     }
 
     public function getCategoryPriceDetailsByCategoryNameByStatus($store_id, $price_category,$status) {
-        $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND store_id='" . $store_id . "' AND status ='".$status ."'";
+       
+        if($store_id!=0)
+        {
+             $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND store_id='" . $store_id . "' AND status ='".$status ."'";
+        }
+        else{
+            $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "'  AND status ='".$status ."'";
+
+        }
         $res = $this->db->query($category_price);
-        // echo "<pre>";print_r($category_price);die;
+        // echo "<pre>";print_r('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND store_id='" . $store_id . "' AND status ='".$status ."'");die;
         
         return $res->rows;
     }
