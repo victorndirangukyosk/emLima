@@ -174,7 +174,7 @@ class ModelCatalogVendorProduct extends Model {
     public function getProducts($data = []) {
        
        
-        if (!empty($data['filter_category_price_prods'])) {
+        if (!empty($data['filter_category_price'])) {
 
             $sql = 'SELECT ps.*,p2c.product_id,pd.name as product_name ,p.*,st.name as store_name,v.firstname as fs,v.lastname as ls,ps.status as sts,v.user_id as vendor_id,pp.status as final_status from ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (ps.product_id = p2c.product_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) join hf7_product_category_prices pp on pp.product_store_id=ps.product_store_id';
 
@@ -229,12 +229,12 @@ class ModelCatalogVendorProduct extends Model {
             $sql .= " AND ps.product_store_id = '" . $this->db->escape($data['filter_product_store_id']) . "'";
         }
 
-        if (!empty($data['filter_category_price_prods'])) {
+        if (!empty($data['filter_category_price'])) {
             $filter_category_price_prods = implode(',', $data['filter_category_price_prods']);
             $sql .= ' AND ps.product_store_id IN (' . $filter_category_price_prods . ') ';
         }
 
-        if (isset($data['filter_status']) && !is_null($data['filter_status']) && empty($data['filter_category_price_prods'])) {
+        if (isset($data['filter_status']) && !is_null($data['filter_status']) && empty($data['filter_category_price'])) {
             $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
         }
 
@@ -381,11 +381,11 @@ class ModelCatalogVendorProduct extends Model {
             }
         }
 
-        if (!empty($data['filter_category_price_prods'])) {
+        if (!empty($data['filter_category_price'])) {
             $filter_category_price_prods = implode(',', $data['filter_category_price_prods']);
             $sql .= ' AND ps.product_store_id IN (' . $filter_category_price_prods . ') ';
         }
-        else  if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+        if (isset($data['filter_status']) && !is_null($data['filter_status']) && empty($data['filter_category_price'])) {
             $sql .= " AND ps.status = '" . (int) $data['filter_status'] . "'";
         }
 
@@ -1225,7 +1225,7 @@ class ModelCatalogVendorProduct extends Model {
 
         }
         $res = $this->db->query($category_price);
-        // echo "<pre>";print_r('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND store_id='" . $store_id . "' AND status ='".$status ."'");die;
+        // echo "<pre>";print_r('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND status ='".$status ."'");die;
         
         return $res->rows;
     }
