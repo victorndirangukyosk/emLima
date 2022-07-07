@@ -1201,7 +1201,7 @@ class ControllerCatalogVendorProduct extends Controller {
             $modified_res_new = [];
             if (count($results) > 0) {
                 foreach ($results as $res) {
-                    if (isset($category_prices[$res['product_store_id'] . '_' . $this->request->get['filter_category_price'] . '_75'])) {
+                    if (isset($category_prices[$res['product_store_id'] . '_' . $this->request->get['filter_category_price'] . '_'.$res['store_id']])) {
                         $modified_res[] = $res;
                     }
                 }
