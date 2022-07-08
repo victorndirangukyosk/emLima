@@ -245,7 +245,7 @@
             <li><a href="<?php echo $customer_feedback; ?>"><?php echo $text_customer_feedback; ?></a></li>
             <?php } ?>
             
-            <?php if($preturn_customer) { ?>
+            <?php if($preturn_customer_otp) { ?>
             <li><a href="<?php echo $customer_otp; ?>">Customer OTP</a></li>
             <?php } ?>
 

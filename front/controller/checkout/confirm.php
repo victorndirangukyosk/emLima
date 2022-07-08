@@ -873,7 +873,7 @@ class ControllerCheckoutConfirm extends Controller {
                             }
 
                             if ($result['code'] == 'discount') {
-                                $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes, NULL, $custom_discounts);
+                                $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes, $store_id, $custom_discounts);
                             }
                         }
                     }

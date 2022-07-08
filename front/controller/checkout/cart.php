@@ -500,7 +500,7 @@ class ControllerCheckoutCart extends Controller {
                                 // print_r($total);
                             }
                             if ($result['code'] == 'discount') {
-                                $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes, NULL, $custom_discounts);
+                                $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes, $store_id, $custom_discounts);
                             }
                         }
                     }

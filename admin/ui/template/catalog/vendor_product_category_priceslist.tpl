@@ -13,8 +13,10 @@
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_enable; ?>" class="btn btn-default" onclick="changeStatus(1)"><i class="fa fa-check-circle text-success"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="changeStatus(0)"><i class="fa fa-times-circle text-danger"></i></button>
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>-->
+                <?php if($this->user->hasPermission('modify', 'category/prices')){ ?>
                 <button type="button" onclick="addupdatecategoryprices();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add or Update Category Prices"><i class="fa fa-plus"></i></button>
                 <button type="button" onclick="addnewproduct();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Add New"><i class="fa fa-plus"></i></button>
+                 <?php } ?>
                 <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
                 <button type="button" onclick="excel_item();" data-toggle="tooltip" title="" class="btn btn-warning " data-original-title="Download Excel per Item"><i class="fa fa-download"></i></button>
 
@@ -305,6 +307,8 @@
 									<?php }?>
                                  
                                 <td class="text-right">
+                <?php if($this->user->hasPermission('modify', 'category/prices')){ ?>
+
                                     <?php if(isset($product['category_price_status']) && $product['category_price_status'] != NULL && $product['category_price_status'] == 1) { ?>
                                     <button type="button" onclick="ChangeCategoryPricesStatus('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 0, '<?php echo $price_cat['price_category']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Disable Product Category Price Status"><i class="fa fa-check-circle text-success"></i></button>
                                     <?php } ?>
@@ -315,7 +319,8 @@
 									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
 									data-toggle="modal" data-target="#<?php echo $product['product_store_id']; ?>historyModal"
 								    title="" class="btn btn-default" data-original-title="History"><i class="fa fa-history text-success"></i></button>
-							    </td>
+							   <?php } ?>
+                                </td>
                                     
                                 </tr>
 									<div id="<?php echo $product['product_store_id']; ?>historyModal" class="modal fade" role="dialog">
