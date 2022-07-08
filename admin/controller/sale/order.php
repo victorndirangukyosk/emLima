@@ -4953,10 +4953,8 @@ class ControllerSaleOrder extends Controller {
                     }
 
                     $show = FALSE;
-                    $data['show_discount'] = $show;
                     if (isset($product['discount_percentage']) && $product['discount_percentage'] > 0) {
                         $show = TRUE;
-                        $data['show_discount'] = $show;
                     }
 
                     $product_data[] = [
@@ -5121,6 +5119,7 @@ class ControllerSaleOrder extends Controller {
                     'customer_experince_phone' => $customer_experince_phone,
                     'paid' => $order_info['paid'],
                     'order_transcation_id' => $transaction_id,
+                    'show_discount' => $show,
                 ];
             }
         }
