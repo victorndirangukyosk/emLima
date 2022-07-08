@@ -7,7 +7,7 @@
         <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-customer').submit() : false;"><i class="fa fa-trash-o"></i></button>
         <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>-->
       </div>
-      <h1><?php echo $heading_title; ?></h1>
+      <h1>Kibanda Customers</h1>
       <ul class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
         <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
@@ -315,9 +315,9 @@
                     <?php } ?>
                    
                    <?php if($customer['status_row'] && $customer['approved_row']) { ?>
-                   <!--<a target="_blank" data-toggle="tooltip" title="Login" href="index.php?path=sale/customer/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['customer_id']; ?>&store_id=0">
+                   <a target="_blank" data-toggle="tooltip" title="Login" href="index.php?path=sale/kibanda/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['customer_id']; ?>&store_id=0">
                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-lock"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                   </a>-->
+                   </a>
                    <?php } else { ?>
                    <!--<a data-toggle="tooltip" title="Account Disabled" href="javascript:void(0)" style="cursor:default">
                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-lock"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
@@ -352,7 +352,7 @@
   </div>
   <script type="text/javascript">
 $('#button-filter').on('click', function() {
-  url = 'index.php?path=sale/customer/kibanda&token=<?php echo $token; ?>';
+  url = 'index.php?path=sale/kibanda&token=<?php echo $token; ?>';
 
    var filter_company = $('input[name=\'filter_company\']').val();
 
@@ -485,7 +485,7 @@ $('#button-filter').on('click', function() {
 $('input[name=\'filter_name\']').autocomplete({
   'source': function(request, response) {
     $.ajax({
-      url: 'index.php?path=sale/customer/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$companyName,
+      url: 'index.php?path=sale/kibanda/autocompletebyCompany&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request)+'&filter_company=' +$companyName,
       dataType: 'json',     
       success: function(json) {
         response($.map(json, function(item) {
@@ -505,7 +505,7 @@ $('input[name=\'filter_name\']').autocomplete({
 $('input[name=\'filter_parent_customer\']').autocomplete({
   'source': function(request, response) {
     $.ajax({
-      url: 'index.php?path=sale/customer/autocompleteparentcustomer&token=<?php echo $token; ?>&filter_parent_customer=' +  encodeURIComponent(request),
+      url: 'index.php?path=sale/kibanda/autocompleteparentcustomer&token=<?php echo $token; ?>&filter_parent_customer=' +  encodeURIComponent(request),
       dataType: 'json',     
       success: function(json) {
         response($.map(json, function(item) {
@@ -526,7 +526,7 @@ $('input[name=\'filter_parent_customer\']').autocomplete({
  $('input[name=\'filter_company\']').autocomplete({
             'source': function (request, response) {
                 $.ajax({
-                    url: 'index.php?path=sale/customer/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    url: 'index.php?path=sale/kibanda/autocompletecompany&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
                     dataType: 'json',
                     success: function (json) {
                         response($.map(json, function (item) {
@@ -593,7 +593,7 @@ $('input[name=\'filter_parent_customer\']').autocomplete({
 $('input[name=\'filter_email\']').autocomplete({
   'source': function(request, response) {
     $.ajax({
-      url: 'index.php?path=sale/customer/autocomplete&token=<?php echo $token; ?>&filter_email=' +  encodeURIComponent(request),
+      url: 'index.php?path=sale/kibanda/autocomplete&token=<?php echo $token; ?>&filter_email=' +  encodeURIComponent(request),
       dataType: 'json',     
       success: function(json) {
         response($.map(json, function(item) {
@@ -618,7 +618,7 @@ $('.date').datetimepicker({
 
 function excel() {
             
-    url = 'index.php?path=sale/customer/export_excel&token=<?php echo $token; ?>';
+    url = 'index.php?path=sale/kibanda/export_excel&token=<?php echo $token; ?>';
     
 
 
