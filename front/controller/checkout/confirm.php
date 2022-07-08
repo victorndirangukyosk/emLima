@@ -1079,6 +1079,8 @@ class ControllerCheckoutConfirm extends Controller {
                             'total' => $product['total'],
                             'tax' => $this->tax->getTax($product['price'], $product['tax_class_id']),
                             'reward' => $product['reward'],
+                            'discount_percentage' => $product['discount_percentage'],
+                            'discount_price' => $product['discount_price'],
                         ];
                     }
                 }
