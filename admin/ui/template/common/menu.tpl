@@ -334,6 +334,11 @@
             <?php if($preturn_customer_otp) { ?>
             <li><a href="<?php echo $customer_otp; ?>">Customer OTP</a></li>
              <?php } ?>
+
+              <?php if($preturn_kibandas) { ?>
+            <li><a href="<?php echo $kibanda; ?>">Kibanda</a></li>
+            <?php } ?>
+            
         </ul>
     </li>
     <?php } ?>
