@@ -1153,15 +1153,14 @@ class ControllerCatalogVendorProduct extends Controller {
         $category_price_prods = NULL;
 
         if (isset($this->request->get['filter_category_price'])) {
-        if (!isset($filter_status) ||$filter_status=="" ) {
-            
-        
-            $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryName(0, $this->request->get['filter_category_price']);
-        }
-        else{
+            if (!isset($filter_status) || $filter_status == "") {
 
-            $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryNameByStatus(0, $this->request->get['filter_category_price'],$filter_status);
-        }
+
+                $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryName(0, $this->request->get['filter_category_price']);
+            } else {
+
+                $category_price_prods = $this->model_catalog_vendor_product->getCategoryPriceDetailsByCategoryNameByStatus(0, $this->request->get['filter_category_price'], $filter_status);
+            }
             $category_price_prods = array_column($category_price_prods, 'product_store_id');
             /* $log = new Log('error.log');
               $log->write('category_price_prods');
@@ -1201,7 +1200,7 @@ class ControllerCatalogVendorProduct extends Controller {
             $modified_res_new = [];
             if (count($results) > 0) {
                 foreach ($results as $res) {
-                    if (isset($category_prices[$res['product_store_id'] . '_' . $this->request->get['filter_category_price'] . '_'.$res['store_id']])) {
+                    if (isset($category_prices[$res['product_store_id'] . '_' . $this->request->get['filter_category_price'] . '_' . $res['store_id']])) {
                         $modified_res[] = $res;
                     }
                 }
@@ -1216,7 +1215,6 @@ class ControllerCatalogVendorProduct extends Controller {
                         } else {
                             // $modified['category_price_status'] = 1;
                             $modified['category_price_status'] = $modified['final_status'];
-
                         }
                         $modified_res_new[] = $modified;
                     }
@@ -1229,7 +1227,7 @@ class ControllerCatalogVendorProduct extends Controller {
         }
 
         $results_count = $this->model_catalog_vendor_product->getProductsCount($filter_data);
-        
+
         if (isset($this->request->get['filter_category_price'])) {
             $modified_res_count = [];
             if (count($results_count) > 0) {
@@ -1244,7 +1242,7 @@ class ControllerCatalogVendorProduct extends Controller {
             $product_total = count($results_count);
         }
 
-        
+
         $this->load->model('catalog/category');
         $data['categories'] = $this->model_catalog_category->getCategories(0);
 
@@ -4582,7 +4580,7 @@ class ControllerCatalogVendorProduct extends Controller {
                     }
 
                     if (!isset($exist_product_price_category_detials) || count($exist_product_price_category_detials) <= 0) {
-                        $res = $this->model_catalog_vendor_product->insertProductDiscountPrice($customer_details['customer_category'], $result['product_store_id'], $result['product_id'], $result['special_price'], $ffilter_vendor_product_discount, $result['product_name']);
+                        $res = $this->model_catalog_vendor_product->insertProductDiscountPrice($customer_details['customer_discount_category'], $result['product_store_id'], $result['product_id'], $result['special_price'], $ffilter_vendor_product_discount, $result['product_name']);
                         $log->write($res);
                         if ($res != 1) {
                             $exist_price_category[] = $result;
@@ -4592,7 +4590,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
                 if (count($exist_price_category) <= 0) {
                     $log->write('updateCustomerPriceCategory');
-                    $updateCustomerPriceCategory = $this->model_sale_customer->updateCustomerPriceDiscount($customer_details['customer_category'], $customer_details['customer_id']);
+                    $updateCustomerPriceCategory = $this->model_sale_customer->updateCustomerPriceDiscount($customer_details['customer_discount_category'], $customer_details['customer_id']);
                 }
             }
 
@@ -4621,7 +4619,7 @@ class ControllerCatalogVendorProduct extends Controller {
         $log->write('RESULTS');
 
         if (count($non_exist_price_category) <= 0 && count($exist_price_category) <= 0 && $updateCustomerPriceCategory == true) {
-            $this->load->controller('catalog/product/cacheProductPrices', 75);
+            $this->load->controller('catalog/product/cacheProductDiscounts', 75);
             $json['status'] = 200;
             $json['message'] = 'Customer Price Category Updated!';
             $this->response->addHeader('Content-Type: application/json');
