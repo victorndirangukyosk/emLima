@@ -361,6 +361,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_customer_ban_ip'] = $this->user->hasPermission('access', 'sale/customer_ban_ip');
         $data['preturn_customer_feedback'] = $this->user->hasPermission('access', 'sale/customer_feedback');
         $data['preturn_customer_otp'] = $this->user->hasPermission('access', 'sale/customer_otp');
+        $data['preturn_customer_login'] = $this->user->hasPermission('access', 'sale/customer_login');
         $data['preturn_customer_issue'] = $this->user->hasPermission('access', 'sale/customer_issue');
         $data['preturn_customer_bulk_email'] = $this->user->hasPermission('access', 'email/bulk_email');
         $data['preturn_order_bulk_email'] = $this->user->hasPermission('access', 'email/bulk_email');
