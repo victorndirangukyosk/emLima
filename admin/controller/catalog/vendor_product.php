@@ -4598,7 +4598,7 @@ class ControllerCatalogVendorProduct extends Controller {
 
             if ($customer_details['customer_discount_category'] == NULL) {
 
-                $new_price_category_name = strtoupper(preg_replace('/\s+/', '', $customer_details['company_name'])) . '_' . strtoupper(preg_replace('/\s+/', '', $customer_details['firstname'])) . '_' . strtoupper(preg_replace('/\s+/', '', $customer_details['lastname']));
+                $new_price_category_name = strtoupper(preg_replace('/[^A-Za-z0-9\-]/', '', $customer_details['company_name'])) . '_' . strtoupper(preg_replace('/[^A-Za-z0-9\-]/', '', $customer_details['firstname'])) . '_' . strtoupper(preg_replace('/[^A-Za-z0-9\-]/', '', $customer_details['lastname']));
                 foreach ($results as $result) {
                     $res = $this->model_catalog_vendor_product->insertProductDiscountPrice($new_price_category_name, $result['product_store_id'], $result['product_id'], $result['special_price'], $ffilter_vendor_product_discount, $result['product_name']);
                     $log->write($res);
