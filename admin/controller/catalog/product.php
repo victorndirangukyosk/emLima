@@ -540,6 +540,22 @@ class ControllerCatalogProduct extends Controller {
         $this->cache->set('category_price_data', $cache_price_data);
     }
 
+    protected function cacheProductDiscounts($store_id) {
+        $this->cache->delete('category_discount_data');
+        $cache_price_data = [];
+        //$sql = 'SELECT * FROM `' . DB_PREFIX . "product_category_prices` where `store_id` = $store_id";
+        $sql = 'SELECT * FROM `' . DB_PREFIX . "customer_discount` where `store_id` > 0";
+        //echo $sql;exit;
+        $resultsdata = $this->db->query($sql);
+        //echo '<pre>'; print_r($resultsdata);exit;
+        if (count($resultsdata->rows) > 0) {
+            foreach ($resultsdata->rows as $result) {
+                $cache_price_data[$result['product_store_id'] . '_' . $result['price_category'] . '_' . $result['store_id']] = $result['discount'];
+            }
+        }
+        $this->cache->set('category_discount_data', $cache_price_data);
+    }
+
     protected function getList() {
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
@@ -1788,7 +1804,6 @@ class ControllerCatalogProduct extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-
     public function getVendorProductVariantsInfo_all() {
 
         $log = new Log('error.log');
@@ -1805,7 +1820,6 @@ class ControllerCatalogProduct extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    
     public function autocompleteStoreProduct() {
         $json = [];
 
