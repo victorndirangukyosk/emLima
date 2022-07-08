@@ -780,7 +780,7 @@
             <?php }?>
 
 
-               <?php if( ($preturn_report_finance != false) || ($preturn_report_receivables_summary || $preturn_report_receivables_ageing  || $preturn_report_missing_products_revenue || $preturn_report_order_product_missing_products)) { ?>
+               <?php if( ($preturn_report_finance != false) ||$preturn_sale_daily != false|| ($preturn_report_receivables_summary || $preturn_report_receivables_ageing  || $preturn_report_missing_products_revenue || $preturn_report_order_product_missing_products)) { ?>
             <li><a class="parent">Finance</a>
                 <ul>
                    
@@ -802,6 +802,9 @@
             <li><a href="<?php echo $report_missing_products_revenue; ?>">Missing Products Revenue Lost</a></li>
             <?php } ?>
 
+             <?php if($preturn_sale_daily) { ?>
+                    <li><a href="<?php echo $report_sale_daily; ?>">Daily Sales</a></li>
+                    <?php }?>
             
                 </ul>
             </li>
