@@ -2695,6 +2695,11 @@ class ModelSaleCustomer extends Model {
         $log = new Log('error.log');
         $log->write($query);
         $res = $this->db->query($query);
+
+        $query2 = 'UPDATE ' . DB_PREFIX . "customer SET customer_category = NULL WHERE customer_id ='" . (int) $customer_id . "'";
+        $log->write($query2);
+        $res2 = $this->db->query($query2);
+
         if ($res == 1) {
             $this->updateSubCustomerDiscountCategory($price_category, $customer_id);
         }
@@ -2714,6 +2719,11 @@ class ModelSaleCustomer extends Model {
         $log = new Log('error.log');
         $log->write($query);
         $res = $this->db->query($query);
+
+        $query2 = 'UPDATE ' . DB_PREFIX . "customer SET customer_category = NULL WHERE parent ='" . (int) $customer_id . "'";
+        $log->write($query2);
+        $res2 = $this->db->query($query2);
+
         return $res;
     }
 
