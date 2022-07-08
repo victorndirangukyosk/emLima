@@ -159,6 +159,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_sale_payment'] = $this->url->link('report/sale_payment', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_sale_transaction'] = $this->url->link('report/sale_transaction', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_sale_daily'] = $this->url->link('report/sale_daily', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_sale_return'] = $this->url->link('report/sale_return', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_sale_coupon'] = $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token'], 'SSL');
@@ -483,6 +484,7 @@ class ControllerCommonMenu extends Controller {
 
         $data['preturn_sale_payment'] = $this->user->hasPermission('access', 'report/sale_payment');
         $data['preturn_sale_transaction'] = $this->user->hasPermission('access', 'report/sale_transaction');
+        $data['preturn_sale_daily'] = $this->user->hasPermission('access', 'report/sale_daily');
 
         $data['preturn_sale_return'] = $this->user->hasPermission('access', 'report/sale_return');
         $data['preturn_sale_coupon'] = $this->user->hasPermission('access', 'report/sale_coupon');
@@ -601,6 +603,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_sale_payment'] = $this->url->link('report/sale_payment', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_sale_transaction'] = $this->url->link('report/sale_transaction', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_sale_daily'] = $this->url->link('report/sale_daily', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_sale_return'] = $this->url->link('report/sale_return', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_sale_coupon'] = $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token'], 'SSL');
@@ -702,6 +705,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_sale_payment'] = $this->user->hasPermission('access', 'report/sale_payment');
 
         $data['preturn_sale_transaction'] = $this->user->hasPermission('access', 'report/sale_transaction');
+        $data['preturn_sale_daily'] = $this->user->hasPermission('access', 'report/sale_daily');
 
         $data['preturn_sale_return'] = $this->user->hasPermission('access', 'report/sale_return');
         $data['preturn_sale_coupon'] = $this->user->hasPermission('access', 'report/sale_coupon');
