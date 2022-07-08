@@ -2,9 +2,24 @@
 
   
   
-  <div class="_2D2lC">
+  <div class="_2D2lC">                                      <?php if($product['variations'][0]['discount_percentage'] > 0) { ?>
+                                                            <div id="discount-container">
+                                                            <del><?= $product['variations'][0]['special_price'];?></del>(<?= $product['variations'][0]['discount_percentage'];?>% OFF)
+                                                            </div>
+                                                            <?php } ?>
+                                                            
+                                                            <?php if($product['variations'][0]['discount_percentage'] > 0) { ?>
                                                             <div class="price-popup" id="content-container">
-                                                                 <?=$product['variations'][0]['special_price'];?></div>
+                                                                 <?=$product['variations'][0]['discount_price'];?>
+                                                            </div>
+                                                            <?php } ?>
+                                                            
+                                                            <?php if($product['variations'][0]['discount_percentage'] <= 0) { ?>
+                                                            <div class="price-popup" id="content-container">
+                                                                 <?=$product['variations'][0]['special_price'];?>
+                                                            </div>
+                                                            <?php } ?>
+                                                            
                                                         </div>
 
 
@@ -14,12 +29,22 @@
                                                       <select class="product-variation">
                                                       <?php foreach($product['variations'] as $variation) { ?>
                                                       <option value="<?php echo isset($variation['variation_id']) ? $variation['variation_id'] : ''; ?>"
+                                                      data-discount="<?php echo isset($variation['discount_percentage']) &&  $variation['discount_percentage'] > 0 ? '<del>'.$variation['special_price'].'</del>('.$variation['discount_percentage'].'% OFF)' : ''; ?>"
+                                                      
+                                                      <?php if($variation['discount_percentage'] > 0) { ?>
+                                                      data-price="<?php echo isset($variation['discount_price']) ? $variation['discount_price'] : ''; ?>"
+                                                      data-special="<?php echo isset($variation['discount_price']) ? $variation['discount_price'] : ''; ?>"
+                                                      <?php } ?>
+                                                      
+                                                      <?php if($variation['discount_percentage'] <= 0) { ?>
                                                       data-price="<?php echo isset($variation['price']) ? $variation['price'] : ''; ?>"
+                                                      data-special="<?php echo isset($variation['special_price']) ? $variation['special_price'] : ''; ?>"
+                                                      <?php } ?>
+                                                      
                                                       data-quantity="<?php echo isset($variation['qty_in_cart']) ? $variation['qty_in_cart'] : ''; ?>"
                                                       data-key="<?php echo isset($variation['key']) ? $variation['key'] : ''; ?>"
-                                                       data-productid="<?= $variation['product_id'] ?>"
-                                                       data-isWl="<?= $variation['isWishListID'] ?>"
-                                                      data-special="<?php echo isset($variation['special_price']) ? $variation['special_price'] : ''; ?>"
+                                                      data-productid="<?= $variation['product_id'] ?>"
+                                                      data-isWl="<?= $variation['isWishListID'] ?>"
                                                       <?php if(isset($variation['category_pricing_variant_status']) && $variation['category_pricing_variant_status'] == 0) { echo "disabled"; } ?> >
                                                       <?php  echo 'Per ' . $variation['unit']; ?>
                                                       </option>
@@ -236,6 +261,7 @@ $(document).delegate('.product-variation', 'change', function() {
      
     const newProductId = $(this).children("option:selected").val();
     const newPrice = $(this).children("option:selected").attr('data-price');
+    const newDiscount = $(this).children("option:selected").attr('data-discount');
     const newproID = $(this).children("option:selected").attr('data-productid');
     const newwlID = $(this).children("option:selected").attr('data-isWl');
     const newSpecial = $(this).children("option:selected").attr('data-special');
@@ -248,6 +274,7 @@ $(document).delegate('.product-variation', 'change', function() {
      //$('#content-container').html('KES ' +newSpecial);
      //$('#content-container').html('KES '  +qty_in_cart1);
      $('#content-container').html(newSpecial);
+     $('#discount-container').html(newDiscount);
  
     let dataHolder = $('#add-cart-btnnew');
     let wishlistHolder = $('#add-wishlist');

@@ -1750,6 +1750,19 @@ class ControllerCommonHome extends Controller {
                     }
                 }
                 //FOR CATEGORY PRICING
+                //FOR CATEGORY DISCOUNT
+                $category_discount_response = NULL;
+                $result['discount_price'] = 0;
+                $result['discount_percentage'] = 0;
+                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    $category_discount_response = $this->load->controller('common/customercategorydiscount', $result);
+                    if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                        $result['discount_price'] = $category_discount_response['discount_price'];
+                        $result['discount_percentage'] = $category_discount_response['discount_percentage'];
+                    }
+                }
+                //FOR CATEGORY DISCOUNT
                 //get price html
                 if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
@@ -1789,6 +1802,20 @@ class ControllerCommonHome extends Controller {
                     $special_price = $this->currency->format($s_price);
                     $price = $this->currency->format($o_price);
                 }
+
+                //FOR CATEGORY DISCOUNT
+                $category_discount_response = NULL;
+                $result['discount_price'] = 0;
+                $result['discount_percentage'] = 0;
+                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    $category_discount_response = $this->load->controller('common/customercategorydiscount', $result);
+                    if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                        $result['discount_price'] = $category_discount_response['discount_price'];
+                        $result['discount_percentage'] = $category_discount_response['discount_percentage'];
+                    }
+                }
+                //FOR CATEGORY DISCOUNT
             }
 
             //get qty in cart
@@ -1831,6 +1858,8 @@ class ControllerCommonHome extends Controller {
                     'weight' => floatval($result['weight']),
                     'price' => $price,
                     'special' => $special_price,
+                    'discount_price' => $result['discount_price'],
+                    'discount_percentage' => $result['discount_percentage'],
                 ];
             } else {
                 // Add as new product
@@ -1852,6 +1881,8 @@ class ControllerCommonHome extends Controller {
                             'weight' => floatval($result['weight']),
                             'price' => $price,
                             'special' => $special_price,
+                            'discount_price' => $result['discount_price'],
+                            'discount_percentage' => $result['discount_percentage'],
                         ],
                     ],
                     'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
@@ -2474,6 +2505,19 @@ class ControllerCommonHome extends Controller {
                     }
                 }
                 //FOR CATEGORY PRICING
+                //FOR CATEGORY DISCOUNT
+                $category_discount_response = NULL;
+                $result['discount_price'] = 0;
+                $result['discount_percentage'] = 0;
+                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    $category_discount_response = $this->load->controller('common/customercategorydiscount', $result);
+                    if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                        $result['discount_price'] = $category_discount_response['discount_price'];
+                        $result['discount_percentage'] = $category_discount_response['discount_percentage'];
+                    }
+                }
+                //FOR CATEGORY DISCOUNT
                 //get price html
                 if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
@@ -2511,6 +2555,20 @@ class ControllerCommonHome extends Controller {
                     $special_price = $this->currency->format($s_price);
                     $price = $this->currency->format($o_price);
                 }
+
+                //FOR CATEGORY DISCOUNT
+                $category_discount_response = NULL;
+                $result['discount_price'] = 0;
+                $result['discount_percentage'] = 0;
+                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    $category_discount_response = $this->load->controller('common/customercategorydiscount', $result);
+                    if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                        $result['discount_price'] = $category_discount_response['discount_price'];
+                        $result['discount_percentage'] = $category_discount_response['discount_percentage'];
+                    }
+                }
+                //FOR CATEGORY DISCOUNT
             }
 
             //get qty in cart
@@ -2551,6 +2609,8 @@ class ControllerCommonHome extends Controller {
                     'weight' => floatval($result['weight']),
                     'price' => $price,
                     'special' => $special_price,
+                    'discount_price' => $result['discount_price'],
+                    'discount_percentage' => $result['discount_percentage'],
                 ];
             } else {
                 // Add as new product
@@ -2572,6 +2632,8 @@ class ControllerCommonHome extends Controller {
                             'weight' => floatval($result['weight']),
                             'price' => $price,
                             'special' => $special_price,
+                            'discount_price' => $result['discount_price'],
+                            'discount_percentage' => $result['discount_percentage'],
                         ],
                     ],
                     'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',

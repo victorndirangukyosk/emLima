@@ -476,6 +476,7 @@ class ControllerCheckoutCart extends Controller {
                 $total = 0;
                 //echo $total;exit;
                 $taxes = $this->cart->getTaxes();
+                $custom_discounts = $this->cart->getDiscounts();
 
                 // Display prices
                 if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -493,9 +494,14 @@ class ControllerCheckoutCart extends Controller {
                         if ($this->config->get($result['code'] . '_status')) {
                             $this->load->model('total/' . $result['code']);
 
-                            $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
-                            // print_r($result['code']);
-                            // print_r($total);
+                            if ($result['code'] != 'discount') {
+                                $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                                // print_r($result['code']);
+                                // print_r($total);
+                            }
+                            if ($result['code'] == 'discount') {
+                                $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes, NULL, $custom_discounts);
+                            }
                         }
                     }
 
@@ -735,7 +741,7 @@ class ControllerCheckoutCart extends Controller {
         $json['count_products'] = $this->cart->countProducts();
         $json['total_amount'] = $this->currency->format($this->cart->getTotal());
         $json['minimum_order_amount'] = $this->config->get('config_active_store_minimum_order_amount') <= $this->cart->getSubTotal() ? TRUE : FALSE;
-        $json['base_url'] = BASE_URL.'/';
+        $json['base_url'] = BASE_URL . '/';
         // Validate minimum quantity requirements.
         $products_cart = $this->cart->getProducts();
 
