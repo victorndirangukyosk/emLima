@@ -646,7 +646,9 @@ class ModelReportSaleTransaction extends Model
             } else {
             }
         } else {
-            $sql .= " WHERE o.order_status_id > '0'";
+            // $sql .= " WHERE o.order_status_id > '0'";
+            $sql .= " WHERE o.order_status_id not in (0,6,8,9,16)";
+
         }
 
         if ($this->user->isVendor()) {
