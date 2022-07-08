@@ -161,6 +161,9 @@
                                 <td>Product Notes</td>
                                 <td class="text-center">Quantity</td>
                                 <td class="text-right">Unit Price</td>
+                                <?php if($order['show_discount'] == TRUE) { ?>
+                                <td class="text-right">Discount</td>
+                                <?php } ?>
                                 <td class="text-right">Total</td>
                             </tr>
                             </thead>
@@ -172,6 +175,9 @@
                                 <td><?= $product['product_note'] ?></td>
                                 <td class="text-center"><?= $product['quantity'] ?> <?= $product['unit'] ?></td>
                                 <td class="text-right"><?= $product['price'] ?></td>
+                                <?php if($order['show_discount'] == TRUE) { ?>
+                                <td class="text-right"><?= $product['discount_amount'] ?></td>
+                                <?php } ?>
                                 <td class="text-right"><?= $product['total'] ?></td>
                             </tr>
                             <?php } ?>
