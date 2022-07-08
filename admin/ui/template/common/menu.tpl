@@ -223,7 +223,7 @@
     <?php } ?>
     
     <?php
-    if( $preturn_customer != false || $preturn_kibandas != false || $preturn_customer_group != false || $preturn_customer_ban_ip != false) {
+    if( (!$this->user->isAccountManager() )  &&($preturn_customer != false || $preturn_kibandas != false || $preturn_customer_group != false || $preturn_customer_ban_ip != false)) {
     ?>
     <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_customer; ?></span></a>
         <ul class="collapse">
@@ -335,7 +335,9 @@
             <li><a href="<?php echo $customer_otp; ?>">Customer OTP</a></li>
              <?php } ?>
 
-              
+               <?php if($preturn_kibandas) { ?>
+            <li><a href="<?php echo $kibanda; ?>"><?php echo $text_kibanda; ?></a></li>
+            <?php } ?>
             
         </ul>
     </li>
