@@ -1,6 +1,6 @@
 <?php
 
-class ModelReportSaleTransaction extends Model
+class ModelReportSaleDaily extends Model
 {
     public function getShopper($shopper_id)
     {
@@ -625,7 +625,7 @@ class ModelReportSaleTransaction extends Model
 
     public function getOrdersNew($data = [])
     {
-        $sql = "SELECT cus.company_name as company, oti.transaction_id, o.order_id, o.shipping_method, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM ".DB_PREFIX."order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '".(int) $this->config->get('config_language_id')."') AS status, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.delivery_date FROM `".DB_PREFIX.'order` o ';
+        $sql = "SELECT cus.company_name as company, oti.transaction_id, o.order_id,  o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM ".DB_PREFIX."order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '".(int) $this->config->get('config_language_id')."') AS status,  o.order_status_id,o.store_name,  o.total, o.amount_partialy_paid,o.paid,o.date_added, o.date_modified,o.delivery_date,ot.value as amount FROM `".DB_PREFIX."order` o  join hf7_order_total ot on o.order_id =ot.order_id and ot.code='total'";
 
         // $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id';
         $sql .= ' left join `'.DB_PREFIX.'customer` cus on cus.customer_id = o.customer_id';
@@ -646,9 +646,7 @@ class ModelReportSaleTransaction extends Model
             } else {
             }
         } else {
-            // $sql .= " WHERE o.order_status_id > '0'";
             $sql .= " WHERE o.order_status_id not in (0,6,8,9,16)";
-
         }
 
         if ($this->user->isVendor()) {
@@ -692,7 +690,7 @@ class ModelReportSaleTransaction extends Model
             $sql .= " AND o.shipping_method LIKE '%".$data['filter_delivery_method']."%'";
         }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added'])) {//date start
             $sql .= " AND DATE(o.date_added) >= DATE('".$this->db->escape($data['filter_date_added'])."')";
         }
 
@@ -704,8 +702,9 @@ class ModelReportSaleTransaction extends Model
             $sql .= " AND DATE(o.delivery_date) = DATE('".$this->db->escape($data['filter_date_delivery'])."')";
         }
 
-        if (!empty($data['filter_date_modified'])) {
-            $sql .= " AND DATE(o.date_modified) <= DATE('".$this->db->escape($data['filter_date_modified'])."')";
+        if (!empty($data['filter_date_modified'])) {//date end
+            // $sql .= " AND DATE(o.date_modified) <= DATE('".$this->db->escape($data['filter_date_modified'])."')";
+            $sql .= " AND DATE(o.date_added) <= DATE('".$this->db->escape($data['filter_date_modified'])."')";
         }
 
         if (!empty($data['filter_total'])) {
