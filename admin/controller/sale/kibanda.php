@@ -894,7 +894,7 @@ class ControllerSaleKibanda extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->response->redirect($this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            $this->response->redirect($this->url->link('sale/kibanda', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
         $this->getkibandaList();
@@ -1958,7 +1958,7 @@ class ControllerSaleKibanda extends Controller {
 
         $results = $this->model_sale_customer->getCustomers($filter_data);
 
-        //echo "<pre>";print_r($results);die;
+        // echo "<pre>";print_r($filter_data);die;
         foreach ($results as $result) {
             if (!$result['approved']) {
                 $approve = $this->url->link('sale/kibanda/kibandaapprove', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL');
