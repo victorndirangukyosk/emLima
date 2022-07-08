@@ -1080,6 +1080,7 @@ class ControllerCheckoutConfirm extends Controller {
                             'tax' => $this->tax->getTax($product['price'], $product['tax_class_id']),
                             'reward' => $product['reward'],
                             'discount_percentage' => $product['discount_percentage'],
+                            'discount_percentage_amount' => $product['price'] - ($product['price'] * ($product['discount_percentage'] / 100)),
                             'discount_price' => $product['discount_price'],
                         ];
                     }
