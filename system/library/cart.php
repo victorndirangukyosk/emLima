@@ -871,6 +871,25 @@ class Cart {
         return $discount_data;
     }
 
+    public function getDiscountsByStore($store_id) {
+        $discount_data = [];
+
+        foreach ($this->getProducts() as $product) {
+            if ($product['discount_percentage'] && $product['store_id'] == $store_id) {
+                $discount_amount_data = $this->tax->getDiscounts($product['price'] * $product['quantity'], $product['discount_percentage'], $product['product_store_id']);
+
+                foreach ($discount_amount_data as $discount_amount) {
+
+                    if (isset($discount_amount['amount']) && $discount_amount['amount'] > 0) {
+                        $discount_data['discount'][] = $discount_amount;
+                    }
+                }
+            }
+        }
+
+        return $discount_data;
+    }
+
     public function getTaxesByStore($store_id) {
         $tax_data = [];
 

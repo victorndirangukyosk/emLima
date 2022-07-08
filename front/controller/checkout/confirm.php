@@ -836,6 +836,7 @@ class ControllerCheckoutConfirm extends Controller {
                 $total = 0;
                 $taxes = $this->cart->getTaxes();
                 $custom_discounts = $this->cart->getDiscounts();
+                $custom_discounts_by_store = $this->cart->getDiscountsByStore($store_id);
 
                 $taxes_by_store = $this->cart->getTaxesByStore($store_id);
                 $log->write('taxes_by_store');
@@ -873,7 +874,7 @@ class ControllerCheckoutConfirm extends Controller {
                             }
 
                             if ($result['code'] == 'discount') {
-                                $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes, $store_id, $custom_discounts);
+                                $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes, $store_id, $custom_discounts_by_store);
                             }
                         }
                     }
