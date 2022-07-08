@@ -833,7 +833,6 @@ class Cart {
     }
 
     public function getTaxes() {
-        $this->getDiscounts();
         $tax_data = [];
 
         foreach ($this->getProducts() as $product) {
@@ -858,7 +857,7 @@ class Cart {
 
         foreach ($this->getProducts() as $product) {
             if ($product['discount_percentage']) {
-                $discount_amount_data = $this->tax->getDiscounts($product['price'], $product['discount_percentage'], $product['product_store_id']);
+                $discount_amount_data = $this->tax->getDiscounts($product['price'] * $product['quantity'], $product['discount_percentage'], $product['product_store_id']);
 
                 foreach ($discount_amount_data as $discount_amount) {
 
