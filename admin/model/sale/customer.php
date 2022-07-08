@@ -195,6 +195,10 @@ class ModelSaleCustomer extends Model {
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
             $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
         }
+        
+        if ($this->user->isAccountManager()) {//in gettotalcustomers it is available
+            $implode[] = "account_manager_id = '" . (int) $this->user->getId() . "'";
+        }
 
         // if (!empty($data['filter_date_added'])) {
         //     $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
