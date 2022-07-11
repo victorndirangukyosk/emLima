@@ -341,6 +341,19 @@ class ControllerAccountWishList extends Controller {
                             }
                         }
                         //FOR CATEGORY PRICING
+                        //FOR CATEGORY DISCOUNT
+                        $category_discount_response = NULL;
+                        $product_info['discount_price'] = 0;
+                        $product_info['discount_percentage'] = 0;
+                        if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                            $category_discount_response = $this->load->controller('common/customercategorydiscount', $product_info);
+                            if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                                $product_info['discount_price'] = $category_discount_response['discount_price'];
+                                $product_info['discount_percentage'] = $category_discount_response['discount_percentage'];
+                            }
+                        }
+                        //FOR CATEGORY DISCOUNT
                         //get price html
                         if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                             $price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
@@ -386,6 +399,20 @@ class ControllerAccountWishList extends Controller {
 
                         $product_info['price'] = $price;
                         $product_info['special_price'] = $special_price;
+
+                        //FOR CATEGORY DISCOUNT
+                        $category_discount_response = NULL;
+                        $product_info['discount_price'] = 0;
+                        $product_info['discount_percentage'] = 0;
+                        if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                            $category_discount_response = $this->load->controller('common/customercategorydiscount', $product_info);
+                            if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                                $product_info['discount_price'] = $category_discount_response['discount_price'];
+                                $product_info['discount_percentage'] = $category_discount_response['discount_percentage'];
+                            }
+                        }
+                        //FOR CATEGORY DISCOUNT
                     }
 
                     if ((float) $product_info['special_price']) {
@@ -420,7 +447,9 @@ class ControllerAccountWishList extends Controller {
                     'status' => isset($product_info['pd_name']) && count($product_info) > 0 ? 1 : 0,
                     'category_price_status' => is_array($category_status_price_details) && array_key_exists('status', $category_status_price_details) ? $category_status_price_details['status'] : 1,
                     'product_note' => $product['product_note'],
-                    /* 'store_id'     => $product['store_id'],
+                    'discount_price' => $product_info['discount_price'],
+                    'discount_percentage' => $product_info['discount_percentage'],
+                        /* 'store_id'     => $product['store_id'],
                           'model'    => $product['model'], */
 
                         /* 'price'    => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $wishlist_info['currency_code'], $wishlist_info['currency_value']),
@@ -666,7 +695,6 @@ class ControllerAccountWishList extends Controller {
 
         $data['location'] = $this->url->link('checkout/checkoutitems', '', 'SSL');
         $data['status'] = 'success';
-
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
