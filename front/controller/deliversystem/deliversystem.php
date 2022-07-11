@@ -2164,6 +2164,24 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         'actual_value' => NULL,
                         'text' => $this->currency->format($new_total),
                     ];
+                }elseif ($total['code'] == 'shipping') {
+                    $total_data[] = [
+                        'code' => $total['code'],
+                        'title' => $total['title'],
+                        'value' => 0,
+                        'sort_order' => $total['sort_order'],
+                        'actual_value' => NULL,
+                        'text' => 0,
+                    ];
+                }elseif ($total['code'] == 'delivery_vat') {
+                    $total_data[] = [
+                        'code' => $total['code'],
+                        'title' => $total['title'],
+                        'value' => 0,
+                        'sort_order' => $total['sort_order'],
+                        'actual_value' => NULL,
+                        'text' => 0,
+                    ];
                 } else {
                     $total_data[] = [
                         'code' => $total['code'],
