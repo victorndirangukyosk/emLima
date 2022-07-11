@@ -208,4 +208,34 @@ class ModelLocalisationOrderStatus extends Model {
         return $order_status_data;
     }
 
+
+    public function getCustomerGroups() {
+      
+            $sql = 'SELECT cg.customer_group_id ,cd.name FROM ' . DB_PREFIX . "customer_group cg join hf7_customer_group_description cd on cg.customer_Group_id =cd.customer_group_id ";
+
+            $sql .= ' ORDER BY cg.sort_order';
+
+            if (isset($data['order']) && ('DESC' == $data['order'])) {
+                $sql .= ' DESC';
+            } else {
+                $sql .= ' ASC';
+            }
+
+            if (isset($data['start']) || isset($data['limit'])) {
+                if ($data['start'] < 0) {
+                    $data['start'] = 0;
+                }
+
+                if ($data['limit'] < 1) {
+                    $data['limit'] = 20;
+                }
+
+                $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+            }
+
+            $query = $this->db->query($sql);
+
+            return $query->rows;
+         
+    }
 }
