@@ -717,14 +717,14 @@ class ControllerCommonScheduler extends Controller {
         $data['filter_payment_terms'] = 'Payment On Delivery';        
         $this->load->model('report/excel');
         $this->model_report_excel->mail_customer_unpaid_order_excel($data);
-        $log->write('Unpaid Orders Excel Sent Successfully -' . $sendingDate);
+        $log->write('Unpaid Orders - POD Excel Sent Successfully -' . $sendingDate);
 
         }
         catch(excetion $ex)
         {
             $log = new Log('error.log');
             $log->write($ex);
-            $log->write('Unpaid Orders Excel Sending Failed -' . $sendingDate);
+            $log->write('Unpaid Orders -POD Excel Sending Failed -' . $sendingDate);
 
         }
 

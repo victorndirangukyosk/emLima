@@ -11007,7 +11007,7 @@ class ModelReportExcel extends Model {
             // header('Cache-Control: max-age=0');
             // $objWriter->save('php://output');
 
-            $filename = 'KB_Unpaid_Order_Sheet_' . $sendingDate . '.xlsx';
+            $filename = 'KB_Unpaid_Order_Sheet_POD_' . $sendingDate . '.xlsx';
 
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 
