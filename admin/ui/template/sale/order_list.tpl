@@ -273,6 +273,22 @@
                                 </select>
                             </div>
                             
+
+                              <div class="form-group">
+                                <label class="control-label" for="input-customer-groups">Customer Group</label>
+                                <select name="filter_customer_group" id="input-customer-group" class="form-control">
+                                    <option value="*"></option>
+                                    
+                                     <?php foreach ($customer_groups as $cust_group) { ?>
+                                    <?php if ($cust_group['customer_group_id'] == $filter_customer_group) { ?>
+                                    <option value="<?php echo $cust_group['customer_group_id']; ?>" selected="selected"><?php echo $cust_group['name']; ?></option>
+                                    <?php } else { ?>
+                                    <option value="<?php echo $cust_group['customer_group_id']; ?>"><?php echo $cust_group['name']; ?></option>
+                                    <?php } ?>
+                                    <?php } ?>
+                                </select>    
+                            </div>
+
                             <div class="form-group">
                             <button type="button" id="button-filter" class="btn btn-primary pull-left" style="margin-top:20px;"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
                             </div>
@@ -650,6 +666,7 @@
         url += '&filter_order_status_id=' + encodeURIComponent(filter_order_status_id);
       } 
 
+        
            
       location = url;
     }
@@ -736,6 +753,12 @@
 
             if (filter_order_status != '*') {
                 url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
+            }
+
+              var filter_customer_group = $('select[name=\'filter_customer_group\']').val();
+
+            if (filter_customer_group != '*') {
+                url += '&filter_customer_group=' + encodeURIComponent(filter_customer_group);
             }
 
 
@@ -2404,11 +2427,18 @@ function downloadOrdersonsolidated() {
                 url = 'index.php?path=report/vendor_orders/consolidatedOrderSheetForOrders&token=<?php echo $token; ?>';
               var filter_order_status = $('select[name=\'filter_order_status\']').val();
 
-            console.log(filter_order_status);
 
             if (filter_order_status != '*' && filter_order_status != '') {
                 url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
             }
+
+            var filter_customer_group = $('select[name=\'filter_customer_group\']').val();
+
+
+            if (filter_customer_group != '*' && filter_customer_group != '') {
+                url += '&filter_customer_group=' + encodeURIComponent(filter_customer_group);
+            }
+
 
             var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
 
@@ -2559,10 +2589,16 @@ function downloadOrdersCalculationSheet() {
     url = 'index.php?path=sale/order/consolidatedCalculationSheetWithFilters&token=<?php echo $token; ?>';
     var filter_order_status = $('select[name=\'filter_order_status\']').val();
 
-            console.log(filter_order_status);
 
             if (filter_order_status != '*' && filter_order_status != '') {
                 url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
+            }
+
+            var filter_customer_group = $('select[name=\'filter_customer_group\']').val();
+
+
+            if (filter_customer_group != '*' && filter_customer_group != '') {
+                url += '&filter_customer_group=' + encodeURIComponent(filter_customer_group);
             }
 
             var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
@@ -2716,10 +2752,16 @@ function downloadOrders() {
                 url = 'index.php?path=report/vendor_orders/downloadorders&token=<?php echo $token; ?>';
               var filter_order_status = $('select[name=\'filter_order_status\']').val();
 
-            console.log(filter_order_status);
 
             if (filter_order_status != '*' && filter_order_status != '') {
                 url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
+            }
+
+             var filter_customer_group = $('select[name=\'filter_customer_group\']').val();
+
+
+            if (filter_customer_group != '*' && filter_customer_group != '') {
+                url += '&filter_customer_group=' + encodeURIComponent(filter_customer_group);
             }
 
             var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
@@ -2868,10 +2910,16 @@ function downloadOrderStickers() {
                 url = 'index.php?path=report/vendor_orders/downloadordersstickers&token=<?php echo $token; ?>';
               var filter_order_status = $('select[name=\'filter_order_status\']').val();
 
-            console.log(filter_order_status);
 
             if (filter_order_status != '*' && filter_order_status != '') {
                 url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
+            }
+
+             var filter_customer_group = $('select[name=\'filter_customer_group\']').val();
+
+
+            if (filter_customer_group != '*' && filter_customer_group != '') {
+                url += '&filter_customer_group=' + encodeURIComponent(filter_customer_group);
             }
 
             var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
