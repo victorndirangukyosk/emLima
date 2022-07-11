@@ -546,36 +546,36 @@ class ControllerSaleEditinvoice extends Controller {
                     $log->write($free_delivery_amount);
                     $log->write($subTotal);
 
-                    if ($subTotal < $free_delivery_amount) {
-                        $log->write('shipping_price if');
+                    // if ($subTotal < $free_delivery_amount) {
+                    //     $log->write('shipping_price if');
 
-                        $this->load->model('shipping/' . $tmp[0]);
-                        $shipping_price = $this->{'model_shipping_' . $tmp[0]}->getPrice($store_id, $subTotal, $subTotal, $order_info['latitude'], $order_info['longitude'], $shipping_city_id);
+                    //     $this->load->model('shipping/' . $tmp[0]);
+                    //     $shipping_price = $this->{'model_shipping_' . $tmp[0]}->getPrice($store_id, $subTotal, $subTotal, $order_info['latitude'], $order_info['longitude'], $shipping_city_id);
 
-                        $log->write($shipping_price);
+                    //     $log->write($shipping_price);
 
-                        $value_coming_tmp = 0;
+                    //     $value_coming_tmp = 0;
 
-                        if ((isset($datas['totals']) && array_key_exists('shipping', $datas['totals']))) {
-                            $value_coming_tmp = $datas['totals']['shipping']['value'];
+                    //     if ((isset($datas['totals']) && array_key_exists('shipping', $datas['totals']))) {
+                    //         $value_coming_tmp = $datas['totals']['shipping']['value'];
 
-                            $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
-                        }
-                    } else {
-                        $value_coming_tmp = 0;
+                    //         $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
+                    //     }
+                    // } else {
+                    //     $value_coming_tmp = 0;
 
-                        if ((isset($datas['totals']) && array_key_exists('shipping', $datas['totals']))) {
-                            $value_coming_tmp = $datas['totals']['shipping']['value'];
-                        }
+                    //     if ((isset($datas['totals']) && array_key_exists('shipping', $datas['totals']))) {
+                    //         $value_coming_tmp = $datas['totals']['shipping']['value'];
+                    //     }
 
-                        $datas['totals']['shipping'] = [];
-                        $datas['totals']['shipping']['code'] = 'shipping';
-                        $datas['totals']['shipping']['title'] = 'Shipping charge';
-                        $datas['totals']['shipping']['value'] = $value_coming_tmp;
-                        $datas['totals']['shipping']['actual_value'] = $value_coming_tmp;
+                    //     // $datas['totals']['shipping'] = [];
+                    //     // $datas['totals']['shipping']['code'] = 'shipping';
+                    //     // $datas['totals']['shipping']['title'] = 'Shipping charge';
+                    //     // $datas['totals']['shipping']['value'] = $value_coming_tmp;
+                    //     // $datas['totals']['shipping']['actual_value'] = $value_coming_tmp;
 
-                        $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
-                    }
+                    //     // $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
+                    // }
                 }
 
                 $p = 2;
@@ -607,7 +607,14 @@ class ControllerSaleEditinvoice extends Controller {
                     /* $log->write("updatetotals");
                       $log->write($tot); */
                     $tot['sort'] = $p;
+                    if($subTotal>= $this->config->get('config_active_store_minimum_order_amount') && ($tot['code'] =='shipping'|| $tot['code'] =='delivery_vat') )
+                    {
+                    $orderTotal=$orderTotal-  $tot['value'];  
+                    }
+                    else{
                     $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
+
+                    }
                     if ($tot['code'] == "credit") {
                         $wallet_amount_positive = abs($tot['value']);
                     }
